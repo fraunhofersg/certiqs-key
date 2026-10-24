@@ -113,7 +113,7 @@ EXAMPLES: dict[str, tuple[str, str]] = {
     "sweep-bb84": (EXAMPLE_GROUPS[2],
                    "a sweep over the QBER: two key lengths and one refused point"),
     "alpha-search-bb84": (EXAMPLE_GROUPS[2],
-                          "BB84 with the optional search over the Rényi order α"),
+                          "BB84 with the optional search over the Rényi order alpha"),
 }
 
 HEADLINE_REPORT = "runs/bbm92_study/data/headline-report/report.html"
