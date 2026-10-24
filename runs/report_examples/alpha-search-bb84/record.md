@@ -1,6 +1,6 @@
 # Record excerpts
 
-Every record value the key-rate report cites, once, under its JSON pointer (RFC 6901) from the record root, in the record's order. Report id 0c859dddb2d5f689600f1ac9092863e75c9fae4ef134d111afaf3abfa8e4b940. [Back to the report](report.md)
+Every record value the key-rate report cites, once, under its JSON pointer (RFC 6901) from the record root, in the record's order. Report id a7b003352dc374623d793f413b1da94321173965a37cbb2fb73a0e9d1cc78b83. [Back to the report](report.md)
 
 ## <a id="p-.payload.compiled"></a>/payload/compiled
 
@@ -465,7 +465,7 @@ Every record value the key-rate report cites, once, under its JSON pointer (RFC 
 | `evaluations/0/reason` | certified_reported |
 | `evaluations/0/relative_gap` | 8.949148796211359e-07 |
 | `evaluations/0/score` | -297559.06497541536 |
-| `evaluations/0/seconds` | 1.3135246000019833 |
+| `evaluations/0/seconds` | 1.5147928999504074 |
 | `evaluations/0/set_aside` | — |
 | `evaluations/1/alpha` | 1.00316227766 |
 | `evaluations/1/h_lb` | 0.24979522952443534 |
@@ -475,7 +475,7 @@ Every record value the key-rate report cites, once, under its JSON pointer (RFC 
 | `evaluations/1/reason` | certified_reported |
 | `evaluations/1/relative_gap` | 2.889144623550867e-08 |
 | `evaluations/1/score` | -7047.880685765953 |
-| `evaluations/1/seconds` | 1.435880900011398 |
+| `evaluations/1/seconds` | 1.36618939996697 |
 | `evaluations/1/set_aside` | — |
 | `evaluations/2/alpha` | 1.1 |
 | `evaluations/2/h_lb` | 0.24400728994250598 |
@@ -485,7 +485,7 @@ Every record value the key-rate report cites, once, under its JSON pointer (RFC 
 | `evaluations/2/reason` | certified_reported |
 | `evaluations/2/relative_gap` | 5.417049887604169e-09 |
 | `evaluations/2/score` | 2081.0 |
-| `evaluations/2/seconds` | 1.6424752000020817 |
+| `evaluations/2/seconds` | 1.4220351000549272 |
 | `evaluations/2/set_aside` | — |
 | `evaluations/3/alpha` | 1.01182902683 |
 | `evaluations/3/h_lb` | 0.2492413326654987 |
@@ -495,7 +495,7 @@ Every record value the key-rate report cites, once, under its JSON pointer (RFC 
 | `evaluations/3/reason` | certified_reported |
 | `evaluations/3/relative_gap` | 2.860519710481859e-09 |
 | `evaluations/3/score` | -102.72091592832885 |
-| `evaluations/3/seconds` | 1.3485558999236673 |
+| `evaluations/3/seconds` | 1.3499364000745118 |
 | `evaluations/3/set_aside` | — |
 | `h_lb` | 0.24400728994250598 |
 | `h_low` | 0.24400729126430565 |
@@ -844,7 +844,7 @@ gen, ok, err, disc
 | `assumption_ids` | A-KEYREG, A-HASH, A-SEED, A-FIXED, A-CONFORM, A-AUTH, A-LAB, A-SRC, A-RHOM, A-SEQ |
 | `assumption_ledger` | key_register, pa_hash_family, post_processing_seeds, parameters_fixed_before_run, post_processing_as_analysed, classical_channel_authenticated, laboratory_sealed, laboratory_sealed, source_replacement_license, round_homogeneity_declaration, sequential_round_model |
 | `assurance_reason` | first_order_reported |
-| `backend/numpy` | 2.5.3 |
+| `backend/numpy` | 2.5.4 |
 | `backend/oracle/capabilities` | choi_form, complex_hermitian_psd, direct_sum_sectors, equality_rows, inequality_rows |
 | `backend/oracle/max_sector_dim` | — |
 | `backend/oracle/name` | qics-sector-choi |
@@ -910,7 +910,7 @@ gen, ok, err, disc
 | `certified/premises` | \[\] |
 | `certified/reasons` | \[\] |
 | `certified/resting_blocks` | \[\] |
-| `certified/seconds` | 0.012638799962587655 |
+| `certified/seconds` | 0.011194299906492233 |
 | `certified/status` | certified |
 | `certified/working_precision_bits` | 128 |
 | `choi_input_basis/t0/alice_dim` | 2 |
@@ -1180,31 +1180,31 @@ gen, ok, err, disc
 | `reported_tier` | certified |
 | `rounds` | 10000 |
 | `search/assessment_history/0/contributes` | true |
-| `search/assessment_history/0/elapsed_seconds` | 0.006644499953836203 |
+| `search/assessment_history/0/elapsed_seconds` | 0.00616500002797693 |
 | `search/assessment_history/0/objective` | 2.527997144420983 |
 | `search/assessment_history/0/raw_bracket` | -1.0886950535835567 |
 | `search/assessment_history/0/raw_gap` | 3.616692197341579 |
 | `search/assessment_history/0/withdrawal` | — |
 | `search/assessment_history/1/contributes` | true |
-| `search/assessment_history/1/elapsed_seconds` | 0.022070599952712655 |
+| `search/assessment_history/1/elapsed_seconds` | 0.021952600101940334 |
 | `search/assessment_history/1/objective` | 0.24400729126430565 |
 | `search/assessment_history/1/raw_bracket` | 0.24400728994250598 |
 | `search/assessment_history/1/raw_gap` | 4.595566704956866e-10 |
 | `search/assessment_history/1/withdrawal` | — |
 | `search/assessment_history/2/contributes` | true |
-| `search/assessment_history/2/elapsed_seconds` | 0.03768639999907464 |
+| `search/assessment_history/2/elapsed_seconds` | 0.04064960009418428 |
 | `search/assessment_history/2/objective` | 0.24400729126430565 |
 | `search/assessment_history/2/raw_bracket` | 0.24400728994250598 |
 | `search/assessment_history/2/raw_gap` | 4.595566704956866e-10 |
 | `search/assessment_history/2/withdrawal` | — |
 | `search/assessment_history/3/contributes` | true |
-| `search/assessment_history/3/elapsed_seconds` | 0.05285129998810589 |
+| `search/assessment_history/3/elapsed_seconds` | 0.056294200010597706 |
 | `search/assessment_history/3/objective` | 0.24400729126430565 |
 | `search/assessment_history/3/raw_bracket` | 0.24400728994250598 |
 | `search/assessment_history/3/raw_gap` | 4.595566704956866e-10 |
 | `search/assessment_history/3/withdrawal` | — |
 | `search/assessment_history/4/contributes` | true |
-| `search/assessment_history/4/elapsed_seconds` | 0.06823939993046224 |
+| `search/assessment_history/4/elapsed_seconds` | 0.07321400009095669 |
 | `search/assessment_history/4/objective` | 0.24400729126430565 |
 | `search/assessment_history/4/raw_bracket` | 0.24400728994250598 |
 | `search/assessment_history/4/raw_gap` | 4.595566704956866e-10 |
@@ -1568,31 +1568,31 @@ gen, ok, err, disc
 | Field | Value |
 | --- | --- |
 | `assessment_history/0/contributes` | true |
-| `assessment_history/0/elapsed_seconds` | 0.006644499953836203 |
+| `assessment_history/0/elapsed_seconds` | 0.00616500002797693 |
 | `assessment_history/0/objective` | 2.527997144420983 |
 | `assessment_history/0/raw_bracket` | -1.0886950535835567 |
 | `assessment_history/0/raw_gap` | 3.616692197341579 |
 | `assessment_history/0/withdrawal` | — |
 | `assessment_history/1/contributes` | true |
-| `assessment_history/1/elapsed_seconds` | 0.022070599952712655 |
+| `assessment_history/1/elapsed_seconds` | 0.021952600101940334 |
 | `assessment_history/1/objective` | 0.24400729126430565 |
 | `assessment_history/1/raw_bracket` | 0.24400728994250598 |
 | `assessment_history/1/raw_gap` | 4.595566704956866e-10 |
 | `assessment_history/1/withdrawal` | — |
 | `assessment_history/2/contributes` | true |
-| `assessment_history/2/elapsed_seconds` | 0.03768639999907464 |
+| `assessment_history/2/elapsed_seconds` | 0.04064960009418428 |
 | `assessment_history/2/objective` | 0.24400729126430565 |
 | `assessment_history/2/raw_bracket` | 0.24400728994250598 |
 | `assessment_history/2/raw_gap` | 4.595566704956866e-10 |
 | `assessment_history/2/withdrawal` | — |
 | `assessment_history/3/contributes` | true |
-| `assessment_history/3/elapsed_seconds` | 0.05285129998810589 |
+| `assessment_history/3/elapsed_seconds` | 0.056294200010597706 |
 | `assessment_history/3/objective` | 0.24400729126430565 |
 | `assessment_history/3/raw_bracket` | 0.24400728994250598 |
 | `assessment_history/3/raw_gap` | 4.595566704956866e-10 |
 | `assessment_history/3/withdrawal` | — |
 | `assessment_history/4/contributes` | true |
-| `assessment_history/4/elapsed_seconds` | 0.06823939993046224 |
+| `assessment_history/4/elapsed_seconds` | 0.07321400009095669 |
 | `assessment_history/4/objective` | 0.24400729126430565 |
 | `assessment_history/4/raw_bracket` | 0.24400728994250598 |
 | `assessment_history/4/raw_gap` | 4.595566704956866e-10 |
@@ -1636,8 +1636,8 @@ gen, ok, err, disc
 | `max_iterations` | 5 |
 | `method` | fw |
 | `policy` | explicit-v1 |
-| `preparation_seconds` | 0.004622900043614209 |
-| `solver_seconds` | 0.0796312999445945 |
+| `preparation_seconds` | 0.004472700064070523 |
+| `solver_seconds` | 0.08445700001902878 |
 | `termination` | budget_exhausted |
 
 *best_contributing_candidate/point/0/imag*

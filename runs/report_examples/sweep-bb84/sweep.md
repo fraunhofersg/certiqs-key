@@ -812,7 +812,7 @@ What differs from point to point: the varying inputs, each point's own numbers, 
 
 | Sweep | Value |
 | --- | --- |
-| id | 12bca24fa78d2da02518e76c686bda5b8598c7d9a1723b07f668351b9d797aa6 |
+| id | 53209367d74663dbaf4fa6a8df8a21c6b29d6eca078415b356e83efdb357a46b |
 | points | 3 |
 | record schema | 0.46.0 |
 | report schema | 0.36.0 |
@@ -826,7 +826,7 @@ What differs from point to point: the varying inputs, each point's own numbers, 
 
 | Provenance | Value |
 | --- | --- |
-| engine | distribution_version = 0.0.1.dev0; git_commit = 3203843199ea99a9d152155416440f0d3de5dbb2; git_dirty = false |
+| engine | distribution_version = 0.1.0; git_commit = da9eda22e78a438c7bc0dfa7fb8909b0065a132f; git_dirty = false |
 | created_by | runs.report_examples.generate |
 
 ### <a id="glossary"></a>Glossary

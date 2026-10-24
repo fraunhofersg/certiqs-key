@@ -1,6 +1,6 @@
 # Record excerpts
 
-Every record value the key-rate report cites, once, under its JSON pointer (RFC 6901) from the record root, in the record's order. Report id 37dd4b62a4802e94d9af72fe2c0a7b600afa952878b8c05b0168e9bc89e6f881. [Back to the report](report.md)
+Every record value the key-rate report cites, once, under its JSON pointer (RFC 6901) from the record root, in the record's order. Report id cc3c5893770dfd1689d32386a03fc87279ccea4b0f658292f07a5aaac4201d49. [Back to the report](report.md)
 
 ## <a id="p-.payload.config"></a>/payload/config
 

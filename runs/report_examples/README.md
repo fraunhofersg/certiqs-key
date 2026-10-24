@@ -81,7 +81,7 @@ they open the committed PDFs from a checkout.
 Each record names its engine in `payload.provenance.engine`
 (`git_commit`, `git_dirty`). The records are one full generation at record
 schema 0.46.0, run on a clean checkout of
-`3203843199ea99a9d152155416440f0d3de5dbb2` on Windows (Python 3.14), so they
+`da9eda22e78a438c7bc0dfa7fb8909b0065a132f` on Windows (Python 3.14), so they
 carry `git_dirty: false`; the reports and excerpts are rendered from them at
 report schema 0.36.0.
 

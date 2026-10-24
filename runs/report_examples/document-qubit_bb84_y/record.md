@@ -1,6 +1,6 @@
 # Record excerpts
 
-Every record value the key-rate report cites, once, under its JSON pointer (RFC 6901) from the record root, in the record's order. Report id 616fb884a8ccbe9c389e0124057d775155740804a177600b1091b6d6df6a7c72. [Back to the report](report.md)
+Every record value the key-rate report cites, once, under its JSON pointer (RFC 6901) from the record root, in the record's order. Report id 519e91d73547065be15961744fa315f22981f0c0608056d568d4ee26aa3494b3. [Back to the report](report.md)
 
 ## <a id="p-.payload.compiled"></a>/payload/compiled
 
@@ -761,7 +761,7 @@ gen, ok, err, disc
 | `assumption_ids` | A-KEYREG, A-HASH, A-SEED, A-FIXED, A-CONFORM, A-AUTH, A-LAB, A-SRC, A-RHOM, A-SEQ |
 | `assumption_ledger` | key_register, pa_hash_family, post_processing_seeds, parameters_fixed_before_run, post_processing_as_analysed, classical_channel_authenticated, laboratory_sealed, laboratory_sealed, source_replacement_license, round_homogeneity_declaration, sequential_round_model |
 | `assurance_reason` | first_order_reported |
-| `backend/numpy` | 2.5.3 |
+| `backend/numpy` | 2.5.4 |
 | `backend/oracle/capabilities` | choi_form, complex_hermitian_psd, direct_sum_sectors, equality_rows, inequality_rows |
 | `backend/oracle/max_sector_dim` | — |
 | `backend/oracle/name` | qics-sector-choi |
@@ -827,7 +827,7 @@ gen, ok, err, disc
 | `certified/premises` | \[\] |
 | `certified/reasons` | \[\] |
 | `certified/resting_blocks` | \[\] |
-| `certified/seconds` | 0.015888000023551285 |
+| `certified/seconds` | 0.03488849999848753 |
 | `certified/status` | certified |
 | `certified/working_precision_bits` | 128 |
 | `choi_input_basis/t0/alice_dim` | 2 |
@@ -922,7 +922,7 @@ gen, ok, err, disc
 | `optimized_q/err` | 0.0 |
 | `optimized_q/gen` | 0.22790000000000005 |
 | `optimized_q/ok` | 0.25015713371627074 |
-| `optimizer_certificate` | an object of 18 fields (13,205 characters); not shown, see the record |
+| `optimizer_certificate` | an object of 18 fields (13,198 characters); not shown, see the record |
 | `oracle_diagnostics/0/backend` | qics |
 | `oracle_diagnostics/0/dual_feasibility` | 1.1472654798961917e-12 |
 | `oracle_diagnostics/0/dual_objective` | -5.314455722115042 |
@@ -1093,31 +1093,31 @@ gen, ok, err, disc
 | `reported_tier` | certified |
 | `rounds` | 10000 |
 | `search/assessment_history/0/contributes` | true |
-| `search/assessment_history/0/elapsed_seconds` | 0.007767200004309416 |
+| `search/assessment_history/0/elapsed_seconds` | 0.023034100071527064 |
 | `search/assessment_history/0/objective` | 0.6894537666602687 |
 | `search/assessment_history/0/raw_bracket` | -0.29691683279551695 |
 | `search/assessment_history/0/raw_gap` | 0.9863705994482888 |
 | `search/assessment_history/0/withdrawal` | — |
 | `search/assessment_history/1/contributes` | true |
-| `search/assessment_history/1/elapsed_seconds` | 0.0357732999837026 |
+| `search/assessment_history/1/elapsed_seconds` | 0.16597900004126132 |
 | `search/assessment_history/1/objective` | 0.19338755136919042 |
 | `search/assessment_history/1/raw_bracket` | 0.19337480378738606 |
 | `search/assessment_history/1/raw_gap` | 1.2747464509743622e-05 |
 | `search/assessment_history/1/withdrawal` | — |
 | `search/assessment_history/2/contributes` | true |
-| `search/assessment_history/2/elapsed_seconds` | 0.06206899997778237 |
+| `search/assessment_history/2/elapsed_seconds` | 0.28344380005728453 |
 | `search/assessment_history/2/objective` | 0.19338755136618782 |
 | `search/assessment_history/2/raw_bracket` | 0.19338696535886868 |
 | `search/assessment_history/2/raw_gap` | 5.85872756780903e-07 |
 | `search/assessment_history/2/withdrawal` | — |
 | `search/assessment_history/3/contributes` | true |
-| `search/assessment_history/3/elapsed_seconds` | 0.08872110000811517 |
+| `search/assessment_history/3/elapsed_seconds` | 0.4199217000277713 |
 | `search/assessment_history/3/objective` | 0.19338755136279362 |
 | `search/assessment_history/3/raw_bracket` | 0.19338649949710573 |
 | `search/assessment_history/3/raw_gap` | 1.0518486923682957e-06 |
 | `search/assessment_history/3/withdrawal` | — |
 | `search/assessment_history/4/contributes` | true |
-| `search/assessment_history/4/elapsed_seconds` | 0.12384549994021654 |
+| `search/assessment_history/4/elapsed_seconds` | 0.5380482000764459 |
 | `search/assessment_history/4/objective` | 0.1933875513627735 |
 | `search/assessment_history/4/raw_bracket` | 0.19338750139059246 |
 | `search/assessment_history/4/raw_gap` | 4.993443079859272e-08 |
@@ -1484,31 +1484,31 @@ gen, ok, err, disc
 | Field | Value |
 | --- | --- |
 | `assessment_history/0/contributes` | true |
-| `assessment_history/0/elapsed_seconds` | 0.007767200004309416 |
+| `assessment_history/0/elapsed_seconds` | 0.023034100071527064 |
 | `assessment_history/0/objective` | 0.6894537666602687 |
 | `assessment_history/0/raw_bracket` | -0.29691683279551695 |
 | `assessment_history/0/raw_gap` | 0.9863705994482888 |
 | `assessment_history/0/withdrawal` | — |
 | `assessment_history/1/contributes` | true |
-| `assessment_history/1/elapsed_seconds` | 0.0357732999837026 |
+| `assessment_history/1/elapsed_seconds` | 0.16597900004126132 |
 | `assessment_history/1/objective` | 0.19338755136919042 |
 | `assessment_history/1/raw_bracket` | 0.19337480378738606 |
 | `assessment_history/1/raw_gap` | 1.2747464509743622e-05 |
 | `assessment_history/1/withdrawal` | — |
 | `assessment_history/2/contributes` | true |
-| `assessment_history/2/elapsed_seconds` | 0.06206899997778237 |
+| `assessment_history/2/elapsed_seconds` | 0.28344380005728453 |
 | `assessment_history/2/objective` | 0.19338755136618782 |
 | `assessment_history/2/raw_bracket` | 0.19338696535886868 |
 | `assessment_history/2/raw_gap` | 5.85872756780903e-07 |
 | `assessment_history/2/withdrawal` | — |
 | `assessment_history/3/contributes` | true |
-| `assessment_history/3/elapsed_seconds` | 0.08872110000811517 |
+| `assessment_history/3/elapsed_seconds` | 0.4199217000277713 |
 | `assessment_history/3/objective` | 0.19338755136279362 |
 | `assessment_history/3/raw_bracket` | 0.19338649949710573 |
 | `assessment_history/3/raw_gap` | 1.0518486923682957e-06 |
 | `assessment_history/3/withdrawal` | — |
 | `assessment_history/4/contributes` | true |
-| `assessment_history/4/elapsed_seconds` | 0.12384549994021654 |
+| `assessment_history/4/elapsed_seconds` | 0.5380482000764459 |
 | `assessment_history/4/objective` | 0.1933875513627735 |
 | `assessment_history/4/raw_bracket` | 0.19338750139059246 |
 | `assessment_history/4/raw_gap` | 4.993443079859272e-08 |
@@ -1552,8 +1552,8 @@ gen, ok, err, disc
 | `max_iterations` | 5 |
 | `method` | fw |
 | `policy` | explicit-v1 |
-| `preparation_seconds` | 0.008715200005099177 |
-| `solver_seconds` | 0.1467988999793306 |
+| `preparation_seconds` | 0.076411799993366 |
+| `solver_seconds` | 0.6225295000476763 |
 | `termination` | budget_exhausted |
 
 *best_contributing_candidate/point/0/imag*

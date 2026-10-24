@@ -244,12 +244,12 @@ The run was refused at its solve stage, so no key length was reported. The recor
 
 | Provenance | Value |
 | --- | --- |
-| report_id | 37dd4b62a4802e94d9af72fe2c0a7b600afa952878b8c05b0168e9bc89e6f881 |
+| report_id | cc3c5893770dfd1689d32386a03fc87279ccea4b0f658292f07a5aaac4201d49 |
 | record_schema_version | 0.46.0 |
 | report_schema_version | 0.36.0 |
 | created_by | runs.report_examples.generate |
 | config_digest | 7494363dc330a4a87548791152025100bbf2ac40e316f3aa6eb07caa463ee6b1 |
-| engine | distribution_version = 0.0.1.dev0; git_commit = 3203843199ea99a9d152155416440f0d3de5dbb2; git_dirty = false |
+| engine | distribution_version = 0.1.0; git_commit = da9eda22e78a438c7bc0dfa7fb8909b0065a132f; git_dirty = false |
 | platform | — |
 | final_iterate | — |
 | reproduce | config_pointer = [record](record.md#p-.payload.config) |
@@ -284,9 +284,9 @@ No claim status is listed: the run was refused before any result named a claim.
 | compilation | — | declaration | `0bba6be1b6cecc1a8c65e623cbd0e3191775f95d25b6756a1572a7c0a351d1dc` |
 | honest_model | — | honest_distribution | `91700c4b665fb3385686fca8118fadd2b2d91c7908649a8d872ae5c190df25a7` |
 | acceptance_construction | — | acceptance_set | `640e25dbda0673544e691e90828457cc3a8f5e60e3d026cb47421030fc81f8af` |
-| docking | — | docked_declaration | `1e57768f0a85f590f2764d6446b12ad158d8af53285f738ef51f1732ec4f1dd5` |
-| bundle_write | — | bundle | `1e57768f0a85f590f2764d6446b12ad158d8af53285f738ef51f1732ec4f1dd5` |
-| bundle_read | — | bundle | `1e57768f0a85f590f2764d6446b12ad158d8af53285f738ef51f1732ec4f1dd5` |
+| docking | — | docked_declaration | `72fbe0d811b76b11db7b9feec0b14ef60861d139c4341f5395f6d2b564985582` |
+| bundle_write | — | bundle | `72fbe0d811b76b11db7b9feec0b14ef60861d139c4341f5395f6d2b564985582` |
+| bundle_read | — | bundle | `72fbe0d811b76b11db7b9feec0b14ef60861d139c4341f5395f6d2b564985582` |
 
 ### <a id="glossary"></a>Glossary
 

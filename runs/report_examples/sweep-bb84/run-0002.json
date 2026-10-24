@@ -41,7 +41,7 @@
           "stage": "compilation",
           "station": null,
           "status": "executed",
-          "wall_time_s": 0.007204700028523803
+          "wall_time_s": 0.004615600104443729
         },
         {
           "children": [],
@@ -74,7 +74,7 @@
           "stage": "honest_model",
           "station": null,
           "status": "executed",
-          "wall_time_s": 0.007391500053927302
+          "wall_time_s": 0.004561599926091731
         },
         {
           "children": [],
@@ -113,7 +113,7 @@
           "stage": "acceptance_construction",
           "station": null,
           "status": "executed",
-          "wall_time_s": 1.4414709999691695
+          "wall_time_s": 1.2076435000635684
         },
         {
           "children": [],
@@ -137,8 +137,8 @@
           },
           "emits": [
             {
-              "digest": "f0a6fdbc2beee31f12ef1cc1fe209d3645237a55aea93f8a9dd629ae8fdcec84",
-              "id": "docked_declaration:f0a6fdbc2bee",
+              "digest": "9eabf020c46eccb5a14885392f754b633e93e9e45509b70e1962c7ff3d94f505",
+              "id": "docked_declaration:9eabf020c46e",
               "kind": "docked_declaration",
               "record_key": null
             }
@@ -149,7 +149,7 @@
           "stage": "docking",
           "station": null,
           "status": "executed",
-          "wall_time_s": 0.0015971999382600188
+          "wall_time_s": 0.0019262999994680285
         },
         {
           "children": [],
@@ -160,7 +160,7 @@
             ],
             "artefacts": [
               "declaration:0bba6be1b6ce",
-              "docked_declaration:f0a6fdbc2bee"
+              "docked_declaration:9eabf020c46e"
             ],
             "config": []
           },
@@ -170,8 +170,8 @@
           },
           "emits": [
             {
-              "digest": "f0a6fdbc2beee31f12ef1cc1fe209d3645237a55aea93f8a9dd629ae8fdcec84",
-              "id": "bundle:f0a6fdbc2bee",
+              "digest": "9eabf020c46eccb5a14885392f754b633e93e9e45509b70e1962c7ff3d94f505",
+              "id": "bundle:9eabf020c46e",
               "kind": "bundle",
               "record_key": "payload.stages.bundle"
             }
@@ -182,7 +182,7 @@
           "stage": "bundle_write",
           "station": null,
           "status": "executed",
-          "wall_time_s": 0.01664879999589175
+          "wall_time_s": 0.018399100052192807
         },
         {
           "children": [],
@@ -191,7 +191,7 @@
               "bundle"
             ],
             "artefacts": [
-              "bundle:f0a6fdbc2bee"
+              "bundle:9eabf020c46e"
             ],
             "config": []
           },
@@ -201,8 +201,8 @@
           },
           "emits": [
             {
-              "digest": "f0a6fdbc2beee31f12ef1cc1fe209d3645237a55aea93f8a9dd629ae8fdcec84",
-              "id": "bundle:f0a6fdbc2bee",
+              "digest": "9eabf020c46eccb5a14885392f754b633e93e9e45509b70e1962c7ff3d94f505",
+              "id": "bundle:9eabf020c46e",
               "kind": "bundle",
               "record_key": "payload.stages.bundle"
             }
@@ -213,7 +213,7 @@
           "stage": "bundle_read",
           "station": null,
           "status": "executed",
-          "wall_time_s": 0.0003399000270292163
+          "wall_time_s": 0.0003299000672996044
         },
         {
           "children": [],
@@ -222,7 +222,7 @@
               "bundle"
             ],
             "artefacts": [
-              "bundle:f0a6fdbc2bee"
+              "bundle:9eabf020c46e"
             ],
             "config": [
               "alpha",
@@ -238,7 +238,7 @@
           "stage": "solve",
           "station": null,
           "status": "refused",
-          "wall_time_s": 0.0018521000165492296
+          "wall_time_s": 0.001629799953661859
         }
       ]
     },
@@ -1381,8 +1381,8 @@
     },
     "provenance": {
       "engine": {
-        "distribution_version": "0.0.1.dev0",
-        "git_commit": "3203843199ea99a9d152155416440f0d3de5dbb2",
+        "distribution_version": "0.1.0",
+        "git_commit": "da9eda22e78a438c7bc0dfa7fb8909b0065a132f",
         "git_dirty": false
       }
     },

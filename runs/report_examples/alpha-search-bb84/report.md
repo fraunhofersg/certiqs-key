@@ -906,10 +906,10 @@ How the search stopped, as a whole: The search did not meet its gap target (1e-1
 
 | alpha | Phase | Key length | h_lb | Score | Reason | Set aside | Seconds |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1.0001 | coarse | 0 | 0.2499935024617661 | -297559.06497541536 | certified_reported | — | 1.3135246000019833 |
-| 1.00316227766 | coarse | 0 | 0.24979522952443534 | -7047.880685765953 | certified_reported | — | 1.435880900011398 |
-| 1.1 | coarse | 2081 | 0.24400728994250598 | 2081.0 | certified_reported | — | 1.6424752000020817 |
-| 1.01182902683 | refine | 0 | 0.2492413326654987 | -102.72091592832885 | certified_reported | — | 1.3485558999236673 |
+| 1.0001 | coarse | 0 | 0.2499935024617661 | -297559.06497541536 | certified_reported | — | 1.5147928999504074 |
+| 1.00316227766 | coarse | 0 | 0.24979522952443534 | -7047.880685765953 | certified_reported | — | 1.36618939996697 |
+| 1.1 | coarse | 2081 | 0.24400728994250598 | 2081.0 | certified_reported | — | 1.4220351000549272 |
+| 1.01182902683 | refine | 0 | 0.2492413326654987 | -102.72091592832885 | certified_reported | — | 1.3499364000745118 |
 
 ### <a id="security-claims"></a>Security claims
 
@@ -1032,13 +1032,13 @@ How the search stopped, as a whole: The search did not meet its gap target (1e-1
 
 | Provenance | Value |
 | --- | --- |
-| report_id | 0c859dddb2d5f689600f1ac9092863e75c9fae4ef134d111afaf3abfa8e4b940 |
+| report_id | a7b003352dc374623d793f413b1da94321173965a37cbb2fb73a0e9d1cc78b83 |
 | record_schema_version | 0.46.0 |
 | report_schema_version | 0.36.0 |
 | created_by | runs.report_examples.generate |
 | config_digest | 4314deec10f11dfcb900399e9bf2c5263018170b93cb1bb45f13033338d6d0b2 |
-| engine | distribution_version = 0.0.1.dev0; git_commit = 3203843199ea99a9d152155416440f0d3de5dbb2; git_dirty = false |
-| platform | numpy = 2.5.3; oracle = (capabilities = (choi_form, complex_hermitian_psd, direct_sum_sectors, equality_rows, inequality_rows); max_sector_dim = none; name = qics-sector-choi; version = 1.1.3); python = 3.14.6; qics = 1.1.3; scipy = 1.18.1 |
+| engine | distribution_version = 0.1.0; git_commit = da9eda22e78a438c7bc0dfa7fb8909b0065a132f; git_dirty = false |
+| platform | numpy = 2.5.4; oracle = (capabilities = (choi_form, complex_hermitian_psd, direct_sum_sectors, equality_rows, inequality_rows); max_sector_dim = none; name = qics-sector-choi; version = 1.1.3); python = 3.14.6; qics = 1.1.3; scipy = 1.18.1 |
 | final_iterate | — |
 | reproduce | config_pointer = [record](record.md#p-.payload.config) |
 
@@ -1079,10 +1079,10 @@ How the search stopped, as a whole: The search did not meet its gap target (1e-1
 | compilation | — | declaration | `0bba6be1b6cecc1a8c65e623cbd0e3191775f95d25b6756a1572a7c0a351d1dc` |
 | honest_model | — | honest_distribution | `91700c4b665fb3385686fca8118fadd2b2d91c7908649a8d872ae5c190df25a7` |
 | acceptance_construction | — | acceptance_set | `640e25dbda0673544e691e90828457cc3a8f5e60e3d026cb47421030fc81f8af` |
-| docking | — | docked_declaration | `1e57768f0a85f590f2764d6446b12ad158d8af53285f738ef51f1732ec4f1dd5` |
-| bundle_write | — | bundle | `1e57768f0a85f590f2764d6446b12ad158d8af53285f738ef51f1732ec4f1dd5` |
-| bundle_read | — | bundle | `1e57768f0a85f590f2764d6446b12ad158d8af53285f738ef51f1732ec4f1dd5` |
-| solve | — | key_rate_result | `009a601511a6bdf21e2826f2f10b9bf374aceb3a488765c6c6f25851bb3846d7` |
+| docking | — | docked_declaration | `72fbe0d811b76b11db7b9feec0b14ef60861d139c4341f5395f6d2b564985582` |
+| bundle_write | — | bundle | `72fbe0d811b76b11db7b9feec0b14ef60861d139c4341f5395f6d2b564985582` |
+| bundle_read | — | bundle | `72fbe0d811b76b11db7b9feec0b14ef60861d139c4341f5395f6d2b564985582` |
+| solve | — | key_rate_result | `2808e0218279d3113c6097f4aeda9291c1e9bb8b550ccce47f076130fb82ced7` |
 
 ### <a id="glossary"></a>Glossary
 

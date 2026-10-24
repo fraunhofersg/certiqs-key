@@ -1007,13 +1007,13 @@ How the search stopped, as a whole: The search did not meet its gap target (1e-1
 
 | Provenance | Value |
 | --- | --- |
-| report_id | 616fb884a8ccbe9c389e0124057d775155740804a177600b1091b6d6df6a7c72 |
+| report_id | 519e91d73547065be15961744fa315f22981f0c0608056d568d4ee26aa3494b3 |
 | record_schema_version | 0.46.0 |
 | report_schema_version | 0.36.0 |
 | created_by | runs.report_examples.generate |
 | config_digest | 7158dd3d5050ee2888a1ac1d8e32d734bfcd20a7514c20fca11e884e4ca928e8 |
-| engine | distribution_version = 0.0.1.dev0; git_commit = 3203843199ea99a9d152155416440f0d3de5dbb2; git_dirty = false |
-| platform | numpy = 2.5.3; oracle = (capabilities = (choi_form, complex_hermitian_psd, direct_sum_sectors, equality_rows, inequality_rows); max_sector_dim = none; name = qics-sector-choi; version = 1.1.3); python = 3.14.6; qics = 1.1.3; scipy = 1.18.1 |
+| engine | distribution_version = 0.1.0; git_commit = da9eda22e78a438c7bc0dfa7fb8909b0065a132f; git_dirty = false |
+| platform | numpy = 2.5.4; oracle = (capabilities = (choi_form, complex_hermitian_psd, direct_sum_sectors, equality_rows, inequality_rows); max_sector_dim = none; name = qics-sector-choi; version = 1.1.3); python = 3.14.6; qics = 1.1.3; scipy = 1.18.1 |
 | final_iterate | — |
 | reproduce | config_pointer = [record](record.md#p-.payload.config) |
 
@@ -1054,10 +1054,10 @@ How the search stopped, as a whole: The search did not meet its gap target (1e-1
 | compilation | — | declaration | `d1c8428098b1a7a1673952f01f86ccd6ac01e924bf74d233d5a1267c45f05db9` |
 | honest_model | — | honest_distribution | `91700c4b665fb3385686fca8118fadd2b2d91c7908649a8d872ae5c190df25a7` |
 | acceptance_construction | — | acceptance_set | `640e25dbda0673544e691e90828457cc3a8f5e60e3d026cb47421030fc81f8af` |
-| docking | — | docked_declaration | `cd3c62244bae1c8b4226ec4a0f7e817223991971baae61b1d760c6bd41674119` |
-| bundle_write | — | bundle | `cd3c62244bae1c8b4226ec4a0f7e817223991971baae61b1d760c6bd41674119` |
-| bundle_read | — | bundle | `cd3c62244bae1c8b4226ec4a0f7e817223991971baae61b1d760c6bd41674119` |
-| solve | — | key_rate_result | `b4bd45879852951c1e1432425c298b0b6bd95141b9116bbbed4b9cf30bd9d681` |
+| docking | — | docked_declaration | `9ef64d11c8b4e2aa0762f88df2e6700808ce8da5430974a2f68fc95c2030804d` |
+| bundle_write | — | bundle | `9ef64d11c8b4e2aa0762f88df2e6700808ce8da5430974a2f68fc95c2030804d` |
+| bundle_read | — | bundle | `9ef64d11c8b4e2aa0762f88df2e6700808ce8da5430974a2f68fc95c2030804d` |
+| solve | — | key_rate_result | `5202bd8823a8c5b1d098258b75a3f71702b611223dd82194e56b9d689ce80ac4` |
 
 ### <a id="glossary"></a>Glossary
 

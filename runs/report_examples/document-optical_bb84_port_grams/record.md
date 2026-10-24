@@ -1,6 +1,6 @@
 # Record excerpts
 
-Every record value the key-rate report cites, once, under its JSON pointer (RFC 6901) from the record root, in the record's order. Report id 63aa61c96746f75c3e67d88ca3a81835dc0664ca685cccf91cde087d96b2da83. [Back to the report](report.md)
+Every record value the key-rate report cites, once, under its JSON pointer (RFC 6901) from the record root, in the record's order. Report id 13b34f2032fae9d46941890bdb62e9a8c187f6eae36d9e02d66ab174f6d90d66. [Back to the report](report.md)
 
 ## <a id="p-.payload.compiled"></a>/payload/compiled
 
@@ -1214,7 +1214,7 @@ gen, ok, err, mis, nc, mc
 | `assumption_ids` | A-KEYREG, A-HASH, A-SEED, A-FIXED, A-CONFORM, A-AUTH, A-LAB, A-SRC, A-RHOM, A-SEQ |
 | `assumption_ledger` | key_register, pa_hash_family, post_processing_seeds, parameters_fixed_before_run, post_processing_as_analysed, classical_channel_authenticated, laboratory_sealed, laboratory_sealed, source_replacement_license, round_homogeneity_declaration, sequential_round_model |
 | `assurance_reason` | first_order_reported |
-| `backend/numpy` | 2.5.3 |
+| `backend/numpy` | 2.5.4 |
 | `backend/oracle/capabilities` | choi_form, complex_hermitian_psd, direct_sum_sectors, equality_rows, inequality_rows |
 | `backend/oracle/max_sector_dim` | — |
 | `backend/oracle/name` | qics-sector-choi |
@@ -1284,7 +1284,7 @@ gen, ok, err, mis, nc, mc
 | `certified/premises` | \[\] |
 | `certified/reasons` | \[\] |
 | `certified/resting_blocks` | \[\] |
-| `certified/seconds` | 0.06293760007247329 |
+| `certified/seconds` | 0.035667199990712106 |
 | `certified/status` | certified |
 | `certified/working_precision_bits` | 128 |
 | `choi_input_basis/t0/alice_dim` | 2 |
@@ -1384,7 +1384,7 @@ gen, ok, err, mis, nc, mc
 | `optimized_q/mis` | 0.5040917381478704 |
 | `optimized_q/nc` | 0.0 |
 | `optimized_q/ok` | 0.25204581904614226 |
-| `optimizer_certificate` | an object of 18 fields (20,958 characters); not shown, see the record |
+| `optimizer_certificate` | an object of 18 fields (20,954 characters); not shown, see the record |
 | `oracle_diagnostics` | a list of 5 items (8,726 characters); not shown, see the record |
 | `per_iterate/0/acceptance_iterate_exact` | true |
 | `per_iterate/0/constraint_row_residual` | 0.0 |
@@ -2134,31 +2134,31 @@ gen, ok, err, mis, nc, mc
 | Field | Value |
 | --- | --- |
 | `assessment_history/0/contributes` | true |
-| `assessment_history/0/elapsed_seconds` | 0.02254860009998083 |
+| `assessment_history/0/elapsed_seconds` | 0.018691399949602783 |
 | `assessment_history/0/objective` | 34.53677677483073 |
 | `assessment_history/0/raw_bracket` | -34.34556356931705 |
 | `assessment_history/0/raw_gap` | 68.88234034402467 |
 | `assessment_history/0/withdrawal` | — |
 | `assessment_history/1/contributes` | true |
-| `assessment_history/1/elapsed_seconds` | 0.06644429999869317 |
+| `assessment_history/1/elapsed_seconds` | 0.06681150000076741 |
 | `assessment_history/1/objective` | 0.2469226516575337 |
 | `assessment_history/1/raw_bracket` | -8.666993272802676 |
 | `assessment_history/1/raw_gap` | 8.9139159241914 |
 | `assessment_history/1/withdrawal` | — |
 | `assessment_history/2/contributes` | true |
-| `assessment_history/2/elapsed_seconds` | 0.10412180004641414 |
+| `assessment_history/2/elapsed_seconds` | 0.1079890999244526 |
 | `assessment_history/2/objective` | 0.2469225788904294 |
 | `assessment_history/2/raw_bracket` | -8.541862474195666 |
 | `assessment_history/2/raw_gap` | 8.788785053010287 |
 | `assessment_history/2/withdrawal` | — |
 | `assessment_history/3/contributes` | true |
-| `assessment_history/3/elapsed_seconds` | 0.15020340005867183 |
+| `assessment_history/3/elapsed_seconds` | 0.14930990000721067 |
 | `assessment_history/3/objective` | 0.24692250613293154 |
 | `assessment_history/3/raw_bracket` | 0.24680775880413588 |
 | `assessment_history/3/raw_gap` | 0.00011474732930447096 |
 | `assessment_history/3/withdrawal` | — |
 | `assessment_history/4/contributes` | true |
-| `assessment_history/4/elapsed_seconds` | 0.19800930004566908 |
+| `assessment_history/4/elapsed_seconds` | 0.19531139999162406 |
 | `assessment_history/4/objective` | 0.24692250613293154 |
 | `assessment_history/4/raw_bracket` | 0.24680775880413588 |
 | `assessment_history/4/raw_gap` | 0.00011474732930447096 |
@@ -2227,8 +2227,8 @@ gen, ok, err, mis, nc, mc
 | `max_iterations` | 5 |
 | `method` | fw |
 | `policy` | explicit-v1 |
-| `preparation_seconds` | 0.013297100085765123 |
-| `solver_seconds` | 0.22265300003346056 |
+| `preparation_seconds` | 0.01399220002349466 |
+| `solver_seconds` | 0.2297889000037685 |
 | `termination` | budget_exhausted |
 
 *best_contributing_candidate/point/0/imag*

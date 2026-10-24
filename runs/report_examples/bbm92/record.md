@@ -1,6 +1,6 @@
 # Record excerpts
 
-Every record value the key-rate report cites, once, under its JSON pointer (RFC 6901) from the record root, in the record's order. Report id 370473c4fec594e92a753817c8aa6cc64912f94c17b24e1e0ef56a4e1f8f8cb8. [Back to the report](report.md)
+Every record value the key-rate report cites, once, under its JSON pointer (RFC 6901) from the record root, in the record's order. Report id 67617caf590f419c244d053493a49e092f3b878357348cb1e154f15258211e52. [Back to the report](report.md)
 
 ## <a id="p-.payload.channel_interface.source_model"></a>/payload/channel_interface/source_model
 
@@ -1318,7 +1318,7 @@ gen, gen:Z\|X, gen:Z\|nc, gen:Z\|mc, gen:Z\|H, gen:Z\|V, gen:Z\|D, gen:Z\|A, gen
 | `assumption_ids` | A-KEYREG, A-HASH, A-SEED, A-FIXED, A-CONFORM, A-AUTH, A-LAB, A-RHOM, A-SEQ |
 | `assumption_ledger` | key_register, pa_hash_family, post_processing_seeds, parameters_fixed_before_run, post_processing_as_analysed, classical_channel_authenticated, laboratory_sealed, laboratory_sealed, round_homogeneity_declaration, sequential_round_model |
 | `assurance_reason` | first_order_reported |
-| `backend/numpy` | 2.5.3 |
+| `backend/numpy` | 2.5.4 |
 | `backend/oracle/capabilities` | choi_form, complex_hermitian_psd, direct_sum_sectors, equality_rows, inequality_rows |
 | `backend/oracle/max_sector_dim` | — |
 | `backend/oracle/name` | qics-sector-choi |
@@ -1474,7 +1474,7 @@ gen, gen:Z\|X, gen:Z\|nc, gen:Z\|mc, gen:Z\|H, gen:Z\|V, gen:Z\|D, gen:Z\|A, gen
 | `certified/premises` | \[\] |
 | `certified/reasons` | \[\] |
 | `certified/resting_blocks` | \[\] |
-| `certified/seconds` | 0.08825959998648614 |
+| `certified/seconds` | 0.09054630005266517 |
 | `certified/status` | certified |
 | `certified/working_precision_bits` | 128 |
 | `claim_roots` | meat-core/frank-wolfe/cor:fo-reference, meat-core/frank-wolfe/cor:certified-keylength, meat-core/frank-wolfe/cor:certified-keylength-reference, meat-core/cor:keylength-bound |
@@ -2024,61 +2024,61 @@ gen, gen:Z\|X, gen:Z\|nc, gen:Z\|mc, gen:Z\|H, gen:Z\|V, gen:Z\|D, gen:Z\|A, gen
 | Field | Value |
 | --- | --- |
 | `assessment_history/0/contributes` | true |
-| `assessment_history/0/elapsed_seconds` | 0.0724534000037238 |
+| `assessment_history/0/elapsed_seconds` | 0.0720519000897184 |
 | `assessment_history/0/objective` | 60.73769238872926 |
 | `assessment_history/0/raw_bracket` | -137.80759772090374 |
 | `assessment_history/0/raw_gap` | 198.54529013051993 |
 | `assessment_history/0/withdrawal` | — |
 | `assessment_history/1/contributes` | true |
-| `assessment_history/1/elapsed_seconds` | 0.18345780007075518 |
+| `assessment_history/1/elapsed_seconds` | 0.1868438000092283 |
 | `assessment_history/1/objective` | 0.4372008305878957 |
 | `assessment_history/1/raw_bracket` | -12.688674061135488 |
 | `assessment_history/1/raw_gap` | 13.12587489182183 |
 | `assessment_history/1/withdrawal` | — |
 | `assessment_history/2/contributes` | true |
-| `assessment_history/2/elapsed_seconds` | 0.2955943000270054 |
+| `assessment_history/2/elapsed_seconds` | 0.289650300052017 |
 | `assessment_history/2/objective` | 0.41986828078759697 |
 | `assessment_history/2/raw_bracket` | -13.28119665783584 |
 | `assessment_history/2/raw_gap` | 13.701064941142446 |
 | `assessment_history/2/withdrawal` | — |
 | `assessment_history/3/contributes` | true |
-| `assessment_history/3/elapsed_seconds` | 0.4173415000550449 |
+| `assessment_history/3/elapsed_seconds` | 0.4021871000295505 |
 | `assessment_history/3/objective` | 0.41971142149732377 |
 | `assessment_history/3/raw_bracket` | -5.721413395368506 |
 | `assessment_history/3/raw_gap` | 6.14112482417328 |
 | `assessment_history/3/withdrawal` | — |
 | `assessment_history/4/contributes` | true |
-| `assessment_history/4/elapsed_seconds` | 0.5470475000329316 |
+| `assessment_history/4/elapsed_seconds` | 0.5148156000068411 |
 | `assessment_history/4/objective` | 0.40276886021541664 |
 | `assessment_history/4/raw_bracket` | -1.0681849062996387 |
 | `assessment_history/4/raw_gap` | 1.4709537666058565 |
 | `assessment_history/4/withdrawal` | — |
 | `assessment_history/5/contributes` | true |
-| `assessment_history/5/elapsed_seconds` | 0.657185300020501 |
+| `assessment_history/5/elapsed_seconds` | 0.6277678000042215 |
 | `assessment_history/5/objective` | 0.40195118000108426 |
 | `assessment_history/5/raw_bracket` | 0.385376034836366 |
 | `assessment_history/5/raw_gap` | 0.01657514544097816 |
 | `assessment_history/5/withdrawal` | — |
 | `assessment_history/6/contributes` | true |
-| `assessment_history/6/elapsed_seconds` | 0.7633243000600487 |
+| `assessment_history/6/elapsed_seconds` | 0.7332410000963137 |
 | `assessment_history/6/objective` | 0.40193822704672366 |
 | `assessment_history/6/raw_bracket` | 0.3912184576021686 |
 | `assessment_history/6/raw_gap` | 0.010719769620569067 |
 | `assessment_history/6/withdrawal` | — |
 | `assessment_history/7/contributes` | true |
-| `assessment_history/7/elapsed_seconds` | 0.8682195000583306 |
+| `assessment_history/7/elapsed_seconds` | 0.8414675000822172 |
 | `assessment_history/7/objective` | 0.4019380578387142 |
 | `assessment_history/7/raw_bracket` | 0.399353428573912 |
 | `assessment_history/7/raw_gap` | 0.0025846292918555924 |
 | `assessment_history/7/withdrawal` | — |
 | `assessment_history/8/contributes` | true |
-| `assessment_history/8/elapsed_seconds` | 0.9700285000726581 |
+| `assessment_history/8/elapsed_seconds` | 0.9437990000005811 |
 | `assessment_history/8/objective` | 0.40193774428493034 |
 | `assessment_history/8/raw_bracket` | 0.4003083007007146 |
 | `assessment_history/8/raw_gap` | 0.0016294441585397632 |
 | `assessment_history/8/withdrawal` | — |
 | `assessment_history/9/contributes` | true |
-| `assessment_history/9/elapsed_seconds` | 1.1005673999898136 |
+| `assessment_history/9/elapsed_seconds` | 1.0550290000392124 |
 | `assessment_history/9/objective` | 0.401937740327496 |
 | `assessment_history/9/raw_bracket` | 0.4018141417830176 |
 | `assessment_history/9/raw_gap` | 0.00012359884073602327 |
@@ -2093,8 +2093,8 @@ gen, gen:Z\|X, gen:Z\|nc, gen:Z\|mc, gen:Z\|H, gen:Z\|V, gen:Z\|D, gen:Z\|A, gen
 | `max_iterations` | 10 |
 | `method` | fw |
 | `policy` | explicit-v1 |
-| `preparation_seconds` | 2.0765579999424517 |
-| `solver_seconds` | 1.1551267000613734 |
+| `preparation_seconds` | 1.8519281999906525 |
+| `solver_seconds` | 1.0982514000497758 |
 | `termination` | budget_exhausted |
 
 ## <a id="p-.payload.stages.key_rate.security_gates.accumulation_branch"></a>/payload/stages/key_rate/security_gates/accumulation_branch

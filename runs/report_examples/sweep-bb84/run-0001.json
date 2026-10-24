@@ -3325,7 +3325,7 @@
           "stage": "compilation",
           "station": null,
           "status": "executed",
-          "wall_time_s": 0.004011200042441487
+          "wall_time_s": 0.003979299915954471
         },
         {
           "children": [],
@@ -3358,7 +3358,7 @@
           "stage": "honest_model",
           "station": null,
           "status": "executed",
-          "wall_time_s": 0.003868600004352629
+          "wall_time_s": 0.004931699950248003
         },
         {
           "children": [],
@@ -3397,7 +3397,7 @@
           "stage": "acceptance_construction",
           "station": null,
           "status": "executed",
-          "wall_time_s": 1.629160900018178
+          "wall_time_s": 1.2198868000414222
         },
         {
           "children": [],
@@ -3421,8 +3421,8 @@
           },
           "emits": [
             {
-              "digest": "f4b814b490000b032e2c2d5d259a6216bbc8edb29057329c22ac3d9ae859587b",
-              "id": "docked_declaration:f4b814b49000",
+              "digest": "1859039e9e2e12ec8adb1ad3a0f6849ad4f01dd84616dc61527d2a5805606805",
+              "id": "docked_declaration:1859039e9e2e",
               "kind": "docked_declaration",
               "record_key": null
             }
@@ -3433,7 +3433,7 @@
           "stage": "docking",
           "station": null,
           "status": "executed",
-          "wall_time_s": 0.012121699983254075
+          "wall_time_s": 0.0014084000140428543
         },
         {
           "children": [],
@@ -3444,7 +3444,7 @@
             ],
             "artefacts": [
               "declaration:0bba6be1b6ce",
-              "docked_declaration:f4b814b49000"
+              "docked_declaration:1859039e9e2e"
             ],
             "config": []
           },
@@ -3454,8 +3454,8 @@
           },
           "emits": [
             {
-              "digest": "f4b814b490000b032e2c2d5d259a6216bbc8edb29057329c22ac3d9ae859587b",
-              "id": "bundle:f4b814b49000",
+              "digest": "1859039e9e2e12ec8adb1ad3a0f6849ad4f01dd84616dc61527d2a5805606805",
+              "id": "bundle:1859039e9e2e",
               "kind": "bundle",
               "record_key": "payload.stages.bundle"
             }
@@ -3466,7 +3466,7 @@
           "stage": "bundle_write",
           "station": null,
           "status": "executed",
-          "wall_time_s": 0.013524000067263842
+          "wall_time_s": 0.005121599999256432
         },
         {
           "children": [],
@@ -3475,7 +3475,7 @@
               "bundle"
             ],
             "artefacts": [
-              "bundle:f4b814b49000"
+              "bundle:1859039e9e2e"
             ],
             "config": []
           },
@@ -3485,8 +3485,8 @@
           },
           "emits": [
             {
-              "digest": "f4b814b490000b032e2c2d5d259a6216bbc8edb29057329c22ac3d9ae859587b",
-              "id": "bundle:f4b814b49000",
+              "digest": "1859039e9e2e12ec8adb1ad3a0f6849ad4f01dd84616dc61527d2a5805606805",
+              "id": "bundle:1859039e9e2e",
               "kind": "bundle",
               "record_key": "payload.stages.bundle"
             }
@@ -3497,7 +3497,7 @@
           "stage": "bundle_read",
           "station": null,
           "status": "executed",
-          "wall_time_s": 0.000700899981893599
+          "wall_time_s": 0.0003572999266907573
         },
         {
           "children": [
@@ -3818,7 +3818,7 @@
               "bundle"
             ],
             "artefacts": [
-              "bundle:f4b814b49000"
+              "bundle:1859039e9e2e"
             ],
             "config": [
               "alpha",
@@ -3862,8 +3862,8 @@
           },
           "emits": [
             {
-              "digest": "74b80a9f08bf0184f61f804f1fcad55ef75af03ca94dd6306adc006da0773284",
-              "id": "key_rate_result:74b80a9f08bf",
+              "digest": "fd6c71b90f4ded7c4aba902083c71cf4bec9913548796c7be670813c3ad4466e",
+              "id": "key_rate_result:fd6c71b90f4d",
               "kind": "key_rate_result",
               "record_key": "payload.stages.key_rate"
             }
@@ -3874,7 +3874,7 @@
           "stage": "solve",
           "station": null,
           "status": "executed",
-          "wall_time_s": 0.2841123000252992
+          "wall_time_s": 0.10925330000463873
         }
       ]
     },
@@ -5028,8 +5028,8 @@
     },
     "provenance": {
       "engine": {
-        "distribution_version": "0.0.1.dev0",
-        "git_commit": "3203843199ea99a9d152155416440f0d3de5dbb2",
+        "distribution_version": "0.1.0",
+        "git_commit": "da9eda22e78a438c7bc0dfa7fb8909b0065a132f",
         "git_dirty": false
       }
     },
@@ -5154,7 +5154,7 @@
         ],
         "assurance_reason": "first_order_reported",
         "backend": {
-          "numpy": "2.5.3",
+          "numpy": "2.5.4",
           "oracle": {
             "capabilities": [
               "choi_form",
@@ -5244,7 +5244,7 @@
           "premises": [],
           "reasons": [],
           "resting_blocks": [],
-          "seconds": 0.03941359999589622,
+          "seconds": 0.009833000018261373,
           "status": "certified",
           "working_precision_bits": 128
         },
@@ -5438,7 +5438,7 @@
           "accumulation_rule": "maximum over the CONTRIBUTING iterates of the first-order linearization O^J_alpha(x_t) + <g_t, v_t - q_t> + b^F_t - <G_t, J_t> of Eq. eq:hlb with the lower bounds of Theorem thm:firstorder (iv): v_t the exact acceptance-side minimiser and b^F_t the feasible-side bound of Lemma lem:feasible-side-dual, verified exactly from the oracle's dual (req:verified-feasible-side) and rounded toward -inf, over every iterate the loop formed at which (H-POS), (H-SUPP) and (H-NOPERT) held and the point was established to lie in AcceptSet x Feas^J(epsilon). Under those hypotheses each bracket is a lower bound on h_low IN EXACT REAL ARITHMETIC (Theorem thm:firstorder (iiib), (iv)), and the maximum of lower bounds is a lower bound. An iterate failing any of them CONTRIBUTES NO BRACKET; the oracle's return and status withdraw none",
           "assurance_reason": "first_order_reported",
           "backend": {
-            "numpy": "2.5.3",
+            "numpy": "2.5.4",
             "oracle": {
               "capabilities": [
                 "choi_form",
@@ -5793,7 +5793,7 @@
             "assessment_history": [
               {
                 "contributes": true,
-                "elapsed_seconds": 0.020433500059880316,
+                "elapsed_seconds": 0.008700500009581447,
                 "objective": 0.4573871520648,
                 "raw_bracket": -0.4199157022997793,
                 "raw_gap": 0.8773028543404577,
@@ -5801,7 +5801,7 @@
               },
               {
                 "contributes": true,
-                "elapsed_seconds": 0.058444200083613396,
+                "elapsed_seconds": 0.025484399986453354,
                 "objective": 0.1054721527864198,
                 "raw_bracket": 0.10547210529373802,
                 "raw_gap": 4.7465670949264904e-08,
@@ -5809,7 +5809,7 @@
               },
               {
                 "contributes": true,
-                "elapsed_seconds": 0.09213450003881007,
+                "elapsed_seconds": 0.042311200057156384,
                 "objective": 0.1054721527864198,
                 "raw_bracket": 0.10547210529373802,
                 "raw_gap": 4.7465670949264904e-08,
@@ -5817,7 +5817,7 @@
               },
               {
                 "contributes": true,
-                "elapsed_seconds": 0.14519890001975,
+                "elapsed_seconds": 0.05870549997780472,
                 "objective": 0.1054721527864198,
                 "raw_bracket": 0.10547210529373802,
                 "raw_gap": 4.7465670949264904e-08,
@@ -5825,7 +5825,7 @@
               },
               {
                 "contributes": true,
-                "elapsed_seconds": 0.1903549999697134,
+                "elapsed_seconds": 0.07475500006694347,
                 "objective": 0.1054721527864198,
                 "raw_bracket": 0.10547210529373802,
                 "raw_gap": 4.7465670949264904e-08,
@@ -5942,8 +5942,8 @@
             "max_iterations": 5,
             "method": "fw",
             "policy": "explicit-v1",
-            "preparation_seconds": 0.005045199999585748,
-            "solver_seconds": 0.2173067000694573,
+            "preparation_seconds": 0.004717999836429954,
+            "solver_seconds": 0.08656740002334118,
             "termination": "budget_exhausted"
           },
           "security_gates": {
@@ -6176,13 +6176,13 @@
               "oracle": 5
             },
             "seconds": {
-              "accepted_point_objective": 0.0017252000980079174,
+              "accepted_point_objective": 0.0012337998487055302,
               "accepted_point_rejected": 0.0,
-              "feasible_side": 0.00555589993018657,
-              "gradient": 0.004193600034341216,
-              "line_search": 0.13082669989671558,
+              "feasible_side": 0.002304899739101529,
+              "gradient": 0.0019039999460801482,
+              "line_search": 0.05463840009178966,
               "objective_evaluations": 0.0,
-              "oracle": 0.07116880000103265
+              "oracle": 0.024330199928954244
             }
           },
           "tolerances": {
@@ -6401,7 +6401,7 @@
           "assessment_history": [
             {
               "contributes": true,
-              "elapsed_seconds": 0.020433500059880316,
+              "elapsed_seconds": 0.008700500009581447,
               "objective": 0.4573871520648,
               "raw_bracket": -0.4199157022997793,
               "raw_gap": 0.8773028543404577,
@@ -6409,7 +6409,7 @@
             },
             {
               "contributes": true,
-              "elapsed_seconds": 0.058444200083613396,
+              "elapsed_seconds": 0.025484399986453354,
               "objective": 0.1054721527864198,
               "raw_bracket": 0.10547210529373802,
               "raw_gap": 4.7465670949264904e-08,
@@ -6417,7 +6417,7 @@
             },
             {
               "contributes": true,
-              "elapsed_seconds": 0.09213450003881007,
+              "elapsed_seconds": 0.042311200057156384,
               "objective": 0.1054721527864198,
               "raw_bracket": 0.10547210529373802,
               "raw_gap": 4.7465670949264904e-08,
@@ -6425,7 +6425,7 @@
             },
             {
               "contributes": true,
-              "elapsed_seconds": 0.14519890001975,
+              "elapsed_seconds": 0.05870549997780472,
               "objective": 0.1054721527864198,
               "raw_bracket": 0.10547210529373802,
               "raw_gap": 4.7465670949264904e-08,
@@ -6433,7 +6433,7 @@
             },
             {
               "contributes": true,
-              "elapsed_seconds": 0.1903549999697134,
+              "elapsed_seconds": 0.07475500006694347,
               "objective": 0.1054721527864198,
               "raw_bracket": 0.10547210529373802,
               "raw_gap": 4.7465670949264904e-08,
@@ -6550,15 +6550,15 @@
           "max_iterations": 5,
           "method": "fw",
           "policy": "explicit-v1",
-          "preparation_seconds": 0.005045199999585748,
-          "solver_seconds": 0.2173067000694573,
+          "preparation_seconds": 0.004717999836429954,
+          "solver_seconds": 0.08656740002334118,
           "termination": "budget_exhausted"
         },
         "search_report": {
           "assessment_history": [
             {
               "contributes": true,
-              "elapsed_seconds": 0.020433500059880316,
+              "elapsed_seconds": 0.008700500009581447,
               "objective": 0.4573871520648,
               "raw_bracket": -0.4199157022997793,
               "raw_gap": 0.8773028543404577,
@@ -6566,7 +6566,7 @@
             },
             {
               "contributes": true,
-              "elapsed_seconds": 0.058444200083613396,
+              "elapsed_seconds": 0.025484399986453354,
               "objective": 0.1054721527864198,
               "raw_bracket": 0.10547210529373802,
               "raw_gap": 4.7465670949264904e-08,
@@ -6574,7 +6574,7 @@
             },
             {
               "contributes": true,
-              "elapsed_seconds": 0.09213450003881007,
+              "elapsed_seconds": 0.042311200057156384,
               "objective": 0.1054721527864198,
               "raw_bracket": 0.10547210529373802,
               "raw_gap": 4.7465670949264904e-08,
@@ -6582,7 +6582,7 @@
             },
             {
               "contributes": true,
-              "elapsed_seconds": 0.14519890001975,
+              "elapsed_seconds": 0.05870549997780472,
               "objective": 0.1054721527864198,
               "raw_bracket": 0.10547210529373802,
               "raw_gap": 4.7465670949264904e-08,
@@ -6590,7 +6590,7 @@
             },
             {
               "contributes": true,
-              "elapsed_seconds": 0.1903549999697134,
+              "elapsed_seconds": 0.07475500006694347,
               "objective": 0.1054721527864198,
               "raw_bracket": 0.10547210529373802,
               "raw_gap": 4.7465670949264904e-08,
@@ -6707,8 +6707,8 @@
           "max_iterations": 5,
           "method": "fw",
           "policy": "explicit-v1",
-          "preparation_seconds": 0.005045199999585748,
-          "solver_seconds": 0.2173067000694573,
+          "preparation_seconds": 0.004717999836429954,
+          "solver_seconds": 0.08656740002334118,
           "termination": "budget_exhausted"
         },
         "sector_report": {
@@ -6983,13 +6983,13 @@
             "oracle": 5
           },
           "seconds": {
-            "accepted_point_objective": 0.0017252000980079174,
+            "accepted_point_objective": 0.0012337998487055302,
             "accepted_point_rejected": 0.0,
-            "feasible_side": 0.00555589993018657,
-            "gradient": 0.004193600034341216,
-            "line_search": 0.13082669989671558,
+            "feasible_side": 0.002304899739101529,
+            "gradient": 0.0019039999460801482,
+            "line_search": 0.05463840009178966,
             "objective_evaluations": 0.0,
-            "oracle": 0.07116880000103265
+            "oracle": 0.024330199928954244
           }
         },
         "tolerances": {
