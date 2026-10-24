@@ -1,0 +1,128 @@
+% ---
+% id: meat-core/rem:homog
+% kind: rem
+% title: "Canonicity of the licensed class"
+% summary: >-
+%   The licence transports exactly τ_A-multiples in trusted mode and scalars
+%   in untrusted mode, where the operator form c_k·1_A can empty the feasible
+%   set. On directions the licence can probe, sound trusted-mode right-hand
+%   sides are dominated by homogeneous ones; data stay out of the declaration.
+% prominence: standard
+% status: accepted
+% uses: [def:homog, def:roundmodel, lem:range, thm:constrained-accumulation, def:admissible-declaration, def:admissible-acceptance-set]
+% mentions: [ex:fss, protocol-compiler/rem:party-local-soundness]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:homog}
+Three observations make Definition~\ref{def:homog} the natural
+licensed class rather than an arbitrary restriction.
+
+\emph{(a) The licence transports exactly the licensed right-hand sides, and
+nothing wider.} In \tref{trusted-source mode} the admissibility format
+\eqref{eq:attset} compares $\Aev^{\dagger}(\hat O_k\otimes\idon{})$ against
+multiples of the identity, and Lemma~\ref{lem:range}\,(i) turns that into the
+state-level right-hand side $c_k\,\tau_A$; the trusted marginal is the only
+operator on $A$ the per-round model supplies.
+
+In untrusted-source mode there is no such operator, and the difference
+is structural rather than a matter of taste: $A$ is an \emph{output}
+of $\Aev_j$ (Definition~\ref{def:roundmodel}), so the input side of the
+adjoint identity carries no $A$ factor at all and the operator-valued
+identity \eqref{eq:transport} has no analogue. Only its trace
+survives, giving \eqref{eq:transport-un} and the scalar class of
+Definition~\ref{def:homog}\,(b). \emph{The operator form
+$\Theta_k=c_k\idon{A}$ is therefore not licensed}, and it is not
+merely unlicensed but wrong: take $d_A=2$, $\hat O=\idon{\Qsys}$,
+$\bowtie\,=\,\succeq$ and $c=1$. Every CPTP $\Aev$ is admissible, since
+$\Aev^{\dagger}(\idon{A}\otimes\idon{\Qsys}\otimes\idon{E''})
+=\idon{E'}\succeq1\cdot\idon{E'}$ by trace preservation, so
+$\AttSet_{\CList}$ is the whole of $\mathrm{CPTP}$ and the declaration
+restricts nothing. The transported scalar constraint is
+$\tr[(\idon{A}\otimes\idon{\Qsys})\,\omega]=\tr\omega=1\ge c=1$, which
+every feasible $\omega$ satisfies --- correct and vacuous, as it should
+be. The operator form would instead demand
+$\tr_{\Qsys}[(\idon{A}\otimes\idon{\Qsys})\,\omega]
+=\omega_A\succeq c\,\idon{A}=\idon{A}$, which \emph{no} state
+satisfies at $d_A\ge2$ ($\tr\omega_A=1<2=\tr\idon{A}$). It would empty
+$\Feas$, violating Definition~\ref{def:admissible-declaration}\,(vii), and would do so
+for a declaration whose \tref{licensed attack set} is everything. Writing
+$\Theta_k=c_k\idon{A}$ in untrusted-source mode is thus a defect, not
+a conservative simplification.
+
+\emph{The sentence ``only its trace survives'' is scoped to the per-round
+model's own operator on $A$, and the general format shows why the scope
+matters.} What has no analogue in untrusted-source mode is the
+\emph{operator-valued identity on $A$ against $\tau_A$}, because there is no
+declared $\tau_A$ to compare against; what does survive, beside the trace, is
+an operator-valued statement on $A$ \emph{tensored with the other
+\tref[measured factor]{measured factors}}, and it survives not by weakening
+the obstruction but by a strictly stronger channel-level condition on the
+declaring side: the party-local admissibility format of
+Definition~\ref{def:roundmodel}, which asks
+$\Aev_j^{\dagger}(X\otimes\hat D\otimes\idon{})\bowtie_k0$ for \emph{every}
+positive semidefinite $X$ on the retained and unscoped systems, and which
+Lemma~\ref{lem:range}\,(i) transports to
+$\tr_{\Qsys_f}[(\idon{}\otimes\hat D)\,\varsigma]\bowtie_k0$ as an operator,
+in either mode. \emph{So ``only its trace survives'' is true of what the
+\emph{scalar} admissibility format \eqref{eq:attset} supplies and is not true
+of the licensed class as a whole once the party-local format is declared};
+the difference is that the scalar format tests one operator inequality on
+Eve's register and the party-local format tests a family of them, one per
+$X$, which is more to license and not less. \emph{And the pathology of the
+operator-form counterexample does not recur there}: the untrusted-mode
+counterexample $\hat O=\idon{\Qsys}$, $\bowtie\,=\,\succeq$, $c=1$ read
+party-locally is not admitted with an empty \tref{feasible set}, because the
+same channel-level condition it would need is
+$\Aev_j^{\dagger}(X\otimes0\otimes\idon{})\succeq0$ for every $X$ with
+$\hat D=0$, which is satisfied, while the state-level reading is
+$\tr_{\Qsys}[(\idon{}\otimes0)\,\varsigma]\succeq0$, which every state
+satisfies --- correct and vacuous, as the scalar reading is. \emph{The
+canonicity argument of (a) is not extended to the third form}: the argument
+that the licensed class is not an arbitrary choice is made here for the two
+untagged forms, and the third form's soundness rests on the certificate on
+the scoped factor's own channel
+(\xref{protocol-compiler/rem:party-local-soundness}) and on nothing this
+remark proves.
+
+\emph{(b) In trusted-source mode, sound right-hand sides are dominated
+by homogeneous ones on the certifiable directions.} Restrict attention
+to the discard-and-prepare channels the licensed set \emph{actually
+contains}: for every
+$\Aev=\varrho\,\tr_{E'}[\,\cdot\,]\in\AttSet_{\CList}(E',\Qsys E'')$
+(a state $\varrho$ on $\Qsys E''$ prepared regardless of the input),
+the reachable marginals include $\tau_A\otimes\varrho_{\Qsys}$, whose
+constraint value $\tr[\hat O_k\,\varrho_{\Qsys}]\,\tau_A$ is a scalar
+multiple of $\tau_A$. A sound right-hand side $\Theta_k$ for
+$\bowtie_k\,=\,\succeq$ must therefore satisfy
+$\Theta_k\preceq\big(\inf\{\tr[\hat O_k\,\varrho_{\Qsys}]:
+\varrho\,\tr_{E'}[\,\cdot\,]\in\AttSet_{\CList}\}\big)\,\tau_A$
+whenever that set is nonempty: on the directions the licensed model
+can probe, $\Theta_k$ is dominated by a homogeneous right-hand side.
+\emph{Which} discard-and-prepare channels are licensed is decided by the
+reduction chain behind the declaration, not by this module: Eve may
+always discard her memory and inject a fresh \emph{physical} state, but what
+reaches $\Qsys$ after the reduction is its squashed image, which in
+general ranges over a proper subset of the states on $\Qsys$. In
+Example~\ref{ex:fss} the licensed set deliberately excludes some
+preparations --- a fresh flag state $\dyad{o'}$ with $o'\ne o$
+violates \eqref{eq:attset} --- and exactly that exclusion is what
+makes the attack set restrictive and
+Theorem~\ref{thm:constrained-accumulation} non-vacuous. The canonical status
+of the licensed class therefore rests on (a) --- the licence transports only
+$\tau_A$-multiples in trusted-source mode, and only scalars in
+untrusted-source mode, in the first place --- with (b) a domination statement
+over the licensed subset in trusted-source mode, not a universal necessity
+claim.
+
+\emph{(c) Data stays out of the declaration.} $\CList$ is
+part of $\Decl$, fixed before any run; an observed number on a
+right-hand side would make the declaration data-dependent. The only
+sanctioned carrier of observed data is the acceptance set $\acSet$
+(Definition~\ref{def:admissible-acceptance-set}); a constraint whose $\Theta_k$ encodes
+statistics of the current run is unsound here regardless of its
+provenance.
+\end{remark}

@@ -1,0 +1,122 @@
+% ---
+% id: transmitter/lem:matched-pinching
+% kind: lem
+% title: "Matched pinching of a block certificate"
+% summary: >-
+%   A block certificate is unchanged by pinching Alice's sectors or the virtual
+%   signal's sectors paired with them, so every state an admitted attack
+%   reaches from it is block diagonal with Alice's declared marginal. An
+%   operator merely constrained to have that marginal need not be block
+%   diagonal.
+% prominence: main
+% status: accepted
+% uses: [def:srcert, def:source-spec]
+% mentions: [thm:certificate-sufficiency]
+% assumes: [A-SRC]
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "A-SRC enters through (SR3) only, as the hypothesis that the attack does not act on A, exactly as in thm:certificate-sufficiency (iii). A consumer's licence to restrict its own feasible set to block-diagonal operators is a theorem of that consumer's module and is not stated here."
+% ---
+
+A block certificate declares its sectors on Alice's side and on the virtual
+signal at once. The lemma shows that this matching survives every admitted
+attack, for the states the attack actually reaches; it is about those states
+only, and part (iii) shows why it does not restrict any optimisation's
+feasible set.
+
+\begin{lemma}\label{lem:matched-pinching}
+Let a source specification carry a certificate in block form
+(Definition~\ref{def:srcert}), with sector projectors $\Pi^{A}_t$ on $A$ and
+$\Pi^{\mathrm v}_t$ on $\Avirt$, $t\in\mathbb{T}$, which sum to the identity
+on $A$ and on $\Avirt$ respectively (Definitions~\ref{def:source-spec}
+and~\ref{def:srcert}), and write
+\begin{equation*}
+  \mathrm{Pin}_{A}(\xi)\coloneqq\sum_{t\in\mathbb{T}}\Pi^{A}_t\,\xi\,\Pi^{A}_t ,
+  \qquad
+  \mathrm{Pin}_{\mathrm v}(\zeta)\coloneqq
+  \sum_{t\in\mathbb{T}}\Pi^{\mathrm v}_t\,\zeta\,\Pi^{\mathrm v}_t
+\end{equation*}
+for the two pinching channels.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(matched structure)} for every $t\in\mathbb{T}$,
+\begin{equation}\label{eq:matched}
+  (\Pi^{A}_t\otimes\idon{\Avirt})\,\Psi
+  =\Psi\,(\Pi^{A}_t\otimes\idon{\Avirt})
+  =(\idon{A}\otimes\Pi^{\mathrm v}_t)\,\Psi
+  =\Psi\,(\idon{A}\otimes\Pi^{\mathrm v}_t)
+  =\Psi_t ,
+\end{equation}
+the block $\Psi_t$ read as an operator on $\Hs{A\Avirt}$ extended by zero.
+Hence
+$(\mathrm{Pin}_{A}\otimes\idmap_{\Avirt})(\Psi)=\Psi
+=(\idmap_{A}\otimes\mathrm{Pin}_{\mathrm v})(\Psi)$.
+\item \emph{(reached states)} assume (SR3), and let $\mathcal{E}$ be any
+channel from $\Avirt E$ to $E'$ and $\sigma$ any state on $E$, as in
+Theorem~\ref{thm:certificate-sufficiency}\,(iii). The state
+$\omega\coloneqq(\idmap_{A}\otimes\mathcal{E})(\Psi\otimes\sigma)$ on $AE'$
+satisfies
+\begin{equation}\label{eq:reached}
+  \tr_{E'}\omega=\tau_A ,\qquad
+  (\mathrm{Pin}_{A}\otimes\idmap_{E'})(\omega)=\omega ,\qquad
+  \omega=(\idmap_{A}\otimes\mathcal{E}')(\Psi\otimes\sigma)
+  \ \text{ with }\
+  \mathcal{E}'\coloneqq\mathcal{E}\circ(\mathrm{Pin}_{\mathrm v}\otimes\idmap_{E}) .
+\end{equation}
+So $\omega=\bigoplus_t\omega_t$ with $\omega_t\in\Pos{A_tE'}$ and
+$\tr_{E'}\omega_t=\tau^{(t)}_A$; and the attack $\mathcal{E}$ and the attack
+$\mathcal{E}'$ that first measures the sector of the virtual signal reach
+the same state.
+\item \emph{(operators that are not reached)} the block diagonality of (ii)
+does not extend to operators merely constrained to have the marginal: in
+general a positive operator on $AE'$ with marginal
+$\tau_A=\bigoplus_t\tau^{(t)}_A$ need not be block diagonal along
+$\mathbb{T}$, and this happens already for two one-dimensional sectors,
+$\tau_A=\tfrac12\idon{A}$ and $E'$ a qubit.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) By Definition~\ref{def:srcert}, $\Psi=\bigoplus_t\Psi_t$ on the \tref{matched
+subspace} $\bigoplus_t\Hs{A_t}\otimes\Hs{S_t}$ and zero on its orthogonal
+complement. The projector $\Pi^{A}_t\otimes\idon{\Avirt}$ has range
+$\bigoplus_{t'}\Hs{A_t}\otimes\Hs{S_{t'}}$, whose intersection with the
+matched subspace is $\Hs{A_t}\otimes\Hs{S_t}$, and it commutes with the
+projector onto the matched subspace, both being diagonal in the product of
+the declared bases. So $(\Pi^{A}_t\otimes\idon{})\Psi$ is the part of
+$\Psi$ with range in $\Hs{A_t}\otimes\Hs{S_t}$, which is $\Psi_t$; taking
+adjoints, $\Psi$ and $\Psi_t$ being Hermitian, gives the second equality,
+and the same argument with $\idon{A}\otimes\Pi^{\mathrm v}_t$, whose range
+meets the matched subspace in the same summand, gives the third and fourth.
+Summing $(\Pi^{A}_t\otimes\idon{})\Psi(\Pi^{A}_t\otimes\idon{})
+=\Psi_t(\Pi^{A}_t\otimes\idon{})=\Psi_t$ over $t$ gives
+$(\mathrm{Pin}_{A}\otimes\idmap)(\Psi)=\Psi$, and likewise on the other
+factor.
+
+(ii) $\mathcal{E}$ is trace preserving and does not act on $A$, the latter
+being (SR3); so $\tr_{E'}\omega=\tr_{\Avirt E}[\Psi\otimes\sigma]
+=\tr_{\Avirt}\Psi=\tau_A$ by (SR1). The maps $\mathrm{Pin}_{A}$ and
+$\mathcal{E}$ act on complementary tensor factors, so they commute, and by
+(i)
+\begin{equation*}
+  (\mathrm{Pin}_{A}\otimes\idmap_{E'})(\omega)
+  =(\idmap_{A}\otimes\mathcal{E})
+   \big((\mathrm{Pin}_{A}\otimes\idmap_{\Avirt})(\Psi)\otimes\sigma\big)
+  =(\idmap_{A}\otimes\mathcal{E})(\Psi\otimes\sigma)=\omega .
+\end{equation*}
+Replacing $(\mathrm{Pin}_{A}\otimes\idmap)(\Psi)$ by
+$(\idmap\otimes\mathrm{Pin}_{\mathrm v})(\Psi)$, equal to it by (i), in the
+middle expression gives
+$\omega=(\idmap_{A}\otimes\mathcal{E}')(\Psi\otimes\sigma)$. An operator
+fixed by $\mathrm{Pin}_{A}\otimes\idmap_{E'}$ is the direct sum of its
+compressions $\omega_t=(\Pi^{A}_t\otimes\idon{})\omega(\Pi^{A}_t\otimes\idon{})$,
+each positive semidefinite as a compression of one, and
+$\tr_{E'}\omega_t=\Pi^{A}_t\tau_A\Pi^{A}_t=\tau^{(t)}_A$.
+
+(iii) With two one-dimensional sectors spanned by $\ket{0}$ and $\ket{1}$,
+$\tau_A=\tfrac12\idon{A}$ and $E'$ a qubit, the projector $\omega$ onto
+$(\ket{0}\ket{0}+\ket{1}\ket{1})/\sqrt2$ is positive semidefinite with
+marginal $\tau_A$ on $A$, and its compression
+$(\Pi^{A}_0\otimes\idon{})\,\omega\,(\Pi^{A}_1\otimes\idon{})
+=\tfrac12\ketbra{0}{1}\otimes\ketbra{0}{1}$ is not zero.
+\end{proof}

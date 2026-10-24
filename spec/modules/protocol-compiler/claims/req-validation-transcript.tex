@@ -1,0 +1,29 @@
+% ---
+% id: protocol-compiler/req:validation-transcript
+% kind: req
+% title: "Transcript of a check that stops early"
+% summary: >-
+%   A check may stop at a failed prerequisite or predicate. Its transcript then
+%   reports only the decisions it took, in their execution order, and no outcome
+%   is inferred for a predicate it did not execute.
+% prominence: standard
+% status: implemented
+% uses: [thm:validator-soundness]
+% mentions: [def:validator]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.validation:CheckOutcome
+% lean:
+% ---
+
+The counts of Theorem~\ref{thm:validator-soundness}\,(iv) are the complete applicable
+inventory of the decisions the checks take on well-typed data, not the number
+an execution that stops early performs.
+
+\begin{requirement}\label{req:validation-transcript}
+A check of Definition~\ref{def:validator} may stop after a failed
+prerequisite or predicate. Its transcript reports only the decisions the check
+actually took, in their execution order, and the engine infers no outcome for
+a predicate it did not execute.
+\end{requirement}

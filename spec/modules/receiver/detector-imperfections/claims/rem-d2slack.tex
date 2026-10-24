@@ -1,0 +1,106 @@
+% ---
+% id: receiver/detector-imperfections/rem:d2slack
+% kind: rem
+% title: "Cost of admitting a dark-count channel with slack"
+% summary: >-
+%   Admitting a declared channel at ε_2 and ε_4 relaxes a hypothesis, not a
+%   precision; r_min above one is reachable, and ignoring it or δ_dc overstates
+%   the multiclick bound in the unsafe direction. The composed family is a
+%   POVM only up to ε_4, a defect left visible and not repaired.
+% prominence: standard
+% status: accepted
+% uses: [receiver/def:tolmap, receiver/rem:ranktwosided, receiver/thm:click-povm, receiver/def:bounddata, receiver/rem:res5why, prop:dark-slack-bound]
+% mentions: [receiver/def:evaluation-model, thm:dark-counts, receiver/thm:exact-and-evaluated, receiver/rem:cdirection, req:dark-channel-record, foundations/req:consumer-decides-exactly]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:d2slack}
+\emph{(a) What is relaxed.} Definition~\ref{def:tolmap}\,(iii) admits a
+declared $R$ that violates (D2) by up to $\varepsilon_2$ in every forbidden
+position and (D1) by up to $\varepsilon_4$ in every column.
+Theorem~\ref{thm:dark-counts} is stated and proved for an $R$ satisfying (D1) and (D2)
+\emph{exactly}, and admitting one that satisfies them only up to
+$(\varepsilon_2,\varepsilon_4)$ does not weaken the theorem; but the module then
+emits an object the theorem's hypothesis does not cover, and what that costs
+has to be stated at the inequality a downstream module actually uses, not only
+at the identity it is proved through. Proposition~\ref{prop:dark-slack-bound}
+states it. This is not a matter of the evaluation model of
+Definition~\ref{def:evaluation-model}: the datum is
+exactly as declared, and what is relaxed is a hypothesis, not the precision of
+an evaluation, so Theorem~\ref{thm:exact-and-evaluated}\,(ii) does not reach it.
+
+\emph{(b) The two values of $\delta_{\dc}$.} On the
+\tref{generated dark-count route} (D1) and (D2) are \emph{theorems}
+(Theorem~\ref{thm:dark-counts}\,(i)) and not tests, so there is no slack to carry and
+the correction in \eqref{eq:darkdelta} is exactly $0$; on the
+\tref{declared dark-count route} they are tested, and
+Proposition~\ref{prop:dark-slack-bound} is what the test admits. In
+\eqref{eq:d2slack}, against the exact value $1$ of
+Theorem~\ref{thm:dark-counts}\,(iii), \emph{both} slacks appear: reading
+\eqref{eq:d2slack} off an exact column sum would drop the $\varepsilon_4$ and
+overstate the bound for every channel this contract admits.
+
+\emph{(c) The upper side of the same tests, and where it bites.}
+\eqref{eq:rmin} defines $r_{\min}$ as a minimum of multiclick column masses, and
+for an $R$ satisfying (D1) and (D2) exactly it satisfies $r_{\min}\le1$ for
+free: entries are non-negative and columns sum to $1$, so
+$R_{\MCK|S'}\le\sum_SR_{S|S'}=1$. The widened (D1) does not supply that, and
+$r_{\min}>1$ is reachable within \eqref{eq:rminupper}: a declared $R$ placing
+mass $1+\varepsilon_4$ on the row $S=[K]$ in every column $S'\notin\MCK$ and
+$1-\varepsilon_4$ on that same row in every column $S'\in\MCK$ occupies no
+(D2)-forbidden position at all, is admitted at
+$(\varepsilon_2,\varepsilon_4)=(0,\varepsilon_4)$, and has
+$r_{\min}=1+\varepsilon_4$. Using the lower side of (D1) in \eqref{eq:d2slack}
+and passing over the upper side here would be exactly the one-sided reading
+that Remarks~\ref{rem:ranktwosided} and~\ref{rem:cdirection} guard against,
+and it would not be harmless: the coefficient $1-r_{\min}$ that
+Theorem~\ref{thm:dark-counts}\,(iv)'s substitution step requires to be non-negative
+would not be, and the composed bound would fail, in the unsafe direction, by
+$(r_{\min}-1)(1-\pmc)$.
+
+\emph{(d) $\bar r$ is not a repair, and it costs a bounded amount.} Nothing is
+clamped (Requirement~\ref{req:dark-channel-record}): $\bar r$ is a separate
+named scalar appearing as a \emph{coefficient in a stated inequality}.
+Lowering that coefficient \emph{weakens} the bound, and needs nothing beyond
+$\id-M_{\MCK}\succeq0$; no claim is made that $\bar r$ approximates $r_{\min}$
+or any exact quantity. That is the distinction
+Definition~\ref{def:tolmap}\,(iv) draws in the other direction, where clamping
+a computed $c$ before it enters \eqref{eq:beta} would assert a relation to an
+exact value that nothing supports. The cost \eqref{eq:rbarcost} is first order
+in $\varepsilon_4$ and no larger.
+
+\emph{(e) Relation to the exact composed inequality.} On the generated route
+$\delta_{\dc}=0$ and $r_{\min}\le1$, so $\bar r=r_{\min}$ and
+\eqref{eq:darkpmcslack} \emph{is} \eqref{eq:darkpmc}. On the declared route a
+downstream module that used \eqref{eq:darkpmc} instead would overstate by
+\begin{equation}\label{eq:darkoverstate}
+  \big(r_{\min}-\bar r\big)\big(1-\pmc\big)+\delta_{\dc} ,
+\end{equation}
+first order in the \tref{receiver tolerances} and in the \emph{unsafe} direction: a
+(D2) violation is precisely weight moved out of $\MCK$, and $r_{\min}>1$ is
+multiclick mass the column arithmetic does not have. And
+\eqref{eq:darkpmcslack} improves on $\pmc$, which is the point of
+Theorem~\ref{thm:dark-counts}\,(iv), only where $\bar r\,(1-\pmc)\ge\delta_{\dc}$;
+below that threshold the declared channel's admitted slack costs more than its
+dark counts gain, and the two emitted numbers say so.
+
+\emph{(f) Theorem~\ref{thm:dark-counts}\,(ii) is outside the widened hypotheses too,
+and is not repaired either.} For an $R$ admitted at
+$(\varepsilon_2,\varepsilon_4)$ the composed family $\{\widetilde M_S\}$ need
+not be a POVM. Writing $\sigma_{S'}\coloneqq\sum_SR_{S|S'}$, one has
+$\sum_S\widetilde M_S=\sum_{S'}\sigma_{S'}M_{S'}$ with
+$\sigma_{S'}\in[1-\varepsilon_4,1+\varepsilon_4]$, so
+$(1-\varepsilon_4)\id\preceq\sum_S\widetilde M_S\preceq(1+\varepsilon_4)\id$
+in place of $=\id$; and a single entry at $-\varepsilon_4$ gives only
+$\widetilde M_S\succeq-\varepsilon_4\,\id$ in place of $\succeq0$. Both defects
+are bounded by $\varepsilon_4$, both are properties of the declared datum, and
+neither is repaired. They are not silent: every consumer decides the
+admission predicates it states of the data it reads exactly and refuses on a
+failure (\xref{foundations/req:consumer-decides-exactly}), so a consumer that
+requires the composed family to be a POVM, or the channel to satisfy (D1) and
+(D2), refuses it; and on this side a positivity defect of an emitted block is
+what $r_5$ makes visible (Remark~\ref{rem:res5why}).
+\end{remark}

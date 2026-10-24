@@ -1,0 +1,58 @@
+% ---
+% id: receiver/rem:ranktwosided
+% kind: rem
+% title: "Two-sided errors of a rank cutoff, and the choice of threshold"
+% summary: >-
+%   Under any positive threshold a counted rank can exceed or fall short of the
+%   exact one, so the rank check is not refuse-only. The contract therefore fixes
+%   the threshold at the declared ε₂, absolute rather than relative, instead of
+%   an undeclared library default.
+% prominence: standard
+% status: accepted
+% uses: [def:tolmap]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:ranktwosided}
+Under any positive threshold $\tau$, the count \eqref{eq:eps2rank} can differ
+from the exact rank in \emph{both} directions.
+\begin{itemize}[leftmargin=1.6em]
+\item \emph{Over-reported.} An exactly singular declared Gram whose zero
+  eigenvalue evaluates at $+2\tau$ (rounding noise in the declared entries,
+  or in the eigenvalue routine) is counted as one rank higher, and a
+  declaration consistent with its port map is \emph{refused}.
+\item \emph{Under-reported.} A Gram whose exact rank is $2$ but whose second
+  eigenvalue is genuinely small, below $\tau$, is counted as rank $1$, and a
+  declaration \emph{inconsistent} with its port map is \emph{admitted} on a
+  single-mode port.
+\end{itemize}
+So the check is not refuse-only, and the choice of $\tau$ is a choice about
+which declarations are accepted, not a numerical detail. That is why this
+contract fixes $\tau=\varepsilon_2$, a number the declarer supplies and can
+reason about, rather than inheriting whatever cutoff a linear-algebra library
+applies by default; the usual library default is
+$\lmax\cdot\max(D_1,D_2)\cdot\epsilon_{\mathrm{mach}}$, which is relative,
+undeclared, and invisible in the artifact. Under \eqref{eq:eps2rank} both
+directions remain possible (no threshold can remove them), but both are now
+consequences of a declared number, and both are recorded: the rank the check
+used is a function of $\{A_k\}$ and $\varepsilon_2$ alone.
+
+The threshold of \eqref{eq:eps2rank} is \emph{absolute}, because a port Gram is
+already normalized by construction: $0\preceq A_k\preceq A_\Sigma\preceq\id$
+puts every eigenvalue in $[0,1]$, and $\vec\alpha^\dagger A_k\vec\alpha$ is a
+mean photon number per unit input intensity, so there is no scale to normalize
+against. A threshold taken relative to $\lmax(A_k)$ would make the decision at
+a nearly dark port (all eigenvalues $\sim10^{-6}$) a million times tighter than
+at a lossless one, which is a property of the port's throughput and not of the
+declarer's numerics. And the threshold is $\varepsilon_2$, because
+\eqref{eq:eps2rank} and Definition~\ref{def:tolmap}\,(i) are the same test on
+the same spectrum from the two sides: item (i) admits eigenvalues down to
+$-\varepsilon_2$ as ``numerically zero'', and \eqref{eq:eps2rank} counts as
+nonzero exactly those above $+\varepsilon_2$, so a declared Gram admitted by
+item (i) has its numerically-zero eigenvalues in
+$[-\varepsilon_2,\varepsilon_2]$ and the two thresholds cannot disagree about
+which they are.
+\end{remark}

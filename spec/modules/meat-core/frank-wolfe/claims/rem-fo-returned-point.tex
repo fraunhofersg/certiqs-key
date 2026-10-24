@@ -1,0 +1,75 @@
+% ---
+% id: meat-core/frank-wolfe/rem:fo-returned-point
+% kind: rem
+% title: "What the measurement of the returned point establishes"
+% summary: >-
+%   The point a run returns is checked once more, on its J factor only, so a
+%   pass establishes that factor of the estimate's premise and a failure leaves
+%   the premise unestablished. Neither h_lb nor the key length rests on that
+%   point, which bears on a run only through the refusal of a negative estimate.
+% prominence: standard
+% status: accepted
+% uses: [thm:firstorder, rem:acc-side, cor:fo-dropped, cor:fo-keylength, meat-core/cor:keylength-bound]
+% mentions: [req:returned-point-measured, req:acceptance-iterate-exact, req:first-order-withdrawal, req:negative-estimate-refused, rem:fo-iterate-checks, rem:fo-check-exposures]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:fo-returned-point}
+The checks of Remark~\ref{rem:fo-iterate-checks} are made on the point
+consumed at each iterate, and the point a run returns need not be one of
+those: a run that stops at its iteration limit returns a point formed after
+the last point it consumed, and
+Requirement~\ref{req:returned-point-measured} applies the three checks to it
+once more. The measurement changes nothing about the point, and it is
+binary64 arithmetic like every application of those checks (the third
+exposure of Remark~\ref{rem:fo-check-exposures}).
+
+\emph{What the record says is about the $J$ factor only.} The three checks
+are the $J$-side checks of Remark~\ref{rem:fo-iterate-checks}; the premise is
+membership in the \emph{product} $\acSet\times\Feas^{J}(\varepsilon)$, and
+its $\acSet$ factor is not checked but holds by construction, and only where
+the acceptance-side point was formed on the \tref{exact island} under
+($\alpha$) and ($\beta$) of Remark~\ref{rem:acc-side}. Whether the
+acceptance-side point the run returned was so formed is \emph{not} part of
+this measurement: the run's record states that property of the points
+consumed at the iterates (Requirement~\ref{req:acceptance-iterate-exact})
+and does not state it of the returned point as such; where that point is the
+last one consumed, the record's entry for that iterate carries it.
+
+\emph{When the point passes all three}, its membership in
+$\Feas^{J}(\varepsilon)$ is established as far as those checks establish
+any membership; the premise of Theorem~\ref{thm:firstorder}\,(iiia) is then
+established at that point exactly when its acceptance-side component was
+formed on the exact island, a property the record does not state of the
+returned point as such. \emph{When it fails any of the three}, the $J$ half
+of that premise, and so the premise of Theorem~\ref{thm:firstorder}\,(i),
+respectively~(iiia), is \emph{not established at that point}, so the
+reported objective is not established to be an upper estimate even of
+$\hlow[\Feas^{J}(\varepsilon)]$, and the record says so. The estimate is
+still reported, as on every run: it is never a bound, so there is no claim
+to withdraw from it, and the record names the premise it lacks rather than
+hiding the number.
+
+\emph{Neither the first-order bound nor the key length rests on any
+property of that point.} $\hlb$ is the maximum in \eqref{eq:hlb} over the
+iterates of $\Itset$, each of which met every condition of
+Requirement~\ref{req:first-order-withdrawal}; under a non-empty
+\tref{dropped set} $\mathcal{D}$ the bound reported instead is
+$\underline{h}^{\mathrm{FO},\mathcal{D}}_{\alpha}$ of
+\eqref{eq:hlb-dropped}, the same expression read on the dropped objective
+over the iterates at which the hypotheses of the \tref{dropped program}
+held (Corollary~\ref{cor:fo-dropped}). The key length reads this submodule
+only through $\hlb$, respectively
+$\underline{h}^{\mathrm{FO},\mathcal{D}}_{\alpha}$
+(Corollary~\ref{cor:fo-keylength}, respectively
+Corollary~\ref{cor:keylength-bound} at
+$h=\underline{h}^{\mathrm{FO},\mathcal{D}}_{\alpha}$ by
+Corollary~\ref{cor:fo-dropped}); the measurement of the returned point
+enters neither the bound, nor the tier, nor the key length. The one way that
+point bears on a run is Requirement~\ref{req:negative-estimate-refused}: a
+negative objective there refuses the run, and no key length is emitted on a
+refused run --- a refusal, never a changed value.
+\end{remark}

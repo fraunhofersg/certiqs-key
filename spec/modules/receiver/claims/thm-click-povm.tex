@@ -1,0 +1,106 @@
+% ---
+% id: receiver/thm:click-povm
+% kind: thm
+% title: "Click-pattern POVM"
+% summary: >-
+%   The click patterns of a receiver instrument form a POVM whose elements
+%   follow from the port Grams by inclusion and exclusion. Every element is
+%   block diagonal in the total input photon number, and vacuum gives only the
+%   no-click outcome.
+% prominence: main
+% status: implemented
+% uses: [def:physmodel, lem:fock-functor, lem:vacelim, thm:port-grams]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.povm:unconditioned_family
+% lean:
+% ---
+
+The element of an outcome $S$ is the pull-back of ``every port in $S$ clicks
+and no other does''. Positivity and completeness come from that projective
+form, and item (ii) then gives the closed form in the port Grams.
+
+\begin{theorem}\label{thm:click-povm}
+Let $\Recv$ be a receiver instrument with \tref{measurement isometry} $V$
+(Definition~\ref{def:physmodel}) and port Grams $\{A_k\}$. Define
+\begin{equation}\label{eq:MSdef}
+  M_S\coloneqq V^\dagger\Big[\prod_{k\in S}\big(\id-\Pi^0_k\big)
+  \prod_{k\notin S}\Pi^0_k\Big]V ,\qquad S\subseteq[K].
+\end{equation}
+Then:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{$\{M_S\}$ is a POVM.} $M_S\succeq0$ for every $S$ and
+  $\sum_{S\subseteq[K]}M_S=\id$. Moreover
+  $\Pvac{J}\coloneqq V^\dagger\Pi^0_JV=\sum_{S\subseteq[K]\setminus J}M_S$ for
+  every $J\subseteq[K]$.
+\item \emph{Closed form.} $\Pvac{J}=\Fock(\id_{\Inp}-A_J)$ and
+  \begin{equation}\label{eq:incexc}
+    M_S=\sum_{T\subseteq S}(-1)^{|T|}\,
+        \Fock\big(\id_{\Inp}-A_{([K]\setminus S)\cup T}\big).
+  \end{equation}
+\item \emph{Photon-number block structure.} Every $M_S$ commutes with the total
+  photon number of the declared inputs, so
+  $M_S=\bigoplus_{n\ge0}\blk{M}{\eqn}_S$ with
+  $\blk{M}{\eqn}_S$ acting on $\Symn{n}(\mathbb{C}^{\Inp})$, and
+  \begin{equation}\label{eq:blockMS}
+    \blk{M}{\eqn}_S=\sum_{T\subseteq S}(-1)^{|T|}
+    \Big(\big(\id-A_{([K]\setminus S)\cup T}\big)^{\otimes n}\Big)
+    \Big|_{\Symn{n}} .
+  \end{equation}
+  In particular $\blk{M}{(=0)}_S=\delta_{S,\varnothing}$: no photon, no click.
+\item \emph{The coarse elements.} With $A_\Sigma=A_{[K]}$,
+  \begin{align}
+    M_{\nc}&\coloneqq M_{\varnothing}=\Fock(\id-A_\Sigma),
+      \label{eq:Mnc}\\
+    M_{\singlec_k}&\coloneqq M_{\{k\}}
+      =\Fock\big(\id-A_{[K]\setminus\{k\}}\big)-\Fock(\id-A_\Sigma),
+      \label{eq:Msc}\\
+    M_{\mc}&\coloneqq\sum_{S\in\MCK}M_S
+      =\id+(K-1)\,\Fock(\id-A_\Sigma)
+        -\sum_{k=1}^{K}\Fock\big(\id-A_{[K]\setminus\{k\}}\big).
+      \label{eq:Mmc}
+  \end{align}
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) The $\Pi^0_k$ are orthogonal projectors (Lemma~\ref{lem:fock-functor}\,(iv))
+acting on the Fock spaces over pairwise disjoint mode sets, hence they commute:
+$\Pi^0_k\Pi^0_j=\Fock\big((\id-\Emd{\{k\}})(\id-\Emd{\{j\}})\big)=\Pi^0_j
+\Pi^0_k$ by Lemma~\ref{lem:fock-functor}\,(ii) and commutativity of the coordinate
+projectors. A product of commuting orthogonal projectors is an orthogonal
+projector, so the bracket in \eqref{eq:MSdef} is a product of commuting
+orthogonal projectors and is therefore positive semidefinite; conjugating by
+$V$ preserves that. Completeness: expanding the commuting product
+$\prod_{k}\big(\Pi^0_k+(\id-\Pi^0_k)\big)=\id$ enumerates exactly the brackets
+of \eqref{eq:MSdef} over $S\subseteq[K]$, so their sum is $\id$, and
+$V^\dagger\id V=\id$ because $V$ is an isometry (Lemma~\ref{lem:vacelim}).
+Summing \eqref{eq:MSdef} over $S\subseteq[K]\setminus J$ leaves the terms in
+which every $k\in J$ contributes the factor $\Pi^0_k$, and the same expansion
+of the remaining product gives $\prod_{k\in J}\Pi^0_k=\Pi^0_J$; conjugating by
+$V$ gives the last identity.
+
+(ii) $\Pvac{J}=\Fock(\id-A_J)$ is Theorem~\ref{thm:port-grams}\,(iii). Expanding the
+commuting product,
+$\prod_{k\in S}(\id-\Pi^0_k)=\sum_{T\subseteq S}(-1)^{|T|}\prod_{k\in T}
+\Pi^0_k$, and multiplying by $\prod_{k\notin S}\Pi^0_k$ gives
+$\sum_{T\subseteq S}(-1)^{|T|}\Pi^0_{([K]\setminus S)\cup T}$, since
+$T\subseteq S$ is disjoint from $[K]\setminus S$. Applying
+$V^\dagger(\cdot)V$ termwise and using $\Pvac{J}=\Fock(\id-A_J)$ gives
+\eqref{eq:incexc}.
+
+(iii) Each $\Fock(\cdot)$ is photon-number block diagonal by
+Lemma~\ref{lem:fock-functor}\,(i), and \eqref{eq:blockMS} is \eqref{eq:incexc}
+restricted to $\Symn{n}(\mathbb{C}^{\Inp})$. At $n=0$ every
+$\Fock(\cdot)^{(0)}=1$, so $\blk{M}{(=0)}_S=\sum_{T\subseteq S}(-1)^{|T|}
+=\sum_{j=0}^{|S|}\binom{|S|}{j}(-1)^j=(1-1)^{|S|}$, which is $1$ for
+$S=\varnothing$ and $0$ otherwise.
+
+(iv) \eqref{eq:Mnc} is \eqref{eq:incexc} at $S=\varnothing$ and \eqref{eq:Msc}
+at $S=\{k\}$. For \eqref{eq:Mmc}, completeness gives
+$M_{\mc}=\id-M_{\varnothing}-\sum_kM_{\{k\}}$, and substituting the previous
+two lines contributes $-\Fock(\id-A_\Sigma)$ once from $M_\varnothing$ and
+$+\Fock(\id-A_\Sigma)$ once from each of the $K$ single-click terms, for a net
+coefficient $K-1$.
+\end{proof}

@@ -1,0 +1,115 @@
+% ---
+% id: receiver/lem:fock-permanent-maps
+% kind: lem
+% title: "The lift of a map between two mode sets"
+% summary: >-
+%   The Fock lift of a linear map between two mode sets respects composition
+%   and adjoints and keeps an isometry an isometry, and its entries in the
+%   occupation bases are permanents divided by square roots of factorials.
+%   Reading a block through a port dilation needs both.
+% prominence: technical
+% status: implemented
+% uses: [def:fock, lem:fock-permanent]
+% mentions: [lem:fock-functor, thm:factor-blocks]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.factor:_column
+% lean:
+% notes: "Kept apart from lem:fock-permanent, which is stated for an operator on one mode set, so that the claims resting on that lemma keep their review scope; the two-space case reads the same words and factorials in two mode sets."
+% ---
+
+Lemma~\ref{lem:fock-functor} and Lemma~\ref{lem:fock-permanent} are stated for
+an operator on one mode space. Theorem~\ref{thm:factor-blocks} lifts an
+isometry from the declared inputs into a different set of modes, and needs the
+same two facts for it: that the lift composes and takes adjoints, and that its
+entries are permanents.
+
+\begin{lemma}\label{lem:fock-permanent-maps}
+Let $I$, $O$ and $O'$ be finite mode sets, each with an orthonormal basis
+listed in a fixed order, let $X:\mathbb{C}^{I}\to\mathbb{C}^{O}$ and
+$X':\mathbb{C}^{O}\to\mathbb{C}^{O'}$ be linear maps, and let $\Fock(X)$ be
+the lift of Definition~\ref{def:fock}.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $\Fock(X)$ maps $\Symn{n}(\mathbb{C}^{I})$ into
+  $\Symn{n}(\mathbb{C}^{O})$ for every $n\ge0$;
+  $\Fock(X'X)=\Fock(X')\Fock(X)$ and $\Fock(X)^{\dagger}=\Fock(X^{\dagger})$;
+  and if $X^{\dagger}X=\id_{I}$, then $\Fock(X)^{\dagger}\Fock(X)$ is the
+  identity of $\mathcal{F}(\mathbb{C}^{I})$, so that $\Fock(X)$ is an
+  isometry.
+\item Let $\vec m\in\mathbb{N}_0^{O}$ and $\vec m'\in\mathbb{N}_0^{I}$ be
+  occupation vectors with $|\vec m|=|\vec m'|=n$, let $w_{\vec m}$,
+  $w_{\vec m'}$, $\vec m!$ and $\vec m'!$ be the words and the factorial
+  products of Lemma~\ref{lem:fock-permanent}, each formed in its own mode set,
+  and let $X[\vec m|\vec m']$ be the $n\times n$ matrix with entries
+  $X_{w_{\vec m}(r),\,w_{\vec m'}(s)}$. Then
+  \begin{equation}\label{eq:fock-permanent-maps}
+    \bra{\vec m}\Fock(X)^{(n)}\ket{\vec m'}
+    =\frac{\operatorname{per}X[\vec m|\vec m']}{\sqrt{\vec m!\,\vec m'!}} ,
+  \end{equation}
+  with $\operatorname{per}$ as in Lemma~\ref{lem:fock-permanent}; at $n=0$
+  both sides are $1$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) On $\Symn{n}(\mathbb{C}^{I})$ the lift $\Fock(X)$ is the restriction of
+$X^{\otimes n}$, which carries $\Symn{n}(\mathbb{C}^{I})$ into
+$\Symn{n}(\mathbb{C}^{O})$ (Definition~\ref{def:fock}); so $\Fock(X)$ maps
+each photon-number summand into the summand of the same $n$. Factor by
+factor, $(X'X)^{\otimes n}=X'^{\otimes n}X^{\otimes n}$, and since
+$X^{\otimes n}$ lands in $\Symn{n}(\mathbb{C}^{O})$, the restriction of the
+product to $\Symn{n}(\mathbb{C}^{I})$ is the product of the restrictions;
+summing over $n$ gives $\Fock(X'X)=\Fock(X')\Fock(X)$. On the full tensor
+powers $(X^{\otimes n})^{\dagger}=(X^{\dagger})^{\otimes n}$, and
+$(X^{\dagger})^{\otimes n}$ carries $\Symn{n}(\mathbb{C}^{O})$ into
+$\Symn{n}(\mathbb{C}^{I})$ (Definition~\ref{def:fock} for the map
+$X^{\dagger}$). So for $\psi\in\Symn{n}(\mathbb{C}^{O})$ and
+$\phi\in\Symn{n}(\mathbb{C}^{I})$,
+$\langle\psi,X^{\otimes n}\phi\rangle=\langle(X^{\dagger})^{\otimes n}\psi,\phi\rangle$
+with both vectors on the right in their symmetric subspaces, and the
+restriction of $(X^{\dagger})^{\otimes n}$ to $\Symn{n}(\mathbb{C}^{O})$ is
+the adjoint of the restriction of $X^{\otimes n}$ to
+$\Symn{n}(\mathbb{C}^{I})$. Distinct $n$ give orthogonal summands, so
+$\Fock(X)^{\dagger}=\Fock(X^{\dagger})$. If $X^{\dagger}X=\id_{I}$, these give
+$\Fock(X)^{\dagger}\Fock(X)=\Fock(X^{\dagger}X)=\Fock(\id_{I})$, and
+$\id^{\otimes n}$ restricts to the identity of every
+$\Symn{n}(\mathbb{C}^{I})$.
+
+(ii) Let $P_I=\frac1{n!}\sum_{\pi}\Pi^{I}_{\pi}$ and
+$P_O=\frac1{n!}\sum_{\pi}\Pi^{O}_{\pi}$ be the orthogonal projectors onto
+$\Symn{n}(\mathbb{C}^{I})$ and $\Symn{n}(\mathbb{C}^{O})$, $\Pi^{I}_{\pi}$ and
+$\Pi^{O}_{\pi}$ permuting the tensor factors, and let $\ket{w_{\vec m}}$ and
+$\ket{w_{\vec m'}}$ be the product basis vectors whose $r$-th factors are the
+basis vectors of the letters $w_{\vec m}(r)$ and $w_{\vec m'}(r)$. The
+permutations that fix $\ket{w_{\vec m}}$ are those that permute equal letters
+among themselves, $\vec m!$ of them, and every other $\Pi^{O}_{\pi}$ sends it
+to an orthogonal product basis vector; so
+$\lVert P_O\ket{w_{\vec m}}\rVert^{2}=\bra{w_{\vec m}}P_O\ket{w_{\vec m}}
+=\vec m!/n!$, and the symmetrized and normalized vector of
+Definition~\ref{def:fock} is
+$\ket{\vec m}=\sqrt{n!/\vec m!}\,P_O\ket{w_{\vec m}}$, and likewise
+$\ket{\vec m'}=\sqrt{n!/\vec m'!}\,P_I\ket{w_{\vec m'}}$. For every
+permutation $\pi$, $X^{\otimes n}\Pi^{I}_{\pi}=\Pi^{O}_{\pi}X^{\otimes n}$,
+both sending $v_1\otimes\cdots\otimes v_n$ to the tensor product of the
+$Xv_r$ permuted by $\pi$; so $X^{\otimes n}P_I=P_OX^{\otimes n}$. With
+$P_O^{\dagger}=P_O$ and $P_I^{2}=P_I$,
+\begin{equation*}
+  \bra{\vec m}X^{\otimes n}\ket{\vec m'}
+  =\frac{n!}{\sqrt{\vec m!\,\vec m'!}}
+   \bra{w_{\vec m}}P_OX^{\otimes n}P_I\ket{w_{\vec m'}}
+  =\frac{n!}{\sqrt{\vec m!\,\vec m'!}}
+   \bra{w_{\vec m}}X^{\otimes n}P_I\ket{w_{\vec m'}}
+  =\frac{1}{\sqrt{\vec m!\,\vec m'!}}\sum_{\pi}
+   \bra{w_{\vec m}}X^{\otimes n}\Pi^{I}_{\pi}\ket{w_{\vec m'}} .
+\end{equation*}
+The vector $\Pi^{I}_{\pi}\ket{w_{\vec m'}}$ is the product vector whose $r$-th
+factor is the basis vector of $w_{\vec m'}(\sigma(r))$ for a permutation
+$\sigma$ determined by $\pi$, and $\pi\mapsto\sigma$ is a bijection of the
+permutation group. The summand is therefore
+$\prod_{r}X_{w_{\vec m}(r),\,w_{\vec m'}(\sigma(r))}$, and the sum over
+$\sigma$ is $\operatorname{per}X[\vec m|\vec m']$. The left-hand side is the
+entry of $\Fock(X)^{(n)}$, $\ket{\vec m'}$ lying in
+$\Symn{n}(\mathbb{C}^{I})$. At $n=0$ the lift is $1$ on the vacuum, the
+permanent of the empty matrix is $1$ and both factorial products are $1$.
+\end{proof}

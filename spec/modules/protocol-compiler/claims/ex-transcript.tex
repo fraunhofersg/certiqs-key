@@ -1,0 +1,70 @@
+% ---
+% id: protocol-compiler/ex:transcript
+% kind: ex
+% title: "A three-message transcript"
+% summary: >-
+%   Alice announces the kind of round, Bob discloses his bit only on test
+%   rounds, and Alice then discloses hers only on detected test rounds. Party
+%   computability holds by the signatures of the tables, and two independent
+%   announcement maps cannot express the protocol.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [def:declaration, thm:sifting-and-key, transmitter/ass:seq]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The timing premise it names is the transmitter's A-SEQ."
+% ---
+
+\begin{example}\label{ex:transcript}
+Default readouts, $\rd{\mathsf A}(x,v)=x$ and $\rd{\mathsf B}(x,v)=v$. Alice's
+letter is $x=(z,b)$, with $z\in\{\mathrm{test},\mathrm{gen}\}$ saying whether
+the round is a test or a generation round and a bit $b\in\{0,1\}$; Bob's
+letter is $v\in\{0,1,\varnothing\}$, a bit or no detection. The transcript
+(Definition~\ref{def:declaration}\,(DX5)) has $L=3$ messages:
+\begin{enumerate}[label=(m\arabic*),leftmargin=3.0em]
+\item $\pi_1=\mathsf A$, $\mathcal{C}_1=\{\mathrm{test},\mathrm{gen}\}$,
+  $a_1(z,b)=z$: Alice announces the kind of round;
+\item $\pi_2=\mathsf B$,
+  $\mathcal{C}_2=\{0,1,\mathrm{click},\varnothing\}$, and
+  $a_2(v,\kappa_1)=v$ if $\kappa_1=\mathrm{test}$ or $v=\varnothing$, and
+  $a_2(v,\mathrm{gen})=\mathrm{click}$ for $v\in\{0,1\}$: Bob discloses his
+  bit on test rounds and only the detection on generation rounds;
+\item $\pi_3=\mathsf A$, $\mathcal{C}_3=\{0,1,\ast\}$, and
+  $a_3((z,b),\kappa_1,\kappa_2)=b$ if $\kappa_1=\mathrm{test}$ and
+  $\kappa_2\ne\varnothing$, and $\ast$ otherwise: Alice discloses her bit on
+  detected test rounds.
+\end{enumerate}
+By \eqref{eq:transcript}, $a((\mathrm{test},b),v)=(\mathrm{test},v,b)$ for
+$v\in\{0,1\}$, $a((\mathrm{test},b),\varnothing)
+=(\mathrm{test},\varnothing,\ast)$,
+$a((\mathrm{gen},b),v)=(\mathrm{gen},\mathrm{click},\ast)$ for $v\in\{0,1\}$
+and $a((\mathrm{gen},b),\varnothing)=(\mathrm{gen},\varnothing,\ast)$: seven
+classes occur out of the twenty-four of
+$\Kann=\mathcal{C}_1\times\mathcal{C}_2\times\mathcal{C}_3$, and the tables
+are total on all of their domains as D(viii) asks, their values on
+combinations that never occur being immaterial. Sifting passes on
+$(\mathrm{gen},\mathrm{click},\ast)$ alone; with $\hold=\mathsf A$ the key
+rule is $r^{0}_{\mathsf A}((z,b),\kappa)=b$, a function of Alice's readout.
+The acceptance map may send each test class $(\mathrm{test},v,b)$ to the
+pair $(v,b)$, so that the test statistics see both bits and the generation
+rounds disclose neither.
+
+\emph{What two \tref[announcement map]{announcement maps} cannot express.} In
+the \tref{basic format}, with two maps $a_A$ on $\Oset{\mathsf A}$ and $a_B$
+on $\Oset{\mathsf B}$, Bob's announcement is a function of $v$ alone and cannot
+depend on the kind of round, which he learns only from (m1); the only way to
+write this protocol there is to put $z$ into Bob's readout, which misstates
+what Bob measures. Here party computability holds \emph{by the signatures}:
+$a_2$ has no argument through which $x$ could enter except the message
+$\kappa_1$ that Alice has made public (Theorem~\ref{thm:sifting-and-key}\,(iv)).
+
+\emph{What it is read under.} Every message of a round follows every
+measurement of that round (\xref{transmitter/ass:seq}): (m1) is sent after Bob
+has measured, so his measurement cannot depend on it, and the declaration has
+no slot in which such a dependence could be written, $\{F_v\}$ being one fixed
+family. A protocol in which Bob chose his measurement after hearing $z$ is
+outside this format and outside the fixed-measurement \tref{round model}.
+\end{example}

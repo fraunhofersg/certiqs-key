@@ -1,0 +1,69 @@
+% ---
+% id: meat-core/ass:auth
+% kind: ass
+% title: "Authentication of the classical channel by a keyed scheme"
+% summary: >-
+%   Every classical message travels through an authentication scheme using
+%   at most k_auth bits of pre-shared key and realising the authenticated
+%   classical channel within ε_auth, a reused key's distance from an ideal
+%   one included. It is the premise by which authentication enters the
+%   key's security.
+% prominence: standard
+% status: accepted
+% uses: [def:authenticated-channel]
+% assumes: []
+% refs:
+%   - "portmann2022security, Sec. VII.A, Eq. (36)"
+%   - "portmann2022security, Sec. IV.A"
+%   - "tupkary2025survey, Sec. 3"
+% provenance: newly-derived
+% short_id: A-AUTH
+% verification: never
+% category: channel-and-adversary
+% affects: [secrecy, correctness]
+% user_statement: >-
+%   Every classical message of your protocol, per-round announcements
+%   included, is protected by one authentication scheme: the attacker may
+%   read, delay or block any message, but one she alters or injects, or
+%   delivers before it was sent, is rejected except within an error ε_auth.
+%   It uses at most k_auth bits of pre-shared secret key per run. That error
+%   is its composable error on two identical copies of a uniform, independent
+%   key plus the distance of the parties' actual copies from such a pair
+%   (zero for a fresh key; for a key from an earlier run, a distance you must
+%   bound, which that run's security parameter alone does not bound); declare
+%   that sum as ε_auth and the bits used as k_auth. No composable proof for
+%   this timing-aware channel is published yet; Wegman–Carter authentication
+%   with separate keys per direction approximates it. Both declared zero
+%   assert a keyless authenticated channel.
+% lean:
+% ---
+
+A real scheme authenticates with a short pre-shared key and an
+unauthenticated channel, for instance by Wegman--Carter hashing; its
+composable security is the distance of
+\cite[Sec.~VII.A, Eq.~(36)]{portmann2022security} from the authenticated
+channel, and an authentic classical channel is one of the standard premises
+of QKD \cite[Sec.~IV.A]{portmann2022security},
+\cite[Sec.~3]{tupkary2025survey}.
+
+\begin{assumption}\label{ass:auth}
+(i) All classical messages of the protocol, the round announcements
+included, are sent through one authentication scheme using a pre-shared key
+and an unauthenticated classical channel, or all over a classical channel
+that is itself the \tref{authenticated classical channel} of
+Definition~\ref{def:authenticated-channel}\,(a), in which case
+$\varepsilon_{\mathrm{auth}}=k_{\mathrm{auth}}=0$;
+(ii) in the first case, the scheme's key consumption is at most
+$k_{\mathrm{auth}}$ bits;
+(iii) run on two identical copies of a uniformly distributed key independent
+of every other register of the protocol and of the adversary's information,
+the scheme $\varepsilon_0$-realises the authenticated classical channel
+(Definition~\ref{def:authenticated-channel}\,(b)), for some
+$\varepsilon_0\ge0$;
+(iv) before the run starts, the joint state of the two parties' copies of
+the pre-shared key the run consumes with every other register of the
+protocol and with the adversary's information is within trace distance
+$\delta\ge0$ of the state in which those copies are replaced by two
+identical copies of a uniformly distributed key independent of them;
+(v) $\varepsilon_0+\delta\le\varepsilon_{\mathrm{auth}}$.
+\end{assumption}

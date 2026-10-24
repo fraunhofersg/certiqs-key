@@ -1,0 +1,85 @@
+% ---
+% id: receiver/lem:fock-permanent
+% kind: lem
+% title: "Entries of a lifted operator in the occupation basis"
+% summary: >-
+%   An entry of the n-photon block of a lifted operator is a permanent of a
+%   submatrix with repeated rows and columns, divided by the square roots of
+%   two products of factorials. For a Gaussian-rational operator the entry is
+%   Gaussian-rational on the diagonal and on every block of at most one photon.
+% prominence: technical
+% status: implemented
+% uses: [def:fock, lem:fock-functor]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.generic:fock_block
+% lean:
+% ---
+
+\begin{lemma}\label{lem:fock-permanent}
+Let $I$ be a finite mode set with orthonormal basis $\{\ket{e_i}\}_{i\in I}$,
+fix an order on $I$, and let $X$ be an operator on $\mathbb{C}^{I}$ and
+$n\ge0$. For an occupation vector $\vec m\in\mathbb{N}_0^{I}$ with
+$|\vec m|=n$ let $w_{\vec m}=(w_{\vec m}(1),\dots,w_{\vec m}(n))$ be the word
+listing each $i\in I$ exactly $m_i$ times in the order of $I$, write
+$\vec m!\coloneqq\prod_{i\in I}m_i!$, and for two such vectors let
+$X[\vec m|\vec m']$ be the $n\times n$ matrix with entries
+$X_{w_{\vec m}(r),\,w_{\vec m'}(s)}$. Write
+$\operatorname{per}Y\coloneqq\sum_{\pi}\prod_{r=1}^{n}Y_{r,\pi(r)}$, the sum
+over the permutations of $\{1,\dots,n\}$, with $\operatorname{per}Y=1$ for
+the empty matrix.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item In the occupation basis of Definition~\ref{def:fock},
+  \begin{equation}\label{eq:fock-permanent}
+    \bra{\vec m}\Fock(X)^{(n)}\ket{\vec m'}
+    =\frac{\operatorname{per}X[\vec m|\vec m']}{\sqrt{\vec m!\,\vec m'!}} .
+  \end{equation}
+\item If $X$ has entries in $\mathbb{Q}(i)=\{x+iy:x,y\in\mathbb{Q}\}$, then
+  $\operatorname{per}X[\vec m|\vec m']$ lies in $\mathbb{Q}(i)$, and the entry
+  \eqref{eq:fock-permanent} lies in $\mathbb{Q}(i)$ wherever
+  $\vec m!\,\vec m'!$ is the square of an integer; in particular on the
+  diagonal, $\vec m=\vec m'$, and for every $\vec m,\vec m'$ when $n\le1$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) Write $P_{\Symn{n}}=\frac{1}{n!}\sum_\pi\Pi_\pi$ for the orthogonal
+projector onto $\Symn{n}(\mathbb{C}^{I})$, $\Pi_\pi$ permuting the tensor
+factors, and $\ket{w_{\vec m}}\coloneqq\ket{e_{w_{\vec m}(1)}}\otimes\cdots
+\otimes\ket{e_{w_{\vec m}(n)}}$. The permutations with
+$\Pi_\pi\ket{w_{\vec m}}=\ket{w_{\vec m}}$ are those that permute equal
+letters among themselves, of which there are $\vec m!$; every other
+$\Pi_\pi\ket{w_{\vec m}}$ is a product basis vector orthogonal to
+$\ket{w_{\vec m}}$. Hence
+$\lVert P_{\Symn{n}}\ket{w_{\vec m}}\rVert^2
+=\bra{w_{\vec m}}P_{\Symn{n}}\ket{w_{\vec m}}=\vec m!/n!$, and the
+symmetrized and normalized vector of Definition~\ref{def:fock} is
+$\ket{\vec m}=\sqrt{n!/\vec m!}\,P_{\Symn{n}}\ket{w_{\vec m}}$. The block
+$\Fock(X)^{(n)}$ is the restriction of $X^{\otimes n}$ to
+$\Symn{n}(\mathbb{C}^{I})$, and $X^{\otimes n}$ commutes with
+$P_{\Symn{n}}$ (proof of Lemma~\ref{lem:fock-functor}\,(i)), so
+\begin{equation*}
+  \bra{\vec m}X^{\otimes n}\ket{\vec m'}
+  =\frac{n!}{\sqrt{\vec m!\,\vec m'!}}
+   \bra{w_{\vec m}}X^{\otimes n}P_{\Symn{n}}\ket{w_{\vec m'}}
+  =\frac{1}{\sqrt{\vec m!\,\vec m'!}}\sum_\pi
+   \bra{w_{\vec m}}X^{\otimes n}\Pi_\pi\ket{w_{\vec m'}} ,
+\end{equation*}
+using $P_{\Symn{n}}^{\dagger}=P_{\Symn{n}}=P_{\Symn{n}}^{2}$. The vector
+$\Pi_\pi\ket{w_{\vec m'}}$ is the product vector whose $r$-th factor is
+$\ket{e_{w_{\vec m'}(\sigma(r))}}$ for a permutation $\sigma$ determined by
+$\pi$, and $\pi\mapsto\sigma$ is a bijection of the permutation group. The
+summand is therefore $\prod_r\bra{e_{w_{\vec m}(r)}}X\ket{e_{w_{\vec m'}(\sigma(r))}}
+=\prod_rX_{w_{\vec m}(r),\,w_{\vec m'}(\sigma(r))}$, and the sum over
+$\sigma$ is $\operatorname{per}X[\vec m|\vec m']$. At $n=0$ both sides are
+$1$.
+
+(ii) The permanent is a sum of products of entries of $X$ with coefficient
+$1$, so it lies in $\mathbb{Q}(i)$, which is closed under sums and products.
+If $\vec m!\,\vec m'!=s^{2}$ with $s$ a positive integer, the entry
+\eqref{eq:fock-permanent} is $\operatorname{per}X[\vec m|\vec m']/s$, which
+lies in $\mathbb{Q}(i)$. On the diagonal $\vec m!\,\vec m'!=(\vec m!)^{2}$,
+and for $n\le1$ every factorial in $\vec m!$ and $\vec m'!$ is $0!$ or $1!$,
+so $\vec m!\,\vec m'!=1$.
+\end{proof}

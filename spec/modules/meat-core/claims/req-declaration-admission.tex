@@ -1,0 +1,42 @@
+% ---
+% id: meat-core/req:declaration-admission
+% kind: req
+% title: "Admission of the declaration"
+% summary: >-
+%   The engine computes nothing from a declaration that fails a condition of
+%   admissibility other than the non-empty feasible set, each decided exactly
+%   on the declared data. The feasible set it leaves to the compiler where
+%   constraints are declared.
+% prominence: standard
+% status: implemented
+% uses: [def:admissible-declaration]
+% mentions: [req:exact-admission, req:compiled-declaration-only, protocol-compiler/thm:feasibility, req:companion-admission]
+% implements: certiqs_key.meat_core.declaration.general_validation:validate_general_declaration
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Seven of the eight conditions of admissibility are conditions on the
+declared numbers and tables, and the engine decides them itself rather than
+trusting the compiler's decision
+(Requirement~\ref{req:exact-admission} for the operator conditions). The
+eighth, a non-empty \tref{feasible set}, holds of every declaration with an empty
+constraint list, which has an explicit feasible state
+(\xref{protocol-compiler/thm:feasibility}\,(i)); with declared constraints it
+is a semidefinite feasibility question that the compiler decides on the
+declaration it emits, and Requirement~\ref{req:compiled-declaration-only}
+keeps every other declaration away from a key length.
+
+\begin{requirement}\label{req:declaration-admission}
+The engine decides conditions (i)--(vi) and (viii) of
+Definition~\ref{def:admissible-declaration}, in the general format as that
+definition reads them there, exactly on the \tref{declared data}, and
+computes nothing from a declaration that fails one of them, which it
+refuses. It does not decide condition~(vii) on a declaration whose
+constraint list is non-empty. A compiled reference companion is admitted
+instead under Requirement~\ref{req:companion-admission}, which decides
+exactly the components it shares with the declaration it accompanies and
+none of its measured family.
+\end{requirement}

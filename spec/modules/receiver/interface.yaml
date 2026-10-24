@@ -1,0 +1,2184 @@
+# spec/modules/receiver/interface.yaml -- the receiver module's interface:
+# inputs, outputs, parameters, conventions and refusal rules
+# (spec/claim-format.md section 5). Machine keys are binding for the
+# implementation. The claims cite the sections of this file as the inputs
+# table (`inputs`), the outputs table (`outputs`), the parameters table
+# (`parameters`), the interface conventions (`conventions`) and the refusal
+# rules (`refusals`).
+
+module_id: receiver
+
+# ---------------------------------------------------------------------------
+# inputs
+#   The inputs table. `name` is the machine key, `symbol` the symbol the
+#   claims use, `type` the declared type and `domain` the validity
+#   conditions; `route` names the input route a key belongs to and is null
+#   where the key belongs to every route. Exactly one of the three routes is
+#   present (`input_routes`); probe conditioning and the exact window are not
+#   routes.
+# ---------------------------------------------------------------------------
+input_routes:
+  mutually_exclusive: [port_grams, instrument_matrix, element_graph]
+  rule: >-
+    Exactly one of the three is present. A request carrying two is refused
+    rather than resolved by precedence.
+  convergence: >-
+    Route (iii): a declared element graph is compiled to Gamma (Def.
+    def:compile), and the result does not depend on the linear extension
+    (Thm. thm:compilation-well-defined); Cor. cor:compiled-instrument states
+    that a well-formed declared element graph, with a declared mode space, an
+    input split Inp = Inp_C + Inp_S and a port map, is a receiver instrument
+    tuple (Def. def:instrument) whose instrument matrix is the compiled
+    Gamma = D_eta Gamma_G. Route (ii): a supplied instrument matrix gives
+    {A_k} (Eq. eq:gramdef). Route (i): a supplied Gram family is {A_k},
+    realised by some Gamma (Thm. thm:representation-independence (ii)).
+  not_a_fourth_route: >-
+    Constructing a setting family (Def. def:setting-family) from the
+    canonical object is a named downstream map, not a fourth route: the
+    Grams stay on the full input space Inp, probe modes included, and each
+    setting's no-click data are derived from them (the probe-free
+    receiver's by Cor. cor:unconditioned-family, those of a receiver with
+    source modes by the submodule that constructs its family). Neither is the exact
+    window a route: Def. def:exactbnd forms the same blocks Eq. eq:blockMS
+    forms, in the same occupation basis and order, at an index above the
+    cutoff instead of below it, and introduces no new object.
+
+inputs:
+
+  # --- the declared receiver ---------------------------------------------------
+
+  - name: mode_space
+    symbol: "M (the declared mode space)"
+    type: ordered label list
+    route: null
+    domain: >-
+      finite, non-empty, pairwise distinct labels (p, pi, tau); the order is
+      the emitted order (Def. def:modes).
+    domain_detail: >-
+      Def. def:modes fixes the label and the order: a mode is m = (p, pi, tau),
+      recording a spatial path p, a polarization pi in {H, V} and a
+      temporal/spectral index tau, and the order is lexicographic in
+      (p, tau, pi) with H before V -- a (p, tau, pi) key, not the order in
+      which the components of the label are written. The index tau is
+      reserved: it is carried in the label and in the emitted artifact, takes a
+      single declared value, and no catalogue entry reads or writes it (Def.
+      def:modes). M is identified with {0, ..., |M| - 1} when
+      matrix indices are needed.
+    tau_validation_note: >-
+      No separate check is named for the single-value restriction on tau
+      (Def. def:modes; Def. def:tolmap (b)), and none is added here. The
+      restriction is decidable by inspection of this key, since every label
+      carries its tau, so under the `fail_closed` convention a declaration with
+      two distinct tau values is refused with a machine-readable reason and no
+      artifact.
+
+  - name: input_modes
+    symbol: "Inp = Inp_C (disjoint union) Inp_S"
+    type: two disjoint sublists
+    route: null
+    domain: >-
+      Inp subset of M, Inp_C non-empty; channel modes listed first.
+      Inp_S = empty is legal and means "no probe".
+    domain_detail: >-
+      Def. def:instrument (ii): Inp_C are the channel modes (the adversary's
+      access) and Inp_S the declared source (probe) modes; every mode of
+      M minus Inp carries vacuum at the input (Ass. ass:vac). The "channel
+      modes listed first" clause is the order of C^Inp that Def.
+      def:instrument fixes and the `subsystem_order` convention restates.
+    dimension_note: >-
+      |Inp_C| sizes the exact-window eigenvalue problem, a cost an implementer
+      must be able to predict: the operator of Eq. eq:exactbnd is a Hermitian
+      matrix of dimension binom(D + n - 1, n), where D is the dimension of the
+      channel input space of the setting family (Def. def:setting-family;
+      Def. def:exactbnd), which is |Inp_C| at the probe-free receiver (Cor.
+      cor:unconditioned-family) and is stated by the submodule that
+      constructs the family where a probe is declared. Thm.
+      thm:emitted-bound states the same dimension in its computability clause,
+      and the `exact_window` row gives it as the reason the depth is the
+      caller's.
+
+  - name: port_map
+    symbol: "{P_k}_{k=1..K}"
+    type: list of disjoint mode sets
+    route: null
+    domain: >-
+      K >= 1; pairwise disjoint subsets of M; a mode in no port is undetected,
+      and that is a declaration, never an inference (Req. req:declared-port-map;
+      Rem. rem:unmonitored).
+    domain_detail: >-
+      Def. def:instrument (iii). Rem. rem:unmonitored proves the declaration
+      has no observable content beyond the A_k it produces -- deleting the row
+      of an unmonitored output mode changes no A_J -- and Req.
+      req:declared-port-map makes the port map a declared input, never
+      inferred from the matrix. The port map also fixes the click alphabet
+      2^[K].
+
+  # --- the three input routes ----------------------------------------------
+
+  - name: port_grams
+    symbol: "{A_k}"
+    type: Hermitian matrix list on Inp
+    route: "(i)"
+    domain: >-
+      admissible: A_k >= 0, sum_k A_k <= 1 (Def. def:gram). Consistency with
+      port_map: rk A_k <= |P_k|. Both conditions are exact statements about
+      the declared data and are decided in floating point (Def.
+      def:evaluation-model) by Def. def:tolmap
+      (i) and (ii): admissibility at eps_2, the rank by the eps_2-rank rule
+      Eq. eq:eps2rank.
+    domain_detail: >-
+      Def. def:gram defines admissibility of a family as an exact condition,
+      decided on a declared family at eps_2 by Def. def:tolmap (i). Thm.
+      thm:port-grams (ii) is the rank bound rk A_k <= min(|Inp|, |P_k|), of
+      which this row states the half that constrains the declared data against
+      the declared port map.
+    decided_by: >-
+      Def. def:tolmap (i): the family is admitted when lmin(A_k) >= -eps_2 for
+      every k and lmax(A_Sigma) <= 1 + eps_2; the tolerance that bounds the
+      residual r_2 (Eq. eq:res2) decides the admission, in the same units.
+      Def. def:tolmap (ii): the rank check is rk_{eps_2}(A_k) <= |P_k| with
+      rk_{eps_2}(X) = #{i : lambda_i((X + X^dagger)/2) > eps_2} (Eq.
+      eq:eps2rank; eigenvalues with multiplicity, the comparison strict), the
+      threshold absolute and equal to eps_2. A violation refuses with
+      `port_gram_rank_exceeds_port_size` (the refusal rules). Rem.
+      rem:ranktwosided shows that the count can differ from the exact rank in
+      both directions, so the check is not refuse-only, which is why the rule
+      is fixed here rather than inherited from a library default, which would
+      be relative, undeclared and invisible in the artifact.
+    also_decided_by_item_iv: >-
+      Def. def:tolmap (iv) decides the derived c = 1 - lmax(B) at eps_2 on
+      every input route, this one included. On route (i) the band Eq.
+      eq:tolmapband has no analogue, items (i) and (iv) carrying the same
+      eps_2, but item (iv) is a test here too and not a formality: redundancy
+      of the exact condition is not admission of the computed one (Rem.
+      rem:bound-data-band, step (2)).
+
+  - name: instrument_matrix
+    symbol: "Gamma"
+    type: complex matrix
+    route: "(ii)"
+    domain: >-
+      Gamma^dagger Gamma <= 1; rows indexed by M as outputs, columns by M as
+      inputs. Contractivity is an exact spectral statement about the declared
+      matrix and is decided in floating point (Def. def:evaluation-model)
+      by Def. def:tolmap (v), at
+      eps_1, the number that bounds the residual r_1; by Eq. eq:r1islmax the
+      two are the same test.
+    domain_detail: >-
+      Def. def:instrument (iv). The index order is the `matrix_convention`:
+      an entry Gamma_{ij} has i the output and j the input, so that
+      (A_k)_{j j'} = sum_{i in P_k} conj(Gamma_{ij}) Gamma_{i j'}.
+    decided_by: >-
+      Def. def:tolmap (v): the matrix is admitted when
+      lmax(Gamma^dagger Gamma) <= 1 + eps_1. By Eq. eq:r1islmax,
+      r_1 = ||(Gamma^dagger Gamma - 1)_+|| = (lmax(Gamma^dagger Gamma) - 1)_+,
+      so the admission and the residual test are the same test on the same
+      number. The test is one-sided and its errors are two-sided (Rem.
+      rem:bound-data-band): too tight refuses a lossless receiver, whose Gamma
+      is unitary (Eq. eq:bb84G is the worked instance); too loose admits a
+      genuinely non-contractive Gamma, which violates Ass. ass:passive. Route
+      (ii) carries no separate Gram admissibility check, because Thm.
+      thm:port-grams (i) derives sum_k A_k <= Gamma_Inp^dagger Gamma_Inp <= 1
+      from contractivity.
+    what_the_derivation_transports: >-
+      The derivation of Thm. thm:port-grams (i) is an implication between exact
+      quantities: it makes the exact condition of Def. def:tolmap (i) redundant
+      on this route and, through B <= 1 in Eq. eq:bbkhyp, that of item (iv)
+      too, and it transports no admission. The computed lmax(A_Sigma) and the
+      computed c are separate evaluations, related to the exact ones by nothing
+      the contract asserts (Thm. thm:exact-and-evaluated (ii)), so an
+      eps_1-admitted Gamma does not thereby satisfy any test stated at eps_2;
+      item (iv) decides the bound data on this route as on every other, and the
+      band Eq. eq:tolmapband that opens when eps_1 > eps_2 is refused. Each
+      route tests its own declared datum under its own declared number, and
+      neither is a tolerance on the derived c. A declarer who wants one slack
+      on lmax(A_Sigma) regardless of route declares eps_1 = eps_2, which also
+      empties Eq. eq:tolmapband (Rem. rem:bound-data-band, last paragraph).
+
+  - name: element_graph
+    symbol: "G"
+    type: typed DAG
+    route: "(iii)"
+    domain: >-
+      well formed in the sense of Def. def:graph: (E1) every element is a
+      catalogue entry with parameters in its declared domain, (E2) acyclic,
+      (E3) support-comparable. Violations are refused with the failing
+      condition named (Req. req:graph-refusal). (E1) is a comparison against a
+      declared domain at every catalogue entry but C10, whose predicate is
+      spectral and is decided at eps_1 by Def. def:tolmap (v) (Def.
+      component-catalogue/def:c10-tolerance); (E2) and (E3) are decided by
+      finite inspection.
+    domain_detail: >-
+      Def. def:graph states the three conditions; Thm.
+      thm:compilation-well-defined (iv) makes each decidable by finite
+      inspection, and Req. req:graph-refusal refuses a graph failing any of
+      them, with the failing condition named together with the offending
+      element or edge for (E1) and the offending element pair for (E3); no
+      matrix is emitted, and no ordering is invented to repair it.
+    e2_note: >-
+      (E2) is a well-formedness condition of Def. def:graph, decided by finite
+      inspection (Thm. thm:compilation-well-defined (iv)) and refused on
+      failure (Req. req:graph-refusal); it is not an assumption and has no
+      row in the assumption ledger. It is a route-(iii) condition: Def.
+      def:compile, Thm. thm:compilation-well-defined and Cor.
+      cor:compiled-instrument state it within their well-formed-graph
+      hypothesis. A declaration on route (i) or (ii) declares no graph and
+      does not rest on it.
+    c10_e1_decided_by: >-
+      Def. def:tolmap (v), the same test as route-(ii) contractivity, applied
+      to the supplied block Gamma_Sigma: admitted when
+      lmax(Gamma_Sigma^dagger Gamma_Sigma) <= 1 + eps_1. C10 is the one entry
+      whose (E1) is a spectral condition rather than a parameter-domain
+      comparison, and the only entry whose declared domain is the
+      contractivity condition itself (Def.
+      component-catalogue/def:c10-tolerance; Thm.
+      component-catalogue/thm:catalogue-admissibility (iii)). Its lossless
+      sub-case is an equality and is decided two-sidedly, as
+      ||Gamma_Sigma^dagger Gamma_Sigma - 1|| <= eps_1.
+
+  # --- detectors, dark counts and the probe ------------------------------------
+
+  - name: detector_layer
+    symbol: "{(P_k, eta_k, p_dc|k)}"
+    type: list
+    route: null
+    domain: >-
+      eta_k in [0, 1], p_dc|k in [0, 1]; applied as the terminal layer
+      (Thm. thm:efficiency).
+    domain_detail: >-
+      Layer L1 of the catalogue submodule (Rem. component-catalogue/rem:layers),
+      deliberately not a row of the catalogue. The efficiency enters as the
+      terminal factor D_eta of Def. def:compile; the dark counts never enter
+      Gamma and act on the outcome label (Thm. thm:dark-counts). A C7 element
+      is not a detector efficiency (Thm. thm:efficiency (iii)), and Req.
+      req:efficiency-schema keeps the two in different fields of the input
+      schema.
+
+  - name: dark_count_channel
+    symbol: "R"
+    type: stochastic matrix or product form
+    route: null
+    domain: >-
+      either the per-port independent form Eq. eq:darkR from {p_dc|k}, or a
+      declared column-stochastic multiclick-absorbing R on 2^[K] (Def.
+      def:darkadm). The two routes are exclusive (Req.
+      req:dark-route-exclusive): a request that declares an explicit R while
+      some p_dc|k in `detector_layer` is non-zero is refused, because it would
+      supply the channel twice with no rule that makes the two agree, and the
+      record of which route the emitted R came from presupposes that exactly
+      one was taken. A declared R therefore requires p_dc|k = 0 for every k.
+      (D1) and (D2) of a declared R are decided by Def. def:tolmap (iii).
+    domain_detail: >-
+      Def. def:darkadm states (D1) column-stochastic and (D2) monotone, and Eq.
+      eq:darkR the independent product form. Thm. thm:dark-counts (i) proves
+      that the product form satisfies both; for a declared R they are checked
+      rather than derived (Rem. rem:corrdark), and Req. req:dark-channel-record
+      makes the artifact record which of the two routes the emitted R came
+      from.
+    route_exclusivity_rule: >-
+      The rule is a refusal, not a precedence and not a consistency check, and
+      it is stated three times: this row, Req. req:dark-route-exclusive, and
+      the refusal rules, which give it the reason
+      `dark_count_channel_declared_twice`. The converse is fixed as well: a
+      declared R requires p_dc|k = 0 for every k, so a request with an explicit
+      R and all-zero per-port probabilities is admitted and takes the declared
+      route.
+    decided_by: >-
+      Def. def:tolmap (iii), whose content is Def.
+      detector-imperfections/def:darktol, for a declared R only. (D1)
+      column-stochasticity is decided at eps_4: admitted when
+      R_{S|S'} >= -eps_4 for every entry and |sum_S R_{S|S'} - 1| <= eps_4 for
+      every column. (D2) monotonicity is decided at eps_2: an entry counts as
+      positive when R_{S|S'} > eps_2, so the channel is refused exactly when
+      some entry with S' not a subset of S exceeds eps_2. On the generated
+      route neither is tested: (D1) and (D2) are theorems there (Thm.
+      thm:dark-counts (i)), which is why Eq. eq:darkdelta gives delta_dc = 0
+      exactly on that route.
+
+  - name: probe_declaration
+    symbol: "(T, {rho^(t)})"
+    type: alphabet plus per-setting state
+    route: null
+    domain: >-
+      Def. def:probe; the Gaussian tier: Gamma^(t) >= 0 diagonal.
+      Occupation-diagonality is validated by construction, not assumed of an
+      arbitrary matrix. A declaration with source modes (Inp_S non-empty) is
+      admitted only where a submodule constructs its setting family (Def.
+      def:setting-family); without one it is refused at validation under the
+      `fail_closed` convention, with the code's reason
+      probe_conditioning_submodule_absent, and only a receiver without
+      source modes, T = {off}, is admitted.
+    domain_detail: >-
+      Def. def:probe: T is a finite non-empty alphabet of probe settings
+      including the setting `off`, whose state is vacuum. An alphabet is a set,
+      so a declaration naming one label twice is refused, a failed validation
+      under the rule of `refusals.named_without_a_spelling_note`, its reason
+      spelled by the code. Each rho^(t) is declared on the probe Fock space and
+      is occupation-diagonal (Def. def:probe; Req.
+      req:probe-diagonal-admission). In the Gaussian
+      tier each rho^(t) is a zero-mean Gaussian state with diagonal
+      normally-ordered second-moment matrix Gamma^(t) = diag(nbar^(t)_m) >= 0,
+      and Gamma^(t) = 0 is vacuum. When Inp_S is empty the declaration is
+      T = {off} and every statement about conditioning is vacuous. The
+      channel grading of the blocks is recovered from the total one only
+      under a condition on the probe state (Rem. rem:blockmeaning), and
+      occupation-diagonality is the stronger form of it that Def. def:probe
+      demands and validation can check (Req. req:probe-diagonal-admission);
+      it is a requirement and not a convenience.
+    predicate_x_note: >-
+      Predicate (X) is read off this row. Predicate (X) of Def. def:pmc is the
+      setting's exact flag (Def. def:setting-family (c)), a property of the
+      declaration set by the construction that produced the setting (Rem.
+      rem:flag-instances): at the probe-free receiver it holds (Cor.
+      cor:unconditioned-family), and a submodule that constructs another
+      setting family states at which of its settings it holds. Either way it
+      is read off the declaration without computing a Gram, a determinant or
+      an eigenvalue. (X) also selects the branch of
+      Eq. eq:pmcex, and with it the remainder that branch keeps, so the same
+      declared datum governs two things.
+
+  # --- the cutoff and the windows ----------------------------------------------
+
+  - name: photon_cutoff
+    symbol: "N"
+    type: integer
+    route: null
+    domain: >-
+      N >= 0; fixes the emitted low-photon blocks 0 <= n <= N and the
+      quantifier domain n > N of the bound.
+    domain_detail: >-
+      The `photon_cutoff` rule of the parameters table: a declared protocol
+      parameter, not a numerical convenience. It fixes which blocks are emitted
+      exactly and the quantifier domain of the bound; this module does not
+      choose it and does not optimize it.
+    depth_motivation_note: >-
+      Why a caller may declare an `exact_window` depth, in terms of this key.
+      At the worked BB84 receiver at balanced bases the analytic bound is
+      beta(n) = 1 - 2^{2-n}, so p_mc = 0 at the cutoff N = 1 and p_mc = 1/2 is
+      reached only at N = 2 (Ex. component-catalogue/ex:bb84bound), while the
+      exact minimum eigenvalue of the two-photon block of the same device is
+      1/2. An exact window of depth 2 gives 1/2 at N = 1, less the widths of
+      its eigenvalue bounds, where the weight is evaluated rigorously (Req.
+      req:rigorous-weight; this receiver's port Grams are Gaussian-rational
+      and enclosed exactly), and
+      max{0, 1/2 - eps_eig} under the floating-point evaluation, from a single
+      3x3 block, and N is the parameter every
+      downstream target dimension grows with (Ex.
+      component-catalogue/ex:bb84exact). That is an argument for declaring a
+      depth, not a rule about N, which this module neither chooses nor
+      optimizes.
+
+  - name: tail_window
+    symbol: "{m_t}_{t in T}"
+    type: integer per setting
+    route: null
+    domain: >-
+      m_t > N, validated; the window of Lem. lem:windowtail used by branch 2 of
+      Def. def:pmc. Required at exactly the settings where predicate (X) of
+      Def. def:pmc fails, the settings whose exact flag is general; which
+      settings need one is decidable from the declaration alone, before any
+      Gram is computed (Rem. rem:flag-instances; Req. req:window-declaration).
+      A probe-free receiver, whose one setting's flag is exact (Cor.
+      cor:unconditioned-family), declares none. A value m_t <= N, or a missing one at
+      a setting that needs it, is refused.
+    supplied_where_not_needed_note: >-
+      Req. req:window-declaration settles the three cases: a window missing
+      where needed is refused; m_t <= N is refused at every setting, whatever
+      its flag; a window m_t > N supplied at a setting whose flag is exact is
+      carried and unused, never a refusal.
+    relation_to_exact_window: >-
+      Where predicate (X) fails and a depth is also declared, the two windows
+      compose: Def. def:pmcex requires m*_t <= m_t there, so that the exact
+      window and the analytic window compose into the single window
+      N < n <= m_t to which Lem. lem:exactwindow is applied (Rem.
+      rem:exact-window-remainders), and the second branch of Eq. eq:pmcex
+      minimises over the exact window, the analytic remainder of the window
+      m*_t < n <= m_t, and the tail T^(t)_{m_t}. A depth violating
+      m*_t <= m_t at such a setting is refused with
+      `exact_window_depth_outside_declared_range`. Where (X) holds, no m_t is
+      required and none constrains the depth: the first branch takes the
+      single remainder beta^(t)(m*_t + 1), admissible by Lem. lem:exactwindow
+      (ii).
+
+  - name: exact_window
+    symbol: "{m*_t}"
+    type: "integer per setting, optional"
+    route: null
+    optional: true
+    domain: >-
+      Opt-in, never defaulted. Where a depth is present at a setting, the
+      exact-window evaluation of Def. def:pmcex gives that setting's p_mc^(t);
+      where it is absent, Def. def:pmc gives it, no block above the cutoff is
+      formed, and the emitted value is the one Eq. eq:pmcdef defines.
+      Validated: m*_t > N always, and additionally m*_t <= m_t where predicate
+      (X) of Def. def:pmc fails, since branch 2's own analytic window must
+      reach at least as far as the exact one. Declaring a depth anywhere
+      requires eps_eig and eps_6; a missing one is refused. Declaring a depth
+      invokes Ass. ass:eig at a setting whose weight is evaluated in floating
+      point, and at no setting whose weight is evaluated rigorously (Req.
+      req:rigorous-weight, Req. req:eig-ledger-row), where a proved lower
+      bound on the block eigenvalue stands in place of the computed one and
+      eps_eig is not subtracted (Def. def:enclosed-weight). It costs one
+      extreme eigenvalue of a Hermitian matrix of dimension
+      binom(|Inp_C| + n - 1, n) per index and setting, and on the rigorous
+      route one enclosure of that block and one bound on its least
+      eigenvalue, which is why the depth is the caller's and no default is
+      stated for it.
+    per_setting: true
+    per_setting_note: >-
+      The depth is optional and per setting, and each per-setting weight
+      p_mc^(t) is its own setting's: a depth changes the weight of the setting
+      that declares it and of no other (Def. def:pmcex, "Per setting"). A
+      caller who declares one at some settings and not at others obtains the
+      exact-window value as the weight of each setting with one, while the
+      uniform weight p_mc = min over t in T of p_mc^(t) is bounded by the
+      settings without one; the two kinds of setting may be mixed in one
+      declaration (Def. def:pmc). The per-setting weights are emitted values in
+      their own right (Thm. thm:emitted-bound, Eq. eq:pmcsetting;
+      `high_photon_bounds`), so a depth declared only at a bright probe setting
+      changes that setting's emitted weight, which a consumer of the
+      per-setting weights uses, and leaves the uniform weight where the
+      settings without a depth put it.
+    no_default_note: >-
+      No default is stated, and none is invented here: the exact window is
+      evaluated only where a declaration requests it, never by default (Req.
+      req:weight-provenance), because its cost is the caller's to accept and a
+      platform default would be an undeclared number (design.md, decision 12).
+      An implementation that supplied a depth -- including m*_t = N + 1, the
+      minimal depth Ex. component-catalogue/ex:bb84exact uses -- would be
+      declaring an input on the caller's behalf.
+    absent_everywhere_note: >-
+      The opt-out is exact. A declaration carrying no depth at any setting is
+      governed by Eq. eq:pmcdef alone: no beta* is formed, no eigenvalue of any
+      block above the cutoff is computed, Ass. ass:eig is not invoked, and the
+      emitted weights are the values Eq. eq:pmcdef defines, expression for
+      expression, evaluated in floating point or on enclosed bound data (Def.
+      def:pmc, last paragraph; Def. def:enclosed-weight; Thm.
+      thm:exact-and-evaluated (v); Ass. ass:eig, lead-in).
+    validation:
+      - "m*_t > N, at every setting carrying a depth (always)"
+      - "m*_t <= m_t, at a setting where predicate (X) fails (only there)"
+      - "eps_eig declared, wherever any depth is declared"
+      - "eps_6 declared, wherever any depth is declared"
+    validation_kinds_note: >-
+      The closing enumeration of Def. def:tolmap classifies each of these and
+      adds no threshold: m*_t > N and m*_t <= m_t are of kind (a), a comparison
+      of declared data against a declared domain; the conditional presence of
+      eps_eig and eps_6 at a declaration carrying a depth is of kind (b), a
+      combinatorial predicate on the declaration decided by finite inspection.
+      Neither is a numerical test and neither consumes a tolerance.
+    refusals:
+      - condition: "a depth is declared and eps_eig or eps_6 is not"
+        reason: exact_window_declared_without_required_tolerance
+      - condition: "m*_t <= N, or m*_t > m_t at a setting where (X) fails"
+        reason: exact_window_depth_outside_declared_range
+    domain_detail: >-
+      Def. def:pmcex, opening sentence: m*_t is an integer with m*_t > N and,
+      where predicate (X) fails at t, also m*_t <= m_t. Req.
+      req:exact-window-declaration: declaring a depth at any setting requires
+      eps_eig and eps_6, and a missing one is refused rather than defaulted,
+      exactly as a missing window m_t is refused; a depth violating m*_t > N,
+      or violating m*_t <= m_t at a setting where (X) fails, is refused. Both
+      reason strings are rows of the refusal rules and are transcribed under
+      `refusals`.
+    what_it_changes_note: >-
+      At a setting carrying a depth, Eq. eq:pmcex replaces Eq. eq:pmcdef, per
+      setting rather than per declaration. Eq. eq:elldef supplies the window
+      values ell^(t)(n) = max{beta^(t)(n), beta-hat*^(t)(n) - eps_eig} on
+      N < n <= m*_t, and each branch keeps its own remainder above them: the
+      first branch (predicate (X) holds) takes beta^(t)(m*_t + 1), admissible
+      by Lem. lem:exactwindow (ii) because (X) makes Eq. eq:collapsehyp hold;
+      the second keeps its own analytic window m*_t < n <= m_t and tail
+      T^(t)_{m_t}, admissible by part (i) with no hypothesis. Neither
+      remainder is new and neither is weakened (Rem.
+      rem:exact-window-remainders).
+    empty_middle_minimum_note: >-
+      A convention Def. def:pmcex fixes and an implementation must not guess:
+      in the second branch of Eq. eq:pmcex the middle minimum runs over the
+      empty index set when m*_t = m_t, and is then +infinity and inactive. A
+      declaration with m*_t = m_t is legal, and the analytic middle window
+      contributes nothing rather than contributing zero.
+
+  # --- the receiver tolerances ---------------------------------------------------
+
+  - name: numerical_tolerances
+    symbol: "{eps_1, ..., eps_6}, eps_gap, eps_eig"
+    type: "six reals in [0, 1) always, two more on the opt-in route"
+    route: null
+    arity: 8
+    members: [eps_1, eps_2, eps_3, eps_4, eps_5, eps_6, eps_gap, eps_eig]
+    always_required: [eps_1, eps_2, eps_3, eps_4, eps_5, eps_gap]
+    conditionally_required: [eps_6, eps_eig]
+    conditionally_required_on: >-
+      an `exact_window` depth being declared at any setting (Def. def:pmcex);
+      required exactly there, refused when missing there, and neither required
+      nor an error when no depth is declared anywhere
+    declared_domain: "[0, 1)"
+    never_defaulted: true
+    domain: >-
+      The declared domain is [0, 1) for each, validated at input and refused
+      outside it (Req. req:tolerance-domain), because a receiver tolerance is a
+      slack on a quantity normalized to [0, 1] and at eps >= 1 the test it
+      governs is vacuous or degenerate (Rem. rem:tolerancedomain). eps_i bounds
+      the residual r_i of Def. def:residuals on the routes where that residual
+      exists, and a residual above its tolerance is a refusal (Req.
+      req:residual-refusal); eps_gap bounds the residual gap Eq. eq:resgap
+      where a window is declared. eps_1, eps_2 and eps_4 additionally decide
+      the exact admissibility conditions of Def. def:tolmap, the only place any
+      of the three is consumed other than as a residual bound. {eps_1, ...,
+      eps_5} and eps_gap are declared on every route: eps_1 and eps_3 are
+      unused on route (i), where r_1 and r_3 do not exist and no contractivity
+      check is made, and an unused tolerance is unused, not an error (Req.
+      req:residual-emission). Without them the `fail_closed` convention has no
+      threshold to test, so they are declared, never defaulted. eps_6 and
+      eps_eig are conditionally required, on the same rule and for the same
+      reason as m_t: required exactly where an `exact_window` depth is
+      declared, refused when missing there, and neither required nor an error
+      when no depth is declared anywhere (Req. req:exact-window-declaration).
+      eps_6 bounds r_6 (Eq. eq:res6); eps_eig decides nothing and is
+      subtracted from a computed eigenvalue in Eq. eq:elldef, the one input on
+      which Ass. ass:eig is stated.
+    domain_refusal_reason: tolerance_outside_declared_domain
+    missing_conditional_refusal_reason: exact_window_declared_without_required_tolerance
+    domain_note: >-
+      The domain is not a convention (Rem. rem:tolerancedomain): a receiver
+      tolerance is a slack on a normalized quantity, never a scale, and every
+      quantity the eight bound, decide or reduce lies in [0, 1]. At eps >= 1
+      each test is vacuous or degenerate in a way the remark names item by
+      item: the tests of Def. def:tolmap (i), (iii), (iv) and (v), the
+      eps_2-rank Eq. eq:eps2rank, which would return rank 0 for every port
+      Gram, the residual gap bounded by eps_gap, and the two tolerances of the
+      exact window, eps_6 and eps_eig, up to a computed beta-hat* that
+      rounding puts outside [0, 1], which is not clamped into that interval
+      (Rem. rem:exacteig). The domain is half-open, [0, 1): 0 is admissible
+      and 1 is not. It is a floor, not sizing advice, and what it buys is that
+      every error term the contract states holds on every value the contract
+      admits.
+    eps_eig_zero_note: >-
+      eps_eig = 0 is inside the declared domain and is admissible: Ass. ass:eig
+      then asserts beta-hat*^(t)(n) <= beta*^(t)(n), that the eigenvalue
+      routine never overshoots at all, the domain being a floor, not sizing
+      advice (Rem. rem:tolerancedomain). Declaring 0 does not remove the
+      assumption; it only makes the declared slack zero. What removes it at a
+      setting is the rigorous evaluation (Req. req:rigorous-weight): a
+      rigorous lower bound on beta*(n) (Rem. rem:ia, the fifth direction;
+      Def. def:enclosed-weight) takes the place of beta-hat*(n) - eps_eig,
+      eps_eig does not enter the weight, and Ass. ass:eig is not invoked there
+      (Thm. thm:enclosed-weight). The declared eps_eig then serves only a
+      setting the engine evaluates in floating point.
+    eps_eig_decides_nothing_note: >-
+      The one declared number that is not a test. Def. def:tolmap: eps_eig
+      decides nothing; it is subtracted from a computed eigenvalue in Eq.
+      eq:elldef, so it is the one declared number the contract spends on a
+      hypothesis (Ass. ass:eig) rather than on a test, and it changes an
+      emitted value, not an admission (the closing enumeration). The
+      `numerical_tolerance_assignment` convention adds that it appears in no
+      item of Def. def:tolmap, and Rem. rem:noslack that it is not a margin of
+      the kind a computed predicate would test and decides no predicate: the
+      exact window is selected by the presence of a declared depth, a property
+      of the declaration.
+    two_consumers_of_the_upper_bound: >-
+      Rem. rem:tolerancedomain names the two arguments that use the upper
+      bound, so that they are not rediscovered: Rem. rem:cdirection's even-n
+      estimate uses eps_2^n <= eps_2^2 for every even n >= 2, which is exactly
+      eps_2 <= 1; and the justification of Eq. eq:eps2rank in Rem.
+      rem:ranktwosided, that the spectrum it thresholds is normalized to
+      [0, 1], is an argument about a threshold inside that interval.
+    two_places_a_tolerance_changes_a_number: >-
+      The `numerical_tolerance_assignment` convention names exactly two places
+      where a declared tolerance changes a number rather than a decision, and
+      neither is a repair of a datum: Eq. eq:darkpmcslack, whose coefficient
+      rbar (Eq. eq:rbar) and correction delta_dc (Eq. eq:darkdelta, built
+      from eps_4 and eps_2 on the declared route) weaken a stated inequality
+      (Prop. prop:dark-slack-bound); and Eq. eq:elldef, where
+      eps_eig is subtracted from a computed eigenvalue before it is used as a
+      lower bound, which likewise lowers the emitted value and never raises it
+      (Rem. rem:exacteig). In both the computed quantity itself is emitted
+      unmodified beside the number the inequality uses.
+
+  # --- the emitted alphabet and the request --------------------------------------
+
+  - name: outcome_coarse_graining
+    symbol: "cg"
+    type: "total map 2^[K] -> V"
+    route: null
+    domain: >-
+      surjective onto the declared emitted alphabet V (Def. def:coarse);
+      declared, never hardcoded.
+    domain_detail: >-
+      Def. def:coarse: cg is supplied as data by the protocol declaration, and
+      the emitted POVM is F_v = sum over the fibre (Eq. eq:coarse). Req.
+      req:declared-alphabet takes V and cg as declared inputs and states why a
+      module that fixed the alphabet internally would be wrong; the
+      six-outcome optical-profile alphabet at K = 4 is one declared instance.
+
+  - name: requested_assurance
+    symbol: null
+    type: enum
+    route: null
+    domain: >-
+      `estimate`, `first-order` or `certified`, the three tiers of
+      foundations/def:tiers; a request naming any other value is refused as
+      an unknown tier (foundations/req:tiers). No value changes the artifact:
+      a tier is reached where the number is computed and is never decided by
+      a request, the certified tier by a run's certified evaluation
+      (meat-core/frank-wolfe/req:certified-evaluation). A request naming `certified` neither guarantees nor refuses that tier:
+      the run's `reported_tier` and its reasons say which tier it reached, and
+      a run that sets `certified_evaluation: strict` refuses where it is not
+      reported certified.
+    domain_detail: >-
+      Thm. thm:exact-and-evaluated (iii) and Req. req:evaluation-label: an
+      artifact carries `bound_evaluation: rigorous` exactly where every
+      weight was evaluated rigorously (Req. req:rigorous-weight), and
+      `floating_point` otherwise; item (v) says that no artifact resting on
+      Ass. ass:eig can claim more. The rigorous evaluation is formed wherever
+      the port Grams are enclosed, whatever is requested. The field is an
+      input because ReceiverRequest carries it and the artifact echoes it; it
+      decides nothing.
+
+  - name: efficiency_normalization
+    symbol: "t"
+    type: "rational number, optional"
+    route: null
+    optional: true
+    domain: >-
+      the factored loss t of detector-imperfections/def:normalized-station,
+      in [eta_max, 1] with eta_max the largest declared efficiency. Absent,
+      a receiver without source modes and with some eta_k > 0 is compiled at
+      t = eta_max / (99/100), formed exactly, where eta_max < 99/100, and at
+      t = 1 where eta_max >= 99/100. Below 99/100 that is a margin short of
+      the full normalization t = eta_max, for the reason
+      detector-imperfections/rem:normalization-scope gives; at or above it
+      the declared receiver is compiled, which can meet the same engine
+      handling when its largest efficiency is one or close to it. Declared,
+      at that t, and t = 1 turns the normalization off
+      (detector-imperfections/req:efficiency-normalization). A receiver with
+      source modes, or whose efficiencies are all zero, is compiled at t = 1.
+    domain_detail: >-
+      A declared t outside [eta_max, 1], or a declared t < 1 in a request
+      compiled at t = 1, is refused with efficiency_normalization_out_of_range
+      (the refusal rules), decided exactly on declared data. The station
+      compiled is the one at the exact rational efficiencies eta_k / t on
+      every route: its exact statements, reference and enclosures are formed
+      from them, its floating-point evaluation evaluates them as it does every
+      declared number, and no rounded quotient is declared in their place; the
+      quotient is exactly one at a port with eta_k = t. Every emitted block,
+      weight, dark-composed element and port Gram is then the normalized
+      station's, and the factor travels in efficiency_record
+      (detector-imperfections/req:normalization-record).
+
+# ---------------------------------------------------------------------------
+# data_flow_inputs
+#   Two inputs supplied at run time by the protocol declaration. They are
+#   data-flow inputs, not contract dependencies, and are recorded because this
+#   is the boundary an implementation could mistake for a contract dependency.
+# ---------------------------------------------------------------------------
+data_flow_inputs:
+  - name: probe_alphabet
+    symbol: "T"
+    supplied_by: the protocol declaration
+    contract_ref: >-
+      Supplied at run time by the protocol declaration as data, not as a
+      contract dependency: the probe alphabet T decides which family of
+      operators is the right object at all. Neither this input nor the
+      emitted outcome alphabet is a `depends_on` edge of module.yaml; the
+      relation is a data-flow edge.
+  - name: emitted_outcome_alphabet
+    symbol: "V"
+    supplied_by: the protocol declaration
+    contract_ref: >-
+      Supplied at run time by the protocol declaration as data (Def.
+      def:coarse; Req. req:declared-alphabet): the alphabet that cg maps onto.
+      This V is the receiver's own per-round alphabet, which carries the click
+      pattern and not the probe setting, whereas the joint outcome alphabet V
+      of spec/notation.md (section 3.3) also carries the per-round classical
+      choices. An implementer binding this key binds the receiver alphabet,
+      not the declaration's.
+
+# ---------------------------------------------------------------------------
+# outputs
+#   The outputs table: the payload of the emitted ReceiverMeasurementArtifact,
+#   key by key. `presence` is `always` unless a presence rule is stated;
+#   exactly one key, `receiver_construction`, carries one. The presence rules
+#   of r_1, r_3, r_6 and {m*_t} are inside two `always` keys and are recorded
+#   on those rows: `validation_results` and `bound_quantifier_domain` are
+#   always emitted and their content is conditional. `fixed_by` names the
+#   claims that fix a key.
+# ---------------------------------------------------------------------------
+outputs:
+
+  # --- the declared receiver and its canonical object ----------------------------
+
+  - name: input_mode_space
+    symbol: "Inp = Inp_C (disjoint union) Inp_S"
+    presence: always
+    content: >-
+      ordered mode labels and the basis of C^Inp; the channel/probe split.
+    fixed_by: "Def. def:modes, Def. def:instrument"
+
+  - name: outcome_alphabet
+    symbol: "V with cg"
+    presence: always
+    content: >-
+      the canonical ordered emitted alphabet and the declared coarse-graining
+      from 2^[K]; stable ids, labels are presentation metadata.
+    fixed_by: "Def. def:coarse, Thm. thm:coarse-graining"
+    order_and_ids_note: >-
+      What is fixed: V and cg are declared data supplied by the protocol
+      declaration, cg is a total surjection from 2^[K] onto V, the emitted
+      alphabet is ordered, the ids are stable, and the labels are presentation
+      metadata and therefore bind nothing. What is not fixed: which particular
+      stable ids are assigned, and whether the emitted order is the declared
+      order of V or is derived from an ordering of 2^[K] through cg. No theorem
+      distinguishes two choices: every statement about F_v is indexed by the
+      letter v and not by its position, and Thm. thm:coarse-graining (ii) sums
+      over a fibre, which is a set.
+
+  - name: port_grams
+    symbol: "{A_k}"
+    presence: always
+    content: >-
+      the canonical object, on Inp, after the efficiency layer; for a
+      receiver compiled at a factored loss t < 1, the normalized station's,
+      A'_k = (eta_k / t) A°_k (detector-imperfections/def:normalized-station).
+    fixed_by: "Def. def:gram, Thm. thm:efficiency"
+    after_efficiency_note: >-
+      "After the efficiency layer" is Thm. thm:efficiency (i)'s substitution
+      A_k -> eta_k A_k, and the rank rule depends on it. Rem. rem:effrank shows
+      the consequence an implementation can get wrong, and Req.
+      req:one-mode-per-port makes it a rule: the rank criterion is decided on
+      the emitted port Grams, after every detector efficiency is applied,
+      never before.
+
+  - name: receiver_construction
+    symbol: "G, {P_k}, probe declaration"
+    presence: "route (iii) only"
+    content: >-
+      the declared element graph with every parameter, the port map, and the
+      probe declaration: the reproducible input the Grams were computed from.
+    fixed_by: "the outputs table"
+    presence_rule: >-
+      Present exactly when route (iii) was used, and absent exactly when the
+      Grams or the instrument matrix were supplied directly: only both halves
+      together make it a rule. The key is present on route (iii) and absent on
+      routes (i) and (ii); there is no third behaviour, and no partial emission
+      is authorised.
+
+  # --- the emitted blocks --------------------------------------------------------
+
+  - name: photon_blocks
+    symbol: "blk M^{(=n)}_v, 0 <= n <= N"
+    presence: always
+    content: >-
+      the emitted low-photon blocks of the coarse-grained POVM, per probe
+      setting, composed with the dark-count channel R: the blocks of the
+      dark-composed family (detector-imperfections Def. def:dark-composed).
+      For every declaration whose model is an admissible receiver exactly
+      (Req. req:exact-route-decision) each block is also carried as a
+      rigorous enclosure computed in exact rational arithmetic, a Hermitian
+      Gaussian-rational centre and symmetric rational radii (Thm.
+      thm:enclosed-blocks at the probe-free receiver, the claims of the
+      submodule that constructs a setting family for its blocks, Cor.
+      cor:exact-dark-composed); this enclosed family is the reference a
+      declaring instance hands beside its snap. The entry records the
+      reference kind offered for every block: exact where every radius of the
+      block is zero (on the exact route, Def. def:exact-route, at least every
+      block of at most one photon, Thm. thm:exact-blocks); enclosed otherwise,
+      with the block's largest radius and the largest radius of the
+      enclosures of irrational inputs (square roots, trigonometric values)
+      from which the centres are computed exactly; or none, with its cause
+      (Req. req:dark-composed-reference). The record of a snap of the family
+      carries per block the kind of the reference the snap ran on
+      (foundations Req. req:who-snaps): exact where it ran on the centres of
+      an exact block, none where it ran on the floating-point blocks. The
+      reference is formed in every run: it is the handed reference the
+      instance passes beside its snap (foundations Def.
+      def:evaluated-off-snap (i)), on which the run evaluates its first-order
+      bound (meat-core/frank-wolfe Req. req:bracket-on-reference). Only a run
+      that declares enclosed references not used forms no enclosure with a
+      radius that is not zero beyond what deciding exactness takes: it
+      carries the reference only on the blocks enclosed exactly, offered as
+      exact, and offers every other block as none, with the cause that
+      enclosed references are not used (Req. req:dark-composed-reference
+      (vi)); the offered kind then appears in the fix (Req.
+      req:snap-fix (ii)). The snap itself uses only the centres
+      of the exact blocks, whatever the entry carries. For a receiver with no
+      probe inputs declared by a component graph, where a port dilation of the
+      declaration is formed, the reference also carries, on every block the
+      structural column count admits, a factor enclosure of the block, columns
+      read through that port dilation with exact rational cores (Thm.
+      thm:factor-blocks, component-catalogue Lem. lem:catalogue-dilations),
+      handed beside the entrywise enclosure and unaltered. It carries none
+      where the route declares the port Grams or the instrument matrix, of
+      which the engine forms no decomposition (cause no_port_dilation), as
+      Req. req:dark-composed-reference (vii)(b) permits. The entry records
+      per block whether one is carried, with its number of columns, or the
+      cause where none is (Req. req:dark-composed-reference (vii)).
+    fixed_by: "Thm. thm:click-povm (iii), Thm. thm:coarse-graining (i), Thm. thm:dark-counts, Def. def:dark-composed, Thm. thm:enclosed-blocks, Thm. thm:exact-blocks, Thm. thm:factor-blocks, Cor. cor:exact-dark-composed, Req. req:dark-composed-reference"
+    reference_note: >-
+      Why the reference is the dark-composed family and not the bare one:
+      loss and dark counts in every port make every dark-composed element
+      positive definite on every block (Prop. prop:noise-floor), and the
+      first-order bound is evaluated on the model the reference describes,
+      which is the device's only with its noise in it (Rem.
+      rem:noise-floor-receiver). Without loss, or without a dark count in
+      every port, some elements are rank-deficient (Prop. prop:noise-floor
+      (iv), (v)), and a snap of them may need its flagged last resort. Where
+      the support of such an element contains no non-zero Gaussian-rational
+      vector, as for the two-photon block of an ideal BB84 receiver measuring
+      in the diagonal basis behind a half-wave plate at pi/8, or the
+      one-photon block behind a half-wave plate at an axis angle theta with
+      irrational cos 4 theta, the model dominates a lattice family declared
+      in the occupation basis only at a weight of at least that element's
+      largest eigenvalue over the completeness constant (foundations Lem.
+      lem:rational-obstruction (v)), which matters to a declared device
+      weight and not to a snap (foundations Rem. rem:noise-floor). The exact
+      dyadic blocks of an ideal device measuring in one basis are lattice
+      values, which a snap keeps. Reductions that apply a channel to the model before comparing it
+      with a lattice family, such as a common unitary or the isometry into a
+      tensor power, are not domination in the occupation basis and lie outside
+      these contracts (spec/future-scope.md, section 13). The floating-point
+      blocks are evaluations of the model's blocks, which the enclosures
+      contain (Thm. thm:exact-and-evaluated (vi) for the unconditioned
+      blocks, the claims of the submodule that constructs a setting family
+      for its blocks, Cor. cor:exact-dark-composed (i) for their
+      dark-count composition); no decision about the
+      reference is taken on them.
+    not_a_compression_note: >-
+      Rem. rem:blockmeaning, recorded because it is the one place an
+      implementation could emit the wrong operator under the right key: the
+      emitted low-photon blocks are operators on the channel space and are not
+      the compressions Pnum(<= N) M_S Pnum(<= N), and emitting them is a
+      decomposition of the physical POVM, never a squashing argument.
+    who_composes_note: >-
+      R is already composed into the dark-composed blocks, and a consumer does
+      not compose it into them again (Req. req:dark-composed-reference (v)); R
+      stays emitted in `dark_count_channel` for the high-photon weight, which
+      is still the bare one (`high_photon_bounds`). This module's code emits,
+      per setting, the dark-composed blocks (`dark_composed`) and their
+      reference (`reference`) beside the bare blocks (`blocks`), on which the
+      residual r_5 runs (Req. req:residual-emission). Its docking hands the
+      consumer the bare blocks unless asked for the dark-composed ones
+      (src/certiqs_key/receiver/docking.py,
+      `receiver_artifact_rows(..., dark_composed=True)`) and states which it
+      handed in the consumer's `photon_blocks_form`: the consumer in this
+      repository, the submodule reductions/wpfss, composes R into blocks
+      handed in the bare form and not into blocks handed in the dark-composed
+      form (reductions/wpfss/def:weight-route). A snap made on the centres of
+      the reference reads the dark-composed blocks. The emitted blocks remain
+      a decomposition of the physical POVM, as Rem. rem:blockmeaning
+      requires.
+    wire_form_note: >-
+      Not fixed by the claims; this module's choice
+      (src/certiqs_key/receiver/artifact.py). The key is one object:
+      `exact_route`, the record of Req. req:exact-route-decision (iv), once
+      (input route, the item that decided, whether the declaration has a
+      model admissible exactly and is on the exact route, and the cause where
+      it is not); and `settings`, one entry per probe setting with `blocks`,
+      `dark_composed` and `reference`. The reference record names the kind
+      offered per block (`exact`, `enclosed` with the block's largest radius,
+      its decision radius rho and the largest leaf radius, or `none`), the
+      cause where none is offered (no model admissible exactly; a declared R
+      failing (D1) or (D2) exactly; a reciprocal without an enclosure;
+      enclosed references not used, for a block not enclosed exactly),
+      whether lmax(A_Sigma) < 1 is established on the Gram enclosures, and,
+      where a reference is offered, its identity (model, exact parameters,
+      establishing claims; a declared operator -- port Grams, instrument
+      matrix, C10 block, declared R -- is named by the SHA-256 of its exact
+      entries, the rationals its declared binary64 values denote) and the
+      SHA-256 of its enclosures written as exact rationals. The enclosures themselves are carried by the artifact object
+      and written out on request, not in the payload, whose size would
+      otherwise grow to megabytes at a large cutoff.
+    emitted_range_note: >-
+      The emitted range is 0 <= n <= N, and the exact window does not widen
+      it: Def. def:exactbnd forms blocks at N < n <= m*_t in order to take one
+      eigenvalue of each and does not add them to this key. Req.
+      req:weight-provenance says what an implementation may do beside it:
+      where the exact window is not requested it may also report block
+      eigenvalues as a diagnostic, while the values entering the strengthening
+      slot are the per-setting weights p_mc^(t) -- at a receiver without a
+      probe the single value p_mc -- and the artifact says which definition
+      produced each and at what depth. The computed eigenvalues of an exact
+      window are carried in `bound_quantifier_domain` (Req.
+      req:exact-window-record), not in this key.
+
+  - name: block_dimensions
+    symbol: "binom(|Inp_C| + n - 1, n)"
+    presence: always
+    content: >-
+      expected dimension of the n-photon channel block, and the
+      occupation-vector basis order.
+    fixed_by: "Def. def:fock"
+    basis_order_note: >-
+      The basis order is fixed by the `subsystem_order` convention -- within a
+      block, occupation vectors in lexicographic order of the occupation vector
+      -- read against the occupation basis of Def. def:fock. The dimension
+      formula is over |Inp_C|, the channel modes.
+    exact_window_note: >-
+      The exact window uses the same formula and basis. Def. def:exactbnd sizes
+      its matrices by binom(D + n - 1, n) with D = |Inp_C| at both instances
+      this module constructs, and forms them by the construction Eq.
+      eq:blockMS uses for the blocks the artifact emits at n <= N, in the
+      occupation basis and order that Def. def:fock and the interface
+      conventions fix, at an index above the cutoff instead of below it. So
+      this key's formula and basis order govern the exact window as well, and
+      an implementation that used a different order above the cutoff would be
+      forming a different matrix.
+
+  # --- detectors -----------------------------------------------------------------
+
+  - name: efficiency_record
+    symbol: "{(q_i, e_i, s_i)}, t"
+    presence: always
+    content: >-
+      every declared loss parameter q_i under its name (a transmittance, a
+      reflectivity, or for y, y_1, y_2 a loss whose transmittance is 1 - q_i),
+      the element e_i that declares it, and
+      the single site s_i at which it enters Gamma, the detector efficiencies
+      as declared among them; and the normalization: the factored loss t,
+      whether t was declared or set by req:efficiency-normalization, every declared efficiency
+      eta_k beside the exact rational eta_k / t the receiver was compiled at,
+      whether the normalization was applied, which it was exactly where
+      t < 1, and, where not, why, the first that holds of: source modes
+      declared, every efficiency zero, or the factor one, declared or by
+      default. Where t < 1 it states that the blocks, multiclick weights and
+      dark-composed family are the normalized station's at t, whose pull-back
+      through the pure-loss channel of transmittance t is the receiver's
+      measurement.
+    fixed_by: >-
+      Req. req:efficiency-record; detector-imperfections/req:normalization-record
+    consumer_obligation: >-
+      detector-imperfections/req:loss-before-evaluation: where t < 1, every
+      evaluation of the emitted blocks or dark-composed family, or of a target
+      formed from them, on a state that stands for the receiver's statistics
+      on an input rho (the honest law among them) is made on
+      Lambda^loss_t(rho), on a joint input on that receiver's channel-system
+      factor with the t of its own record; the states the key-rate program
+      optimises over are not such inputs. A consumer that cannot apply the
+      loss refuses with factored_loss_not_applied, a reason string of the
+      consumer's tier (the run tier's RunRefusalReason), not of this module.
+    two_equal_values_note: >-
+      Req. req:efficiency-record: two elements may carry equal numerical
+      values; they are still two losses and appear as two rows. Req.
+      req:efficiency-convention says what the record is for: whether the
+      declared Grams come from power data or from click data is a declared
+      field, and the efficiency_record is where the answer is written down;
+      Rem. rem:powervsclick says why it cannot be inferred from the numbers.
+
+  - name: dark_count_channel
+    symbol: "R, r_min, rbar, delta_dc"
+    presence: always
+    content: >-
+      the emitted stochastic matrix on 2^[K]; which of the two routes of Def.
+      def:darkadm it came from; which admissibility conditions were checked
+      (Thm. thm:dark-counts); and three numbers under distinct names: r_min
+      exactly as Eq. eq:rmin computes it, the capped coefficient
+      rbar = min{r_min, 1} of Eq. eq:rbar, and the composition correction
+      delta_dc of Eq. eq:darkdelta, whose value follows the route (0 generated,
+      eps_4 + (K + 1) eps_2 declared). The inequality a consumer composes with
+      is Eq. eq:darkpmcslack, stated in rbar and delta_dc, not Eq. eq:darkpmc,
+      which holds only for an exactly admissible R; the overstatement from
+      using the latter is Eq. eq:darkoverstate. Neither R nor r_min is
+      modified: rbar is a coefficient in a stated inequality, not a repair
+      (Prop. prop:dark-slack-bound; Req. req:dark-channel-record).
+    fixed_by: "Thm. thm:dark-counts; Eq. eq:rmin, Eq. eq:rbar, Eq. eq:darkdelta; Prop. prop:dark-slack-bound; Req. req:dark-channel-record"
+    emitted_scalars:
+      - name: r_min
+        equation: "Eq. eq:rmin"
+        rule: >-
+          the minimum of R_{MC_K|S'} over every non-multiclick column, the
+          no-click column S' = empty included (Rem. rem:rmintrap). Emitted
+          unmodified.
+      - name: rbar
+        equation: "Eq. eq:rbar"
+        rule: >-
+          rbar = min{r_min, 1}. It exists because the widened (D1) of Def.
+          def:tolmap (iii) admits column sums up to 1 + eps_4, so Eq.
+          eq:rminupper gives R_{MC_K|S'} <= 1 + (K + 2) eps_4 and r_min > 1 is
+          reachable. Nothing is clamped (Req. req:dark-channel-record): R is
+          emitted as declared, r_min as Eq. eq:rmin computes it, and rbar is a
+          separate named scalar appearing as a coefficient in a stated
+          inequality (Rem. rem:d2slack (d)). Its cost is bounded by Eq.
+          eq:rbarcost: 0 <= r_min - rbar <= (K + 2) eps_4.
+      - name: delta_dc
+        equation: "Eq. eq:darkdelta"
+        rule: >-
+          0 on the generated route, where (D1) and (D2) are theorems and not
+          tests; eps_4 + (K + 1) eps_2 on the declared route. Derived at Eq.
+          eq:d2slack from the lower side of (D1)'s column sum and the upper
+          side of (D2)'s entry bound, the K + 1 counting the rows S with
+          |S| <= 1.
+    composition_rule: >-
+      Eq. eq:darkpmcslack: whenever blk M^{(>N)}_{MC_K} >= p_mc id^{(>N)},
+      blk Mtilde^{(>N)}_{MC_K} >= ((1 - rbar) p_mc + rbar - delta_dc)
+      id^{(>N)}. On the generated route delta_dc = 0 and r_min <= 1, so Eq.
+      eq:darkpmcslack is Eq. eq:darkpmc (Rem. rem:d2slack (e)). The rule is
+      indifferent to which definition produced p_mc: `high_photon_bounds`
+      states the hypothesis on p_mc as the emitted bound, and Def. def:pmcex
+      emits into the same slot, so the composition rule is the same at a
+      setting carrying an exact-window depth.
+    which_checked_note: >-
+      Rem. rem:corrdark fixes what "which conditions were checked" means: for
+      the product form (D1) and (D2) are derived; for a declared R they are
+      checked rather than derived, and the artifact records which of the two
+      routes the emitted R came from. Where the check is the one this contract
+      performs, Def. def:tolmap (iii) at eps_4 and eps_2, items (ii), (iii)
+      and (iv) of Thm. thm:dark-counts hold only as Prop.
+      prop:dark-slack-bound and Rem. rem:d2slack restate them, and Thm.
+      thm:dark-counts (ii) in particular is outside the widened hypotheses and
+      is not repaired (Rem. rem:d2slack (f)).
+    not_composed_note: >-
+      Dark counts are emitted as the channel R with r_min, rbar and delta_dc.
+      They are composed into the emitted photon_blocks (Req.
+      req:dark-composed-reference) and not into p_mc: the consumer composes
+      them into the high-photon bound with Eq. eq:darkpmcslack (Req.
+      req:dark-channel-record).
+
+  # --- the high-photon bound -----------------------------------------------------
+
+  - name: high_photon_bounds
+    symbol: "{(O_i, (p_i^(t))_{t in T})}"
+    presence: always
+    content: >-
+      the strengthening slot (Def. def:slot), carrying the single entry
+      (MC_K, (p_mc^(t))_{t in T}): one weight per probe setting, p_mc^(t) of
+      Def. def:pmc, or of Def. def:pmcex at a setting whose declaration carries
+      an exact-window depth, evaluated rigorously where the port Grams are
+      enclosed -- the enclosed weight of Def. def:enclosed-weight rounded down
+      to binary64 (Req. req:rigorous-weight) -- and in floating point
+      elsewhere, each guaranteed at its own setting (Thm.
+      thm:emitted-bound, Eq. eq:pmcsetting), together with the entry's uniform
+      weight p_mc = min over T of p_mc^(t), guaranteed at every setting (Eq.
+      eq:pmcstatement). A probe-free receiver has T = {off} and emits the one
+      weight p_mc = p_mc^(off). Unlike photon_blocks, this is the bare
+      pre-dark-count bound: p_mc is computed from the conditioned Grams, and
+      the consumer's composition is Thm. thm:dark-counts (iv) where the emitted
+      R is exactly admissible and Eq. eq:darkpmcslack in general, at each
+      setting with that setting's weight, both stated at every setting of a
+      setting family.
+    fixed_by: >-
+      Def. def:slot, Def. def:pmc, Def. def:pmcex, Def. def:enclosed-weight,
+      Thm. thm:emitted-bound (Eqs. eq:pmcsetting and eq:pmcstatement), Thm.
+      thm:enclosed-weight, Req. req:rigorous-weight, Thm. thm:dark-counts (iv),
+      Eq. eq:darkpmcslack (Prop. prop:dark-slack-bound). Cor.
+      cor:emitted-unconditioned instantiates them at the probe-free receiver;
+      the submodule that constructs a setting family where a probe is
+      declared instantiates them in a claim of its own. That instantiation is
+      what the emitted values rest on for an actual receiver.
+    per_setting_note: >-
+      Thm. thm:emitted-bound states the per-setting inequality Eq.
+      eq:pmcsetting as its first conclusion, and Def. def:slot carries a weight
+      per entry and setting, so the per-setting values are the guaranteed
+      content and the uniform weight is derived from them. The reason is
+      physical: with a bright probe on, the high-photon multiclick floor is
+      expected to be larger than with it off, and a minimum alone would keep
+      only the smaller one. No claim states that it is larger; a probe-on
+      weight is a window-and-tail bound wherever predicate (X) fails, and the
+      per-setting weights keep each setting's own weight whichever is larger.
+      At T = {off} the entry is (MC_K, p_mc) (Def. def:slot, one-setting
+      clause).
+    code_note: >-
+      The payload carries each entry's per-setting weights inside the entry
+      (entries[i].per_setting: [{setting, weight}]) beside its uniform weight,
+      and no separate top-level per_setting list, so nothing appears twice;
+      HighPhotonBounds.per_setting is a read-only reading of the single entry.
+      bound.emitted_weights is Eq. eq:pmcsetting and bound.emitted_weight its
+      minimum, Eq. eq:pmcstatement.
+      artifact.FIRST_VERSION_STATING_THE_PER_SETTING_WEIGHTS = (0, 2, 0)
+      states, for a consumer, the first module version whose thm:emitted-bound
+      carries eq:pmcsetting.
+    slot_note: >-
+      Def. def:slot: a finite list of pairs (O_i, (p_i^(t))_{t in T}) with the
+      O_i pairwise disjoint subsets of 2^[K] and every p_i^(t) >= 0, with the
+      guarantee that the sum over O_i of the > N blocks at setting t dominates
+      p_i^(t) times the identity, for every t in T and every i; the uniform
+      weight p_i = min over T of p_i^(t) then carries the same guarantee at
+      every setting. The artifact carries r = 1 with
+      (O_1, (p_1^(t))_t) = (MC_K, (p_mc^(t))_t), whose uniform weight is p_mc;
+      at a one-setting family the entry is written (MC_K, p_mc). Prop.
+      prop:slotvalid proves p_i^(t) >= 0 and sum_i p_i^(t) <= 1 at every
+      setting, and the same for the uniform weights, so the failure conditions
+      p_y < 0 and sum_y p_y > 1 of a squashing request (spec/architecture.md
+      section 5.4) cannot be triggered by this module's output.
+    still_one_entry_note: >-
+      The exact window is not the multi-bound extension point: it emits the
+      same single entry (MC_K, p_mc) for the same outcome set, evaluated more
+      sharply, and r = 1 still. Nor are the per-setting weights: the same
+      single entry for the same outcome set, with one weight per setting, and
+      r = 1 still (design.md, "Named extension points").
+    range_note: >-
+      0 <= p_mc^(t) <= 1 exactly at every setting, and so 0 <= p_mc <= 1, at
+      settings with and without a depth. Thm. thm:emitted-bound states it, and
+      Rem. rem:exacteig (its "Range" paragraph) derives it for the exact window
+      from the analytic remainder at most 1 that each branch of Eq. eq:pmcex
+      keeps, whatever the computed beta-hat*; their floating-point evaluation
+      is governed by Thm. thm:exact-and-evaluated (ii), and no computed value
+      is clamped into [0, 1] to make them look true.
+    never_worse_note: >-
+      Prop. prop:exactnoworse: at every setting carrying a declared depth, the
+      value Eq. eq:pmcex is at least the value Eq. eq:pmcdef gives at that
+      setting on the same bound data. Rem. rem:noworsefl states the
+      qualification an implementation must not lose: the proposition compares
+      two expressions in exact arithmetic, and on branch 1 the emitted value
+      can sit below the one Eq. eq:pmcdef would produce by evaluation errors on
+      which the contract claims no bound. So "never worse" is a statement
+      about the mathematics and not a runtime invariant an implementation may
+      assert as a check.
+
+  - name: bound_quantifier_domain
+    symbol: "N, T, {m_t}, {m*_t}, {beta-hat*^(t)(n)}"
+    presence: always
+    content: >-
+      the literal statement "for all n > N and all t in T", with N and T
+      echoed; and, per setting, which branch of Def. def:pmc was taken --
+      branch 1 exactly where predicate (X) holds -- and the declared window m_t
+      where branch 2 was. Per setting, the evaluation that formed the emitted
+      weight, `rigorous` or `floating_point`, with the reason where it is
+      `floating_point` (`port_grams_not_enclosed` or
+      `bound_inputs_not_enclosed`); where it is `rigorous`, the enclosed bound
+      data, the rigorous window bounds and the enclosed weight as exact
+      rationals (Req. req:rigorous-weight (vi)). Where an exact-window depth
+      m*_t was declared, the depth and the computed window values
+      beta-hat*^(t)(n), N < n <= m*_t; where the weight is `floating_point`
+      these are what Eq. eq:elldef read p_mc^(t) from, and the fact that Ass.
+      ass:eig was invoked at that setting is recorded.
+    fixed_by: "Thm. thm:emitted-bound, Eqs. eq:pmcsetting and eq:pmcstatement, Def. def:pmc, Def. def:pmcex, Def. def:enclosed-weight, Req. req:rigorous-weight, Req. req:weight-provenance"
+    one_predicate_note: >-
+      The branch-1 selector is predicate (X) alone, the setting's exact flag
+      (Def. def:setting-family (c)), decided on the declaration before any
+      arithmetic -- at the two instances this module constructs, no probe
+      modes declared (Inp_S empty) or the setting carrying the vacuum probe
+      (Gamma^(t) = 0) (Rem. rem:flag-instances) -- and the key reports the
+      branch rather than a predicate. Rem. rem:noslack states why no computed
+      companion exists: the slack such a predicate would test equals -beta(0),
+      which is <= 0 at every receiver, so a test demanding sigma >= eps > 0 is
+      unsatisfiable, and a test demanding sigma >= 0 is satisfied only in the
+      exact-equality case, which (X) already guarantees from the declaration
+      without computing anything. The declared eps_eig of Def. def:pmcex is not
+      a margin of this kind and decides no predicate (Rem. rem:noslack).
+    computed_values_note: >-
+      The emitted p_mc is a function of declared data alone at every setting
+      governed by Def. def:pmc; at a setting governed by Def. def:pmcex it is a
+      function of the declared data and of the computed window values, which is
+      why they are carried here. At a setting evaluated rigorously it is the
+      enclosed weight rounded down, a function of the enclosed bound data and
+      the rigorous window bounds carried beside it.
+    computed_values_are_emitted_unmodified_note: >-
+      Req. req:exact-window-record: the engine carries each
+      beta-hat*^(t)(n), N < n <= m*_t, in the artifact exactly as computed, in
+      bound_quantifier_domain, and eps_eig enters only as the declared slack
+      subtracted in Eq. eq:elldef, so that a reader can recompute Eq. eq:elldef
+      and see what the slack cost. So this key carries the raw computed
+      eigenvalue, not beta-hat* - eps_eig and not a value clamped into [0, 1].
+    assumption_invocation_record_note: >-
+      The key records, per setting, the fact that Ass. ass:eig was invoked at
+      that setting, which is exactly a setting with a depth whose weight is
+      `floating_point`. Req. req:eig-ledger-row requires the same of the ledger:
+      the engine carries Ass. ass:eig in `assumption_ledger` beside the
+      settings at which it was invoked. So the invocation appears in two
+      places, here per setting and in `assumption_ledger` as a ledger row, and
+      both are required by the contract.
+
+  # --- residuals, evaluation and ledger --------------------------------------------
+
+  - name: validation_results
+    symbol: "r_1..r_6, g_{N,m_t}"
+    presence: always
+    content: >-
+      the residuals of Def. def:residuals that exist on the route taken and for
+      the evaluation requested -- r_2, r_4, r_5 on every route, r_1 and r_3 on
+      routes (ii) and (iii) only, r_6 exactly at the settings carrying an
+      exact-window depth -- with their computed values; and the achieved
+      residual gap Eq. eq:resgap, a finite real (Lem. lem:windowtail (ii)), at
+      each setting that declares a window; each with pass or fail against its
+      declared tolerance. On route (i) the keys of r_1 and r_3 are absent, and
+      so is the key of r_6 where no depth is declared, exactly as
+      `receiver_construction` is absent off route (iii): they are not emitted
+      as zero, which would report a check that was not made (Req.
+      req:residual-emission).
+    fixed_by: >-
+      Def. def:residuals (Eq. eq:res1-Eq. eq:res6, Eq. eq:rhodef, the paragraph
+      "Which residuals exist on which route" and the paragraph "r_6 depends
+      on the request, not on the route"); Req. req:residual-emission;
+      Req. req:residual-refusal; Prop. prop:res5; Eq. eq:resgap;
+      Lem. lem:windowtail (ii); Thm. thm:exact-and-evaluated (iv)
+    residual_route_presence:
+      "(i) port_grams":
+        present: [r_2, r_4, r_5]
+        absent: [r_1, r_3]
+      "(ii) instrument_matrix":
+        present: [r_1, r_2, r_3, r_4, r_5]
+        absent: []
+      "(iii) element_graph":
+        present: [r_1, r_2, r_3, r_4, r_5]
+        absent: []
+    residual_request_presence:
+      no_depth_declared_anywhere:
+        present: []
+        absent: [r_6]
+      depth_declared_at_some_setting:
+        present: [r_6]
+        present_at: "exactly the settings carrying a depth, over exactly N < n <= m*_t"
+        absent_at: "every setting carrying no depth"
+    r6_is_request_dependent_note: >-
+      A different rule from that of r_1 and r_3 (Def. def:residuals, the
+      paragraph on r_6): r_6 is request-dependent, not route-dependent. It
+      compares two evaluations of one proved inequality,
+      beta^(t)(n) <= beta*^(t)(n) (Lem. lem:exactbasic), so its exact value is
+      0 like the other five, and it exists on all three routes but only at the
+      settings whose declaration carries an exact-window depth, over exactly
+      the indices N < n <= m*_t that depth names. A declaration that requests
+      no exact window computes no beta-hat* and has nothing to compare, so the
+      key of r_6 is absent there, absent and not zero, by the same rule and for
+      the same reason as r_1 and r_3 on route (i). eps_6 is then not required
+      either, being conditionally required on the same condition; this is where
+      eps_6 differs from eps_1 and eps_3, which are declared on every route and
+      merely unused on one.
+    residual_norm: spectral
+    residual_norm_note: >-
+      Def. def:residuals: the norm is the spectral norm throughout Eq.
+      eq:res1-Eq. eq:rhodef. r_2 and r_6 are scalars and are unaffected by it.
+    r6_note: >-
+      r_6 = max over t and over N < n <= m*_t of
+      (beta^(t)(n) - beta-hat*^(t)(n))_+ (Eq. eq:res6), the window consistency
+      defect, whose exact value is 0 (Lem. lem:exactbasic). A value above eps_6
+      refuses with the reason
+      `window_eigenvalue_consistency_residual_above_tolerance` (Req.
+      req:residual-refusal). Rem. rem:exacteig says what it catches: an
+      evaluation that contradicts an inequality the contract proves, such as a
+      block formed at the wrong index, a wrongly ordered occupation basis, a
+      conditioned family taken at the wrong setting or an iteration that has
+      not converged, which is the failure mode most likely to be gross. And
+      what it does not: it does not verify Ass. ass:eig, because r_6 fires when
+      beta-hat* lands too low and Ass. ass:eig constrains it from landing too
+      high; no test in the contract bounds the unsafe direction, and the
+      assumption carries it. The direction is refuse-only, as for r_5: it
+      refuses and repairs nothing (Req. req:residual-refusal).
+    r5_note: >-
+      r_5 = max over v, n, t of rho(blk M^{(=n)}_{v|t}) with
+      rho(X) = max{ ||X - X^dagger||, (-lmin((X + X^dagger)/2))_+ }
+      (Eq. eq:res5, Eq. eq:rhodef), over exactly the blocks the artifact emits:
+      every v in V, every 0 <= n <= N and every setting t in T of the setting
+      family. These are the bare blocks, before any dark-count channel, which
+      the `photon_blocks` entry carries beside its dark-composed blocks; r_5
+      does not run over the dark-composed ones (Req. req:residual-emission).
+      Prop. prop:res5 (iv): every such block satisfies rho = 0 exactly, so r_5
+      is a residual in the same sense as the others. The
+      direction is refuse-only (Req. req:residual-refusal): no block is
+      Hermitized, symmetrized, projected onto the positive cone, clamped or
+      repaired in any way.
+
+  - name: bound_evaluation
+    symbol: null
+    presence: always
+    content: >-
+      per artifact, `rigorous` exactly where the weight of every setting was
+      formed by the rigorous evaluation of Req. req:rigorous-weight, and
+      `floating_point` otherwise (Thm. thm:exact-and-evaluated (iii), Req.
+      req:evaluation-label). Which evaluation formed each setting's weight,
+      with the fallback reason, is recorded per setting in
+      `bound_quantifier_domain`. The label concerns the weights alone: the
+      emitted blocks are floating-point evaluations under either value.
+    fixed_by: "Thm. thm:exact-and-evaluated, Req. req:evaluation-label, Req. req:rigorous-weight, Def. def:evaluation-model"
+    values: [rigorous, floating_point]
+    fallback_reasons: [port_grams_not_enclosed, bound_inputs_not_enclosed]
+    fallback_reasons_note: >-
+      Why a setting's weight is `floating_point` (Req. req:rigorous-weight
+      (i)): `port_grams_not_enclosed` where the declaration has no model
+      admissible exactly, so that Req. req:exact-route-decision (iii) forms
+      no enclosure of the port Grams; `bound_inputs_not_enclosed` where a
+      reciprocal of the conditioned prefactors or effective Grams receives no
+      enclosure. Neither is a refusal: the artifact is emitted with the
+      floating-point weight. Neither is the `receiver_grams_not_enclosed`
+      string of `refusals.tier_fallback`, which no run emits.
+    consumer_note: >-
+      A run whose declaration carries a routed weight into which a
+      per-setting weight evaluated in floating point enters, the uniform
+      weight of a slot entry counting the weight of every setting as entering
+      it, is not reported at the certified tier
+      (meat-core/frank-wolfe/req:certified-evaluation (vii) (b)); the
+      reductions pass the label on unchanged (reductions/wpfss, its
+      `bound_evaluation`).
+    exact_window_note: >-
+      The exact window does not soften this value: by Thm.
+      thm:exact-and-evaluated (v), item (ii) governs beta-hat* as it governs
+      every other computed quantity, so a weight of Def. def:pmcex is
+      `floating_point`, and no artifact resting on Ass. ass:eig can claim
+      more. An exact window evaluated rigorously reads no beta-hat* and keeps
+      the value `rigorous`.
+
+  - name: assumption_ledger
+    symbol: "A-..."
+    presence: always
+    content: >-
+      the machine keys of the assumption files (ass:*), one row per file and
+      every row on every artifact, with the declared values of the parameters
+      each one constrains.
+    fixed_by: "the assumption files (ass:*)"
+    rows:
+      - {id: A-TRUST, machine_key: receiver_trusted_exact}
+      - {id: A-PASSIVE, machine_key: passive_optics}
+      - {id: A-VAC, machine_key: undeclared_inputs_vacuum}
+      - {id: A-MODES, machine_key: no_undeclared_paths}
+      - {id: A-THRESH, machine_key: threshold_memoryless_detectors}
+      - {id: A-PORT, machine_key: mode_insensitive_ports}
+      - {id: A-EXACT, machine_key: exact_parameters}
+      - {id: A-NOSEL, machine_key: device_not_adversarial}
+      - {id: A-ROUND, machine_key: round_homogeneity}
+      - {id: A-EIG, machine_key: exact_window_eigenvalue_slack}
+    a_eig_row_note: >-
+      A-EIG's declared parameter is eps_eig, and Req. req:eig-ledger-row
+      requires the ledger row to carry more than the key: the engine carries
+      the assumption in `assumption_ledger` beside the settings at which it
+      was invoked: those carrying a depth whose weight is `floating_point`. A
+      declaration that requests no exact window does not invoke it, and
+      neither does a setting whose weight is evaluated rigorously (Req.
+      req:rigorous-weight). The row itself is always present: where no
+      setting invokes it, it records that A-EIG was invoked at no setting.
+    decided_conditions_note: >-
+      The conditions this module decides on the declared data alone have no
+      row: the well-formedness of a declared element graph (Def. def:graph;
+      Req. req:graph-refusal) and the occupation-diagonality of the declared
+      probe states (Def. def:probe; Req. req:probe-diagonal-admission) are
+      refused when they fail, and the floating-point evaluation (Def.
+      def:evaluation-model) is recorded in `bound_evaluation`. Wherever the
+      consumer emits its supplier row, it carries this ledger entire, as
+      supplied, and requires its keys as this module installs them
+      (reductions/wpfss/rem:receiver-imports; reductions/ass:recv); where it
+      omits that row, for an artifact the run built with a model admissible
+      exactly and every weight evaluated rigorously, the run's record carries
+      this ledger from the artifact itself (reductions/req:recv-row-provenance).
+
+  - name: calibration_coverage
+    symbol: null
+    presence: always
+    content: >-
+      the literal statement that the device is trusted and exactly
+      characterized (Ass. ass:trust) and that no characterization data,
+      uncertainty set or device family is represented.
+    fixed_by: "Ass. ass:trust; design.md, Named extension points; spec/future-scope.md by name"
+
+  - name: mathematical_spec_version
+    symbol: null
+    presence: always
+    content: >-
+      `receiver@0.9.0` of the accepted contract; an artifact may not claim a
+      draft version.
+    fixed_by: "the outputs table; the conventions, `artifact_bindings_mathematical_spec_version`"
+    value: "receiver@0.9.0"
+    code_note: >-
+      src/certiqs_key/receiver/artifact.py binds ACCEPTED_CONTRACT_VERSION
+      `0.9.0`, the accepted version of module.yaml the code implements, and derives
+      MATHEMATICAL_SPEC_VERSION `receiver@0.9.0` from it rather than from a
+      second literal; the artifact refuses any other value in `__post_init__`.
+
+# ---------------------------------------------------------------------------
+# not_emitted
+#   What is deliberately not emitted, recorded because a reader could take the
+#   silence for permission.
+# ---------------------------------------------------------------------------
+not_emitted:
+  - squashed POVM
+  - flag space
+  - any cutoff-truncated "squashing"
+  - a sector decomposition of a system Q
+  - a constraint list
+not_emitted_note: >-
+  The emitted photon-number blocks are a decomposition of the physical POVM,
+  and calling a finite truncation of them a squashing proof is what
+  spec/architecture.md forbids this module to do (Rem. rem:blockmeaning). The
+  exact window does not weaken this: it forms blocks above the cutoff to take
+  one eigenvalue of each and emits none of them as a block; what it emits is a
+  scalar into the strengthening slot and the eigenvalues into
+  `bound_quantifier_domain`.
+
+# ---------------------------------------------------------------------------
+# key_name_reused_on_both_sides
+#   Two key names appear on both sides of the interface and mean two different
+#   objects; recorded so that an implementation does not identify them.
+#   `exact_window` is an input key only, and no output key of that name exists.
+# ---------------------------------------------------------------------------
+key_name_reused_on_both_sides:
+  - name: port_grams
+    input_meaning: >-
+      route (i) only: the declared admissible family on Inp, before the
+      efficiency layer (the inputs table).
+    output_meaning: >-
+      always: the canonical family on Inp, after the efficiency layer (the
+      outputs table; Thm. thm:efficiency (i)).
+  - name: dark_count_channel
+    input_meaning: >-
+      the per-port form generated from {p_dc|k}, or a declared R, and the two
+      are exclusive: a request supplying both is refused (the inputs table;
+      Def. def:darkadm; Req. req:dark-route-exclusive; the refusal rules).
+    output_meaning: >-
+      the emitted stochastic matrix, which route it came from, which
+      admissibility conditions were checked, and three scalars under distinct
+      names, r_min, rbar and delta_dc (the outputs table; Thm.
+      thm:dark-counts; Eq. eq:rmin, Eq. eq:rbar, Eq. eq:darkdelta; Rem.
+      rem:d2slack).
+
+# ---------------------------------------------------------------------------
+# parameters
+#   The parameters table: units, exactness, domains, and the photon cutoff N.
+#   This module has no free numerical parameter of its own -- N is a declared
+#   protocol parameter it neither chooses nor optimizes -- and the section
+#   fixes how declared numbers are read.
+# ---------------------------------------------------------------------------
+parameters:
+
+  units:
+    dimensionless:
+      - transmittances
+      - reflectivities
+      - efficiencies
+      - dark-count probabilities
+      - Gram entries
+      - "mean photon numbers nbar^(t)_m (also >= 0)"
+    angles_and_phases: radians
+    decibel_conversion: "eta = 10^(-L_dB / 10), converted at validation"
+    angle_presentation: "theta = c * pi, c a rational coefficient read exactly"
+    admitted_alternative_presentations: [decibel_power_loss, angle_in_units_of_pi]
+    refused_presentations: [splitting_ratio]
+    presentation_rule: >-
+      Two alternative presentations are admitted. (a) A power loss in
+      decibels, converted at validation by eta = 10^(-L_dB / 10), the
+      converted value being what the artifact carries; the presentation is not
+      a second source of truth, and the exact route reads that converted value
+      (a binary64 number, so a dyadic rational; foundations Def. def:binary64
+      (iii); Req. req:exact-route-decision (ii)). (b) An angle or phase
+      parameter given as a rational coefficient c of pi, the parameter being
+      c * pi exactly; the coefficient is what the artifact carries and is the
+      declared datum, read as the rational number it denotes (an integer or
+      a fraction as itself, a finite binary64 coefficient as the dyadic
+      rational it is; a non-finite one is refused as malformed), and the
+      binary64 evaluation of the contract's statements uses fl(fl(c) * fl(pi)),
+      the binary64 product of c and pi each rounded to binary64, as an
+      evaluation of that datum (Def. def:evaluation-model). Presentation
+      (b) is how an angle reaches the exact route: an angle given in radians
+      is a declared value, the dyadic rational it denotes, and a non-zero one
+      is not a rational multiple of pi, so it takes the declaration off the
+      exact route (Req. req:exact-route-decision (ii), (iv)); its cosine and
+      sine are then enclosed, and the reference is enclosed rather than exact
+      (Req. req:exact-route-decision (iii)). A splitting ratio is not
+      admitted and is refused.
+    splitting_ratio_rule: >-
+      A declaration offering a beamsplitter as a : b is refused with the reason
+      `splitting_ratio_presentation_unsupported`, and the transmittance x of
+      Eq. eq:bs is declared directly. The presentation is refused rather than
+      converted because the string a : b does not carry the two facts a
+      conversion needs -- whether the ratio is of power or of amplitude, and
+      which of the two declared output paths the first term names -- so any
+      conversion rule written down here would be a reading imposed on a
+      declared datum, which `fail_closed` forbids; and the failure would be
+      silent, since 90:10 read as an amplitude ratio gives x = 81/100 where the
+      power reading gives x = 9/10, and both are legal transmittances. The
+      decibel presentation survives the same test: L_dB names one quantity,
+      applied to one element, with no arm to choose. So does the coefficient
+      of pi: c names one angle parameter, in one unit, with no reading to
+      choose.
+    refusal_reason: splitting_ratio_presentation_unsupported
+
+  exactness:
+    reserved_field: tolerance
+    rule: >-
+      Every parameter carries a reserved optional field `tolerance`. It is
+      validated as absent or exactly zero and refused otherwise, with the
+      reason "parameter uncertainty sets are out of scope" (Ass. ass:exact;
+      Req. req:reserved-tolerance-field). It is refused rather than ignored
+      because an ignored tolerance is a silent claim that the device is exact.
+    contract_ref: "Ass. ass:exact; Req. req:reserved-tolerance-field"
+    reason_string_note: >-
+      The quoted reason is prose, not a declared machine key, and it is not
+      frozen anywhere as a machine-readable reason string. The obligation is
+      the `fail_closed` convention's refusal with a machine-readable reason,
+      and the spelling of that reason is the code's.
+
+  domains:
+    rule: >-
+      Each catalogue entry states its parameter domain in Table tab:catalogue,
+      and Thm. component-catalogue/thm:catalogue-admissibility proves that the
+      whole declared domain yields an admissible element. A parameter outside
+      its domain is refused; it is never clipped to the boundary.
+    contract_ref: >-
+      Table tab:catalogue; Thm. component-catalogue/thm:catalogue-admissibility
+
+  photon_cutoff:
+    symbol: N
+    rule: >-
+      A declared protocol parameter, not a numerical convenience. It fixes
+      which blocks are emitted exactly (0 <= n <= N) and the quantifier domain
+      of the bound (n > N). This module does not choose it and does not
+      optimize it.
+
+  representation_note: >-
+    What is fixed: the declared parameter is exact (Ass. ass:exact), and the
+    evaluation of the contract's statements is IEEE-754 double precision,
+    binary64 (Def. def:evaluation-model; the `numerics` convention; Thm.
+    thm:exact-and-evaluated (ii)). What is not fixed: how a declared parameter
+    such as x = 1/3 is represented between declaration and evaluation. Thm.
+    thm:exact-and-evaluated (iv) treats Grams declared directly, binary64
+    values and so dyadic rationals, as a case of its own.
+    The rigorous evaluation of the weights (Req. req:rigorous-weight) reads
+    the parameter exactly where the exact arithmetic of Req.
+    req:exact-route-decision represents it and through square-root and angle
+    enclosures otherwise; it does not decide the representation of the
+    floating-point evaluation either. Locators: Ass. ass:exact; Def.
+    def:evaluation-model; Thm. thm:exact-and-evaluated (i), (ii), (iv), (vii);
+    the `numerics` convention.
+
+# ---------------------------------------------------------------------------
+# conventions
+#   Declared once, used everywhere: the interface conventions the claims cite.
+#   Seventeen conventions, numbered as bullets in their order; notes explain
+#   them.
+# ---------------------------------------------------------------------------
+conventions:
+
+  # bullet 1
+  log_base: 2
+  entropy_units: bits
+  log_base_note: >-
+    Declared and fixed for the artifact this module feeds. The contract states
+    no entropy and contains no logarithm; the convention is recorded so that
+    any future numerical statement in this module inherits it rather than
+    choosing, and so that a mixed base anywhere in the module is a defect on
+    sight.
+
+  # bullet 2
+  entropy_variant: sandwiched-renyi
+  arrow: up
+  alpha_domain: "(1, 2)"
+  entropy_variant_note: >-
+    Inherited from the platform and used nowhere here: the contract states no
+    Renyi quantity, imports no alpha-dependent fact, and therefore intersects
+    the domain with nothing. The recorded interval is the platform working
+    intersection, carried so that the artifact is consumed under one declared
+    domain rather than under none. The values bind nothing in this module, and
+    no frozen value in the oracle registry depends on alpha.
+
+  # bullet 3
+  test_statistics_model: output_state
+  test_statistics_model_note: >-
+    Binding. The probe setting t is a per-round public choice of known bias.
+    This module emits the conditional family {M_{v|t}}, complete for each fixed
+    t (the bar convention), and the weights q_t that turn it into the joint
+    family M_{v,t} = q_t M_{v|t} are applied by the declaration join. No
+    state-independent fraction is ever emitted or assumed, and conditioning on
+    t is conditioning on declared classical data, never on a state-dependent
+    event: a setting family carries one POVM per setting, each complete
+    (Def. def:setting-family (a)), and the bias belongs to the protocol
+    declaration (Def. def:probe). Nothing in this contract multiplies by a
+    q_t. The exact window does
+    not touch this: Eq. eq:pmcex is evaluated per setting and the minimum over
+    T is taken afterwards, exactly as Eq. eq:pmcdef's is.
+
+  # bullet 4
+  round_homogeneity: required
+  round_homogeneity_note: >-
+    One instrument, one probe declaration and one dark-count channel describe
+    every round (Ass. ass:round). A device whose rounds differ is refused, not
+    averaged.
+
+  # bullet 5
+  matrix_convention: >-
+    rows are outputs, columns are inputs, so that an element maps input
+    annihilation operators to output annihilation operators,
+    b_i = sum_j Gamma_{ij} a_j; Gamma_{ij} is the complex field-transfer
+    amplitude from input mode j to output mode i.
+
+  # bullet 6
+  composition_order: >-
+    later elements multiply from the left. Element e_1 then e_2 gives
+    Gamma = Gamma-hat_{e_2} Gamma-hat_{e_1} (Def. def:compile).
+
+  # bullet 7
+  embedding: >-
+    an element acting on Sigma subset of M is a matrix Gamma_Sigma on C^Sigma
+    with Gamma_Sigma^dagger Gamma_Sigma <= 1_Sigma; its global form is
+    Gamma-hat_e = Gamma_Sigma (direct sum) 1_{M minus Sigma}, the identity on
+    every untouched mode.
+
+  # bullet 8
+  subsystem_order: >-
+    input modes ordered with Inp_C before Inp_S, each block internally in the
+    order it inherits from M, the order Def. def:instrument fixes for C^Inp.
+    It takes PRECEDENCE over the lexicographic order of Def. def:modes for
+    C^Inp, every Gram and every block matrix, while the order of Def.
+    def:modes is the order in which M is listed in the artifact; the two
+    differ exactly when a probe path label sorts before a channel path
+    label. Grams
+    are written on C^Inp in that order; block matrices with the Chan block
+    first; photon-number blocks in increasing n; within a block, occupation
+    vectors in lexicographic order of the occupation vector.
+  subsystem_order_note: >-
+    The within-block clause also governs blocks the artifact does not emit.
+    Def. def:exactbnd forms blk M^{(=n)}_mc at N < n <= m*_t in the occupation
+    basis and order that Def. def:fock and these conventions fix, so this
+    bullet fixes the basis of the exact-window matrices as well. An
+    implementation that ordered them differently would still get the same
+    eigenvalue -- a permutation is a similarity -- but Rem. rem:exacteig names
+    a wrongly ordered occupation basis among the failure modes r_6 is there to
+    catch, so the order is stated rather than left to chance.
+
+  # bullet 9
+  polarization_basis: >-
+    |+> = (|H> + |V>)/sqrt2, |-> = (|H> - |V>)/sqrt2,
+    |R> = (|H> - i|V>)/sqrt2, |L> = (|H> + i|V>)/sqrt2. The circular sign is a
+    genuine convention split in the literature and is fixed here, once.
+
+  # bullet 10
+  waveplate_convention: >-
+    the fast-axis angle theta is measured from the H axis in the plane
+    transverse to propagation, positive in the right-handed sense about the
+    propagation direction; the retarder carries its physical global phase
+    exp(-i delta / 2), and it is not dropped (Eq. eq:retarder, entry C3).
+
+  # bullet 11
+  beamsplitter_convention: >-
+    the core is Bsp(x, phi) of Eq. eq:bs, real at phi = 0 with det = -1. The
+    symmetric "i" convention is a different presentation, related to this one
+    by Eq. eq:bssym, and is Gram-equivalent only under TWO CONDITIONS: the
+    two output paths never interfere again downstream, and the input-side
+    factor of Eq. eq:bssym is a scalar on the declared input space (Rem.
+    rem:bsconv). A matrix taken from the other convention is converted before
+    it is declared, never declared as is.
+
+  # bullet 12
+  mirror_handedness: >-
+    an explicit boolean per mirror, default false, documented as a
+    coordinate-frame choice and never applied implicitly.
+
+  # bullet 13
+  povm_index_convention: >-
+    a comma denotes a joint outcome and a bar a conditional POVM
+    (spec/notation.md section 2.6); this module emits bars.
+
+  # bullet 14
+  numerics: floating_point
+  numerics_note: >-
+    floating_point (Thm. thm:exact-and-evaluated, Def. def:evaluation-model)
+    for the evaluation of the claims, beside exact rational arithmetic for the
+    enclosures of the blocks and for the rigorous evaluation of the weights
+    (Req. req:rigorous-weight; Thm. thm:exact-and-evaluated (vi), (vii)). The
+    exact window in the floating-point evaluation adds a computed eigenvalue,
+    not a different arithmetic, and Thm. thm:exact-and-evaluated (ii) governs
+    it as it governs every other computed quantity (item (v)).
+
+  # bullet 15
+  numerical_tolerance_assignment: >-
+    Every exact admissibility condition this contract states and evaluates
+    in floating point (Def. def:evaluation-model) is decided by a declared
+    tolerance, named once in Def.
+    def:tolmap and repeated here so that the binding is visible where the
+    conventions are read. eps_1 decides route-(ii) contractivity and the (E1)
+    predicate of catalogue entry C10; eps_2 decides route-(i) Gram
+    admissibility and the route-(i) rank consistency check (by the eps_2-rank
+    rule Eq. eq:eps2rank), the (D2) monotonicity of a declared dark-count
+    channel, and the widened admissibility test c >= -eps_2 of Eq.
+    eq:bounddata on every input route: Def. def:tolmap (iv) decides that one
+    alone, item (v)'s route-(ii) admission at eps_1 does not decide it, and the
+    band Eq. eq:tolmapband it would otherwise open is refused; eps_4 decides
+    (D1) column-stochasticity; eps_1, ..., eps_6 bound the residuals of Def.
+    def:residuals that exist on the route taken and for the evaluation
+    requested; and eps_gap bounds the residual gap Eq. eq:resgap. eps_eig
+    decides nothing and appears in no item of Def. def:tolmap: it is subtracted
+    from a computed eigenvalue in Eq. eq:elldef and is the one declared number
+    this contract uses to state a hypothesis rather than a test (Ass. ass:eig).
+    Each is declared in [0, 1). Every exact condition this contract decides
+    under a threshold is one of the five items of Def. def:tolmap or of the two
+    extensions the submodules declare in the same form (Def. def:darktol, which
+    is item (iii)'s content, and Def. def:c10-tolerance), and no undeclared
+    threshold and no library default decides any of them -- in particular no
+    machine-epsilon-relative rank cutoff. Every other validation is a
+    comparison against a declared domain, a combinatorial predicate on the
+    declaration, or one of the residual tests against its own declared eps.
+    Nothing is clamped, projected or repaired at any of these tests: each
+    either passes on the declared datum or refuses. In two places, and only
+    two, a declared tolerance changes a number rather than a decision, and
+    neither is a repair of a datum: Eq. eq:darkpmcslack, whose coefficient
+    rbar (Eq. eq:rbar) and correction delta_dc (Eq. eq:darkdelta, built from
+    eps_4 and eps_2 on the declared route) weaken a stated inequality (Prop.
+    prop:dark-slack-bound); and Eq. eq:elldef, where eps_eig
+    is subtracted from a computed eigenvalue before it is used as a lower
+    bound, which likewise lowers the emitted value and never raises it (Rem.
+    rem:exacteig). In both the computed quantity itself is emitted unmodified
+    beside the number the inequality uses.
+
+  # The tolerance-assignment bullet as a map, key by key. `decides` is null
+  # wherever the tolerance decides no exact admissibility condition: Def.
+  # def:tolmap's preamble says so of eps_3, eps_5, eps_6 and eps_gap, which
+  # bound computed quantities only, and of eps_eig, which decides nothing at
+  # all. `bounds` is null at exactly one member, eps_eig, which bounds no
+  # residual either: it is subtracted.
+  numerical_tolerance_assignment_map:
+    eps_1:
+      decides: >-
+        route-(ii) contractivity Gamma^dagger Gamma <= 1, and the (E1)
+        predicate of catalogue entry C10, whose lossless sub-case is decided
+        two-sidedly (Def. def:tolmap (v); Def. def:c10-tolerance)
+      bounds: >-
+        r_1 (Eq. eq:res1); by Eq. eq:r1islmax the admission and the residual
+        test are the same test on the same number
+    eps_2:
+      decides: >-
+        route-(i) Gram admissibility (Def. def:tolmap (i)); the route-(i) rank
+        consistency check by the eps_2-rank rule Eq. eq:eps2rank (item (ii));
+        the (D2) monotonicity of a declared dark-count channel (item (iii));
+        and the widened bound-data test c >= -eps_2 of Eq. eq:bounddata on
+        every input route: Def. def:tolmap (iv) decides that one ALONE, item
+        (v)'s route-(ii) admission at eps_1 does not decide it, and the band
+        Eq. eq:tolmapband it would otherwise open is REFUSED
+      bounds: "r_2 (Eq. eq:res2), the Gram positivity defect"
+    eps_3:
+      decides: null
+      bounds: "r_3 (Eq. eq:res3), the deficiency identity"
+      note: >-
+        Unused on route (i), where r_3 does not exist and its key is absent;
+        an unused tolerance is unused, not an error. Still declared on every
+        route.
+    eps_4:
+      decides: >-
+        (D1) column-stochasticity of a declared dark-count channel
+        (Def. def:tolmap (iii))
+      bounds: "r_4 (Eq. eq:res4), blockwise POVM completeness"
+    eps_5:
+      decides: null
+      bounds: >-
+        r_5 (Eq. eq:res5), the Hermiticity-and-positivity defect of each
+        emitted photon-number block
+    eps_6:
+      decides: null
+      bounds: >-
+        r_6 (Eq. eq:res6), the window consistency defect. Conditionally
+        required: required exactly where an exact_window depth is declared.
+    eps_gap:
+      decides: null
+      bounds: "the residual gap Eq. eq:resgap, where a window is declared"
+    eps_eig:
+      decides: null
+      bounds: null
+      note: >-
+        The one member that neither decides nor bounds: it decides nothing,
+        appears in no item of Def. def:tolmap, and is subtracted from a
+        computed eigenvalue in Eq. eq:elldef, the one declared number this
+        contract uses to state a hypothesis rather than a test (Ass. ass:eig);
+        it changes an emitted value, not an admission (Def. def:tolmap,
+        closing enumeration). Conditionally required, on the same rule as
+        eps_6.
+
+  # bullet 16
+  fail_closed: >-
+    every failed validation produces a refusal with a machine-readable reason
+    and no artifact. No default is substituted for a missing datum, no
+    parameter is clipped into its domain, no cycle is resolved, and no
+    tolerance is ignored.
+  fail_closed_sites_note: >-
+    Among the sites that refuse under this convention are those of the exact
+    window: a declared depth with eps_eig or eps_6 missing; a depth outside
+    m*_t > N or m*_t <= m_t; and r_6 > eps_6. So does bound data failing Def.
+    def:tolmap (iv), which Req. req:tolerance-tests makes a failed validation,
+    with no artifact emitted. The first three carry reason strings of the
+    refusal rules; the fourth deliberately does not
+    (`refusals.named_without_a_spelling`).
+
+  # bullet 17
+  artifact_bindings_mathematical_spec_version: "receiver@0.9.0"
+  artifact_bindings_note: >-
+    `artifact_bindings.mathematical_spec_version` = `receiver@0.9.0` of the
+    accepted contract. The code spells the same string: artifact.py's
+    ACCEPTED_CONTRACT_VERSION is `0.9.0` and MATHEMATICAL_SPEC_VERSION is
+    `receiver@0.9.0` (the `code_note` of the output `mathematical_spec_version`).
+
+# ---------------------------------------------------------------------------
+# refusals
+#   The refusal rules. Eight machine-readable refusal reasons, in the table's
+#   order, and beside them the tier-fallback string of Req.
+#   req:evaluation-label, which is not a refusal and is never produced.
+#   `new_at` names the version of the frozen oracle registry
+#   (tests/oracles/registry_receiver_povm.py) whose vocabulary first lists the
+#   row; the registry's test reads it.
+# ---------------------------------------------------------------------------
+refusals:
+
+  reason_strings_verbatim:
+    - dark_count_channel_declared_twice
+    - splitting_ratio_presentation_unsupported
+    - port_gram_rank_exceeds_port_size
+    - photon_block_positivity_residual_above_tolerance
+    - tolerance_outside_declared_domain
+    - exact_window_declared_without_required_tolerance
+    - exact_window_depth_outside_declared_range
+    - window_eigenvalue_consistency_residual_above_tolerance
+    - efficiency_normalization_out_of_range
+
+  table:
+    - condition: >-
+        A declared dark-count channel R is supplied while some p_dc|k is
+        non-zero
+      reason: dark_count_channel_declared_twice
+      stated_at: "the inputs table, Req. req:dark-route-exclusive, Rem. rem:corrdark"
+      emits_artifact: false
+      new_at: "0.2.0"
+    - condition: >-
+        A beamsplitter parameter is offered as a splitting ratio a : b
+      reason: splitting_ratio_presentation_unsupported
+      stated_at: "the parameters table"
+      emits_artifact: false
+      new_at: "0.2.0"
+    - condition: >-
+        Route (i): rk_{eps_2} A_k > |P_k| for some k
+      reason: port_gram_rank_exceeds_port_size
+      stated_at: "the inputs table, Def. def:tolmap (ii), Eq. eq:eps2rank"
+      emits_artifact: false
+      new_at: "0.2.0"
+    - condition: >-
+        An emitted photon-number block fails Hermiticity or positivity:
+        r_5 > eps_5
+      reason: photon_block_positivity_residual_above_tolerance
+      stated_at: "Def. def:residuals, Prop. prop:res5, Req. req:residual-refusal"
+      emits_artifact: false
+      new_at: "0.2.0"
+    - condition: >-
+        A declared tolerance lies outside [0, 1)
+      reason: tolerance_outside_declared_domain
+      stated_at: "the inputs table, Rem. rem:tolerancedomain, Req. req:tolerance-domain"
+      emits_artifact: false
+      new_at: "0.2.0"
+    - condition: >-
+        An `exact_window` depth is declared and eps_eig or eps_6 is not
+      reason: exact_window_declared_without_required_tolerance
+      stated_at: "the inputs table, Req. req:exact-window-declaration"
+      emits_artifact: false
+      new_at: "0.3.0"
+    - condition: >-
+        A declared depth violates m*_t > N, or violates m*_t <= m_t at a
+        setting where (X) fails
+      reason: exact_window_depth_outside_declared_range
+      stated_at: "the inputs table, Req. req:exact-window-declaration"
+      emits_artifact: false
+      new_at: "0.3.0"
+    - condition: >-
+        The computed window disagrees with Thm. thm:multiclick-bound: r_6 > eps_6
+      reason: window_eigenvalue_consistency_residual_above_tolerance
+      stated_at: "Def. def:residuals, Req. req:residual-refusal, Rem. rem:exacteig"
+      emits_artifact: false
+      new_at: "0.3.0"
+    - condition: >-
+        A declared efficiency_normalization t outside [eta_max, 1], or a
+        declared t < 1 in a request with source modes or with every
+        efficiency zero
+      reason: efficiency_normalization_out_of_range
+      stated_at: "the inputs table, detector-imperfections/req:efficiency-normalization"
+      emits_artifact: false
+      new_at: "0.7.0"
+
+  tier_fallback:
+    reason: receiver_grams_not_enclosed
+    stated_at: "Req. req:evaluation-label (never produced); Thm. thm:exact-and-evaluated (iii)"
+    emits_artifact: true
+    retired: true
+    note: >-
+      The string would be a tier fallback with an artifact, answering a
+      `certified` request of this module that depended on compiled Grams with
+      `estimate` and this reason. The certified tier is a run's
+      (meat-core/frank-wolfe/req:certified-evaluation), no request names it
+      here, so the fallback never fires, and Req. req:evaluation-label states
+      that the label `certified` and this reason are never produced. Where
+      the rigorous evaluation of the weight cannot be formed, the artifact
+      says so with the reasons of `bound_evaluation.fallback_reasons`, not
+      with this string. The code's reason vocabulary (RefusalReason) is the
+      nine refusals of the table above and does not contain the string. The
+      row stays because the frozen oracle registry's reason vocabulary lists it
+      and its test reads this row; `retired: true` marks the string as outside
+      the code's vocabulary, and `emits_artifact: true` records what the
+      string would mean, not a path the engine takes.
+
+  reason_vocabulary:
+    - dark_count_channel_declared_twice
+    - splitting_ratio_presentation_unsupported
+    - port_gram_rank_exceeds_port_size
+    - photon_block_positivity_residual_above_tolerance
+    - tolerance_outside_declared_domain
+    - exact_window_declared_without_required_tolerance
+    - exact_window_depth_outside_declared_range
+    - window_eigenvalue_consistency_residual_above_tolerance
+    - efficiency_normalization_out_of_range
+    - receiver_grams_not_enclosed
+  reason_vocabulary_note: >-
+    The reason spellings this file carries: the nine refusals of the table,
+    each with no artifact, and the tier fallback, which would carry an
+    artifact and never fires (`tier_fallback`). An implementation that emitted
+    another spelling under one of these conditions, or reused one of these
+    spellings for a condition the table does not name, would be reporting
+    something the contract does not state.
+
+  named_without_a_spelling:
+    - condition: "two input routes supplied at once"
+      stated_at: "`input_routes.rule`; the refusal rules (this list)"
+    - condition: "a violated condition (E1), (E2) or (E3) of Def. def:graph"
+      stated_at: "Def. def:graph; Req. req:graph-refusal; the refusal rules (this list)"
+    - condition: "a non-zero `tolerance` field"
+      stated_at: "the parameters table, `exactness`; Ass. ass:exact; Req. req:reserved-tolerance-field"
+      prose_reason: "parameter uncertainty sets are out of scope"
+    - condition: "a missing or too-small m_t"
+      stated_at: "the inputs table `tail_window`; Req. req:window-declaration"
+    - condition: "a missing declared tolerance"
+      stated_at: "the inputs table `numerical_tolerances`"
+    - condition: "a probe state outside the Gaussian tier"
+      stated_at: "the inputs table `probe_declaration`; Def. def:probe; Req. req:probe-diagonal-admission"
+    - condition: >-
+        bound data failing Def. def:tolmap (iv): a computed c < -eps_2, which
+        includes the whole band c in [-eps_1, -eps_2) that item (v)'s test
+        would admit
+      stated_at: "Def. def:tolmap (iv); Req. req:tolerance-tests"
+      new_at: "0.3.0"
+      no_string_deliberately: >-
+        The contract declines to fix a reason string for this check, and this
+        file does not supply one. Req. req:tolerance-tests leaves the string
+        to the implementer, under the rule `named_without_a_spelling_note`
+        states for the validations the table does not spell, none of the
+        tabulated strings covering this check. The contract DELIBERATELY ADDS
+        NONE, because fixing a contract-verbatim key here would settle an
+        interface detail that no claim of the contract consumes (Req.
+        req:tolerance-tests, lead-in).
+  named_without_a_spelling_note: >-
+    The rule for every validation the table does not spell: it refuses under
+    the `fail_closed` convention at the site that states it, with a reason
+    string the implementer names, so the obligation and the identity of the
+    failing check are the contract's and the spelling is the code's. No key is
+    invented for any of them here. The list above names the sites the
+    contract names; every further failed validation named in this interface
+    is covered by the same rule and is likewise unspelled, among them a
+    parameter outside its catalogue domain, a residual r_i > eps_i for i other
+    than 5 and 6, a declared R failing (D1) or (D2), a cycle, a probe
+    alphabet declaring one label twice, and a receiver with source modes
+    where no submodule constructs its setting family (both in the inputs
+    table `probe_declaration`).
+
+# ---------------------------------------------------------------------------
+# component_catalogue
+#   Def. component-catalogue/def:catalogue-entries and Table tab:catalogue,
+#   transcribed because Def. def:graph (E1) makes "parameters in the declared
+#   domain" an input-validation condition. Ten entry types C1-C10, and two
+#   layers L1, L2 that are deliberately not rows of the catalogue. `domain` is
+#   the table's "Parameters (domain)" column and `lossless_exactly_when` its
+#   last column.
+# ---------------------------------------------------------------------------
+component_catalogue:
+
+  - id: C1
+    name: Beamsplitter
+    support: "2 paths (4 modes)"
+    domain: "x in [0, 1], phi in [0, 2 pi), y_1, y_2 in [0, 1]"
+    lossless_exactly_when: "y_1 = y_2 = 0"
+    contract_ref: "Def. component-catalogue/def:catalogue-entries C1; Eq. eq:bs; Table tab:catalogue"
+
+  - id: C2
+    name: Polarizing beamsplitter
+    support: "2 paths (4 modes)"
+    domain: "t_H, t_V in [0, 1], phi_H, phi_V in [0, 2 pi), y_1, y_2 in [0, 1]"
+    lossless_exactly_when: "y_1 = y_2 = 0"
+    contract_ref: "Def. component-catalogue/def:catalogue-entries C2; Eq. eq:pbs; Table tab:catalogue"
+
+  - id: C3
+    name: "Retarder, with half- and quarter-wave presets"
+    support: "1 path, polarization"
+    domain: "delta in [0, 2 pi), theta in [0, pi), y in [0, 1]"
+    lossless_exactly_when: "y = 0"
+    contract_ref: "Def. component-catalogue/def:catalogue-entries C3; Eq. eq:retarder, Eq. eq:hwpqwp; Table tab:catalogue"
+    phase_note: >-
+      The retarder carries its physical global phase exp(-i delta / 2), and it
+      is not dropped (the `waveplate_convention`).
+
+  - id: C4
+    name: "Circular retarder (polarization rotator)"
+    support: "1 path, polarization"
+    domain: "rho in [0, 2 pi)"
+    lossless_exactly_when: "always"
+    contract_ref: "Def. component-catalogue/def:catalogue-entries C4; Eq. eq:retgen; Table tab:catalogue"
+
+  - id: C5
+    name: Mirror or fold
+    support: "1 path, polarization"
+    domain: "R_H, R_V in [0, 1], phi_H, phi_V in [0, 2 pi), fl (a boolean)"
+    lossless_exactly_when: "R_H = R_V = 1"
+    contract_ref: "Def. component-catalogue/def:catalogue-entries C5; Eq. eq:mirror; Table tab:catalogue"
+    handedness_note: >-
+      `fl` is the handedness flip: an explicit boolean per mirror, default
+      false, documented as a coordinate-frame choice and never applied
+      implicitly (the `mirror_handedness` convention). It is the one default
+      value the contract itself fixes.
+
+  - id: C6
+    name: Phase shifter
+    support: "any Sigma"
+    domain: "phi_m in [0, 2 pi)"
+    lossless_exactly_when: "always"
+    contract_ref: "Def. component-catalogue/def:catalogue-entries C6; Table tab:catalogue"
+
+  - id: C7
+    name: Loss
+    support: "any Sigma"
+    domain: "eta_m in [0, 1]"
+    lossless_exactly_when: "every eta_m = 1"
+    contract_ref: "Def. component-catalogue/def:catalogue-entries C7; Table tab:catalogue"
+    not_a_detector_efficiency_note: >-
+      Thm. thm:efficiency (iii) and Req. req:efficiency-schema: a C7 element
+      is not a detector efficiency, and the input schema keeps the two in
+      different fields -- C7 in `element_graph`, eta_k in `detector_layer`.
+
+  - id: C8
+    name: Polarizer
+    support: "1 path, polarization"
+    domain: "theta in [0, pi), t, t_perp in [0, 1]"
+    lossless_exactly_when: "t = t_perp = 1 (then Gamma_Sigma = 1)"
+    contract_ref: "Def. component-catalogue/def:catalogue-entries C8; Eq. eq:polarizer; Table tab:catalogue"
+
+  - id: C9
+    name: Mode routing
+    support: "any Sigma"
+    domain: "a permutation of Sigma"
+    lossless_exactly_when: "always"
+    contract_ref: "Def. component-catalogue/def:catalogue-entries C9; Table tab:catalogue"
+
+  - id: C10
+    name: Generic block
+    support: "any Sigma"
+    domain: >-
+      Gamma_Sigma with Gamma_Sigma^dagger Gamma_Sigma <= 1 (checked)
+    lossless_exactly_when: >-
+      Gamma_Sigma^dagger Gamma_Sigma = 1 (checked)
+    contract_ref: "Def. component-catalogue/def:catalogue-entries C10; Table tab:catalogue; Def. def:tolmap (v)"
+    checked_note: >-
+      C10 is the one entry whose (E1) is a spectral condition rather than a
+      parameter-domain comparison, its declared domain being the contractivity
+      condition itself (Def. component-catalogue/def:c10-tolerance; Thm.
+      component-catalogue/thm:catalogue-admissibility (iii)). Both of its (E1)
+      checks are decided at eps_1 by Def. def:tolmap (v), the lossless sub-case
+      two-sidedly as ||Gamma_Sigma^dagger Gamma_Sigma - 1|| <= eps_1.
+
+layers:
+  - id: L1
+    name: Detector layer
+    content: >-
+      A port map {P_k} with per-port efficiency eta_k in [0, 1] and dark-count
+      probability p_dc|k in [0, 1]. The efficiency enters as the terminal
+      factor D_eta of Def. def:compile; the dark counts never enter Gamma at
+      all and act on the outcome label (Thm. thm:dark-counts).
+    contract_ref: >-
+      Rem. component-catalogue/rem:layers, L1; Def. def:compile; Thm.
+      thm:efficiency (iii); Req. req:efficiency-schema
+    d_eta_second_summand_note: >-
+      D_eta = sum_k sqrt(eta_k) E_{P_k} + E_{M minus the union of the ports}
+      (Def. def:compile). The second summand is not decoration: without it
+      D_eta would annihilate every unmonitored mode, and D_eta = 1 at unit
+      efficiency, on which Thm. thm:compilation-well-defined (iii) rests, would
+      fail.
+  - id: L2
+    name: "Source (probe) layer"
+    content: >-
+      The input split Inp = Inp_C (disjoint union) Inp_S and the probe
+      declaration of Def. def:probe. Undeclared input modes carry vacuum and
+      may be eliminated (Thm. thm:port-grams (iv)); declared source modes carry
+      a declared state and may not.
+    contract_ref: "Rem. component-catalogue/rem:layers, L2; Rem. rem:lossvsprobe"
+    note: >-
+      Rem. component-catalogue/rem:layers: that difference is the entire
+      structural distinction between loss and probe, and it is a definition
+      rather than a convention. Rem. rem:lossvsprobe states the consequence of
+      getting it wrong: eliminating a probe mode would silently replace the
+      probe by vacuum, so the derived POVM would describe a different device
+      from the one deployed, and since the probe is a countermeasure that
+      mismatch is security-relevant.
+
+# ---------------------------------------------------------------------------
+# never_verified_set
+#   The assumptions this module names and never verifies.
+# ---------------------------------------------------------------------------
+never_verified_set:
+  - A-TRUST
+  - A-PASSIVE
+  - A-VAC
+  - A-MODES
+  - A-THRESH
+  - A-PORT
+  - A-EXACT
+  - A-NOSEL
+  - A-ROUND
+  - A-EIG
+never_verified_note: >-
+  Rem. rem:unchecked-assumptions: every assumption of this contract that is
+  a statement about the physical receiver or the run is one the engine never
+  verifies, as the contract says of each; no function of the declared data
+  decides it, and validation decides only those of its clauses that
+  constrain the declared data. Ass. ass:eig is a statement about the
+  arithmetic; it is likewise never verified, and it is invoked only where a
+  caller declares an exact-window depth at a setting whose weight is
+  evaluated in floating point, so a declaration that declares none, or whose
+  weights are all evaluated rigorously, is unaffected by it. Req. req:decidable-assumptions: the engine enforces by
+  validation, wherever it is decidable, every clause of an assumption of
+  this contract that constrains the declared data; the assumptions whose
+  verification field is never (spec/claim-format.md section 3.2) form this
+  set. No code path of this module may decide what any of them
+  says beyond those clauses.
+
+fallback_reason_verbatim: receiver_grams_not_enclosed
+fallback_reason_note: >-
+  The tier-fallback reason: `refusals.tier_fallback` says why the string
+  stays in this file although the engine never produces it (Req.
+  req:evaluation-label).
+
+# ---------------------------------------------------------------------------
+# named_extension_points
+#   The extension points of design.md, "Named extension points". Each is a
+#   later claim in a slot this contract already carries, not a re-derivation
+#   of anything in it, and an implementation must not anticipate one.
+# ---------------------------------------------------------------------------
+named_extension_points:
+  - name: multi-bound high-photon families
+    slot: >-
+      additional entries in the strengthening slot of Def. def:slot. The exact
+      window is not this extension: it emits the same single entry (MC_K, p_mc)
+      for the same outcome set, evaluated more sharply, and r = 1 still.
+  - name: >-
+      active elements, feedback loops, photon-number-resolving detectors,
+      temporal-mode structure, detector memory
+    slot: >-
+      each excluded by a named ledger assumption, so that a reader meeting one
+      of them knows which line of the ledger it violates.
+  - name: >-
+      device families, uncertainty sets, characterization protocols, and the
+      family-dominating (range-inclusion) reduction
+    slot: "deferred to spec/future-scope.md, which names them."
+
+# ---------------------------------------------------------------------------
+# artifact_bindings
+# ---------------------------------------------------------------------------
+artifact_bindings:
+  mathematical_spec_version: "receiver@0.9.0"
+  code_note: >-
+    src/certiqs_key/receiver/artifact.py binds ACCEPTED_CONTRACT_VERSION
+    "0.9.0" and MATHEMATICAL_SPEC_VERSION
+    f"receiver@{ACCEPTED_CONTRACT_VERSION}", and
+    ReceiverMeasurementArtifact.__post_init__ raises on any other value, so an
+    artifact cannot report a version this file does not name.
+  artifact_type: ReceiverMeasurementArtifact
+  produces_note: >-
+    The outputs table names the emitted artifact a ReceiverMeasurementArtifact,
+    and the fifteen output keys are its payload; spec/architecture.md (section
+    4.3) leaves each producing module's interface to fix its own payload. No
+    key beyond these fifteen is authorised.
+  consumes_note: >-
+    Two inputs arrive at run time from the protocol declaration as data -- the
+    probe alphabet T and the emitted outcome alphabet V -- and neither is a
+    contract-dependency edge (`data_flow_inputs`). The module that imports this
+    contract is reductions (reductions/wpfss/rem:receiver-imports), and
+    nothing in this file is written for it.
+
+# ---------------------------------------------------------------------------
+# package
+#   The module's Python package. A repository layout fact, not a contract
+#   statement.
+# ---------------------------------------------------------------------------
+package: "src/certiqs_key/receiver/"

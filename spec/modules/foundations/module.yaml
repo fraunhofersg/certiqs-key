@@ -1,0 +1,269 @@
+id: foundations
+kind: core
+version: 0.12.0
+title: "Foundations: quantum-information preliminaries, number model, exact admissibility and emission"
+abstract: >-
+  The foundations module states the arithmetic every other module relies on,
+  and none of its mathematics is specific to a protocol; one emission rule names
+  the data of a protocol declaration it binds. A declared value is a binary64 number
+  and denotes exactly the dyadic rational it is; a sum is accumulated in a
+  declared order and rounds nowhere when each of its binary64 additions is
+  exact, which makes it the exact sum ([[lem:exact-accumulation]]). A declared
+  operator family is exactly admissible for a sector map when it is exactly
+  Hermitian, positive and complete, with a completeness sum that rounds nowhere
+  ([[def:exact-admissibility]]). The requirements say who establishes this:
+  declared operator data are exactly admissible at every module boundary
+  ([[req:boundary-admission]]), every consumer decides its predicates exactly
+  and refuses otherwise, and a producer verifies what it emits before emitting
+  it ([[req:exact-emission]]). One declared tolerance per instance bounds only
+  how far an instance may move its own declaration, only a declarer snaps its
+  data onto its lattice, and a snap of a measurement family keeps the blocks
+  known exactly on the lattice and moves the others by one fidelity-first
+  procedure that revives no zero ([[req:snap-reference]]). A moved block is
+  related to its model by no claim, so a run evaluates it off its snap, with
+  the reference handed beside the snap in its place
+  ([[def:evaluated-off-snap]]), or rests there on a named assumption
+  ([[ass:snapped-measurement]]) unless it declares the strict option that
+  refuses it; the module fixes the exact island, the bounds that carry a
+  least eigenvalue, a rank and a matrix function across an enclosure, and the
+  three tiers of a reported key rate. Beside the arithmetic it states the round
+  model, with its attack sets and the round homogeneity the modules' round
+  assumptions assert, and the quantum-information preliminaries the entropy
+  optimisation is written in:
+  pinching, the sandwiched Rényi divergence and its conditional entropies, the
+  classical divergences and the quantum relative entropy, the extended
+  divergence kernel ([[lem:kernel]]), the bound by which pinching lowers the
+  trace power ([[lem:pinchmono]]), and two published results on pinched trace
+  powers ([[fact:pinch-id]], [[fact:concavity]]). The module's main claims
+  are [[lem:exact-accumulation]], [[def:exact-admissibility]] and
+  [[req:boundary-admission]] on the side of the arithmetic, and
+  [[lem:kernel]] and [[lem:pinchmono]] on the side of the entropy
+  optimisation. It reads nothing from another module, and the
+  strengthenings of exact admissibility that a module states for its own data,
+  such as a declared lattice or conditions on Alice's data, stay with that
+  module.
+depends_on: []
+notation_version: "0.10.0"
+reading_groups:
+- title: Quantum-information preliminaries
+  start: def:pinching
+  abstract: >-
+    These are the quantum-information objects the entropy optimisation is
+    written in: pinching, the sandwiched Rényi divergence with its two
+    conditional entropies, and the classical divergences with the quantum
+    relative entropy. The section's main results, two lemmas, establish what
+    the optimisation needs of them,
+    that the extended divergence kernel is jointly convex, lower semicontinuous
+    and non-increasing in its second argument ([[lem:kernel]]), and that
+    pinching lowers the trace power ([[lem:pinchmono]]). Two published results
+    close the section, the pinched trace-power form of the conditional Rényi
+    entropy ([[fact:pinch-id]]) and the concavity of the pinched trace-power
+    functional ([[fact:concavity]]).
+- title: The round model
+  start: def:round-model
+  abstract: >-
+    A run of n rounds is attacked by a sequence of channels, one per round, each
+    delivering the per-round system, with Alice's system too where the adversary
+    supplies it, and carrying Eve's memory forward. A list of operator
+    constraints restricts each round's channel by adjoint conditions, which cut
+    out an attack set, with a stronger condition for an entry scoped to one
+    factor of a product system. A register of any dimension, such as an
+    adversary's memory, is approximated by compressing it onto a
+    finite-dimensional subspace, at a cost in trace norm that the state's
+    weight outside the subspace bounds and that adds along a sequence of
+    channels ([[lem:register-compression]]). The round model is stated once for a generic
+    per-round system, and the modules that analyse a protocol instantiate it at
+    their own systems. A family of objects describing a round is
+    round-homogeneous when the same objects describe every round and every
+    round behaves as they describe whatever the other rounds do, so no device
+    has memory across rounds; the modules' round assumptions assert it, or its
+    sameness clause alone where they say so, of their own families.
+- title: Binary64 numbers and exact sums
+  start: def:binary64
+  abstract: Declared values are binary64 numbers, read as the dyadic rationals they
+    are. A sum of them is accumulated left to right in a declared order, and it rounds
+    nowhere when every binary64 addition is exact. The main result,
+    [[lem:exact-accumulation]], shows that such a sum is the exact sum, so a predicate
+    on it is a predicate on the declared values. An example shows that the order of
+    accumulation changes the computed sum.
+- title: Declared data and exact admissibility
+  start: def:declared-data
+  abstract: Declared data are what an instance states and what a producer emits as
+    its own declaration, and a consumer reads them across a module boundary. An
+    operator is a list of blocks against a sector map and is block diagonal by
+    construction. The section's main definition, [[def:exact-admissibility]],
+    states the five conditions every
+    module's admission shares, and a counterexample shows why a completeness sum
+    must round nowhere.
+- title: The declared tolerance and the snap
+  start: def:tolerance
+  abstract: An instance declares one tolerance, which bounds the defects it may repair
+    in its own data, measured as entrywise defects of differences and as a floor on
+    the least eigenvalue. [[lem:floor-stricter]] shows that the floor is the stricter
+    of the two, by a factor of the dimension that is attained. A snap replaces a
+    declared family by an exactly admissible one on the declarer's lattice and
+    records what it changed. A measurement family has a reference, the model
+    it is declared from, known exactly or through rational entrywise
+    enclosures, and on some blocks also through an enclosed factor with an
+    exact core ([[def:factor-enclosure]]). Entries
+    known to be zero fix the structural support of each element, which no snap
+    may enlarge, save the flagged last resort of [[req:support-safe-snap]] (iv);
+    a block is kept where the snap is decided equal to the data it is made
+    from, and moved otherwise.
+    An enclosure entry whose disc contains zero may be recentred at zero and
+    widened, and the reference is unchanged ([[lem:recentred-enclosure]]). A
+    declarer may hand the reference beside the snap, and a block whose snapped
+    data nothing the key length rests on reads, save the points and the
+    acceptance data, is evaluated off its snap ([[def:evaluated-off-snap]]).
+- title: Domination and its limits
+  start: def:domination
+  abstract: >-
+    A family G dominates a family F at a block weight q when G − (1−q)F is
+    positive semidefinite for every outcome; G is then a mixture of F and a
+    complete residual family, which is what lets a noise channel reduce G to F
+    plus flags of weight q. A dominated family adds no support, though it may
+    lose some, and domination composes and survives trusted classical
+    post-processing ([[lem:domination]]); for a family that absorbs its
+    residue in one element only that element constrains the weight
+    ([[lem:absorbing-domination]]). A reference can dominate a lattice family
+    at a weight below one only along rationally spanned directions
+    ([[lem:rational-obstruction]]), and an exact decision on a rational
+    enclosure gives a sufficient condition for the positivity of matrices
+    with irrational entries ([[lem:enclosure-psd]]). No requirement relates a
+    snap to its model by domination; the section is kept for a declared
+    device weight. The closing remark explains what a weight does not
+    control, why an idealised model with an element whose support has no
+    rational direction needs a noise floor before it dominates a lattice
+    family at a small weight, and that reductions other than domination are
+    not bound by that obstruction.
+- title: The exact island, enclosures and the tiers
+  start: def:exact-island
+  abstract: The exact island is where the engine computes on exact rationals, namely
+    every decision that data satisfy the conditions their declaration states, a
+    snap's decisions on its output and the decisions on a reference among
+    them, a producer's construction of its
+    emission, the exact establishment of the acceptance-side iterate and of the
+    acceptance-side minimum over the acceptance set as its consumer reads it,
+    and the certification of a lower bound on the feasible-side minimum. A
+    least eigenvalue is bounded from below exactly from any approximate
+    eigenbasis, by a Gershgorin bound corrected for the basis' defect from
+    orthogonality ([[lem:least-eigenvalue-bound]]). The bound moves across a
+    ball around an exact matrix, and an entrywise enclosure fixes the rank of
+    every matrix it contains once its exactly zero rows are dropped and the
+    rest is shown positive definite ([[cor:least-eigenvalue-over-enclosure]]),
+    a factor enclosure fixes the rank and support of each of its members once
+    the Gram matrix of its columns is shown positive definite throughout
+    ([[cor:rank-over-factor-enclosure]]), and
+    powers of positive definite matrices and their divided-difference maps move
+    by explicit constants under a perturbation
+    ([[lem:matrix-function-perturbation]]). A reported key rate carries one of
+    three tiers, estimate, first-order or certified, and no other.
+- title: The snapped-measurement assumption
+  start: ass:snapped-measurement
+  abstract: >-
+    A moved block of a measurement snap is related to its model by no claim.
+    Where the run reads it, because no reference reaches the evaluation, or the
+    evaluation on the reference does not count, or the key length is formed
+    from a number the run certified on the snapped family in its place, the
+    analysis of the run is an
+    analysis of the snapped family, the more so where a flagged last resort
+    gave an element support the data deny. The one assumption of the
+    module, [[ass:snapped-measurement]], is the premise under which that
+    analysis describes the device: on the blocks the record names, the device
+    measures the snapped family as recorded, in place of the model there, and
+    for a producer's snap of its own emission, what the run concludes from the
+    emission holds of the snapped family. A block evaluated off its snap is
+    never among them. A run with no such block, or a run that declares the
+    strict option, does not rest on it.
+- title: Admission
+  start: req:boundary-admission
+  abstract: The section's main requirement, [[req:boundary-admission]], is that
+    declared operator data are exactly admissible at every module boundary.
+    Every consumer decides its admission predicates
+    exactly and refuses otherwise, and it alters nothing it reads except by rounding
+    an emitted bound in a direction its producer licenses as weakening. A sum is
+    decided in the order declared with its data.
+- title: The tolerance, norms and snapping
+  start: req:declared-tolerance
+  abstract: One declared tolerance per instance caps the defect an instance may
+    repair in its own declaration, and it governs nothing else; a probability
+    vector prepared from ordinary numerical inputs is admitted by the input
+    preparation's own rule. A bound in one norm
+    is never read as a bound in another, and only the declarer of data snaps them,
+    on record. A block of a snap of a measurement family known exactly on the
+    lattice is kept, and every other block is moved by one procedure that aims
+    at fidelity; a moved block that the run does not evaluate off its snap is
+    disclosed with its cause, one of four groups and a fix, or refused where
+    the run declares the strict option ([[req:snap-reference]]). No snap
+    revives an element, row or column that the data state to be zero, save a
+    flagged last resort where nothing else restores the conditions of a snap
+    ([[req:support-safe-snap]]).
+- title: Emission
+  start: req:declared-lattice
+  abstract: These are the three emission rules. The lattice condition binds data
+    declared at a lattice exponent, emitted bounds are rounded in the direction that
+    weakens them, and a producer establishes exact admissibility of what it emits
+    before emitting it ([[req:exact-emission]]), or refuses.
+- title: Arithmetic and tiers
+  start: req:exact-island
+  abstract: Every decision, certification and construction of the exact island is
+    computed exactly, a binary64 candidate entering only through one of them, and
+    nothing outside the island carries an error budget, save a slack a supplier
+    spends on its own floating-point evaluation under a named assumption; a
+    rigorous enclosure, whose operations bound their own rounding, assumes
+    none. Every run reports each tier of its key rate it reaches and names the
+    strongest, which carries its claim.
+order:
+  - def:pinching
+  - def:renyi
+  - def:kl
+  - lem:kernel
+  - lem:pinchmono
+  - fact:pinch-id
+  - fact:concavity
+  - def:round-model
+  - def:round-homogeneity
+  - lem:register-compression
+  - def:binary64
+  - lem:binary64-lattice
+  - def:declared-order
+  - lem:exact-accumulation
+  - rem:summation-order
+  - def:declared-data
+  - def:sector-map
+  - def:exact-admissibility
+  - rem:computed-completeness
+  - def:tolerance
+  - lem:floor-stricter
+  - def:exact-reference
+  - def:factor-enclosure
+  - def:snap
+  - lem:recentred-enclosure
+  - def:evaluated-off-snap
+  - def:domination
+  - lem:domination
+  - lem:absorbing-domination
+  - lem:rational-obstruction
+  - lem:enclosure-psd
+  - rem:noise-floor
+  - def:exact-island
+  - lem:least-eigenvalue-bound
+  - cor:least-eigenvalue-over-enclosure
+  - cor:rank-over-factor-enclosure
+  - lem:matrix-function-perturbation
+  - def:tiers
+  - ass:snapped-measurement
+  - req:boundary-admission
+  - req:consumer-decides-exactly
+  - req:declared-order
+  - req:declared-tolerance
+  - req:tolerance-scope
+  - req:norm-conversion
+  - req:who-snaps
+  - req:snap-reference
+  - req:support-safe-snap
+  - req:declared-lattice
+  - req:rounding-direction
+  - req:exact-emission
+  - req:exact-island
+  - req:tiers

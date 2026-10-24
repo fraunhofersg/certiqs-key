@@ -1,0 +1,83 @@
+% ---
+% id: transmitter/rem:da1
+% kind: rem
+% title: "The one-dimensional retained system"
+% summary: >-
+%   For a one-dimensional retained system the two source modes impose the
+%   same condition and the licence excludes no attack. A trusted non-empty
+%   source segment there for which no certificate exists rests on the
+%   supplier obligation A-LINK, a case no artefact reaches.
+% prominence: standard
+% status: accepted
+% uses: [def:source-spec, def:srcert]
+% mentions: [ass:src, rem:source-mode, req:licence-scope, def:source-segment, def:source-link, thm:certificate-sufficiency, lem:ensemble-presentation, reductions/def:chain, reductions/thm:two-sided, reductions/lem:source-transfer, protocol-compiler/ass:link, protocol-compiler/def:chaincond, protocol-compiler/thm:chain-consumption, meat-core/rem:modes-da1, transmitter/decoy/def:tagged-source]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:da1}
+Suppose $d_A=1$. Then $\Seq{A}=\{[1]\}$, so the only marginal a
+trusted-mode specification can carry is $\tau_A=[1]$; and for any state
+$\omega$ on $A$ and the \tref[virtual transmitted system]{transmitted system} the $A$-marginal $\omega_A$ is
+the $1\times1$ matrix $\tr\omega$, so the conditions $\omega_A=\tau_A$ and
+$\tr\omega=1$ are the same condition on the same number. The two source
+modes, \tref{trusted-source mode} and \tref{untrusted-source mode}, therefore impose the same
+condition on every consumer, and what the source-replacement certificate
+licenses at $d_A=1$ is the condition $\tr\omega=1$, which every normalized
+state satisfies: it excludes nothing, and Assumption~\ref{ass:src} is
+\emph{vacuous} --- it deletes no attack. That is why the certificate of
+Definition~\ref{def:srcert} is demanded only at $d_A\ge2$
+(Requirement~\ref{req:licence-scope}). A specification at $d_A=1$ is also
+the shape in which a protocol with no trusted source is declared: the
+consuming declaration folds Alice's measured system into the receiver-side
+systems and names, in its partition of the outcome among the parties, which
+components are hers (\xref{meat-core/rem:modes-da1}). That shape is the
+\emph{safe} direction (Remark~\ref{rem:source-mode}): it removes an assumption
+rather than adding one.
+
+\emph{A non-empty source segment at $d_A=1$.} Every such specification that
+an artefact of this module can carry is covered by theorems, and the one case
+left to an assumption is reached by no artefact. In detail, the theorem route
+applies to a non-empty segment whose consumer declares the ensemble form
+(Definition~\ref{def:srcert}, ``What a consumer reads of a presentation'')
+and which passes every condition that admits it: the admission rule on the
+kind, (S1) to (S4) and (A1) to (A3) of Definition~\ref{def:source-segment},
+the refusals of Definition~\ref{def:source-link}\,(d) and (f), and the
+admission rule of \xref{reductions/def:chain}, which admits the segment only
+in trusted-source mode and only where every entry of the constraint list is
+licensed, as \xref{protocol-compiler/def:chaincond} decides it. There the
+security statement is carried across the segment by the source identity
+\eqref{eq:srcmap} at the descriptors of the emitted links, by
+Theorem~\ref{thm:certificate-sufficiency}\,(iii) with (SR1) to (SR3) for the source-replacement
+recasting, and by \xref{reductions/thm:two-sided} for the composition with
+the receiver segment; at $d_A\ge2$ Assumption~\ref{ass:src} supplies the
+attestation. The degenerate declaration of the decoy submodule
+(Definition~\ref{def:tagged-source}) is covered by the same route: with one
+polarisation, intensity set $\{0\}$, its \tref{entropy cutoff} and
+\tref{source cutoff} both zero and
+all weight on the zero-photon sector it has one one-dimensional sector, hence
+$d_A=1$; its ensemble presentation supplies (SR1) and (SR2) as theorems
+(Lemma~\ref{lem:ensemble-presentation}\,(i)), its defined source state and
+marginal are both $[1]$, and (SR3) is vacuous, a trace-preserving map being
+unable to act nontrivially on a one-dimensional retained register. The
+hypotheses of \xref{reductions/lem:source-transfer}\,(ii), (iii) and
+\xref{reductions/thm:two-sided} therefore hold there as well.
+
+\emph{The case left to an assumption.} A trusted specification at $d_A=1$
+that declares no certificate, with a non-empty segment and a virtual
+ensemble that is not constant over the letters with $p_x>0$, has none to
+declare: with a one-dimensional retained register (SR2) would force all
+positively weighted virtual states to coincide. The theorem route does not
+cover that case. Its transfer across the segment is the source clause of the
+protocol compiler's supplier obligation A-LINK
+(\xref{protocol-compiler/ass:link}), declared on that module's
+chain-condition definition, \xref{protocol-compiler/def:chaincond}, and on
+\xref{protocol-compiler/thm:chain-consumption}\,(v$'$), never discharged, and emitted in
+its assumption ledger. No artefact reaches the case: (A3) of
+Definition~\ref{def:source-segment} accepts a segment only inside an artefact
+of the admitting module, and the one admitted constructor kind emits an
+ensemble presentation, which supplies the certificate described above.
+\end{remark}

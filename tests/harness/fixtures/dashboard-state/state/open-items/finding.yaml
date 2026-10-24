@@ -1,0 +1,17 @@
+id: core-a/loose-bound
+title: The bound in thm:main is looser than the source
+kind: finding
+status: open
+severity: minor
+priority: 3
+needs_human: false
+owner: agent
+module: core-a
+claims: [core-a/thm:main]
+opened: 2026-09-03
+closes_when: The bound is tightened or the looseness is recorded in notes.
+brief: |
+  Found by the arrival verifier.
+links: []
+history:
+  - 2026-09-03: opened.

@@ -1,0 +1,17 @@
+digraph claims {
+  rankdir=LR;
+  graph [label="10 Decoy-state sources and the tagging channel: The physical-source assumption\nArrow: claim -> prerequisite. Solid: uses; dashed: assumes.\nDeclared dependencies, not a proof check. Mentions excluded.", labelloc=t, fontsize=13, fontname="Arial", bgcolor="white", pad=0.25, nodesep=0.3];
+  node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11, margin="0.13,0.09"];
+  edge [color="#526777", arrowsize=0.65];
+  subgraph "cluster_transmitter/decoy" {
+    label="transmitter/decoy"; color="#cbd5df";
+    "transmitter/decoy/ass:wcp" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/decoy/ass:wcp<BR/>Emission of the declared weak-<BR/>coherent-pulse states<BR/>accepted</TD></TR><TR><TD HREF="../decoy/claims/ass-wcp.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/decoy/ass:wcp" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../decoy/claims/ass-wcp.tex", target="_top"];
+    "transmitter/decoy/def:tagged-source" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/decoy/def:tagged-source<BR/>Tagged virtual source: cutoffs, flags<BR/>and sector map<BR/>implemented<BR/>BOUNDARY: further prerequisites omitted</TD></TR><TR><TD HREF="../decoy/claims/def-tagged-source.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/decoy/def:tagged-source" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled,dashed", URL="../decoy/claims/def-tagged-source.tex", target="_top"];
+    "transmitter/decoy/def:wcp-model" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/decoy/def:wcp-model<BR/>Phase-randomised weak-coherent-pulse<BR/>source model<BR/>implemented<BR/>BOUNDARY: further prerequisites omitted</TD></TR><TR><TD HREF="../decoy/claims/def-wcp-model.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/decoy/def:wcp-model" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled,dashed", URL="../decoy/claims/def-wcp-model.tex", target="_top"];
+    "transmitter/decoy/rem:wcp-virtual-model" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/decoy/rem:wcp-virtual-model<BR/>The tagged declaration as a virtual<BR/>model of the device<BR/>accepted</TD></TR><TR><TD HREF="../decoy/claims/rem-wcp-virtual-model.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/decoy/rem:wcp-virtual-model" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../decoy/claims/rem-wcp-virtual-model.tex", target="_top"];
+  }
+  "transmitter/decoy/ass:wcp" -> "transmitter/decoy/def:tagged-source";
+  "transmitter/decoy/ass:wcp" -> "transmitter/decoy/def:wcp-model";
+  "transmitter/decoy/rem:wcp-virtual-model" -> "transmitter/decoy/def:tagged-source";
+  "transmitter/decoy/rem:wcp-virtual-model" -> "transmitter/decoy/def:wcp-model";
+}

@@ -1,0 +1,17 @@
+digraph claims {
+  rankdir=LR;
+  graph [label="5 Assumptions\nArrow: claim -> prerequisite. Solid: uses; dashed: assumes.\nDeclared dependencies, not a proof check. Mentions excluded.", labelloc=t, fontsize=13, fontname="Arial", bgcolor="white", pad=0.25, nodesep=0.3];
+  node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11, margin="0.13,0.09"];
+  edge [color="#526777", arrowsize=0.65];
+  subgraph "cluster_transmitter" {
+    label="transmitter"; color="#cbd5df";
+    "transmitter/ass:ens" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/ass:ens<BR/>Emission of the specified ensemble<BR/>accepted</TD></TR><TR><TD HREF="../claims/ass-ens.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/ass:ens" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../claims/ass-ens.tex", target="_top"];
+    "transmitter/ass:seq" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/ass:seq<BR/>Sequential round structure<BR/>accepted</TD></TR><TR><TD HREF="../claims/ass-seq.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/ass:seq" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../claims/ass-seq.tex", target="_top"];
+    "transmitter/ass:src" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/ass:src<BR/>Retention of the system A in trusted-<BR/>source mode<BR/>accepted</TD></TR><TR><TD HREF="../claims/ass-src.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/ass:src" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../claims/ass-src.tex", target="_top"];
+    "transmitter/def:source-spec" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/def:source-spec<BR/>Source specification<BR/>implemented<BR/>BOUNDARY: further prerequisites omitted</TD></TR><TR><TD HREF="../claims/def-source-spec.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/def:source-spec" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled,dashed", URL="../claims/def-source-spec.tex", target="_top"];
+    "transmitter/def:srcert" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/def:srcert<BR/>Source-replacement certificate<BR/>implemented<BR/>BOUNDARY: further prerequisites omitted</TD></TR><TR><TD HREF="../claims/def-srcert.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/def:srcert" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled,dashed", URL="../claims/def-srcert.tex", target="_top"];
+  }
+  "transmitter/ass:ens" -> "transmitter/def:source-spec";
+  "transmitter/ass:src" -> "transmitter/def:source-spec";
+  "transmitter/ass:src" -> "transmitter/def:srcert";
+}

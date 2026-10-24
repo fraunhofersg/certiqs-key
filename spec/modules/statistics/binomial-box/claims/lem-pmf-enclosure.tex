@@ -1,0 +1,95 @@
+% ---
+% id: statistics/binomial-box/lem:pmf-enclosure
+% kind: lem
+% title: "Rational enclosure of the logarithm of a binomial mass point"
+% summary: >-
+%   Rational bounds on ln m!, ln p and ln(1 − p) enclose the logarithm of a
+%   binomial mass point, with width the sum of the component widths. On the
+%   Stirling branch no intermediate is of the size of the mass point, of p^j
+%   or of a binomial coefficient.
+% prominence: technical
+% status: implemented
+% uses: [statistics/thm:binomial-tails, lem:stirling-enclosure, lem:log-enclosure]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.enclosure:log_pmf_bounds
+% lean:
+% ---
+
+At large $n$ a binomial mass point such as $p^{n}$ is too small, and its
+exact rational too long, for an implementation to hold, while its logarithm
+is of moderate size. The logarithm of the law of Theorem~\ref{thm:binomial-tails} is a sum of
+three log-factorials and two logarithms, and each is replaced by its
+rational bound in the direction its sign requires.
+
+\begin{lemma}\label{lem:pmf-enclosure}
+Let $n\ge1$, let $p\in(0,1)$ be rational, let $\Ncount{}$ be binomial with
+parameters $(n,p)$ and write $\mathrm{pmf}(j)\coloneqq\Pr[\Ncount{}=j]
+=\binom{n}{j}p^{j}(1-p)^{n-j}>0$ for $0\le j\le n$ (Theorem~\ref{thm:binomial-tails}),
+and $F(m)\coloneqq\ln m!$ for an integer $m\ge0$. Then
+\begin{equation}\label{eq:lnpmf}
+  \ln\mathrm{pmf}(j)\ =\ F(n)-F(j)-F(n-j)+j\ln p+(n-j)\ln(1-p).
+\end{equation}
+Let $F^{-}(m)\le F(m)\le F^{+}(m)$ be rational bounds for
+$m\in\{n,j,n-j\}$ --- those of Lemma~\ref{lem:stirling-enclosure}\,(iii)
+for $m\ge1$, or $F^{\mp}(m)$ the root bounds of
+Lemma~\ref{lem:log-enclosure} on the integer $m!$ where that integer is held
+exactly, and $F^{\mp}(0)=0$ --- and let
+$\lambda_p^{-}\le\ln p\le\lambda_p^{+}$ and
+$\lambda_q^{-}\le\ln(1-p)\le\lambda_q^{+}$ be rational bounds
+(Lemma~\ref{lem:log-enclosure}). Put
+\begin{equation}\label{eq:pmf-enclosure}
+\begin{aligned}
+  \ell^{-}(j)&\coloneqq F^{-}(n)-F^{+}(j)-F^{+}(n-j)
+              +j\,\lambda_p^{-}+(n-j)\,\lambda_q^{-},\\
+  \ell^{+}(j)&\coloneqq F^{+}(n)-F^{-}(j)-F^{-}(n-j)
+              +j\,\lambda_p^{+}+(n-j)\,\lambda_q^{+}.
+\end{aligned}
+\end{equation}
+Then $\ell^{-}(j)\le\ln\mathrm{pmf}(j)\le\ell^{+}(j)$, both bounds are
+rationals, and the width is the sum of the component widths,
+\begin{equation}\label{eq:pmf-width}
+  \ell^{+}(j)-\ell^{-}(j)
+  =\sum_{m\in\{n,\,j,\,n-j\}}\big(F^{+}(m)-F^{-}(m)\big)
+  +j\,(\lambda_p^{+}-\lambda_p^{-})+(n-j)\,(\lambda_q^{+}-\lambda_q^{-}).
+\end{equation}
+In particular, if every logarithm entering the bounds is enclosed to width
+$\delta$ and $\ln(2\pi)$ to width $\delta_C$, the width is at most
+$(3n+\tfrac32)\,\delta+\tfrac32\,\delta_C+\tfrac{3}{156}$. A log precision
+of $2^{-s}$ with $s$ about $\log_2 n$ bits beyond the wanted precision brings
+the terms in $\delta$ and $\delta_C$ within it; the remaining term, at most
+$\tfrac{1}{12m(12m+1)}$ for each $m\in\{n,j,n-j\}$ taken on the Stirling
+branch, is fixed by $m$, and no choice of $s$ reduces it. On the Stirling
+branch every quantity in \eqref{eq:pmf-enclosure} is a rational whose size
+is polynomial in the bit sizes of $n$, $p$ and the precision, and no intermediate has the magnitude of $\mathrm{pmf}(j)$,
+$p^{j}$ or $\binom{n}{j}$ themselves; the exact-factorial branch is for
+small $m$ only and holds the integer $m!$ by construction.
+\end{lemma}
+
+\begin{proof}
+\eqref{eq:lnpmf} is the logarithm of the law, using
+$\ln\binom{n}{j}=\ln n!-\ln j!-\ln(n-j)!$ and $p,1-p>0$. For the bounds,
+replace each term of \eqref{eq:lnpmf} by the bound in the direction its
+sign requires: $F(n)$, $j\ln p$ and $(n-j)\ln(1-p)$ enter with positive
+coefficients ($j\ge0$, $n-j\ge0$) and are bounded below by their lower and
+above by their upper bounds; $F(j)$ and $F(n-j)$ enter with a minus sign, so
+a lower bound on $\ln\mathrm{pmf}(j)$ uses their upper bounds and an upper
+bound uses their lower bounds. Subtracting the two displays of
+\eqref{eq:pmf-enclosure} gives \eqref{eq:pmf-width}. For the estimate: on
+the Stirling branch, by Lemma~\ref{lem:stirling-enclosure}\,(iii), the width
+of $F^{\mp}(m)$ is at most
+$(m+\tfrac12)\delta+\tfrac12\delta_C+\tfrac{1}{12m(12m+1)}$, and
+$\frac{1}{12m(12m+1)}\le\frac{1}{156}$ for $m\ge1$; on the exact-factorial
+branch it is the width of the root bounds on $\ln m!$, a logarithm entering
+the bounds, so at most $\delta\le(m+\tfrac12)\delta$ for $m\ge1$; and for
+$m=0$ it is $0$. So each of the three widths is at most
+$(m+\tfrac12)\delta+\tfrac12\delta_C+\tfrac{1}{156}$; summing over
+$m\in\{n,j,n-j\}$, whose values add up to $2n$, and adding
+$j\delta+(n-j)\delta=n\delta$ gives at most
+$(2n+\tfrac32)\delta+n\delta+\tfrac32\delta_C+\tfrac{3}{156}$. The size
+statement holds because each term of \eqref{eq:pmf-enclosure} is a sum of
+products of the given rationals with the integers $n$, $j$, $n-j$ and
+$m+\tfrac12$; the rational $\frac{1}{12m+1}$ and its like are of the bit
+size of $m$.
+\end{proof}

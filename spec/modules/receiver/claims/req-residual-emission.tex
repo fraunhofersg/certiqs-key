@@ -1,0 +1,44 @@
+% ---
+% id: receiver/req:residual-emission
+% kind: req
+% title: "Emission of the residuals that exist on the route and request"
+% summary: >-
+%   Every artifact carries exactly the residuals that exist on its input route
+%   and for its request; the key of any other residual is absent, never zero.
+%   The tolerances of the first and third residual are declared on every route,
+%   that of the sixth is required only with an exact-window depth.
+% prominence: standard
+% status: implemented
+% uses: [def:residuals, prop:res5]
+% mentions: [receiver/detector-imperfections/req:dark-composed-reference]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.construct:emitted_residuals
+% lean:
+% ---
+
+The artifact already follows this rule for the record of the receiver
+construction, which is present exactly on route (iii); a residual that does
+not exist on the route or for the request taken is likewise absent, because
+emitting $0$ would report a check that was not made.
+
+\begin{requirement}\label{req:residual-emission}
+The engine emits with every artifact, in \iface{validation_results}, those
+residuals of Definition~\ref{def:residuals} that exist on the input route taken
+and for the evaluation requested, and no other: the keys of $r_1$ and $r_3$ are
+absent, not zero, on route (i), and the key of $r_6$ is absent, not zero, at a
+declaration that requests no exact window. The blocks over which
+\eqref{eq:res5} maximises are the floating-point blocks
+$\blk{M}{\eqn}_{v|t}$ of the coarse-grained elements that
+Definition~\ref{def:residuals} names, before any \tref{dark-count channel}, which
+the \iface{photon_blocks} entry carries beside its dark-composed blocks
+(Requirement~\ref{req:dark-composed-reference}); $r_5$ does not run over the
+dark-composed blocks, on which the exact value $0$ of
+Proposition~\ref{prop:res5}\,(iv) is not asserted.
+$\varepsilon_1$ and $\varepsilon_3$ are declared on every route, route (i)
+included, where they are unused (\iface{numerical_tolerances});
+$\varepsilon_6$ is required exactly where an \tref{exact-window depth} is
+declared, on the same condition as $r_6$, and where it is declared elsewhere
+it is unused and not an error.
+\end{requirement}

@@ -1,0 +1,73 @@
+% ---
+% id: meat-core/cor:reduction-constrained
+% kind: cor
+% title: "The reduction for arbitrary constraint lists"
+% summary: >-
+%   For any declared constraint list, licensed or not, the constrained value
+%   bounds the constrained single-round rate from below, with the same list on
+%   both sides. A key length from the constrained value still needs the
+%   attack-set licence of [[thm:constrained-accumulation]].
+% prominence: standard
+% status: implemented
+% uses: [def:homog, def:hqkd-list, def:feasible, thm:reduction, def:admissible-declaration]
+% mentions: [thm:constrained-accumulation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.objective:constraint_value
+% lean:
+% ---
+
+No step of the reduction reads the constraint list beyond checking that the
+joint dephasing keeps every entry, so the comparison holds for any list.
+Whether the constrained value may enter a key length is a separate question,
+answered by the attack-set licence (Theorem~\ref{thm:constrained-accumulation}).
+
+\begin{corollary}\label{cor:reduction-constrained}
+Let $\CList$ be arbitrary: $\Theta_k$ an arbitrary Hermitian operator on $A$
+in \tref{trusted-source mode}, $\Theta_k=c_k$ an arbitrary real number in
+\tref{untrusted-source mode}, and entries declared \tref{party-local} in
+either mode (Definition~\ref{def:admissible-declaration}\,(vi)); no licensing restriction
+(Definition~\ref{def:homog}) is needed in either mode. Then
+\begin{equation}\label{eq:c8-general}
+  \hqkd(\CList)\;\ge\;\hlow(\CList),
+\end{equation}
+where $\hqkd(\CList)$ is the \tref{constrained single-round rate} of
+Definition~\ref{def:hqkd-list} and $\hlow(\CList)$ denotes
+\eqref{eq:hlow-def} over the feasible set $\Feas$ of \eqref{eq:feas},
+which carries the same list ($\hlow(\CList)$ and the unadorned
+$\hlow$ are the same quantity; the argument is written when the
+dependence on the declared list matters, as in
+$\hlow(\CList)\ge\hlow(\varnothing)$).
+\end{corollary}
+
+\begin{proof}
+Steps 1--5 of the proof of Theorem~\ref{thm:reduction} apply verbatim
+to a feasible point of \eqref{eq:hqkd-list}: Step 1 preserves every
+entry. For an entry read through its lifted operator, block diagonality
+of $\hat O_k$ along $\SecSet$ and self-adjointness of $\PinS$ give
+$\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\,\omega'_{A\Qsys}]
+=\mathcal{P}_{\mathbb{T}}\big(\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\,
+\omega_{A\Qsys}]\big)$; in trusted-source mode $\mathcal{P}_{\mathbb{T}}$ is
+positive and linear and fixes $\Theta_k$, which is block diagonal along
+$\mathbb{T}$ ($c_k\tau_A$ for a \tref{homogeneous} entry, by type for
+a \tref{general} one, Definition~\ref{def:admissible-declaration}\,(iii)), so
+$X\bowtie_k\Theta_k$ implies
+$\mathcal{P}_{\mathbb{T}}(X)\bowtie_k\Theta_k$; in untrusted-source mode the
+entry value is the trace of the same operator, which the pinching
+preserves. For a party-local entry scoped to $f$, with
+$\hat D=\hat O_k-c_k\idon{\Qsys_f}$ block diagonal for the pinching
+$\mathcal{P}_f$ of that factor and $\mathcal{P}_{f^c}$ the product of the
+other factors' pinchings,
+$\tr_{\Qsys_f}[(\idon{}\otimes\hat D)\,\omega'_{A\Qsys}]
+=(\mathcal{P}_{\mathbb{T}}\otimes\mathcal{P}_{f^c})\big(
+\tr_{\Qsys_f}[(\idon{}\otimes\hat D)\,\omega_{A\Qsys}]\big)$, and a positive
+map preserves $\bowtie_k0$; Steps 2--3 do not change
+the $A\Qsys$-marginal, and the state
+$\tilde\omega=\omega'_{A\Qsys}$ of Step 4 therefore satisfies every
+entry of $\CList$ in addition to $\tr\tilde\omega=1$, block diagonality along the joint
+sectors
+and (in trusted-source mode) $\tilde\omega_A=\tau_A$, that is,
+$\tilde\omega\in\Feas$. Taking infima over
+the constrained sets on both sides yields \eqref{eq:c8-general}.
+\end{proof}

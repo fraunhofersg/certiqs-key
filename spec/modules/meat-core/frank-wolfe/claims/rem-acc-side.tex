@@ -1,0 +1,139 @@
+% ---
+% id: meat-core/frank-wolfe/rem:acc-side
+% kind: rem
+% title: "Exact minimisation on the acceptance side"
+% summary: >-
+%   For a singleton or a polytope acceptance set the acceptance-side half of
+%   the linear minimisation is discharged by an exact minimisation, and a
+%   certified lower bound may replace the minimum, the bound staying valid.
+%   An acceptance iterate formed exactly stays in the set by induction.
+% prominence: standard
+% status: accepted
+% uses: [thm:firstorder, lem:fo-khyp, meat-core/def:admissible-acceptance-set]
+% mentions: [rem:fo-reachability, foundations/def:exact-island, def:first-order-setting, req:iterate-checks, req:acceptance-geometries, req:acceptance-iterate-exact, req:bacc-recorded, rem:fo-arithmetic, lem:feasible-side-dual, req:verified-feasible-side]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:acc-side}
+The acceptance half of \eqref{eq:lmo}, the
+\tref{acceptance-side inequality}, is discharged exactly, because its
+minimisation over $\acSet$ lies on the \tref{exact island}
+(\xref{foundations/def:exact-island}\,(ii)): $\acSet$ is declared as exact rational
+data and the minimisation is a linear program over it. Two geometries are
+admitted, the singleton~(a) and the polytope~(b), and each supplies what
+the bracket needs.
+
+The \tref{acceptance support} $\Chacc$ is \eqref{eq:chacc-def}, and by
+Lemma~\ref{lem:fo-khyp}\,(i) it is the support of a single element of
+$\acSet$ while no element has support outside it. So minimising a linear
+functional over $\acSet$ may be done in the coordinates $\Chacc$ alone,
+which is also where the acceptance-side gradient $\lmoq_t$ of
+Theorem~\ref{thm:firstorder} lives and where the first pairing of
+Definition~\ref{def:first-order-setting} is taken --- the three statements
+agree, and the case $\Chacc\subsetneq\Chatset$ is admitted throughout rather
+than excluded by a hypothesis.
+
+Given an exact vector $\lmoq\in\mathbb{R}^{\Chacc}$, a number $\bacc$ with
+\begin{equation}\label{eq:bacc-def}
+  \bacc\;\le\;\min_{\mathbf q'\in\acSet}\
+  \sum_{\hat c\in\Chacc}\lmoq(\hat c)\,q'(\hat c)
+\end{equation}
+is a certified lower bound on the acceptance-side minimum, and a point
+attaining the minimum discharges the first inequality of \eqref{eq:lmo}
+outright. \emph{The bracket may consume $\bacc$ in place of the pairing
+with such a point, and the substitution is exact rather than
+approximate}: at $\lmoq=\lmoq_t$, \eqref{eq:bacc-def} is the hypothesis on
+$b^{\mathrm A}_t$ of Theorem~\ref{thm:firstorder}\,(iv), so replacing
+$\langle\lmoq_t,v_t\rangle$ by $\bacc$ in \eqref{eq:hlb} --- and only
+there, the subtrahend $\langle\lmoq_t,\mathbf q_t\rangle$ being evaluated
+as before --- keeps the conclusion $\hlb\le\hlow$ (a run that does so
+records which of the two it used, Requirement~\ref{req:bacc-recorded}). Two instantiations are part of this submodule; an $\acSet$
+that fits neither is refused at admission
+(Requirement~\ref{req:acceptance-geometries}).
+\emph{(a) Singleton} $\acSet=\{\mathbf q^{*}\}$: the minimum is the single
+evaluation $\sum_{\hat c}\lmoq(\hat c)q^{*}(\hat c)$, attained at
+$v_t=\mathbf q^{*}$, and $\bacc$ is any downward-rounded evaluation of it.
+\emph{(b) Polytope}
+$\acSet=\{\mathbf q:\ \mathbf q\ge0,\ \textstyle\sum_{\hat c}q(\hat c)=1,\
+B\mathbf q\le\mathbf b\}$ for an exact matrix $B$ and vector
+$\mathbf b$, read in the coordinates $\Chacc$: the minimum is attained at
+a vertex and is computed exactly over the rationals, which discharges
+\eqref{eq:lmo}'s first inequality with equality. A dual witness certifies
+it independently: for any $\mathbf u\ge0$ and $v\in\mathbb{R}$ with
+$\lmoq(\hat c)+(B^{\transpose}\mathbf u)(\hat c)+v\ge0$ for every $\hat
+c\in\Chacc$,
+\begin{equation*}
+  \min_{\mathbf q'\in\acSet}\langle\lmoq,\mathbf q'\rangle
+  \;\ge\;-\langle\mathbf b,\mathbf u\rangle-v :
+\end{equation*}
+indeed $\langle\lmoq,\mathbf q'\rangle
+=\langle\lmoq+B^{\transpose}\mathbf u+v\mathbf 1,\mathbf q'\rangle
+-\langle\mathbf u,B\mathbf q'\rangle-v
+\ge0-\langle\mathbf u,\mathbf b\rangle-v$, using $\mathbf q'\ge0$
+componentwise, $\mathbf u\ge0$ with $B\mathbf q'\le\mathbf b$, and
+$\sum_{\hat c}q'(\hat c)=1$.
+
+\emph{The acceptance-side iterate is on the island too, and that is what
+makes $\mathbf q_t\in\acSet$ hold by construction.} The membership
+hypothesis of Theorem~\ref{thm:firstorder}\,(ii) and~(iiib) is on a
+\emph{product}, $x_t\in\acSet\times\Feas^{J}(\varepsilon)$, and the three
+checks of Requirement~\ref{req:iterate-checks} are all conditions on the $J$
+factor: per-block positive semidefiniteness, the coupling residual and the
+declared rows. \emph{Nothing checks the other factor, and nothing needs
+to}, provided the acceptance-side iterate is formed on the exact island
+under two conditions (Requirement~\ref{req:acceptance-iterate-exact}):
+\begin{itemize}[leftmargin=2.4em]
+\item[($\alpha$)] the acceptance-side iterate is initialised at an exact
+rational point $\mathbf q_{0}\in\acSet$ --- one exists whenever
+$\acSet\neq\varnothing$, the acceptance data being exact rationals by
+Definition~\ref{def:admissible-acceptance-set} and \xref{foundations/def:exact-island}, so that
+the single point of geometry~(a) and the vertices of geometry~(b) are
+rational; and Lemma~\ref{lem:fo-khyp}\,(i)'s equally weighted average of
+finitely many of them is rational too, and is supported on all of
+$\Chacc$, which Remark~\ref{rem:fo-reachability} also needs;
+\item[($\beta$)] every acceptance-side update is a convex combination,
+with \emph{exact rational} weights in $[0,1]$, of points already
+established to lie in $\acSet$ --- in the intended use
+$\mathbf q_{t+1}=(1-\gamma_t)\mathbf q_t+\gamma_t\,u_t$ with
+$u_t\in\acSet$ exact and rational, and in geometries (a) and (b) the
+acceptance-side minimiser $v_t$ is such a point: the single
+$\mathbf q^{*}$ in (a), a vertex computed exactly over the rationals in
+(b).
+\end{itemize}
+Under ($\alpha$) and ($\beta$), $\mathbf q_t\in\acSet$ for every $t$ by
+induction, $\acSet$ being convex (Definition~\ref{def:admissible-acceptance-set}) and the
+arithmetic exact --- so the property is \emph{true} rather than tested,
+there is no check for a run to fail and no residual for it to expose, and
+\eqref{eq:hlb} is evaluated at a point whose acceptance factor is where
+the theorem says it is. \emph{Why it must be exact and not merely
+checked}: on the polytope geometry (b) a binary64 convex combination of
+exact points of $\acSet$ can violate $\sum_{\hat c}q(\hat c)=1$ or a row
+of $B\mathbf q\le\mathbf b$, and three consumers break if it does ---
+Lemma~\ref{lem:fo-khyp}\,(ii)'s identical deletion of the
+$\hat c\notin\Chacc$ terms is unlicensed and $O^{J}_{\alpha}(x_t)$ may be
+$+\infty$; the pairing on $\mathbb{R}^{\Chacc}$ loses its justification,
+since $v_t-\mathbf q_t$ need no longer vanish outside $\Chacc$ and
+$\langle\lmoq_t,v_t-\mathbf q_t\rangle$ would silently drop terms of
+unknown sign from \eqref{eq:hlb}; and Step~2's chord argument needs $x_t$
+in the convex set it runs in. The singleton geometry (a) is immune ---
+there $\acSet$ has one point and every convex combination of it is it ---
+but the polytope geometry is a first-class instantiation of this submodule
+and is not.
+
+\emph{What this leaves.} With the acceptance half discharged, the other
+half of \eqref{eq:lmo}, the \tref{feasible-side inequality}, concerns the
+minimisation over $\Feas^{J}$ --- a semidefinite program in the block
+variables, solved in binary64 by a backend. It is not asked of the backend's
+return at all: part~(iv) of Theorem~\ref{thm:firstorder} takes a lower
+bound on that minimum in place of the pairing, and
+Lemma~\ref{lem:feasible-side-dual} supplies one from the backend's
+multipliers, formed in exact arithmetic over the exact $\Feas^{J}$, the
+rounding of the frame the rows are built with charged
+(Requirement~\ref{req:verified-feasible-side}). Both sides of a bracket are
+then lower bounds over the exact sets, certified exactly for the linear
+forms the run computed; what the binary64 computation of those forms
+leaves is Remark~\ref{rem:fo-arithmetic}'s.
+\end{remark}

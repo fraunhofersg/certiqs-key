@@ -1,0 +1,30 @@
+% ---
+% id: reductions/req:carried-tuple-emitted
+% kind: req
+% title: "Emission of the carried tuple, and constraints built from it"
+% summary: >-
+%   Beside each link's channel witness the engine emits the carried tuple of the
+%   link's squashing relation, and it builds every emitted constraint from an
+%   operator in that tuple. Such a constraint belongs to the relation, not to
+%   one realizing channel.
+% prominence: standard
+% status: accepted
+% uses: [rem:channel-choice]
+% mentions: [def:squashing]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A constraint built from one of the \tref{carried operators} has the same
+pull-back for every channel realizing the \tref{squashing relation}, while
+one read off a particular channel is tied to it
+(Remark~\ref{rem:channel-choice}).
+
+\begin{requirement}\label{req:carried-tuple-emitted}
+Beside the channel witness of each link it emits, the engine emits the
+carried tuple of the link's squashing relation
+(Definition~\ref{def:squashing}; \iface{transported_operators}), and it
+builds every constraint it emits from an operator in that tuple.
+\end{requirement}

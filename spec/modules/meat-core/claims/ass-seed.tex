@@ -1,0 +1,73 @@
+% ---
+% id: meat-core/ass:seed
+% kind: ass
+% title: "Private, independent and fresh local randomness"
+% summary: >-
+%   The post-processing seeds are drawn with their declared laws, privately,
+%   independently and afresh; in trusted-source mode the source's letters and
+%   prepared systems are independent of the adversary, who never gets a
+%   purification of them. Leftover hashing and source replacement rest on it.
+% prominence: standard
+% status: accepted
+% uses: [def:postprocessing-model]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Sec. 4, opening paragraphs"
+%   - "tupkary2025survey, Sec. 3"
+%   - "tupkary2025survey, Sec. 5.6.1"
+%   - "tupkary2026decoy, Protocol 1, step 1(a)(i)"
+% provenance: newly-derived
+% short_id: A-SEED
+% verification: never
+% category: local-randomness
+% affects: [secrecy, correctness]
+% user_statement: >-
+%   Your random choices come from a good private random number generator.
+%   The error-correction seed, the error-verification hash and the
+%   privacy-amplification hash are each drawn with their intended
+%   distribution, kept secret until the protocol announces them, independent
+%   of each other, of every other record of the protocol (the raw key
+%   included) and of everything the attacker knows, and drawn anew in every
+%   run. With a trusted source, the randomness with which it picks each
+%   round's letter and prepares its state is uncorrelated with the attacker
+%   at the start, and no purification of a prepared state is ever available
+%   to the attacker. A seed reused across runs, fixed in the device or
+%   disclosed early, or a predictable or pre-shared random source, violates
+%   this.
+% lean:
+% ---
+
+The parties' local randomness is taken to be ideal and never leaked beyond
+what the protocol announces \cite[Sec.~4, opening paragraphs]{tupkary2026decoy},
+\cite[Sec.~3]{tupkary2025survey}; a generator that is only close to ideal
+in the composable sense adds its own error parameter
+\cite[Sec.~5.6.1]{tupkary2025survey}. The published premise covers the
+randomness used to choose the signal states as well as the hash seeds: the
+protocol begins with local randomness in classical registers and ``the
+adversary is uncorrelated to this randomness''
+\cite[Sec.~4, opening paragraphs]{tupkary2026decoy}, and in particular the
+adversary holds no purification of a prepared signal state
+\cite[Protocol~1, step 1(a)(i)]{tupkary2026decoy}. Clause (v) states that
+part for the source's draws, in \tref{trusted-source mode}, where the analysis
+describes the source by them.
+
+\begin{assumption}\label{ass:seed}
+(i) The error-correction seed $S_{\mathrm{pub}}$, the error-verification seed
+$S_{\mathrm{EV}}$ and the privacy-amplification hash $G$ of
+Definition~\ref{def:postprocessing-model} are drawn with the laws that
+definition gives them, $S_{\mathrm{EV}}$ and $G$ with the laws of their hash
+families;
+(ii) each is drawn privately: its value is available to the adversary only
+once the protocol announces it;
+(iii) each is independent of every other register of the protocol and of the
+adversary's information at the time it is drawn;
+(iv) each is drawn afresh in every run;
+(v) in \tref{trusted-source mode}, the letters Alice's source draws in the
+$n$ rounds, and the systems it prepares from them, are jointly independent of
+the adversary's registers at the start of the protocol: the joint state of
+the letters, the prepared systems and those registers is the product of its
+marginal on the letters and the prepared systems together and its marginal on
+those registers; in particular the adversary holds no purification of a
+prepared system, and no purification of a prepared system is made available
+to the adversary during or after the protocol.
+\end{assumption}

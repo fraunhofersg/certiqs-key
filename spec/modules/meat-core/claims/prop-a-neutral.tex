@@ -1,0 +1,144 @@
+% ---
+% id: meat-core/prop:a-neutral
+% kind: prop
+% title: "Value neutrality along Alice's sectors"
+% summary: >-
+%   Pinching a feasible state along Alice's declared sectors keeps it feasible
+%   with the same statistics and an objective no larger. So restricting the
+%   variable to states block diagonal there changes no value, and the pinching
+%   carries minimisers to minimisers.
+% prominence: standard
+% status: accepted
+% uses: [def:declaration, def:feasible, def:homog, def:maps, def:branch, lem:branch-maps, thm:branch-formula, lem:cone-concavity, foundations/lem:kernel, foundations/def:pinching, def:admissible-declaration]
+% mentions: [thm:reduction]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The proposition is independent of Step 1 of thm:reduction: either makes the restriction sound, and this one adds that nothing is lost."
+% ---
+
+Step~1 of the proof of Theorem~\ref{thm:reduction} shows that restricting the
+variable to states block diagonal along Alice's declared sectors is sound; the
+proposition below shows, independently, that the restriction also loses no
+value.
+
+\begin{proposition}
+\label{prop:a-neutral}
+Let $\Decl$ satisfy Definition~\ref{def:admissible-declaration} in the general format of
+Definition~\ref{def:declaration}, in either source mode and with an arbitrary
+list $\CList$, \tref{general} and \tref{party-local} entries included.
+Let $\Feas^{\circ}$ be the set defined as $\Feas$ is in
+Definition~\ref{def:feasible} but with block diagonality required along
+$\SecSet$ only --- the feasible set of the same declaration with the factor
+tagged $A$ forgotten --- and let
+$\mathcal{P}_{\mathbb{T}}(X)\coloneqq\sum_{t}\Pi^{A}_tX\Pi^{A}_t$. Then for
+every $\alpha\in(1,\infty)$, every distribution $\mathbf q$ on $\Chatset$ and
+every $\omega\in\Feas^{\circ}$, the operator
+$\omega'\coloneqq(\mathcal{P}_{\mathbb{T}}\otimes\idmap_{\Qsys})(\omega)$
+satisfies
+\begin{equation}\label{eq:a-neutral}
+  \omega'\in\Feas,\qquad
+  P_{\hat c}(\omega')=P_{\hat c}(\omega),\qquad
+  K_{\hat c}(\omega')\ge K_{\hat c}(\omega)\quad\forall\hat c,\qquad
+  O_{\alpha}(\mathbf q,\omega')\le O_{\alpha}(\mathbf q,\omega),
+\end{equation}
+the last in the extended-real sense. Consequently
+$\inf_{\acSet\times\Feas}O_{\alpha}=\inf_{\acSet\times\Feas^{\circ}}O_{\alpha}$,
+and $\omega\mapsto\omega'$ maps minimisers over $\Feas^{\circ}$ to minimisers
+over $\Feas$.
+\end{proposition}
+
+\begin{proof}
+$\mathcal{P}_{\mathbb{T}}$ is a pinching (\xref{foundations/def:pinching}):
+completely positive, trace preserving, unital and self-adjoint for the trace
+pairing.
+
+\emph{Membership.} $\omega'\succeq0$ and $\tr\omega'=\tr\omega=1$.
+$\mathcal{P}_{\mathbb{T}}\otimes\idmap_{\Qsys}$ commutes with
+$X\mapsto(\idon{A}\otimes\Pi_s)X(\idon{A}\otimes\Pi_{s'})$, so $\omega'$ is
+block diagonal along $\SecSet$ as $\omega$ is, and along $\mathbb{T}$ by
+construction; hence along the joint sectors. In trusted-source mode
+$\omega'_A=\mathcal{P}_{\mathbb{T}}(\omega_A)=\mathcal{P}_{\mathbb{T}}(\tau_A)
+=\tau_A$, because $\tau_A$ is block diagonal along $\mathbb{T}$
+(Definition~\ref{def:admissible-declaration}\,(iii)). For an entry read through its lifted
+operator, the partial trace over $\Qsys$ commutes with a map acting on $A$
+alone, so
+$\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\omega']
+=\mathcal{P}_{\mathbb{T}}\big(\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\omega]\big)$.
+In trusted-source mode $\mathcal{P}_{\mathbb{T}}$ is positive and linear, so
+$X\bowtie_k\Theta_k$ implies
+$\mathcal{P}_{\mathbb{T}}(X)\bowtie_k\mathcal{P}_{\mathbb{T}}(\Theta_k)
+=\Theta_k$, every $\Theta_k$ being block diagonal along $\mathbb{T}$: for a
+\tref{homogeneous} entry $\Theta_k=c_k\tau_A$, for a general one by
+its type (Definition~\ref{def:declaration}\,(DX2)). In untrusted-source mode
+the entry value is the trace of the same operator, which
+$\mathcal{P}_{\mathbb{T}}$ preserves. For a party-local entry
+scoped to $f$, with $\hat D\coloneqq\hat O_k-c_k\idon{\Qsys_f}$, the partial
+trace over $\Qsys_f$ commutes with a map acting on $A$ alone, so
+$\tr_{\Qsys_f}[(\idon{}\otimes\hat D)\omega']
+=(\mathcal{P}_{\mathbb{T}}\otimes\idmap)\big(
+\tr_{\Qsys_f}[(\idon{}\otimes\hat D)\omega]\big)$ with the identity map on
+the other measured factors; a pinching tensored with an identity map is a
+pinching, hence positive, and $Y\bowtie_k0$ implies
+$(\mathcal{P}_{\mathbb{T}}\otimes\idmap)(Y)\bowtie_k0$. So
+$\omega'\in\Feas$.
+
+\emph{Linear quantities.} For all $(x,v)$, by self-adjointness of the
+pinching and block diagonality of $M_x$ along $\mathbb{T}$
+(Definition~\ref{def:admissible-declaration}\,(iii)),
+$\tr[(M_x\otimes F_v)\omega']
+=\tr[(\mathcal{P}_{\mathbb{T}}(M_x)\otimes F_v)\omega]
+=\tr[(M_x\otimes F_v)\omega]$. Hence $\Phimap[\omega']=\Phimap[\omega]$ by
+\eqref{eq:Phimap}, so $P_{\hat c}$ is unchanged, and
+$\tr\cG_{\hat c}(\omega')=\tr\cG_{\hat c}(\omega)$, that trace being
+$\sum_{\kappa\in\Kann_{\mathrm{pass}}(\hat c)}\sum_{(x,v)\in a^{-1}(\kappa)}
+\tr[(M_x\otimes F_v)\,\cdot\,]$ by the computation in the proof of
+Lemma~\ref{lem:branch-maps}\,(i).
+
+\emph{The non-linear term.} With $m\coloneqq|\mathbb{T}|$, an enumeration
+$t\mapsto j_t\in\{1,\dots,m\}$ and $\zeta\coloneqq e^{2\pi i/m}$, the
+operators $U_k\coloneqq\sum_t\zeta^{j_tk}\Pi^{A}_t$, $k=0,\dots,m-1$, are
+unitaries on $A$ with
+$\mathcal{P}_{\mathbb{T}}(X)=\frac1m\sum_kU_kXU_k^{\dagger}$, by the
+unitary-mixture form of a pinching in \xref{foundations/def:pinching}, with
+the projectors $\Pi^{A}_t$ enumerated by $j_t$. Each $U_k$ is a function of the
+projectors $\Pi^{A}_t$ and therefore commutes with every operator block
+diagonal along $\mathbb{T}$, in particular with every $\sqrt{M_x}$. Let
+$\widetilde U_k$ be $U_k$ on the $A$ factor of the output space
+$\Hs{R\,XY\,C_AC_B\,A\Qsys}$ of \eqref{eq:kraus} and the identity on the other
+factors. Every term of $K_{\kappa}$ carries
+$\sqrt{M_x}\otimes\sqrt{F_v}$ on $A\Qsys$, so
+$K_{\kappa}(U_k\otimes\idon{\Qsys})=\widetilde U_kK_{\kappa}$ and, $\cG_{\hat
+c}$ being linear,
+\begin{equation*}
+  \cG_{\hat c}(\omega')=\frac1m\sum_{k=0}^{m-1}
+  \widetilde U_k\,\cG_{\hat c}(\omega)\,\widetilde U_k^{\dagger}.
+\end{equation*}
+For a unitary $U$ that is the identity on $R$ and any $X\succeq0$:
+$(UXU^{\dagger})^{1/\alpha}=UX^{1/\alpha}U^{\dagger}$ by functional calculus;
+$\cZ(UYU^{\dagger})=U\cZ(Y)U^{\dagger}$ because $U$ commutes with every
+$Z_j=\dyad{j}_R$; and
+$\tr[(U\cZ(Y)U^{\dagger})^{\alpha}]=\tr[\cZ(Y)^{\alpha}]$. So the functional
+$T$ of \eqref{eq:Tcone} satisfies $T(UXU^{\dagger})=T(X)$, and by its
+concavity on the whole cone (Lemma~\ref{lem:cone-concavity}\,(b))
+\begin{equation*}
+  T_{\hat c}(\omega')=T\big(\cG_{\hat c}(\omega')\big)
+  \ge\frac1m\sum_kT\big(\widetilde U_k\cG_{\hat c}(\omega)
+  \widetilde U_k^{\dagger}\big)=T_{\hat c}(\omega).
+\end{equation*}
+With \eqref{eq:fK},
+$K_{\hat c}=T_{\hat c}+P_{\hat c}-\tr\cG_{\hat c}$, and the two linear terms
+unchanged, $K_{\hat c}(\omega')\ge K_{\hat c}(\omega)$.
+
+\emph{The objective and the infima.} In \eqref{eq:objective} the state
+enters through $P_{\hat c}$, unchanged, and through
+$\frac{1}{\alpha-1}d(q(\hat c),K_{\hat c})$ with $d$ the kernel of
+\xref{foundations/lem:kernel}, non-increasing in its second argument; the
+conventions at vanishing arguments are those of that kernel, so the
+inequality holds in the extended-real sense. Finally
+$\Feas\subseteq\Feas^{\circ}$, so the infimum over $\Feas$ is no smaller,
+and by \eqref{eq:a-neutral} it is no larger; if $(\mathbf q,\omega)$ attains
+the infimum over $\Feas^{\circ}$ then $(\mathbf q,\omega')$ attains the same
+value over $\Feas$.
+\end{proof}

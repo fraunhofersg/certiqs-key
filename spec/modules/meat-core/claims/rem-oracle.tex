@@ -1,0 +1,48 @@
+% ---
+% id: meat-core/rem:oracle
+% kind: rem
+% title: "Validation against the order-one limit"
+% summary: >-
+%   The limit of [[thm:oracle]] is a blockwise relative-entropy program that
+%   checks an implementation as α → 1; it validates no finite-α value and
+%   bounds nothing. It is available only where every acceptable distribution
+%   is positive on the key-live values.
+% prominence: standard
+% status: accepted
+% uses: [thm:oracle, thm:choi]
+% mentions: [meat-core/frank-wolfe/def:first-order-setting, meat-core/frank-wolfe/thm:firstorder, req:limit-not-a-bound]
+% assumes: []
+% refs:
+%   - "winick2018reliable, Eqs. (1)-(6)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:oracle}
+The right-hand side of \eqref{eq:oracle} is a blockwise relative-entropy
+objective, of the structure of the conic von~Neumann key-distance program
+of \cite[Eqs.~(1)--(6)]{winick2018reliable} with acceptance-set membership
+in place of the equality constraints used there. Theorem~\ref{thm:oracle}
+is stated over the declared $\Feas$, so it covers arbitrary $\CList$
+unchanged, and affine constraints enter both programs natively. The limit
+validates the consistency of the $\alpha\to1^{+}$ limit of an
+implementation of \eqref{eq:choi-program}; it does not validate
+finite-$\alpha$ objective values or the finite-$\alpha$ $K_{\hat c}$, and
+it is a bound of no kind, in particular no lower bound on $\hlow$
+(Requirement~\ref{req:limit-not-a-bound}).
+
+\emph{On which declarations it is available.}
+Theorem~\ref{thm:oracle} assumes a $p_0>0$ with $q(\hat c)\ge p_0$ for
+\emph{every} $\mathbf q\in\acSet$ and every $\hat c\in\Chkey$, which asks
+that every element of $\acSet$ be strictly positive on $\Chkey$; on a
+compact $\acSet$ that is exactly the existence of $p_0$, the minimum being
+attained. A singleton $\acSet=\{\mathbf q^{*}\}$ with
+$\Chkey\subseteq\operatorname{supp}\mathbf q^{*}$ satisfies it; a polytope
+with a vertex vanishing somewhere on $\Chkey$ does not, and there the
+limit is unavailable. Theorem~\ref{thm:oracle} is a validation statement:
+no key length passes through it, and a declaration outside its hypothesis
+loses this check and no claim. The condition is narrower than the
+\tref{acceptance support} $\Chacc$ of \eqref{eq:chacc-def}, which asks
+positivity of \emph{some} element and against which (H-POS) of
+Theorem~\ref{thm:firstorder} is stated for exactly that reason.
+\end{remark}

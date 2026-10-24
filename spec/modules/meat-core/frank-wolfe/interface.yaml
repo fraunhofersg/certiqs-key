@@ -1,0 +1,1772 @@
+# spec/modules/meat-core/frank-wolfe/interface.yaml -- the `frank-wolfe`
+# submodule's interface: what it reads from the core and from the backend,
+# what it emits, the windows it declares on objects it computed, how the
+# feasible side of its bound is verified and the vocabulary that withdraws
+# its number (spec/claim-format.md section 5). The claim files under claims/
+# are the contract; this file states no mathematics of its own and repeats
+# none. The submodule's claims and their statuses are listed by
+# `python -m harness.check_claims --module meat-core/frank-wolfe --status`.
+#
+# What is here and what is not. This submodule is where a lower bound on the
+# value of the core's program is produced. It assumes nothing of a solver:
+# the acceptance-side minimum is computed exactly and the feasible-side one
+# is bounded from below in exact arithmetic (rem:acc-side;
+# lem:feasible-side-dual; req:verified-feasible-side). It also certifies
+# that bound, forming it again at the run's final points with every step
+# from the declaration's data exact or rigorously enclosed
+# (`certified_evaluation`; lem:certified-bracket; req:certified-evaluation). The core states the program, its Choi
+# form, its gradients, the key length and the two docking claims, and names
+# no solver (`../interface.yaml`); this file adds rows to the core's tables
+# and changes none of them. Every row names, in a `locator` or `fixed_by`
+# field, the claims it rests on; a bare label is this submodule's and a
+# label prefixed `meat-core/` is the core's.
+#
+# The coupling to the core is two core claims and nothing else:
+# meat-core/lem:estimate, which says what the objective at any feasible
+# point is worth, and meat-core/cor:keylength-bound, which turns any lower
+# bound on the value into a key length. This submodule establishes such a
+# bound for the Frank-Wolfe linearisation and instantiates the second claim
+# at it. A second solver submodule docks at the same two claims with its own
+# bound, and nothing of the core changes when it does.
+#
+# Machine keys and refusal spellings are binding for the implementation;
+# where this file and a claim disagree, the claim decides. Where this file
+# fixes something no claim states, the row says so and the list is
+# `fixed_by_this_file`.
+
+module_id: meat-core/frank-wolfe
+parent_module: meat-core
+
+candidate_search_interface:
+  locator: "rem:fo-reachability; thm:firstorder"
+  request: "certiqs_key.solvers.types.SearchRequest"
+  methods: [fw, pairwise, factor, entropy, corrective, auto]
+  default_method: fw
+  public_default_method: auto
+  effort_fields: [budget_seconds, max_iterations, gap_target]
+  other_choices: [oracle, warm_start]
+  public_settings: "certiqs_key.runs.config.SolverSettings"
+  public_ordinary: [method, budget_seconds, max_iterations]
+  public_ordinary_methods: [auto, fw]
+  public_advanced: [method, oracle, gap_tolerance, warm_start, certified_evaluation]
+  public_advanced_methods: [pairwise, factor, entropy, corrective]
+  public_reading: >-
+    The run tier's settings split the request's choices into two tiers. The
+    ordinary one is the method (auto or fw), the wall budget and the work
+    cap; the expert methods and every other choice are in the advanced block,
+    whose method overrides the ordinary one (setting both is refused). The
+    run tier resolves an absent method to public_default_method (auto), the
+    request itself to default_method (fw); the split is
+    presentation, and the request above admits all six methods alike. The
+    run tier's gap_tolerance is the request's gap_target, admitted finite and
+    positive.
+  effort_reading: >-
+    One coordinator-wide wall budget, a method-native iteration cap and a
+    diagnostic gap target; under auto the iteration cap binds its
+    Frank-Wolfe stages only, and its factor, entropy and corrective stages
+    run to their own convergence or their share of the budget. They do not change support, membership or oracle
+    thresholds. On a run with an admitted reference companion the share
+    `reference_polish_share` of the wall budget of one evaluation is set
+    aside before the search for the polish of req:bracket-on-reference (i),
+    which shortens the search on the snapped declaration accordingly. Explicit unsupported searches report a capability refusal;
+    automatic dispatch records skipped methods and their reasons, structural
+    or resource (an entropy cone over its allocation plan).
+  assessment: >-
+    Every candidate, including an FW iterate, uses the shared original
+    objective, gradient, acceptance minimisation, point/support checks and
+    exact-set oracle assessment. Search-only arithmetic and conic objectives
+    cannot contribute a bound directly. The refusal of a negative estimate
+    of the run's own search (req:negative-estimate-refused) and the
+    run-level security refusals remain mandatory; the polish of
+    req:bracket-on-reference (i) and the statistics check's solve
+    (meat-core/req:unreachable-acceptance-set (ii)) report no estimate of the
+    run and refuse on no sign.
+  result: >-
+    search_report records policy, attempts, switches, budgets and termination.
+    The best contributing candidate records its q, original objective,
+    bracket and gap separately from the final/search-best candidate. Every
+    retained bound is for the same declaration, order and dropped program.
+
+# ---------------------------------------------------------------------------
+# inputs
+#   Two groups, and the split is the whole architecture of this submodule:
+#   what it reads from the core, which is mathematics this file does not
+#   restate, and what it reads from the backend, a search direction and a
+#   candidate dual of which nothing is assumed. Nothing is read from a
+#   supplier module: the declaration
+#   reached the core, was admitted there exactly, and this submodule sees the
+#   program the core formed from it.
+# ---------------------------------------------------------------------------
+inputs:
+
+  from_the_core:
+
+    - name: choi_program
+      symbol: "the feasible set Feas^J and its objective"
+      type: "block variables plus affine and conic constraints"
+      presence: always
+      domain: >-
+        The exact conic program the core states: per-block positive
+        semidefinite Choi blocks, the coupling condition that binds the
+        sector blocks, and the declared constraint rows in the form the
+        declared source mode gives them. It is an exact reformulation and not
+        a relaxation: its value is the value of the state-form program. In
+        untrusted-source mode the Choi step is the identity, the coupling
+        condition is the single scalar normalisation, and there is no Choi
+        input register -- the degenerate case of the same program and not a
+        second one.
+      locator: "meat-core/thm:choi (eq:choi-feas, eq:choi-program); meat-core/def:support-frame; meat-core/lem:choi-marginal; meat-core/def:untrusted-choi; meat-core/def:feasible"
+      what_this_submodule_does_not_do_to_it: >-
+        It does not widen it. The feasible-side minimum of eq:lmo, and the
+        lower bound that stands in for it, are over this exact set, and the
+        relaxed feasible set (def:relaxed-feasible-set) is where the iterate
+        may lie and never where a minimum is taken
+        (thm:firstorder (iiib), (iv); rem:iterate-relaxed-oracle-exact;
+        lem:feasible-side-dual; def:first-order-setting, eq:lmo).
+
+    - name: gradient
+      symbol: "the split-form gradient"
+      type: "a vector on the acceptance support and a block operator per sector"
+      presence: "at each iterate at which a bracket is accumulated"
+      domain: >-
+        The gradient of the Choi-form objective at the iterate itself,
+        assembled by the core's gradient claims, with the hypothesis weakened
+        to the acceptance support and to the key-live acceptance values by
+        lem:fo-khyp (iii); the restrictions are identities on that set and
+        not truncations. The formulas are the core's and are part of its
+        contract; any gradient callable is an internal API and is serialised
+        nowhere.
+      locator: "meat-core/thm:gradient; meat-core/cor:full-gradient; meat-core/lem:dk; lem:fo-khyp (iii)"
+      the_face_discipline: >-
+        The gradient is taken only where it exists. At maximal support every
+        direction the theorem pairs against stays inside the face, so the
+        derivative exists two-sidedly and the divergent case of the core's
+        gradient theorem is unreachable from such a point (lem:fo-face;
+        meat-core/req:gradient-at-maximal-support). That is what (H-SUPP)
+        buys, and it is why a solver refuses to differentiate at a
+        non-maximal support rather than perturbing.
+
+    - name: acceptance_set_exact_data
+      symbol: Qacc
+      type: "exact rational data, with its geometry tag"
+      presence: always
+      domain: >-
+        The core's input, read here in the coordinates of the acceptance
+        support alone -- the set of acceptance values some element of the
+        acceptance set gives positive weight (def:first-order-setting,
+        eq:chacc-def) -- which by lem:fo-khyp (i) is the support of a single
+        element while no element has support outside it. The data are exact
+        rationals on the exact island and the minimisation over them is a
+        linear program solved exactly, which is why the acceptance-side
+        inequality is a hypothesis of thm:firstorder decided here. The two
+        geometries this contract solves are `acceptance_lmo` below.
+      locator: "meat-core/def:admissible-acceptance-set; def:first-order-setting; lem:fo-khyp (i), (ii); rem:acc-side; req:acceptance-geometries"
+
+    - name: docking_claims
+      symbol: null
+      type: "two core claims"
+      presence: always
+      domain: >-
+        meat-core/lem:estimate, which is what the number reported as the
+        estimate is worth, restated here as thm:firstorder (i); and
+        meat-core/cor:keylength-bound, which turns this submodule's lower
+        bound into a key length and is instantiated by cor:fo-keylength at
+        h = h_lb. The core asserts nothing about how the bound was obtained,
+        in what arithmetic, or how close it lies to the value: those are this
+        submodule's statements.
+      locator: "meat-core/lem:estimate; meat-core/cor:keylength-bound"
+
+  from_the_backend:
+
+    - name: linear_oracle_return
+      symbol: "the primal block list and the dual the backend returns at an iterate"
+      type: "a block list per sector, and multipliers for the coupling condition and each row, or none"
+      presence: "at each iterate at which a bracket is accumulated, where the backend returns them"
+      domain: >-
+        Nothing is assumed of it. The dual is a candidate given to the exact
+        certification of req:verified-feasible-side, whose bound over the
+        exact feasible set holds for any multipliers, the rounding of the
+        frame the rows are built with deducted (lem:feasible-side-dual (i),
+        (iv)), and zero multipliers stand in where the backend returns no
+        finite dual. The primal block
+        list is a direction for the search and the point of the recorded
+        diagnostic pairing, and it enters no bracket. The acceptance-side
+        point is not a backend return, and its inequality, the other half of
+        eq:lmo, is decided exactly (`acceptance_lmo`). The oracle is
+        physics-blind -- it receives sector-block Choi data, constraint
+        operators and a linear cost, never protocol names or squashing
+        metadata -- and it is capability-gated: if the program requires a
+        capability the active oracle does not declare, the run stops with a
+        capability error and never falls back silently (spec/architecture.md
+        7.3).
+      locator: "req:verified-feasible-side; lem:feasible-side-dual; thm:firstorder (iv); def:first-order-setting (eq:lmo); rem:fo-oracle-repair; rem:fo-iterate-checks; spec/architecture.md 7.3"
+      the_repaired_point_serves_the_search: >-
+        The adapter's positivity clip acts on the primal block list, which
+        no bracket reads; the clip is recorded, bounds nothing and needs no
+        account in any claim (req:oracle-repair; rem:fo-oracle-repair). Its
+        window is `oracle_repair_window` below, a number of its own, and
+        spec/architecture.md 2.8 ("Who snaps") names this clip as a licensed
+        repair that is not a snap.
+      a_status_that_is_not_optimal: >-
+        A return of any status, or none, leaves the iterate's bracket in the
+        first-order number: the multipliers are read off the dual where the
+        backend returns a finite one and are zero where it does not. Either
+        way the feasible-side bound stays at most the minimum, over the exact
+        feasible set, of the linear form at the gradient as computed, the
+        frame's rounding being deducted or the row multipliers zeroed; a poor
+        dual costs tightness only. Solver status and duality gap are
+        diagnostics and promote nothing.
+        Locator: req:verified-feasible-side (ii); req:first-order-withdrawal;
+        rem:fo-interface; spec/architecture.md 7.4.
+      the_dual_objective_is_never_used: >-
+        An interior-point backend reports a dual objective, and it is never
+        used: an approximately dual-feasible return can put it above the
+        minimum, on the unsafe side of the quantity the bracket bounds. What
+        is used is the dual point, read through lem:feasible-side-dual in
+        exact arithmetic, where the infeasibility of the dual costs a known
+        multiple of the residual's least eigenvalue in tightness and never
+        soundness, and an inequality multiplier is made positive
+        semidefinite by an exact shift.
+        Locator: req:verified-feasible-side; lem:feasible-side-dual.
+
+  # -------------------------------------------------------------------------
+  # The dropped program's rows. They exist only where a run chooses a
+  # non-empty dropped set; an empty set is the run without one, row for row.
+  # -------------------------------------------------------------------------
+  from_the_run:
+
+    - name: dropped_set
+      symbol: D
+      type: "set of (acceptance value, joint sector) pairs"
+      presence: "optional; empty is the run without a dropped set"
+      domain: >-
+        A formulation choice of the run, recorded with it and declared by no
+        one (meat-core/def:dropped; meat-core/req:dropped-set-record). It
+        changes the objective and not the feasible set: a dropped sector
+        keeps its variable, its statistics weight, its place in the marginal
+        condition and its constraint rows.
+      what_this_submodule_does_with_it: >-
+        It linearises the dropped objective: the bound of cor:fo-dropped is
+        against h_low^D, which bounds h_low and h_qkd from below
+        (meat-core/prop:drop-bound (iii)). The three hypotheses ask nothing
+        of a dropped or key-inert joint pair: no rank comparison, no matrix
+        power and no support condition is taken there, which is the whole
+        computational point of the choice.
+      locator: "meat-core/def:dropped; meat-core/prop:drop-bound; meat-core/cor:drop-program; cor:fo-dropped"
+
+# ---------------------------------------------------------------------------
+# outputs
+#   The rows the core's outputs table names as this submodule's. The core's
+#   `h_low`, `key_length`, `sector_report`, `sector_weight_report`,
+#   `map_validation_report`, `assumption_ledger` and
+#   `mathematical_spec_version` are the core's and are not restated.
+# ---------------------------------------------------------------------------
+outputs:
+
+  - name: h_lb
+    symbol: h_lb
+    type: "extended real, or absent"
+    presence: >-
+      Present exactly when the index set of contributing iterates is
+      non-empty -- when at least one iterate satisfied (H-POS), (H-SUPP) and
+      (H-NOPERT) and lay in the relaxed feasible set with its acceptance
+      factor formed on the exact island. Absent otherwise, with a
+      machine-readable reason from `withdrawal_reasons` naming what failed;
+      if no iterate survives, the index set is empty and the number is
+      absent for that reason, with the same vocabulary
+      (req:first-order-withdrawal). The oracle's return and status decide
+      nothing here.
+    domain: >-
+      Bits per round. The value is the maximum over contributing iterates of
+      the objective at the iterate, plus the two lower bounds on the linear
+      minima, less the pairings of the gradient with the iterate, and in
+      exact real arithmetic it is at most the value of the program, as is
+      its clamp at zero. The type is the one the notation declares, and the
+      value minus infinity is unreachable: on a run that emits the number at
+      all the index set is finite and non-empty, the positivity hypothesis
+      makes the objective finite at every contributing iterate, and the
+      bounds and pairings are finite reals, so the maximum is over finitely
+      many real numbers. An implementation need not build a minus-infinity
+      path and will not exercise one.
+    locator: "thm:firstorder (ii), (iiib), (iv) and eq:hlb; req:verified-feasible-side; req:first-order-withdrawal; req:first-order-clamp; rem:fo-interface; rem:fo-negative-values; rem:fo-arithmetic; on a run with a reference companion, cor:fo-reference and req:bracket-on-reference (the bound formed on the companion)"
+    it_is_not_a_floating_point_invariant: >-
+      The inequality against the value is a consequence of exact arithmetic,
+      not of the computation. No solver's optimality enters it: both lower
+      bounds hold over the exact sets for the gradient as the run computed
+      it, the feasible one with the frame's rounding charged
+      (`feasible_side_bound`). But the objective, the gradient, the
+      subtracted pairings and the maps and frame they are built from are
+      binary64 and unbudgeted, so a computed bound may exceed the computed
+      estimate, and the true value, by an amount no claim bounds.
+      Two things follow: the clamp at zero does not repair it, since
+      clamping cannot correct a bound that is too high; and the ordering
+      between the two reported numbers is a diagnostic to record and
+      explain, never an assertion to rely on (req:bound-estimate-difference).
+      Locator: rem:fo-arithmetic; req:bound-estimate-difference;
+      spec/architecture.md 2.8 ("What the first-order tier must not do").
+
+  - name: reference_bracket
+    symbol: "h_lb[D^ref], beside h_lb[D]"
+    type: record
+    presence: >-
+      wherever a compiled reference companion was handed to the run
+      (protocol-compiler/req:reference-companion-compiled), whether or not it
+      was admitted; null otherwise. A companion not admitted
+      (meat-core/req:companion-admission (i)) is recorded here with status
+      not_evaluated and the admission's refusal.
+    domain: >-
+      At the run record's stages.key_rate.reference_bracket. Its status is
+      counted, withdrawn or not_evaluated. Where some evaluated point
+      contributes (counted), `h_lb` above IS the bound on the companion,
+      h_lb[D^ref], and the key length is formed from it; this record carries
+      beside it the bound on the searched declaration, h_lb[D], and the key
+      length it would give (snapped.h_lb, snapped.key_length), as diagnostics
+      from which no key length is reported, and the signed difference
+      h_lb[D^ref] - h_lb[D]. Per evaluated point (the first set of
+      req:bracket-on-reference (i), at most the four best contributing
+      iterates of the search and its last, and the second, at most the four
+      best contributing points of the polish and its last): the set it
+      belongs to (`search` or `polish`), its bracket on the companion and
+      the withdrawal reasons there, and for a point of the first set its
+      bracket on the searched declaration. The polish, at `polish`: whether
+      it ran and, where not, why; the point it started from (the index of
+      that point in the first set); the share `reference_polish_share` and
+      the wall budget it gave; the wall time it took; where it did not run
+      because its start point's acceptance-side component was not exact,
+      that reason; its method and
+      iteration cap; the number of points it assessed; the cause it stopped
+      on (its share spent, its cap, its own stopping rule, or a failure,
+      named). The polish reports no estimate and refuses nothing; its points
+      count only through the bracket and the certified evaluation. The companion's admission with
+      its measurements (completeness defect and least eigenvalue per block of
+      the evaluated family, the largest radius of its enclosure). Where no
+      point contributes, `h_lb` is h_lb[D] and `reference_bracket_withdrawn`
+      is recorded; so too, with the cause `factor_enclosure_inconsistent`,
+      where the certified evaluation finds a block's two enclosures
+      inconsistent, decided after the companion's number was formed, which
+      it then replaces (req:bracket-on-reference (iv)). Two parts of item (vi) live elsewhere in the run record,
+      because the reductions and the run decide them: per block whether the
+      companion carries the handed reference or the snapped block is the
+      reductions' companion record, stages.reduction.reference_companion.blocks
+      (each station's reduction on a multi-station run); the blocks evaluated
+      off their snap, and those still resting on A-SNAP with their group
+      (foundations/req:snap-reference (iii): no usable reference, reference
+      bracket withdrawn, reference bracket not evaluated, last resort), are
+      the run's decision, snaps.reference_companion (evaluated_off_snap,
+      evaluated_off_snap_count, resting_blocks, rests_on_a_snap). Only moved
+      blocks are counted there: a kept block is named as kept and never as
+      evaluated off its snap (req:bracket-on-reference (v)). Where the
+      companion's bracket counts but its certified evaluation certifies no
+      point and the key length is formed from a number certified on the
+      searched declaration (the fallback of req:certified-evaluation (i)),
+      the blocks the companion carried are not evaluated off their snap:
+      they are listed under resting_blocks in the group
+      reference_bracket_withdrawn with the cause companion_not_certified
+      (req:bracket-on-reference (v); foundations/req:snap-reference
+      (iii)(b)), and the status here stays counted, the first-order number
+      being the companion's. There, evaluated_off_snap is false for each of
+      those blocks, in snaps.reference_companion and in its own per-block
+      flag below, and evaluated_off_snap_count excludes them. Each block of
+      the instance's measurement snaps carries its own evaluated_off_snap
+      flag, false on a kept block: on a single-station run at
+      snaps.instance.measurement_snaps[*].blocks[*], and on a multi-station
+      run, where snaps.instance is a list of stations, at
+      stages.stations[i].rows_adaptation.measurement_snaps[*].blocks[*] of
+      each station i.
+    locator: "req:bracket-on-reference; req:certified-evaluation (i); cor:fo-reference; rem:fo-arithmetic; meat-core/req:companion-admission; foundations/def:evaluated-off-snap; foundations/req:snap-reference (iii)"
+
+  - name: first_order_clamped
+    symbol: null
+    type: bool
+    presence: "always, on a run that emits the bound"
+    domain: >-
+      True when the computed bound was negative and what reached the key
+      length was zero in its place. A computed bound may be negative without
+      being unsound -- the linearisation is weak far from the optimum -- and
+      zero is a valid lower bound on a non-negative quantity, so the
+      substitution is one valid lower bound for another and not a repair of
+      anybody's data. The unclamped value is carried under `h_lb`, so that a
+      reader sees what was computed and not only what was used.
+    locator: "req:first-order-clamp; rem:fo-negative-values; thm:firstorder (ii), (iiib); cor:fo-keylength"
+    and_the_opposite_rule_on_the_other_path: >-
+      A negative estimate is never clamped: it is a typed refusal
+      (`negative_objective`, the core's row; req:negative-estimate-refused),
+      because unlike this number it is not a lower bound and zero cannot
+      stand in for it. The two negatives are handled oppositely and the
+      reason is stated where each is.
+
+  - name: key_length
+    symbol: ell
+    type: "int, or absent"
+    presence: "the core's row; emitted only on a run whose tier is the first-order or the certified tier, from the number of that tier"
+    domain: >-
+      The core's key length, instantiated here. cor:fo-keylength is
+      meat-core/cor:keylength-bound at h = h_lb: the same expression with the
+      clamped bound in place of the value, no new floor, no additional term
+      and no exact arithmetic. The monotonicity conclusions hold verbatim for
+      the maximal length built from it, and if the bound is at most zero no
+      key is claimed.
+    locator: "cor:fo-keylength (eq:keylength-fo); cor:certified-keylength on a certified run, cor:certified-keylength-reference on a reference companion, cor:certified-keylength on the searched declaration in the certified fallback (req:certified-evaluation (i), (vi)); meat-core/cor:keylength-bound; meat-core/thm:keylength; meat-core/prop:monotone"
+    which_part_of_the_theorem_a_run_is_in: >-
+      Part (iiib), not part (ii). The two conclude the same inequality
+      against the same exact value, part (ii) being the case of zero
+      relaxation of part (iiib); but a run of this contract verifies its
+      iterate's membership at positive declared windows on the feasible
+      factor, so what it establishes is relaxed membership and not exact
+      membership. The corollary consumes the same inequality on either
+      reading.
+
+  - name: optimizer_certificate
+    symbol: null
+    type: record
+    presence: always
+    domain: >-
+      Solver status, residuals and the achieved tier -- the certified tier
+      where the certified evaluation certified a point and the run is
+      reported at it (`certified_evaluation`), the first-order tier
+      otherwise where at least one iterate contributed a bracket, every
+      hypothesis having held there, and the estimate otherwise, with a
+      machine-readable reason naming the failed check. On a run that reports the bound it
+      carries, per contributing iterate: the objective value; the
+      linearisation value; the oracle status, a diagnostic; the verified
+      feasible-side bound with its frame deduction and the row-multiplier
+      norm it used, the oracle's primal pairing and the dual gap between
+      them, and per group the source of its multipliers
+      (`feasible_side_bound` below); the three measured
+      residuals of the relaxed membership, all three on the feasible factor;
+      the boolean recording that the acceptance-side iterate was formed
+      under the two exact-island conditions, which is the acceptance
+      factor's counterpart of those residuals and is a recorded property,
+      never a measurement; which of the acceptance-side minimiser or the
+      certified acceptance-side bound was used; and the recorded positivity
+      repairs, the two kinds kept apart. Plus, on every trusted-source-mode
+      run, the support frame actually used and the form each declared
+      constraint row was imposed in; in untrusted-source mode both fields
+      are absent.
+    locator: "rem:fo-returned-point; rem:fo-iterate-checks; rem:fo-oracle-repair; rem:fo-iterate-repair; req:iterate-repair; req:oracle-repair; req:returned-point-measured; req:bacc-recorded; req:verified-feasible-side (vi); rem:acc-side (alpha), (beta); req:acceptance-iterate-exact; meat-core/req:frame-recorded; meat-core/req:row-form-record; meat-core/rem:ordering; meat-core/def:untrusted-choi (a)"
+    the_two_repairs_are_kept_apart_and_the_reason_is_on_the_record: >-
+      A repair of an oracle return is a step of the search, and no bracket
+      reads the point it repairs; a repair of a formed iterate is a step in
+      building the point the theorem is applied at. They repair different
+      objects for different reasons, which is why the record distinguishes
+      them by construction rather than by convention.
+      Locator: req:oracle-repair; req:iterate-repair (iii);
+      rem:fo-oracle-repair; rem:fo-iterate-repair.
+    the_returned_point_is_measured: >-
+      On every run, `group_b_worst` -- each per-run Group B row with its
+      declared window and the worst quantity met on the run -- carries under
+      `iterate_positivity`, `iterate_coupling` and `constraint_rows` a
+      `returned_point` entry: the smallest block eigenvalue (with the block
+      it sits in), the worst coupling residual (with its Alice sector, `*`
+      in untrusted-source mode) and the worst declared-row residual, measured
+      once at the end of the run on the point the estimate h_low is the
+      objective at, with `iteration` null because that point is not an
+      iterate the loop consumed. Beside it, `iterate_coupling` and
+      `constraint_rows` carry `consumed_point`, the worst over the
+      per-iterate checks; the oracle's return is not checked
+      (req:iterate-checks). The boolean
+      `stages.key_rate.estimate_point_relaxed_member` is true exactly when
+      the returned point passes all three checks of req:iterate-checks --
+      positivity at exactly 0, not at `iterate_repair_window`; the coupling
+      at `iterate_coupling`; the rows at `constraint_rows` -- and false says
+      the estimate's premise is not established at that point (the core's
+      `h_low` row). The flag covers the J factor only: the acceptance factor
+      of the returned point holds by construction only where its
+      acceptance-side component was formed on the exact island
+      (rem:acc-side), and `acceptance_iterate_exact` records that property
+      per consumed iterate in `per_iterate` and does not state it of the
+      returned point as such; where that point is the last one consumed, the
+      last `per_iterate` entry carries it. So a true flag establishes the
+      premise of thm:firstorder (iiia) only as far as the J factor goes. A
+      record, not a gate: no bracket, tier or key length reads it, and
+      neither `h_lb` nor `h_lb_dropped` rests on that point.
+      Locator: req:returned-point-measured; rem:fo-returned-point;
+      rem:fo-iterate-checks; rem:acc-side.
+    general_record_shape: >-
+      One driver solves every declaration, as its general embedding, and
+      its record keys `choi_input_basis` by Alice-sector label. Each entry
+      records `frame` (full or support), `input_dim`, `alice_dim`, the actual
+      isometry as `real` and `imag`, and the Choi factor as `factor_real` and
+      `factor_imag`. `constraint_row_form` is keyed first by Alice-sector
+      label and then by the decimal string of the zero-based constraint
+      index; the imposed trusted-source rows are `conjugated` or
+      `conjugated_party_local`. These are descriptions of the selected
+      representation, not additional hypotheses.
+    general_timing_shape: >-
+      `timings` contains `seconds` and `calls`, each a mapping from measured
+      stage name to elapsed time or call count. The record describes work
+      performed; no mathematical quantity or assurance tier depends on it.
+      The per-iterate record uses `constraint_row_residual` for the largest
+      declared-row violation and `acceptance_iterate_exact` for the recorded
+      exact-island property.
+
+  # -------------------------------------------------------------------------
+  # The dropped program's output row.
+  # -------------------------------------------------------------------------
+
+  - name: h_lb_dropped
+    symbol: "h^FO,D_alpha"
+    type: "extended real, or absent"
+    presence: "present exactly when a non-empty dropped set was used and the index set of contributing iterates is non-empty"
+    domain: >-
+      The first-order bound for the dropped program, eq:hlb read on the
+      dropped objective. It is reported under its own name, with D beside it,
+      and never as h_lb: max{0, h^FO,D} <= h^D_alpha <= h_low <= h_qkd
+      (eq:hlb-dropped). Both inequalities on the right are
+      meat-core/prop:drop-bound (iii) and neither is claimed to be tight.
+    what_a_consumer_may_do_with_it: >-
+      Exactly what it may do with h_lb: instantiate meat-core's
+      cor:keylength-bound at it, the right-hand side being non-decreasing in
+      the bound it consumes. A consumer that reads it as h_lb would attribute
+      to the undropped program a number computed from a smaller one; the
+      direction is safe, the name is not.
+    locator: "cor:fo-dropped, eq:hlb-dropped; meat-core/def:dropped; meat-core/req:dropped-set-record; meat-core/cor:keylength-bound"
+
+  # -------------------------------------------------------------------------
+  # The certified number.
+  # -------------------------------------------------------------------------
+
+  - name: certified_bound
+    symbol: "h^cert_alpha"
+    type: "real, or absent"
+    presence: >-
+      Present exactly when the certified evaluation ran and certified at
+      least one point (req:certified-evaluation (vi)); absent where the
+      option is `off`, where the run formed no first-order number, and where
+      no point was certified, with the reasons under `certified_evaluation`
+      below.
+    domain: >-
+      Bits per round, the largest certified bracket b^A_t + b^F_t over the
+      certified points (eq:hcert), rounded toward minus infinity. On the
+      declaration it is formed on -- the reference companion where the
+      first-order number is its bracket, the searched declaration otherwise,
+      and the searched declaration also where the companion's bracket counts
+      but its certified evaluation certifies no point (the fallback,
+      req:certified-evaluation (i)) -- max{0, h^cert} <= h_low in exact real arithmetic
+      (cor:certified-keylength (i)), and, unlike `h_lb`, every arithmetic
+      step from that declaration's data to the number is exact or
+      rigorously enclosed, so the inequality holds of the number the run
+      prints. Under a dropped set it bounds h^D_alpha, as h_lb_dropped does.
+    locator: "req:certified-evaluation; cor:certified-keylength; cor:certified-keylength-reference; lem:certified-bracket; lem:certified-bracket-enclosed; rem:certified-scope; foundations/def:tiers (iii); foundations/ass:snapped-measurement in the fallback"
+    which_number_reaches_the_key_length: >-
+      Where the run is reported at the certified tier, max{0, h^cert} is what
+      the core's `key_length` is formed from (cor:certified-keylength (ii); on a
+      reference companion, for the protocol it declares,
+      cor:certified-keylength-reference),
+      computed exactly: n h, lambda_ec and ceil(log2(1/eps_ev)) exact, the
+      term alpha/(alpha-1) log2(1/eps_pa) exact where 1/eps_pa is a power of
+      two and otherwise enclosed and refined until the floor is decided, so
+      that the key length is ell_max at max{0, h^cert}
+      (req:certified-evaluation (vi)); `h_lb` with its key length
+      (`first_order_key_length`) is recorded beside it. In the fallback the
+      key length is cor:certified-keylength's on the searched declaration,
+      never cor:certified-keylength-reference's, and rests on A-SNAP for the
+      blocks the companion carried; it is never compared with, or replaced
+      by, the key length of the companion's first-order number `h_lb`, larger
+      or smaller. Where it is not -- no certified point, the arithmetic
+      unavailable, a premise of the category numerical-trust invoked on the
+      run, or a receiver weight evaluated in floating point on the
+      declaration (req:certified-evaluation (vii)) -- `h_lb` reaches the key
+      length as without the evaluation.
+
+# ---------------------------------------------------------------------------
+# withdrawal_reasons
+#   The strings that say why an iterate contributes no bracket to the
+#   first-order number, and why the number is absent when no iterate is left
+#   (req:first-order-withdrawal). `frozen_spellings` holds the strings of the
+#   frozen oracle registry's vocabulary; this file spells none of its own. An
+#   acceptance geometry other than the two admitted ones is refused at
+#   admission (req:acceptance-geometries) and reaches no withdrawal. None of
+#   these strings refuses the run: the estimate is reported as on every other
+#   run. Withdrawal is never a weakening of what the number means; there is
+#   no reduced form of the claim. The strings that refuse a run -- the
+#   admission refusals and the negative estimate -- are the core's.
+# ---------------------------------------------------------------------------
+withdrawal_reasons:
+
+  frozen_spellings: [gradient_hypothesis_positivity, gradient_hypothesis_support, gradient_perturbation_applied, iterate_not_feasible]
+  the_oracle_withdraws_nothing: >-
+    No string names the oracle: req:first-order-withdrawal withdraws an
+    iterate for no return and no status of the backend, the feasible side of
+    a bracket being verified without them (req:verified-feasible-side). The
+    frozen oracle registry's vocabulary carries a fifth string,
+    oracle_not_optimal, for a withdrawal on the oracle's status that no
+    claim of this submodule makes; re-deriving that registry entry by hand
+    from req:first-order-withdrawal is the implementation batch's.
+  the_reference_companion_adds_one_string: >-
+    A point evaluated on a reference companion is withdrawn there under the
+    frozen strings, read of the companion's hypotheses, maps and entries
+    (req:bracket-on-reference (ii)). Where no evaluated point contributes, the
+    run falls back to the bound on the searched declaration and records
+    `reference_bracket_withdrawn`, beside each point's reasons; it is a
+    record of which number counts and withdraws no first-order number. The
+    same record, with the cause `factor_enclosure_inconsistent`, follows
+    where the certified evaluation finds a block's two enclosures
+    inconsistent: the companion's first-order number reads the entrywise
+    enclosure, which may be the defective one, and the snapped bound reads
+    neither. Locator: req:bracket-on-reference (iv); req:certified-evaluation
+    (iv).
+
+  the_dropped_program_adds_no_string: >-
+    A run with a non-empty dropped set withdraws h_lb_dropped under the same
+    strings, read of the dropped program's hypotheses:
+    `gradient_hypothesis_positivity` for (H-POS^D),
+    `gradient_hypothesis_support` for (H-SUPP^D) at a kept key-active joint
+    pair -- a dropped or key-inert pair cannot fail it, nothing being asked
+    of it -- `gradient_perturbation_applied` for (H-NOPERT^D), and
+    `iterate_not_feasible` unchanged. No further string is added, because no
+    new way of failing exists: the hypotheses are the same three read of a
+    different objective, and the two lower bounds are the same constructions
+    read at the gradient of that objective, a different linear form over the
+    same sets (`acceptance_lmo`; `feasible_side_bound`).
+    Locator: cor:fo-dropped; req:first-order-withdrawal; rem:fo-interface;
+    req:verified-feasible-side.
+
+  rows:
+
+    - reason: gradient_hypothesis_positivity
+      condition: >-
+        (H-POS) fails at an iterate: the acceptance weight, or the statistics
+        value, or a key-live branch value, was not strictly positive where
+        the hypothesis asks it to be.
+      fixed_by: "thm:firstorder (H-POS); lem:fo-khyp (iii); req:first-order-withdrawal (i); rem:fo-interface"
+      why_the_hypothesis_is_stated_on_the_acceptance_support: >-
+        Because that is where it is consumed, and because on the whole
+        acceptance alphabet it would be unsatisfiable whenever the support is
+        proper -- a case the acceptance assumption admits -- so the tier would
+        be unreachable for a whole class of declarations for no mathematical
+        reason.
+
+    - reason: gradient_hypothesis_support
+      condition: >-
+        (H-SUPP) fails at an iterate: a key-active branch operator did not
+        attain maximal support, decided as the rank equality of the
+        eigenvalue count at `support_cutoff` against the rank of the Kraus
+        stack read with the same row (at its square root on singular values;
+        req:support-rank-check).
+      fixed_by: "thm:firstorder (H-SUPP); lem:fo-face; req:support-rank-check; req:first-order-withdrawal (ii); rem:fo-one-ruler"
+      it_is_not_ambient_positivity: >-
+        The branch operator lives on a larger ambient space, so its spectrum
+        always contains zero and an ambient positivity test is never
+        satisfied. The hypothesis is a rank equality against a reference
+        dimension, and both sides are computed, with one declared number.
+
+    - reason: gradient_perturbation_applied
+      condition: >-
+        (H-NOPERT) fails at an iterate: a perturbation of the iterate, of a
+        block of it, or of a branch operator built from them was applied
+        between the point being fixed and the gradient being taken.
+      fixed_by: "thm:firstorder (H-NOPERT); rem:fo-nopert; req:first-order-withdrawal (iii); rem:fo-interface; rem:fo-iterate-repair"
+      what_it_does_not_forbid: >-
+        The iterate repair of `iterate_repair_window` is not a violation of
+        it: the repair belongs to the formation of the iterate, upstream of
+        the point the theorem is applied at, and the repaired point is the
+        iterate -- objective, gradient and both pairings are evaluated at that
+        one point, and no second function enters the argument
+        (req:iterate-repair). What the hypothesis forbids is the perturbation
+        route, which takes the gradient at a perturbed operator and concludes
+        about the objective at the unperturbed one; that needs a domination
+        statement this contract does not prove.
+
+    - reason: iterate_not_feasible
+      condition: >-
+        The point consumed at an iterate failed one of the three
+        feasible-side checks and was not repairable within the declared
+        repair window, or its acceptance-side component was not formed on
+        the exact island under the two conditions of rem:acc-side. Both
+        cases carry this one reason: each leaves unestablished the
+        membership in a product whose two factors are established by
+        different means.
+      fixed_by: "req:first-order-withdrawal (iv); req:iterate-checks; req:iterate-repair; req:acceptance-iterate-exact; rem:fo-interface; rem:fo-iterate-checks; rem:acc-side (alpha), (beta); thm:firstorder (ii), (iiib)"
+      there_is_no_check_on_the_acceptance_factor_and_none_is_offered: >-
+        The acceptance factor is true by construction, not tested: an exact
+        rational starting point of the set and exact rational convex
+        combinations of points already in it keep the iterate in the set by
+        induction, the set being convex. An iterate whose acceptance-side
+        component was formed in binary64 has not met the hypothesis and
+        contributes no bracket, under this reason; on the polytope geometry
+        such an iterate can violate the normalisation or a row, and three
+        consumers break if it does.
+
+# ---------------------------------------------------------------------------
+# acceptance_lmo
+#   The acceptance-side minimisation, the half of eq:lmo that is a
+#   hypothesis of thm:firstorder this contract decides rather than assumes. Its set lies on the exact
+#   island, its data are exact rationals and the minimisation is a linear
+#   program solved exactly. The feasible side is `feasible_side_bound`
+#   below.
+# ---------------------------------------------------------------------------
+acceptance_lmo:
+
+  locator: "rem:acc-side; req:acceptance-geometries; thm:firstorder (ii), (iiib), (iv); def:first-order-setting (eq:lmo); lem:fo-khyp (i)"
+
+  what_is_consumed: >-
+    Step 3 of the proof of thm:firstorder reads of the acceptance half one
+    inequality and nothing else: that the acceptance-side linear form at the
+    point used is at most its minimum over the set. A point attaining the
+    minimum discharges it outright; the bracket may consume a certified
+    lower bound on the minimum in place of the pairing with such a point,
+    and the substitution is exact rather than approximate: the conclusions
+    of thm:firstorder (ii) and (iiib) hold with it (thm:firstorder (iv);
+    rem:acc-side). A run records which of the two it used
+    (`optimizer_certificate`; req:bacc-recorded).
+
+  the_coordinates: >-
+    The acceptance support alone. It is the support of a single element of
+    the set while no element has support outside it, so the minimisation,
+    the acceptance-side gradient and the pairing all live in the same
+    coordinates -- the three statements agree -- and the case of a proper
+    support is admitted throughout rather than excluded by a hypothesis.
+    Locator: def:first-order-setting; lem:fo-khyp (i), (ii).
+
+  geometries:
+
+    - tag: singleton
+      how_the_minimum_is_obtained: >-
+        A single evaluation, attained at the one point of the set; the
+        certified bound is any downward-rounded evaluation of it.
+      note: >-
+        Immune to the exact-island question on the iterate: the set has one
+        point and every convex combination of it is it.
+      locator: "rem:acc-side (a)"
+
+    - tag: polytope
+      how_the_minimum_is_obtained: >-
+        The minimum is attained at a vertex and is computed exactly over the
+        rationals, which discharges the inequality with equality. A dual
+        witness certifies it independently: any non-negative multiplier
+        vector and scalar whose combination with the objective vector is
+        componentwise non-negative on the support gives a certified lower
+        bound, and rem:acc-side writes the one-line derivation out.
+      note: >-
+        This is the geometry on which the exact-island conditions matter: a
+        binary64 convex combination of exact points can violate the
+        normalisation or a row, and then the identical deletion of the
+        off-support terms is unlicensed and the objective may be infinite;
+        the pairing on the support loses its justification, terms of unknown
+        sign being dropped silently; and the chord argument needs the iterate
+        in the convex set it runs in.
+      locator: "rem:acc-side (b) and its closing paragraph"
+
+  a_third_geometry: >-
+    A declaration whose acceptance set fits neither is refused at admission
+    (req:acceptance-geometries): a
+    third geometry would need a certified acceptance-side bound that no
+    requirement decides and no assumption carries. The taxonomy of
+    geometries is the statistics module's, and the tag is read as data (the
+    core's `acceptance_set` input row; spec/architecture.md 3.2).
+
+# ---------------------------------------------------------------------------
+# feasible_side_bound
+#   The feasible-side half of a bracket. thm:firstorder (iv) takes a lower
+#   bound on the feasible-side minimum in place of the pairing with the
+#   oracle's return, lem:feasible-side-dual supplies one from any
+#   multipliers, and req:verified-feasible-side says how a run forms it. No
+#   property of the backend is assumed: neither its optimality, nor the
+#   feasibility of its return or its dual, nor its status.
+# ---------------------------------------------------------------------------
+feasible_side_bound:
+
+  locator: "req:verified-feasible-side; lem:feasible-side-dual (i), (ii), (iii), (iv); thm:firstorder (iv); foundations/lem:least-eigenvalue-bound; foundations/def:exact-island (iii)"
+
+  what_it_bounds: >-
+    The minimum, over the exact feasible set, of the linear form at the
+    gradient as the run computed it. No status of the backend, no dual it
+    returns and no rounding of the frame can raise the bound above that
+    minimum: the rows are built from the declaration's exact data and the
+    run's binary64 frame, and the frame's error is charged by
+    lem:feasible-side-dual (iv) or, where no bound on it is formed, the row
+    multipliers are zero and the rows are not read.
+
+  the_groups: >-
+    One group per Alice sector in trusted-source mode, each with the
+    operator coupling of its sector and the rows of that sector, and one
+    group in untrusted-source mode, with the scalar normalisation as its
+    coupling and every row; the bound is the sum over the groups
+    (lem:feasible-side-dual (ii)). A group with a one-dimensional coupling
+    and no rows is bounded with zero multipliers, which loses nothing beyond
+    the eigenvalue bound (lem:feasible-side-dual (iii)).
+
+  what_it_reads: >-
+    The exact Hermitian part of the gradient blocks as computed; the rows of
+    lem:feasible-side-dual (ii) in the form the engine imposes them, built
+    from the declared operators, right-hand sides and constants taken
+    exactly and, in trusted-source mode, from the binary64 frame the engine
+    constructed; and the backend's dual for that same solve, mapped to the
+    coupling condition and each row in the encoding the oracle used, or zero
+    multipliers where the backend returned no finite dual. Every binary64
+    number is read as the dyadic rational it is. An inequality row's
+    multiplier is made positive semidefinite by an exact shift.
+
+  the_frame: >-
+    Per Alice sector, a dyadic bound on the operator-norm error of the
+    binary64 frame, decided exactly: zero where the frame is decided exact,
+    no deduction at all where every row of the sector is frame-free, and an
+    entrywise square-root bound where the marginal is diagonal and the frame
+    is the full or the diagonal frame. Elsewhere -- a frame for which no
+    bound on its error is formed, such as the
+    full frame of a marginal that is not diagonal -- the sector's row
+    multipliers are zero, the coupling multiplier kept. Untrusted-source
+    mode has no frame.
+    Locator: req:verified-feasible-side (ii), (iv); lem:feasible-side-dual
+    (iv).
+
+  the_arithmetic: >-
+    Exact rational arithmetic throughout, a certification of the exact
+    island: the residual operators, the shifted multipliers, the
+    least-eigenvalue bounds of foundations/lem:least-eigenvalue-bound at a
+    basis the engine chooses (the basis decides tightness only, the
+    identity always admissible), the norm bounds and the frame deductions,
+    and the bound itself, which enters the binary64 bracket rounded toward
+    minus infinity.
+
+  record:
+    per_bracket: [feasible_side_bound, frame_deduction, row_multiplier_norm, oracle_pairing, dual_gap]
+    per_group: [feasible_side_multipliers]
+    reading: >-
+      `feasible_side_bound` is the number the bracket uses.
+      `frame_deduction` is the sum of the frame deductions it contains and
+      `row_multiplier_norm` the sum of the bounds on the row multipliers'
+      operator norms it used. `oracle_pairing` is the gradient's pairing with
+      the primal block list the backend returned, where it returned one, and
+      `dual_gap` is that pairing less the bound, with its sign: positive
+      where the return pairs above the verified bound, negative where an
+      infeasible return pairs below it. `feasible_side_multipliers` is
+      `backend`, `zero` or `rows_zeroed`. All but the first are diagnostics
+      and enter no number.
+    locator: "req:verified-feasible-side (vi)"
+
+  what_it_does_not_verify: >-
+    The gradient itself. The bound holds for the linear form at the gradient
+    as the run computed it, and that gradient is evaluated in binary64 from
+    statistics and branch maps, and through the binary64 frame, that are
+    themselves binary64; on a reference companion it is evaluated at the
+    centres of the companion's enclosure. How far it lies from the exact
+    gradient is the unbudgeted evaluation arithmetic of rem:fo-arithmetic,
+    which no claim of this submodule bounds.
+    Locator: rem:fo-arithmetic; foundations/req:exact-island.
+
+# ---------------------------------------------------------------------------
+# certified_evaluation
+#   The run option, the reasons and the record of the certified evaluation
+#   (req:certified-evaluation). It runs after the first-order number is
+#   formed, at that number's points and on that number's declaration, once
+#   more on the searched declaration where a companion certifies no point,
+#   and decides the tier only; the search, its checks and the first-order
+#   number are unchanged by it.
+# ---------------------------------------------------------------------------
+certified_evaluation:
+
+  locator: "req:certified-evaluation; lem:certified-bracket; lem:certified-bracket-enclosed; cor:certified-keylength; cor:certified-keylength-reference; rem:certified-scope; req:bracket-on-reference (v); meat-core/lem:kraus-freedom; meat-core/lem:objective-homogeneous; foundations/def:tiers (iii); foundations/req:tiers; foundations/req:exact-island; foundations/cor:least-eigenvalue-over-enclosure; foundations/def:factor-enclosure; foundations/cor:rank-over-factor-enclosure; foundations/lem:matrix-function-perturbation; foundations/lem:least-eigenvalue-bound; foundations/req:snap-reference (iii)(b), (iv)"
+
+  option:
+    name: certified_evaluation
+    values: ["on", "off", "strict"]
+    default: "on"
+    reading: >-
+      `on`: the evaluation runs, and a run that certifies no point keeps its
+      first-order number, key length and tier with the reasons. `off`: the
+      evaluation does not run, and the record says so. `strict`: as `on`,
+      but a run not reported at the certified tier refuses with the core's
+      `certification_refused` and reports no key length
+      (req:certified-evaluation (viii)). A run certified through the fallback
+      below is reported at the certified tier, so `strict` accepts it; the
+      record, the ledger and the report name A-SNAP for the blocks it rests
+      on there. The foundations option `strict_snaps`, which refuses a run
+      resting on A-SNAP, keeps the fallback from running
+      (foundations/req:snap-reference (iv)). A run that forms no first-order
+      number, its bound withdrawn, has no certified evaluation (the
+      requirement runs on every run that forms one), so `strict` does not
+      refuse it: it reports the estimate and no key length. No other knob
+      exists: the points, the working precision floor, the rank rule and the
+      fallback are the requirement's.
+
+  points: >-
+    The points the run's first-order number is formed from, on the
+    declaration it is formed on: on an admitted reference companion whose
+    bracket counts, the at most five of the points of
+    req:bracket-on-reference (i), the search's and the polish's together,
+    that contribute there with the largest brackets on the companion, a
+    point in both sets counted once, ties broken by the sequence in which
+    the search and then the polish consumed them, each with the
+    solve that requirement's item (ii) makes there, and otherwise the at most four best contributing iterates of the
+    searched declaration and the last point assessed, each with the search's
+    solve there. Each point is taken exactly, the acceptance-side component
+    as its exact iterate and each Choi block as the exact Hermitian part of
+    its dyadic entries (req:certified-evaluation (i)).
+
+  fallback: >-
+    Where the evaluation has run on a companion and certified no point
+    there, it runs once more on the searched declaration, at the points and
+    with the solves of the second case above, unless the run declares
+    `strict_snaps`. It runs nowhere else: not where a point of the companion
+    is certified, not where no companion's bracket counts, not where the
+    companion's bracket is withdrawn on `factor_enclosure_inconsistent` (the
+    evaluation then runs on the searched declaration as the run's ordinary
+    second case, its first-order number formed there), not where the
+    rigorous arithmetic is unavailable. A number it certifies is a bound on
+    the searched declaration's value: its key length is cor:certified-keylength's
+    there, never cor:certified-keylength-reference's, and the moved blocks on
+    which the companion carried the handed reference, with the data sectors
+    whose normalizer it bypassed, then rest on A-SNAP in the group
+    reference_bracket_withdrawn with the cause companion_not_certified
+    (req:bracket-on-reference (v); foundations/req:snap-reference (iii)(b)).
+    The run's first-order number stays the companion's, recorded beside the
+    certified one, and no number is formed from the two together
+    (req:certified-evaluation (vi)). Where the fallback certifies no point
+    either, the run keeps the companion's first-order number with the
+    reasons of both evaluations, and its blocks stay evaluated off their
+    snap.
+
+  what_it_establishes: >-
+    At each point, exactly or rigorously enclosed at a working precision of
+    at least 128 bits: every Choi block positive definite, which gives
+    (H-SUPP); (H-POS) with certified signs; for every matrix function, a
+    subspace established to contain the support of the operator it acts on
+    (the range of the pass-class factors, or the pinching applied to it) and
+    a positive floor under the compression to it, which together prove the
+    subspace is the support (meat-core/lem:kraus-freedom (iv)); enclosures of
+    the gradient and of the frame, the branch maps formed from exact factors
+    or, for an element whose rank its factor enclosure fixes, from the
+    adjoints of its enclosed factors with the exact core, the statistics
+    read through the entrywise enclosures and the deficits through the
+    enclosure that holds each element's factor form, so that the enclosures
+    hold at every pair of lem:certified-bracket-enclosed (c);
+    b^A as the exact acceptance-side minimum at the enclosure's centre less
+    its radius, b^F by lem:certified-bracket (iii) from a Hermitian centre of
+    the residual's enclosure and its Frobenius radius -- the Hermitian-centred
+    enclosure's centre rounded to a dyadic grid, the rounding charged to the
+    radius, as that part admits any Hermitian M_p within rho_p of the
+    residual (req:certified-evaluation (v)(c)) -- with the multipliers of
+    req:verified-feasible-side (ii) and no frame deduction, the frame being
+    enclosed. The objective at the point and the pairings with the point are
+    not formed: the Euler form (lem:certified-bracket (i)) removes them.
+
+  over_an_enclosed_companion: >-
+    The blocks a companion carries with a positive radius are read through
+    their recentred entrywise enclosures, and, where its compilation carries
+    one, through a factor enclosure (foundations/def:factor-enclosure). The
+    entrywise rule comes first: a block's factor form is that of
+    foundations/cor:least-eigenvalue-over-enclosure (iv), the rows fixed at
+    zero dropped, the rest positive definite throughout. Where it leaves a
+    block undecided or fixes no rank, the factor rule follows: a factor
+    enclosure with no column decides the block zero, and one with a Gram
+    floor certified over its box (foundations/cor:rank-over-factor-enclosure
+    (ii)) decides it not zero with factor form L-dagger and the exact core.
+    A block whose rank neither rule fixes at a key-active joint pair, or an
+    undecided block entering a pass class at all, leaves every point
+    uncertified (`rank_not_certified`), save where another block of its
+    element is decided zero (an exact zero block, or one the entrywise or
+    factor rule decides zero), the element then being zero for every
+    member (req:certified-evaluation (iv)). Wherever a factor enclosure is
+    carried, whichever rule fixes the rank, L W L-dagger is also enclosed
+    over its box and the factor rule's zero and not-zero decisions are
+    taken; where that enclosure is disjoint at some entry from the block's
+    entrywise enclosure, or the two decisions conflict (one zero, the other
+    not zero), the block's two enclosures are inconsistent, which (H-FAC)
+    and the entrywise enclosure property exclude, and every point is
+    uncertified (`factor_enclosure_inconsistent`), at every pair, key-inert
+    or not, and the companion's bracket is withdrawn with that cause
+    (req:certified-evaluation (iv)(c); req:bracket-on-reference (iv)). That
+    the companion's
+    block is a member of its factor enclosure is hypothesis (H-FAC) of
+    lem:certified-bracket-enclosed, established by the claims that form and
+    carry the enclosure (receiver/thm:factor-blocks, which the receiver's
+    record names, then meat-core/cor:reference-companion-factors through the
+    reduction and the compiler) and decided by no rule here
+    (req:certified-evaluation (iv)).
+
+  reasons:
+    per_point: [acceptance_iterate_not_exact, frame_not_enclosed, rank_not_certified, factor_enclosure_inconsistent, block_not_positive_definite, positivity_not_certified, support_not_established, floor_not_certified, acceptance_geometry_not_certified, boxed_form_inconsistent]
+    per_run: [not_certified, certifier_unavailable, numerical_trust_premise, receiver_weight_floating_point, certified_evaluation_off]
+    refusal: certification_refused
+    reading: >-
+      A per-point reason says why that point contributes no certified
+      bracket; `rank_not_certified`, `factor_enclosure_inconsistent` and
+      `frame_not_enclosed` concern the declaration and so mark every point.
+      `factor_enclosure_inconsistent`: a block's factor enclosure and its
+      entrywise enclosure contradict each other, disjoint at an entry or one
+      deciding the block zero and the other not zero, a defect of a carrier
+      (req:certified-evaluation (iv)(c)). It also withdraws the companion's
+      bracket (req:bracket-on-reference (iv)). It reads as an engine defect
+      and not as a fix for the user: its fix is "an engine defect in the
+      carriers of the factor enclosures; report it". `boxed_form_inconsistent`:
+      the engine's reordered form of an element with a boxed block (the third
+      kind of lem:certified-bracket-enclosed) is inconsistent with itself, which
+      no claim admits; it is a step not established, so the point is not
+      certified with the reason named (req:certified-evaluation (v), its last
+      sentence). It marks every point of the declaration evaluated and reads as
+      an engine defect, reported as one; on a reference companion the fallback
+      of (i) then runs as for any companion that certifies no point.
+      `support_not_established`: a
+      matrix function would act on a subspace not established to contain the
+      operator's support (req:certified-evaluation (iii)(a)). `not_certified`: no point was
+      certified, the per-point reasons beside it. `certifier_unavailable`:
+      the rigorous arithmetic is not installed or not usable on the
+      platform. `numerical_trust_premise`: a point was certified but an
+      assumption of the category numerical-trust is invoked on the run, an
+      assumption of its closure counting as invoked unless its module records
+      it as invoked nowhere (A-EIG at no setting, receiver/req:eig-ledger-row),
+      so the certified number is recorded and not reported at the tier
+      (req:certified-evaluation (vii) (a)). `receiver_weight_floating_point`:
+      a point was certified but the declaration carries a weight routed from
+      the receiver's weights into which a per-setting weight enters that the
+      receiver's record names as evaluated in floating point, the uniform
+      weight of a slot entry counting every setting's weight as entering it
+      (receiver/req:evaluation-label, receiver/req:rigorous-weight (vi)), so
+      the certified number is recorded and not reported at the tier
+      (req:certified-evaluation (vii) (b)).
+      `certified_evaluation_off`: the option was `off`. None of these
+      withdraws or changes the first-order number; only
+      `certification_refused`, the core's refusal string, refuses, and only
+      under `strict`.
+
+  record:
+    where: "stages.key_rate.certified"
+    per_run: [certified_evaluation, status, certified_bound, first_order_key_length, certified_minus_first_order, max_gradient_radius, working_precision_bits, arithmetic_library, reasons, declaration, premises, resting_blocks, companion_points]
+    per_point: [index, certified, acceptance_side_bound, feasible_side_bound, certified_bracket, gradient_radius, reasons]
+    declaration_values: [reference_companion, searched]
+    status_values: [certified, not_certified, withheld, "off"]
+    reading: >-
+      `certified_bound` is the number reported at the certified tier, the
+      only field that enters a number. `first_order_key_length` is the key
+      length formed from the first-order number, recorded beside the
+      certified one. `certified_minus_first_order` is h^cert less the
+      first-order number on the same declaration, with its sign, a
+      diagnostic of the binary64 evaluation and not a correction; in the
+      fallback that is the bound on the searched declaration,
+      reference_bracket's snapped.h_lb, and the field is absent where that
+      declaration has none. `declaration` names the declaration the
+      per-point entries were evaluated on, `reference_companion` or
+      `searched`. `premises` holds the premise at the snap the certified
+      number rests on: ["A-SNAP"] wherever a moved block or class of the
+      declaration it is formed on rests on A-SNAP (among them, on the
+      searched declaration, every moved block or class it has, in the
+      fallback, without a companion and after a withdrawn bracket alike; on
+      a companion, every moved block on which it carries the snapped block,
+      and every moved block of another snap it shares with the searched
+      declaration, such as another measured factor's), [] otherwise, so two
+      records with the same declaration and the same resting blocks agree.
+      `resting_blocks` names those blocks and classes with their group and
+      cause, as the run's record lists them (snaps.reference_companion.resting_blocks
+      and the snap records) where the key length is formed from a number on
+      that declaration, those of req:bracket-on-reference (v) among
+      them in the fallback, with the cause companion_not_certified. Both
+      fields describe the declaration `declaration` names, whatever the
+      status: in a fallback not reported at the certified tier (`withheld`,
+      or `not_certified`) they still name those blocks with that cause,
+      while the run's key length is the companion's first-order one and
+      snaps.reference_companion names them evaluated off their snap
+      (req:certified-evaluation (ix)). `companion_points` holds, wherever the fallback ran or the
+      companion's bracket was withdrawn on `factor_enclosure_inconsistent`,
+      the companion's points, each with whether it was certified and its
+      reasons, which say why; it is absent elsewhere.
+      `max_gradient_radius` is the largest radius, over the certified points,
+      of the enclosure of the gradient's entries; `arithmetic_library` names
+      the library of the rigorous arithmetic with its version. The per-point
+      `acceptance_side_bound` and `feasible_side_bound` are b^A_t and b^F_t of
+      the certified bracket, not the first-order bracket's fields of the same
+      name. `status` is `withheld` where a point was certified and the tier
+      withheld for `numerical_trust_premise` or
+      `receiver_weight_floating_point`. A `strict` run that is not reported
+      at the certified tier writes no status: it refuses at the solve stage
+      with `certification_refused` (req:certified-evaluation (viii)), and no
+      key-rate stage exists to carry one.
+    locator: "req:certified-evaluation (viii), (ix)"
+
+  what_it_does_not_reach: >-
+    The arithmetic before the declaration: a supplier's floating-point
+    evaluation behind the declaration's data, which rests on that supplier's
+    premises. Where it reaches the number the tier is withheld: an
+    assumption of the category numerical-trust invoked on the run, or a
+    weight routed from a receiver weight the receiver evaluated in floating
+    point, which holds of the device only as A-RECV (ii) attests it
+    (req:certified-evaluation (vii); receiver/req:evaluation-label). A
+    receiver weight evaluated rigorously is a bound by
+    receiver/thm:enclosed-weight. The modelling premises of the declaration, A-SNAP among them on
+    the blocks a run reads at their snap, the blocks a companion carried
+    among them where the number is certified in the fallback. The
+    correctness of the code, the
+    library of the rigorous arithmetic included, for which no assumption is
+    stated (rem:certified-scope).
+
+# ---------------------------------------------------------------------------
+# declared_thresholds
+#   Group B rows: predicates on objects this submodule computed. They are
+#   the core's Group B continued, and the core's section says so and names
+#   their keys. They are not instances of the instance's tolerance and must
+#   not be declared under it: what they decide is accumulated arithmetic on
+#   iterates and on oracle returns, not a property of anybody's declaration,
+#   so a window sized on declaration defects would refuse every run, and a
+#   declaration admitted exactly says nothing about them
+#   (foundations/req:tolerance-scope (ii)). Each is recorded in
+#   `optimizer_certificate` with the worst quantity it was compared against
+#   on the run.
+#
+#   There is no Group A here. This submodule decides no predicate on
+#   declared data: the declaration was admitted by the core, exactly, before
+#   the program was formed (meat-core/req:exact-admission).
+#
+#   The norm, as the core states it: a defect of a difference is entrywise,
+#   a positivity condition is a spectral floor, and the two are never
+#   converted into each other. An operator inequality is relaxed by a
+#   spectral floor, an operator equality by an entrywise ball, a scalar
+#   equality by an interval; which predicate is which is part of the
+#   definition of the relaxed feasible set.
+#   Locator: def:relaxed-feasible-set; foundations/lem:floor-stricter;
+#   spec/architecture.md 2.8.
+# ---------------------------------------------------------------------------
+declared_thresholds:
+
+  # -------------------------------------------------------------------------
+  # The general format's readings. No new window and no new number: the rows
+  # below say at which object an existing declared threshold is read once
+  # Alice carries sectors and a dropped set is chosen. At |T| = 1 and D empty
+  # each reading is the row it names, object for object.
+  # -------------------------------------------------------------------------
+  general_format_readings:
+
+    - machine_key: iterate_coupling
+      read_at: >-
+        One coupling residual per Alice sector,
+        || sum_s tr_Q_s J_(t,s) - 1_A_(0,t) ||_max, each inside the same
+        declared window (thm:choi, the general format: the Choi feasible set
+        is a product over Alice sectors, one coupling constraint each;
+        req:per-sector-coupling).
+      normalization_clause_still_follows: >-
+        The normalisation clause holds with the same dimension factor:
+        prop:relaxed-set-properties (e) proves (c') in the general format,
+        the residual being the direct sum of the per-sector residuals R_t,
+        with G_t = W_t^dagger W_t and tr[chi(J)] = 1 + sum_t tr[G_t R_t]. So
+        the clause and its factor are unchanged, and no run performs a check
+        it was not already performing.
+      locator: "def:relaxed-feasible-set (the general format); prop:relaxed-set-properties (b), (c'), (e); req:per-sector-coupling; rem:fo-general-format (3); meat-core/thm:choi (the general format)"
+
+    - machine_key: support_cutoff
+      read_at: >-
+        The rank of the branch operator of a joint pair, relative to that
+        block's own spectral radius, where the finer hypothesis is used. The
+        three residual exposures rem:fo-check-exposures names are unchanged in
+        kind and are one set per joint pair rather than per sector; no claim
+        bounds any of them, here as there.
+      reference_read_at: >-
+        The other side of the comparison, with the same row. Per joint pair
+        where cor:fo-dropped's (H-SUPP^D) is the hypothesis:
+        dim W_(c-hat,(t,s)) of eq:Wcs-joint, the rank of the stacked matrix
+        eq:Kstack with W_tau replaced by that sector's factor W_t (in
+        untrusted-source mode the inclusion of A_t into A), read at
+        the square root of this row relative to its largest singular value
+        and computed once per pair from the declaration (and, in
+        trusted-source mode, the frame) and never from an iterate. Per
+        sector where thm:firstorder's (H-SUPP) is
+        the hypothesis; the two agree at |T| = 1.
+      why_both_readings_stand: >-
+        (H-SUPP) at the sector implies (H-SUPP^D) at each of its joint pairs
+        (cor:fo-dropped, the implications), so a run may discharge the
+        coarser one; the finer one is what lets a key-inert or dropped joint
+        pair inside a key-active sector be left alone.
+      locator: "rem:fo-one-ruler; req:support-rank-check; cor:fo-dropped (Step 0, Step 0(c), eq:Wcs-joint); meat-core/def:branch-support (eq:Kstack)"
+
+  group_b_computed_objects:
+
+    - machine_key: iterate_positivity
+      predicate: >-
+        The per-block minimum eigenvalue (a spectral floor) of the point
+        consumed at an iterate -- the Choi blocks in trusted-source mode, the
+        state blocks in untrusted-source mode -- after any repair.
+      window: "exactly 0 (strict): non-negative per block, at no window"
+      locator: "req:iterate-checks (i); rem:fo-iterate-checks; rem:fo-iterate-repair; prop:relaxed-set-properties (c) 'Fourth'"
+      why_zero: >-
+        The relaxed feasible set does not relax positivity -- the objective
+        factors through a matrix power, which is undefined off the cone --
+        so a point admitted at a positive window would lie in no member of
+        the family, at which the objective is not defined and no part of the
+        theorem applies. Deciding it at a positive window would admit such
+        points while asserting the coverage; it is decided at zero, and the
+        drift a window would let pass silently is repaired and recorded under
+        the next row (req:iterate-repair).
+      what_it_does_not_establish: >-
+        The minimum eigenvalue is itself computed, so a block whose true
+        minimum is negative within the eigensolver's own backward error
+        passes unrepaired, and the reassembly of a repaired block is itself
+        rounded. That residue is named with the other two exposures in
+        rem:fo-check-exposures and is the unbudgeted arithmetic this contract
+        declares everywhere, and not a window this contract chose.
+
+    - machine_key: iterate_repair_window
+      predicate: >-
+        How negative the spectrum of a block of a formed iterate may be (a
+        spectral floor) before the iterate is rejected outright; below it
+        the block is projected onto the positive semidefinite cone, the
+        repair recorded, and the two residual rows below measured again on
+        the repaired point.
+      window: "declared beside the instance's tolerance and never under it"
+      locator: "req:iterate-repair; rem:fo-iterate-repair"
+      what_it_is_and_is_not: >-
+        It is a construction step: what it establishes is a hypothesis of
+        the theorem, on an object the engine itself chose, and it says
+        nothing about the backend. The record keeps it apart from the oracle
+        repairs, which repair a different object for a different reason.
+      the_three_rules: >-
+        The three rules of req:iterate-repair. First, the repaired point is
+        the iterate: the repair is upstream of the point the theorem is
+        applied at, and the objective, the gradient and the pairings with
+        the iterate are evaluated at that one point. Second, the coupling and
+        constraint-row residuals are measured again on the repaired point and
+        never carried over, because a projection moves them -- by a bounded
+        amount whose dimension factor is written down, and the rule is
+        nevertheless to measure again rather than to bound in advance.
+        Third, every repair is recorded with the block, the iterate and the
+        measured depth. A residual that then fails its window refuses the
+        iterate, which is the one place this repair can cost a run.
+      its_natural_size: >-
+        The drift a positivity window on the formed iterate would measure, so
+        a block within it is projected and recorded rather than passed
+        unrecorded. What an iterate may still be refused on is the coupling
+        or constraint-row residual measured again after the repair.
+
+    - machine_key: iterate_coupling
+      predicate: >-
+        The coupling residual of the point consumed at an iterate -- the
+        entrywise distance of the summed partial traces from the identity on
+        the Choi input register, and in untrusted-source mode the scalar
+        distance of the summed block traces from one, which is that residual
+        at input dimension one.
+      window: "declared; entrywise"
+      locator: "req:iterate-checks (ii); rem:fo-iterate-checks; def:relaxed-feasible-set; prop:relaxed-set-properties (c')"
+      why_it_is_not_at_zero: >-
+        The residual it decides is drift over the convex combinations that
+        built the iterate, and it is measured orders above any declaration
+        defect: the foundations design notes record the measurement
+        (spec/modules/foundations/design.md, "Why exact, and the measurements
+        behind the policy") -- a coupling residual of about two parts in ten
+        to the tenth after two hundred convex combinations of oracle returns
+        -- and note that applying a declaration tolerance to it at any value
+        the measurement supports would refuse every run at around iteration
+        thirty. It is a row apart from `iterate_positivity` because the two
+        need opposite windows and cannot share one.
+      and_the_normalization: >-
+        The normalisation clause of the relaxed feasible set is implied by
+        this one and adds no check: prop:relaxed-set-properties (c') derives
+        the implication and its dimension factor in each form. Relaxing the
+        coupling while holding the normalisation exact would exclude the
+        generic point with a nonzero residual -- which is what this check
+        accepts in the normal case.
+
+    - machine_key: constraint_rows
+      predicate: >-
+        The declared constraint rows of the Choi program, relaxed as
+        def:relaxed-feasible-set defines them -- a spectral floor for an
+        operator inequality, an entrywise ball for an operator equality, an
+        interval for a scalar one -- on the point consumed at an iterate.
+      window: "declared; required on every run"
+      locator: "req:iterate-checks (iii); rem:fo-iterate-checks; def:relaxed-feasible-set (eq:feas-eps)"
+      why_it_is_required_and_what_it_does_not_buy: >-
+        Checking two of the three is not checking the condition. The check
+        is made on the consumed point and not on the oracle's return:
+        verifying a return feasible gives the opposite inequality to the one
+        a bracket needs -- feasibility bounds the linear form from below,
+        which is exactly the side the first-order claim cannot use -- and
+        one can verify which set the oracle minimised over, never that it
+        minimised, which is why the feasible side of a bracket is a verified
+        lower bound instead (req:verified-feasible-side). What the check
+        buys is the membership hypothesis of thm:firstorder (iiib) on its J
+        factor and the estimate tier's own premise, which is the tier
+        reported on every run, and it is required for that reason.
+      its_window_is_argued_not_measured: >-
+        Its window rests on the argument of rem:fo-iterate-checks rather than
+        on a measurement. A threshold that has never fired may be sized
+        wrongly; saying so is what this field is for.
+
+    - machine_key: oracle_repair_window
+      predicate: >-
+        How negative the spectrum of a returned block may be (a spectral
+        floor, never an entrywise defect) before the return is rejected
+        outright; below it the block is projected onto the positive
+        semidefinite cone and the repair recorded.
+      window: "declared beside the instance's tolerance and never under it"
+      locator: "req:oracle-repair; rem:fo-oracle-repair; req:verified-feasible-side"
+      it_serves_the_search_alone: >-
+        The repaired return is a direction for the search and the point of
+        the diagnostic pairing; no bracket reads it
+        (req:verified-feasible-side), so the repair is not a step this
+        contract has to account for. Its record is not a bound on anything
+        and nothing here converts it into one -- a window bounds the
+        displacement, but converting that into an error on a pairing needs a
+        bound on the gradient, and the gradient carries ratios that
+        meat-core/prop:value-range (iii) exhibits declarations driving up
+        without limit.
+      measured: >-
+        The foundations design notes record the measurement
+        (spec/modules/foundations/design.md, "Why exact, and the measurements
+        behind the policy"): the clip fires eighty to five hundred times per
+        run at depths to about seven parts in ten to the eleventh, above
+        every tolerance in the recommended band, so a tolerance-sized window
+        would refuse every run. That is the reason this row is a number of
+        its own (foundations/req:tolerance-scope (ii)).
+      not_to_be_confused_with: "`iterate_repair_window`, which repairs a different object for a different reason."
+
+    - machine_key: support_cutoff
+      predicate: >-
+        Whether a key-active branch operator at an iterate attains maximal
+        support: the numerical rank is the number of eigenvalues above the
+        window. This is the check that decides (H-SUPP).
+      window: "declared, relative to that block's own spectral radius"
+      locator: "req:support-rank-check; rem:fo-one-ruler; lem:fo-face; thm:firstorder (H-SUPP)"
+      why_relative: >-
+        Right rather than convenient: the condition is a rank condition,
+        invariant under scaling the block, and the gradient is positively
+        homogeneous of degree zero, so a uniformly small block is not a
+        degenerate one.
+      the_exposure: >-
+        One-sided and on the unsafe side: a block whose true support is a
+        proper subspace but whose smallest relevant eigenvalue is reported
+        above the window is differentiated on a non-maximal face silently.
+        It is the first of the three exposures rem:fo-check-exposures names,
+        and it is named so that none is discovered later.
+      the_reference: >-
+        The same row reads the other side. The maximal branch support
+        dimension dim W is the numerical rank of the Kraus stack of eq:Kstack
+        at the square root of this window relative to the stack's largest
+        singular value -- equivalently the count of eigenvalues of
+        K K^dagger, the branch operator at the identity input, above this
+        window -- computed once per pair from the declaration and the support
+        frame and never from an iterate. A derived window and no number of
+        its own: a direction enters the branch operator with weight sigma^2,
+        so reading sigma at this value would count directions whose weight
+        in the operator lies below this window at every iterate with cond(J)
+        at most this window over sigma_rel^2, and in every recorded run that
+        comparison withdrew at every iterate (the core's `group_c_retired`,
+        `branch_support_dim`). Where a pair has no direction between the two
+        windows the two readings coincide at every iterate.
+      the_reference_exposure: >-
+        A too-small dim W passes a rank-deficient block: a direction of W
+        genuinely present but of relative weight at most this window in
+        K K^dagger is not counted. The second exposure rem:fo-check-exposures
+        names, one-sided and on the unsafe side; no claim bounds it. Its
+        window is wider than a reading at this value on sigma would be, by
+        the band between the two windows: a direction in that band would be
+        counted there (a deficiency withdraws) and is not counted here (a
+        deficiency passes). A too-large value can only fail the comparison,
+        which removes the iterate's bracket from the number. The run records,
+        per key-active pair, how many directions of the stack lie between the
+        two windows (`map_validation_report.hsupp_reference_band`).
+
+    - machine_key: optimizer_gap
+      predicate: "The solver's stopping rule and its converged / iteration-limit status."
+      window: "declared; outside every other scope of this section entirely"
+      locator: "rem:fo-interface; rem:fo-returned-point; spec/architecture.md 7.4"
+      note: >-
+        It decides no predicate on any operator and no claim depends on it: a
+        run that stops at its iteration limit reports exactly what a
+        converged run reports. Solver status and duality gap are diagnostics
+        only and promote nothing. A candidate search whose last stage stopped
+        on its own no-progress rule with its relative bracket
+        (h_low - h_lb)/|h_low| at most 1e-3 records relative_gap_met rather
+        than stagnated (solvers/solve.py CONVERGED_RELATIVE_GAP); that label
+        is read after the search and is no stopping rule.
+
+  the_relaxed_family_and_which_number_is_its_epsilon:
+    statement: >-
+      The relaxed feasible set is defined, and every statement about it is
+      proved, for every non-negative relaxation, so no claim depends on the
+      answer and both candidate readings are conservative. An implementation
+      nevertheless needs one number, and it is the larger of
+      `iterate_coupling` and `constraint_rows` (req:iterate-checks) -- never
+      the instance's tolerance, which governs declared data and which this
+      module does not take. At that number the set does contain the points a
+      run accepts: a per-block positive semidefinite point whose coupling and
+      constraint-row residuals each pass their own check lies in it, by
+      monotonicity from the smaller window to the larger and by the derived
+      normalisation clause (rem:feas-tol, the window a run reads).
+    what_the_family_relaxes: >-
+      The marginal or coupling condition and the declared constraint rows,
+      and, as their arithmetic consequence, the normalisation -- and nothing
+      else. Positive semidefiniteness and the sector-block structure are
+      unrelaxed in its definition, which is what the objective's domain
+      needs. The normalisation is not relaxed by a choice: it is an
+      arithmetic consequence of the condition that couples the sector
+      blocks, and in untrusted-source mode it is that condition
+      (def:relaxed-feasible-set, its lead-in).
+    the_monotonicity: >-
+      The relaxed value is no larger than the exact value, so the estimate at
+      a relaxed point over-estimates a quantity that is itself no larger than
+      the value -- which is why reading the set at a tolerance is
+      conservative, and why the reported estimate is not established to lie
+      on either side of the value (prop:relaxed-set-properties (d), (d')).
+    and_the_two_forms_are_not_interchangeable: >-
+      The relaxed quantity the theorem uses is the Choi-form one and not the
+      state-form one: at a positive relaxation the two relaxed sets are not
+      in bijection under the Choi map, and no relation between the two
+      numbers is claimed or needed (prop:relaxed-set-properties (d');
+      rem:feas-tol).
+    locator: "def:relaxed-feasible-set; prop:relaxed-set-properties (a), (c'), (c''), (d), (d'); rem:feas-tol; req:iterate-checks; thm:firstorder (iiia), (iiib)"
+
+# ---------------------------------------------------------------------------
+# assumption_ledger
+#   One row, and it is superseded. A-LMO, the assumption that the oracle's
+#   return reached the feasible-side minimum (ass:lmo), is assumed by no
+#   claim: the feasible side of every bracket is the verified bound of
+#   lem:feasible-side-dual (req:verified-feasible-side), so no run carries
+#   it. The row stays because the claim-closure table lists every
+#   assumption, superseded ones included, with the machine key it reads
+#   from the owner's ledger row, and a table with a keyless assumption is
+#   refused.
+#
+#   Which claims declare an assumption is a fact about the graph and is
+#   named by the command that computes it, never by a count or a list
+#   (spec/claim-format.md section 4.5; PRINCIPLES.md section 7):
+#     python -m harness.check_claims --dependents meat-core/frank-wolfe/ass:lmo
+#   and, for the closure of the headline number,
+#     python -m harness.check_claims --assumptions meat-core/frank-wolfe/cor:fo-keylength
+# ---------------------------------------------------------------------------
+assumption_ledger:
+
+  the_command: "python -m harness.check_claims --dependents meat-core/frank-wolfe/ass:lmo"
+  the_closure_command: "python -m harness.check_claims --assumptions meat-core/frank-wolfe/cor:fo-keylength"
+
+  rows:
+    - {id: A-LMO, machine_key: exact_linear_oracle}
+
+  emission_rule:
+    A-LMO: "on no run: superseded, and in the closure of no live claim"
+
+  note: >-
+    This submodule carries no live assumption of its own. The
+    acceptance-side minimum is computed exactly (rem:acc-side) and the
+    feasible-side one is bounded from below in exact arithmetic
+    (lem:feasible-side-dual; req:verified-feasible-side), so no first-order
+    number rests on a solver's optimality. What a first-order number still
+    rests on unverified is binary64 evaluation of the objective, the
+    gradient and the data derived from the declaration, which no assumption
+    covers and no claim budgets (rem:fo-arithmetic). A certified number does
+    not rest on it, every step from the declaration's data being exact or
+    rigorously enclosed, and adds no assumption: the library of the rigorous
+    arithmetic is part of the implementation, not a premise
+    (rem:certified-scope). Estimate-tier outputs are unaffected.
+
+  inherited_from_the_core: >-
+    Every ledger row of the core is in this submodule's closures as well,
+    this submodule's claims using the core's; they are not restated here.
+    Run
+    `python -m harness.check_claims --assumptions meat-core/frank-wolfe/cor:fo-keylength`
+    for the closure of the headline number, and see the core's
+    `assumption_ledger` for each row's key and emission rule and the
+    assumption's claim file for what it costs if violated.
+
+# ---------------------------------------------------------------------------
+# conventions
+#   The core's conventions bind here unchanged and are not restated. Some of
+#   them matter in this submodule in a way they do not in the core, and each
+#   is recorded with what it decides here.
+# ---------------------------------------------------------------------------
+conventions:
+
+  inherits: "spec/modules/meat-core/interface.yaml, `conventions`, in full"
+
+  number_model_here: >-
+    The optimiser is the unbudgeted part of the platform. Everything outside
+    the exact island -- the objective, the gradient, the data derived from
+    the declaration, the oracle and the iterates -- is binary64, and no
+    claim of this submodule rests on a floating-point error budget. The two
+    lower bounds on the linear minima are on the island
+    (foundations/def:exact-island (ii), (iii)): computed exactly, over the
+    exact sets, for the gradient as computed. That is what the first-order
+    tier means, and it
+    is why the tier is weaker than a certificate; rem:fo-arithmetic states
+    what it leaves unverified, rather than hiding it. The certified
+    evaluation is the certificate where it succeeds: at the run's final
+    points it forms the bracket again in ball arithmetic, a rigorously
+    enclosed computation, from the declaration's exact data, and the
+    certified tier reports that number (`certified_evaluation`).
+    Locator: rem:fo-arithmetic; req:verified-feasible-side;
+    req:certified-evaluation; foundations/req:exact-island;
+    spec/architecture.md 2.8.
+
+  exact_island_here: >-
+    The acceptance side in full, and it is this submodule that spends it:
+    the set, the minimisation over it and the acceptance-side iterate
+    arithmetic. The third is what makes the acceptance factor of the
+    membership hypothesis true by construction rather than checked -- so the
+    property is true rather than tested, there is no check for a run to fail
+    and no residual for it to expose -- and it costs one vector of rationals
+    per iterate and one convex combination, beside the per-iterate
+    eigendecompositions the objective and the gradient already perform. The
+    feasible side spends it too, at each bracket: the certification of
+    `feasible_side_bound`, exact rational arithmetic on the dyadic numbers
+    it is given.
+    Locator: rem:acc-side (alpha), (beta); req:acceptance-iterate-exact;
+    req:verified-feasible-side (iv); rem:fo-iterate-checks.
+
+  exact_island_bounded_bits: >-
+    A departure from the cost prose above, recorded where it happens. Exact
+    convex combinations with binary64 steps grow the iterate's denominators
+    by about 50 bits per step, and the arithmetic became superlinear at
+    production budgets (+19 percent at 2000 vanilla iterations). So past 512
+    bits the implementation proposes a short exact point -- the exact values
+    of the binary64 view, the sum repaired, nudged toward the exact interior
+    start if needed -- and adopts it only if an exact membership check
+    (q >= 0, sum q = 1, B q <= b over the rationals, no window) passes. That
+    is condition (beta) of rem:acc-side read with weight 1 on a point
+    established to lie in the set; the iterate itself is still never tested,
+    a rejected candidate is discarded, and nothing can fail or withdraw
+    because of the check. What is not literally true is the cost sentence:
+    there is one further device (the shortener) and one further exact check
+    on candidates. Past 65,536 bits of the point, the weights or any atom
+    (pairwise) the exact side is given up, and every later iterate
+    contributes no bracket, under `iterate_not_feasible`. Code:
+    certiqs_key.solvers.frank_wolfe.acceptance_iterate (Shortener,
+    SHORTEN_ABOVE_BITS, EXACT_BITS_CAP), joint_pairwise.ActiveSet.bounded.
+
+  exact_island_partial_minimum: >-
+    A second departure from the cost prose of `exact_island_here`: the
+    loop's q rule is keyed on the declared geometry, and on a canonical box
+    it is an exact partial minimisation in q. On a canonical box the
+    acceptance-side iterate is not a convex combination of the previous
+    iterate and a
+    vertex: at every point the loop evaluates, q is the binary64 closed-form
+    partial minimiser of the objective over the box at that J (a binary64
+    solve, not an exact argmin), then formed exactly as a member of the box
+    -- each coordinate's binary64 value taken as the rational it is, clipped
+    exactly into the declared bounds, and the exact residual of sum q = 1
+    moved onto the coordinates with room, so q^- <= q <= q^+ and sum q = 1
+    hold over the rationals by construction. The box's declared rows are its
+    bounds (canonical_box admits nothing else), so that is membership in the
+    set, and condition (beta) of rem:acc-side reads it with weight 1 on a
+    point established to lie in the set, as for the shortener; the island
+    flag is set and read as on every other geometry. The per-iterate cost is
+    one closed-form solve per line-search trial and one exact vector per
+    accepted step, beside the eigendecompositions; there is no convex
+    combination on this geometry. A singleton is unchanged; any other
+    polytope keeps the convex combination above (its partial-minimum solve
+    is not built). No claim depends on the q rule: thm:firstorder holds at any
+    checked point of acSet x Feas^J(epsilon), and rem:fo-reachability
+    prescribes no optimiser. Code: certiqs_key.solvers.frank_wolfe.q_rule.
+
+  no_relative_entropy_penalty: >-
+    Stated as a convention because it is a mistake the literature invites.
+    No relative-entropy penalty is imported onto this objective from any
+    source. An implementation that subtracts a penalty term taken from a
+    von-Neumann-entropy key-rate formulation -- however standard there -- is
+    claiming a theorem this objective does not have: the objective is not a
+    relative entropy, its branch terms are Renyi-order trace powers, and no
+    statement of this contract relates the two at finite order. Face
+    handling is the core's gradient compression, unbudgeted, which is
+    exactly why this tier is weaker than a certificate and why that weakness
+    is stated.
+    Locator: req:no-imported-penalty; spec/architecture.md 2.8 and 6.
+
+  the_direction_of_danger: >-
+    Stated once, in rem:fo-danger, and it governs every row above: the
+    asymmetry is that a bound reported too high is unsound while a bound
+    reported too low merely costs rate. Every window, every withdrawal and
+    every refusal of this file is arranged on that asymmetry, which is why
+    no bracket pairs the gradient with a solver's return and why the clamp
+    at zero is not a repair of the one failure that matters.
+    Locator: rem:fo-danger; rem:fo-interface.
+
+# ---------------------------------------------------------------------------
+# fail_closed
+#   The rules this submodule adds to the core's, in the order a conforming
+#   implementation decides them. The core's rules run first and are not
+#   restated: the declaration is admitted, the bundle validated and the maps
+#   cross-validated before a program exists to solve.
+# ---------------------------------------------------------------------------
+fail_closed:
+
+  policy: >-
+    Every rule below decides an object this submodule computed, at its own
+    declared window or at exactly zero, and none of them touches declared
+    data. A failure removes an iterate's bracket from the first-order
+    number, or withdraws the number, and leaves the estimate; only the
+    core's rules refuse a run.
+
+  rows:
+
+    - rule: oracle_capability
+      order: 1
+      checked: >-
+        The active linear oracle declares every capability the program
+        requires -- the complex Hermitian cone, the direct-sum sector layout,
+        the Choi or state form, the maximum sector dimension, whether
+        equality constraints are native, determinism and its dependencies.
+      outcome: >-
+        The run stops with a capability error and never falls back silently
+        to a solver that cannot represent the problem. A missing oracle is a
+        capability error at probe time.
+      reasons: ["the probe's, spec/architecture.md 7.3"]
+      fixed_by: "spec/architecture.md 7.3"
+      fixed_here: >-
+        No claim of this submodule states the probe. The probe that decides
+        whether an oracle may be asked at all is the architecture's, and it
+        is named here because it is this submodule's refusal gate and the run
+        tier is forbidden to default it (spec/architecture.md 3.3).
+
+    - rule: iterate_positivity_and_repair
+      order: 2
+      checked: >-
+        Per-block positive semidefiniteness of the point consumed, at exactly
+        zero; a failing block is either rejected -- the iterate then
+        contributes no bracket -- or projected within
+        `iterate_repair_window`, recorded, and the two residual rows measured
+        again on the repaired point.
+      outcome: "the iterate contributes no bracket, or is repaired and measured again"
+      reasons: [iterate_not_feasible]
+      fixed_by: "req:iterate-checks (i); req:iterate-repair; rem:fo-iterate-checks; rem:fo-iterate-repair; prop:relaxed-set-properties (c)"
+
+    - rule: relaxed_membership
+      order: 3
+      checked: >-
+        The coupling residual at `iterate_coupling` and every declared
+        constraint row at `constraint_rows`, on the point consumed, after any
+        repair; nothing is checked on the oracle return. Checking two of the
+        three is not checking the condition.
+      outcome: "the iterate contributes no bracket"
+      reasons: [iterate_not_feasible]
+      fixed_by: "req:iterate-checks (ii), (iii); rem:fo-iterate-checks; def:relaxed-feasible-set"
+      and_the_other_factor: >-
+        The three checks establish the feasible factor and no more. The
+        acceptance factor is not checked at all and needs no check, being
+        exact by construction; an iterate whose acceptance-side component was
+        formed in binary64 contributes no bracket, under the same reason
+        (req:acceptance-iterate-exact), and there is no check for it to pass
+        and none is offered.
+
+    - rule: gradient_hypotheses
+      order: 4
+      checked: "(H-POS), (H-SUPP) and (H-NOPERT) at the iterate."
+      outcome: "the iterate contributes no bracket; a run that perturbs the gradient at every iterate reports no bound at all"
+      reasons: [gradient_hypothesis_positivity, gradient_hypothesis_support, gradient_perturbation_applied]
+      fixed_by: "thm:firstorder; lem:fo-face; lem:fo-khyp; rem:fo-nopert; req:first-order-withdrawal (i)-(iii); req:support-rank-check; rem:fo-interface; rem:fo-one-ruler"
+
+    - rule: acceptance_geometry
+      order: 5
+      checked: >-
+        The acceptance-side minimum is obtained exactly in one of the two
+        admitted geometries. A declaration in any other geometry is refused
+        at admission and never reaches this rule.
+      outcome: "none: no run reaches this rule, the refusal being at admission"
+      reasons: []
+      fixed_by: "req:acceptance-geometries; rem:acc-side"
+
+    - rule: empty_contributing_set
+      order: 6
+      checked: "Whether any iterate survived rules 2 to 4."
+      outcome: >-
+        No bound is reported and the run reports its estimate -- correct,
+        and not an error. A run whose iterates carry no strictly positive
+        component may legitimately fail the hypotheses at every iterate; the
+        tier is conditional on how the iterates are formed, and this contract
+        prescribes no optimiser.
+      reasons: ["the reason of the last failure, from `withdrawal_reasons`"]
+      fixed_by: "req:first-order-withdrawal; rem:fo-interface; rem:fo-reachability"
+
+  no_row_promotes: >-
+    Binding. Nothing is silently upgraded: a caller never receives a
+    stronger label than the checks support, and there is no promotion step.
+    A backend status changes no number, the feasible side of every bracket
+    being verified without it. Solver status and duality gap are
+    diagnostics, and a partial iterate may be returned as a diagnostic but
+    never cached as success without explicit labelling.
+    Locator: foundations/req:tiers; rem:fo-interface;
+    req:verified-feasible-side; spec/architecture.md 7.2, 7.4.
+
+# ---------------------------------------------------------------------------
+# artifact_bindings
+# ---------------------------------------------------------------------------
+artifact_bindings:
+  mathematical_spec_version: "meat-core@1.28.0"
+  version_note: >-
+    The core's pin. A submodule's claims are inside its core's contract and
+    it emits no artefact of its own, so the pin is the core's
+    `artifact_bindings` and moves with it.
+  package: "src/certiqs_key/solvers/"
+  package_note: >-
+    The package is present. The accepted contract pin identifies the
+    mathematics; implementation acceptance remains a separate human gate.
+    Which file carries which claim is the core's design.md, "Where the code
+    is".
+
+# ---------------------------------------------------------------------------
+# depends_on_modules
+# ---------------------------------------------------------------------------
+depends_on_modules: []
+depends_on_modules_note: >-
+  As module.yaml declares: no sibling submodule and no foreign module of its
+  own. It inherits the core's list and uses the core's claims; a core claim
+  never uses one of this submodule's (spec/claim-format.md section 1), which
+  is what makes the core reviewable without it and what
+  makes a second solver submodule a sibling rather than an amendment.
+
+# ---------------------------------------------------------------------------
+# fixed_by_this_file
+#   Every place this file says something no claim of this submodule states.
+# ---------------------------------------------------------------------------
+fixed_by_this_file:
+
+  - row: "outputs.reference_bracket (reference_polish_share and the polish record)"
+    what: >-
+      the value 1/10 of `reference_polish_share`, the share of the
+      wall budget of one evaluation set aside for the polish of req:bracket-on-reference (i)
+      before the search on the snapped declaration begins, on a run with an
+      admitted companion and a wall budget; and the field names of the
+      polish record.
+    why: >-
+      The requirement fixes that a share is set aside and recorded, and no
+      value: the polish's points can only raise the companion's bracket, so
+      the share bears on tightness and wall time and on nothing a claim
+      rests on. Measured on the stagnation probes (BBM92 SPDC, n 2e11,
+      alpha 1.05) the polish recovered the snapped bound in 0.6 to 2 s,
+      about 1 to 2 percent of a 120 s budget; 1/10 leaves room for a slower
+      case while costing the search on the snapped declaration little. The
+      implementation batch benchmarks it before acceptance.
+
+  - row: "fail_closed.oracle_capability"
+    what: "the whole row."
+    why: >-
+      No claim of this submodule states the capability probe.
+      spec/architecture.md 7.3 does and names it a gate of this module.
+
+  - row: "fail_closed.rows (the order field)"
+    what: "the order in which a conforming implementation decides the rules."
+    why: >-
+      No claim fixes an order across the set. What the claims do fix, and
+      what the order respects, is that the positivity check and its repair
+      come before the two residuals are measured (req:iterate-repair (ii))
+      and that the gradient is taken at the point after any repair
+      (req:iterate-repair (i)). The rest is this file's.
+
+  - row: "outputs (the key names and the presence rules)"
+    what: >-
+      that the bound, the clamp flag and the certificate are emitted under
+      these keys, and each row's presence rule.
+    why: >-
+      The requirements name the keys (req:first-order-clamp,
+      req:iterate-repair, req:oracle-repair, req:returned-point-measured,
+      req:acceptance-iterate-exact, req:verified-feasible-side) and state
+      what the record must carry,
+      and req:first-order-withdrawal states when the number is present; the
+      emission rule of each row is this file's.
+
+  - row: "acceptance_lmo (the block's shape)"
+    what: "presenting the two geometries as a table with a tag, and naming the third case's outcome as a row."
+    why: >-
+      rem:acc-side and req:acceptance-geometries state both geometries, the
+      substitution and the outcome for any other set in prose, and name no
+      tag field; the tag is an input datum of the core (its `acceptance_set`
+      row) and the taxonomy is the statistics module's.
+
+  - row: "certified_evaluation.record (its place, the status values and the per-point field names) and certified_evaluation.reasons (the run-level `certified_evaluation_off`)"
+    what: "where the certified evaluation's record sits, how its status and per-point fields are spelled, and the string for an evaluation switched off."
+    why: >-
+      req:certified-evaluation (ix) names the run-level keys it binds and
+      says what is recorded per point, and spells no place, no status value
+      and no per-point key; the option `off` is the requirement's, the string
+      that records it is this file's.
+
+  - row: "feasible_side_bound.record (the split per bracket and per group, and the values `backend`, `zero` and `rows_zeroed`)"
+    what: "where each recorded field sits and how the multiplier source is spelled."
+    why: >-
+      req:verified-feasible-side (vi) names the six keys and says which are
+      per bracket and which per group, and spells no value for the
+      multiplier source; the spelling is this file's.

@@ -1,0 +1,108 @@
+% ---
+% id: protocol-compiler/def:eligible
+% kind: def
+% title: "Key-length eligibility"
+% summary: >-
+%   An emitted declaration may back a key-length claim when every check passes,
+%   the transmitter's source-replacement licence record is present and
+%   re-decided wherever a marginal is declared at dimension two or more, and a
+%   non-empty constraint list is licensed and carries an attack-set licence.
+% prominence: standard
+% status: implemented
+% uses: [thm:validator-soundness, def:homog, transmitter/def:srcert, transmitter/thm:certificate-sufficiency, def:declaration, def:exact]
+% mentions: [thm:gates, def:gate-outcome-table, rem:gate-by-certificate-form, rem:party-local-soundness, ass:atk, req:eligibility-flag, req:source-licence-passed-on, foundations/req:consumer-decides-exactly, transmitter/req:licence-scope, transmitter/def:source-spec]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.gates:GateId
+% lean:
+% ---
+
+A declaration that passes validation is well-formed; whether it may back a
+key-length claim is a further question, decided by three gates. The first is
+stated on the checks rather than on the target conditions, because the checks
+are what a program evaluates and the two are not interchangeable at V7
+(Theorem~\ref{thm:validator-soundness}\,(iii)). The emitted flag records the outcome
+(Requirement~\ref{req:eligibility-flag}), the \tref{licence record} the second gate
+reads is passed on to the consuming engine
+(Requirement~\ref{req:source-licence-passed-on}), and why that gate admits an
+\tref{ensemble presentation} but refuses a block-form certificate is
+Remark~\ref{rem:gate-by-certificate-form}.
+
+Gate (G2) re-decides the transmitter's conditions because a consumer decides
+and never infers (\xref{foundations/req:consumer-decides-exactly}). A
+trusted-mode specification at $d_A\ge2$ without the record does not reach
+this gate at all, the transmitter refusing it before this module sees it;
+that, and that no record is demanded at $d_A=1$, is
+\xref{transmitter/req:licence-scope} (the mode itself is defined in
+\xref{transmitter/def:source-spec}). What the attack-set licence record
+attests for a party-local entry, and why that entry needs it, is
+Remark~\ref{rem:party-local-soundness}.
+
+\begin{definition}\label{def:eligible}
+An emitted declaration is \term[An emitted declaration that may back a key-length claim: every check passes, the source-replacement licence record is present and re-decided where required, and a non-empty constraint list is licensed and carries an attack-set licence record.]{key-length-eligible}
+when all of the following hold:
+\begin{enumerate}[label=(G\arabic*),leftmargin=3.0em]
+\item V1--V8 all pass --- whereupon D(i)--D(viii) all hold of the declared
+numbers, by the soundness half of Theorem~\ref{thm:validator-soundness}\,(i);
+\item \emph{(a consumption gate on the transmitter artefact)} if the
+\tref{marginal slot} is filled and $d_A\ge2$: the transmitter artefact
+carries the source-replacement licence record of
+\xref{transmitter/def:srcert} --- the certificate
+$(\tau_A,\Psi,\{p_x,\rvirt_x\})$ with its attestation (SR3) --- whose
+\emph{five decidable conditions} the transmitter decided exactly on the same
+data (\xref{transmitter/thm:certificate-sufficiency}\,(i)) and which \emph{this
+module re-decides on the emitted data}: $\Psi=\Psi^{\dagger}$; $\Psi^2=\Psi$;
+$\tr\Psi=1$, the trace accumulated over the row index and
+\tref[rounds nowhere]{rounding nowhere}; (SR1); and (SR2) --- each
+\emph{exactly}, as matrix and scalar identities. The transmitter's decision is
+not taken on its word. \emph{No condition of (G2) is stated on
+a vector.} The certificate's \tref{declared datum} is the operator $\Psi$; the unit
+vector $\ket{\psi}$ with $\Psi=\dyad{\psi}$ exists by $\Psi^2=\Psi$ and
+$\tr\Psi=1$ and is never itself declared (\xref{transmitter/def:srcert}).
+Clause (SR3) carries no number and is not decidable
+(Theorem~\ref{thm:gates}\,(i)): (G2) asks for its presence only. At $d_A=1$
+no record is demanded, the licence being vacuous there;
+\item if $m\ge1$: (a) $\CList$ lies in the licensed class of the emitted source
+mode (Definition~\ref{def:homog}) --- \emph{a type check on each entry's
+right-hand-side tag, comparing no numbers} --- \emph{and}
+(b) the attack-set licence record, the attestation of
+Assumption~\ref{ass:atk}, is present.
+\end{enumerate}
+
+\emph{(G2) by form of the certificate.} The five conditions above are those
+of a certificate declared in \tref{pure form}: a pure-form certificate is
+re-decided exactly as stated, and refused when one of the five fails.
+
+A certificate declared in \tref{block form} is refused at this gate by its
+declared form, whatever its blocks, by row~3 of the gate outcome table of
+Definition~\ref{def:gate-outcome-table}. A block-form
+certificate (\xref{transmitter/def:srcert}) is a positive semidefinite
+unit-trace \tref{block list} on which that definition imposes no purity, so
+one with more than one non-zero block, or whose one non-zero block is not a
+rank-one projector, also fails $\Psi^2=\Psi$; but the refusal does not rest on
+that, since one whose one non-zero block is a rank-one projector can meet all
+five conditions above.
+
+An \tref{ensemble presentation} declares no $\Psi$ and no $\{M_x\}$ to
+re-decide. For it the gate decides, in place of the five conditions, what the
+presentation declares: (E1), (E2) and (E3) of \xref{transmitter/def:srcert}
+on the declared weighted ensemble, and that the emitted declaration is in
+\tref{ensemble form} with its Alice slots \emph{the} ones the presentation
+defines --- the \tref{sector structure} of the factor tagged $A$ is the
+matched structure, and for every $t$ and $x$ the block $N^{(t)}_x$ is entry
+for entry the transpose of the declared block $\sigma^{\mathrm v,(t)}_x$ and
+$\tau^{(t)}_A$ the transpose of their declared-order sum. \emph{A presentation
+accompanying a POVM-form declaration is refused}, nothing tying the declared
+$\{M_x\}$ to it, which is the transmitter's own rule for a POVM-form consumer.
+In every form, (G2) asks for the presence of (SR3).
+
+\emph{(G3)(a) with the \tref{party-local form}.} The licensed class of
+Definition~\ref{def:homog} contains, in either source mode, the entries
+declared \tref{party-local}; the decision remains a type check on each
+entry's tag and compares no numbers. A list carrying such an entry is
+key-length-eligible only with the attack-set licence record of (b), as every
+non-empty list is, and what that record attests for a tagged entry is a
+certificate of the module that produces the chain, on the scoped factor's own
+channel (Definition~\ref{def:homog}).
+\end{definition}

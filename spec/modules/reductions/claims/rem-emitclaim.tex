@@ -1,0 +1,81 @@
+% ---
+% id: reductions/rem:emitclaim
+% kind: rem
+% title: "What the reduction's claim is about after an emission snap"
+% summary: >-
+%   Where the normalizer moves the datum, the claims are about the declared
+%   model, and nothing proved relates it to the handed one. A run can
+%   evaluate off the snap on the reference companion; elsewhere a disclosed
+%   premise relates them.
+% prominence: standard
+% status: accepted
+% uses: [def:emitnorm, thm:emit, def:reduction-instance]
+% mentions: [req:emission-record, cor:reference-companion, foundations/ass:snapped-measurement, foundations/def:evaluated-off-snap, meat-core/prop:optol-nobound, meat-core/frank-wolfe/req:certified-evaluation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:emitclaim}
+Where the exact construction stays on the declared lattice --- every
+$\Delta_s=0$ --- there is nothing to say: the emitted target is the
+constructed one, the defining identity is about the handed model itself, and
+what the artefact asserts is what the instance's existence theorem proves
+(Definition~\ref{def:reduction-instance}\,(I3)). \emph{Where some
+$\Delta_s>0$ the emitted numbers are a declaration and not the constructed
+ones}, and what the artefact asserts is then this. There is a datum $A'$ ---
+exhibited rather than posited, and carried entry by entry in the emitted
+target's data sectors --- which is exactly admissible, class complete at the
+declared weights, and differs from the handed datum by at most $\Delta_s$
+entrywise per data sector. \emph{It is the datum of a whole declared model}
+$\Mdec=M[A']$ \eqref{eq:declmodel}: the handed model with the datum replaced
+as the instance's model map defines it, every object the hypotheses (H) are
+about --- an above-cutoff family, a register POVM, a further branch --- being
+the declared one, which the normalizer never reads. \emph{The emitted channel
+$\Lambda$ squashes that model, exactly and with no error term} ---
+$\Lambda^{\dagger}(F_v)=\Mdec_v$ \eqref{eq:emitidentity}, an identity on
+$\Bsys$ and not on the data sectors alone; every hypothesis (H) holds of it by
+the stability clause; every certificate of the instance is discharged for it;
+and every claim of this contract that reads a declared number reads it.
+\emph{The physical content of the artefact alone is therefore a statement
+about $\Mdec$, of which the normalizer moved the data sectors and nothing
+else}, and $A'$ stands one modelling step further from the supplier's own
+output than the instance's declaration already stood. Both steps are
+recorded, the first in the instance's record of its snap and the second in
+this module's emission record (Requirement~\ref{req:emission-record}).
+
+\emph{Nothing proved relates $\Mdec$ to the handed model, and distance is not
+such a relation.} The size $\Delta_s$ of the move bounds nothing that
+matters to a key rate: the consuming contract shows that two exactly
+admissible families within any declared distance can have rate bounds far
+apart (\xref{meat-core/prop:optol-nobound}), so no bound relates a key length
+computed from $\Mdec$ alone to one computed from the handed model, and none
+is asserted. The snap keeps every row and column that the handed datum holds
+at zero (Definition~\ref{def:emitnorm}, fifth property), save on a class
+snapped by the last resort, which the record flags, and it may move support
+along other directions. A run therefore does not rest on the declared model
+where it can avoid it: where it forms the number its key length is formed
+from on the reference companion (Corollary~\ref{cor:reference-companion}),
+which the module builds with no normalizer from the handed reference, or from
+the instance's own snapped blocks where none is handed, every data sector is \tref{evaluated off its snap}
+(\xref{foundations/def:evaluated-off-snap}), and the emitted target serves
+only the search. Elsewhere, and so also where the key length is formed from
+a number certified on the snapped declaration in place of the companion's
+(\xref{meat-core/frank-wolfe/req:certified-evaluation}\,(i)), the run rests on
+\xref{foundations/ass:snapped-measurement}\,(ii), the premise for a
+producer's snap of its own emission: what the run concludes about the device
+from the emitted target holds with $A'$ in place of $A$ on the sectors
+concerned. The artefact being an exact statement about $\Mdec$, the premise
+holds in particular where the device measures $\Mdec$ there. The record
+names the moved sectors (Requirement~\ref{req:emission-record}).
+
+\emph{Two things this does not license.} It does not license repairing what
+this module was handed: the normalizer runs on the datum an instance computed,
+and on nothing else (Definition~\ref{def:emitnorm}, fourth property). And it
+does not license emitting $\textsf{status}=\textsf{exact}$ about a family the
+identity does not hold of: the value is truthful precisely because the
+identity is re-established for $\Mdec$, whose data sectors are $A'$, rather
+than asserted of a construction the artefact does not carry.
+\end{remark}

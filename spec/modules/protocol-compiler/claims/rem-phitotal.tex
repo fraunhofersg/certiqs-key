@@ -1,0 +1,27 @@
+% ---
+% id: protocol-compiler/rem:phitotal
+% kind: rem
+% title: "Totality of the acceptance-statistic map"
+% summary: >-
+%   Were the acceptance-statistic map partial, its fibres would not partition
+%   the outcome pairs and the acceptance statistic would lose mass. Totality is
+%   therefore decided by check V1, not assumed.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [def:validator, req:validator-refusals]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:phitotal}
+If $\phi$ were partial, the fibres would not partition $\Xset\times\Vset$: the
+total mass of $\Phimap[\omega]$ would fall short of that of
+$P_{\Decl}[\omega]$ by the mass of the unhandled classes, for some $\omega$ ---
+a lost probability, and an acceptance statistic that does not sum to one.
+Totality is therefore decided by check V1 of Definition~\ref{def:validator},
+not assumed, and a specification with an unhandled announcement class is
+refused (Requirement~\ref{req:validator-refusals}).
+\end{remark}

@@ -1,0 +1,76 @@
+% ---
+% id: reductions/thm:chain
+% kind: thm
+% title: "Composition of a chain"
+% summary: >-
+%   The receiver composite of a chain is again a squashing relation with the
+%   composed pull-backs, so output-state equality, security transfer and the
+%   licence apply to it at every length of the source segment. Its status is
+%   exact whenever every link's is.
+% prominence: standard
+% status: implemented
+% uses: [def:chain, def:link, thm:factorization, thm:transfer, cor:sequential, thm:licence, prop:preorder, cor:transported]
+% mentions: [rem:ordering, thm:two-sided, req:mixed-status-chain, req:no-approximate-relations]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.links:Chain
+% lean:
+% ---
+
+The order of the source and receiver stages, which this theorem does not
+read, is the subject of Remark~\ref{rem:ordering}.
+
+\begin{theorem}\label{thm:chain}
+Let $\redChain=(\redChain_{\mathrm{src}},\redChain_{\mathrm{rec}})$ be a
+reduction chain with receiver segment
+$\redChain_{\mathrm{rec}}=(\Lnk_1,\dots,\Lnk_k)$ and receiver composite
+$\Lambda_{\redChain}$ of \eqref{eq:chaincomposite}. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $\big(M^{\mathrm{in}}_1;O^{\mathrm{in}}_1\big)
+  \dsq_{\Lambda_{\redChain}}
+  \big(M^{\mathrm{out}}_k;\hat O^{\mathrm{out}}_k\big)$, and
+  $\Lambda_{\redChain}^{\dagger}
+  =\Lambda_{\Lnk_1}^{\dagger}\circ\dots\circ\Lambda_{\Lnk_k}^{\dagger}$;
+\item Theorem~\ref{thm:factorization}, Theorem~\ref{thm:transfer} and
+  Corollary~\ref{cor:sequential} apply to the composite: the physical protocol
+  with $M^{\mathrm{in}}_1$ and the final \tref{squashed protocol} with
+  $M^{\mathrm{out}}_k$ have the same output state, round by round and
+  adaptively;
+\item an entry $(\hat O_k,\bowtie_k,c_k)$ declared on the \emph{final} target
+  is sound for the receiver composite when the certificate
+  \eqref{eq:certificate} holds for its pull-back
+  $\Lambda_{\redChain}^{\dagger}(\hat O_k)$, which (C2) computes link by link; and
+  Theorem~\ref{thm:licence} then applies with $\Lambda_{\redChain}$;
+\item the composite status is \textsf{exact} whenever every link's is, and no
+  other composite value is asserted.
+\end{enumerate}
+Nothing above reads the source segment: (i)--(iv) are statements about the
+receiver composite $\Lambda_{\redChain}$ and hold at every length
+$L_{\mathrm s}\ge0$. What the \emph{pair} \eqref{eq:chaincomposite} composes to
+as a reduction is Theorem~\ref{thm:two-sided}, under the source segment's own
+interface conditions and the admission rule of Definition~\ref{def:chain}, and
+this theorem does not restate it. Where the source segment is empty the source
+composite is the identity and the receiver composite is the whole of the
+chain's reduction.
+\end{theorem}
+
+\begin{proof}
+(i) is Proposition~\ref{prop:preorder} applied $k-1$ times, the tuple chaining
+(C2) being exactly the hypothesis that makes the operator tuples compose. (ii)
+is those results applied to the relation of (i), which is all they need. (iii)
+is Corollary~\ref{cor:transported} and Theorem~\ref{thm:licence} applied to the
+composite relation; the pull-back is computed as
+$\Lambda_{\Lnk_1}^{\dagger}\big(\dots\Lambda_{\Lnk_k}^{\dagger}
+(\hat O_k)\dots\big)$ by (i). (iv): a composition of exact identities is an
+exact identity, by (i) applied to identities carrying no error term. The
+remaining half is not proved and is not claimed: a chain containing a link
+that is not \textsf{exact} is declined rather than assigned a composite
+status, by the rules of Requirements~\ref{req:no-approximate-relations}
+and~\ref{req:mixed-status-chain}.
+The closing paragraph is Definition~\ref{def:chain}: the composite is defined
+there as the pair \eqref{eq:chaincomposite}, whose second member is the
+receiver segment's and is the only member any of (i)--(iv) reads --- each of
+them quantifies over the links $\Lnk_1,\dots,\Lnk_k$ and over nothing else ---
+and with $L_{\mathrm s}=0$ its first member is the identity.
+\end{proof}

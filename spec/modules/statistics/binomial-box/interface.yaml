@@ -1,0 +1,977 @@
+# spec/modules/statistics/binomial-box/interface.yaml -- the `binomial-box`
+# submodule's interface: which endpoint rule each request value selects and
+# what that rule is known to carry, the parameters its evaluations take, the
+# search procedure the enclosure route records, and which completeness report
+# is made on each route (spec/claim-format.md section 5). The claim files
+# under claims/ are the contract; this file authors no mathematics and repeats
+# none.
+#
+# What is here and what is not. The core states the taxonomy, the tail
+# identity, the frequency vector and the acceptance support and box oracle,
+# and names no rule (`../interface.yaml`). This submodule is where a set is
+# built: the per-outcome interval over an admissible endpoint rule, the
+# honest-containment guard, the box, the completeness bound, honest
+# containment and the parameter behaviour -- and the two rules this
+# repository carries, each proved an instance of one definition. This file
+# adds rows to the core's tables and changes none of them. Every row names,
+# in a `locator` field, the claims it rests on; a bare label is this
+# submodule's and a label prefixed `statistics/` is the core's.
+#
+# The shape of the coupling, in one sentence: `def:endpoint-rule` is the one
+# definition of what a rule is, and every rule is one claim proving an
+# instance of it, so adding a rule adds a claim, its entry in the clauses that
+# enumerate the rules (def:endpoint-rule (viii), req:rule-in-force), a row of
+# `rule_table` and a value of the core's `endpoint_rule` input, and no theorem
+# about the construction changes.
+#
+# Three kinds of thing are fixed here, and the reader should keep them apart.
+#   (a) What the claims prove, tabulated so that a consumer can read off which
+#       theorem applies on which route -- `rule_table`. Nothing here is a
+#       decision.
+#   (b) What the requirements leave to the interface and name as such -- the
+#       search procedure of `req:search-procedure`, and the completeness
+#       report on the routes other than `exact` + `sweep`
+#       (`req:completeness-report`) -- and the evaluation parameters, which no
+#       claim fixes.
+#   (c) The values of the evaluation parameters. Each row gives its proposed
+#       default, marked `proposal: true`, the quantity it is sized against,
+#       and under `settled` the value in force, with the reason where it
+#       differs; none of them can make an endpoint less conservative, which is
+#       why they can be proposed rather than decided
+#       (prop:bracketed-endpoints (i)).
+
+module_id: statistics/binomial-box
+parent_module: statistics
+
+# ---------------------------------------------------------------------------
+# claims
+#   The submodule's claim files in the order module.yaml assembles them. The
+#   authority is the claim files and the command below;
+#   tests/oracles/test_statistics_acceptance_registry_interface.py reads this
+#   list.
+# ---------------------------------------------------------------------------
+claims:
+
+  the_command: "python -m harness.check_claims --module statistics/binomial-box --status"
+  provenance_note: >-
+    Every claim is `newly-derived` with its derivation inline. Every lemma of
+    the enclosure and Bernstein groups carries a complete proof and names in
+    prose the classical result it restates; nothing is cited and nothing is
+    registered in refs/.
+
+  order:
+    - {claim: def:endpoint-rule, kind: def, provenance: newly-derived, refs: []}
+    - {claim: lem:guard, kind: lem, provenance: newly-derived, refs: []}
+    - {claim: def:interval, kind: def, provenance: newly-derived, refs: []}
+    - {claim: prop:rule-exact, kind: prop, provenance: newly-derived, refs: []}
+    - {claim: rem:guard, kind: rem, provenance: newly-derived, refs: []}
+    - {claim: rem:guard-activation, kind: rem, provenance: newly-derived, refs: []}
+    - {claim: def:construction, kind: def, provenance: newly-derived, refs: []}
+    - {claim: thm:box-construction, kind: thm, provenance: newly-derived, refs: []}
+    - {claim: rem:selector, kind: rem, provenance: newly-derived, refs: []}
+    - {claim: lem:envelope-dominance, kind: lem, provenance: newly-derived, refs: []}
+    - {claim: thm:completeness-bound, kind: thm, provenance: newly-derived, refs: []}
+    - {claim: rem:epsstar, kind: rem, provenance: newly-derived, refs: []}
+    - {claim: rem:sound-indep, kind: rem, provenance: newly-derived, refs: []}
+    - {claim: rem:envelope, kind: rem, provenance: newly-derived, refs: []}
+    - {claim: thm:honest-containment, kind: thm, provenance: newly-derived, refs: []}
+    - {claim: rem:hlow-consequence, kind: rem, provenance: newly-derived, refs: []}
+    - {claim: def:monotone-rule, kind: def, provenance: newly-derived, refs: []}
+    - {claim: lem:widening, kind: lem, provenance: newly-derived, refs: []}
+    - {claim: lem:cheb, kind: lem, provenance: newly-derived, refs: []}
+    - {claim: thm:monotonicity-limits, kind: thm, provenance: newly-derived, refs: []}
+    - {claim: rem:n-nonmono, kind: rem, provenance: newly-derived, refs: []}
+    - {claim: lem:log-enclosure, kind: lem, provenance: newly-derived, refs: []}
+    - {claim: lem:stirling-enclosure, kind: lem, provenance: newly-derived, refs: []}
+    - {claim: lem:bernstein-tail, kind: lem, provenance: newly-derived, refs: []}
+    - {claim: prop:rule-bernstein, kind: prop, provenance: newly-derived, refs: []}
+    - {claim: rem:completeness-on-rules, kind: rem, provenance: newly-derived, refs: []}
+    - {claim: lem:pmf-enclosure, kind: lem, provenance: newly-derived, refs: []}
+    - {claim: lem:tail-majorant, kind: lem, provenance: newly-derived, refs: []}
+    - {claim: prop:bracketed-endpoints, kind: prop, provenance: newly-derived, refs: []}
+    - {claim: rem:local-evaluation, kind: rem, provenance: newly-derived, refs: []}
+    - {claim: req:rule-in-force, kind: req, provenance: newly-derived, refs: []}
+    - {claim: req:request-defaults, kind: req, provenance: newly-derived, refs: []}
+    - {claim: req:input-refusal, kind: req, provenance: newly-derived, refs: []}
+    - {claim: req:completeness-report, kind: req, provenance: newly-derived, refs: []}
+    - {claim: req:honest-model-record, kind: req, provenance: newly-derived, refs: []}
+    - {claim: req:search-procedure, kind: req, provenance: newly-derived, refs: []}
+    - {claim: req:enclosure-substrate, kind: req, provenance: newly-derived, refs: []}
+    - {claim: req:endpoint-exact-record, kind: req, provenance: newly-derived, refs: []}
+
+# ---------------------------------------------------------------------------
+# rule_table
+#   The heart of this file, and it is a transcription and not a decision. One
+#   row per value of the core's `endpoint_rule` input, times the values of
+#   `tail_evaluation` that change what is proved. Each row names the claim that
+#   proves the value is an instance of def:endpoint-rule, and says whether the
+#   instance is monotone in the allocation -- which is exactly the hypothesis
+#   thm:monotonicity-limits (i) and (ii) read, so the column decides whether
+#   those two clauses apply on the route. The column `sa7_i_and_ii_apply`
+#   says whether they do; its name is the one the frozen registry's test
+#   reads.
+#
+#   What every row carries, without exception, because def:endpoint-rule
+#   (a)-(c) is what being a rule means: the admissibility inequalities; the
+#   zero-budget convention; the degenerate-mass convention; hence lem:guard
+#   (i)-(iv) -- the ordering, the budgets met at the guarded endpoints, the
+#   exact cost of the guard and the unconditional 1/n distance from the
+#   envelope's value on each side -- and hence thm:box-construction,
+#   thm:completeness-bound, thm:honest-containment and thm:monotonicity-limits
+#   (iii) and (vi). The one property that varies between rows is monotonicity
+#   in the allocation.
+# ---------------------------------------------------------------------------
+rule_table:
+
+  what_every_row_carries:
+    admissible_endpoint_rule: "def:endpoint-rule (a), (b), (c)"
+    the_guard: "lem:guard (i)-(iv)"
+    the_construction: "thm:box-construction (i)-(iv): well defined, exact rationals, an admissible canonical box, honest containment, and meat-core/def:admissible-acceptance-set by construction"
+    completeness: "thm:completeness-bound: the honest run's frequency vector is outside the emitted set with probability at most epsilon-star, which is at most the budget"
+    honest_containment_and_surfacing: "thm:honest-containment (i)-(iii)"
+    the_two_rule_independent_limits: "thm:monotonicity-limits (iii) (the zero-budget limit) and (vi) (the one-letter alphabet)"
+
+  rows:
+
+    - endpoint_rule: exact
+      tail_evaluation: sweep
+      the_rule: "def:interval, the exact binomial quantile rule"
+      instance_proved_by: "prop:rule-exact (ii); (vii) where a tail is decided against an upper bound"
+      how_it_is_evaluated: >-
+        The closed forms of prop:rule-exact (iv) -- the two strict tails of
+        statistics/cor:tail-forms, decided exactly at rational honest mass,
+        by summing the binomial probabilities or by the incomplete-beta form
+        (statistics/lem:exact-strict-tails). This is the default
+        (req:rule-in-force). Above a size bound on the exact tails the
+        implementation encloses the tails in dyadic arithmetic with directed
+        rounding and decides every comparison against the upper bound; that
+        is internal to this route and is not the `enclosure` value of
+        `tail_evaluation`; prop:rule-exact (vii) admits it.
+      monotone_in_the_allocation: true
+      monotone_locator: "prop:rule-exact (ii), last sentence; (vii)"
+      sa7_i_and_ii_apply: true
+      extremality: >-
+        The emitted interval is the smallest admissible one, before the guard:
+        the quantiles are the largest respectively smallest integers meeting
+        the budgets, and shrinking beyond them is inadmissible
+        (prop:rule-exact (iii)). Where a tail is decided against an upper
+        bound the emitted interval contains this one and may be wider
+        (prop:rule-exact (vii)).
+      n_monotone: false
+      n_monotone_locator: "thm:monotonicity-limits (v), with an explicit counterexample; rem:n-nonmono"
+      cost: >-
+        Linear to quadratic in n per constrained outcome -- the running
+        binomial sum is swept from zero. This is the cost the enclosure route
+        exists to avoid.
+      pins: >-
+        The frozen oracle registry tests/oracles/registry_statistics_acceptance.py
+        pins this route (`../design.md`, "Where the code is").
+
+    - endpoint_rule: exact
+      tail_evaluation: enclosure
+      the_rule: "prop:bracketed-endpoints, the enclosure evaluation of the exact rule"
+      instance_proved_by: "prop:bracketed-endpoints (i)"
+      how_it_is_evaluated: >-
+        A certified predicate on the index, decided against the local tail
+        enclosure of lem:tail-majorant (ii)-(iii) with the mass point enclosed
+        by lem:pmf-enclosure and every logarithm by lem:log-enclosure; the
+        lower tail through the mirror of lem:tail-majorant (v). About log2(n)
+        evaluations per endpoint, each on rationals of the size of a
+        logarithm.
+      monotone_in_the_allocation: false
+      monotone_locator: >-
+        Not claimed. prop:bracketed-endpoints proves admissibility,
+        exactness-when-decided and a conservatism bound, and not
+        monotonicity; rem:local-evaluation records the condition under which
+        it holds in practice -- a non-increasing upper enclosure, which the
+        tail's own per-count decay makes likely -- and says in as many words
+        that the claims do not rest on it.
+      sa7_i_and_ii_apply: false
+      monotonicity_limits_iv_note: >-
+        thm:monotonicity-limits (iv), the O(n^{-1/2}) half-width and the
+        Hausdorff limit, is proved for the exact rule, which the sweep
+        evaluation emits wherever it decides the tails exactly. On
+        this route prop:bracketed-endpoints (iii) gives the same bound
+        verbatim wherever the bracket is decided, and the bound plus the
+        conservatism term over n otherwise; where r_(kappa+1) >= 1 no
+        conservatism bound is available and only admissibility stands.
+      monotonicity_limits_note: >-
+        This is the one row where a consumer must not read
+        thm:monotonicity-limits (i) or (ii): neither "the set shrinks as the
+        budget grows" nor the infimum consequence for h_low is established on
+        this route. Everything else the table lists is unaffected,
+        monotonicity in the allocation being a hypothesis of those two
+        clauses alone.
+      extremality: >-
+        An admissible relaxation of the exact rule and never a tightening: the
+        emitted box contains the exact rule's box, and equals it wherever
+        the bracket is decided (prop:bracketed-endpoints (i), (ii)). What the
+        relaxation costs is bounded in counts by that proposition's (iii) --
+        the enclosure's slack divided by the per-count decay of the tail at
+        the quantile.
+      n_monotone: false
+      n_monotone_locator: "thm:monotonicity-limits (v) is stated for the exact rule and this route emits the exact quantile wherever the bracket is decided; no monotonicity in n is claimed here either."
+      cost: "about log2(n) enclosure evaluations per endpoint."
+      pins: >-
+        Small-n oracles pin this route (tests/oracles/registry_statistics_rules.py):
+        the bracket verdict per outcome and side, and its equality with the
+        sweep wherever the bracket is decided. The procedure below is pinned
+        with them.
+
+    - endpoint_rule: bernstein
+      tail_evaluation: "either; no tail is evaluated to find an endpoint"
+      the_rule: "prop:rule-bernstein, the Bernstein rule, defined inside the proposition"
+      instance_proved_by: "prop:rule-bernstein (i)"
+      how_it_is_evaluated: >-
+        In closed form, from n, the honest mass and the allocation alone: a
+        rational upper bound on the budget term through lem:log-enclosure,
+        the closed-form deviation of lem:bernstein-tail rounded upward with an
+        integer square root, then a floor and a ceiling with a clip into the
+        index range. Finitely many operations on integers and rationals,
+        integer square roots included, and no others.
+      monotone_in_the_allocation: true
+      monotone_locator: "prop:rule-bernstein (ii), provided every rounding is a non-decreasing function of its real argument; the proposition exhibits one: the argument rounded up to the fixed dyadic grid 2^-s Z before each integer square root (a fixed denominator), and L and t rounded up to that grid. The bare integer-square-root rounding of a rational is not monotone in the rational and must not be used as written"
+      sa7_i_and_ii_apply: true
+      monotonicity_limits_i_and_ii_note: >-
+        The proviso is part of the hypothesis and is an obligation on the
+        evaluation: the parameters below are fixed per run and recorded in the
+        `honest_model`, and an implementation that varied them with the
+        allocation would lose the monotonicity the row asserts.
+      extremality: >-
+        Never narrower than the exact rule's raw quantile interval
+        (prop:rule-bernstein (iii), last sentence), the quantiles being the
+        extremal admissible indices. How much wider is a numerical fact and
+        not a claim (`../design.md`, decision 8).
+      n_monotone: false
+      n_monotone_locator: "As in the other rows, the column says whether the emitted interval is monotone in n, and here that is not claimed. prop:rule-bernstein (iii) proves the unrounded half-width strictly decreasing in n and O(n^{-1/2}) at fixed honest mass and allocation; that the integer-rounded boxes are nested in n is not claimed"
+      cost: "constant per endpoint."
+      why_it_is_carried: >-
+        It is the alternative for a consumer sweeping n. The exact rule's
+        emitted interval is not monotone in n (thm:monotonicity-limits (v)),
+        which a consumer sweeping n sees as noise; this rule's unrounded
+        half-width decreases strictly in n, at the cost of a wider box.
+
+  a_third_rule: >-
+    A new rule is one claim proving an instance of def:endpoint-rule, its
+    entry in def:endpoint-rule (viii) and req:rule-in-force, one row here and
+    one value of the core's `endpoint_rule` input: thm:box-construction,
+    thm:completeness-bound, thm:honest-containment and thm:monotonicity-limits
+    (iii), (vi) apply to it as they stand, and thm:monotonicity-limits (i),
+    (ii) apply exactly if its claim proves it monotone in the allocation. The
+    Chernoff-KL rule is deferred in those terms (spec/future-scope.md section
+    12). A request naming a rule this table does not carry is refused with
+    `endpoint_rule_unknown` and never guessed
+    (statistics/binomial-box/thm:honest-containment (iii); req:input-refusal).
+
+# ---------------------------------------------------------------------------
+# evaluation_parameters
+#   The numbers the two closed-form routes take, which the claims leave to the
+#   evaluation and fix no value of. They are not thresholds: no value of any
+#   of them can make an endpoint less conservative, because every bound
+#   entering an endpoint decision is used in the one direction
+#   statistics/def:conservative-evaluation admits (prop:bracketed-endpoints (i); prop:rule-bernstein (i)). A coarser
+#   parameter widens the emitted box and costs rate; it cannot cost soundness
+#   and it cannot cost completeness.
+#
+#   Each row gives the proposed default, marked `proposal: true`, with the
+#   quantity it is sized against written down, so that a change is a
+#   calculation and not a preference. The value in force is the row's
+#   `settled` field, with the reason where it differs from the proposal; the
+#   values in force are recorded per run in the core's `honest_model`
+#   (req:honest-model-record).
+# ---------------------------------------------------------------------------
+evaluation_parameters:
+
+  the_enclosure_route:
+    applies_to: >-
+      tail_evaluation = enclosure, with either rule: on endpoint_rule = exact
+      these parameters decide the endpoints and the completeness figure; on
+      endpoint_rule = bernstein they decide the completeness figure only (the
+      fourth row of `completeness_report`) and are recorded with the rule's
+      own.
+    locator: "rem:local-evaluation (the window, the substrate); req:enclosure-substrate; lem:tail-majorant (ii)-(iii); lem:pmf-enclosure; lem:stirling-enclosure (ii); lem:log-enclosure"
+
+    rows:
+
+      - name: window_length_T
+        symbol: T
+        claim_locator: "lem:tail-majorant (ii), (iii)"
+        what_it_is: >-
+          The number of mass points summed exactly at the head of the tail
+          before the geometric majorant takes over. The bracket's own width in
+          log space is ln(1 + B_T/A_T), and B_T/A_T is about r^T/(1 - r) with
+          r the ratio near the index, so T trades evaluation time against the
+          last counts of the endpoint (rem:local-evaluation, "The window").
+        proposed_default: >-
+          Adaptive, not fixed: start at T = 32 and double until either
+          B_T/A_T <= 2^-24 or the window reaches the end of the range
+          (k + T + 1 > n, where the tail is exact), with a cap of T = 4096
+          doublings' worth of terms; the value actually used is recorded.
+        proposal: true
+        settled: >-
+          The proposal as it stands -- start at 32, double, stop at
+          B_T/A_T <= 2^-24 or at the end of the range, cap 4096, the window
+          sums A_T and B_T held as dyadics at a significand of 128 bits with
+          directed rounding -- recorded per run as four numbers under this
+          row's name (window_start, window_target_bits, the cap
+          window_length_T and window_precision), because an adaptive window is
+          not identified by its cap alone and the window precision moves the
+          emitted box at a coarse setting (at n = 60, p = 1/4 the figure moves
+          at 12 bits and the box at 6, every setting conservative). One branch
+          the proposal does not name: lem:tail-majorant (ii) needs
+          r_(k+T+1) < 1, and below the mode no window shorter than about
+          np - k terms achieves it, so where the first index with ratio under
+          one lies more than the cap above k + 1 the window is not built: the
+          tail is bounded below by the single mass point at that index, a term
+          of the same sum, and no upper bound is claimed there, so the index is
+          never certified admissible and no emitted endpoint rests on this
+          branch. What it costs is that a genuinely admissible index below the
+          mode -- reachable only at a tail budget above one half -- is passed
+          over, which makes the endpoint more conservative, the admissible
+          direction. The branch is part of the rule (it changes which indices
+          are certified) and therefore of what the frozen oracles pin.
+        sized_against: >-
+          The relative slack of the majorant, which enters the conservatism
+          bound of prop:bracketed-endpoints (iii) as w divided by the
+          per-count decay. At 2^-24 the slack contributes about 6e-8 nats to
+          w, which against a per-count decay of order 1e-2 in the regimes the
+          engine runs in is under 1e-5 counts -- far below the one count that
+          would change an endpoint.
+        if_it_is_too_small: "the bracket is undecided more often; the emitted endpoint is more conservative and `endpoint_exact` says so. Nothing else changes."
+
+      - name: root_exponent_j
+        symbol: "j, with m = 2^j"
+        claim_locator: "lem:log-enclosure (eq:log-rational-bounds, eq:isqrt-bounds)"
+        what_it_is: >-
+          The number of successive integer square roots taken, so that the
+          root bounds on a logarithm have slack at most (ln x)^2 / (2 m) times
+          a factor near one (lem:log-enclosure, eq:log-root-slack).
+        proposed_default: "j = 48"
+        proposal: true
+        settled: >-
+          j = 64. The code splits the binary exponent before the iteration,
+          ln x = e ln 2 + ln x' with x' in [1, 2), so the iteration always runs
+          where the grid resolves the value; after that split j = 48 also
+          closes the bracket at n = 10^9 at the same cost, so the proposal
+          would have done. 64 is kept because the difference between the two
+          is the logarithm term, the one contribution to the enclosure width
+          that grows with n, and at 64 it is under 1e-17, leaving the width
+          the n-independent Wallis constant alone at every n; the cost is nil
+          because the window dominates the route. Measured at n = 10^9,
+          p = 10^-3, 10^-9 per side: j = 32 does not close the bracket (width
+          6.9 nats, endpoint 537 counts high); j = 48 and j = 64 emit the same
+          endpoint, widths 2.9e-4 and 1.8e-4 nats.
+        sized_against: >-
+          The slack of a single logarithm, which lem:pmf-enclosure multiplies
+          by about 3n. At j = 48 and |ln x| <= 2^10 the slack is below 2^-29;
+          the logarithms this route takes are of rationals whose logarithm is
+          of order tens, so the slack is below 2^-40 in practice, and 3n times
+          that is below 2^-20 at n = 10^6.
+        if_it_is_too_small: "the pmf enclosure is wider, so the bracket is undecided more often. Nothing else changes."
+
+      - name: root_precision_bits
+        symbol: s
+        claim_locator: "lem:log-enclosure (eq:isqrt-bounds)"
+        what_it_is: >-
+          The precision of each integer-square-root step, the two bounds of one
+          step differing by at most 2^-s.
+        proposed_default: "s = 128"
+        proposal: true
+        settled: >-
+          s = 128, the proposal. Each root step rounds its lower bound down
+          and its upper bound up to s significant bits on the fixed grid, and
+          the achieved width is computed and returned rather than assumed (the
+          caveat below).
+        sized_against: >-
+          The accumulated width of the j steps, which must not dominate the
+          root-bound slack above. At s = 128 the accumulation is negligible
+          against 2^-40 and the integers stay of a few hundred bits.
+        a_caveat_the_implementer_must_read: >-
+          lem:log-enclosure asserts an enclosure at any prescribed width, and
+          its proof establishes computability rather than the width of one
+          fixed schedule. The conforming implementation carries the actual
+          width it achieved rather than assuming 2^-s, and widens the schedule
+          until the width it holds is the width it needs. Both bounds are
+          valid at every s, so this is a question of tightness and never of
+          soundness.
+
+      - name: wallis_length_M
+        symbol: M
+        claim_locator: "lem:stirling-enclosure (ii), eq:wallis-partial, eq:wallis-bounds"
+        what_it_is: >-
+          The number of factors of the Wallis partial product that encloses
+          2 pi, to relative width 1/(2M), and through it the constant of
+          Robbins' bounds.
+        proposed_default: "M = 65536, computed once and cached; the product accumulated as a dyadic with directed rounding, the lower bound rounding down and the upper up"
+        proposal: true
+        settled: >-
+          M = 4096, computed once and cached, the product accumulated as exact
+          integers with one directed rounding at the end: tighter than 2M
+          directed roundings and cheaper with a binary-split product. The
+          constant enters lem:pmf-enclosure with coefficient 3/2, so M = 4096
+          contributes 3/(4M) = 1.8e-4 nats, which at the per-count decay of
+          3e-3 nats the n = 10^9 run has is 0.06 counts and at small n is
+          nothing at all; M = 65536 would be a one-off product sixteen times as
+          long for a tightening no endpoint can see. Both changes are in the
+          admissible direction: a wider enclosure can only make an endpoint
+          more conservative.
+        sized_against: >-
+          The constant enters lem:pmf-enclosure with coefficient 3/2. At
+          M = 2^16 the relative width is 2^-17, so the contribution to the pmf
+          enclosure is about 1.1e-5 nats, which at a per-count decay of order
+          1e-2 is under 1e-3 counts.
+        why_it_is_cached: >-
+          It depends on no input. It is a constant of the arithmetic, not of
+          the request, and recomputing it per outcome would dominate the cost
+          of a route whose whole point is that it is logarithmic in n.
+        if_it_is_too_small: "the pmf enclosure is wider by a constant. Nothing else changes."
+
+  the_bernstein_rule:
+    applies_to: "endpoint_rule = bernstein"
+    locator: "prop:rule-bernstein (its j and s, parameters of the evaluation); req:honest-model-record; lem:log-enclosure; lem:bernstein-tail (eq:bernstein-t)"
+
+    rows:
+
+      - name: root_exponent_j
+        symbol: "j, with m = 2^j"
+        claim_locator: "prop:rule-bernstein, opening sentence; lem:log-enclosure"
+        what_it_is: >-
+          The root exponent of the enclosure of the budget term, an upper bound
+          on the logarithm of the reciprocal budget. A larger bound gives a
+          larger deviation and a wider interval, which is the admissible
+          direction.
+        proposed_default: "j = 32"
+        proposal: true
+        settled: "j = 32, the proposal; the budget term is iterated on 1/eps itself (prop:rule-bernstein (ii)), so its relative excess over ln(1/eps) is about ln(1/eps)/2^33: 1.6e-9 at eps = 1e-6, 2.7e-9 at 1e-10, below 1e-8 down to 1e-30; the deviation enters t under a square root, so the half-width moves by about half that."
+        sized_against: >-
+          The half-width, which depends on the budget term under a square
+          root: a relative error of 2^-20 in the term moves the half-width by
+          about half that, far below one count at any n this engine runs at.
+          The Bernstein route is the cheap one and does not need the enclosure
+          route's precision.
+
+      - name: root_precision_bits
+        symbol: s
+        claim_locator: "prop:rule-bernstein, opening sentence; lem:log-enclosure (eq:isqrt-bounds)"
+        what_it_is: "the precision of each integer-square-root step, including the one that rounds the deviation upward."
+        proposed_default: "s = 64"
+        proposal: true
+        settled: "s = 64, the proposal; the same grid 2^-s Z is used for the deviation's square root and for L and t (the rounding directions row)."
+        sized_against: "the same quantity as the row above; the deviation is rounded up, so any residue costs a fraction of a count of extra width."
+
+      - name: the_rounding_directions
+        symbol: null
+        claim_locator: "prop:rule-bernstein (i), (ii); statistics/def:conservative-evaluation"
+        what_it_is: >-
+          Not a parameter but a binding rule, listed here because an
+          implementer reads the parameters and must read this with them: the
+          budget term is rounded up, the deviation is rounded up, and the
+          endpoints take a floor on the lower side and a ceiling on the upper.
+          Every one of these widens. The monotonicity of clause (ii) requires
+          in addition that every rounding be a non-decreasing function of its
+          real argument, and the implementation meets it the way
+          prop:rule-bernstein (ii) exhibits: round the argument up to the
+          fixed dyadic grid 2^-s Z before each integer square root (so the
+          denominator is fixed and isqrt is monotone in the numerator), and
+          round L and t up to the same grid. The bare integer-square-root
+          rounding of a rational is not monotone in the rational.
+
+  recorded_per_run: >-
+    The values in force are part of the emitted `honest_model` (the core's
+    output row; req:honest-model-record), together with the rule and the
+    evaluation. Two runs with the same inputs and different parameters may
+    emit different endpoints, all of them admissible; a record that did not
+    name the parameters would not identify what was computed.
+
+# ---------------------------------------------------------------------------
+# search_procedure
+#   The procedure req:search-procedure requires and names this block as
+#   recording. prop:bracketed-endpoints defines the enclosure evaluation
+#   through a fixed deterministic search procedure that returns a bracketed
+#   endpoint for every input, and holds whatever procedure found the
+#   endpoint; fixing the procedure, with its parameters, is what makes the
+#   evaluation a rule in the sense of def:endpoint-rule (rem:local-evaluation).
+#   Until it is fixed there is no function of (n, p, eps), and a claim about
+#   the rule has no subject.
+# ---------------------------------------------------------------------------
+search_procedure:
+
+  locator: "req:search-procedure; prop:bracketed-endpoints (the definition of the enclosure evaluation); rem:local-evaluation (The search)"
+
+  proposed: >-
+    BISECTION over the index range on the certified predicate, exactly as
+    rem:local-evaluation describes it. For the upper side: maintain a pair
+    (lo, hi) with the certified-admissible predicate true at hi and not true
+    at lo, starting from hi = n -- where it always holds -- and from the
+    fictitious index lo = -1; while hi - lo > 1, evaluate the predicate at the
+    midpoint, treating an undecided index as not certified, and replace lo or
+    hi accordingly; return hi. The lower side is the same procedure applied to
+    the mirror count of lem:tail-majorant (v), the returned index subtracted
+    from n. The zero-budget and degenerate-mass conventions are returned
+    directly, without a search, as prop:bracketed-endpoints requires.
+  proposal: true
+  settled: >-
+    The proposal as it stands, without a seed: hi = n, lo = -1, the undecided
+    index counted as not certified, the lower side through the mirror of
+    lem:tail-majorant (v). No seed, because a seed is part of the procedure
+    and therefore of the rule and of what the frozen oracles pin, for a
+    constant factor in a route that is already logarithmic in n.
+  proposal_note: >-
+    A proposal in its details and a requirement in its obligation: the
+    procedure must be FIXED, TOTAL and DETERMINISTIC, with fixed parameters
+    (req:search-procedure), because that is what makes the evaluation a rule.
+    Any procedure with those three properties returning a bracketed endpoint
+    satisfies prop:bracketed-endpoints, which holds for every bracketed
+    endpoint, whatever procedure found it (rem:local-evaluation). A change to
+    the procedure is a change to the rule and therefore to the frozen oracles
+    that pin it.
+
+  why_it_terminates_and_what_it_returns: >-
+    The predicate holds at n unconditionally (prop:bracketed-endpoints, the
+    sentence before the definition of a bracketed endpoint), so the invariant
+    is establishable and the loop terminates after about log2(n + 1)
+    evaluations with hi certified and hi - 1 not certified -- which is the
+    definition of a bracketed upper endpoint. THE SEARCH CANNOT FAIL: there is
+    no input on which it returns nothing, which is why the enclosure route
+    adds no reason code to the core's.
+
+  an_optional_seed: >-
+    rem:local-evaluation names the Bernstein endpoint as a natural starting
+    point -- it is admissible and usually certified -- and a downward scan
+    from any certified index as an alternative to bisection. A seed changes
+    nothing the claims assert so long as the procedure stays fixed, total and
+    deterministic; an implementation that seeds must record that it does,
+    because the seed is part of the procedure and therefore part of the rule.
+
+  what_the_bisection_does_not_give: >-
+    It does not give the least certified index in general, and that is why
+    monotonicity in the allocation is not claimed for this route: the
+    bisection returns the least certified index exactly when the certified set
+    is an up-set of the index range, which holds when the upper enclosure is
+    non-increasing -- true of the tail itself by lem:tail-majorant (iv) and
+    true of the enclosure up to its rounding (rem:local-evaluation). The
+    claims do not rest on it and neither does this file.
+
+# ---------------------------------------------------------------------------
+# completeness_report
+#   Which of the two admissible reports of rem:completeness-on-rules is made
+#   on each route. That remark states both and proves both admissible.
+#   req:completeness-report fixes the report on `exact` + `sweep` --
+#   epsilon-star itself, rounded upward and clamped where a tail cannot be
+#   evaluated exactly -- which the first row below transcribes, and on every
+#   other route requires the report that route's row names; those three rows
+#   are this file's.
+#
+#   Neither choice affects the emitted set and neither affects soundness: what
+#   differs is the advertised abort probability of the honest run, which (a)
+#   overstates by the budget the guarded endpoints leave unspent -- on a
+#   closed-form rule the slack of the rule's own tail bound as well as what
+#   the integrality of the endpoints and the guard leave
+#   (rem:completeness-on-rules (b)). Changing one of those three rows changes
+#   this file and no claim.
+#
+#   The principle the four rows follow, stated once: report the tightest
+#   figure the route can afford. Where the tails are already evaluated in the
+#   course of finding the endpoints, report them; where they are not, report
+#   them if the route can bound them cheaply, and otherwise report the
+#   allocation sum, which costs nothing and is always valid.
+# ---------------------------------------------------------------------------
+completeness_report:
+
+  locator: "req:completeness-report; rem:completeness-on-rules (a), (b); rem:epsstar; thm:completeness-bound (eq:completeness); lem:guard (ii)"
+
+  rows:
+
+    - endpoint_rule: exact
+      tail_evaluation: sweep
+      report: "the exact epsilon-star of rem:epsstar"
+      what_is_emitted: >-
+        The sum over the constrained outcomes of the two binomial tails at the
+        guarded endpoints, evaluated exactly in the closed forms of
+        statistics/cor:tail-forms; no clamp is needed, epsilon-star <= ecomp
+        being part of thm:completeness-bound. Where an implementation cannot
+        evaluate a tail exactly it rounds upward and reports
+        min{ecomp, tilde-epsilon}.
+      why: >-
+        The tails are already decided in the course of finding the quantiles,
+        so the tightest figure is free. This is the report the frozen oracles
+        pin.
+
+    - endpoint_rule: exact
+      tail_evaluation: enclosure
+      report: "rem:completeness-on-rules (b): the upper enclosures at the emitted endpoints, clamped by ecomp"
+      what_is_emitted: >-
+        min{ecomp, sum over the constrained outcomes of the two upper
+        enclosures of the tails at the emitted guarded endpoints}. Each upper
+        enclosure is the object the endpoint decision used, recomputed at the
+        guarded endpoint where the guard moved it (one evaluation at that
+        index, which is where thm:completeness-bound evaluates the tails) and
+        turned from a log-space bound into a number: the endpoint decision is
+        made in log space and a completeness figure is a rational, so an
+        exponential upper bound inverts lem:log-enclosure -- a bounded
+        monotone search for a dyadic y whose lower root bound is at least the
+        given u, so that ln y >= u and y >= e^u -- with a tail below 2^-4096
+        reported as 2^-4096, an upper bound that keeps the denominators
+        bounded. No transcendental dependency, and no emitted endpoint is
+        touched.
+      why: >-
+        The upper enclosures are already in hand at the emitted endpoints, and
+        each is at least the true tail, so the sum is at least epsilon-star and
+        hence at least the honest failure probability -- the direction
+        rem:epsstar requires. The clamp is what keeps the figure inside the
+        declared output domain, exactly as rem:epsstar's clamp does. Reporting
+        the allocation sum here would throw away a figure the route has
+        already computed.
+
+    - endpoint_rule: bernstein
+      tail_evaluation: sweep
+      report: "rem:completeness-on-rules (a): the allocation sum"
+      what_is_emitted: >-
+        The sum over the constrained outcomes of the two allocated tail
+        budgets. By lem:guard (ii) each tail at a guarded endpoint is at most
+        its allocation, so the sum is at least epsilon-star and hence at least
+        the honest failure probability; it lies in [0, ecomp] by the input
+        domain, so no clamp is needed.
+      why: >-
+        The rule evaluates no tail to find an endpoint, and evaluating the
+        tails by a sweep afterwards would cost the very sweep this rule was
+        chosen to avoid -- a linear-to-quadratic pass per outcome to tighten a
+        usability figure that changes no emitted number. The report costs
+        nothing beyond the inputs. What it costs the reader is named on the
+        row below.
+
+    - endpoint_rule: bernstein
+      tail_evaluation: enclosure
+      report: "rem:completeness-on-rules (b): the upper enclosures at the emitted endpoints, clamped by ecomp"
+      what_is_emitted: >-
+        as in the second row, with the endpoints the Bernstein rule emitted;
+        the enclosure parameters in force decide the figure here and are
+        recorded in the honest_model with the rule's own.
+      why: >-
+        Here the tails are affordable: an enclosure at a known endpoint is
+        about one evaluation per endpoint, not a sweep, so the tighter figure
+        is bought at a cost of the same order as the rule itself. This is why
+        `tail_evaluation` is not ignored on the Bernstein route even though it
+        changes no endpoint: it says whether the reported figure is the cheap
+        bound or the tight one.
+
+  what_the_choice_costs_a_reader: >-
+    On the allocation-sum row the reported figure is looser than the set
+    deserves, by the budget the guarded endpoints leave unspent -- the slack
+    of the Bernstein rule's own tail bound, and what the integrality of the
+    endpoints, the guard and a degenerate honest coordinate leave -- which at
+    a coarse allocation can be most of it. A profile that wants the tight figure on a Bernstein run
+    asks for `tail_evaluation = enclosure`. Neither choice affects the emitted
+    set, neither affects soundness, and both are valid upper bounds on the
+    honest failure probability (rem:completeness-on-rules; rem:sound-indep).
+
+  one_thing_no_row_may_do: >-
+    REPORT A DOWNWARD-ROUNDED FIGURE. Every row above is upward-rounded and
+    clamped where a clamp is needed; a downward-rounded evaluation would claim
+    a completeness the set does not have and is inadmissible on every route
+    (req:completeness-report; rem:epsstar; statistics/def:conservative-evaluation).
+
+# ---------------------------------------------------------------------------
+# the_guard
+#   Not a row of any table, and it is the part of this submodule a consumer is
+#   likeliest to mis-size, so it is stated once here with its two costs kept
+#   apart. It is rule-independent: it is applied to whatever endpoints the rule
+#   returned, and lem:guard proves its four properties for every rule.
+# ---------------------------------------------------------------------------
+the_guard:
+
+  locator: "def:endpoint-rule (eq:guard); lem:guard (i)-(iv); prop:rule-exact (vi); rem:guard; rem:guard-activation"
+
+  what_it_buys: >-
+    Unconditional honest containment: the whole envelope interval of a
+    constrained outcome -- for a single honest law, its honest mass -- lies
+    inside the emitted interval for every admissible budget and every
+    admissible allocation, including allocations so lopsided that the rule's
+    own interval excludes it (lem:guard (i)). thm:box-construction (iii) and
+    thm:honest-containment rest on exactly that, and without the guard both
+    would carry a side condition on how large the budget may be.
+
+  what_it_costs_has_two_answers_and_both_are_reported: >-
+    Against the rule's own interval the cost is the identity lem:guard (iii)
+    and it is not bounded by one count -- for the exact rule
+    prop:rule-exact (vi) shows the enlargement approaching the whole remaining
+    mass in frequency, uniformly in n, as a single tail's allocation
+    approaches one. Against the honest value the quantity bounded is the
+    emitted endpoint's distance from the envelope's value on its side -- the
+    honest mass, for a single law -- and that is at most 1/n unconditionally
+    (lem:guard (iv)). Reporting only the second would overstate the
+    guarantee, which is why rem:guard states both.
+
+  when_it_is_active: >-
+    Not only at extreme budgets. rem:guard-activation exhibits it firing under
+    the default uniform allocation at an ordinary budget, for any outcome
+    whose expected count over the whole run is positive and at or below the
+    tail budget allocated to it -- a routine feature of the fine-grained joint
+    alphabet A-TSM (reductions/ass:tsm) gives, at any n. An implementation may
+    report which of the four exact conditions of prop:rule-exact (vi) holds,
+    all four being decidable in the closed forms the exact rule already needs;
+    this file neither requires nor forbids it.
+
+# ---------------------------------------------------------------------------
+# inputs, outputs, parameters, error_terms
+# ---------------------------------------------------------------------------
+inputs:
+  inherits: "spec/modules/statistics/interface.yaml, `inputs`, in full"
+  adds: []
+  reads_specially:
+    - "endpoint_rule and tail_evaluation -- together they select the row of `rule_table` in force (req:rule-in-force)"
+    - "budget_allocation -- the per-outcome shares are what an endpoint rule consumes; the default uniform rule is monotone (def:monotone-rule), which is the hypothesis thm:monotonicity-limits (i) reads"
+
+outputs:
+  inherits: "spec/modules/statistics/interface.yaml, `outputs`, in full"
+  adds: []
+  fills:
+    - "acceptance_set -- always a `polytope` in canonical box form, for every rule (def:construction; thm:box-construction)"
+    - "completeness_certified -- per `completeness_report` above (req:completeness-report)"
+    - "honest_model -- the rule, the evaluation and the evaluation parameters above (req:honest-model-record); the honest model it was computed under (the distribution, or the envelope with the tag `envelope_honest_rounds`) is the core's row"
+    - "infeasibility_report -- the eleven codes are the core's (req:input-refusal); this submodule adds none, the search being total (`search_procedure`)"
+    - "endpoint_exact -- the bracket verdict, on the exact + enclosure row only (req:endpoint-exact-record)"
+
+parameters:
+  inherits: "spec/modules/statistics/interface.yaml, `parameters`: alpha is not a parameter of this module and this submodule adds none."
+  note: >-
+    THE EVALUATION PARAMETERS ABOVE ARE NOT PARAMETERS IN THAT SENSE AND NOT
+    THRESHOLDS: they are the recorded settings of an evaluation, they decide
+    no predicate on declared data, and no value of any of them can make an
+    endpoint less conservative.
+
+error_terms:
+  inherits: "spec/modules/statistics/interface.yaml, `error_terms`, in full"
+  the_one_row_that_needs_reading_here: >-
+    `completeness_budget.monotonicity` is conditional on the rule being
+    monotone in the allocation, and `rule_table` is the table that says which
+    rules are. On the `exact` + `enclosure` row thm:monotonicity-limits (i)
+    and (ii) do not apply.
+
+# ---------------------------------------------------------------------------
+# assumption_ledger
+# ---------------------------------------------------------------------------
+assumption_ledger:
+  rows: []
+  inherited_from_the_core: >-
+    This submodule declares no assumption of its own and adds no ledger row.
+    Its claims declare the core's A-HON-ENV, A-HON, A-ALPHABET and A-REACH,
+    and two of its remarks (rem:sound-indep, rem:guard-activation) declare
+    reductions' A-TSM, which is no row of the core's ledger. The core's
+    `assumption_ledger` names each own row's claim file, which holds the
+    statement; its `affects` field,
+    its reading and the generated "Assumed by" list say what a failure puts
+    at stake. Run
+    `python -m harness.check_claims --assumptions statistics/binomial-box/<label>`
+    for the closure of any claim of this submodule.
+  what_the_enclosure_and_bernstein_groups_need: >-
+    The enclosure and Bernstein groups introduce no assumption. Every lemma of
+    both is proved from the binomial law of statistics/thm:binomial-tails and
+    elementary analysis, and what they need of the arithmetic is the
+    direction statistics/def:conservative-evaluation already names -- which
+    is why prop:bracketed-endpoints and prop:rule-bernstein state a
+    conservative evaluation as their hypothesis and assume nothing. In particular no interval-arithmetic soundness assumption
+    and no transcendental library is trusted anywhere: the enclosures are
+    self-contained down to integer square roots.
+
+# ---------------------------------------------------------------------------
+# conventions
+#   The core's conventions bind here unchanged and are not restated. Two are
+#   added because the enclosure route needs a substrate the core never had to
+#   name, and one of the core's is used in this submodule in a way it is not
+#   in the core.
+# ---------------------------------------------------------------------------
+conventions:
+
+  inherits: "spec/modules/statistics/interface.yaml, `conventions`, in full"
+
+  exact_arithmetic_here: >-
+    The licence of statistics/def:conservative-evaluation is spent in this
+    submodule and nowhere else. Both closed-form
+    routes are that licence taken up: an endpoint is decided against a bound
+    that rounds the tail upward, which can only widen the emitted interval.
+    The lower bound of an enclosure never moves an emitted endpoint: it enters
+    only the bracket verdict of prop:bracketed-endpoints (ii), which is a
+    diagnostic, and the conservatism bound of its (iii), which is a report. An
+    implementation that let a lower enclosure narrow an interval would have
+    inverted the one direction this contract has.
+    Locator: statistics/def:conservative-evaluation; lem:widening;
+    prop:bracketed-endpoints (i)-(iii);
+    prop:rule-bernstein (i).
+
+  the_substrate_rule: >-
+    What makes the enclosure route possible at all, rather than a performance
+    note, and what req:enclosure-substrate requires. Everything is computed in
+    log space with directed rounding: the mass point through
+    lem:pmf-enclosure, the window through the rationals of lem:tail-majorant
+    (iii) whose logarithms lem:log-enclosure encloses, and the budget through
+    the same lemma. THE PRODUCTS INSIDE THE WINDOW ARE HELD AS DYADIC NUMBERS
+    WITH AN EXPLICIT BINARY EXPONENT, rounded in the direction each bound
+    requires -- down for the lower, up for the upper -- and not as exact
+    rationals, whose denominators would grow with the window; the Stirling
+    remainders and the root bounds are rationals of the size of a logarithm.
+    No intermediate ever has the magnitude of a mass point, of a power of the
+    honest mass or of a binomial coefficient. An exact rational whose
+    denominator is a power of the round count is not a number model for this
+    route.
+    Locator: req:enclosure-substrate; rem:local-evaluation (The substrate);
+    lem:pmf-enclosure (its closing sentences); lem:log-enclosure.
+
+  no_transcendental_dependency: >-
+    NO LOGARITHM, EXPONENTIAL OR SPECIAL FUNCTION OF ANY LIBRARY IS CALLED ON
+    ANY PATH OF THIS SUBMODULE, and no claim of it rests on one. The
+    logarithm's enclosure is root bounds evaluated with integer square roots;
+    Stirling's constant is Wallis's product; the binomial tail is a window of
+    exact mass points and a geometric majorant. That is the whole of it, and
+    it is the reason the enclosures are derived in full rather than imported.
+    Locator: lem:log-enclosure; lem:stirling-enclosure; lem:tail-majorant.
+
+# ---------------------------------------------------------------------------
+# fail_closed
+#   The rules this submodule adds to the core's. The core's rules run first and
+#   are not restated: the input domain is decided, with one of eleven reason
+#   codes, before any endpoint is computed.
+# ---------------------------------------------------------------------------
+fail_closed:
+
+  policy: >-
+    This submodule adds no refusal and no reason code, and that is a property
+    worth stating rather than a gap: once the input domain holds, every route
+    returns a set. The construction is unconditional
+    (thm:honest-containment (iii)), the enclosure search is total
+    (`search_procedure`), and the Bernstein evaluation is a closed form on
+    rationals. An implementation that can refuse from inside this submodule
+    on a validated input has a defect.
+
+  rows:
+
+    - rule: "the rule selector is resolved before anything is computed"
+      order: 1
+      checked: "the (endpoint_rule, tail_evaluation) pair names a row of `rule_table`."
+      outcome: "otherwise the core's `endpoint_rule_unknown`, with no acceptance_set. The pair is never partially honoured and no route is substituted for another."
+      locator: "statistics/binomial-box/thm:honest-containment (iii); req:input-refusal; req:rule-in-force; ../interface.yaml, the two request rows"
+
+    - rule: "the guard is applied to whatever the rule returned"
+      order: 2
+      checked: "the emitted endpoints are the guarded ones, eq:guard, and never the rule's raw endpoints."
+      outcome: >-
+        Not a failure mode but a construction step, listed because omitting it
+        is the one silent way to break thm:box-construction (iii) and
+        thm:honest-containment: the raw interval need not contain the envelope
+        interval, and everything downstream rests on the fact that the
+        guarded one does.
+      locator: "def:endpoint-rule (eq:guard); lem:guard (i); rem:guard"
+
+    - rule: "the report is upward-rounded and clamped where a clamp is needed"
+      order: 3
+      checked: "the figure emitted under `completeness_certified` is the row of `completeness_report` for the route in force."
+      outcome: "a downward-rounded figure is inadmissible on every route; there is no reduced form of the completeness claim."
+      locator: "req:completeness-report; rem:epsstar; rem:completeness-on-rules"
+
+# ---------------------------------------------------------------------------
+# artifact_bindings
+# ---------------------------------------------------------------------------
+artifact_bindings:
+  mathematical_spec_version: "statistics@0.10.0"
+  version_note: >-
+    The core's value. A submodule's claims are inside its core's contract and
+    it emits no artefact of its own, so any pin is the core's; where a run
+    records the version it consumed is `../interface.yaml`,
+    `artifact_bindings.version_note`.
+  package: null
+  package_note: >-
+    No package binding of its own. The code is inside
+    `src/certiqs_key/statistics/`: the rules and their evaluations are modules
+    of that package, and the machine keys and parameter names above are
+    binding for them. A rule is removable: deleting the Bernstein group's
+    claims and its evaluation removes one value of `endpoint_rule`, one row
+    of `rule_table`, one block of `evaluation_parameters` and two rows of
+    `completeness_report`; deleting the enclosure group removes one value of
+    `tail_evaluation`, the `search_procedure` block, the core's
+    `endpoint_exact` output row and two rows of `completeness_report`. Either
+    deletion also edits every remaining claim that uses or mentions a deleted
+    one, the clauses that enumerate the rules (def:endpoint-rule (viii),
+    req:rule-in-force) among them; `python -m harness.check_claims` after the
+    deletion names them.
+
+# ---------------------------------------------------------------------------
+# depends_on_modules
+# ---------------------------------------------------------------------------
+depends_on_modules: []
+depends_on_modules_note: >-
+  As module.yaml declares: no sibling submodule and no foreign module of its
+  own. It inherits the core's list -- which is `reductions`, for the A-TSM
+  ledger row alone -- and uses the core's claims; a core claim never uses one
+  of this submodule's (spec/claim-format.md section 1). The edge that does
+  exist runs the other way and is the sibling's: `singleton` depends on this
+  submodule, its statistics/singleton/rem:singleton-honest reading
+  thm:completeness-bound and thm:monotonicity-limits.
+
+# ---------------------------------------------------------------------------
+# fixed_by_this_file
+#   Every place this file says something no claim of this submodule states.
+# ---------------------------------------------------------------------------
+fixed_by_this_file:
+
+  - row: "search_procedure"
+    what: "the bisection over the index range on the certified predicate, without a seed."
+    why: >-
+      req:search-procedure requires one fixed, total and deterministic
+      procedure with fixed parameters and names this block as the record of
+      it; rem:local-evaluation describes the bisection. Which procedure, in
+      its details, is this file's, and the frozen oracles pin it.
+
+  - row: "evaluation_parameters (every default and every settled value)"
+    what: "the window policy, the root exponent, the precision and the Wallis length, for both routes."
+    why: >-
+      prop:rule-bernstein takes j and s as parameters of the evaluation and
+      fixes no values; rem:local-evaluation leaves the window and the
+      arithmetic to the implementation. No claim fixes a number. Each default
+      is marked a proposal and is sized against a written quantity, and none
+      of them can make an endpoint less conservative.
+
+  - row: "completeness_report (the three rows other than `exact` + `sweep`)"
+    what: "which of the two admissible reports is made on each route other than `exact` + `sweep`."
+    why: >-
+      rem:completeness-on-rules states both reports and proves both
+      admissible; req:completeness-report fixes the report on `exact` +
+      `sweep` (epsilon-star itself, rounded upward and clamped where a tail
+      cannot be evaluated exactly) and requires, on every other route, the
+      report the route's row here names. Neither choice affects the emitted
+      set or soundness.
+
+  - row: "rule_table (the table's existence and its `sa7_i_and_ii_apply` column)"
+    what: "presenting the rules as a table keyed by the request, and stating per row whether thm:monotonicity-limits (i) and (ii) apply."
+    why: >-
+      Every cell is a transcription -- each rule's own proposition says
+      whether it is monotone in the allocation, and thm:monotonicity-limits
+      (i), (ii) state that hypothesis -- but no claim puts the two together,
+      and a consumer reading thm:monotonicity-limits alone would not know
+      which routes it may read it on. The table is this file's, and the
+      `exact` + `enclosure` row is the one it exists for.
+
+  - row: "fail_closed (the three rows and their order)"
+    what: "that this submodule adds no refusal, and the order in which its three steps happen."
+    why: >-
+      No claim states an order or the absence of a refusal. What the claims
+      fix is that the construction is unconditional on the input domain
+      (thm:honest-containment (iii)) and that the guard is applied to the
+      rule's endpoints (def:endpoint-rule, eq:guard); the reading that this
+      leaves no failure mode is this file's.
+
+  - row: "conventions.no_transcendental_dependency"
+    what: "the absence of any transcendental dependency, stated as a convention binding on every implementation of this submodule."
+    why: >-
+      The lemmas prove the enclosures without naming a dependency, and
+      prop:rule-bernstein (i) computes the Bernstein rule by operations on
+      integers and rationals alone; no claim says that no path of the
+      enclosure route calls a library function. The substrate convention
+      beside it restates req:enclosure-substrate.
+
+  - row: "the_guard (the block)"
+    what: "collecting the guard's two costs and its activation regime in one place."
+    why: >-
+      Every sentence is lem:guard's, prop:rule-exact (vi)'s, rem:guard's or
+      rem:guard-activation's. The collection is this file's, because the guard
+      is applied on every route and a reader of `rule_table` needs it beside
+      the table rather than several claims away.

@@ -1,0 +1,96 @@
+% ---
+% id: meat-core/rem:repeated-executions
+% kind: rem
+% title: "One execution's security parameter and a reused key"
+% summary: >-
+%   One execution's parameter covers one run, and separate executions that
+%   share no key add their parameters ([[cor:separate-executions]]). A reused
+%   authentication key enters through ε_auth, charged twice, and the earlier
+%   run's parameter does not bound its distance in general.
+% user_statement: >-
+%   The security parameter ε covers one execution: one run of n rounds and
+%   its post-processing. It is not a per-round or per-bit figure, and it does
+%   not shrink when you repeat the protocol. Several executions are together
+%   secure with the sum of their ε ([[cor:separate-executions]]) under
+%   [[A-SEPARATE]]. The sum does not cover parameters chosen from an earlier
+%   run's data, such as the error-correction budget or the acceptance test.
+%   The conditions of [[A-SEPARATE]] include: (i) their number and parameters
+%   are all fixed before the first starts; (ii) they share no key material
+%   and no device state; (iii) their keys stay unused until the last has
+%   ended. Reusing key from an earlier run to authenticate the next is not
+%   covered either. Such a key enters only through the next run's declared
+%   authentication error ε_auth, counted twice, and the earlier run's ε does
+%   not by itself bound how far that key is from an ideal one.
+% prominence: standard
+% status: accepted
+% uses: [cor:composed-security, cor:separate-executions]
+% mentions: [ass:auth, ass:separate-executions]
+% assumes: []
+% refs:
+%   - "portmann2022security, Sec. II.E"
+%   - "portmann2022security, Sec. II.F"
+%   - "tupkary2025survey, Sec. 2.3, footnote 2"
+%   - "tupkary2025survey, Sec. 2.3, Remark 2.1"
+%   - "tupkary2026decoy, Sec. 3.3, Def. 3.8, Eqs. (11), (17)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:repeated-executions}
+The parameter $\epa+\eev+2\varepsilon_{\mathrm{auth}}$ of
+Corollary~\ref{cor:composed-security}\,(iii) bounds one execution: one run
+of $n$ rounds and its post-processing. It is not a rate per round or per
+bit, and it does not shrink when executions are repeated.
+
+A run whose pre-shared authentication key is not fresh, for instance part of
+the key of an earlier execution, enters through
+Assumption~\ref{ass:auth}\,(iii)--(v). If, before the run starts, the key
+jointly with every other register and the adversary's information is within
+trace distance $\delta$ of the state in which it is replaced by a uniform and
+independent key, then running the scheme, the protocol and any
+distinguisher on it is a channel applied to that joint state, together with
+fresh systems independent of it; a channel does not increase the trace
+distance, so the outputs differ by at most $\delta$ from those on the ideal
+key, and by the triangle inequality the scheme realises the authenticated
+classical channel within $\varepsilon_0+\delta$, where $\varepsilon_0$ is its
+error on an ideal key. The declared $\varepsilon_{\mathrm{auth}}$ includes
+$\delta$, and Corollary~\ref{cor:composed-security}\,(iii) charges it twice,
+$2\delta$ in all. For a key taken from an earlier execution's output, that
+execution's parameter does not bound $\delta$ in general. That parameter is
+a sum over the pairs of key lengths
+\cite[Sec.~3.3, Def.~3.8, Eqs.~(11), (17)]{tupkary2026decoy}: it bounds the
+key's distance from an ideal one where both parties hold a key only
+weighted by the probability of that event, which the adversary controls
+\cite[Sec.~2.3, Remark~2.1]{tupkary2025survey}. Where one party holds a key
+and the other none, as after a blocked final $\mathrm{accept}$ of the
+\tref{authentication post-processing}, the ideal state of that definition
+also leaves one party without a key, so the parameter does not bound the
+probability of that event; there no shared key exists to reuse, and
+$\delta$, the distance of the whole state on which the next run starts,
+conditioned on its starting, counts that event where the next run starts
+on it, and otherwise enters $\delta$ through the conditioning on its
+start, which the adversary influences.
+
+For executions that share no key material and no device state, and whose
+keys stay unused until the last of them has reached its
+\tref{end of an execution} (Assumption~\ref{ass:separate-executions}), the
+parameters add:
+Corollary~\ref{cor:separate-executions} bounds $N$ such executions, run
+against one adversary in any order, by
+$\varepsilon_1+\dots+\varepsilon_N$ for the joint ideal map, which is what
+composition gives for constructive statements
+\cite[Sec.~II.E]{portmann2022security}. Not covered are a key used before
+the last execution has ended, since the ideal map applied at the end would
+then replace a key whose use the adversary has already seen; parameters
+chosen from an earlier execution's data, which would make each
+$\varepsilon_i$ depend on the attack; and a chain in which a key of one
+execution authenticates the next. For such a chain the hybrid would have
+to replace a key by an ideal one at a moment both parties have ended the
+earlier execution, which the authentication post-processing does not
+provide, and the earlier parameter does not bound $\delta$ (the paragraph
+above). That the literature expects such chains to add
+\cite[Sec.~2.3, footnote~2]{tupkary2025survey} is cited as motivation
+only, and a bound on the failure probability accumulated over every use
+\cite[Sec.~II.F]{portmann2022security} lies outside what this contract
+proves.
+\end{remark}

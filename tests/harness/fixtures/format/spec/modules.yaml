@@ -1,0 +1,7 @@
+cores:
+  - id: core-b
+    title: Core B
+    depends_on: [core-a]
+  - id: core-a
+    title: Core A
+    depends_on: []

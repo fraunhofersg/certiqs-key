@@ -1,0 +1,44 @@
+% ---
+% id: statistics/rem:box-oracle-consumer
+% kind: rem
+% title: "The closed-form box minimum for the consuming engine"
+% summary: >-
+%   Over the canonical box the minimum of a linear functional that the
+%   consuming engine certifies is computable exactly in closed form, with no linear-programming
+%   solve and a dual witness for re-verification. A linear minimisation oracle
+%   over the box can be implemented as a sort plus a prefix sum.
+% prominence: standard
+% status: accepted
+% uses: [thm:box-oracle]
+% mentions: [meat-core/frank-wolfe/rem:acc-side, foundations/req:rounding-direction, foundations/req:consumer-decides-exactly]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:box-oracle-consumer}
+\xref{meat-core/frank-wolfe/rem:acc-side} lets the certificate consume, in
+place of the pairing with a point attaining the minimum, a number $\bacc$
+with
+\begin{equation}\label{eq:bacc-shape}
+  \bacc\ \le\ \min_{\mathbf{q}\in\acSet}\ \sum_{\hat c\in\Chacc}g(\hat c)\,
+  q(\hat c)
+\end{equation}
+for a given exact $g$, and for a polytope it computes the minimum by a
+linear program solved exactly over the rationals. For the representation
+this module emits the minimum is computable in closed form, exactly, by
+\eqref{eq:greedy}: no dual search and no linear-programming solve is needed,
+and the dual witness of Theorem~\ref{thm:box-oracle}\,(iii) is available for
+independent re-verification in exactly the shape that remark's
+instantiation~(b) expects. Two consequences follow. First, the acceptance-side
+minimisation is not a source of numerical error for this geometry: besides the
+consumer's outward rounding of the box bounds when it reads the set
+(\xref{foundations/req:consumer-decides-exactly}), which leaves a non-empty
+canonical box containing the emitted one, to which
+Theorem~\ref{thm:box-oracle} applies again, the only rounding is the final
+downward evaluation of a rational number, which keeps a lower bound a lower
+bound (\xref{foundations/req:rounding-direction}). Second,
+a consumer's linear minimisation oracle over $\acSet$ may be implemented as a
+sort plus a prefix sum.
+\end{remark}

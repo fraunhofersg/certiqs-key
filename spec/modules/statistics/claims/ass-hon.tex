@@ -1,0 +1,43 @@
+% ---
+% id: statistics/ass:hon
+% kind: ass
+% title: "Honest i.i.d. rounds"
+% summary: >-
+%   On an honest run the acceptance statistics are independent and identically
+%   distributed with the declared law. The premise bears on the advertised
+%   honest abort probability and restricts no adversary.
+% prominence: standard
+% status: implemented
+% uses: []
+% mentions: [ass:hon-env]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-HON
+% verification: never
+% category: honest-model
+% affects: [completeness]
+% refines: A-HON-ENV
+% user_statement: >-
+%   Without an eavesdropper, every round's acceptance outcome is drawn
+%   independently from the same declared distribution. If you expect drift
+%   between or within runs, declare an honest envelope instead. This premise
+%   only bears on the advertised probability that an honest run aborts: if it
+%   fails, an honest run may abort more or less often than advertised. Security
+%   is unaffected.
+% implements: certiqs_key.statistics.construction:HONEST_MODEL_TAG
+% lean:
+% ---
+
+The premise fixes one honest law for every round and narrows
+Assumption~\ref{ass:hon-env} to the \tref{degenerate envelope} of that law. It
+is asserted about the honest channel only, never against an adversary.
+Physically it says that the honest channel acts identically and independently
+in every round and that there is no memory across rounds: the sameness and
+the no-memory clause of a \tref{round-homogeneous} family, asserted of the
+honest channel.
+
+\begin{assumption}\label{ass:hon}
+(i) On an honest run the acceptance statistics $\Chat_1,\dots,\Chat_n$ are
+independent and identically distributed with law $\honest$ on $\Chatset$.
+\end{assumption}

@@ -1,0 +1,60 @@
+% ---
+% id: receiver/detector-imperfections/def:normalized-station
+% kind: def
+% title: "Normalized station and factored loss"
+% summary: >-
+%   A normalized station at factor t divides every detector efficiency of a
+%   probe-free receiver by t, for t between the largest efficiency and one;
+%   t is the factored loss. Its port Grams are those of the receiver divided
+%   by t.
+% prominence: standard
+% status: implemented
+% uses: [receiver/def:instrument, receiver/def:gram, receiver/def:compile, receiver/thm:representation-independence, receiver/prop:mode-algebra, thm:efficiency]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.request:normalized_station
+% lean:
+% ---
+
+The efficiencies enter a receiver's port Grams as one scalar per port
+(Theorem~\ref{thm:efficiency}\,(i)), on each of the three input routes: as
+the \tref{terminal detector-efficiency layer} of an \tref{instrument matrix}, or as
+the scalars a declared Gram family is multiplied by. The definition divides
+those scalars by a common factor and keeps everything else.
+
+\begin{definition}\label{def:normalized-station}
+Let $\Recv$ be a \tref{receiver instrument} without
+\tref{declared source modes}, $\InpS=\varnothing$, with $K$ ports, whose
+\tref[port Gram matrices]{port Grams} are
+\begin{equation}\label{eq:efficiencygrams}
+  A_k=\eta_k\,A^{\circ}_k,\qquad k=1,\dots,K,
+\end{equation}
+for an \tref{admissible Gram family} $\{A^{\circ}_k\}$ on
+$\mathbb{C}^{\InpC}$ and efficiencies $\eta_k\in[0,1]$ with
+$\eta_{\max}\coloneqq\max_k\eta_k>0$. This is the case for an instrument
+matrix $D_\eta\Gmat_0$, $\Gmat_0$ a contraction, with $A^{\circ}_k$ the port
+Grams of $\Gmat_0$ (Theorem~\ref{thm:efficiency}\,(i)), and for a declared
+Gram family $\{A^{\circ}_k\}$ with declared efficiencies. For
+$t\in[\eta_{\max},1]$, a
+\term[A receiver instrument with the same channel modes and ports whose port Grams are those of the receiver divided by the factored loss t.]{normalized station}
+of $\Recv$ at the
+\term[The factor t, between the largest declared efficiency and one, by which a normalized station divides every efficiency.]{factored loss}
+$t$ is a receiver instrument $\Recv'$ without declared source modes, with the
+channel modes and the $K$ ports of $\Recv$, whose port Grams are
+\begin{equation}\label{eq:normalizedgrams}
+  A'_k=\frac{\eta_k}{t}\,A^{\circ}_k ,\qquad\text{so that}\qquad A_k=t\,A'_k .
+\end{equation}
+One exists: $\eta_k/t\in[0,1]$, so $0\preceq A'_k\preceq A^{\circ}_k$ and
+$\sum_kA'_k\preceq\sum_kA^{\circ}_k\preceq\id$, and an admissible family is
+the port-Gram family of some receiver instrument
+(Theorem~\ref{thm:representation-independence}\,(ii)); for the instrument
+matrix $D_\eta\Gmat_0$ one is $D_{\eta/t}\Gmat_0$, a product of two
+contractions (Proposition~\ref{prop:mode-algebra}\,(ii)), with
+$D_{\eta/t}$ the terminal layer of Definition~\ref{def:compile} at the
+efficiencies $\eta_k/t$. Its click-pattern POVM depends on the port Grams
+alone (Theorem~\ref{thm:representation-independence}\,(i)), so it is one
+POVM for every choice. The choice $t=\eta_{\max}$ is the \emph{full}
+normalization, at which the largest efficiency becomes one, and $t=1$ gives
+$\Recv'$ the port Grams of $\Recv$.
+\end{definition}

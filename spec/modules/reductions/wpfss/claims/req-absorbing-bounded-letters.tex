@@ -1,0 +1,31 @@
+% ---
+% id: reductions/wpfss/req:absorbing-bounded-letters
+% kind: req
+% title: "Absorbing bounded letters as an input validity condition"
+% summary: >-
+%   Every bounded letter of the slot must be absorbing under the descended
+%   dark-count matrix, decided exactly on input. A declaration with one
+%   non-absorbing letter is refused as a whole; no entry's weight is zeroed
+%   in its place.
+% prominence: standard
+% status: accepted
+% uses: [rem:absorbneeded, prop:route]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Without \eqref{eq:absorbing} the routed bound \eqref{eq:routebound} is no
+longer proved and fails in general, in the unsafe direction
+(Remark~\ref{rem:absorbneeded}), and no bound is stated for a letter that
+fails it.
+
+\begin{requirement}\label{req:absorbing-bounded-letters}
+The engine takes \eqref{eq:absorbing} as a declared input validity condition:
+it decides $R^{\cg}_{y_i|y_i}=1$ exactly at every bounded letter $y_i$ of the
+slot, and refuses a declaration in which some bounded letter fails it, with
+the reason \iface{bounded_letter_not_absorbing}. The refusal is of the whole
+artifact: the failing entry's weight is not set to zero and the rest kept.
+\end{requirement}

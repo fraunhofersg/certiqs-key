@@ -1,0 +1,29 @@
+% ---
+% id: meat-core/def:keyactive
+% kind: def
+% title: "Key-active index set"
+% summary: >-
+%   The key-active index set of an acceptance value holds the sectors that are
+%   not key-inert with it. Restricting the deficit sum to it leaves the
+%   objective exactly equal, not bounded, and removes no state variable.
+% prominence: standard
+% status: implemented
+% uses: [prop:exact-cancellation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.branch:key_live_values
+% lean:
+% ---
+
+\begin{definition}\label{def:keyactive}
+The
+\term[The set of sectors that are not key-inert with a given acceptance value.]{key-active index set}
+of $\hat c$ is
+$\SecSet_{K}(\hat c)\coloneqq\{s\in\SecSet:(\hat c,s)\text{ is not
+key-inert}\}$. By Proposition~\ref{prop:exact-cancellation},
+$K_{\hat c}(\omega)=P_{\hat c}(\omega)
++\sum_{s\in\SecSet_{K}(\hat c)}f_{\hat c,s}(\omega_s)$ for block-diagonal
+$\omega$; the objective computed with the sum restricted to
+$\SecSet_K(\hat c)$ is \emph{exactly equal} to the full sum, not a bound.
+\end{definition}

@@ -1,0 +1,44 @@
+% ---
+% id: meat-core/frank-wolfe/rem:fo-oracle-repair
+% kind: rem
+% title: "A repaired oracle return as a step of the search"
+% summary: >-
+%   Repairs are permitted on computed objects and never on declared data. A
+%   repaired oracle return feeds only the search and a recorded diagnostic,
+%   and its record bounds nothing: a window on the block bounds no error on a
+%   pairing whose gradient can grow without limit.
+% prominence: standard
+% status: accepted
+% uses: [thm:firstorder, meat-core/cor:full-gradient, meat-core/prop:value-range]
+% mentions: [meat-core/req:exact-admission, req:oracle-repair, rem:fo-iterate-repair, req:verified-feasible-side]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:fo-oracle-repair}
+This remark and Remark~\ref{rem:fo-iterate-repair} concern two positivity
+repairs, on two different objects. Both are on objects this module
+computed, so both are permitted where no repair of \tref{declared data}
+ever is (contrast Requirement~\ref{req:exact-admission}: declared data is
+exactly admissible or refused, and this module repairs none of it). The
+first, on an \emph{oracle return}, touches only the search; the second, on
+a \emph{formed iterate}, is a construction step that makes a hypothesis of
+Theorem~\ref{thm:firstorder} hold by construction.
+
+\emph{On an oracle return: a step of the search.} A backend may return a
+block whose spectrum is slightly negative, and
+Requirement~\ref{req:oracle-repair} lets the engine reject the return or
+project the block within a window of its own. The repaired return is a
+direction for the search and the point of the recorded diagnostic pairing;
+no bracket of $\hlb$ reads it, the feasible side of every bracket being a
+lower bound formed from the backend's multipliers
+(Requirement~\ref{req:verified-feasible-side}), so the repair needs no
+account in any claim of this module. Nor could its record supply one: a
+declared window bounds $\|S_t^{+}-S_t\|$, but converting that into an error
+on $\langle\lmoJ_t,S_t\rangle$ needs a bound on $\|\lmoJ_t\|$, and
+\eqref{eq:grad-q}--\eqref{eq:grad-J} carry the ratios $q/P^{J}_{\hat c}$
+and $q/K^{J}_{\hat c}$, which Proposition~\ref{prop:value-range}\,(iii)
+exhibits declarations driving up without limit.
+\end{remark}

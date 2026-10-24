@@ -1,0 +1,20 @@
+% ---
+% id: core-a/req:refuse
+% kind: req
+% title: Refusal of an object with a negative coordinate
+% summary: The engine refuses a declared object whose second coordinate is negative.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [thm:bound]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}\label{req:refuse}
+The engine refuses a declared \tref{base object} with $y < 0$ with the refusal
+\iface{negative_second_coordinate}, since Theorem~\ref{thm:bound} does not
+apply to it.
+\end{requirement}

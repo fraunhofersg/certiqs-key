@@ -1,0 +1,47 @@
+id: domination
+kind: submodule
+version: 0.4.0
+title: "Domination links"
+abstract: >-
+  This submodule relates two measurement families not by the size of their
+  difference but by domination: one family dominates the other at one weight
+  per sector. Its main result, [[thm:noise-channel]], derives from the
+  branching calculus that the dominating family is then a noise channel
+  followed by the dominated one together with classical flags, the channel
+  keeping each sector with probability one minus its weight. That relation
+  is a typed link of its own, the domination link, placed on the target
+  system after a squashing link, and a squashing link followed by it is an
+  exact chain whose security transfers with the same ε ([[cor:dom-chain]]).
+  No requirement of the engine uses these claims: a snapped measurement is
+  not related to its model by domination, and a run evaluates its key length
+  on the model instead where it holds one. They are kept for a declared
+  device weight (A-DOM), and the remark on rotated projective elements says
+  why an idealised model needs its noise floor before it dominates a lattice
+  family at a small weight.
+depends_on: []   # no claim of the submodule reads a sibling
+reading_groups:
+- title: The domination link and its noise channel
+  start: def:domination-link
+  abstract: >-
+    A domination link runs from a finite target family to a family it
+    dominates at one weight per sector, its flags prepared into sectors added
+    for the purpose or into indicator sectors the target already has. The
+    main result, [[thm:noise-channel]], derives its channel from the
+    generalized instrument that keeps or flags each sector and from the
+    common-target rule. The closing remark says why a rotated projective
+    element dominates no lattice element, so that a model needs its noise
+    floor before domination can relate a lattice family to it at a small
+    weight.
+- title: Domination in a reduction chain
+  start: cor:dom-chain
+  abstract: >-
+    A squashing link at an exact datum followed by the domination link to
+    another datum it dominates is an exact chain, so security transfers
+    through it with the same ε and every entry is decided on the composite
+    pull-back ([[cor:dom-chain]]). No requirement emits such a chain; it is
+    the relation a declared device weight would use.
+order:
+  - def:domination-link
+  - thm:noise-channel
+  - rem:rotated-projective
+  - cor:dom-chain

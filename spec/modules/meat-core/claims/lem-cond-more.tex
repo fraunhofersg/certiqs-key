@@ -1,0 +1,37 @@
+% ---
+% id: meat-core/lem:cond-more
+% kind: lem
+% title: "Conditioning on more side information"
+% summary: >-
+%   The sandwiched conditional Rényi entropy cannot increase when the
+%   conditioning system grows, by data processing under the partial trace. The
+%   conservative steps that hand the adversary extra information rest on it.
+% prominence: technical
+% status: accepted
+% uses: []
+% assumes: []
+% refs:
+%   - "tomamichel2016finite, Thm. 4.1, Eq. (4.82)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{lemma}\label{lem:cond-more}
+For $\alpha\in(1,\infty)$ and any $\rho_{ABC}\in\Seq{ABC}$:
+$\Hsandup(A|BC)_{\rho}\le\Hsandup(A|B)_{\rho}$.
+\end{lemma}
+
+\begin{proof}
+For any $\sigma_{BC}\in\Seq{BC}$, data processing for the sandwiched
+divergence under the channel $\tr_C$
+(\cite[Thm.~4.1, Eq.~(4.82)]{tomamichel2016finite}; $\alpha>1\ge\frac12$)
+gives
+$\Dsand(\rho_{ABC}\|\idon{A}\otimes\sigma_{BC})
+\ge\Dsand(\rho_{AB}\|\idon{A}\otimes\sigma_{B})$. Taking $-\inf$ over
+$\sigma_{BC}$ on the left and noting that every $\sigma_B$ arises as a
+marginal on the right,
+$\Hsandup(A|BC)_{\rho}
+=-\inf_{\sigma_{BC}}\Dsand(\rho_{ABC}\|\idon{A}\otimes\sigma_{BC})
+\le-\inf_{\sigma_{B}}\Dsand(\rho_{AB}\|\idon{A}\otimes\sigma_{B})
+=\Hsandup(A|B)_{\rho}$.
+\end{proof}

@@ -1,0 +1,28 @@
+% ---
+% id: receiver/detector-imperfections/req:efficiency-convention
+% kind: req
+% title: "Declared efficiency convention of the port Grams"
+% summary: >-
+%   Whether the declared Grams come from power data or from click data is a
+%   declared field, written down in the efficiency record. The numbers alone
+%   cannot say which, and the two readings differ by exactly the efficiencies.
+% prominence: standard
+% status: accepted
+% uses: [rem:powervsclick]
+% mentions: [thm:efficiency, req:efficiency-record]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Power data return the \tref[port Gram matrices]{port Grams} $A_k$ and click data return $\eta_kA_k$
+(Remark~\ref{rem:powervsclick}); the efficiencies must enter through
+\eqref{eq:etagram} exactly once.
+
+\begin{requirement}\label{req:efficiency-convention}
+Which of the two conventions a declaration means, Grams from power data
+rescaled by $\eta_k$ or Grams from click data with every $\eta_k$ declared as
+$1$, is a declared field, and the \iface{efficiency_record}
+(Requirement~\ref{req:efficiency-record}) is where the answer is written down.
+\end{requirement}

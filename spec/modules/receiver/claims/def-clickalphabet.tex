@@ -1,0 +1,33 @@
+% ---
+% id: receiver/def:clickalphabet
+% kind: def
+% title: "Click-pattern alphabet"
+% summary: >-
+%   A raw outcome is the set of detector ports that click, and the raw
+%   alphabet splits into the no-click outcome, the single-click set and the
+%   multiclick set. Any merging into a protocol's alphabet comes later.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+At $K=4$ the sets defined here are the raw, single-click and multiclick sets
+of the optical-profile notation
+(\repodoc{spec/notation.md#37-optical-profile-symbols}).
+
+\begin{definition}\label{def:clickalphabet}
+An \term[The set of detector ports that click in one round.]{outcome} is the set $S\subseteq[K]$ of ports that click; the
+\term[The set of all outcomes, the subsets of the K ports.]{raw alphabet} is $2^{[K]}$, in bijection with $\{0,1\}^{K}$ by indicator
+vectors. We write
+\begin{equation}\label{eq:mcsc}
+  \SCK\coloneqq\big\{\{k\}:k\in[K]\big\},\qquad
+  \MCK\coloneqq\big\{S\subseteq[K]:|S|\ge2\big\}
+\end{equation}
+for the \term[The outcomes in which exactly one port clicks.]{single-click set} and the \term[The outcomes in which at least two ports click.]{multiclick set}, so that
+$2^{[K]}=\{\varnothing\}\sqcup\SCK\sqcup\MCK$, and $\varnothing$ is the
+\term[The outcome in which no port clicks.]{no-click outcome}.
+\end{definition}

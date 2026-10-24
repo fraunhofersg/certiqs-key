@@ -1,0 +1,26 @@
+% ---
+% id: transmitter/decoy/req:decoy-ensemble-conditions
+% kind: req
+% title: "Positivity and weight sums of the emitted blocks"
+% summary: >-
+%   The engine decides on the declared blocks that each is positive
+%   semidefinite and that a letter's block traces sum to its weight, the weights
+%   to one. It refuses a declaration in which either fails.
+% prominence: standard
+% status: implemented
+% uses: [cor:emitted-decoy, transmitter/def:srcert]
+% mentions: [req:exact-decoy-blocks]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.decoy.emit:emit_decoy_declaration
+% lean:
+% ---
+
+\begin{requirement}\label{req:decoy-ensemble-conditions}
+The engine decides (E1) and (E2) of Definition~\ref{def:srcert} on the declared
+blocks of a decoy declaration, as it decides (E3)
+(Requirement~\ref{req:exact-decoy-blocks}). It refuses, with no artefact, a
+declared block failing (E1) or a weight sum failing (E2)
+(\iface{ensemble_presentation_not_admissible}).
+\end{requirement}

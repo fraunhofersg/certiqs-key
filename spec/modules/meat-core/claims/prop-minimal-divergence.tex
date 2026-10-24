@@ -1,0 +1,215 @@
+% ---
+% id: meat-core/prop:minimal-divergence
+% kind: prop
+% title: "The minimal divergence as the value with every pair dropped"
+% summary: >-
+%   Dropping every pair leaves α/(α−1) times the minimal divergence between
+%   accepted distributions and feasible statistics, and h_low lies between
+%   that and it plus log₂(d_Z+1) times the key-live mass. A positive lower
+%   bound proves that no feasible state has accepted statistics.
+% user_statement: >-
+%   The key-rate program charges a penalty whenever the accepted statistics
+%   differ from the per-round statistics of every state the declared devices
+%   admit. This result isolates that penalty. If some such state has
+%   statistics the acceptance test accepts, the program's value is at most
+%   the entropy ceiling, log₂(d_Z+1) times the largest key-live probability
+%   an accepted distribution gives. If none has, the value has a floor that
+%   grows without limit as the Rényi order approaches one, so a key length
+%   can grow with the mismatch rather than with the secrecy of the key. A
+%   positive lower bound on the penalty-only program, which the engine
+%   computes with its usual solver, proves that no such state has accepted
+%   per-round statistics. It does not prove that a finite run of those
+%   devices fails the test: its frequencies can still fall in the
+%   acceptance set.
+% prominence: standard
+% status: implemented
+% uses: [def:dropped, prop:drop-bound, cor:drop-program, prop:value-range, def:feasible, def:maps, def:joint-sectors, def:admissible-declaration, def:admissible-acceptance-set, foundations/def:kl]
+% mentions: [rem:hlow-range]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.consistency:proven_floor
+% lean:
+% notes: "Part (iv) gives the lower bound on D_min that the check of the acceptance set turns into the cap of prop:model-pass-bound, on which it refuses; parts (iii) and (iv) are statements about the declaration and the acceptance set alone, and say nothing about how the accepted statistics were obtained. Where the acceptance set is built from an honest envelope, its reading against statistics/ass:reach is statistics/binomial-box/rem:hlow-consequence, which meat-core cannot use."
+% ---
+
+The \tref{objective} is a divergence penalty plus one entropy term per
+\tref{key-live acceptance value}, and only the entropy terms are bounded
+(Proposition~\ref{prop:value-range}); an infinite value is the extreme case
+(Remark~\ref{rem:hlow-range}). Dropping every pair removes the entropy terms
+altogether, so the dropped program then measures the penalty alone: how far
+the accepted distributions lie from the statistics of the feasible set.
+
+\begin{proposition}\label{prop:minimal-divergence}
+Let $\Decl$ satisfy Definition~\ref{def:admissible-declaration} in the
+general format, in either source mode and with an arbitrary list $\CList$,
+let $\acSet$ satisfy Definition~\ref{def:admissible-acceptance-set}, and let
+$\alpha\in(1,\infty)$. Let
+$\mathcal{D}_{\mathrm{all}}\coloneqq\Chkey\times(\mathbb{T}\times\SecSet)$
+be the dropped set of every pair (Definition~\ref{def:dropped}), and put
+\begin{equation}\label{eq:dmin}
+  \sfD_{\min}\coloneqq\inf_{\mathbf q\in\acSet}\ \inf_{\omega\in\Feas}\
+  \sfD\big(\mathbf q\,\big\|\,\Phimap[\omega]\big)\in[0,+\infty],
+  \qquad
+  m_{\mathrm{key}}\coloneqq\sup_{\mathbf q\in\acSet}\
+  \sum_{\hat c\in\Chkey}q(\hat c)\in[0,1],
+\end{equation}
+with $\inf\varnothing=+\infty$ and $\sup\varnothing=0$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(The value with every pair dropped.)} For every distribution
+  $\mathbf q$ on $\Chatset$ and every $\omega\in\Feas$,
+  $O^{\mathcal{D}_{\mathrm{all}}}_{\alpha}(\mathbf q,\omega)
+  =\frac{\alpha}{\alpha-1}\,\sfD(\mathbf q\|\Phimap[\omega])$; hence
+  $\underline{h}^{\mathcal{D}_{\mathrm{all}}}_{\alpha}
+  =\frac{\alpha}{\alpha-1}\,\sfD_{\min}$.
+\item \emph{(The value between its floor and its ceiling.)}
+  \begin{equation}\label{eq:dmin-sandwich}
+    \frac{\alpha}{\alpha-1}\,\sfD_{\min}\;\le\;\hlow\;\le\;
+    \frac{\alpha}{\alpha-1}\,\sfD_{\min}+\log_2(d_Z+1)\,m_{\mathrm{key}} .
+  \end{equation}
+\item \emph{(When the floor is positive.)} $\sfD_{\min}=0$ if and only if
+  $\mathbf q=\Phimap[\omega]$ for some $\mathbf q\in\acSet$ and some
+  $\omega\in\Feas$. Equivalently, $\sfD_{\min}>0$ if and only if no
+  distribution of $\acSet$ is the statistics $\Phimap[\omega]$ of a state
+  $\omega\in\Feas$.
+\item \emph{(Bounds at one order serve every order.)} Let $b$ be a real
+  number with $b\le\underline{h}^{\mathcal{D}_{\mathrm{all}}}_{\alpha}$, and
+  let $(\mathbf q,\omega)\in\acSet\times\Feas$. Then
+  \begin{equation}\label{eq:dmin-bracket}
+    \frac{\alpha-1}{\alpha}\,b\;\le\;\sfD_{\min}\;\le\;
+    \frac{\alpha-1}{\alpha}\,
+    O^{\mathcal{D}_{\mathrm{all}}}_{\alpha}(\mathbf q,\omega),
+  \end{equation}
+  and for every $\alpha'\in(1,\infty)$ the value $\underline{h}_{\alpha'}$
+  of \eqref{eq:hlow-def} at the order $\alpha'$ satisfies
+  $\underline{h}_{\alpha'}\ge\frac{\alpha'}{\alpha'-1}\cdot
+  \frac{\alpha-1}{\alpha}\,b$. If $b>0$, then $\sfD_{\min}>0$, and no
+  distribution of $\acSet$ is the statistics of a state of $\Feas$.
+  For every $\alpha'\ge\alpha$,
+  \begin{equation}\label{eq:dmin-ceiling}
+    \frac{\alpha'}{\alpha'-1}\,\sfD_{\min}\;\le\;
+    \frac{\alpha'}{\alpha'-1}\cdot\frac{\alpha-1}{\alpha}\,
+    O^{\mathcal{D}_{\mathrm{all}}}_{\alpha}(\mathbf q,\omega)\;\le\;
+    O^{\mathcal{D}_{\mathrm{all}}}_{\alpha}(\mathbf q,\omega),
+  \end{equation}
+  so that $\underline{h}_{\alpha'}\le
+  \frac{\alpha'}{\alpha'-1}\cdot\frac{\alpha-1}{\alpha}\,
+  O^{\mathcal{D}_{\mathrm{all}}}_{\alpha}(\mathbf q,\omega)
+  +\log_2(d_Z+1)\,m_{\mathrm{key}}$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\emph{Idea.} With every pair dropped, $K$ equals $P$ and the two prefactors
+of a key-live term add up to that of the other terms, so the objective is
+the scaled divergence. The entropy terms are non-negative and each at most
+$\log_2(d_Z+1)$, which places $\hlow$ between the scaled minimal divergence
+and that plus the entropy ceiling. A divergence vanishes only between equal
+distributions, and the minimum is attained.
+
+Throughout, $\omega\in\Feas$ has $\tr\omega=1$ (Definition~\ref{def:feasible}),
+so $\Phimap[\omega]$ of \eqref{eq:Phimap} is a probability distribution on
+$\Chatset$ whose entry at $\hat c$ is $P_{\hat c}(\omega)$, as in the proof of
+Proposition~\ref{prop:drop-bound}\,(ii).
+
+\emph{(i).} Every pair of $\Chkey\times(\mathbb{T}\times\SecSet)$ lies in
+$\mathcal{D}_{\mathrm{all}}$, so the sum in \eqref{eq:KD} is empty and
+$K^{\mathcal{D}_{\mathrm{all}}}_{\hat c}(\omega)=P_{\hat c}(\omega)$ for every
+$\hat c\in\Chkey$. Fix $\hat c$ and write $q=q(\hat c)$, $P=P_{\hat c}(\omega)$.
+For $\hat c\notin\Chkey$ the term of \eqref{eq:objective} is
+$\frac{\alpha}{\alpha-1}q\log_2\frac qP$. For $\hat c\in\Chkey$, with $K$
+replaced by $P$, it is $q\log_2\frac qP+\frac{q}{\alpha-1}\log_2\frac qP$:
+if $q=0$ both summands are $0$ by the convention
+$0\log_2\frac0v=0$ of \xref{foundations/def:kl}, as is
+$\frac{\alpha}{\alpha-1}q\log_2\frac qP$; if $q>0$ and $P=0$ both are
+$+\infty$, as is $\frac{\alpha}{\alpha-1}q\log_2\frac qP$; if $q,P>0$ they
+add up to $\big(1+\frac{1}{\alpha-1}\big)q\log_2\frac qP
+=\frac{\alpha}{\alpha-1}q\log_2\frac qP$. Summing over $\hat c\in\Chatset$
+gives $O^{\mathcal{D}_{\mathrm{all}}}_{\alpha}(\mathbf q,\omega)
+=\frac{\alpha}{\alpha-1}\sum_{\hat c}q(\hat c)\log_2
+\frac{q(\hat c)}{P_{\hat c}(\omega)}
+=\frac{\alpha}{\alpha-1}\sfD(\mathbf q\|\Phimap[\omega])$ in the extended-real
+sense. Taking the infimum over $\acSet\times\Feas$ in \eqref{eq:hlowD}, with
+the positive factor $\frac{\alpha}{\alpha-1}$ taken out (and
+$\frac{\alpha}{\alpha-1}\cdot(+\infty)=+\infty$), gives
+$\underline{h}^{\mathcal{D}_{\mathrm{all}}}_{\alpha}
+=\frac{\alpha}{\alpha-1}\sfD_{\min}$.
+
+\emph{(ii), the lower inequality.} By
+Proposition~\ref{prop:drop-bound}\,(iii),
+$\underline{h}^{\mathcal{D}_{\mathrm{all}}}_{\alpha}\le\hlow$, and by (i) the
+left-hand side is $\frac{\alpha}{\alpha-1}\sfD_{\min}$.
+
+\emph{(ii), the upper inequality.} If $\sfD_{\min}=+\infty$ the right-hand
+side is $+\infty$. Otherwise let $(\mathbf q,\omega)\in\acSet\times\Feas$ with
+$\sfD(\mathbf q\|\Phimap[\omega])<+\infty$; then $q(\hat c)>0$ implies
+$P_{\hat c}(\omega)>0$. For $\hat c\in\Chkey$ with $q(\hat c)>0$ let
+$e_{\hat c}(\omega)\coloneqq\frac{1}{1-\alpha}\log_2
+\frac{K_{\hat c}(\omega)}{P_{\hat c}(\omega)}$; by
+Proposition~\ref{prop:value-range}\,(ii), $P_{\hat c}(\omega)>0$ gives
+$e_{\hat c}(\omega)\le\log_2(d_Z+1)$, so $e_{\hat c}(\omega)$ is a real
+number and $K_{\hat c}(\omega)>0$. For such $\hat c$, with $q=q(\hat c)$,
+$P=P_{\hat c}(\omega)$, $K=K_{\hat c}(\omega)$, the term of
+\eqref{eq:objective} is
+$q\log_2\frac qP+\frac{q}{\alpha-1}\big(\log_2\frac qP+\log_2\frac PK\big)
+=\frac{\alpha}{\alpha-1}q\log_2\frac qP+q\,e_{\hat c}(\omega)$; for
+$\hat c\in\Chkey$ with $q(\hat c)=0$ the term is $0
+=\frac{\alpha}{\alpha-1}q(\hat c)\log_2\frac{q(\hat c)}{P_{\hat c}(\omega)}$.
+Summing,
+\begin{equation*}
+  O_{\alpha}(\mathbf q,\omega)
+  =\frac{\alpha}{\alpha-1}\sfD(\mathbf q\|\Phimap[\omega])
+  +\sum_{\hat c\in\Chkey:\,q(\hat c)>0}q(\hat c)\,e_{\hat c}(\omega)
+  \le\frac{\alpha}{\alpha-1}\sfD(\mathbf q\|\Phimap[\omega])
+  +\log_2(d_Z+1)\,m_{\mathrm{key}} ,
+\end{equation*}
+using $\sum_{\hat c\in\Chkey}q(\hat c)\le m_{\mathrm{key}}$. For every
+$\varepsilon>0$ there is such a pair with
+$\sfD(\mathbf q\|\Phimap[\omega])\le\sfD_{\min}+\varepsilon$, so
+$\hlow\le O_{\alpha}(\mathbf q,\omega)\le\frac{\alpha}{\alpha-1}
+(\sfD_{\min}+\varepsilon)+\log_2(d_Z+1)\,m_{\mathrm{key}}$; letting
+$\varepsilon\to0$ gives \eqref{eq:dmin-sandwich}.
+
+\emph{(iii).} If $\mathbf q=\Phimap[\omega]$ with $\mathbf q\in\acSet$ and
+$\omega\in\Feas$, then $\sfD(\mathbf q\|\Phimap[\omega])=0$, and since
+$\sfD_{\min}\ge0$ ($\underline{h}^{\mathcal{D}_{\mathrm{all}}}_{\alpha}\ge0$ by
+Proposition~\ref{prop:drop-bound}\,(iii), and (i)), $\sfD_{\min}=0$.
+Conversely let $\sfD_{\min}=0$. Then
+$\underline{h}^{\mathcal{D}_{\mathrm{all}}}_{\alpha}=0$ by (i) is finite, so by
+Corollary~\ref{cor:drop-program}\,(ii) it is attained at some
+$(\mathbf q,\omega)\in\acSet\times\Feas$, where by (i)
+$\sfD(\mathbf q\|\mathbf p)=0$ with $\mathbf p\coloneqq\Phimap[\omega]$. Let
+$S\coloneqq\{\hat c:q(\hat c)>0\}$. The divergence being finite,
+$p(\hat c)>0$ on $S$, and
+$0=\sfD(\mathbf q\|\mathbf p)=-\sum_{\hat c\in S}q(\hat c)\log_2
+\frac{p(\hat c)}{q(\hat c)}\ge-\log_2\sum_{\hat c\in S}p(\hat c)\ge0$, the
+first inequality by concavity of $\log_2$ (Jensen's inequality for the
+weights $q(\hat c)$, $\hat c\in S$, which sum to $1$), the second because
+$\sum_{\hat c\in S}p(\hat c)\le1$. Both are equalities. The second gives
+$\sum_{\hat c\in S}p(\hat c)=1$, so $p(\hat c)=0$ off $S$. In the first,
+$\log_2$ is strictly concave, so equality forces
+$\frac{p(\hat c)}{q(\hat c)}$ to be one constant $\lambda$ on $S$; summing
+$p(\hat c)=\lambda q(\hat c)$ over $S$ gives $\lambda=1$. Hence
+$\mathbf q=\mathbf p=\Phimap[\omega]$. The second sentence is the
+contrapositive of the first, $\sfD_{\min}$ lying in $[0,+\infty]$.
+
+\emph{(iv).} By (i), $b\le\frac{\alpha}{\alpha-1}\sfD_{\min}$, which is the
+lower inequality of \eqref{eq:dmin-bracket}; by (i) again,
+$\frac{\alpha-1}{\alpha}O^{\mathcal{D}_{\mathrm{all}}}_{\alpha}(\mathbf q,\omega)
+=\sfD(\mathbf q\|\Phimap[\omega])\ge\sfD_{\min}$, the upper one. The lower
+inequality of \eqref{eq:dmin-sandwich} at the order $\alpha'$, whose
+$\sfD_{\min}$ and $\Feas$ do not depend on the order, gives
+$\underline{h}_{\alpha'}\ge\frac{\alpha'}{\alpha'-1}\sfD_{\min}
+\ge\frac{\alpha'}{\alpha'-1}\cdot\frac{\alpha-1}{\alpha}\,b$. If $b>0$, the
+lower inequality of \eqref{eq:dmin-bracket} gives $\sfD_{\min}>0$, and (iii)
+the assertion that follows it. For \eqref{eq:dmin-ceiling}, multiply the upper
+inequality of \eqref{eq:dmin-bracket} by $\frac{\alpha'}{\alpha'-1}>0$; the
+second inequality holds because $t\mapsto\frac{t}{t-1}=1+\frac{1}{t-1}$ is
+decreasing on $(1,\infty)$, so $\frac{\alpha'}{\alpha'-1}\le
+\frac{\alpha}{\alpha-1}$ for $\alpha'\ge\alpha$, and
+$O^{\mathcal{D}_{\mathrm{all}}}_{\alpha}(\mathbf q,\omega)\ge0$
+(Proposition~\ref{prop:drop-bound}\,(ii)). The last bound on
+$\underline{h}_{\alpha'}$ is the upper inequality of
+\eqref{eq:dmin-sandwich} at the order $\alpha'$ with the first inequality of
+\eqref{eq:dmin-ceiling}.
+\end{proof}

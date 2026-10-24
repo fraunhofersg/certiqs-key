@@ -1,0 +1,126 @@
+% ---
+% id: statistics/binomial-box/lem:bernstein-tail
+% kind: lem
+% title: "Bernstein's inequality for a binomial count"
+% summary: >-
+%   Either tail of a binomial (n, p) count at distance t > 0 from np has
+%   probability at most exp(−t²/(2(v + t/3))) with v = np(1 − p), and every t
+%   at least a closed-form root t(L) brings both below e^(−L). The Bernstein
+%   endpoint rule evaluates that root.
+% prominence: technical
+% status: implemented
+% uses: [statistics/def:freq]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.bernstein:bernstein_deviation
+% lean:
+% ---
+
+The lemma is Bernstein's inequality for a sum of independent, bounded,
+centred random variables, specialised to a binomial count and derived in full
+here; its closed-form deviation $t(L)$, the positive root of
+$t^{2}-(2L/3)\,t-2vL=0$, is what the Bernstein endpoint rule evaluates.
+
+\begin{lemma}\label{lem:bernstein-tail}
+Let $\Ncount{}$ be binomial with parameters $(n,p)$, $n\ge1$, $p\in[0,1]$,
+and put $v\coloneqq np(1-p)$. For every real $t>0$,
+\begin{equation}\label{eq:bernstein}
+  \Pr\big[\Ncount{}-np\ge t\big]\ \le\ \exp\Big(-\frac{t^{2}}{2\,(v+t/3)}\Big),
+  \qquad
+  \Pr\big[\Ncount{}-np\le -t\big]\ \le\ \exp\Big(-\frac{t^{2}}{2\,(v+t/3)}\Big).
+\end{equation}
+Consequently, for every real $L>0$ and every
+\begin{equation}\label{eq:bernstein-t}
+  t\ \ge\ t(L)\ \coloneqq\ \frac{L}{3}+\sqrt{\Big(\frac{L}{3}\Big)^{2}+2vL},
+\end{equation}
+both tails in \eqref{eq:bernstein} are at most $e^{-L}$.
+\end{lemma}
+
+\begin{proof}
+\emph{Idea.} The exponential Markov inequality, with the
+moment-generating-function bound $\mathbb{E}[e^{\lambda X}]\le
+\exp\big(\sigma^{2}(e^{\lambda}-1-\lambda)\big)$ for a centred $X\le1$ and the
+estimate $e^{\lambda}-1-\lambda\le\lambda^{2}/(2(1-\lambda/3))$, evaluated at
+$\lambda=t/(v+t/3)$; the deviation $t(L)$ then solves a quadratic.
+
+If $p\in\{0,1\}$ then $\Ncount{}=np$ with probability one, both
+probabilities in \eqref{eq:bernstein} are $0$ for $t>0$, and there is nothing
+to prove. Let $0<p<1$, so $v>0$.
+
+\emph{Step 1 (a moment-generating-function bound).} Let $X$ be a real random
+variable with $\mathbb{E}[X]=0$, $\operatorname{Var}(X)=\sigma^{2}<\infty$ and
+$X\le1$ almost surely, and let $\lambda>0$. Put
+$g(\lambda)\coloneqq e^{\lambda}-1-\lambda$. We claim
+\begin{equation}\label{eq:mgf}
+  \mathbb{E}\big[e^{\lambda X}\big]\ \le\ 1+\sigma^{2}g(\lambda)\ \le\
+  \exp\big(\sigma^{2}g(\lambda)\big).
+\end{equation}
+The second inequality is $1+z\le e^{z}$. For the first, consider
+$\psi(u)\coloneqq(e^{u}-1-u)/u^{2}$ for $u\neq0$, with $\psi(0)\coloneqq1/2$
+(its limit). We show that $\psi$ is non-decreasing on $\mathbb{R}$. For
+$u\neq0$, $\psi'(u)=N(u)/u^{3}$ with
+$N(u)\coloneqq(e^{u}-1)u-2(e^{u}-1-u)=e^{u}(u-2)+u+2$. Now $N(0)=0$,
+$N'(u)=e^{u}(u-1)+1$ with $N'(0)=0$, and $N''(u)=u\,e^{u}$, which has the sign
+of $u$; hence $N'$ decreases on $(-\infty,0]$ and increases on $[0,\infty)$,
+so $N'\ge N'(0)=0$ everywhere, so $N$ is non-decreasing, and with $N(0)=0$
+the sign of $N(u)$ is the sign of $u$. Therefore $\psi'(u)=N(u)/u^{3}\ge0$ for
+every $u\neq0$, and $\psi$ is non-decreasing (continuity at $0$ follows from
+the series $\psi(u)=\sum_{k\ge2}u^{k-2}/k!$). For a real $x\le1$ and
+$\lambda>0$ we have $\lambda x\le\lambda$, hence
+$\psi(\lambda x)\le\psi(\lambda)$, i.e.\ for $x\neq0$
+\begin{equation*}
+  \frac{e^{\lambda x}-1-\lambda x}{\lambda^{2}x^{2}}\ \le\
+  \frac{e^{\lambda}-1-\lambda}{\lambda^{2}},
+  \qquad\text{so}\qquad
+  e^{\lambda x}\ \le\ 1+\lambda x+x^{2}g(\lambda),
+\end{equation*}
+and the last inequality holds at $x=0$ too. Apply it to $X$ pointwise and
+take expectations: $\mathbb{E}[e^{\lambda X}]\le1+\lambda\,\mathbb{E}[X]
++g(\lambda)\,\mathbb{E}[X^{2}]=1+\sigma^{2}g(\lambda)$, which is
+\eqref{eq:mgf}.
+
+\emph{Step 2 (exponential Markov).} Write $\Ncount{}=\sum_{j=1}^{n}\chi_j$ with
+$\chi_j$ independent Bernoulli$(p)$ (Definition~\ref{def:freq}), and
+$X_j\coloneqq\chi_j-p$. Then $\mathbb{E}[X_j]=0$,
+$\operatorname{Var}(X_j)=p(1-p)$, and $X_j\le1-p\le1$. For $\lambda>0$,
+Markov's inequality applied to the non-negative variable
+$e^{\lambda\sum_jX_j}$ and independence give
+\begin{equation*}
+  \Pr\Big[\sum_{j}X_j\ge t\Big]
+  \ \le\ e^{-\lambda t}\,\mathbb{E}\Big[e^{\lambda\sum_jX_j}\Big]
+  \ =\ e^{-\lambda t}\prod_{j=1}^{n}\mathbb{E}\big[e^{\lambda X_j}\big]
+  \ \le\ \exp\big(-\lambda t+v\,g(\lambda)\big),
+\end{equation*}
+by \eqref{eq:mgf} with $\sigma^{2}=p(1-p)$ and $np(1-p)=v$.
+
+\emph{Step 3 (an elementary bound on $g$).} For integers $k\ge2$,
+$k!\ge2\cdot3^{k-2}$ (induction: $2!=2$, and
+$(k+1)!=(k+1)\,k!\ge3\cdot2\cdot3^{k-2}$). Hence for $0<\lambda<3$,
+\begin{equation*}
+  g(\lambda)=\sum_{k\ge2}\frac{\lambda^{k}}{k!}
+  \ \le\ \frac{\lambda^{2}}{2}\sum_{k\ge2}\Big(\frac{\lambda}{3}\Big)^{k-2}
+  \ =\ \frac{\lambda^{2}}{2\,(1-\lambda/3)}.
+\end{equation*}
+
+\emph{Step 4 (the choice of $\lambda$).} Put
+$\lambda\coloneqq t/(v+t/3)$, which lies in $(0,3)$ because $v>0$. Then
+$1-\lambda/3=v/(v+t/3)$, so Step 3 gives
+$g(\lambda)\le\lambda^{2}(v+t/3)/(2v)=t^{2}/\big(2v(v+t/3)\big)$, and the
+exponent of Step 2 is at most
+\begin{equation*}
+  -\lambda t+v\,g(\lambda)
+  \ \le\ -\frac{t^{2}}{v+t/3}+\frac{t^{2}}{2(v+t/3)}
+  \ =\ -\frac{t^{2}}{2(v+t/3)},
+\end{equation*}
+which is the first inequality of \eqref{eq:bernstein}. For the second, apply
+Steps 1--4 to $-X_j=p-\chi_j$, which has the same mean and variance and
+satisfies $-X_j\le p\le1$: $\Pr[\sum_j(-X_j)\ge t]=\Pr[\Ncount{}-np\le-t]$.
+
+\emph{Step 5 (the closed-form deviation).} For $t>0$, the inequality
+$t^{2}/(2(v+t/3))\ge L$ is equivalent to $t^{2}-(2L/3)\,t-2vL\ge0$. The
+quadratic on the left has the two real roots $L/3\pm\sqrt{(L/3)^{2}+2vL}$, of
+which $t(L)$ is the positive one and the other is $\le0$; so the inequality
+holds for every $t\ge t(L)$, and then both bounds in \eqref{eq:bernstein}
+are at most $e^{-L}$.
+\end{proof}

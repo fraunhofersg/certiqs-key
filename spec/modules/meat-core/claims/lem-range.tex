@@ -1,0 +1,179 @@
+% ---
+% id: meat-core/lem:range
+% kind: lem
+% title: "Constraint transport and range inclusion"
+% summary: >-
+%   An admissible attack carries the licensed bounds on its adjoint over to the
+%   constraint conditions on the round's state, so every round output lies in
+%   the constrained target set. A larger output set can only lower the rate,
+%   which is the conservative comparison accumulation needs.
+% prominence: standard
+% status: accepted
+% uses: [def:homog, def:roundmodel, fact:meat, def:hqkd-list]
+% mentions: [rem:homog]
+% assumes: [A-ATK, A-SRC]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{lemma}\label{lem:range}
+Let $\CList$ be licensed (Definition~\ref{def:homog}) or empty, and let
+$\Aev_j$ be $\CList$-admissible for the declared source mode
+(Definition~\ref{def:roundmodel}).
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(Transport.)} \emph{Trusted-source mode:} for every
+$\omega\in\Seq{A\,E_{j-1}\,\Etil}$ with $\omega_A=\tau_A$, the state
+$\varsigma\coloneqq(\idmap_A\otimes\Aev_j\otimes\idmap_{\Etil})(\omega)
+\in\Seq{A\Qsys E'_j\Etil}$ satisfies $\varsigma_A=\tau_A$ and
+$\varsigma_{A\Qsys}\models\CList$.
+\emph{Untrusted-source mode:} for every
+$\omega\in\Seq{E_{j-1}\,\Etil}$, the state
+$\varsigma\coloneqq(\Aev_j\otimes\idmap_{\Etil})(\omega)
+\in\Seq{A\Qsys E'_j\Etil}$ satisfies $\varsigma\models\Decl$ --- which
+in that mode is only $\tr\varsigma=1$ --- and
+$\varsigma_{A\Qsys}\models\CList$ in the scalar form of
+Definition~\ref{def:homog}\,(b). \emph{In either mode}, every entry of
+$\CList$ declared \tref{party-local} holds of $\varsigma_{A\Qsys}$ in
+the form \eqref{eq:partylocal-entry}, the attack being admissible for it in
+the sense of \eqref{eq:attset-pl}.
+\item \emph{(Range inclusion.)} With $\Mprot_j$ the round channel
+\eqref{eq:roundchannel} and $\Sigma_j$ its output set
+\eqref{eq:meat-range},
+$\Sigma_j\subseteq\Sigma^{\CList}(E'_j\Etil)$ up to the regrouping of the
+registers of the output, $(Z\Chat)(E'_jI_j)\Etil\mapsto(Z\Chat I)(E'_j\Etil)$;
+hence, embedding the finitely many $E'_j\Etil$ into a common register
+$\Etil^{*}$ with $\dim\Hs{\Etil^{*}}=\max_j\dim\Hs{E'_j\Etil}$,
+\begin{equation*}
+  \Sigma=\operatorname{conv}\Big(\bigcup_{j}\Sigma_j\Big)
+  \;\subseteq\;\Sigma^{\CList}(\Etil^{*}).
+\end{equation*}
+\item \emph{(Antitonicity.)} If $\Sigma\subseteq\Sigma'$ then the
+value of \eqref{eq:meat-rate} computed over $\Sigma$ is at least its
+value computed over $\Sigma'$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) $\varsigma_A=\omega_A=\tau_A$:
+$\idmap_A\otimes\Aev_j\otimes\idmap_{\Etil}$ is trace-preserving and
+acts trivially on $A$. For the constraints, test against an arbitrary
+$X\in\Lin{A}$:
+\begin{equation*}
+  \tr\big[X\,\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\,
+  \varsigma_{A\Qsys}]\big]
+  =\tr\big[(X\otimes\hat O_k\otimes\idon{E'_j})\,
+  (\idmap_A\otimes\Aev_j)(\omega_{AE_{j-1}})\big]
+  =\tr\big[\big(X\otimes
+  \Aev_j^{\dagger}(\hat O_k\otimes\idon{E'_j})\big)\,
+  \omega_{AE_{j-1}}\big]
+\end{equation*}
+by definition of the adjoint. Hence, as operators on $A$,
+\begin{equation}\label{eq:transport}
+  \tr_{\Qsys}\big[(\idon{A}\otimes\hat O_k)\,\varsigma_{A\Qsys}\big]
+  =\tr_{E_{j-1}}\big[\big(\idon{A}\otimes
+  \Aev_j^{\dagger}(\hat O_k\otimes\idon{E'_j})\big)\,
+  \omega_{AE_{j-1}}\big].
+\end{equation}
+Write $X_k\coloneqq\Aev_j^{\dagger}(\hat O_k\otimes\idon{E'_j})
+-c_k\idon{E_{j-1}}$. For $\bowtie_k\,=\,\succeq$, admissibility
+\eqref{eq:attset} says $X_k\succeq0$, and
+$\tr_{E_{j-1}}[(\idon{A}\otimes X_k)\,\omega]
+=\tr_{E_{j-1}}[(\idon{A}\otimes X_k^{1/2})\,\omega\,
+(\idon{A}\otimes X_k^{1/2})]\succeq0$ --- cyclicity under the partial
+trace for operators on the traced factor, and the middle expression is
+the partial trace of a PSD operator --- so \eqref{eq:transport} equals
+$c_k\,\omega_A+\tr_{E_{j-1}}[(\idon{A}\otimes X_k)\,\omega]
+\succeq c_k\,\tau_A$. For $\bowtie_k\,=\,\preceq$, apply the same
+argument to $-X_k\succeq0$; for $\bowtie_k\,=\,=$, admissibility
+forces $X_k=0$, and \eqref{eq:transport} equals $c_k\,\tau_A$ exactly.
+(For $\CList=\varnothing$ the claim is only $\varsigma_A=\tau_A$.)
+
+\emph{(i), untrusted-source mode.} Here $A$ is an \emph{output} of
+$\Aev_j$, so the computation above has no operator-valued analogue:
+there is no $A$ factor on the input side to carry an operator
+inequality through, and the identity \eqref{eq:transport} --- whose
+left-hand side is an operator on $A$ and whose right-hand side is built
+from $\omega_{AE_{j-1}}$ --- has no counterpart. What does survive is
+its trace. Normalization is immediate: $\Aev_j\otimes\idmap_{\Etil}$ is
+trace-preserving, so $\tr\varsigma=\tr\omega=1$. For the constraints,
+by definition of the adjoint,
+\begin{equation}\label{eq:transport-un}
+  \tr\big[(\idon{A}\otimes\hat O_k)\,\varsigma_{A\Qsys}\big]
+  =\tr\big[(\idon{A}\otimes\hat O_k\otimes\idon{E'_j})\,
+  \Aev_j(\omega_{E_{j-1}})\big]
+  =\tr\big[\Aev_j^{\dagger}
+  \big(\idon{A}\otimes\hat O_k\otimes\idon{E'_j}\big)\,
+  \omega_{E_{j-1}}\big].
+\end{equation}
+Write $X_k\coloneqq
+\Aev_j^{\dagger}(\idon{A}\otimes\hat O_k\otimes\idon{E'_j})
+-c_k\idon{E_{j-1}}$. For $\bowtie_k\,=\,\succeq$ admissibility
+\eqref{eq:attset-un} says $X_k\succeq0$, so
+$\tr[X_k\,\omega_{E_{j-1}}]\ge0$ (the trace of a product of two PSD
+operators is non-negative), and \eqref{eq:transport-un} equals
+$c_k\tr[\omega_{E_{j-1}}]+\tr[X_k\,\omega_{E_{j-1}}]\ge c_k$, using
+$\tr\omega_{E_{j-1}}=1$. For $\bowtie_k\,=\,\preceq$ apply the same
+argument to $-X_k\succeq0$; for $\bowtie_k\,=\,=$ admissibility forces
+$X_k=0$ and \eqref{eq:transport-un} equals $c_k$ exactly. This is
+precisely the scalar entry format of
+Definition~\ref{def:homog}\,(b), and it is the \emph{only} conclusion
+the licence supports in this mode; the operator form
+$\Theta_k=c_k\idon{A}$ is not available (Remark~\ref{rem:homog}\,(a)).
+(For $\CList=\varnothing$ the claim is only $\tr\varsigma=1$.)
+
+\emph{(i), party-local entries.} Let $(\hat O_k,\bowtie_k,c_k;f)$ be
+declared party-local, write
+$\hat D\coloneqq\hat O_k-c_k\idon{\Qsys_f}$ and
+$Y\coloneqq\tr_{\Qsys_f}[(\idon{}\otimes\hat D)\,\varsigma_{A\Qsys}]$, a
+Hermitian operator on $A\Qsys_{f^c}$, and let $X\in\Pos{A\Qsys_{f^c}}$. In
+trusted-source mode, by the definition of the adjoint,
+\begin{equation*}
+  \tr[XY]=\tr\big[(X\otimes\hat D\otimes\idon{E'_j})\,
+  (\idmap_A\otimes\Aev_j)(\omega_{AE_{j-1}})\big]
+  =\tr\Big[(\idmap_A\otimes\Aev_j)^{\dagger}
+  \big(X\otimes\hat D\otimes\idon{E'_j}\big)\;\omega_{AE_{j-1}}\Big],
+\end{equation*}
+and \eqref{eq:attset-pl} with $R'=A$ and $R$ trivial says that the operator
+in the last trace is $\bowtie_k0$ on $AE_{j-1}$; since
+$\omega_{AE_{j-1}}\succeq0$ the trace is $\ge0$ for $\succeq$, $\le0$ for
+$\preceq$ and $0$ for $=$. In untrusted-source mode the same computation
+with $\varsigma_{A\Qsys E'_j}=\Aev_j(\omega_{E_{j-1}})$ gives
+$\tr[XY]=\tr[\Aev_j^{\dagger}(X\otimes\hat D\otimes\idon{E'_j})\,
+\omega_{E_{j-1}}]$, and \eqref{eq:attset-pl} with $R'$ trivial and $R=A$
+gives the same signs. A Hermitian $Y$ with $\tr[XY]\ge0$ for every
+$X\succeq0$ is positive semidefinite, and one with $\tr[XY]=0$ for every
+$X\succeq0$ vanishes, positive semidefinite operators spanning all
+operators; so $Y\bowtie_k0$, which is \eqref{eq:partylocal-entry}. The
+tensor factors are written in the order of \eqref{eq:attset-pl}; reordering
+them is a fixed unitary relabelling on both sides.
+
+(ii) \emph{Trusted-source mode.} Fix
+$\omega\in\Seq{A\,E_{j-1}\,\Etil}$ with $\omega_A=\tau_A$ and
+set
+$\varsigma=(\idmap_A\otimes\Aev_j\otimes\idmap_{\Etil})(\omega)$. By
+\eqref{eq:roundchannel},
+$(\Mprot_j\otimes\idmap_{\Etil})(\omega)
+=(\Mprot\otimes\idmap_{E'_j\Etil})(\varsigma)$ --- the same operator,
+with the registers of the round-$j$ output regrouped: the announcement $I_j$,
+emitted by $\Mprot$, is assigned to $E_j=E'_jI_j$ on the left and to
+the $I$-output on the right. By (i), $\varsigma$ is feasible for
+\eqref{eq:sigL} with purifier $E'_j\Etil$, so the output lies in
+$\Sigma^{\CList}(E'_j\Etil)$. Isometric embedding of each $E'_j\Etil$
+into the common $\Etil^{*}$ preserves feasibility and the
+$A\Qsys$-marginal, so every embedded $\Sigma_j$ lies in the convex set
+$\Sigma^{\CList}(\Etil^{*})$ (Definition~\ref{def:hqkd-list}), and so
+does the convex hull. \emph{Untrusted-source mode.} The same argument
+with $\omega\in\Seq{E_{j-1}\Etil}$ and
+$\varsigma=(\Aev_j\otimes\idmap_{\Etil})(\omega)$: the second line of
+\eqref{eq:roundchannel} gives the same regrouping identity, (i) gives
+feasibility for \eqref{eq:sigL} in the untrusted reading of
+\eqref{eq:margcond}, and the embedding step is unchanged. Note that
+for $\CList=\varnothing$ the inclusion is then immediate for a
+different reason as well: $\Sigma^{\varnothing}(\Etil^{*})$ is the set
+of \emph{all} $(\Mprot\otimes\idmap)(\sigma)$ with $\sigma$ normalized,
+and every round-channel output is of that form.
+
+(iii) An infimum over a superset is no larger; the bracket of
+\eqref{eq:meat-rate} is evaluated pointwise.
+\end{proof}

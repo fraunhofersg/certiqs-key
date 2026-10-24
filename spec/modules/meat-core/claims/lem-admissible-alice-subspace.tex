@@ -1,0 +1,64 @@
+% ---
+% id: meat-core/lem:admissible-alice-subspace
+% kind: lem
+% title: "The admissible Alice subspace"
+% summary: >-
+%   Every feasible state is supported in the admissible Alice subspace, the
+%   support of the declared marginal or all of Alice's system, tensored with
+%   the measured system; with no constraints the bound is tight. The subspace
+%   depends on the marginal slot alone.
+% prominence: standard
+% status: accepted
+% uses: [def:feasible, def:admissible-declaration]
+% mentions: [def:branch-support, lem:branch-support, cor:full-gradient]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+This is where the declared marginal enters the support and face rules of the
+gradients: the \tref{maximal branch support} of
+Definition~\ref{def:branch-support} is formed from $\Sadm$, and for a
+nonempty $\CList$ the inclusion~(i) is all that the bound
+\eqref{eq:Wcs-bound} of Lemma~\ref{lem:branch-support} uses.
+The marginal also enters the gradient formulas, through the $W_{\tau}$
+conjugation in \eqref{eq:grad-pieces} of
+Corollary~\ref{cor:full-gradient}, which \eqref{eq:grad-pieces-un} drops.
+
+\begin{lemma}\label{lem:admissible-alice-subspace}
+Let $\Decl$ be a declaration, and write
+\begin{equation}\label{eq:SA}
+  \Sadm\coloneqq
+  \begin{cases}
+    \operatorname{supp}\tau_A, & \text{trusted-source mode},\\[0.3ex]
+    \Hs{A}, & \text{untrusted-source mode},
+  \end{cases}
+\end{equation}
+the \emph{admissible Alice subspace}; it is determined by the
+\tref{marginal slot} alone and never by $\CList$ or by a particular feasible
+point. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item every $\omega\in\Feas$ satisfies
+$\operatorname{supp}\omega\subseteq\Sadm\otimes\Hs{\Qsys}$;
+\item the bound~(i) is tight for $\CList=\varnothing$, and for a nonempty
+$\CList$ it remains a valid upper bound.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) In \tref{untrusted-source mode} this is vacuous. In
+\tref{trusted-source mode}, with
+$\Pi^{\perp}\coloneqq\idon{A}-\Pi_{\operatorname{supp}\tau_A}$,
+$\tr[(\Pi^{\perp}\otimes\idon{\Qsys})\,\omega]=\tr[\Pi^{\perp}\tau_A]=0$
+forces $(\Pi^{\perp}\otimes\idon{})\,\omega=0$ by positivity.
+
+(ii) For $\CList=\varnothing$ take $\omega=\tau_A\otimes\chi$ with $\chi$ any
+full-rank sector-block-diagonal state on $\Qsys$, for instance
+$\idon{\Qsys}/d_{\Qsys}$, respectively any full-rank sector-block-diagonal
+state $\omega$ on $A\Qsys$, for instance $\idon{A\Qsys}/(d_Ad_{\Qsys})$.
+Such an $\omega$ lies in $\Feas$, and
+$\operatorname{supp}\omega=\operatorname{supp}\tau_A\otimes\Hs{\Qsys}$,
+respectively $\operatorname{supp}\omega=\Hs{A\Qsys}$, which is
+$\Sadm\otimes\Hs{\Qsys}$. For a nonempty $\CList$, (i) holds as proved.
+\end{proof}

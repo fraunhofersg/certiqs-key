@@ -1,0 +1,53 @@
+% ---
+% id: protocol-compiler/rem:exactness
+% kind: rem
+% title: "Scope of the exact encoding"
+% summary: >-
+%   The exact choice marginal fixes the sum over outcomes, not the individual
+%   probabilities, so no state-independent weight can be factored out of a
+%   security argument. Nor does it establish D(iii) of the emitted binary64
+%   family, which check V3 decides after the emission decisions.
+% prominence: standard
+% status: accepted
+% uses: [lem:weighted, def:weighted, thm:measurements-and-statistics]
+% mentions: [thm:choice-encoding]
+% assumes: [A-COIN]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:exactness}
+Equation \eqref{eq:choicemass} says the choice \emph{marginal} reproduces the
+declared weight for every state. What it fixes is that marginal alone: it
+does \emph{not} license treating $q_t$ as a fraction that may be factored out
+of a security argument, since $q_t$ appears in \eqref{eq:choicemass} only after
+summing $\tr[N_{u,t}\omega]$ over $u$, and the terms $\tr[N_{u,t}\omega]$
+that carry it depend on $\omega$. That is what separates the emitted encoding
+from a fixed fraction applied outside the operators. The exactness statement
+matters because it removes the only respectable motive for that unsound
+encoding: the weight carried inside the operators already reproduces the
+declared choice statistics exactly. Assumption~\ref{ass:coin} is
+where the physical content sits --- a choice correlated with the adversary is
+not a choice of known bias, and no encoding repairs that.
+
+\emph{Nor does it say that the emitted family passes V3.}
+Lemma~\ref{lem:weighted}\,(i) is a statement about the mathematical products
+$q_tN_{u|t}$, respectively $P(f\,|\,t(v))F_v$; what is emitted is those
+products as represented, as binary64 data, and two things can go wrong between
+the two. A product of binary64 numbers need not be binary64, and a family
+whose entries are all binary64 may still have a declared-order sum that
+rounds. Both are decided before emission, by the emission decisions of
+Definition~\ref{def:weighted}, and D(iii) is decided on the emitted blocks
+afterwards, by check V3 (Theorem~\ref{thm:measurements-and-statistics}\,(i),
+and (i$'$) in the general format), and never inferred from
+the lemma, no part of which rests on that theorem. A weighting that fails
+either decision is refused, which is the direction that costs a good
+declaration rather than admitting a bad one. Both paragraphs are about the products of
+Definition~\ref{def:weighted} in either of its forms; what differs between
+the forms is only the first: for the setting-dependent form the exactness
+statement, Theorem~\ref{thm:choice-encoding}\,(ii), is \emph{not asserted at all}, the
+marginal of the choice value being state-dependent through the setting
+marginal of the outcome statistics (Lemma~\ref{lem:weighted}\,(iv)), and no
+one is tempted to factor it out.
+\end{remark}

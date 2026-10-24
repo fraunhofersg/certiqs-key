@@ -1,0 +1,49 @@
+% ---
+% id: meat-core/rem:completeness-scope
+% kind: rem
+% title: "Completeness covers the acceptance test only"
+% summary: >-
+%   The completeness parameter ε* of the statistics module bounds an honest
+%   run's failure of the acceptance test only. Aborts in error verification
+%   and in authentication are bounded by no claim, so ε* does not bound the
+%   honest abort probability of the whole protocol.
+% user_statement: >-
+%   The completeness figure ε* bounds one thing only: the chance that an
+%   honest run, with no attacker and devices behaving as the declared honest
+%   model says, fails the acceptance test on its statistics. An honest run can
+%   also abort later: in error verification, when error correction leaves the
+%   two raw keys different, and in authentication. No result bounds those
+%   aborts, so an honest run's overall abort chance can exceed ε*. Whether
+%   your error-correction code reconstructs the key on honest runs is yours to
+%   check; it affects only how often you obtain a key. Completeness never
+%   affects the security parameter ε, which holds for every abort pattern
+%   ([[cor:composed-security]]) and so says nothing about how often runs
+%   abort.
+% prominence: standard
+% status: accepted
+% uses: [def:postprocessing-model, def:authenticated-channel]
+% mentions: [cor:composed-security, statistics/binomial-box/thm:completeness-bound, statistics/singleton/thm:singleton-completeness]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:completeness-scope}
+The completeness statements of the statistics module,
+\xref{statistics/binomial-box/thm:completeness-bound} with its parameter
+$\varepsilon^{\star}$ and \xref{statistics/singleton/thm:singleton-completeness},
+bound the probability that an honest run fails the acceptance test, the
+complement of the event $\OmAT$ of
+Definition~\ref{def:postprocessing-model}\,(i). An honest run of the
+fixed-length protocol can also abort later: in error verification, when the
+partner's reconstruction $\hat Z_1^n$ differs from $Z_1^n$, and in
+authentication
+(Definition~\ref{def:authenticated-channel}). That the error-correction scheme lets the partner reconstruct $Z_1^n$
+from $L_{\mathrm{EC}}$ and its own data on honest runs is a premise of no
+security claim here: it bears only on how often an honest run aborts. No
+claim of this contract bounds those abort probabilities, so $\varepsilon^{\star}$ bounds the honest abort
+probability of the acceptance test and not that of the whole protocol.
+Security is unaffected: Corollary~\ref{cor:composed-security} holds for every
+abort pattern.
+\end{remark}

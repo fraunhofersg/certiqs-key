@@ -1,0 +1,72 @@
+% ---
+% id: reductions/thm:factorization
+% kind: thm
+% title: "Equality of the physical and squashed output states"
+% summary: >-
+%   Replacing each round's physical measurement by the squashing channel
+%   followed by the target measurement leaves the protocol's whole output state
+%   unchanged. Every security criterion therefore takes the same value on the
+%   physical and the squashed protocol, with no error term.
+% prominence: standard
+% status: accepted
+% uses: [def:protocol, def:criterion, lem:msmfact]
+% assumes: [A-MEAS, A-ROUND-SQ, A-SEQ]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A \tref{squashing relation} is a statement about one round's measurement.
+Through the factorization of the \tref{measurement channel}
+(Lemma~\ref{lem:msmfact}) it
+becomes a statement about the whole protocol, and the proof uses no property
+of the criterion $f_E$ beyond its being a function of the output state: not
+linearity, not monotonicity, not continuity. The one structural hypothesis is
+the factorization $\Grnd_j=\bar{\Grnd}_j\circ(\idmap\otimes\redNmsm_M)$ of
+Definition~\ref{def:protocol}, and it rests on the measuring devices
+entering only through one POVM per round (Assumption~\ref{ass:meas})
+together with the round order and the one POVM for all rounds that the
+definition declares. The round's order is not part of
+Assumption~\ref{ass:meas}: that every public message of the round follows
+every measurement of the round is A-SEQ (\xref{transmitter/ass:seq}).
+
+\begin{theorem}
+\label{thm:factorization}
+Let $M\dsq_{\Lambda}F$ over $\Vset$ and let $\Eprot_M,\Eprot_F$ be as in
+Definition~\ref{def:protocol}. Then
+\begin{equation}\label{eq:factorization}
+  \Eprot_M\;=\;\Eprot_F\circ\big(\idmap\otimes\Lambda^{\otimes n}\big),
+\end{equation}
+the identity acting on every register other than $\Bsys_1\dots\Bsys_n$; and
+consequently, for every finite-dimensional adversary system $E$ and every input
+$\rho$,
+\begin{equation}\label{eq:sameoutput}
+  (\Eprot_M\otimes\idmap_E)(\rho)
+  =(\Eprot_F\otimes\idmap_E)\big(\sigma\big),
+  \qquad
+  \sigma\coloneqq\big(\idmap\otimes\Lambda^{\otimes n}\otimes\idmap_E\big)(\rho).
+\end{equation}
+In particular $\Crit(\Eprot_M,\rho)=\Crit(\Eprot_F,\sigma)$ for every
+\tref{security criterion} in the sense of Definition~\ref{def:criterion}.
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:msmfact}, $\redNmsm_M=\redNmsm_F\circ\Lambda$. Substituting into
+\eqref{eq:protocol},
+\begin{equation*}
+  \Grnd^{M}_j
+  =\bar{\Grnd}_j\circ\big(\idmap\otimes\redNmsm_F\circ\Lambda\big)
+  =\bar{\Grnd}_j\circ\big(\idmap\otimes\redNmsm_F\big)\circ\big(\idmap\otimes\Lambda_j\big)
+  =\Grnd^{F}_j\circ\big(\idmap\otimes\Lambda_j\big),
+\end{equation*}
+where $\Lambda_j$ denotes $\Lambda$ acting on $\Bsys_j$ and the identity
+elsewhere. For $i\ne j$ the maps $\Grnd^{F}_i$ and $\Lambda_j$ act on disjoint
+tensor factors --- $\Grnd^{F}_i$ touches $A_i$, $\Qsys_i$ and classical
+registers, while $\Lambda_j$ touches only $\Bsys_j$ --- so they commute.
+Composing the $n$ rounds therefore moves every $\Lambda_j$ to the front, and
+the $\Lambda_j$ assemble into $\Lambda^{\otimes n}$ because they act on
+disjoint systems. Applying $\Kfin$, which touches no $\Bsys_j$, gives
+\eqref{eq:factorization}. Equation~\eqref{eq:sameoutput} is
+\eqref{eq:factorization} tensored with $\idmap_E$, and the equality of the
+criteria is \eqref{eq:criterion} evaluated on the two equal states.
+\end{proof}

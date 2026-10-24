@@ -1,0 +1,17 @@
+id: spec/b-decision
+title: Decide the bigger thing
+kind: decision
+status: open
+severity: major
+priority: 2
+needs_human: true
+owner: maintainer
+module: null
+claims: []
+opened: 2026-09-02
+closes_when: The bigger thing is decided.
+brief: |
+  A major decision, ranked above the minor one whatever its priority.
+links: []
+history:
+  - 2026-09-02: opened.

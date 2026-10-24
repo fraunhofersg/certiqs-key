@@ -1,0 +1,30 @@
+% ---
+% id: meat-core/req:objective-alpha-domain
+% kind: req
+% title: "Rényi order of an evaluated objective"
+% summary: >-
+%   The engine evaluates the objective, its gradient and the program only at
+%   a Rényi order α in (1, ∞), where the objective is defined, and refuses any
+%   other order.
+% prominence: technical
+% status: implemented
+% uses: [def:feasible]
+% mentions: [rem:alpha-domain, foundations/def:renyi]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.objective:check_alpha_structural
+% lean:
+% ---
+
+The \tref{objective} \eqref{eq:objective} is defined for
+$\alpha\in(1,\infty)$ (Definition~\ref{def:feasible}), the range on which
+\xref{foundations/def:renyi} defines the sandwiched entropies and on which
+the entropy, program and gradient results are stated
+(Remark~\ref{rem:alpha-domain}).
+
+\begin{requirement}\label{req:objective-alpha-domain}
+The engine evaluates the objective, its gradient and the program only at a
+R\'enyi order $\alpha\in(1,\infty)$, and refuses any other order
+(\iface{alpha_in_the_profile_domain}).
+\end{requirement}

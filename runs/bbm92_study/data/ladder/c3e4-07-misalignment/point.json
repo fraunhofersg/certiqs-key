@@ -1,0 +1,59 @@
+{
+ "alpha": "search",
+ "device": {
+  "alice_basis_split": "14/25",
+  "alice_dark_count": {
+   "A": "13/100000000",
+   "D": "13/100000000",
+   "H": "13/100000000",
+   "V": "13/100000000"
+  },
+  "alice_efficiency": {
+   "A": "216/295",
+   "D": "4/5",
+   "H": "4/5",
+   "V": "216/295"
+  },
+  "alice_pbs_leak_reflected": "1/100",
+  "alice_pbs_leak_transmitted": "1/1000",
+  "bob_basis_split": "14/25",
+  "bob_dark_count": {
+   "A": "13/100000000",
+   "D": "13/100000000",
+   "H": "13/100000000",
+   "V": "13/100000000"
+  },
+  "bob_efficiency": {
+   "A": "216/295",
+   "D": "4/5",
+   "H": "4/5",
+   "V": "216/295"
+  },
+  "bob_half_wave_angle": "15288567027608731/113187804032455040",
+  "bob_pbs_leak_reflected": "1/100",
+  "bob_pbs_leak_transmitted": "1/1000"
+ },
+ "f_ec": 1.1,
+ "id": "c3e4-07-misalignment",
+ "labels": {
+  "coincidences": 30000,
+  "effect": "misalignment",
+  "loss_db": 0.0,
+  "rounds": 51000,
+  "rung": 7,
+  "source": "neumann2022transnational",
+  "value": "sin^2 theta = 0.004 (Bob)"
+ },
+ "model": {
+  "alice_transmittance": "1",
+  "bob_transmittance": "1",
+  "visibility": "49/50"
+ },
+ "parameters": {},
+ "rounds": 51000,
+ "solver": {
+  "budget_seconds": 600,
+  "max_iterations": null,
+  "method": "auto"
+ }
+}

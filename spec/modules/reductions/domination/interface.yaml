@@ -1,0 +1,49 @@
+# spec/modules/reductions/domination/interface.yaml -- the `domination`
+# submodule's interface (spec/claim-format.md section 5). The claim files
+# under claims/ are the contract; this file authors no mathematics, and where
+# it and a claim disagree, the claim decides.
+#
+# The submodule states the domination link, its noise channel and the exact
+# chain a squashing link followed by it forms. No requirement of the engine
+# uses them: a snapped measurement family is not related to its model by
+# domination (foundations/req:snap-reference; a run evaluates its first-order
+# bound on the reference companion instead, meat-core/frank-wolfe/
+# req:bracket-on-reference). The claims are kept for a declared device weight,
+# the reserved A-DOM below, so the submodule reads no input, emits no link
+# and has no refusal row.
+#
+# Every row names, in a `locator` field, the claim label it rests on; a bare
+# label is this submodule's, and a label prefixed `reductions/` is the core's.
+
+module_id: domination
+parent_module: reductions
+
+inputs: []
+
+outputs: []
+
+# ---------------------------------------------------------------------------
+# link_kinds
+# ---------------------------------------------------------------------------
+link_kinds:
+  added_by_this_submodule: [family-dominating]
+  implemented: []
+  locator: "def:domination-link; cor:dom-chain; reductions/req:reserved-link-kinds"
+  note: >-
+    The kind is stated by def:domination-link and emitted by no requirement:
+    no run carries a domination weight into a chain. Deleting this submodule
+    removes the kind and leaves the core's vocabulary intact.
+
+# ---------------------------------------------------------------------------
+# reserved
+# ---------------------------------------------------------------------------
+reserved:
+  assumptions:
+    - short_id: A-DOM
+      status: "reserved; no claim file yet"
+      meaning: >-
+        A declared domination weight: that a device's POVM dominates a
+        characterised model at a stated weight per block, from device ranges
+        (efficiency and dark-count intervals). It would feed the domination
+        link with a weight that is attested rather than decided.
+      where: "spec/future-scope.md, 'Declared domination weights (A-DOM)'"

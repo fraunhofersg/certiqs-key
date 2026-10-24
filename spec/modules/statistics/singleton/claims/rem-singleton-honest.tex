@@ -1,0 +1,48 @@
+% ---
+% id: statistics/singleton/rem:singleton-honest
+% kind: rem
+% title: "Certifiability and completeness of the singleton"
+% summary: >-
+%   The consuming engine certifies a singleton's acceptance-side minimum, but
+%   its completeness figure 1 − Pr[freq = q*] is close to one at realistic
+%   alphabets and round counts, and no budget exists whenever n q* leaves the
+%   count grid. Its accept probability needs one honest law.
+% prominence: standard
+% status: accepted
+% uses: [thm:singleton-completeness, statistics/binomial-box/thm:monotonicity-limits, statistics/binomial-box/thm:completeness-bound, statistics/def:envelope]
+% mentions: [meat-core/frank-wolfe/rem:acc-side, req:singleton-budget-record, req:singleton-point-form]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:singleton-honest}
+The consuming engine certifies the acceptance-side minimum of a singleton
+geometry (\xref{meat-core/frank-wolfe/rem:acc-side}~(a)), so a singleton
+acceptance set is certifiable. By Theorem~\ref{thm:singleton-completeness}
+its completeness figure is $1-\Pr[\operatorname{freq}=\mathbf{q}^{\ast}]$,
+which is close to $1$ for any realistic alphabet and round count; that is
+why the \tref{construction map} never emits it. The degenerate case of
+Theorem~\ref{thm:singleton-completeness}\,(ii), where the accept probability is exactly $0$
+and \emph{no} admissible completeness budget exists, is not exotic: it is
+reached whenever $n\,\mathbf{q}^{\ast}$ has a non-integer coordinate, which
+for a fixed $\mathbf{q}^{\ast}$ happens at most round counts.
+Requirement~\ref{req:singleton-budget-record} says what an instance that
+declares a singleton set records.
+
+A singleton is also the $n=2$ output of the counterexample in
+Theorem~\ref{thm:monotonicity-limits}\,(v): the construction can produce a set with a single
+point, and when it does, \eqref{eq:completeness} still bounds the honest
+failure probability. The two statements agree, because there the budget
+$\ecomp=\tfrac45$ was large enough to pay for it.
+
+Unlike the box construction, the singleton reads its honest input in the
+\tref{point form} only: Theorem~\ref{thm:singleton-completeness} assumes A-HON, one law
+$\honest$ for independent rounds, because its accept probability
+\eqref{eq:singleton-acc} is the exact multinomial probability under that one
+law and has no counterpart for an envelope of laws. A single law is the
+\tref{degenerate envelope} (Definition~\ref{def:envelope});
+Requirement~\ref{req:singleton-point-form} says how an envelope is read.
+\end{remark}

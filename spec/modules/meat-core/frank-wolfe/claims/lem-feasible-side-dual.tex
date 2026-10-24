@@ -1,0 +1,412 @@
+% ---
+% id: meat-core/frank-wolfe/lem:feasible-side-dual
+% kind: lem
+% title: "A lower bound on the feasible-side minimum from any multipliers"
+% summary: >-
+%   Any multipliers for the coupling condition and the declared rows give a
+%   lower bound on a linear form's minimum over the exact Choi feasible set,
+%   dual-feasible or not, since the coupling fixes every feasible point's
+%   total trace. Rows built from an inexact frame cost an explicit deduction.
+% prominence: standard
+% status: implemented
+% uses: [def:first-order-setting, meat-core/thm:choi, meat-core/def:feasible, meat-core/def:untrusted-choi, meat-core/def:declaration, meat-core/def:joint-sectors, meat-core/prop:frame-free-rows]
+% mentions: [thm:firstorder]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% supersedes: meat-core/frank-wolfe/ass:lmo
+% implements: certiqs_key.solvers.frank_wolfe.verified:verified_feasible_side
+% lean:
+% ---
+
+Part~(iv) of Theorem~\ref{thm:firstorder} admits any real number below the
+feasible-side minimum $\min_{J'\in\Feas^{J}}\langle\lmoJ_t,J'\rangle$ in
+place of the pairing with a point an oracle returned. The lemma supplies one
+by weak duality, from multipliers for the coupling condition and for the
+declared rows. What makes it hold for \emph{any} multipliers, and not only at
+a feasible point of a dual program, is that the coupling condition fixes the
+total trace of every point of the \tref{feasible set} exactly: the least
+eigenvalue of the residual operator, however negative, then enters with a
+known coefficient. Part~(i) states this for an abstract set cut out by a
+coupling condition and affine operator rows, part~(ii) reads the Choi
+feasible set of Theorem~\ref{thm:choi} in that form, and part~(iii) shows
+that the bound is attained on a set with a one-dimensional coupling and no
+rows. A run can form the rows only with a computed frame, which in general
+differs from the exact $W_{\mathsf t}$ of Theorem~\ref{thm:choi}; part~(iv)
+says what that costs: a deduction linear in the row multipliers and in a
+bound on the frame's error, after which the bound holds over the exact set
+again.
+
+\begin{lemma}\label{lem:feasible-side-dual}
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(Weak duality with a trace identity.)} Let
+  $\mathcal{H}_{\mathrm{in}}$ be a Hilbert space of finite dimension
+  $d_{\mathrm{in}}\ge1$, let $P$ be a finite non-empty set, and for every
+  $p\in P$ let $\mathcal{H}_p$ be a finite-dimensional Hilbert space. Let
+  $\mathcal{R}$ be a finite, possibly empty, set of \emph{rows}; a row $r$
+  consists of a finite-dimensional Hilbert space $\mathcal{K}_r$, a
+  Hermitian operator $\Theta_r$ on it, a relation
+  $\bowtie_r\in\{\preceq,\succeq,=\}$ and, for every $p\in P$, a linear map
+  $L_{r,p}$ from operators on $\mathcal{H}_{\mathrm{in}}\otimes\mathcal{H}_p$
+  to operators on $\mathcal{K}_r$ that maps Hermitian operators to Hermitian
+  ones. Write $L^{*}_{r,p}$ for its adjoint, the real-linear map from
+  Hermitian operators on $\mathcal{K}_r$ to Hermitian operators on
+  $\mathcal{H}_{\mathrm{in}}\otimes\mathcal{H}_p$ with
+  $\tr[\Lambda\,L_{r,p}(X)]=\tr[L^{*}_{r,p}(\Lambda)\,X]$ for all Hermitian
+  $\Lambda$ and $X$. Let $\mathcal{J}$ be the set of lists
+  $J=(J_p)_{p\in P}$ of positive semidefinite operators $J_p$ on
+  $\mathcal{H}_{\mathrm{in}}\otimes\mathcal{H}_p$ with
+  \begin{equation}\label{eq:abstract-feasible}
+    \sum_{p\in P}\tr_{\mathcal{H}_p}J_p=\id_{\mathcal{H}_{\mathrm{in}}}
+    \qquad\text{and}\qquad
+    L_r(J)\coloneqq\sum_{p\in P}L_{r,p}(J_p)\ \bowtie_r\ \Theta_r
+    \quad\text{for every }r\in\mathcal{R}.
+  \end{equation}
+  Let $G=(G_p)_{p\in P}$ be a list of Hermitian operators $G_p$ on
+  $\mathcal{H}_{\mathrm{in}}\otimes\mathcal{H}_p$, let $Y$ be a Hermitian
+  operator on $\mathcal{H}_{\mathrm{in}}$, and for every row $r$ let
+  $\Lambda_r$ be a Hermitian operator on $\mathcal{K}_r$, with
+  $\Lambda_r\succeq0$ when $\bowtie_r$ is $\preceq$ or $\succeq$. Put
+  $\sigma_r\coloneqq-1$ when $\bowtie_r$ is $\preceq$ and
+  $\sigma_r\coloneqq+1$ otherwise,
+  \begin{equation}\label{eq:dual-residual}
+    R_p\;\coloneqq\;G_p-Y\otimes\id_{\mathcal{H}_p}
+    -\sum_{r\in\mathcal{R}}\sigma_r\,L^{*}_{r,p}(\Lambda_r)
+    \qquad(p\in P),
+  \end{equation}
+  and let $\lambda$ be a real number with $\lambda\le\lmin(R_p)$ for every
+  $p\in P$. Then for every $J\in\mathcal{J}$
+  \begin{equation}\label{eq:feasible-side-dual}
+    \langle G,J\rangle\coloneqq\sum_{p\in P}\tr[G_pJ_p]
+    \;\ge\;b(G;Y,\Lambda,\lambda)\coloneqq
+    d_{\mathrm{in}}\,\lambda+\tr Y
+    +\sum_{r\in\mathcal{R}}\sigma_r\tr[\Lambda_r\Theta_r],
+  \end{equation}
+  so that $b(G;Y,\Lambda,\lambda)\le\inf_{J\in\mathcal{J}}\langle G,J\rangle$.
+  No other condition is placed on $Y$, on the $\Lambda_r$ or on $\lambda$:
+  $Y$ and the $\Lambda_r$ need not be feasible for any dual program,
+  $\lambda$ may be negative, and $Y=0$ with every $\Lambda_r=0$ is admitted.
+\item \emph{(The Choi feasible set is of that form.)} Let $\Decl$ be a
+  declaration in the general format of Definition~\ref{def:declaration}, the
+  \tref{basic format} included, with its Alice sectors
+  $\mathsf t\in\mathbb{T}$.
+  \begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+  \item In \tref{trusted-source mode}, with a frame and the factors
+    $W_{\mathsf t}$ as in Theorem~\ref{thm:choi}, the factor
+    $\Feas^{J}_{\mathsf t}$ of $\Feas^{J}=\prod_{\mathsf t}\Feas^{J}_{\mathsf t}$
+    (Theorem~\ref{thm:choi}, the general format) is the set $\mathcal{J}$ of
+    (i) with $\mathcal{H}_{\mathrm{in}}=\Hs{A_{0,\mathsf t}}$, $P=\SecSet$,
+    $\mathcal{H}_s=\Hs{\Qsys_s}$ and $J_s=J_{(\mathsf t,s)}$, and with the
+    following rows. For every entry $k$ read through its
+    \tref{lifted operator}, one row with $\mathcal{K}=\Hs{A_{\mathsf t}}$,
+    $\Theta=\Theta^{(\mathsf t)}_k$, the relation $\bowtie_k$ and
+    \begin{equation*}
+      L_{k,s}(X)=W_{\mathsf t}\,\tr_{\Qsys_s}\!\big[(\idon{A_{0,\mathsf t}}
+      \otimes\hat O^{\uparrow(s)}_k)X\big]\,W_{\mathsf t}^{\dagger},
+      \qquad
+      L^{*}_{k,s}(\Lambda)=(W_{\mathsf t}^{\dagger}\Lambda W_{\mathsf t})
+      \otimes\hat O^{\uparrow(s)}_k .
+    \end{equation*}
+    For every \tref{party-local} entry $k$, scoped to the measured factor $f$,
+    and every $s_{f^c}$, one row with
+    $\mathcal{K}=\Hs{A_{\mathsf t}}\otimes\Hs{\Qsys_{f^c,s_{f^c}}}$,
+    $\Theta=0$, the relation $\bowtie_k$ and, at $s=(s_{f^c},s_f)$,
+    \begin{gather*}
+      L_{(k,s_{f^c}),s}(X)=(W_{\mathsf t}\otimes\id)\,
+      \tr_{\Qsys_{f,s_f}}\!\big[(\id\otimes D^{(s_f)}_k)X\big]\,
+      (W_{\mathsf t}^{\dagger}\otimes\id),\\
+      L^{*}_{(k,s_{f^c}),s}(\Lambda)=\big((W_{\mathsf t}^{\dagger}\otimes\id)
+      \Lambda(W_{\mathsf t}\otimes\id)\big)\otimes D^{(s_f)}_k ,
+    \end{gather*}
+    where $D^{(s_f)}_k\coloneqq\hat O^{(s_f)}_k-c_k\idon{}$ acts on
+    $\Hs{\Qsys_{f,s_f}}$ at the place of that factor in $\Hs{\Qsys_s}$, while
+    $L_{(k,s_{f^c}),s'}=0$ and $L^{*}_{(k,s_{f^c}),s'}=0$ at every sector
+    $s'$ whose component on the other factors is not $s_{f^c}$. The two
+    kinds of map, and the formulas for their adjoints, are defined, and the
+    formulas hold, for any linear map $W$ from $\Hs{A_{0,\mathsf t}}$ to
+    $\Hs{A_{\mathsf t}}$ in place of $W_{\mathsf t}$; we write
+    $L^{W}_{r,s}$ for a row's map so built. A
+    homogeneous or party-local row in the frame-free form of
+    Proposition~\ref{prop:frame-free-rows}, on a \tref{tight} frame, is a row
+    of the same kind with $\idon{A_{0,\mathsf t}}$ in place of
+    $W_{\mathsf t}$, hence with $\Hs{A_{0,\mathsf t}}$ in place of
+    $\Hs{A_{\mathsf t}}$ in its $\mathcal{K}$, and with
+    $\Theta=c_k\idon{A_{0,\mathsf t}}$, respectively $\Theta=0$; and
+    $\Feas^{J}_{\mathsf t}$ is unchanged when it replaces the conjugated
+    row. Hence, for $Y_{\mathsf t}$, $\Lambda_{\mathsf t}=(\Lambda_r)_r$ and
+    $\lambda_{\mathsf t}$ as in (i) for each $\mathsf t$, and with
+    $G_{\mathsf t}\coloneqq(G_{(\mathsf t,s)})_{s\in\SecSet}$,
+    \begin{equation}\label{eq:feasible-side-sum}
+      b_{\mathrm F}\;\coloneqq\;\sum_{\mathsf t\in\mathbb{T}}
+      b(G_{\mathsf t};Y_{\mathsf t},\Lambda_{\mathsf t},\lambda_{\mathsf t})
+      \;\le\;\langle G,J'\rangle
+      \qquad\text{for every }J'\in\Feas^{J}.
+    \end{equation}
+  \item In \tref{untrusted-source mode}, $\Feas^{J}$, which is $\Feas$
+    (Definition~\ref{def:first-order-setting}), is the set $\mathcal{J}$ of
+    (i) with $\mathcal{H}_{\mathrm{in}}$ one-dimensional, so that $Y=y$ is a
+    real number, $Y\otimes\id=y\,\id$, $\tr Y=y$ and $d_{\mathrm{in}}=1$;
+    with $P$ the set of \tref[joint sector]{joint sectors},
+    $\mathcal{H}_{(\mathsf t,s)}=\Hs{A_{\mathsf t}\Qsys_s}$ and
+    $J_{(\mathsf t,s)}=\omega^{(\mathsf t,s)}$; and with these rows. For every
+    scalar entry $k$, one row with $\mathcal{K}=\mathbb{C}$, $\Theta=c_k$,
+    the relation $\bowtie_k$,
+    $L_{k,(\mathsf t,s)}(X)=\tr[(\idon{A_{\mathsf t}}\otimes
+    \hat O^{\uparrow(s)}_k)X]$ and
+    $L^{*}_{k,(\mathsf t,s)}(\mu)=\mu\,\idon{A_{\mathsf t}}\otimes
+    \hat O^{\uparrow(s)}_k$; for every party-local entry $k$ and every pair
+    $(\mathsf t,s_{f^c})$, one row as in (a) with $\idon{A_{\mathsf t}}$ in
+    place of $W_{\mathsf t}$, its maps vanishing outside the joint sectors
+    $(\mathsf t,(s_{f^c},s_f))$. Hence
+    $b(G;y,\Lambda,\lambda)\le\langle G,J'\rangle$ for every
+    $J'\in\Feas^{J}$, the whole list being one set of the form of (i).
+  \end{enumerate}
+\item \emph{(A scalar coupling and no rows.)} If $d_{\mathrm{in}}=1$ and
+  $\mathcal{R}=\varnothing$ in (i), then, with $Y=0$ and
+  $\lambda=\min_{p\in P}\lmin(G_p)$, the infimum in (i) is attained and
+  $b(G;0,\Lambda,\lambda)=\min_{J\in\mathcal{J}}\langle G,J\rangle$.
+\item \emph{(Rows built from an inexact frame.)} In trusted-source mode fix
+  an Alice sector $\mathsf t$, a linear map $\widetilde W_{\mathsf t}$ from
+  $\Hs{A_{0,\mathsf t}}$ to $\Hs{A_{\mathsf t}}$ and a real number
+  $\varepsilon_{\mathsf t}\ge\opn{\widetilde W_{\mathsf t}-W_{\mathsf t}}$.
+  For every row $r$ of $\Feas^{J}_{\mathsf t}$ in (ii)(a) let
+  $\widetilde L_{r,s}\coloneqq L^{\widetilde W_{\mathsf t}}_{r,s}$, a row in
+  frame-free form keeping its map, every other datum of the row
+  ($\Theta_r$, $\hat O^{\uparrow(s)}_k$, $D^{(s_f)}_k$, $c_k$) unchanged. Let
+  $G_{\mathsf t}$, $Y$ and the $\Lambda_r$ be as in (i), form
+  $\widetilde R_s$ by \eqref{eq:dual-residual} with
+  $\widetilde L^{*}_{r,s}$ in place of $L^{*}_{r,s}$, and let
+  $\widetilde\lambda\le\lmin(\widetilde R_s)$ for every $s\in\SecSet$. Then
+  for every $J\in\Feas^{J}_{\mathsf t}$, the factor cut out by the rows
+  built from the exact $W_{\mathsf t}$,
+  \begin{equation}\label{eq:frame-deficit}
+    \begin{gathered}
+    \langle G_{\mathsf t},J\rangle\;\ge\;
+    b(G_{\mathsf t};Y,\Lambda,\widetilde\lambda)-\sum_{r}\kappa_r,\\
+    \kappa_r\coloneqq d_{A_{0,\mathsf t}}\,\varepsilon_{\mathsf t}
+    \big(2\opn{\widetilde W_{\mathsf t}}+\varepsilon_{\mathsf t}\big)\,
+    \opn{\Lambda_r}\,\max_{s\in\SecSet}\opn{O_{r,s}},
+    \end{gathered}
+  \end{equation}
+  where $O_{r,s}$ is $\hat O^{\uparrow(s)}_k$ for a lifted-operator row,
+  $D^{(s_f)}_k$ for a party-local row at $s=(s_{f^c},s_f)$ and $0$ at the
+  other sectors, and $\kappa_r\coloneqq0$ for a row in frame-free form.
+  Summed over $\mathsf t$ as in (ii)(a), the right-hand sides bound
+  $\langle G,J'\rangle$ from below for every $J'\in\Feas^{J}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Idea.} The linear form is split into the residual paired with $J$ and
+two terms the constraints fix or bound: the coupling condition turns the
+$Y$-term into $\tr Y$, and each row turns its term into at least
+$\sigma_r\tr[\Lambda_r\Theta_r]$. The residual term is at least $\lambda$
+times the total trace, which the coupling condition fixes at
+$d_{\mathrm{in}}$, so a $\lambda$ of either sign enters with a known
+coefficient.
+
+\emph{(i), Step 1 (two identities).} The adjoint exists and is unique: the
+Hermitian operators on a finite-dimensional space form a finite-dimensional
+real inner product space under $(A,B)\mapsto\tr[AB]$, which is real for
+Hermitian $A$ and $B$ since $\overline{\tr[AB]}=\tr[(AB)^{\dagger}]=\tr[BA]$,
+and $L_{r,p}$ restricts to a real-linear map between two such spaces. Let
+$J\in\mathcal{J}$. For every operator $X$ on
+$\mathcal{H}_{\mathrm{in}}\otimes\mathcal{H}_p$,
+$\tr[(Y\otimes\id_{\mathcal{H}_p})X]=\tr[Y\,\tr_{\mathcal{H}_p}X]$, the
+defining property of the partial trace; summing over $p$ and using the
+coupling condition of \eqref{eq:abstract-feasible},
+\begin{equation*}
+  \sum_{p\in P}\tr[(Y\otimes\id_{\mathcal{H}_p})J_p]
+  =\tr\Big[Y\sum_{p\in P}\tr_{\mathcal{H}_p}J_p\Big]=\tr Y .
+\end{equation*}
+Every $J_p$ is Hermitian, being positive semidefinite, so by the defining
+identity of the adjoint, for every row $r$,
+$\sum_p\tr[L^{*}_{r,p}(\Lambda_r)J_p]=\sum_p\tr[\Lambda_r\,L_{r,p}(J_p)]
+=\tr[\Lambda_r\,L_r(J)]$.
+
+\emph{Step 2 (the rearrangement).} By \eqref{eq:dual-residual},
+$G_p=R_p+Y\otimes\id_{\mathcal{H}_p}+\sum_r\sigma_rL^{*}_{r,p}(\Lambda_r)$,
+so by Step~1
+\begin{equation*}
+  \langle G,J\rangle=\sum_{p\in P}\tr[R_pJ_p]+\tr Y
+  +\sum_{r\in\mathcal{R}}\sigma_r\tr[\Lambda_r\,L_r(J)] .
+\end{equation*}
+
+\emph{Step 3 (the residual term).} For every $p$, $R_p$ is Hermitian, $G_p$,
+$Y\otimes\id$ and every $L^{*}_{r,p}(\Lambda_r)$ being so, and
+$R_p-\lambda\id$ is positive semidefinite, its eigenvalues being those of
+$R_p$ less $\lambda$, which are non-negative by the choice of $\lambda$. For
+positive semidefinite $A$ and $B$, $\tr[AB]=\tr[B^{1/2}AB^{1/2}]\ge0$. Hence
+$\tr[R_pJ_p]\ge\lambda\tr J_p$. The trace of $J_p$ is that of
+$\tr_{\mathcal{H}_p}J_p$, so by the coupling condition
+$\sum_p\tr J_p=\tr\id_{\mathcal{H}_{\mathrm{in}}}=d_{\mathrm{in}}$ exactly,
+and
+\begin{equation*}
+  \sum_{p\in P}\tr[R_pJ_p]\;\ge\;\lambda\sum_{p\in P}\tr J_p
+  \;=\;d_{\mathrm{in}}\,\lambda ,
+\end{equation*}
+for either sign of $\lambda$, the total trace being an equality and not a
+bound.
+
+\emph{Step 4 (the rows).} If $\bowtie_r$ is $\succeq$, then
+$L_r(J)-\Theta_r\succeq0$ and $\Lambda_r\succeq0$, so
+$\tr[\Lambda_r(L_r(J)-\Theta_r)]\ge0$ by the trace fact of Step~3, which is
+$\sigma_r\tr[\Lambda_rL_r(J)]\ge\sigma_r\tr[\Lambda_r\Theta_r]$ with
+$\sigma_r=+1$. If $\bowtie_r$ is $\preceq$, then $\Theta_r-L_r(J)\succeq0$
+and $\Lambda_r\succeq0$ give $\tr[\Lambda_rL_r(J)]\le\tr[\Lambda_r\Theta_r]$,
+which is the same inequality with $\sigma_r=-1$. If $\bowtie_r$ is $=$, then
+$L_r(J)=\Theta_r$ and the two sides are equal for every Hermitian
+$\Lambda_r$.
+
+Substituting Steps~3 and~4 into Step~2 gives \eqref{eq:feasible-side-dual}.
+As $J\in\mathcal{J}$ was arbitrary, $b(G;Y,\Lambda,\lambda)$ is below every
+value of $\langle G,\cdot\rangle$ on $\mathcal{J}$ and hence below its
+infimum, which is $+\infty$ when $\mathcal{J}$ is empty. No step used a
+property of $Y$, of the $\Lambda_r$ or of $\lambda$ beyond those stated in
+(i).
+
+\emph{(ii)(a).} By Theorem~\ref{thm:choi} in the general format, $\Feas^{J}$
+is the set of lists $(J_{(\mathsf t,s)})$ over the joint sectors with
+$J_{(\mathsf t,s)}\in\Pos{A_{0,\mathsf t}\Qsys_s}$, the coupling
+constraints $\sum_s\tr_{\Qsys_s}J_{(\mathsf t,s)}=\idon{A_{0,\mathsf t}}$,
+for every entry read through its lifted operator the rows
+$W_{\mathsf t}\big(\sum_s\tr_{\Qsys_s}[(\idon{A_{0,\mathsf t}}\otimes
+\hat O^{\uparrow(s)}_k)J_{(\mathsf t,s)}]\big)W_{\mathsf t}^{\dagger}
+\bowtie_k\Theta^{(\mathsf t)}_k$, and for every party-local entry the last
+line of \eqref{eq:feas-general} at $J$, conjugated by
+$W_{\mathsf t}\otimes\id$, which is one operator condition on
+$\Hs{A_{\mathsf t}}\otimes\Hs{\Qsys_{f^c,s_{f^c}}}$ for every
+$(\mathsf t,s_{f^c})$; every constraint involves the blocks of one Alice
+sector only, and $\Feas^{J}=\prod_{\mathsf t}\Feas^{J}_{\mathsf t}$ with
+$\Feas^{J}_{\mathsf t}$ cut out by the constraints of $\mathsf t$. In the
+basic format the same holds with one Alice sector, the lifted operator of an
+entry being its own operator, and no party-local entry
+(\eqref{eq:choi-feas}). These constraints of $\mathsf t$ are
+\eqref{eq:abstract-feasible} with the data listed: the row of a
+lifted-operator entry is $\sum_sL_{k,s}(J_s)\bowtie_k\Theta^{(\mathsf t)}_k$,
+and the row of a party-local entry at $s_{f^c}$ is the sum over $s_f$ of
+$L_{(k,s_{f^c}),(s_{f^c},s_f)}$, which is the sum over all $s$, the other
+terms being $0$. Each listed map takes Hermitian operators to Hermitian ones:
+for a Hermitian $X$ and a Hermitian operator $O$ acting on one tensor
+factor $\Qsys'$ alone,
+$\big(\tr_{\Qsys'}[(\id\otimes O)X]\big)^{\dagger}=\tr_{\Qsys'}[X(\id\otimes
+O)]=\tr_{\Qsys'}[(\id\otimes O)X]$, an operator on the traced factor
+alone moving cyclically under the partial trace over that factor, and a
+congruence preserves Hermiticity. Here $\hat O^{\uparrow(s)}_k$ is
+Hermitian, every $\hat O_k$ being exactly Hermitian per sector block
+(Definition~\ref{def:declaration}, exact admissibility), and so is
+$D^{(s_f)}_k$, $c_k$ being real. The adjoints: for Hermitian $\Lambda$ on
+$\Hs{A_{\mathsf t}}$ and $X$ on $\Hs{A_{0,\mathsf t}\Qsys_s}$, by
+cyclicity of the trace and the partial-trace identity of Step~1,
+\begin{equation*}
+  \tr\big[\Lambda\,W_{\mathsf t}\tr_{\Qsys_s}[(\id\otimes
+  \hat O^{\uparrow(s)}_k)X]W_{\mathsf t}^{\dagger}\big]
+  =\tr\big[\big((W_{\mathsf t}^{\dagger}\Lambda W_{\mathsf t})\otimes\id\big)
+  (\id\otimes\hat O^{\uparrow(s)}_k)X\big]
+  =\tr\big[\big((W_{\mathsf t}^{\dagger}\Lambda W_{\mathsf t})\otimes
+  \hat O^{\uparrow(s)}_k\big)X\big],
+\end{equation*}
+and the operator in the last trace is Hermitian; for a party-local row the
+same computation holds with $(W_{\mathsf t}^{\dagger}\otimes\id)\Lambda
+(W_{\mathsf t}\otimes\id)$ on $\Hs{A_{0,\mathsf t}}\otimes
+\Hs{\Qsys_{f^c,s_{f^c}}}$ in place of $W_{\mathsf t}^{\dagger}\Lambda
+W_{\mathsf t}$ and $D^{(s_f)}_k$ on $\Hs{\Qsys_{f,s_f}}$ in place of
+$\hat O^{\uparrow(s)}_k$. Neither computation, nor the Hermiticity of the
+maps, reads any property of $W_{\mathsf t}$ beyond its being linear, so
+both hold for any linear $W$ in its place. For the frame-free forms: on a tight frame a
+homogeneous row, read per Alice sector, and a party-local row hold for a
+list in their frame-free form exactly when they hold in their conjugated
+form (Proposition~\ref{prop:frame-free-rows}\,(i) and (iii)), so
+$\Feas^{J}_{\mathsf t}$ is unchanged, and the frame-free row is of the
+stated kind by the same two computations with the identity in place of
+$W_{\mathsf t}$. Finally, for $J'\in\Feas^{J}$ its part
+$J'_{\mathsf t}\coloneqq(J'_{(\mathsf t,s)})_s$ lies in
+$\Feas^{J}_{\mathsf t}$, and
+$\langle G,J'\rangle=\sum_{\mathsf t}\langle G_{\mathsf t},J'_{\mathsf t}\rangle
+\ge\sum_{\mathsf t}b(G_{\mathsf t};Y_{\mathsf t},\Lambda_{\mathsf t},
+\lambda_{\mathsf t})$ by (i) applied to each factor, which is
+\eqref{eq:feasible-side-sum}.
+
+\emph{(ii)(b).} In untrusted-source mode the Choi step is the identity and
+$\Feas^{J}$ denotes $\Feas$ (Definitions~\ref{def:untrusted-choi}
+and~\ref{def:first-order-setting}). By \eqref{eq:choi-feas-un} in the basic
+format and by the lines of \eqref{eq:feas-general} that hold in
+untrusted-source mode in the general format (Definition~\ref{def:feasible}),
+$\Feas$ is the set of lists of positive semidefinite blocks
+$\omega^{(\mathsf t,s)}$ over the joint sectors with
+$\sum_{(\mathsf t,s)}\tr\omega^{(\mathsf t,s)}=1$, the scalar rows
+$\sum_{(\mathsf t,s)}\tr[(\idon{A_{\mathsf t}}\otimes
+\hat O^{\uparrow(s)}_k)\omega^{(\mathsf t,s)}]\bowtie_kc_k$, and the
+party-local rows, unconjugated, one for every $(\mathsf t,s_{f^c})$. With
+$\mathcal{H}_{\mathrm{in}}$ one-dimensional, $\tr_{\mathcal{H}_p}J_p$ is the
+number $\tr J_p$ and $\id_{\mathcal{H}_{\mathrm{in}}}$ is $1$, so the
+coupling condition of \eqref{eq:abstract-feasible} is the normalisation.
+The scalar row's map is real on Hermitian $X$, a trace of a product of two
+Hermitian operators, and
+$\mu\tr[(\id\otimes\hat O^{\uparrow(s)}_k)X]
+=\tr[(\mu\,\id\otimes\hat O^{\uparrow(s)}_k)X]$ gives its adjoint; the
+party-local rows are those of (a) with the identity in place of
+$W_{\mathsf t}$. Then (i) applies to the whole list.
+
+\emph{(iii).} With $\mathcal{R}=\varnothing$ and $Y=0$,
+\eqref{eq:dual-residual} is $R_p=G_p$, so
+$\lambda=\min_p\lmin(G_p)$ is admissible in (i) and
+$b(G;0,\Lambda,\lambda)=d_{\mathrm{in}}\lambda=\lambda$ is at most the
+infimum. Let $p^{*}$ attain the minimum and let $u$ be a unit eigenvector of
+$G_{p^{*}}$ for $\lmin(G_{p^{*}})$. The list with $J_{p^{*}}=uu^{\dagger}$
+and $J_p=0$ for $p\ne p^{*}$ is positive semidefinite, and, as
+$\mathcal{H}_{\mathrm{in}}$ is one-dimensional, its coupling condition reads
+$\sum_p\tr J_p=1$, which holds; there are no rows. So it lies in
+$\mathcal{J}$, and $\langle G,J\rangle=u^{\dagger}G_{p^{*}}u=\lambda$. The
+infimum is therefore attained and equals $b(G;0,\Lambda,\lambda)$.
+
+\emph{(iv).} Write $W\coloneqq W_{\mathsf t}$,
+$\widetilde W\coloneqq\widetilde W_{\mathsf t}$,
+$\varepsilon\coloneqq\varepsilon_{\mathsf t}$ and
+$d\coloneqq d_{A_{0,\mathsf t}}$, and let $J\in\Feas^{J}_{\mathsf t}$: its
+blocks are positive semidefinite, it satisfies the exact coupling condition,
+and it satisfies every row built from $W$. \emph{Step 1.} Steps~1 to~3 of
+(i), run with the maps $\widetilde L_{r,s}$ in place of $L_{r,s}$, read of
+the rows only the adjoint identity, which $\widetilde L_{r,s}$ satisfies by
+(ii)(a) for any linear $W$, and of $J$ only positivity and the coupling
+condition; they give
+$\langle G_{\mathsf t},J\rangle\ge d\,\widetilde\lambda+\tr Y
++\sum_r\sigma_r\tr[\Lambda_r\widetilde L_r(J)]$.
+\emph{Step 2 (the exact rows).} For each row put
+$\Delta_{r,s}\coloneqq\widetilde L^{*}_{r,s}(\Lambda_r)-L^{*}_{r,s}(\Lambda_r)$,
+a Hermitian operator. By the adjoint identities of both maps,
+$\tr[\Lambda_r\widetilde L_r(J)]=\tr[\Lambda_rL_r(J)]
++\sum_s\tr[\Delta_{r,s}J_s]$. $J$ satisfies the row built from $W$, so
+Step~4 of (i) gives
+$\sigma_r\tr[\Lambda_rL_r(J)]\ge\sigma_r\tr[\Lambda_r\Theta_r]$. For a
+Hermitian $\Delta$ and a positive semidefinite $J_s$,
+$-\opn{\Delta}\id\preceq\Delta\preceq\opn{\Delta}\id$ and the trace fact of
+Step~3 give $|\tr[\Delta J_s]|\le\opn{\Delta}\tr J_s$, so, the total trace
+being $d$ by the coupling condition,
+$\big|\sum_s\tr[\Delta_{r,s}J_s]\big|\le d\max_s\opn{\Delta_{r,s}}$. Hence
+$\langle G_{\mathsf t},J\rangle\ge b(G_{\mathsf t};Y,\Lambda,\widetilde\lambda)
+-d\sum_r\max_s\opn{\Delta_{r,s}}$.
+\emph{Step 3 (the size of $\Delta$).} For a lifted-operator row,
+$\Delta_{r,s}=(\widetilde W^{\dagger}\Lambda_r\widetilde W
+-W^{\dagger}\Lambda_rW)\otimes\hat O^{\uparrow(s)}_k$ and
+$\widetilde W^{\dagger}\Lambda_r\widetilde W-W^{\dagger}\Lambda_rW
+=(\widetilde W-W)^{\dagger}\Lambda_r\widetilde W
++W^{\dagger}\Lambda_r(\widetilde W-W)$. The operator norm is
+submultiplicative and invariant under the adjoint,
+$\opn{\widetilde W-W}\le\varepsilon$ and
+$\opn{W}\le\opn{\widetilde W}+\varepsilon$, so the bracket has norm at most
+$\varepsilon\opn{\Lambda_r}(2\opn{\widetilde W}+\varepsilon)$; and the
+norm of a tensor product is the product of the norms, the singular values
+of $A\otimes B$ being the products of those of $A$ and of $B$. So
+$\opn{\Delta_{r,s}}\le\varepsilon(2\opn{\widetilde W}+\varepsilon)
+\opn{\Lambda_r}\opn{O_{r,s}}$. For a party-local row the same computation
+holds with $\widetilde W\otimes\id$ and $W\otimes\id$, whose difference has
+the norm of $\widetilde W-W$ and whose norms are those of $\widetilde W$ and
+$W$, and with $D^{(s_f)}_k$ in place of $\hat O^{\uparrow(s)}_k$; at a
+sector whose component on the other factors is not $s_{f^c}$ both maps
+vanish and $\Delta_{r,s}=0$. For a row in frame-free form
+$\widetilde L_{r,s}=L_{r,s}$ and $\Delta_{r,s}=0$. Substituting into Step~2
+gives \eqref{eq:frame-deficit}. The sum over $\mathsf t$ follows as in
+(ii)(a), $J'_{\mathsf t}$ lying in $\Feas^{J}_{\mathsf t}$ for every
+$J'\in\Feas^{J}$.
+\end{proof}

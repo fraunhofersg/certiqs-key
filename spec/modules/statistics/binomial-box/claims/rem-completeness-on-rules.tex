@@ -1,0 +1,70 @@
+% ---
+% id: statistics/binomial-box/rem:completeness-on-rules
+% kind: rem
+% title: "Completeness figures on a closed-form rule"
+% summary: >-
+%   The tightest completeness figure this submodule certifies on any
+%   admissible rule is ε*, but a rule that evaluates no tail can report the
+%   allocation sum or a clamped upward-rounded tail evaluation; both bound the
+%   honest failure probability. Neither choice changes the emitted set or
+%   soundness.
+% prominence: standard
+% status: accepted
+% uses: [def:endpoint-rule, lem:guard, thm:completeness-bound, rem:epsstar, rem:sound-indep, prop:rule-bernstein, def:interval, statistics/def:conservative-evaluation]
+% mentions: [req:completeness-report, req:honest-model-record, prop:rule-exact]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:completeness-on-rules}
+Theorem~\ref{thm:completeness-bound} holds for every \tref{admissible endpoint rule}, and
+its $\varepsilon^{\star}$, the sum of the binomial tails at the
+\tref{guarded endpoints}, is the tightest completeness figure this submodule
+certifies for the emitted set, whatever rule produced the endpoints: every
+figure this remark lists is at least $\varepsilon^{\star}$, while the honest failure
+probability itself, which $\varepsilon^{\star}$ bounds by a union bound, may
+be smaller. What differs between rules is
+the cost of \emph{evaluating} it. On the exact rule of
+Definition~\ref{def:interval} the tails are decided in the course of finding
+the quantiles, and $\varepsilon^{\star}$ is reported exactly wherever they are
+decided exactly; where they are decided against the upper bounds of
+Proposition~\ref{prop:rule-exact}\,(vii) it is rounded upward and clamped
+(Remark~\ref{rem:epsstar}). On a closed-form rule such as the Bernstein rule
+of Proposition~\ref{prop:rule-bernstein}, the endpoints are found without
+evaluating any tail, and two reports are admissible, both upward-rounded in
+the sense of a \tref{conservative evaluation}
+(Definition~\ref{def:conservative-evaluation}) and Remark~\ref{rem:epsstar}:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{the allocation sum}
+$\sum_{\hat c\in\Chatcon}\big(\varepsilon^{-}(\hat c)+\varepsilon^{+}(\hat
+c)\big)$. By Lemma~\ref{lem:guard}\,(ii) each tail at a guarded endpoint is
+at most its allocation, so the sum is at least $\varepsilon^{\star}$ and
+hence, by \eqref{eq:completeness}, at least the honest failure probability;
+and it lies in $[0,\ecomp]$ because the allocation of an
+\tref{admissible input} is non-negative and sums to at most $\ecomp$
+(Definition~\ref{def:endpoint-rule}), so no clamp is needed. It costs nothing
+beyond the inputs and is what a rule that evaluates no tail can always
+report;
+\item \emph{an upward-rounded evaluation of the tails at the emitted
+endpoints}, $\min\{\ecomp,\tilde\varepsilon\}$ for any
+$\tilde\varepsilon\ge\varepsilon^{\star}$ obtained by bounding each tail from
+above (exactly, by the closed forms of the exact rule's evaluation, or by an
+enclosure), which is the clamped figure of Remark~\ref{rem:epsstar}. At
+$\tilde\varepsilon=\varepsilon^{\star}$ it is tighter than (a) by the budget
+the guarded endpoints leave unspent,
+$\sum_{\hat c\in\Chatcon}(\varepsilon^{-}(\hat c)+\varepsilon^{+}(\hat c))-\varepsilon^{\star}$,
+which on a closed-form rule includes the slack of the rule's own tail bound
+besides what integrality and the guard leave; an
+upward-rounded $\tilde\varepsilon>\varepsilon^{\star}$ need not be at most
+(a), since an upper bound on a tail at a guarded endpoint may exceed that
+tail's allocation.
+\end{enumerate}
+Neither choice affects the emitted set, and neither affects soundness
+(Remark~\ref{rem:sound-indep}); the difference is the advertised abort
+probability of the honest run, which (a) overstates by the unspent budget.
+Requirement~\ref{req:completeness-report} fixes which of the two is reported
+on each route, and Requirement~\ref{req:honest-model-record} what is recorded
+beside the figure.
+\end{remark}

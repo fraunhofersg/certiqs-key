@@ -1,0 +1,170 @@
+% ---
+% id: meat-core/fact:meat
+% kind: fact
+% title: "Marginal-constrained entropy accumulation, sequential form"
+% summary: >-
+%   On an accepted event the Rényi entropy of n rounds of sequential channels
+%   with quantum memory, under a product marginal constraint, is at least n
+%   times a single-round rate less (α/(α−1))·log₂(1/p_Ω). The rate minimises a
+%   KL penalty plus conditional entropies over the channels' convex range.
+% prominence: standard
+% status: accepted
+% uses: [foundations/def:kl, foundations/def:renyi]
+% mentions: [thm:accumulated-entropy, thm:constrained-accumulation, thm:protocol-channel, rem:modes-da1]
+% assumes: []
+% refs:
+%   - "arqand2025meat, Thm. 4.2a, Eqs. (100)-(101)"
+%   - "arqand2025meat, Def. 4.2, Eq. (98)"
+%   - "arqand2025meat, footnote 12"
+%   - "arqand2025meat, footnote 17"
+%   - "arqand2025meat, Lemma 4.11, Eqs. (113)-(114)"
+%   - "arqand2025meat, Cor. 4.2, Eq. (137)"
+%   - "arqand2025meat, Rem. 5.1"
+%   - "arqand2025meat, Thm. 4.2a"
+%   - "arqand2025meat, Eq. (1)"
+% provenance: published
+% lean:
+% ---
+
+The imported theorem is stated below in this module's notation. The locator
+notes after the statement tie each display to its place in the source, and
+note~(vii) checks that a one-dimensional marginal register is an admissible
+instance, on which the \tref{untrusted-source mode} case of
+Theorem~\ref{thm:accumulated-entropy} rests. Untrusted-source mode on the
+program is the subject of Remark~\ref{rem:modes-da1}, whose part (b) quotes
+the sentence following \cite[Eq.~(1)]{arqand2025meat} that note~(vii)
+cites. The Fact is the source's theorem in its published form, on
+$\alpha<\infty$ (note~(vi)), quoted once for both source modes. The source states no separate result for trivial
+marginal registers: that its hypotheses admit them is note~(vii)'s reading
+of the source at the locators it quotes, and the claim that instantiates the
+Fact there, Theorem~\ref{thm:accumulated-entropy}, is newly derived.
+
+\begin{fact}\label{fact:meat}
+\emph{(\cite[Thm.~4.2a, Eqs.~(100)--(101)]{arqand2025meat}.)}
+For each $j\in\{1,\dots,n\}$ take a state
+$\sigma^{(j-1)}\in\Seq{A_{j-1}}$ and a channel
+$\Mprot_j\in\mathrm{CPTP}(A_{j-1}E_{j-1},\,S_j\Chat_jE_j)$ with
+$\Chat_j$ classical. Let
+\begin{equation*}
+  \rho_{S_1^n\Chat_1^nE_n}
+  =\big(\Mprot_n\circ\dots\circ\Mprot_1\big)\big[\omega^{0}\big],
+  \qquad
+  \omega^{0}\in\Seq{A_0^{n-1}E_0},
+\end{equation*}
+subject to the product marginal constraint
+$\omega^{0}_{A_0^{n-1}}=\sigma^{(0)}\otimes\dots\otimes\sigma^{(n-1)}$;
+$E_0$ is unconstrained, and $\omega^{0}$ ranges over \emph{all}
+normalized states compatible with the marginal constraint (purity is
+not assumed). Suppose
+$\rho=p_{\Omega}\,\rho_{|\Omega}+(1-p_{\Omega})\rho_{|\bar\Omega}$
+with $p_{\Omega}\in(0,1]$ and $\rho_{|\Omega},\rho_{|\bar\Omega}$
+normalized, all $\Chat_j$ isomorphic to one register $\Chat$ with
+alphabet $\Chatset$, and let $S_{\Omega}$ be a convex set of
+probability distributions on $\Chatset$ such that
+$\operatorname{freq}_{\hat c_1^n}\in S_{\Omega}$ for every frequency
+vector with nonzero probability in $\rho_{|\Omega}$. Then, for every
+$\alpha\in(1,\infty)$ (locator note (vi): the source also covers the
+endpoint $\alpha=\infty$, which no claim of this module uses),
+\begin{equation}\label{eq:meat}
+  \Hsandup\big(S_1^n\big|\Chat_1^nE_n\big)_{\rho_{|\Omega}}
+  \;\ge\;n\,\hup-\frac{\alpha}{\alpha-1}\log_2\frac{1}{p_{\Omega}},
+\end{equation}
+where
+\begin{equation}\label{eq:meat-rate}
+  \hup=\inf_{\mathbf q\in S_{\Omega}}\ \inf_{\nu\in\Sigma}
+  \left(\frac{\alpha}{\alpha-1}\,
+  \sfD\!\left(\mathbf q\,\middle\|\,\boldsymbol{\nu}_{\Chat}\right)
+  +\sum_{\hat c\in\operatorname{supp}(\boldsymbol{\nu}_{\Chat})}
+  q(\hat c)\,\Hsandup(S|E\Etil)_{\nu_{|\hat c}}\right),
+\end{equation}
+with $\sfD$ the classical (base-2) KL divergence of
+\xref{foundations/def:kl} and $\Sigma=\Sigma_{S\Chat E\Etil}$ the
+\emph{marginal-constrained convex range}
+(\cite[Def.~4.2, Eq.~(98)]{arqand2025meat}) of the channels
+$\Mprot_j\otimes\idmap_{\Etil}$ and states $\sigma^{(j-1)}$:
+\begin{equation}\label{eq:meat-range}
+  \Sigma\coloneqq\operatorname{conv}\!\Big(\bigcup_{j=1}^{n}\Sigma_j\Big),
+  \qquad
+  \Sigma_j\coloneqq\big\{(\Mprot_j\otimes\idmap_{\Etil})[\omega]:
+  \omega\in\Seq{A_{j-1}E_{j-1}\Etil},\
+  \omega_{A_{j-1}}=\sigma^{(j-1)}\big\},
+\end{equation}
+where every output is embedded in common registers $S\Chat E\Etil$ (the
+results hold for any choice of embeddings;
+\cite[footnote~12]{arqand2025meat}) and $\Etil$ is a register of large
+enough dimension to serve as a purifying register for any of the
+$A_{j-1}E_{j-1}$ registers (enlargeable without loss of generality;
+\cite[footnote~17]{arqand2025meat}).
+
+\emph{Locator notes.} (i) The statement above is the source's
+Thm.~4.2a with its registers written in this module's fonts; its
+Eq.~(100) is \eqref{eq:meat}, its Eq.~(101) is \eqref{eq:meat-rate},
+and its Def.~4.2, Eq.~(98) is \eqref{eq:meat-range}. Thm.~4.2a is the
+special case of the source's Thm.~4.2b in which the per-round secret
+test registers (the unbarred $C_j$ of the source) are trivial, which is
+the case Theorem~\ref{thm:protocol-channel} generates. The source states
+its entropies in base~2
+(bits). (ii) The divergence in the penalty term is the \emph{KL}
+divergence $\sfD$: the source obtains the rate objective as the convex
+conjugate of a log-sum-exponential
+(\cite[Lemma~4.11, Eqs.~(113)--(114)]{arqand2025meat}) and evaluates
+it in its Eq.~(118), stating there explicitly that the first term ``is
+the KL divergence''.
+(iii) An alternative import is the tensor-product
+specialization \cite[Cor.~4.2, Eq.~(137)]{arqand2025meat}, in which
+the round channels carry no $E_j$ output and Eve's entire action is
+the choice of one global input state. The source presents that
+corollary as a register substitution of the theorems above, and its
+Sec.~5 applies the resulting analysis when every public announcement
+is made only after \emph{all} measurements are complete; for per-round
+(``on-the-fly'') announcements --- the model
+Theorem~\ref{thm:protocol-channel} generates, whose round channel
+announces $I_j$ in every round --- the source's own
+route (its Sec.~5, Protocols~1--2 and the reduction between them) is
+the sequential form quoted here, in which Eve carries a quantum memory
+$E_{j-1}$ between rounds and may adapt each round's action to all
+earlier announcements. The present import therefore covers a strictly
+larger attack model than that specialization would. (iv) The theorem has no
+announcement register of its own: announcements enter the sequential
+model inside the $E_j$ outputs (the source's Sec.~5: Eve
+``immediately incorporates'' each $I_j$ into her side information).
+(v) Indexing is off by one between this module's rounds and the
+source's registers (\cite[Rem.~5.1]{arqand2025meat}): round $j$ here
+uses the source's $A_{j-1}E_{j-1}$. (vi) The source states the
+theorem for $\alpha\in(1,\infty]$, and its Def.~2.6 defines the
+entropies at the endpoint; \xref{foundations/def:renyi}
+defines the sandwiched family on $(1,\infty)$ only, so the Fact is
+quoted, and Theorems \ref{thm:accumulated-entropy} and \ref{thm:constrained-accumulation} are stated, on
+$(1,\infty)$. No claim uses the endpoint: every key-length statement
+is confined to $(1,2)$.
+(vii) \emph{Trivial marginal registers are admissible} --- the import
+check for \tref{untrusted-source mode}, read off the source at the
+locators named. The hypotheses that
+\cite[Thm.~4.2a]{arqand2025meat} places on the marginal registers are,
+in full, that one ``take a state $\sigma^{(j-1)}\in S_=(A_{j-1})$, and
+a channel $M_j\in\mathrm{CPTP}(A_{j-1}E_{j-1},S_j\widehat C_jE_j)$,
+such that $\widehat C_j$ are classical'', together with the product
+condition
+$\omega_{A_0^{n-1}}=\sigma^{(0)}_{A_0}\otimes\dots\otimes
+\sigma^{(n-1)}_{A_{n-1}}$ on the input state; and
+\cite[Def.~4.2, Eq.~(98)]{arqand2025meat} likewise only ``consider[s]
+channels $E_j\in\mathrm{CPTP}(A_{j-1}\bar A_{j-1},Z_j)$ and states
+$\sigma^{(j-1)}\in S_=(A_{j-1})$'' (in the source's symbols, where $E_j$ is a
+channel and $Z_j$ its output register, not this module's register $E_j$ and
+raw key $Z_j$). \emph{No dimension bound and no
+rank condition is imposed on $A_{j-1}$ at either locator}, and the
+source's standing convention is explicit that none is imposed globally
+either: ``we will assume that all systems are finite-dimensional, but
+we will not impose any bounds on the system dimensions unless otherwise
+specified'' (\cite[Sec.~2, the convention stated below its Table~1]%
+{arqand2025meat}). A one-dimensional $A_{j-1}$ is therefore an
+admissible instantiation, and at it the product marginal condition is
+satisfied by every normalized $\omega$, since $\Seq{A_0^{n-1}}$ is then
+a singleton --- the hypothesis discharges vacuously rather than
+failing. Independently, the source reads the same equivalence into its
+own definition of channel conditional entropy: see the sentence
+following \cite[Eq.~(1)]{arqand2025meat}. Nothing else in Fact~\ref{fact:meat}
+mentions $A_{j-1}$ beyond the purifier requirement, which asks $\Etil$
+to purify $A_{j-1}E_{j-1}$ and is only weakened by shrinking
+$A_{j-1}$.
+\end{fact}

@@ -1,0 +1,148 @@
+% ---
+% id: receiver/detector-imperfections/prop:noise-floor
+% kind: prop
+% title: "Loss and dark counts make every dark-composed element definite"
+% summary: >-
+%   With loss and a dark-count probability in (0,1) in every port, every
+%   dark-composed element is positive definite on every photon-number block,
+%   with a least eigenvalue bounded below through the no-click element. Without
+%   loss, or without a dark count in some port, some element is singular.
+% prominence: standard
+% status: accepted
+% uses: [def:dark-composed, def:darkadm, thm:efficiency, receiver/def:setting-family, receiver/thm:multiclick-bound, receiver/lem:fock-block-spectrum, receiver/thm:click-povm, receiver/def:physmodel, receiver/def:instrument, receiver/def:fock, receiver/lem:fock-functor, receiver/thm:port-grams, receiver/def:coarse]
+% mentions: [receiver/cor:unconditioned-family]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The \tref{no-click outcome} is the only one that the vacuum and a lossy device
+both reach on every photon-number block, and a dark count can turn it into
+any other outcome. That single column of the dark-count channel therefore
+spreads a positive multiple of the no-click element into every element. Items
+(i)--(iii) say when this makes every element positive definite; items (iv)
+and (v) show that neither ingredient can be dropped. Item (iii) applies at
+every setting whose operator satisfies $\lmax(B^{(t)})\le\lmax(A_\Sigma)$;
+the unconditioned receiver has $B=A_\Sigma$ and $\gamma=1$
+(Corollary~\ref{cor:unconditioned-family}), and a submodule that constructs
+a setting family states whether its operators do.
+
+\begin{proposition}\label{prop:noise-floor}
+Let $\{\widetilde M_{S|t}\}$ and $\{\widetilde F_{v|t}\}$ be the
+\tref{dark-composed family} (Definition~\ref{def:dark-composed}) of a
+\tref{setting family} $\big(\Tset,\{M_{S|t}\}\big)$ with operators $B^{(t)}$
+and prefactors $\gamma^{(t)}$ (Definition~\ref{def:setting-family}), a
+\tref{dark-count channel} $R$ and a declared coarse-graining $\cg$, and write
+$r_S\coloneqq R_{S|\varnothing}$.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{The floor.} For every $t$, $S$, $v$ and $n\ge0$,
+  \begin{equation}\label{eq:noise-floor}
+    \blk{\widetilde M}{\eqn}_{S|t}\succeq r_S\,\gamma^{(t)}
+      \big(1-\lmax(B^{(t)})\big)^{n}\,\id,
+    \qquad
+    \blk{\widetilde F}{\eqn}_{v|t}\succeq R_{\cg^{-1}(v)|\varnothing}\,
+      \gamma^{(t)}\big(1-\lmax(B^{(t)})\big)^{n}\,\id .
+  \end{equation}
+  Hence, if $r_S>0$ for every $S\subseteq[K]$ and $\lmax(B^{(t)})<1$, every
+  $\widetilde M_{S|t}$ and every $\widetilde F_{v|t}$ is positive definite on
+  every photon-number block.
+\item \emph{Dark counts in product form.} On the generated dark-count route,
+  $r_S=\prod_{k\in S}p_{\dc|k}\prod_{k\notin S}(1-p_{\dc|k})$, and $r_S>0$
+  for every $S$ if and only if $0<p_{\dc|k}<1$ for every $k$.
+\item \emph{Loss through the efficiencies.} If the \tref{instrument matrix} of a
+  receiver instrument is $D_\eta\Gmat'$, with $\Gmat'$ a contraction and
+  $D_\eta$ the \tref{terminal detector-efficiency layer}, then
+  $\lmax(A_\Sigma)\le\max_k\eta_k$. For the unconditioned receiver, with
+  $\InpS=\varnothing$, $B=A_\Sigma$ and $\gamma=1$, so $\eta_k<1$ and
+  $0<p_{\dc|k}<1$ for every $k$ give
+  $\lmin\big(\blk{\widetilde M}{\eqn}_S\big)\ge r_S\,(1-\max_k\eta_k)^{n}>0$.
+\item \emph{Loss is necessary.} If $\lmax(B^{(t)})=1$, then for every
+  dark-count channel and every $n\ge1$ the element
+  $\blk{\widetilde M}{\eqn}_{\varnothing|t}=r_\varnothing\,\blk{M}{\eqn}_{\varnothing|t}$
+  is singular; if $B^{(t)}=\id$ it is zero.
+\item \emph{Dark counts in every port are necessary.} For the unconditioned
+  receiver on the generated route, let
+  $Z\coloneqq\{k:p_{\dc|k}=0\}$. Then $\blk{\widetilde M}{\eqn}_S=0$ for
+  every $S$ with $|S\cap Z|>n$; in particular
+  $\blk{\widetilde M}{(=0)}_{\{k\}}=0$ for every $k\in Z$. If $p_{\dc|k}=1$,
+  then $\widetilde M_S=0$ for every $S\not\ni k$.
+\item \emph{Equivalence.} For the unconditioned receiver on the generated
+  route, every $\widetilde M_S$ is positive definite on every
+  photon-number block if and only if $\lmax(A_\Sigma)<1$ and
+  $0<p_{\dc|k}<1$ for every $k$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) By \eqref{eq:family-elements}, $\Pvac{[K]}^{(t)}=M_{\varnothing|t}$, so
+\eqref{eq:family-prefactor} gives
+$M_{\varnothing|t}=\gamma^{(t)}\Fock(\id-B^{(t)})$, and
+$0\preceq B^{(t)}\preceq\id$ by \eqref{eq:bbkhyp}. Lemma~\ref{lem:fock-block-spectrum}
+gives $\blk{M}{\eqn}_{\varnothing|t}\succeq\gamma^{(t)}(1-\lmax(B^{(t)}))^{n}\id$.
+Every term of $\widetilde M_{S|t}=\sum_{S'}R_{S|S'}M_{S'|t}$ is positive
+semidefinite, so dropping all but $S'=\varnothing$ gives
+$\widetilde M_{S|t}\succeq r_SM_{\varnothing|t}$, and the blocks inherit the
+inequality because every term is block diagonal. Summing over the fibre of
+$v$ gives the second inequality, with
+$\sum_{S\in\cg^{-1}(v)}r_S=R_{\cg^{-1}(v)|\varnothing}$. If every $r_S>0$ and
+$\lmax(B^{(t)})<1$, the right-hand sides are positive multiples of $\id$:
+$\gamma^{(t)}>0$ by Definition~\ref{def:setting-family}, and every fibre is
+non-empty because $\cg$ is onto (Definition~\ref{def:coarse}).
+
+(ii) \eqref{eq:darkR} at $S'=\varnothing$ is the stated product. It is positive
+for $S=[K]$ only if every $p_{\dc|k}>0$, and for $S=\varnothing$ only if every
+$p_{\dc|k}<1$; conversely, under both, every factor is positive.
+
+(iii) By Theorem~\ref{thm:efficiency}\,(i), $A_k=\eta_kA'_k$ with $A'_k$ the
+port Grams of $\Gmat'$, and $\sum_kA'_k\preceq\id$ by
+Theorem~\ref{thm:port-grams}\,(i) applied to $\Gmat'$. Hence
+$A_\Sigma=\sum_k\eta_kA'_k\preceq(\max_k\eta_k)\sum_kA'_k\preceq(\max_k\eta_k)\id$,
+each $A'_k$ being positive semidefinite. For $\InpS=\varnothing$,
+$M_\varnothing=\Fock(\id-A_\Sigma)$ by \eqref{eq:Mnc} of
+Theorem~\ref{thm:click-povm}, which is \eqref{eq:family-prefactor} with
+$\gamma=1$ and $B=A_\Sigma$; the argument of (i), which uses only this form of
+$M_\varnothing$ and $0\preceq A_\Sigma\preceq\id$
+(Theorem~\ref{thm:port-grams}\,(i)), gives the bound, and (ii) makes $r_S$
+positive.
+
+(iv) By (D2), $R_{\varnothing|S'}>0$ forces $S'\subseteq\varnothing$, so
+$\widetilde M_{\varnothing|t}=r_\varnothing M_{\varnothing|t}
+=r_\varnothing\gamma^{(t)}\Fock(\id-B^{(t)})$. By
+Lemma~\ref{lem:fock-block-spectrum} the least eigenvalue of its $n$-photon block
+is $r_\varnothing\gamma^{(t)}(1-\lmax(B^{(t)}))^{n}=0$ for $n\ge1$. If
+$B^{(t)}=\id$, the block is $r_\varnothing\gamma^{(t)}(0^{\otimes n})|_{\Symn{n}}=0$
+for $n\ge1$.
+
+(v) \emph{Step 1 (no more clicks than photons).} For $\InpS=\varnothing$,
+$\blk{M}{\eqn}_{S'}=0$ whenever $|S'|>n$. Indeed
+$M_{S'}=V^\dagger X V$ with
+$X=\prod_{k\in S'}(\id-\Pi^0_k)\prod_{k\notin S'}\Pi^0_k$
+(Theorem~\ref{thm:click-povm}, \eqref{eq:MSdef}). The \tref{measurement isometry}
+$V=\Fock(U)\Fock(\iota)$ of Definition~\ref{def:physmodel} maps
+$\Symn{n}(\mathbb{C}^{\Inp})$ into the $n$-photon sector of
+$\mathcal{F}(\mathbb{C}^{\Modes\sqcup\Env})$, because both lifts preserve the
+photon number (Lemma~\ref{lem:fock-functor}\,(i) and Definition~\ref{def:fock}).
+Each $\Pi^0_k$ is the projector onto the span of the occupation vectors with
+no photon in $\Port{k}$ (Lemma~\ref{lem:fock-functor}\,(iv)), so all of them
+are diagonal in the occupation basis and $\prod_{k\in S'}(\id-\Pi^0_k)$ is the
+projector onto the span of the occupation vectors with at least one photon in
+every port of $S'$. The ports are pairwise disjoint
+(Definition~\ref{def:instrument}\,(iii)), so such a vector carries at least
+$|S'|$ photons, and $X$ vanishes on the $n$-photon sector when $|S'|>n$. Hence
+$M_{S'}$ vanishes on $\Symn{n}(\mathbb{C}^{\Inp})$.
+
+\emph{Step 2.} By \eqref{eq:darkR}, $R_{S|S'}\neq0$ requires $S'\subseteq S$
+and $p_{\dc|k}\neq0$ for every $k\in S\setminus S'$, that is,
+$S\cap Z\subseteq S'$. If $|S\cap Z|>n$, every $S'$ with $R_{S|S'}\neq0$ has
+$|S'|>n$, and Step 1 gives
+$\blk{\widetilde M}{\eqn}_S=\sum_{S'}R_{S|S'}\blk{M}{\eqn}_{S'}=0$. For
+$k\in Z$ and $S=\{k\}$, $|S\cap Z|=1>0$. If $p_{\dc|k}=1$, every entry
+$R_{S|S'}$ with $k\notin S$ carries the factor $1-p_{\dc|k}=0$.
+
+(vi) Sufficiency is (i) with (ii), at $\gamma=1$ and $B=A_\Sigma$ as in (iii).
+Necessity: if $\lmax(A_\Sigma)=1$, (iv) gives a singular block of
+$\widetilde M_\varnothing$ at $n=1$; if some $p_{\dc|k}=0$, (v) gives
+$\blk{\widetilde M}{(=0)}_{\{k\}}=0$; if some $p_{\dc|k}=1$, (v) gives
+$\widetilde M_\varnothing=0$.
+\end{proof}

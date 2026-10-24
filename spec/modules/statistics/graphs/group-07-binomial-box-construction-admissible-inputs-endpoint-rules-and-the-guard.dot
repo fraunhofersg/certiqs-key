@@ -1,0 +1,22 @@
+digraph claims {
+  rankdir=LR;
+  graph [label="7 Binomial box construction: Admissible inputs, endpoint rules and the guard\nArrow: claim -> prerequisite. Solid: uses; dashed: assumes.\nDeclared dependencies, not a proof check. Mentions excluded.", labelloc=t, fontsize=13, fontname="Arial", bgcolor="white", pad=0.25, nodesep=0.3];
+  node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11, margin="0.13,0.09"];
+  edge [color="#526777", arrowsize=0.65];
+  subgraph "cluster_statistics" {
+    label="statistics"; color="#cbd5df";
+    "statistics/def:envelope" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">statistics/def:envelope<BR/>Honest envelope and its envelope set<BR/>implemented<BR/>BOUNDARY: further prerequisites omitted</TD></TR><TR><TD HREF="../claims/def-envelope.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-statistics/def:envelope" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled,dashed", URL="../claims/def-envelope.tex", target="_top"];
+    "statistics/def:freq" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">statistics/def:freq<BR/>Frequency vector and counts<BR/>accepted<BR/>BOUNDARY: further prerequisites omitted</TD></TR><TR><TD HREF="../claims/def-freq.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-statistics/def:freq" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled,dashed", URL="../claims/def-freq.tex", target="_top"];
+    "statistics/def:matched-alphabet" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">statistics/def:matched-alphabet<BR/>Alphabet and round count matched to<BR/>the consuming declaration<BR/>accepted<BR/>BOUNDARY: further prerequisites omitted</TD></TR><TR><TD HREF="../claims/def-matched-alphabet.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-statistics/def:matched-alphabet" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled,dashed", URL="../claims/def-matched-alphabet.tex", target="_top"];
+  }
+  subgraph "cluster_statistics/binomial-box" {
+    label="statistics/binomial-box"; color="#cbd5df";
+    "statistics/binomial-box/def:endpoint-rule" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">statistics/binomial-box/def:endpoint-rule<BR/>Admissible inputs, endpoint rules and<BR/>guarded endpoints<BR/>implemented</TD></TR><TR><TD HREF="../binomial-box/claims/def-endpoint-rule.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-statistics/binomial-box/def:endpoint-rule" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled", URL="../binomial-box/claims/def-endpoint-rule.tex", target="_top"];
+    "statistics/binomial-box/lem:guard" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">statistics/binomial-box/lem:guard<BR/>The honest-containment guard for every<BR/>rule<BR/>implemented</TD></TR><TR><TD HREF="../binomial-box/claims/lem-guard.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-statistics/binomial-box/lem:guard" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled", URL="../binomial-box/claims/lem-guard.tex", target="_top"];
+  }
+  "statistics/binomial-box/def:endpoint-rule" -> "statistics/def:envelope";
+  "statistics/binomial-box/def:endpoint-rule" -> "statistics/def:freq";
+  "statistics/binomial-box/def:endpoint-rule" -> "statistics/def:matched-alphabet";
+  "statistics/binomial-box/lem:guard" -> "statistics/binomial-box/def:endpoint-rule";
+  "statistics/binomial-box/lem:guard" -> "statistics/def:envelope";
+}

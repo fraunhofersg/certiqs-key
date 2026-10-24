@@ -1,0 +1,59 @@
+% ---
+% id: meat-core/ass:conform
+% kind: ass
+% title: "The implementation runs the analysed post-processing"
+% summary: >-
+%   The implementation applies the acceptance test and the verification
+%   abort, sends no message beyond the model's, outputs the model's key or
+%   nothing, uses no key before the execution ends and aborts on an
+%   authentication failure. It ties the analysed protocol to the one that runs.
+% prominence: standard
+% status: accepted
+% uses: [def:postprocessing-model, def:authenticated-channel, def:execution-end]
+% assumes: []
+% refs:
+%   - "portmann2022security, Sec. IV.A"
+%   - "tupkary2026decoy, Sec. 4.1, Protocol 1"
+% provenance: newly-derived
+% short_id: A-CONFORM
+% verification: never
+% category: post-processing
+% affects: [secrecy, correctness]
+% user_statement: >-
+%   Your implementation runs exactly the analysed post-processing. It aborts
+%   unless the acceptance statistics lie in the declared acceptance set; after
+%   the rounds it sends no public message other than the error-correction
+%   transcript of at most λ_EC bits and its seed, the verification seed, hash
+%   and result, the privacy-amplification hash choice and the closing accept
+%   or abort decisions; it aborts when verification fails or a message fails
+%   authentication (an auth-abort); it outputs the analysed ℓ-bit key, or
+%   nothing. No part of the key is used before the execution has ended: the
+%   key holder, having sent its final decision, waits until the partner has
+%   received it or an auth-abort in its place, and the partner until one of
+%   these has arrived. Interactive error correction, a resent syndrome or
+%   early key use violate this. Tightening 2ε_auth to ε_auth under this timing
+%   is an open question.
+% lean:
+% ---
+
+That the devices execute the protocol as prescribed is one of the standard
+premises of QKD \cite[Sec.~IV.A]{portmann2022security}; the post-processing
+prescribed here is the fixed-length instance of
+\cite[Sec.~4.1, Protocol~1]{tupkary2026decoy}.
+
+\begin{assumption}\label{ass:conform}
+(i) The implementation evaluates the acceptance test of
+Definition~\ref{def:postprocessing-model}\,(i) and aborts unless $\OmAT$
+holds;
+(ii) after the rounds, the only classical messages either party sends are
+those of Definition~\ref{def:postprocessing-model} and of the
+\tref{authentication post-processing}
+(Definition~\ref{def:authenticated-channel}\,(c));
+(iii) both parties abort when the verification flag is $\mathrm{rej}$;
+(iv) each party outputs the $\ell$-bit key that
+Definition~\ref{def:postprocessing-model}\,(iv) assigns to it, or $\perp$;
+(v) neither party uses any part of its key before the
+\tref{end of an execution} (Definition~\ref{def:execution-end});
+(vi) a party that receives an authentication failure acts as the
+authentication post-processing prescribes.
+\end{assumption}

@@ -1,0 +1,55 @@
+% ---
+% id: foundations/def:tolerance
+% kind: def
+% title: "The declared tolerance and the defects it bounds"
+% summary: >-
+%   The declared tolerance is a binary64 number in [0, 1) that bounds the
+%   defects of an instance's own data before they are snapped. A defect of a
+%   difference is an entrywise maximum modulus, and positivity is measured by a
+%   floor on the least eigenvalue.
+% prominence: standard
+% status: accepted
+% uses: [def:binary64, def:declared-data, def:sector-map]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{definition}\label{def:tolerance}
+The \term[a binary64 number, at least zero and below one, that an instance
+states in its run configuration]{declared tolerance} is a binary64 number
+$\tnum$ with
+$0\le\tnum<1$, stated by an instance in its run configuration
+(Definition~\ref{def:declared-data}). For a complex matrix $Y$ we write
+$\mxn{Y}\coloneqq\max_{i,l}|Y_{il}|$ for its \emph{entrywise maximum modulus}.
+The \term[the entrywise maximum moduli of the differences that the predicates
+of data name: the Hermiticity defect and the completeness, column, trace and
+sum residues]{defects} of data are the entrywise maximum moduli of the
+differences
+their predicates name:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item the \emph{Hermiticity defect} $\mxn{X-X^{\dagger}}$ of a square matrix
+  $X$;
+\item the \emph{completeness residue}
+  $\max_{s\in\mathsf{S}}\mxn{\sum_{j\in J}a^{(s)}_j-c\,\idon{d_s}}$ of a family of
+  \tref[block list]{block lists} $\{a_j\}_{j\in J}$ against a
+  \tref{sector map} with blocks $s\in\mathsf{S}$
+  (Definition~\ref{def:sector-map}), read with a declared constant $c$;
+\item the \emph{column residue} $\max_{l}\big|\sum_{i}P_{il}-1\big|$ of a real
+  matrix $P$ read as column-stochastic;
+\item the \emph{trace residue} $|\tr X-1|$ of a square matrix $X$ read as
+  having unit trace, and the \emph{sum residue} $\big|\sum_{x}p_x-1\big|$ of a
+  vector $p$ read as a probability vector.
+\end{enumerate}
+The sums here are exact sums. A square matrix $X$ passes the
+\term[the condition that the least eigenvalue of the Hermitian part of a square
+matrix is at least minus the declared tolerance]{positivity floor} at $\tnum$
+when
+$\lmin\big(\tfrac12(X+X^{\dagger})\big)\ge-\tnum$. Data lie
+\term[said of data whose defects are each at most the declared tolerance and
+whose blocks read as positive semidefinite each pass the positivity floor at
+it]{within the declared tolerance} when each of their defects is at most
+$\tnum$ and each of their blocks read as positive semidefinite passes the
+positivity floor at $\tnum$.
+\end{definition}

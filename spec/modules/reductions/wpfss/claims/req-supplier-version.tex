@@ -1,0 +1,40 @@
+% ---
+% id: reductions/wpfss/req:supplier-version
+% kind: req
+% title: "Receiver versions from which per-setting weights are read"
+% summary: >-
+%   Per-setting weights are read only from an artifact whose receiver version
+%   states them as the content of a claim. An artifact of any other version is
+%   refused, a probe-free one included, and nothing it reports is read per
+%   setting.
+% prominence: standard
+% status: accepted
+% uses: [def:weight-route, prop:route]
+% mentions: [receiver/thm:emitted-bound, receiver/def:slot]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A hypothesis of Proposition~\ref{prop:route}, whose part (iv) discharges the
+per-setting guarantee by \xref{receiver/thm:emitted-bound}, is discharged
+only by a claim that states it. At a receiver
+version whose claims state only the minimum over the settings, the
+per-setting values an artifact reports beside it are the content of no
+claim, and the \tref{weight route} reads every slot per setting
+(Definition~\ref{def:weight-route}), so such an artifact supplies nothing it
+can read.
+
+\begin{requirement}\label{req:supplier-version}
+The engine reads the \tref[per-setting weight]{per-setting weights}
+$p^{(t)}_i$ of a receiver artifact (\iface{high_photon_bounds}) only where
+the artifact's module version resolves to an accepted receiver version that
+states them: one whose \xref{receiver/thm:emitted-bound} carries the
+per-setting inequality as its first conclusion and whose
+\xref{receiver/def:slot} carries a weight per entry and setting. An artifact
+whose version does not state them, a probe-free one included, is refused with
+\iface{high_photon_slot_ill_formed}: the per-setting values it reports beside
+the minimum are not read from it, and its minimum is not read at every
+setting in their place.
+\end{requirement}

@@ -1,0 +1,115 @@
+% ---
+% id: reductions/wpfss/cor:two-sector-decided
+% kind: cor
+% title: "The requested two-sector entry, decided on the emitted numbers"
+% summary: >-
+%   On the licensed route the requested two-sector entry keeps its certificate
+%   wherever every block of its outcome below the cutoff clears its first
+%   constant and its second constant is at most the outcome's certified
+%   weight. Both conditions are decided exactly on the emitted numbers.
+% prominence: standard
+% status: implemented
+% uses: [prop:flat-instance, prop:chain, def:targets, reductions/def:reduction-instance, reductions/thm:licence, reductions/cor:entries, reductions/thm:emit, reductions/lem:exactpsd, reductions/def:substrate]
+% mentions: [rem:published]
+% assumes: [A-RECV]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.constraints:_two_sector_certificate
+% lean:
+% user_statement: >-
+%   A constraint you request in the published two-constant form is added to
+%   the model only after the engine has checked exactly, on the numbers it
+%   emits, that the receiver blocks below the photon-number cutoff clear the
+%   first constant and that the second constant does not exceed the certified
+%   high-photon weight the receiver supplies. Where either check fails the
+%   request is refused; the constraint is never taken on your word.
+% ---
+
+Remark~\ref{rem:published} compares the scalar flag-weight constraint of
+the literature with the operator entry \eqref{eq:two-sector-entry}, whose two
+constants are the least eigenvalues of the two halves of an element. A
+request declares the constants instead, and the entry is emitted only where
+its certificate is decided on the emitted numbers. The above-cutoff half has
+no finite presentation, so it is decided through the certified weight; the
+below-cutoff half is decided on the emitted blocks themselves.
+
+\begin{corollary}\label{cor:two-sector-decided}
+Let $\mathcal{J}_{\mathrm{flat}}$ be the flat instance of
+Proposition~\ref{prop:flat-instance} on the licensed route, with channel
+$\Lambda$ and routed weights $(p_v)$, and let $A''$ be an admissible datum of
+it over any substrate of Definition~\ref{def:substrate} over which it is a
+reduction instance, $\Fld=\mathbb{R}$ included. Let $e\in\Vset$, let $a$ and $b$ be declared real constants, and put
+\begin{equation}\label{eq:two-sector-at}
+  \hat O[A'']\;\coloneqq\;\Ffss_e[A'']-a\,\Pleq-b\,\Pflag ,
+\end{equation}
+written in the form \eqref{eq:instance-entry} with coefficient $1$ for $e$
+on every sector, every other coefficient $0$, and $Z=-a\,\Pleq-b\,\Pflag$.
+Then:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item its pull-back is
+  \begin{equation}\label{eq:two-sector-pullback}
+    \Lambda^{\dagger}\big(\hat O[A'']\big)
+    \;=\;\bigoplus_{m\le N}\big(A''^{(m)}_e-a\,\idon{d_m}\big)
+    \ \dsum\ \big(\blk{M}{\gtN}_e-b\,\idon{}\big);
+  \end{equation}
+\item if
+  \begin{equation}\label{eq:two-sector-condition}
+    A''^{(m)}_e-a\,\idon{d_m}\;\succeq\;0\quad(m\le N)
+    \qquad\text{and}\qquad b\;\le\;p_e ,
+  \end{equation}
+  then $\Lambda^{\dagger}(\hat O[A''])\succeq0$, which is the certificate
+  \eqref{eq:certificate} of the entry $(\hat O[A''],\succeq,0)$;
+\item the first condition of \eqref{eq:two-sector-condition} is necessary for
+  that certificate. At the declared datum $A'$ of Theorem~\ref{thm:emit},
+  whose blocks and routed weights are emitted lattice values, and for
+  constants $a$ and $b$ that are lattice values, both conditions are decided
+  by finitely many field operations and sign comparisons on these numbers,
+  and \eqref{eq:two-sector-condition} is a decided certificate for the entry
+  $(\hat O[A'],\succeq,0)$ in the sense of
+  Corollary~\ref{cor:entries}\,(iii).
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+No step of (i) and (ii) reads a property of the substrate beyond its
+field operations and its order, so they hold over each substrate the
+statement admits. (i) The instance at $A''$ is a reduction instance by the stability clause
+of Definition~\ref{def:reduction-instance}, and (I3) of
+Proposition~\ref{prop:flat-instance} holds there: its channel
+$\Lambda=\PinS\circ\Lfss$ does not depend on the datum,
+$\Lambda^{\dagger}(\Ffss_e[A''])=M_e[A'']$, and $\Pleq$ and $\Pflag$ are
+transported with the pull-backs $\Pleq$ and $\Pgt$
+(Proposition~\ref{prop:chain}\,(i)). By linearity of the adjoint and the
+model map \eqref{eq:flat-model},
+\begin{equation*}
+  \Lambda^{\dagger}\big(\hat O[A'']\big)
+  \;=\;M_e[A'']-a\,\Pleq-b\,\Pgt
+  \;=\;\bigoplus_{m\le N}\big(A''^{(m)}_e-a\,\idon{d_m}\big)
+  \ \dsum\ \big(\blk{M}{\gtN}_e-b\,\idon{}\big),
+\end{equation*}
+since $\Pleq$ is the identity on every photon-number block $m\le N$ and zero
+above the cutoff, and $\Pgt$ the reverse.
+
+(ii) The blocks below the cutoff are positive semidefinite by the first
+condition. The block above the cutoff is the handed instance's, the model
+map reading no entry of the datum there; the routed weights are
+\tref{certified weights} by (H2) of Proposition~\ref{prop:flat-instance}, so
+\eqref{eq:certweights} gives $\blk{M}{\gtN}_e\succeq p_e\idon{}\succeq
+b\,\idon{}$ by the second condition. A direct sum of positive semidefinite
+blocks is positive semidefinite, so $\Lambda^{\dagger}(\hat O[A''])\succeq0$,
+which is \eqref{eq:certificate} with $c=0$ and $\bowtie\,=\,\succeq$.
+
+(iii) A direct summand of a positive semidefinite operator is positive
+semidefinite, so the certificate implies the first condition. At $A'$ the
+blocks are lattice values, $A'\in\mathcal{D}_{\kappa}$ by
+Theorem~\ref{thm:emit}\,(ii), and so are the routed weights, $a$ and $b$;
+lattice values are dyadic rationals. Each $A'^{(m)}_e-a\,\idon{d_m}$ is
+therefore Hermitian, $A'$ being admissible and $a$ real, with entries in
+$\mathbb{Q}(i)$, and its positivity is decided by \eqref{eq:psdtest} of
+Lemma~\ref{lem:exactpsd} over the substrate $\Fld=\mathbb{Q}$, which
+Definition~\ref{def:substrate} admits; $b\le p_e$ is one comparison of two
+rationals. The condition is thus one on the emitted numbers and the declared
+constants, decided exactly from them, and by (ii) it is sufficient for
+\eqref{eq:certificate} under the instance's hypotheses (H), which is what a
+decided certificate is.
+\end{proof}

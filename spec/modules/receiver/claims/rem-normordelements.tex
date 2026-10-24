@@ -1,0 +1,33 @@
+% ---
+% id: receiver/rem:normordelements
+% kind: rem
+% title: "Click-pattern elements in normal-ordered form"
+% summary: >-
+%   Each joint no-click element is the normal-ordered exponential of the
+%   summed Gram A_J of its ports, the form used in the optics literature. For
+%   one port and one input mode with Gram A_1 = 1 this is the perfect on/off
+%   detector pair of the cited literature.
+% prominence: standard
+% status: accepted
+% uses: [prop:normord, thm:click-povm]
+% assumes: []
+% refs:
+%   - "sperling2012, Eq. (6)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:normordelements}
+By Proposition~\ref{prop:normord}, $\Pvac{J}=\normord{\exp(-\vec
+a^\dagger A_J\vec a)}$, which is the form these operators take in the optics
+literature; \eqref{eq:incexc} then reads
+$M_S=\sum_{T\subseteq S}(-1)^{|T|}\normord{\exp(-\vec a^\dagger
+A_{([K]\setminus S)\cup T}\vec a)}$. At $K=1$ and a single input mode with
+$A_1=\lambda$ this is $M_\varnothing=\normord{e^{-\lambda\hat n}}$ and
+$M_{\{1\}}=\normord{\id-e^{-\lambda\hat n}}$, which at $\lambda=1$ is the
+perfect on/off detector pair $\hat\pi_0=\dyad{0}=\normord{e^{-\hat n}}$,
+$\hat\pi_1=\normord{\hat 1-e^{-\hat n}}$ of
+\cite[Eq.~(6)]{sperling2012}. The comparison is corroboration only: the
+identity is Proposition~\ref{prop:normord} and the POVM property is
+Theorem~\ref{thm:click-povm}\,(i).
+\end{remark}

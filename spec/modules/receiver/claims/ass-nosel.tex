@@ -1,0 +1,44 @@
+% ---
+% id: receiver/ass:nosel
+% kind: ass
+% title: "Device fixed independently of the adversary"
+% summary: >-
+%   The receiver configuration and the probe declaration are fixed before the
+%   run and cannot be chosen or influenced by the adversary. With [[A-TRUST]]
+%   this makes one declared POVM, rather than a family, the right object.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [ass:trust]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-NOSEL
+% verification: never
+% category: receiver
+% affects: [secrecy]
+% refines: A-TRUST
+% user_statement: >-
+%   Your receiver's configuration (its components and their settings, which
+%   output goes to which detector, and the probe settings) is fixed before the
+%   run. An attacker cannot choose or change it, including through properties
+%   the model does not describe, such as the wavelength of injected light
+%   shifting a beam splitter's ratio. If an attacker can steer the receiver
+%   this way, the declared measurement is the wrong one and the result does
+%   not apply. This premise is about the configuration of the receiver
+%   itself; what may leave or enter the station by other routes is the
+%   laboratory premise of this station's party, [[A-LAB]].
+% lean:
+% ---
+
+Together with Assumption~\ref{ass:trust}, this assumption is what makes a
+single POVM, rather than a family, the right object.
+
+\begin{assumption}
+\label{ass:nosel}
+(i) The component list, its parameters, the port map and the
+\tref{probe declaration} are fixed before the protocol run;
+(ii) none of them is chosen by the adversary, and none can be influenced by
+her, in particular not through a degree of freedom the model does not carry,
+such as wavelength.
+\end{assumption}

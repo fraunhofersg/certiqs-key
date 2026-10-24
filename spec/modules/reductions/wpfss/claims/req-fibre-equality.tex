@@ -1,0 +1,29 @@
+% ---
+% id: reductions/wpfss/req:fibre-equality
+% kind: req
+% title: "Certified sets equal to fibres of the coarse-graining"
+% summary: >-
+%   Every certified set of the slot must be exactly one fibre of the declared
+%   coarse-graining; the equality is decided on input and a slot that fails
+%   it is refused. A split set leaves neither letter with a bound.
+% prominence: standard
+% status: accepted
+% uses: [rem:fibre]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A bound on a sum of positive operators says nothing about its summands, so a
+certified set split over two letters leaves neither with a bound, and one
+merged with other outcomes attaches the weight to a larger fibre
+(Remark~\ref{rem:fibre}).
+
+\begin{requirement}\label{req:fibre-equality}
+The engine requires every bounded set of the slot to be exactly a fibre of
+the \tref{declared coarse-graining}, $\mathcal{O}_i=\cg^{-1}(y_i)$, validates
+the equality at input, and refuses a slot that fails it with the reason
+\iface{bound_set_not_a_fibre}.
+\end{requirement}

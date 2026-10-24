@@ -1,0 +1,59 @@
+% ---
+% id: meat-core/frank-wolfe/req:iterate-checks
+% kind: req
+% title: "Feasibility checks at each iterate"
+% summary: >-
+%   At each iterate the engine decides block positivity of the consumed point
+%   at exactly 0, and the coupling and constraint-row residuals of that point
+%   at their own windows. The larger window is the ε at which a run reads the
+%   relaxed set; no declared tolerance is that number.
+% prominence: standard
+% status: implemented
+% uses: [def:relaxed-feasible-set, prop:relaxed-set-properties]
+% mentions: [rem:fo-iterate-checks, meat-core/thm:choi, meat-core/def:untrusted-choi, meat-core/req:exact-admission, foundations/req:tolerance-scope, foundations/def:tolerance]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.joint_driver:_check_point
+% lean:
+% ---
+
+Every statement about the \tref{relaxed feasible set} holds for every
+$\varepsilon\ge0$ (Proposition~\ref{prop:relaxed-set-properties}), so no
+claim depends on which $\varepsilon$ a run reads, and each candidate reading
+is conservative; an implementation nevertheless needs one number. The set
+relaxes positivity not at all, which is why positivity is decided at
+exactly $0$ (Proposition~\ref{prop:relaxed-set-properties}\,(c),
+\emph{Fourth}); a point that passes the three checks lies in
+$\Feas^{J}(\varepsilon)$ at the larger window, by monotonicity from the
+smaller one (\emph{ibid.}\,(a)) and because the coupling clause implies the
+normalisation clause (\emph{ibid.}\,(c$'$)). The windows are numbers of
+their own on a \tref{computed object}
+(\xref{foundations/req:tolerance-scope}\,(ii)), and this module takes no
+declared tolerance (Requirement~\ref{req:exact-admission}). What the checks
+buy, and why no check of a point the oracle returned would serve the bound,
+is Remark~\ref{rem:fo-iterate-checks}.
+
+\begin{requirement}\label{req:iterate-checks}
+On the point it consumes at each iterate, after any repair, the engine
+decides every condition defining $\Feas^{J}$ in \eqref{eq:choi-feas}, as the
+relaxed feasible set relaxes it, all three and none of them optional:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item per-block positive semidefiniteness, at exactly $0$ and at no window
+  (\iface{iterate_positivity});
+\item the coupling condition, its residual
+  $\|\sum_s\tr_{\Qsys_s}J_s-\idon{A_0}\|_{\max}$, or, in
+  \tref{untrusted-source mode}, where the coupling condition is the
+  normalisation $\sum_s\tr\omega_s=1$
+  (Definition~\ref{def:untrusted-choi}\,(b)), its residual
+  $|\sum_s\tr\omega_s-1|$, at the declared window \iface{iterate_coupling};
+\item the declared constraint rows $\bowtie_k$, each residual at the declared
+  window \iface{constraint_rows}.
+\end{enumerate}
+No fourth check is required, and none is required of the point the oracle
+returned at that iterate. The
+$\varepsilon$ at which a run reads the relaxed feasible set is the larger of
+the two declared windows of (ii) and~(iii). No \tref{declared tolerance} (\xref{foundations/def:tolerance}) is
+that number: the windows govern conditions checked on an iterate and never on
+a declaration.
+\end{requirement}

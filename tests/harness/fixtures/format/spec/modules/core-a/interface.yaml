@@ -1,0 +1,25 @@
+# The interface of core-a in the `format` fixture: two input rows (one with
+# fixed_by, one with a locator only), one output row, and the ledger row of
+# the module's one assumption.
+module_id: core-a
+inputs:
+  - name: base_object
+    symbol: "(x, y)"
+    type: pair of reals
+    presence: always
+    domain: x + y = 1
+    fixed_by: "def:object (the defining identity)"
+  - name: second_coordinate_sign
+    symbol: y >= 0
+    presence: whenever the bound is wanted
+    locator: "ass:leaf; thm:bound"
+outputs:
+  - name: first_coordinate_cap
+    symbol: x <= 1
+    presence: always
+    locator: "thm:bound"
+assumption_ledger:
+  rows:
+    - id: A-LEAF
+      machine_key: leaf_nonnegative
+      claim: ass:leaf

@@ -1,0 +1,272 @@
+% ---
+% id: protocol-compiler/thm:gates
+% kind: thm
+% title: "The emission gates and their outcomes"
+% summary: >-
+%   Each gate is decidable or a presence test, and each failure has one fixed
+%   outcome, a refusal or an emission flagged as backing no key length, never a
+%   default, dropped entry, changed source mode or licence the compiler writes.
+%   Passing asserts nothing about the apparatus or attack-set inclusion.
+% prominence: main
+% status: implemented
+% uses: [thm:validator-soundness, def:eligible, def:gate-outcome-table, def:spec, def:compile, def:homog, def:declaration, def:exact, transmitter/thm:certificate-sufficiency, transmitter/def:source-spec]
+% mentions: [prop:conservative, def:validator, rem:gate-by-certificate-form, rem:party-local-soundness, req:gate-outcomes, transmitter/def:srcert, transmitter/fact:sr, transmitter/lem:ensemble-presentation]
+% assumes: [A-ATK, A-RHOM]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.gates:resolve_gates
+% lean:
+% notes: "A-RHOM is declared here because gate (G2) decides the certificate once, for the one declaration that describes every round. A-LINK, A-SEQ and A-SRC are not declared: none of them occurs in this theorem's mathematics, and A-SEQ and A-SRC reach its closure through transmitter/thm:certificate-sufficiency. A-ATK's licensed class is carried by its scope (a non-empty list licensed for the declared source mode) and by the statements of its meat-core declarers; this theorem states no such hypothesis, because gate (G3)(a) decides the class."
+% ---
+
+One principle fixes every outcome. A check that fails, so that no declaration
+is shown to be well-formed, or a certificate that does not verify is a
+refusal, and no declaration is emitted; a \tref{well-formed declaration} on
+verified data whose key-length claim is unsupported is emitted, not
+key-length-eligible, and may be explored numerically. The refusal strings and
+the flag that carry these outcomes are Requirement~\ref{req:gate-outcomes}'s.
+
+\begin{theorem}\label{thm:gates}
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(decidability)} (G1) is decidable by Theorem~\ref{thm:validator-soundness}; (G2)'s
+conditions --- the five of Definition~\ref{def:eligible}\,(G2), namely $\Psi$
+Hermitian, $\Psi^2=\Psi$, $\tr\Psi=1$ with the trace rounding nowhere, (SR1)
+and (SR2) --- are finitely many exact identities on the emitted data
+(\xref{transmitter/thm:certificate-sufficiency}\,(i)); (G3)(a) is decided by
+\emph{reading the type of the datum each entry's right-hand-side slot holds,
+which is its tag}, and by nothing else --- it compares no matrix against any
+other and constructs no right-hand side; (G3)(b) is a presence test. (G2)'s
+clause (SR3) and (G3)(b)'s record are attestations and are \emph{not}
+decidable; they are tested for presence only;
+\item \emph{(outcome of a failure)} If any gate fails, the compiler emits no
+key-length-eligible declaration, and which of the \emph{two} permitted
+outcomes it produces --- refusal, or emission of a declaration that is not
+key-length-eligible --- is fixed by the \tref{gate outcome table}
+(Definition~\ref{def:gate-outcome-table}) and is not an
+implementer's choice; where the failures of one declaration meet the premises
+of a refusal row and of an emission row both, the outcome is the refusal. No
+protocol specification meets the premise of rows 2 and 4, the two rows of the
+gate outcome table that describe a certificate-absent case: by
+Definition~\ref{def:spec}\,(a) a transmitter artefact in trusted-source mode at
+$d_A\ge2$ carries a source-replacement certificate. The compiler
+never drops a constraint entry silently, never
+substitutes a default, never changes the source mode it was handed, and never
+synthesizes a licence.
+\item \emph{(no assertion)} Passing (G3)(b) records that an attestation was
+supplied. It asserts nothing about attack-set inclusion, and no claim of this
+contract does. Likewise passing (G2) records that the transmitter's licence
+record is present and that its five decided conditions hold of the emitted
+data: it asserts nothing about the apparatus, and what it buys for the run is
+bought under Assumption~\ref{ass:rhom} --- the certificate is decided once, for
+the one declaration that describes every round, which is where this module
+spends round homogeneity (\xref{transmitter/fact:sr} drops the per-round
+superscript of the source state under exactly that assumption of the
+consumer's).
+\end{enumerate}
+
+\emph{The general format.} For a declaration in the general format of
+Definition~\ref{def:declaration}\,(DX1)--(DX6) the three parts hold with the
+following readings, of which the three above are the case of one Alice sector,
+one \tref{measured factor}, \tref{POVM form}, a pure-form certificate and no
+party-local entry.
+\begin{enumerate}[label=(\roman*$'$),leftmargin=2.6em]
+\item \emph{(decidability)} (G1) is decidable by Theorem~\ref{thm:validator-soundness} in its
+general-format reading. (G2) keeps its five conditions and is decidable in
+\emph{one further declared form} (Definition~\ref{def:eligible}): the five
+conditions of a pure-form certificate, as above, a certificate declared
+in \tref{block form} being refused at this gate; and, for an \tref{ensemble
+presentation}, (E1), (E2), (E3) on the declared weighted ensemble together with
+the entry-for-entry identity of the declaration's Alice slots with the
+transposes of the declared blocks and of their declared-order sum --- finitely
+many exact identities, comparisons of labels and integers, and finitely many
+summation decisions, the number fixed by $|\mathbb{T}|$, $|\Xset|$ and the
+declared dimensions. \emph{Purity is decided by nothing there}: a presentation
+declares no $\Psi$, and purity of its blocks, (SR1) and (SR2) are theorems of
+the presentation (\xref{transmitter/lem:ensemble-presentation}\,(i), (ii)), the
+second giving every non-zero block as a positive multiple of a rank-one
+projector. \emph{At one Alice sector it is not thereby waived}, the defined
+$\Psi$ being that one block, of unit trace, hence a rank-one projector of which
+the five conditions hold. \emph{At two or more it is waived}, and the gate
+rests there on two statements --- rank-one blocks by theorem, which is the
+hypothesis under which \xref{transmitter/thm:certificate-sufficiency}\,(ii) holds in both directions,
+and that theorem's (iii), which reads purity nowhere --- the first of which a
+general block form does not supply. (G3)(a) is decided by reading the type of the
+datum each entry's right-hand-side slot holds and, for the third form, the tag
+field it arrives with --- three forms being in the licensed class, and still
+\emph{nothing computed and nothing compared numerically}. (G3)(b) is a presence
+test, and (SR3) is tested for presence in every form.
+\item \emph{(no row is added)} The outcome of every failure of the general
+format is fixed by a \emph{row the gate outcome table already has}. A
+general-format check
+of Definition~\ref{def:validator} that fails is (G1) and is row 1, the refusal
+naming the check. A certificate that is \emph{present} and fails a condition
+of (G2) is row 3: a certificate that does not verify is a defect in the
+supplied data, not a weaker claim. \emph{Row 3's premise is read of the
+declared form}, which reads the cell and adds no row: for a pure-form
+certificate the five conditions the cell enumerates are the conditions, and
+the cell is literal; for a certificate declared in block form the condition
+it fails is the form itself, (G2) admitting no block-form certificate
+(Definition~\ref{def:eligible}), and the cell's premise --- a certificate
+present and failing a condition of (G2) --- covers it, whether or not it also
+fails $\Psi^2=\Psi$; for an ensemble presentation the conditions are (E1) to (E3) and the
+identity of the declaration's Alice slots with the transposed declared blocks,
+and the cell's premise --- a certificate present and failing a condition of
+(G2) --- covers them, the enumeration in it being the pure form's list and not
+a restriction of the premise. \emph{An ensemble presentation accompanying a
+POVM-form declaration is a failure of that kind and is refused} (row 3),
+because nothing ties the declared
+$\{M_x\}$ to the presentation (Definition~\ref{def:eligible}). A list
+carrying an entry declared general in trusted-source mode is row 5 and is
+emitted, not key-length-eligible; \emph{a list carrying a \tref{party-local}
+entry is not that row}, that form being licensed in either mode.
+\item \emph{(no assertion)} Item (iii) holds as stated, and passing (G3)(b)
+records, rather than asserts, one further item: for a list carrying a
+party-local entry, what the attack-set licence record attests is a certificate
+of the module that produces the chain, on the scoped factor's own channel
+(Definition~\ref{def:homog}), and
+\emph{no function of the emitted matrices decides it}, exactly as for the
+untagged forms. Passing (G2) on an ensemble presentation likewise records that
+the transmitter's record is present and that the conditions of \emph{that
+form} hold of the emitted data, and asserts nothing about the apparatus; what
+it buys for the run is bought under Assumption~\ref{ass:rhom} as in (iii), the
+certificate being decided once for the one declaration that describes every
+round.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} Each gate condition is either a finite list of exact identities,
+a type read off each constraint entry, or a presence test; the outcome of a
+failure is the one the gate outcome table of
+Definition~\ref{def:gate-outcome-table} fixes, no row of it changes the
+source mode or drops an entry, and by the definition of a protocol
+specification no specification meets its certificate-absent rows; and
+the general format adds decisions of the same kinds and failures that land on
+existing rows.
+
+\emph{Step 1 (decidability, (i)).} Each clause is as stated:
+Theorem~\ref{thm:validator-soundness}\,(iv) for (G1);
+\xref{transmitter/thm:certificate-sufficiency}\,(i) for the (G2) identities.
+For (G3)(a): by Definition~\ref{def:homog} the licensed class is defined by
+which of the two forms each entry \emph{declares}, and the tag is a field of
+the datum (Definition~\ref{def:declaration}), so deciding the class is reading
+$m$ tags and checking that the datum each names has the type it names --- $m$
+comparisons of a label and a type, terminating and exact. \emph{Nothing is
+computed and nothing is compared numerically.} Presence tests are decidable
+trivially. That (SR3) and the licence record are attestations is
+\xref{transmitter/def:srcert}\,(SR3) and Assumption~\ref{ass:atk}: neither is
+a property of the emitted matrices, so no function of them decides it.
+
+\emph{Step 2 (the marginal slot and the certificate-absent rows, for (ii)).}
+$\tau_A$ reaches the emitted
+data only through the transmitter artefact's marginal slot ---
+Definition~\ref{def:compile} passes that slot through, and no input of this
+module carries a marginal or a mode separately (Definition~\ref{def:spec}\,(a):
+the mode is read off the artefact's marginal slot and is never a second
+datum). The premise of
+rows 2 and 4 is an artefact in trusted mode at $d_A\ge2$ whose certificate is
+absent, and by Definition~\ref{def:spec}\,(a) a transmitter artefact in
+trusted-source mode at $d_A\ge2$ additionally carries a source-replacement
+certificate; so no protocol specification meets that premise. That the engine
+refuses such a request is Requirement~\ref{req:gate-outcomes}'s, and no step
+here uses it. At
+$d_A=1$, where (G2) does not demand the certificate at all, the slot holds
+$\tau_A=[1]$, the value the transmitter filled it with
+(Definition~\ref{def:spec}\,(a)), and this
+module passes the slot through --- that is not a default substituted for a
+missing datum here, which item (ii) forbids, because this module fills
+nothing: $\Seq{A}=\{[1]\}$ is a singleton, so D(ii) admits that value and no
+other, and at $d_A=1$ the two source modes impose the same condition
+(\xref{transmitter/def:source-spec}), so the filled slot excludes nothing.
+
+\emph{Step 3 ((ii) and (iii)).} (ii) and (iii) are rules of the
+\tref{compilation map}, stated here because they are the behaviour the gate exists to produce.
+(ii)'s precedence clause is part of that rule and is what makes the table fix
+\emph{one} outcome for each declaration: one declaration can meet the premise
+of a refusal row and of an emission row at once --- a certificate failing a
+condition of (G2), row~3, beside a list carrying an entry declared general,
+row~5 --- and the clause takes the refusal, so no declaration whose supplied
+data failed a check or a certificate is emitted.
+(ii) is consistent: the one non-refusal outcome is exactly the one for which
+this contract proves the result sound --- an ineligible declaration is not
+consumed by a key-length statement at all --- and no row changes the source
+mode, re-reads a constraint entry or drops one. No row invokes
+Proposition~\ref{prop:conservative}: the rows on which it could bear, the
+certificate-absent ones, are met by no protocol specification (Step~2).
+(iii)'s second sentence is
+Assumption~\ref{ass:rhom} read where it is spent: (G2) decides the certificate
+once and \xref{transmitter/thm:certificate-sufficiency}\,(iii) is a statement
+about one round's source state, so the flag says of the run only what one
+declaration can say of every round.
+
+\emph{Step 4 (the general format, (i$'$)).} Theorem~\ref{thm:validator-soundness}\,(iv) in its
+general-format reading gives (G1). For (G2): each condition
+Definition~\ref{def:eligible} lists for a form is either an identity or an
+order relation between declared numbers, decided as
+Definition~\ref{def:exact} decides such a predicate, or a comparison of labels,
+integers and structures, or one summation decision --- and each list is finite,
+its length fixed by $|\mathbb{T}|$, $|\Xset|$ and the declared dimensions. That
+purity is decided by nothing \emph{for a presentation} is read off
+\xref{transmitter/def:srcert}: a presentation declares no $\Psi$, and purity,
+(SR1) and (SR2) are conclusions of the transmitter's lemma, so no function of
+the emitted data is asked for them. Three separate statements describe what
+the gate then demands. \emph{First}, the five conditions are decided of every
+certificate declared in pure form, and at one Alice sector --- the only case a
+declaration in the \tref{basic format} can present --- they \emph{hold} of the
+$\Psi$ a presentation defines, by
+\xref{transmitter/lem:ensemble-presentation}\,(ii) with unit \tref{total weight}.
+\emph{Second}, a presentation is admitted only beside an
+\emph{ensemble-form} declaration, which no basic-format declaration is; and a
+certificate declared in \emph{block form} is refused here
+(Definition~\ref{def:eligible}). \emph{Third}, at $|\mathbb{T}|\ge2$ the
+defined $\Psi=\bigoplus_t\Psi_t$ has $\Psi^2=\bigoplus_tg_t\Psi_t\ne\Psi$ once
+two blocks are non-zero, so global purity is not demanded of a presentation
+there, and what the gate rests on in its place is what
+Remark~\ref{rem:gate-by-certificate-form} names --- rank-one blocks by theorem,
+giving both directions of \xref{transmitter/thm:certificate-sufficiency}\,(ii),
+and that theorem's (iii), which reads purity nowhere. A general block form
+lacks the first and has the second, that theorem being stated in every form;
+the refusal of a block form rests on scope and not on that difference, and
+the distinction is not the word ``purity''
+(Remark~\ref{rem:gate-by-certificate-form}). For (G3)(a): by
+Definition~\ref{def:homog} the licensed class is defined by which of the three
+forms an entry \emph{declares}, the first two by the type of the datum and the
+third by the tag field beside a real scalar, so deciding the class is reading
+$m$ tags and checking that the datum each names has the type it names --- $m$
+comparisons of a label and a type, terminating and exact, and again nothing
+computed: no form of the general format introduces a numerical comparison.
+
+\emph{Step 5 (the general format, (ii$'$)).} (ii$'$) is a statement about
+where each failure lands, and it is proved by exhibiting the row: a failing
+check is (G1) by the definition of that gate, and (G1)'s row is a refusal
+naming the check, so every failing check of the general format lands on that
+row; a certificate present and failing a condition of (G2) is the premise of
+row 3, its outcome a refusal naming the condition. \emph{A block-form
+certificate meets that premise by its form}: the record is present, and the
+condition of (G2) it fails is that (G2) admits no certificate declared in
+block form (Definition~\ref{def:eligible}), which holds of every block-form
+certificate whatever its blocks --- including one whose one non-zero block is
+a rank-one projector and which therefore meets $\Psi^2=\Psi$ --- so the
+outcome is a refusal naming the form. \emph{An ensemble presentation
+beside a POVM-form declaration meets the premise too}: the record is present,
+and the condition of its form that it fails is the one requiring the
+declaration's Alice slots to be \emph{the} slots the presentation defines,
+which a POVM-form declaration has not got --- so the outcome is a refusal, and
+the refusal names which condition failed. No premise of any other row is met
+by a general-format failure, and each of the six rows keeps its outcome; in
+particular no general-format failure yields a key-length-eligible
+declaration, and none yields an emission on a row whose outcome is a refusal.
+
+\emph{Step 6 (the general format, (iii$'$)).} The added item is the
+\tref{soundness condition of a party-local entry} (Definition~\ref{def:homog};
+that the party-local form is sound only under it is
+Remark~\ref{rem:party-local-soundness}), read where the record is tested:
+every attack reaches the scoped factor through a channel on that factor alone
+carrying the spectral certificate, which is a certificate of the module that
+produces the chain (Definition~\ref{def:eligible}), and the gate tests for
+the presence of the record that attests it. \emph{So admitting the third form
+at (G3)(a) moves no decision from an attestation to this module and none from
+this module to an attestation}: it adds one licensed tag and one clause to
+what the same record attests. The rest of (iii) holds as stated, including
+where Assumption~\ref{ass:rhom} is spent.
+\end{proof}

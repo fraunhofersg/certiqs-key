@@ -1,0 +1,390 @@
+id: receiver
+kind: core
+version: 0.11.0
+title: "Receiver POVM (receiver)"
+abstract: >-
+  This contract turns a declared passive optical receiver into the
+  click-pattern measurement it performs and into lower bounds on its
+  multiclick weight on every photon-number block above a cutoff N; both are
+  recorded in the receiver's artifact, which the flag-state squasher of the
+  reductions module consumes. A receiver may be declared by its port Grams
+  (route (i)), by an instrument matrix (route (ii)) or by a graph of
+  catalogue components (route (iii)); the three routes converge on the port
+  Gram family, which determines the click statistics exactly. A receiver
+  fed by its own probe source as well as by the channel needs a submodule
+  that constructs its setting family and is otherwise refused. The main results of this core
+  module are the click-pattern POVM, which follows by inclusion and exclusion
+  and is block diagonal in the total input photon number
+  ([[thm:click-povm]]); its declared coarse-graining into the protocol's
+  alphabet, under which lower bounds on disjoint raw outcomes add
+  ([[thm:coarse-graining]]); the weight in [0, 1] emitted for each probe
+  setting, which bounds that setting's multiclick element from below on every
+  block of channel photon number above N ([[thm:emitted-bound]]); and the
+  range of the weights the artifact carries in its strengthening slot, one
+  per outcome set and setting, which are non-negative and sum to at most one
+  at every setting ([[prop:slotvalid]]). The weight comes from an analytic
+  lower bound on the smallest eigenvalue of every multiclick block, made
+  uniform over all blocks above N either by a collapse lemma, which reduces
+  the non-negative part of the infimum over those blocks to that of the value
+  at the first of them, or by the minimum over a finite window of blocks capped by
+  an analytic term for the tail beyond it; an optional exact window uses lower
+  bounds on the smallest eigenvalues of finitely many blocks. Every statement
+  is exact unless it names a receiver tolerance or the eigenvalue slack: where
+  the declaration defines an admissible receiver exactly, the weights are
+  evaluated rigorously, in exact rational arithmetic from enclosures of the
+  model taken on the conservative side, and are lower bounds by theorem with no
+  premise about arithmetic ([[thm:enclosed-weight]]), while elsewhere they are
+  evaluated in binary64 floating point, residuals diagnose the evaluation, and
+  an exact window rests on the assumption that each computed eigenvalue less a
+  declared slack does not exceed the exact one. Separately, for every declaration that
+  defines an admissible receiver exactly, whatever its parameters, the
+  photon-number blocks are enclosed rigorously in exact rational arithmetic,
+  from enclosures of the square roots, cosines and sines the construction
+  takes ([[thm:enclosed-blocks]]); where the port Grams are Gaussian-rational
+  the blocks of at most one photon are known exactly ([[thm:exact-blocks]]),
+  and, read through a port dilation, a block of a receiver without probe
+  inputs can be given besides in enclosed factor form, which fixes its rank
+  where the Gram matrix of its columns has a positive floor, as no entrywise
+  box with positive radii can for a block of lower rank whose support no
+  coordinate vectors span ([[thm:factor-blocks]]). These enclosures are the reference a snap of the emitted blocks is
+  certified against. The results are conditional on the device
+  assumptions of the Assumptions section, among them a trusted, exactly
+  characterised, passive device whose declared modes carry every path to a
+  detector: the main results rest only on the few of these their proofs use,
+  and the others enter the weight through the corollaries that apply
+  [[thm:emitted-bound]] to each setting family.
+  Detector imperfections and the component catalogue are submodules, each
+  with main results of its own.
+depends_on: [foundations]   # the round homogeneity its A-ROUND (ass:round) asserts of its own family
+notation_version: "0.3.0"   # the spec/notation.md version this module pins
+submodules: [component-catalogue, detector-imperfections]
+reading_groups:
+- title: Modes, Fock space and the mode algebra
+  start: def:modes
+  abstract: >-
+    A receiver acts on a finite set of declared optical modes, and its photon
+    statistics live in the Fock space over them. This section lifts a matrix
+    on the modes to every photon-number sector and records the algebra the
+    later proofs run on: embedding, products and adjoints preserve
+    contractions and elements on disjoint modes commute
+    ([[prop:mode-algebra]]), and the lift respects composition, adjoints and
+    projectors ([[lem:fock-functor]]), also for maps between two mode
+    spaces, where the lift of a direct sum is a tensor product
+    ([[lem:fock-maps]]). The lift of 1 − A is called a lifted
+    no-click operator because, with A the sum of the port Grams of a set of
+    ports, it is the operator for the event that no port of the set clicks,
+    pulled back to the declared inputs ([[thm:port-grams]]). Its spectrum on each photon-number
+    block is computed from the eigenvalues of A ([[lem:fock-block-spectrum]]),
+    which is where the analytic high-photon bound starts. The normal-ordered
+    form is stated for comparison with the optics literature; no proof uses
+    it.
+- title: The receiver instrument and its physical model
+  start: def:instrument
+  abstract: >-
+    A receiver instrument is a declared mode space, a split of the declared
+    inputs into channel modes, through which the adversary's signal enters,
+    and probe modes, disjoint detector ports and a contractive instrument
+    matrix; its port Grams are the compact data the measurement is derived
+    from. The probe modes carry the receiver's own probe light, in a declared
+    state for each probe setting, which the receiver chooses privately in each round. A
+    contraction becomes a physical device by a unitary dilation with vacuum
+    environment modes, and the detectors are commuting threshold measurements
+    on the ports. Vacuum on every undeclared input makes the restriction to
+    the declared input columns exact ([[lem:vacelim]]); a probe mode carries
+    its declared state and is never eliminated.
+- title: Component graphs and compilation
+  start: def:catalogue
+  abstract: >-
+    A receiver may be declared as a directed graph of catalogue components.
+    The graph determines an instrument matrix when it is well formed
+    (parameters in their domains, acyclic, and any two elements that share a
+    mode ordered): every topological order then compiles to the same
+    contraction ([[thm:compilation-well-defined]]). A well-formed graph, with its declared input modes, ports and efficiencies,
+    then gives a receiver instrument ([[cor:compiled-instrument]]). Without the
+    ordering condition two sorts of the same graph can give different
+    devices, which is why it is a well-formedness condition rather than a
+    modelling remark.
+- title: Port Grams and the click-pattern POVM
+  start: thm:port-grams
+  abstract: >-
+    The joint no-click element of any set of ports pulls back to the lift of
+    the identity minus the sum of the Grams of the ports in that set,
+    whatever dilation is chosen
+    ([[thm:port-grams]]), and the loss deficiency splits exactly into loss through
+    the dilation and light reaching unmonitored declared modes. An outcome is
+    the set of ports that click. The main result, [[thm:click-povm]], is the
+    click-pattern POVM: it follows by inclusion and exclusion, is positive by
+    construction rather than by its alternating form, and is block diagonal
+    in the total input photon number.
+- title: Representation independence and coarse-graining
+  start: thm:representation-independence
+  abstract: >-
+    Two receivers induce the same click POVM exactly when their port Grams
+    agree, every admissible Gram family is realised by some instrument, and a
+    one-mode-per-port description exists exactly when every Gram has rank at
+    most one ([[thm:representation-independence]]). Phases inside a single port after all
+    interference are invisible; a phase on an earlier element whose output
+    paths are later recombined is not covered and can change the Grams. The
+    main result, [[thm:coarse-graining]], is that under a declared
+    coarse-graining, which merges raw outcomes into the protocol's alphabet,
+    lower bounds on disjoint raw outcomes add, and a bound on a merged outcome
+    gives nothing about its parts.
+- title: The analytic high-photon bound
+  start: def:bounddata
+  abstract: >-
+    A squashing argument needs a lower bound on the multiclick element valid
+    on every photon-number block above the cutoff. Extreme eigenvalues of the
+    no-click operators give a scalar bound function on each block
+    ([[thm:multiclick-bound]]); it is not monotone in general. Where its value at
+    zero photons is at most zero, the bound cannot decrease from any photon
+    number n ≥ 1 at which it is non-negative, so the non-negative part of the infimum over the tail is
+    that of its value at the first photon number above the cutoff
+    ([[lem:collapse]]); otherwise a finite
+    window with an analytic tail gives a valid bound that converges to the
+    infimum when c < 1, with a stated residual gap ([[lem:windowtail]]).
+- title: Exact block eigenvalues
+  start: def:exactbnd
+  abstract: >-
+    The analytic bound bounds three operators separately and loses slack that
+    no wider window recovers. Computing the smallest eigenvalue of a block
+    itself recovers it: that exact block bound dominates the analytic bound,
+    is at most one, and is non-negative wherever the multiclick element is
+    positive ([[lem:exactbasic]]). Lower estimates on finitely many exact
+    blocks combine with an admissible analytic remainder into a uniform bound
+    over the whole tail ([[lem:exactwindow]]).
+- title: Setting families and the emitted weight
+  start: def:setting-family
+  abstract: >-
+    A setting family packages, for each declared setting, a photon-number
+    block-diagonal POVM whose joint no-click elements have the prefactor form
+    of the multiclick bound; a probe-free receiver is the one-setting family,
+    and a submodule that constructs another family proves there that it is one.
+    Where a depth is declared, a setting's weight is an exact window; elsewhere
+    it is the collapse value where the declaration marks the setting exact and
+    a declared window and tail otherwise; their minimum is the uniform weight.
+    Formed on bounds that lie on the conservative side of the exact data, the
+    same formulas give the enclosed weight, a bound with no assumption
+    ([[thm:enclosed-weight]]). The first main result, [[thm:emitted-bound]], is
+    that each per-setting weight bounds its setting's multiclick element on
+    every block above the cutoff, and the uniform weight bounds it at every
+    setting, under the eigenvalue-slack assumption only where a computed block
+    eigenvalue enters. The
+    second, [[prop:slotvalid]], is that the strengthening slot in which the
+    artifact carries the weights has weights that are non-negative and sum to
+    at most one at every setting, as a squashing request requires.
+- title: The reference, enclosed and exact
+  start: def:complex-enclosure
+  abstract: >-
+    The reference a run hands beside the snap of the emitted blocks, and
+    evaluates its first-order bound on, must be known through rational
+    boxes, and the binary64 evaluation is not one.
+    Complex enclosures, a Gaussian-rational centre with a rational radius,
+    are carried through sums, products and reciprocals by explicit rules
+    ([[lem:enclosure-arithmetic]]). An entry of a lifted operator in the
+    occupation basis is a permanent divided by square roots of factorials
+    ([[lem:fock-permanent]]), so enclosures of the port Grams, themselves
+    obtained from enclosures of square roots, cosines and sines, enclose
+    every block, and the emitted blocks up to the cutoff are a reference for
+    any declared parameters ([[thm:enclosed-blocks]]). Where the port Grams
+    are Gaussian-rational, the exact route ([[def:exact-route]]), every block
+    of at most one photon is known exactly, which a snap needs in order to
+    keep a block unmoved ([[thm:exact-blocks]]). Read through a port
+    dilation, an isometry from the inputs that reproduces the port Grams
+    ([[def:port-dilation]]), every block is also a weighted sum of rank-one
+    terms whose columns are enclosed the same way, a factor enclosure, which
+    fixes the block's rank where those columns are certified independent
+    ([[thm:factor-blocks]]).
+- title: Residuals, tolerances and floating-point evaluation
+  start: def:residuals
+  abstract: >-
+    Every statement of this contract is exact unless it names a receiver
+    tolerance or the eigenvalue-slack assumption; its evaluation is binary64
+    floating point, beside a rigorous evaluation of the weights in exact
+    rational arithmetic wherever the port Grams are enclosed
+    ([[def:evaluation-model]]). Six residuals check the floating-point evaluation's consistency, each
+    with an exact value of zero, and the receiver tolerances, numbers an
+    instance declares to the receiver as a supplier, decide each exact
+    condition on declared data ([[def:tolmap]]), with the direction of the
+    unclamped bound-data constant stated on both sides. None of this encloses a floating-point
+    number: the one relation between a floating-point and an exact quantity is the
+    opt-in eigenvalue-slack assumption ([[thm:exact-and-evaluated]]), and the
+    floating-point blocks are evaluations of the model's blocks, which the
+    rational enclosures of the previous section contain, while a rigorously
+    evaluated weight is a bound by theorem. The last remark records in which
+    direction each input of the bound is enclosed for the rigorous evaluation.
+- title: Assumptions
+  start: ass:trust
+  abstract: >-
+    This section states every assumption the derivations use, the implicit
+    ones included. Most device assumptions spell out the trusted, exactly
+    characterised receiver ([[ass:trust]]): the declared instrument is exactly
+    the physical receiver, with every optical path declared, passive, fed by
+    vacuum on every undeclared mode, read by threshold detectors that respond
+    to any photon in their ports, and fixed independently of the adversary.
+    Round homogeneity of the receiver ([[ass:round]]) refines the protocol
+    compiler's round-homogeneity premise instead. The eigenvalue-slack assumption is the one premise on
+    the arithmetic, and only a setting with an exact window whose weight is
+    evaluated in floating point invokes it. The engine verifies none of them; conditions decided on the
+    declared data alone are definitions with requirements, not assumptions.
+- title: "Requirements: compilation, representation and outcomes"
+  start: req:graph-refusal
+  abstract: >-
+    These requirements bind the engine where the mathematics leaves a choice
+    to the implementation. A component graph that is not well formed, and a
+    probe state outside the Gaussian tier, are refused rather than repaired,
+    and the port map, the one-mode-per-port
+    reading and the emitted alphabet are declared or decided, never inferred.
+- title: "Requirements: the emitted weight"
+  start: req:window-declaration
+  abstract: >-
+    These requirements fix what a declaration must supply before any weight
+    is computed and which declarations are refused. They also fix that the
+    weight is evaluated rigorously wherever the port Grams are enclosed, with
+    no eigenvalue slack, and what the artifact records beside each emitted
+    weight, so that a reader can recompute it.
+- title: "Requirements: residuals, tolerances and the evaluation label"
+  start: req:residual-emission
+  abstract: >-
+    These requirements say which residuals the engine emits, and that a
+    residual or an admission test that fails refuses while nothing is
+    repaired or clamped. The receiver tolerances have a declared domain, and
+    every artifact carries an evaluation label, the rigorous one only where
+    every weight was evaluated rigorously. Whether a
+    declaration defines an admissible receiver exactly, and whether it is on
+    the exact route, is decided in exact arithmetic and recorded with its
+    cause, and the port Grams of every such declaration are enclosed.
+- title: "Requirements: the assumptions"
+  start: req:decidable-assumptions
+  abstract: >-
+    The engine validates, where it is decidable, every clause of an
+    assumption that constrains the declared data, and it refuses a non-zero
+    parameter tolerance. It carries the eigenvalue-slack assumption beside
+    the settings at which it was invoked, those whose weight uses a computed
+    block eigenvalue.
+order:
+  - def:modes
+  - def:fock
+  - def:embed
+  - prop:mode-algebra
+  - rem:overlap
+  - lem:fock-functor
+  - lem:fock-maps
+  - rem:migdal
+  - lem:fock-block-spectrum
+  - lem:fock-monotone
+  - prop:normord
+  - rem:konig
+  - rem:whyprojector
+  - def:instrument
+  - def:gram
+  - def:probe
+  - lem:dilation
+  - def:physmodel
+  - lem:vacelim
+  - rem:lossvsprobe
+  - def:catalogue
+  - def:graph
+  - def:compile
+  - thm:compilation-well-defined
+  - cor:compiled-instrument
+  - rem:e3
+  - rem:edgemeaning
+  - rem:noloops
+  - rem:acyc-efficiency
+  - thm:port-grams
+  - lem:deficiency
+  - rem:unmonitored
+  - def:clickalphabet
+  - thm:click-povm
+  - rem:positivity
+  - rem:normordelements
+  - rem:small-k
+  - rem:blockmeaning
+  - thm:representation-independence
+  - cor:phases
+  - cor:extinction
+  - rem:rankone
+  - def:coarse
+  - thm:coarse-graining
+  - def:bounddata
+  - thm:multiclick-bound
+  - rem:k-minus-1
+  - rem:kamin
+  - lem:collapse
+  - rem:n0
+  - rem:collapsesharp
+  - lem:windowtail
+  - def:exactbnd
+  - lem:exactbasic
+  - rem:exactpositivity
+  - lem:exactwindow
+  - rem:exactscope
+  - def:setting-family
+  - cor:unconditioned-family
+  - def:pmc
+  - rem:pmc-branch-choice
+  - rem:flag-instances
+  - rem:noslack
+  - def:pmcex
+  - rem:exact-window-remainders
+  - prop:exactnoworse
+  - rem:noworsefl
+  - rem:exacteig
+  - def:enclosed-weight
+  - thm:enclosed-weight
+  - thm:emitted-bound
+  - cor:emitted-unconditioned
+  - def:slot
+  - prop:slotvalid
+  - rem:notsharp
+  - def:complex-enclosure
+  - lem:enclosure-arithmetic
+  - lem:fock-permanent
+  - lem:fock-permanent-maps
+  - thm:enclosed-blocks
+  - def:port-dilation
+  - thm:factor-blocks
+  - def:exact-route
+  - thm:exact-blocks
+  - def:residuals
+  - prop:res5
+  - rem:res5why
+  - def:tolmap
+  - rem:bound-data-band
+  - rem:tolerancedomain
+  - rem:ranktwosided
+  - rem:cdirection
+  - def:evaluation-model
+  - thm:exact-and-evaluated
+  - rem:exactness-scope
+  - rem:ia
+  - ass:trust
+  - rem:unchecked-assumptions
+  - ass:passive
+  - ass:vac
+  - ass:modes
+  - ass:thresh
+  - ass:port
+  - ass:exact
+  - ass:nosel
+  - ass:round
+  - ass:eig
+  - req:graph-refusal
+  - req:probe-diagonal-admission
+  - req:declared-port-map
+  - req:one-mode-per-port
+  - req:declared-alphabet
+  - req:window-declaration
+  - req:exact-window-declaration
+  - req:exact-window-record
+  - req:weight-provenance
+  - req:rigorous-weight
+  - req:residual-emission
+  - req:residual-refusal
+  - req:tolerance-tests
+  - req:tolerance-domain
+  - req:evaluation-label
+  - req:exact-route-decision
+  - req:decidable-assumptions
+  - req:reserved-tolerance-field
+  - req:eig-ledger-row

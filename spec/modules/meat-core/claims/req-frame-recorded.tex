@@ -1,0 +1,34 @@
+% ---
+% id: meat-core/req:frame-recorded
+% kind: req
+% title: "Record of the support frame"
+% summary: >-
+%   In trusted-source mode every run records the support frame it used, with
+%   the declared isometry, beside any Choi block it reports. In
+%   untrusted-source mode there is no frame, and none is recorded.
+% prominence: standard
+% status: accepted
+% uses: [def:support-frame, rem:ordering]
+% mentions: [rem:basis-invariance, def:untrusted-choi]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.joint_driver:joint_run_metadata
+% lean:
+% ---
+
+The reported Choi blocks and the channel reading of
+Remark~\ref{rem:ordering} are relative to the declared isometry, while
+$\hlow$ and every quantity the module outputs within one frame are not
+(Remark~\ref{rem:basis-invariance}); so the frame is recorded rather than
+made canonical.
+
+\begin{requirement}\label{req:frame-recorded}
+In trusted-source mode every run records, beside any Choi block it
+reports, the \tref{support frame} it used: the construction that produced
+it, the dimension $d_{A_0}$ and the \tref{declared isometry} $\iota$, per
+Alice sector in the general format, as \iface{choi_input_basis} in
+\iface{optimizer_certificate}. In \tref{untrusted-source mode} no $A_0$ and no
+$\iota$ exist (Definition~\ref{def:untrusted-choi}\,(a)), and the field is
+absent.
+\end{requirement}

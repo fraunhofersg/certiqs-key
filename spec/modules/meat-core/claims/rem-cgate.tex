@@ -1,0 +1,97 @@
+% ---
+% id: meat-core/rem:cgate
+% kind: rem
+% title: "Degeneracy of the licensed-class half of the gate"
+% summary: >-
+%   In either format the licensed-class half of the constraint gate is a
+%   genuine type check in trusted-source mode at d_A ≥ 2, vacuous in
+%   untrusted-source mode, and at d_A = 1 rejects only what a producer can
+%   trivially avoid. In the last two cases the key length rests on the
+%   attack-set licence alone.
+% prominence: standard
+% status: accepted
+% uses: [def:homog, prop:trivial-alice-system, def:declaration, thm:keylength, rem:homog, def:feasible, thm:convexity, thm:removal, thm:choi, thm:gradient, def:admissible-declaration]
+% mentions: [req:constrained-key-gate, req:degenerate-gate-report, protocol-compiler/rem:party-local-soundness]
+% assumes: [A-ATK, A-SRC]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The numerical machinery --- Definition~\ref{def:feasible},
+Theorems~\ref{thm:convexity}, \ref{thm:removal}, \ref{thm:choi} and
+\ref{thm:gradient} --- is valid for arbitrary $\CList$, with
+$\hlow(\CList)\ge\hlow(\varnothing)$; what the two-part gate on $\CList$
+(Requirement~\ref{req:constrained-key-gate}) decides is only whether its
+output may reach the key length of Theorem~\ref{thm:keylength}.
+
+\begin{remark}\label{rem:cgate}
+Part (i) of the two-part gate --- ``the list lies in the licensed class
+of the declared source mode'' --- is the half a program can check. How
+much it checks depends on the source mode and on $d_A$.
+
+\emph{\tref[trusted-source mode]{Trusted-source mode} with $d_A\ge2$:} the restriction is genuine
+--- the multiples of $\tau_A$ are a one-dimensional subspace of the
+$d_A^2$-dimensional real space of Hermitian operators on $A$, so a
+\tref{general} entry is in general not a licensed one --- and a declaration
+can fail part~(i). \emph{The check is nevertheless a \emph{type} check}: an
+entry declares either its scalar $c_k$ or an operator $\Theta_k$
+(Definition~\ref{def:homog}), and part~(i) inspects which, rather than
+comparing the operator against $c_k\tau_A$. What is being rejected is a
+declaration that \emph{says} it is general, never one whose numbers came out
+near a multiple; the class is the same and the decision is exact.
+
+\emph{$d_A=1$:} it is a type check that rejects nothing a producer cannot
+trivially avoid. An entry declared \tref{general} fails it, as at every
+$d_A$ (Definition~\ref{def:homog}); but every $1\times1$ Hermitian
+$\Theta_k$ equals $\Theta_k\cdot[1]=c_k\tau_A$
+(Proposition~\ref{prop:trivial-alice-system}\,(iii)), so such an entry could
+always have been declared homogeneous with the same condition, and no
+declaration \emph{need} fail part~(i).
+
+\emph{\tref[untrusted-source mode]{Untrusted-source mode}, any $d_A$:} it is
+\emph{vacuously true}. The entry \emph{type} is scalar by
+Definition~\ref{def:declaration}, so part~(i) degenerates from a
+mathematical condition to a type check that a declaration passes by
+construction whenever it is well formed.
+
+In both degenerate cases the constrained branch of
+Theorem~\ref{thm:keylength} therefore rests \emph{entirely} on
+part~(ii), the attack-set licence of A-ATK
+(\xref{protocol-compiler/ass:atk}), which no program can verify. Arguably it
+is the correct degeneration: in the no-marginal model the licensed class
+\emph{is} the scalar class (Remark~\ref{rem:homog}\,(a)), so there is no
+wider class for part~(i) to exclude, and the honest statement is that the
+attestation is doing all of the work. What an implementation reports of a
+passing part~(i) in these cases is Requirement~\ref{req:degenerate-gate-report}.
+
+\emph{The general format.} The scalar class named for the no-marginal model
+is the licensed class of the \tref{basic format}. In the general format of
+Definition~\ref{def:declaration} the licensed class of
+Definition~\ref{def:homog} contains, in \emph{either} mode, the entries
+declared \tref{party-local} beside the mode's own form; so in the
+no-marginal model the licensed class is the scalar form \emph{together with}
+party-local. \emph{And those two are exactly the forms that are
+expressible there}: a general right-hand side does not exist in
+untrusted-source mode at all (Definition~\ref{def:homog};
+Definition~\ref{def:admissible-declaration}\,(vi) in its general-format reading), so it is
+refused by well-formedness before part~(i) is reached. \emph{The licensed
+class therefore grew by exactly what the expressible class grew by, part~(i)
+excludes nothing new, and the degeneration stands}, along the same two
+readings: \emph{in the no-marginal model} part~(i) remains a type check that
+a declaration passes \emph{by construction} whenever it is well formed, both
+expressible forms being licensed --- two forms there, not three; and
+\emph{at $d_A=1$} it remains the weaker statement that it rejects nothing a
+producer cannot trivially avoid, a general entry being expressible and
+unlicensed in trusted-source mode while every $1\times1$ Hermitian
+$\Theta_k$ equals $c_k\tau_A$, so that such an entry could always have been
+declared homogeneous instead. In both readings the honest statement is still
+that the attestation is doing all of the work. In trusted-source mode at
+$d_A\ge2$ part~(i) is not degenerate, in either format. \emph{What the third
+form does change} is what part~(ii) carries: a tagged entry makes the
+attestation attest \emph{more} --- the certificate on the scoped factor's
+own channel (\xref{protocol-compiler/rem:party-local-soundness}) --- so the
+rules of the gate bind it exactly as they bind the others
+(Requirements~\ref{req:constrained-key-gate}
+and~\ref{req:degenerate-gate-report}).
+\end{remark}

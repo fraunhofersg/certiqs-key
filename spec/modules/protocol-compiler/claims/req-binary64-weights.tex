@@ -1,0 +1,33 @@
+% ---
+% id: protocol-compiler/req:binary64-weights
+% kind: req
+% title: "Declared weights as binary64 input"
+% summary: >-
+%   A declared weight in either form that is not exactly a finite binary64
+%   number is rejected as malformed input before it enters any sum or product.
+%   This is the declared input type, not a failed predicate, and it has no
+%   refusal string of its own.
+% prominence: standard
+% status: implemented
+% uses: [def:weighted]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.weights:weighted_family
+% lean:
+% ---
+
+The conditions of Definition~\ref{def:weighted} are decided on declared
+numbers, so the declared weights have to be numbers of the type they are
+decided on.
+
+\begin{requirement}\label{req:binary64-weights}
+The weights of either form of Definition~\ref{def:weighted} --- each $q_t$ of
+the \tref{setting-independent form} and each entry of $P$ of the
+\tref{setting-dependent form} --- are \tref{binary64 numbers}. The engine
+rejects as malformed input a declared weight, in either form, that is not
+exactly representable as a finite binary64 number, before that weight is used
+in an accumulation or a product. This is the declared input type: the
+rejection is not a failed summation predicate, and it adds no row of the gate
+report and no refusal string.
+\end{requirement}

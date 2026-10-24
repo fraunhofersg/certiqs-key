@@ -1,0 +1,34 @@
+% ---
+% id: meat-core/req:reported-key-length
+% kind: req
+% title: "Reported key length"
+% summary: >-
+%   The engine reports the maximal key length built from the lower bound h on
+%   h_low it uses, the right-hand side of the key-length bound at max{0, h}
+%   floored and clamped at 0, as its conservative integer output.
+% prominence: standard
+% status: accepted
+% uses: [def:max-key-length, thm:keylength, cor:keylength-bound]
+% mentions: [prop:monotone]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.keylength:key_length
+% lean:
+% ---
+
+The engine never has the exact $\hlow$, only a lower bound $h$ on it that a
+solver establishes, and Corollary~\ref{cor:keylength-bound} is where it
+obtains its key length from one. The key length is a non-negative integer, both steps that
+make it one, the floor and the clamp at $0$, go in the safe direction
+(Definition~\ref{def:max-key-length}), and, when $h$ depends on none of
+$(\lEC,\eev,\epa)$, Corollary~\ref{cor:keylength-bound}\,(a) carries the
+monotonicity of Proposition~\ref{prop:monotone} over to it.
+
+\begin{requirement}\label{req:reported-key-length}
+The engine reports as \iface{key_length} the \tref{maximal key length}
+built from the lower bound $h\le\hlow$ it uses, that is $\ell_{\max}$ of
+Definition~\ref{def:max-key-length} with $\max\{0,h\}$ in place of $\hlow$
+(Corollary~\ref{cor:keylength-bound}\,(a)), with its floor and its clamp at
+$0$: that is its conservative integer-output rule.
+\end{requirement}

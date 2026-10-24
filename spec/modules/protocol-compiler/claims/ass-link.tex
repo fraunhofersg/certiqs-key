@@ -1,0 +1,67 @@
+% ---
+% id: protocol-compiler/ass:link
+% kind: ass
+% title: "Soundness of every reduction link"
+% summary: >-
+%   Every link of the reduction chain is sound: its channel exists and is a
+%   channel, the reduced protocol's security implies the physical one's, and
+%   every transported constraint holds on reachable states. A decided pullback
+%   or source identity is a necessary condition only, never this obligation.
+% prominence: standard
+% status: accepted
+% uses: [def:chaincond, transmitter/def:source-segment]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Lemma 9.3, Eqs. (146)-(147)"
+%   - "tupkary2026decoy, Lemma 9.1, Eqs. (138)-(139)"
+%   - "tupkary2026decoy, Rem. 9.2"
+% provenance: newly-derived
+% short_id: A-LINK
+% verification: never
+% category: supplied-artefact
+% affects: [secrecy]
+% user_statement: >-
+%   Every reduction step between your physical devices and the finite model
+%   the engine solves is sound, and so is their combination. Each step's
+%   channel exists, a channel supplied as numbers is a genuine quantum
+%   channel, and a receiver step maps the model's measurement back to the
+%   physical one. Security of the reduced protocol implies security of the
+%   physical one, and every constraint a step passes on holds for every state
+%   an attacker can reach. The run lists this premise wherever it cannot point
+%   to a proof: it is not listed on the idealised Band-A route, whose one
+%   step is checked to be the identity, nor where
+%   every measuring device's single reduction step was built in this run by
+%   the engine's reductions module with status exact, with no source step and
+%   outcomes kept as they are, where that module's theorems prove it. A chain or
+%   channel from elsewhere must come with the proof.
+% lean:
+% ---
+
+The compiler decides the pullback identity and the source identity (S3)
+exactly where the data make them decidable; those are necessary conditions,
+and not this obligation. The obligation belongs to whoever presents the
+chain, a channel supplied as data included. On the Band-A identity link,
+given as data with the identity outcome correspondence and the directly
+declared family as its target, every clause holds by exhibition, and on a single instance
+link the reductions module emits with status exact its own theorems prove
+every clause; there nothing is left to attest. The published templates are
+\cite[Lemma~9.3, Eqs.~(146)--(147)]{tupkary2026decoy} for the squashing case
+and \cite[Lemma~9.1, Eqs.~(138)--(139)]{tupkary2026decoy} for the source
+case, composed in the order of \cite[Rem.~9.2]{tupkary2026decoy}.
+
+\begin{assumption}\label{ass:link}
+Each link of either segment of the \tref{reduction chain} is sound:
+(i) for a \emph{receiver} link, (a) where the link supplies no channel as
+data, only a theorem that constructs one, its channel exists as claimed;
+(b) it satisfies the pullback identity \eqref{eq:pullback}; and (c) security
+of the protocol using the emitted measurement implies security of the
+protocol using the physical one;
+(ii) for a \emph{source} link, (a) the channel of the source identity (S3) of
+\xref{transmitter/def:source-segment} exists as claimed; and (b) security of
+the protocol preparing the \tref{virtual ensemble} implies security of the
+protocol preparing the specified one;
+(iii) for a link of either segment, every reachable state after the reduction
+satisfies every constraint entry the link transports;
+(iv) a link of either segment that supplies its channel \emph{as data}
+supplies a completely positive and trace-preserving map.
+\end{assumption}

@@ -1,0 +1,45 @@
+% ---
+% id: protocol-compiler/ass:ideal
+% kind: ass
+% title: "Ideal qubit receiver on the Band-A route"
+% summary: >-
+%   On the Band-A route the declared receiver is an exactly projective qubit
+%   measurement with unit efficiency and no loss, dark counts, multi-photon
+%   events or misalignment, on a transmitted system that is exactly a qubit.
+%   The route is an explicit idealization, not a squashing argument.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-IDEAL
+% verification: never
+% category: receiver
+% affects: [secrecy]
+% user_statement: >-
+%   Only for an idealised Band-A analysis: your receiver is a perfect qubit
+%   measurement, with unit detection efficiency, no loss, no dark counts, no
+%   multi-photon events and no misalignment, and what reaches it in each round
+%   is exactly one qubit. The engine refuses a Band-A declaration whose own
+%   numbers contradict this: more than one measuring station, a measured
+%   system (or, with a trusted source, a transmitted system) of dimension other
+%   than two, or a measurement not made of projectors (per basis, where a basis
+%   choice is declared). No real optical receiver meets this; use the route to
+%   reproduce textbook comparison values. Declare a real device through the
+%   receiver module and a squashing reduction.
+% lean:
+% ---
+
+Used to reproduce known comparison values, a Band-A declaration is sound,
+and its idealization is visible in this assumption. It is an idealization,
+not a reduction: no squashing argument is made and none is needed, because
+nothing infinite-dimensional is being reduced.
+
+\begin{assumption}\label{ass:ideal}
+In a \tref{Band A} specification:
+(i) the declared receiver is exactly an ideal projective qubit measurement;
+(ii) it has unit detection efficiency, no dark counts, no loss, no
+multi-photon events and no misalignment;
+(iii) the \tref{transmitted system} is exactly a qubit.
+\end{assumption}

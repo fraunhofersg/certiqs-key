@@ -1,0 +1,28 @@
+% ---
+% id: statistics/req:box-bounds-key
+% kind: req
+% title: "Recorded bounds of a canonical box"
+% summary: >-
+%   A geometry in canonical box form is emitted with its lower and upper bound
+%   vectors recorded beside the rows they determine. The recorded pair is what
+%   licenses the closed-form box oracle.
+% prominence: standard
+% status: implemented
+% uses: [def:taxonomy]
+% mentions: [rem:two-tags, thm:box-oracle]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.taxonomy:canonical_box
+% lean:
+% ---
+
+A consumer that reads the recorded pair can minimise over the box in closed
+form (Theorem~\ref{thm:box-oracle}); one that ignores it still reads a well-formed
+polytope (Remark~\ref{rem:two-tags}).
+
+\begin{requirement}\label{req:box-bounds-key}
+The engine emits a geometry in \tref{canonical box form} with its pair
+$(\qlo,\qhi)$ recorded under \iface{box_bounds}, beside the rows
+\eqref{eq:boxrows} that the pair determines.
+\end{requirement}

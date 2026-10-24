@@ -1,0 +1,303 @@
+% ---
+% id: protocol-compiler/def:validator
+% kind: def
+% title: "The emitted validator"
+% summary: >-
+%   Eight exact checks on a candidate declaration: sector maps, the marginal,
+%   the operators, the key alphabet, sifting, constraint typing, feasibility
+%   and party computability. Feasibility passes only on an empty list, a
+%   verified default candidate or a verified supplied witness.
+% prominence: standard
+% status: implemented
+% uses: [def:declaration, def:exact, thm:feasibility, def:compile, def:spec, def:homog, def:target]
+% mentions: [thm:validator-soundness, def:chaincond, thm:measurements-and-statistics, thm:sifting-and-key, rem:chain-and-validator, req:validator-refusals, req:derived-objects, foundations/req:exact-island]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.validation:validate
+% lean:
+% notes: "thm:measurements-and-statistics is a mention and not a use: V1's pointer to it explains why V1 has no off-block conjunct and no check rests on it, which lets thm:typing and thm:measurements-and-statistics use this definition without a cycle."
+% ---
+
+The validator is the list of checks the compiler runs on a candidate
+declaration before it emits one. A candidate failing a check is refused with a
+reason naming the check (Requirement~\ref{req:validator-refusals}); what
+passing all eight establishes is Theorem~\ref{thm:validator-soundness}, and which conditions
+are decided on the chain rather than here, and which objects check V1 does
+not compare, is Remark~\ref{rem:chain-and-validator}. That check V7 decides
+on quantities formed in exact arithmetic is
+\xref{foundations/req:exact-island} at work, and that no product block,
+\tref{lifted operator} or denoted family of an \tref{ensemble form} is a
+datum is
+Requirement~\ref{req:derived-objects}.
+
+\begin{definition}\label{def:validator}
+Given a candidate declaration \eqref{eq:declaration} with its emitted
+\tref{index map}, the checks are as follows. \emph{Every operator condition
+below is decided exactly}, in the sense of Definition~\ref{def:exact}, and
+every combinatorial condition exactly as well.
+\begin{description}[leftmargin=3.0em,style=nextline]
+\item[V1 (finiteness, totality, and the \tref{sector map})] every declared alphabet is
+  finite and non-empty and every declared map is tabulated on all of its stated
+  domain; every declared system carries a finite dimension;
+  $d_{\Qsys}=\sum_{s\in\SecSet}d_s$; the restriction of $\idxm$ to $\SecSet$ is
+  the total order the sector map fixes; \emph{and the sector maps
+  agree}: there is one emitted map $\Smap$, and the map carried by each
+  supplied $\Qsys$-operator family is compared against it in \emph{block
+  kind}, in the \emph{list of block identifiers}, in their \emph{order} and in
+  their \emph{dimensions}. A disagreement on any of the four is refused,
+  naming the first position at which the lists differ. The families compared
+  are exactly the $\Qsys$-operator families of \eqref{eq:declaration}, which
+  is the list D(i) quantifies over and no wider one: the emitted family
+  $\{F_v\}$, which the last link of $\Chrec$ delivers as its \tref[target povm]{target POVM}
+  against the map the chain's producer wrote it against, and each constraint
+  entry of $\CList$, declared in $\Spec_{\mathrm{con}}$ or transported by a
+  link of either segment. Those two slots are the whole of
+  \eqref{eq:declaration} that carries a $\Qsys$-operator
+  (Definition~\ref{def:declaration}), so the list is exhaustive by
+  construction rather than by enumeration; the objects outside it are compared
+  where they belong. The entries of
+  $\Spec_{\mathrm{con}}$ are compared as well as the transported ones:
+  Definition~\ref{def:compile} fills $\CList$ from both sources,
+  Definition~\ref{def:spec}\,(e) has each declared $\hat O_k$ carry its own
+  sector map, and an entry written against a different map is the error this
+  check exists for, whichever source it arrived from. The comparison is
+  combinatorial --- it compares labels and integers, never matrix entries ---
+  and it is the whole of the structural verification the emitted declaration
+  receives: block-diagonality is carried by the type
+  (Theorem~\ref{thm:measurements-and-statistics}\,(ii)), so the one structural error that can still
+  arise is two parties disagreeing about what the sectors are, and V1 is the
+  check for it.
+\item[V2 (\tref{marginal slot})] the slot holds $\nomarg$, or a matrix $\tau_A$ on $A$
+  --- one block, $A$ carrying no sector decomposition --- satisfying
+  $\tau_A=\tau_A^{\dagger}$, $\tau_A\succeq0$ and $\tr\tau_A=1$, each decided
+  exactly, and with the trace accumulated over the row index verified to
+  \tref[rounds nowhere]{round nowhere}; a failure of the last is refused.
+\item[V3 (operators, block by block)]
+  $M_x=M_x^{\dagger}$ and $M_x\succeq0$ for each $x\in\Xset$, and
+  $\sum_xM_x=\idon{A}$ with the sum, in the emitted index order, verified to
+  round nowhere, a failure of which is refused;
+  $F_v^{(s)}=F_v^{(s)\dagger}$ and $F_v^{(s)}\succeq0$ for each
+  $(v,s)\in\Vset\times\SecSet$, and, for each $s$,
+  $\sum_vF_v^{(s)}=\idon{\Qsys_s}$ with that sum verified to round nowhere, a
+  failure being refused with the sector and the outcome index at which the
+  first inexact addition occurred; and
+  $\hat O_k^{(s)}=\hat O_k^{(s)\dagger}$ for each $(k,s)$. Every one of these
+  is decided exactly. There is no off-block condition: an emitted
+  $\Qsys$-operator is a \tref{block list}, so there is no $\Pi_sF_v\Pi_{s'}$ or
+  $\Pi_s\hat O_k\Pi_{s'}$ to evaluate and nothing that could be non-zero.
+\item[V4 (key alphabet)] every tabulated value of $r$ lies in
+  $\Zval\sqcup\{\perp\}$.
+\item[V5 (sifting consistency)] for all $(x,v)$ and $(x',v')$ with
+  $a(x,v)=a(x',v')$: $r(x,v)=\perp\iff r(x',v')=\perp$.
+\item[V6 (constraint typing, including the tag)] when the marginal
+  slot is filled: $\bowtie_k\in\{\preceq,=,\succeq\}$, and the entry's
+  right-hand side is of one of the two admitted types, which is what fixes its
+  tag (Definition~\ref{def:homog}): \tref{homogeneous}, whose datum is of
+  real scalar type, or \tref{general}, whose datum is a matrix on $A$ with
+  $\Theta_k=\Theta_k^{\dagger}$ decided exactly. When the slot holds
+  $\nomarg$: $\bowtie_k\in\{\le,=,\ge\}$ and the right-hand side is of real
+  scalar type. A real scalar right-hand side is accepted in
+  \tref{trusted-source mode} at every $d_A$, and is the licensed form there
+  (Definition~\ref{def:homog}). The relation symbol, the type of the
+  right-hand side and the tag that type fixes are compared exactly; an entry
+  whose right-hand-side slot holds neither admitted object, or a complex-typed
+  right-hand side in \tref{untrusted-source mode}, is refused by type and not
+  measured. The check also reads an object \eqref{eq:declaration} does not
+  carry, the tag field of an \emph{arriving} entry, in $\Spec_{\mathrm{con}}$
+  or transported by a link: where an arriving entry carries an explicit tag
+  field, V6 compares that field with the type of the datum it names, and a
+  disagreement is refused. An entry of \eqref{eq:declaration} in
+  either of the two forms above is the triple
+  $(\hat O_k,\bowtie_k,\mathrm{rhs}_k)$ and holds no tag field independent of
+  the type of its datum, the emitted tag being read off that type
+  (Definition~\ref{def:homog}); so on a candidate declaration this clause has
+  no subject, refuses nothing, and is not among the conjuncts D(vi) is paired
+  with (Theorem~\ref{thm:validator-soundness}, proof). An entry carrying no tag field is not
+  refused: its tag is the type of its datum and is read off it, which is what
+  lets an entry declared as
+  a real constant, carrying no tag field, be read here.
+\item[V7 (feasibility; one-sided, three branches)] V7 passes in exactly three
+  cases:
+  \begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+  \item $\CList=\varnothing$; or
+  \item $\CList\ne\varnothing$ and the default candidate
+    \eqref{eq:witness-empty}, which the compiler forms and does not emit,
+    passes the per-block verification of Theorem~\ref{thm:feasibility}\,(ii); or
+  \item $\CList\ne\varnothing$, the default candidate fails, and a witness
+    $\omega^{\star}$ is supplied \emph{as a block list against $\Smap$} --- the
+    map it carries compared with $\Smap$ in block kind, in identifiers, in
+    their order and in their dimensions, exactly as V1 compares the map of a
+    declared $\Qsys$-operator family --- and passes that same verification.
+    This is the one place a witness's sector map is compared, and it is
+    here rather than at V1 because $\omega^{\star}$ is a block list on
+    $A\Qsys$, is no slot of \eqref{eq:declaration}, and is quantified over by
+    no target condition (Definition~\ref{def:target}).
+  \end{enumerate}
+  Otherwise V7 fails and the candidate is refused, the refusal naming, where a
+  witness was supplied and rejected on its map, the first position at which
+  the two lists differ. The verification in (b) and (c) is the $|\SecSet|$
+  block positivity decisions --- Hermiticity and semidefiniteness per block
+  --- the trace, the marginal equality in trusted-source mode, and one leg per
+  constraint entry, all decided exactly, on quantities formed in exact
+  arithmetic (Theorem~\ref{thm:feasibility}\,(ii)). It is taken on a
+  candidate satisfying D(i)--D(iii) and D(vi), which V1--V3 and V6 decide; a
+  candidate failing one of them is refused there. V7 is the one check of the
+  list that
+  is \emph{not} equivalent to its target condition: it implies D(vii) and is
+  implied by nothing weaker than a candidate that verifies
+  (Theorem~\ref{thm:validator-soundness}\,(iii)).
+\item[V8 (party computability)] $a_A$ and $a_B$ are tabulated on
+  $\Oset{\mathsf A}$, $\Oset{\mathsf B}$; and for all $(x,v)$, $(x',v')$ with
+  $\rd{\hold}(x,v)=\rd{\hold}(x',v')$ and $a(x,v)=a(x',v')$:
+  $r(x,v)=r(x',v')$.
+\end{description}
+
+\emph{The general format.} On a candidate declaration in the general format
+of Definition~\ref{def:declaration}\,(DX1)--(DX6) the eight checks read as
+follows, every operator condition again being decided exactly. In the
+\tref{basic format} --- one Alice sector, one \tref{measured factor},
+\tref{POVM form}, two messages neither reading the other and no party-local
+entry --- each reading is the check of the
+same name above, conjunct for conjunct, so on such a candidate the two
+readings admit and refuse alike.
+
+\emph{V1 in the general format.} Finiteness and totality as above, every
+table of the transcript included: each $a_m$ is tabulated on all of
+$\Oset{\pi_m}\times\mathcal{C}_1\times\dots\times\mathcal{C}_{m-1}$, which is
+also where the signature clause of D(viii) lives: a table whose stated
+domain names a later message's alphabet is not of that type and is refused
+here. \emph{The sector map is one factorised map}: at most one factor tagged
+$A$ and, where there is one, first in the list; at least one factor tagged
+$\Qsys$; \emph{one block kind across the factors}, a disagreement being
+refused, naming the first factor at which the kind differs;
+$d_{\Qsys_f}=\sum_{s_f}d_{f,s_f}$ for every factor and
+$d_{\Qsys}=\prod_fd_{\Qsys_f}$; and, where an $A$ factor is declared,
+$d_A=\sum_td_{A_t}$. The restriction of $\idxm$ to each factor's \tref{sector set}
+is the total order that factor's own map fixes, and its restriction to
+$\mathbb{T}$ is the order the $A$ factor's map fixes; the product orders on
+$\SecSet$ and $\Vset$ and the order on the \tref[joint sector]{joint sectors} are derived
+by (DX1) and (DX3) and are not compared, there being no second datum to
+compare them with. \emph{And the maps agree, factor by factor}: the map
+carried by each declared family $\{F^{f}_{v_f}\}_{v_f}$ is compared against
+the map of factor $f$, and the map carried by each entry's operator
+$\hat O_k$ against the map of that entry's scope, in the same four
+components, with the same refusal naming the first differing position.
+\emph{Alice's \tref{declared data} are compared too, against the map of the
+factor tagged $A$}: the map carried by $\tau_A$, the map carried by each
+operator of Alice's measurement slot --- $M_x$ in POVM form, $N_x$ in
+\tref{ensemble form} --- and the map carried by each $\Theta_k$ of an entry declared
+general are each compared against that factor's map in the same four
+components (block kind, block identifiers, their order, dimensions), with the
+same refusal naming the first differing position. That comparison is what
+makes condition~(T) of Definition~\ref{def:exact} decided for Alice's data,
+which its general-format paragraph calls non-empty for them; it is decided
+here and nowhere else, and without it a candidate whose Alice block list
+carried a different block kind, a different identifier list or a different
+order would pass every check and violate D(i). Where no factor is tagged $A$
+there is one Alice block and no map to compare, as in V1 above. \emph{The list
+of compared objects is again exhaustive by construction}: the objects D(i)
+quantifies over are the per-factor families, the entries' operators and
+Alice's declared data. The product family is no datum, and the
+\tref{lifted operator} of a scoped entry is no datum; the descriptors that the
+last links of a chain produce, decided per factor at
+Definition~\ref{def:chaincond}\,(C1), and a supplied witness, compared at
+branch~(c) of V7, stay outside the list; and the physical families stay outside
+it too, one per factor.
+
+\emph{V2 in the general format.} The slot holds $\nomarg$, or a block list
+$(\tau^{(t)}_A)_t$ against the $A$ factor's map with
+$\tau^{(t)}_A=\tau^{(t)\dagger}_A$ and $\tau^{(t)}_A\succeq0$ for every $t$
+and $\sum_t\tr\tau^{(t)}_A=1$, each trace accumulated over the row index and
+the block traces then added in the \tref{declared order} of $\mathbb{T}$, with
+\emph{every} one of those additions verified to round nowhere; a failure of
+the last is refused. \emph{Where Alice's measurement slot is in ensemble form,
+additionally $\tau^{(t)}_A\ne0$ for every $t$}, a comparison of declared
+entries with the datum $0$, a failure being refused naming the sector. At
+$|\mathbb{T}|=1$ this is V2 above, the one block being the whole of $A$.
+
+\emph{V3 in the general format.} \emph{Per measured factor}: for every
+$f\in\mathbb{F}$, every $v_f\in\Vset^{f}$ and every $s_f\in\SecSet^{f}$,
+$F^{f,(s_f)}_{v_f}$ Hermitian and positive semidefinite, and for each $s_f$
+the sum $\sum_{v_f}F^{f,(s_f)}_{v_f}=\idon{\Qsys_{f,s_f}}$ with its
+declared-order sum verified to round nowhere, a failure being refused with
+the \emph{factor}, the sector and the outcome index at which the first
+inexact addition occurred. \emph{On Alice's data, block by block along
+$\mathbb{T}$}: in \tref{POVM form} $M^{(t)}_x$ Hermitian and positive
+semidefinite for every $(x,t)$ and $\sum_xM^{(t)}_x=\idon{A_t}$ for every
+$t$, the sum in the emitted index order verified to round nowhere, a failure
+being refused with the Alice sector; in \tref{ensemble form} $N^{(t)}_x$
+Hermitian and positive semidefinite for every $(x,t)$ and, \emph{in place of
+the completeness identity}, the identity $\sum_xN^{(t)}_x=\tau^{(t)}_A$ of
+\eqref{eq:ensembleform} decided entry by entry against the declared block of
+$\tau_A$, a failure being refused with the sector and the first differing
+entry, with that declared-order sum verified to round nowhere, a failure
+being refused with the sector and the index of the first inexact addition.
+\emph{An ensemble-form slot beside a marginal slot holding $\nomarg$ is
+refused}; this is D(iii)'s general-format clause, and it is a decision on
+which of two slots is filled, not on a number. And $\hat O_k^{(s_{f_k})}$ is
+Hermitian for every entry and every block of its scope. \emph{Nothing is
+decided on a product block \eqref{eq:productfamily}, on a lifted operator or
+on the denoted family \eqref{eq:ensemblepovm}}: none of the three is a datum,
+and that the first is a POVM on
+$\Qsys$ and the third a POVM on $A$ are theorems
+(Definition~\ref{def:declaration}\,(DX3), Theorem~\ref{thm:sifting-and-key}\,(v)).
+
+\emph{V4, V5, V7 in the general format.} V4 and V5 keep their wording, with
+$a$ the function \eqref{eq:transcript} derives from the transcript's tables;
+V5's pairs are compared on the values of that function and on nothing about
+how it was built. V7 keeps its three branches and its refusal, and what its
+branches (b) and (c) verify is the per-\emph{joint}-sector verification of
+Theorem~\ref{thm:feasibility}\,(ii) in the general format, on a candidate
+satisfying D(i)--D(iii) and D(vi), in their general-format reading, which
+V1--V3 and V6 decide (a candidate failing one of them is refused there): the
+default candidate is
+\eqref{eq:witness-empty} read per joint sector, and a supplied
+$\omega^{\star}$ is required to be a block list over the joint sectors, its
+map compared in the same four components at branch~(c) and there alone.
+
+\emph{V6 in the general format.} When the marginal slot is filled:
+$\bowtie_k\in\{\preceq,=,\succeq\}$, and the entry's right-hand side is of
+one of the \emph{three} admitted forms, which with the arriving tag field is
+what fixes its tag (Definition~\ref{def:homog}): homogeneous with a real
+scalar, general with a block list $(\Theta^{(t)}_k)_t$ along $\mathbb{T}$
+decided Hermitian block by block, or \tref{party-local} with a real scalar. When the
+slot holds $\nomarg$: the right-hand side is of real scalar type, either
+untagged or tagged party-local. \emph{The relation symbol is decided by form
+and not by mode alone}: for an \emph{untagged} entry
+$\bowtie_k\in\{\preceq,=,\succeq\}$ when the slot is filled and
+$\bowtie_k\in\{\le,=,\ge\}$ when it holds $\nomarg$, exactly as in V6 above;
+for an entry declared party-local, $\bowtie_k\in\{\preceq,=,\succeq\}$
+\emph{in either case}, its reading being an operator relation
+(Definition~\ref{def:homog}, the relation-symbol clause of the \tref[party-local form]{party-local
+form}; Definition~\ref{def:target}, D(vi) in the general format), with the
+scalar symbols admitted as well where every row of that entry is $1\times1$
+--- every Alice block, and every sector block of every measured factor other
+than the entry's scope, of dimension one, $d_A=1$ at one measured factor
+included --- the three operator symbols being the three scalar symbols there.
+This is a decision on a declared symbol beside a declared tag and measures
+nothing, and at an entry not declared party-local it is the clause of V6
+above word for word, so nothing that clause admits or refuses moves.
+\emph{Every entry's scope names a measured factor of the emitted sector map},
+a comparison of a label against the factor list, a failure being refused
+naming the entry; this is the general-format half of D(vi) and is decided and
+never measured, as the relation symbol is. \emph{A party-local entry is the
+one that arrives carrying that tag value}, and it carries a tag field the
+type of its datum does not determine, that type not separating it from a
+homogeneous one. On a candidate carrying one, the arriving-tag clause of V6
+above therefore has a subject, and it is this comparison: the datum is of the
+type \emph{that} tag admits, a real scalar, and the scope names a measured
+factor; a party-local tag beside a matrix right-hand side is refused. The
+sentence of V6 above that an entry holds no tag field independent of the type
+of its datum is true of the two untagged forms, homogeneous and general, and
+of them alone. \emph{Nothing is inferred}: an entry arriving without the
+party-local tag is never read party-locally. So the arriving-tag clause
+refuses no party-local entry beside a real scalar, which a literal reading of it
+would otherwise do, and wherever no entry is tagged the reading is that of V6
+above (Definition~\ref{def:homog}).
+
+\emph{V8 in the general format.} The announcement clause reads the
+transcript: every $a_m$ is tabulated on all of its stated domain, which is
+V1's clause restated where D(viii) pairs with it; the key clause is unchanged,
+with $a$ the derived function.
+\end{definition}

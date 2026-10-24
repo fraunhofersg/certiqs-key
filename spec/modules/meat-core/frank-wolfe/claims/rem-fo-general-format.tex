@@ -1,0 +1,79 @@
+% ---
+% id: meat-core/frank-wolfe/rem:fo-general-format
+% kind: rem
+% title: "The first-order bound in the general format"
+% summary: >-
+%   The first-order theorem holds as written in the general format, since no
+%   step of its proof reads a constraint row, the number of measured factors or
+%   the number of Alice sectors. In trusted-source mode the linear minimisation
+%   splits into one conic program per Alice sector.
+% prominence: standard
+% status: accepted
+% uses: [thm:firstorder, def:first-order-setting, meat-core/thm:choi, meat-core/prop:a-neutral, meat-core/lem:branch-support]
+% mentions: [cor:fo-dropped, lem:feasible-side-dual, def:relaxed-feasible-set, prop:relaxed-set-properties, rem:feas-tol, req:per-sector-coupling, rem:fo-interface, rem:fo-iterate-checks, rem:fo-returned-point, rem:fo-one-ruler, rem:fo-reachability, rem:fo-check-exposures, rem:fo-oracle-repair, rem:fo-iterate-repair, rem:fo-negative-values, meat-core/def:declaration]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:fo-general-format}
+\emph{(1) Theorem~\ref{thm:firstorder} is stated for a declaration in the
+general format} of Definition~\ref{def:declaration} as well, with
+$\Feas^{J}$ the set of lists over the joint sectors of
+Theorem~\ref{thm:choi} and $J_s\coloneqq\bigoplus_{\mathsf t}
+J_{(\mathsf t,s)}$ for every sector $s$ of the measured system, and the
+last paragraph of its proof checks each step there. That check is made on
+the general format itself, since the \tref{basic format} cannot express
+the general case: a \tref{party-local} entry, a
+\tref{transcript protocol} of more than two messages and an
+\tref{ensemble form} measurement slot are each outside it, so no appeal to
+``the same declaration with its factor tagged $A$ forgotten'' would carry
+the general case, and none is made.
+\emph{What Proposition~\ref{prop:a-neutral} does and does not contribute
+here.} It says that restricting the variable to states block diagonal along
+Alice's sectors costs nothing, which is why the joint-sector program is the
+right program to run and not a weaker one; it is not what carries the
+theorem, and the inclusion of the joint-sector Choi set into a Choi set of
+the $A$-forgotten declaration is not used, nor is it available in general,
+that declaration's Choi feasible set carrying only
+\tref[lifted operator]{lifted-operator} rows and no party-local row. In the
+pairing $\langle\lmoJ_t,S_t-J_t\rangle$ only the blocks of the gradient on
+the joint sectors enter, $S_t$ and $J_t$ being lists over them. (H-SUPP) is
+asked of $\cG^{J}_{\hat c,s}(J_s)$ on the whole sector $s$, and
+$J_{(\mathsf t,s)}\succ0$ for every $\mathsf t$ suffices for it, since then
+$J_s\succ0$. The weaker hypothesis per joint pair, which does not ask
+anything of key-inert joint pairs inside a key-active sector, is
+Corollary~\ref{cor:fo-dropped} at $\mathcal{D}=\varnothing$.
+
+\emph{(2) The linear minimisation splits.} In trusted-source mode
+$\Feas^{J}=\prod_{\mathsf t}\Feas^{J}_{\mathsf t}$
+(Theorem~\ref{thm:choi}, general format), so
+$\min_{J'\in\Feas^{J}}\langle\lmoJ_t,J'\rangle
+=\sum_{\mathsf t}\min_{J'_{\mathsf t}\in\Feas^{J}_{\mathsf t}}
+\langle\lmoJ_{t,\mathsf t},J'_{\mathsf t}\rangle$: one independent conic
+program per Alice sector, each with its own coupling constraint of size
+$d_{A_{0,\mathsf t}}$. A lower bound on each sector's minimum, summed over
+the sectors, is therefore a lower bound on the minimum over the product,
+which is how Lemma~\ref{lem:feasible-side-dual}\,(ii) forms the feasible
+side of a bracket, one bound per Alice sector; and a pairing at most each
+sector's minimum, summed, is at most the minimum over the product, which is
+the second inequality of \eqref{eq:lmo}.
+In untrusted-source mode the single normalisation and every scalar entry
+couple all joint sectors and nothing splits. What does not split in either
+mode is the iteration: the gradient couples all blocks through the scalars
+$q(\hat c)/P_{\hat c}$ and $q(\hat c)/K_{\hat c}$.
+
+\emph{(3) The relaxed feasible set per Alice sector.} In the general format
+the \tref{relaxed feasible set} of Definition~\ref{def:relaxed-feasible-set}
+and the recorded fields of Remarks~\ref{rem:fo-interface},
+\ref{rem:fo-iterate-checks}, \ref{rem:fo-returned-point},
+\ref{rem:fo-one-ruler}, \ref{rem:fo-reachability},
+\ref{rem:fo-check-exposures}, \ref{rem:fo-oracle-repair},
+\ref{rem:fo-iterate-repair} and~\ref{rem:fo-negative-values} are read with the
+coupling constraint per Alice sector, and no statement of
+Proposition~\ref{prop:relaxed-set-properties}, of
+Remark~\ref{rem:feas-tol} or of those remarks changes;
+what a run decides and records per sector is
+Requirement~\ref{req:per-sector-coupling}.
+\end{remark}

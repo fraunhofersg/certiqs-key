@@ -1,0 +1,102 @@
+% ---
+% id: meat-core/frank-wolfe/rem:fo-iterate-checks
+% kind: rem
+% title: "What the iterate checks establish"
+% summary: >-
+%   The three iterate checks decide every condition of the relaxed feasible
+%   set, all of them on the J factor; the acceptance factor holds by
+%   construction. They serve the membership hypothesis and the estimate's
+%   premise; no check of a solver's return would serve the bound.
+% prominence: standard
+% status: accepted
+% uses: [thm:firstorder, def:first-order-setting, def:relaxed-feasible-set, meat-core/thm:choi, prop:relaxed-set-properties, rem:acc-side]
+% mentions: [req:iterate-checks, req:iterate-repair, req:acceptance-iterate-exact, req:verified-feasible-side, foundations/req:tolerance-scope, rem:fo-returned-point]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:fo-iterate-checks}
+Requirement~\ref{req:iterate-checks} decides, on the point consumed at each
+iterate, every condition defining $\Feas^{J}$ in \eqref{eq:choi-feas}:
+per-block positive semidefiniteness, the coupling condition
+$\sum_s\tr_{\Qsys_s}J_s=\idon{A_0}$, \emph{and the declared constraint rows}
+$\bowtie_k$. Checking two of the three is not checking the condition.
+\emph{No such check is made on a point a solver returned, and none would
+serve the bound}: verifying $S_t\in\Feas^{J}$ gives
+$\langle\lmoJ_t,S_t\rangle\ge\min_{J'\in\Feas^{J}}\langle\lmoJ_t,J'\rangle$,
+the \emph{opposite} inequality to \eqref{eq:lmo}. Feasibility bounds the
+linear form from below, which is exactly the side the first-order claim
+cannot use; one can verify \emph{which set} a solver minimised over, never
+that it minimised. The feasible side of a bracket is therefore a lower bound
+formed without any point of the solver
+(Requirement~\ref{req:verified-feasible-side}). What the checks do buy is
+the membership hypothesis of Theorem~\ref{thm:firstorder}\,(iiib) on its
+$J$ factor, and Theorem~\ref{thm:firstorder}\,(i),
+respectively~(iiia): the point the run reports its estimate at is a convex
+combination of oracle returns; \eqref{eq:fo-estimate} holds only for points
+of $\acSet\times\Feas^{J}$, which is what a run does \emph{not} establish,
+and (iiia) is the part it is in, giving
+$O^{J}_{\alpha}(x)\ge\hlow[\Feas^{J}(\varepsilon)]$ at the relaxed
+membership the checks do establish --- on the point the run returned, the
+membership the end-of-run measurement of
+Remark~\ref{rem:fo-returned-point} establishes, which is of the $J$ factor
+only. So the checks serve the bound's membership hypothesis and the premise
+of the estimate tier, which is the tier reported on every run. Their windows are numbers of their own and not
+the declared tolerance $\tnum$, the object checked being one the optimiser
+computed (\xref{foundations/req:tolerance-scope}\,(ii)).
+
+Between them the three checks are what membership in
+$\Feas^{J}(\varepsilon)$ at the larger of the two declared windows asks
+for, and they cover all of it: per-block positive semidefiniteness, which
+the family does not relax and which is decided on the point consumed at
+exactly $0$ and at no window (Requirement~\ref{req:iterate-repair} says
+what may be done to a block that fails it, and the record it must carry);
+the coupling residual and each $\bowtie_k$ residual, each inside its own
+window, hence inside the larger of the two by monotonicity
+(Proposition~\ref{prop:relaxed-set-properties}\,(a)); and the family's
+normalisation clause with them, that clause being implied by the coupling
+clause and adding no check
+(Proposition~\ref{prop:relaxed-set-properties}\,(c$'$)). No fourth check is
+needed.
+
+\emph{All three are conditions on the $J$ factor.} The hypothesis they
+serve is on a \emph{product}, $x_t\in\acSet\times\Feas^{J}(\varepsilon)$,
+and nothing in these checks touches the other factor: \emph{the three
+checks establish the $J$ half and no more, and the $\acSet$ half is not
+checked at all}. It is instead true \emph{by construction}, the
+acceptance-side iterate being formed in exact rational arithmetic on the
+\tref{exact island} under ($\alpha$) and ($\beta$) of
+Remark~\ref{rem:acc-side}: a convex combination, with exact rational
+weights, of exact points of a convex set, so $\mathbf q_t\in\acSet$ by
+induction. Remark~\ref{rem:acc-side} names the three consumers of
+Theorem~\ref{thm:firstorder} that break if it does not hold. A run that
+forms $\mathbf q_t$ in binary64 instead has not met the membership
+hypothesis (Requirement~\ref{req:acceptance-iterate-exact}); there is no
+check for it to pass on that factor, and none is offered. The coverage
+claim of the previous paragraph is therefore a claim about one factor of a
+product.
+
+\emph{The window on the positivity check decides whether the coverage claim
+is true.} At a positive window $w$ the positivity check would accept a
+point with $\lmin\in(-w,0)$, which lies in \emph{no}
+$\Feas^{J}(\varepsilon)$ for any $\varepsilon$ --- the family relaxes the
+coupling and the $\bowtie_k$ rows and relaxes positivity not at all
+(Proposition~\ref{prop:relaxed-set-properties}\,(c), \emph{Fourth}) --- so
+at such a point $O^{J}_{\alpha}$ is not even defined and neither (i) nor
+(ii) nor (iii) of Theorem~\ref{thm:firstorder} applies. That is why
+positivity is decided at $0$, and the drift a declared window would let
+pass silently is repaired and recorded under
+Requirement~\ref{req:iterate-repair}. By
+Theorem~\ref{thm:firstorder}\,(iiia) that reading is the conservative one:
+membership in the wider $\Feas^{J}(\varepsilon)$ gives
+$O^{J}_{\alpha}(x)\ge\hlow[\Feas^{J}(\varepsilon)]$, the \emph{Choi-form}
+relaxed infimum \eqref{eq:hlow-feasJ}, and
+$\hlow[\Feas^{J}(\varepsilon)]\le\hlow$ by \eqref{eq:feas-tol-mono-J}, so
+the estimate over-estimates a quantity that is itself no larger than
+$\hlow$. (The state-form $\hlow[\Feas(\varepsilon)]$ is a different number
+and is not what the checks buy;
+Proposition~\ref{prop:relaxed-set-properties}\,(d$'$) says why the two are
+not interchangeable at $\varepsilon>0$.)
+\end{remark}

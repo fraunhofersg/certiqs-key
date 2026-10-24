@@ -1,0 +1,36 @@
+% ---
+% id: reductions/lem:msmfact
+% kind: lem
+% title: "Measurement-channel factorization"
+% summary: >-
+%   A POVM squashes to a target via a channel exactly when its measurement
+%   channel is the target's measurement channel after that channel. This is
+%   the channel identity the protocol-level argument inserts round by round.
+% prominence: standard
+% status: accepted
+% uses: [lem:sep, lem:statistics]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{lemma}\label{lem:msmfact}
+Let $M,F$ be POVMs on $\Bsys,\Qsys$ over $\Vset$ and let
+$\Lambda\colon\Tcl{\Bsys}\to\Tcl{\Qsys}$ be a channel. Then
+\begin{equation}\label{eq:msmfact}
+  M\dsq_{\Lambda}F
+  \qquad\Longleftrightarrow\qquad
+  \redNmsm_M=\redNmsm_F\circ\Lambda .
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+($\Rightarrow$) For every $\rho\in\Tcl{\Bsys}$,
+$\redNmsm_M(\rho)=\sum_v\tr[\Lambda^{\dagger}(F_v)\rho]\dyad{v}
+=\sum_v\tr[F_v\Lambda(\rho)]\dyad{v}=\redNmsm_F(\Lambda(\rho))$ by
+\eqref{eq:pairing}. ($\Leftarrow$) Comparing the coefficient of $\dyad{v}$ on
+both sides gives $\tr[M_v\rho]=\tr[F_v\Lambda(\rho)]$ for every state $\rho$,
+which is condition (ii) of the statistics equivalence,
+Lemma~\ref{lem:statistics}, with $m=0$.
+\end{proof}

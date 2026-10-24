@@ -1,0 +1,58 @@
+% ---
+% id: foundations/def:renyi
+% kind: def
+% title: "Sandwiched Rényi divergence and conditional entropies"
+% summary: >-
+%   The sandwiched Rényi divergence of order α > 1 and the two conditional
+%   entropies it induces, one at the fixed marginal and one optimised over the
+%   marginal, in bits. The fixed-marginal entropy is no larger, so substituting
+%   it inside a lower bound is conservative, and the reverse substitution is not.
+% prominence: standard
+% status: implemented
+% uses: []
+% assumes: []
+% refs:
+%   - "tomamichel2016finite, Def. 5.2, Eqs. (5.18)-(5.19)"
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.linalg:psd_trace_power
+% lean:
+% ---
+
+The source \cite[Def.~5.2]{tomamichel2016finite} writes the two conditional
+entropies of the following definition, its Eqs.~(5.18)--(5.19), with a
+tilde, as \repodoc{spec/notation.md} does for the sandwiched family; the
+pair it writes with an overline, its Eqs.~(5.16)--(5.17), is the Petz
+family, which is a different quantity.
+
+\begin{definition}
+\label{def:renyi}
+For $\alpha\in(1,\infty)$, $\rho\in\Sleq{AB}$ and $\sigma\in\Pos{AB}$, on the
+same system,
+\begin{equation}\label{eq:sandwiched}
+  \Dsand(\rho\,\|\,\sigma)\coloneqq\frac{1}{\alpha-1}\log_2
+  \tr\!\left[\left(\sigma^{\frac{1-\alpha}{2\alpha}}\,\rho\,
+  \sigma^{\frac{1-\alpha}{2\alpha}}\right)^{\alpha}\right]
+\end{equation}
+when $\operatorname{supp}\rho\subseteq\operatorname{supp}\sigma$, and
+$\Dsand(\rho\|\sigma)\coloneqq+\infty$ otherwise. The exponent
+$\frac{1-\alpha}{2\alpha}$ is negative, and the power of $\sigma$ is taken on
+its support and is zero on its kernel, as for the generalised inverse; where
+$\operatorname{supp}\rho\subseteq\operatorname{supp}\sigma$, $\rho=P\rho P$
+for the projector $P$ onto that support, so the value reads the power on the
+support alone. For
+$\rho_{AB}\in\Seq{AB}$,
+\begin{equation}\label{eq:Hdefs}
+  \Hsanddown(A|B)_{\rho}\coloneqq-\Dsand(\rho_{AB}\,\|\,\idon{A}\otimes\rho_B),
+  \qquad
+  \Hsandup(A|B)_{\rho}\coloneqq-\inf_{\sigma_B\in\Seq{B}}
+  \Dsand(\rho_{AB}\,\|\,\idon{A}\otimes\sigma_B).
+\end{equation}
+Both are in bits. These are the definitions of
+\cite[Def.~5.2, Eqs.~(5.18)--(5.19)]{tomamichel2016finite}. Since the
+infimum in \eqref{eq:Hdefs} includes $\sigma_B=\rho_B$,
+\begin{equation}\label{eq:arrow-order}
+  \Hsanddown(A|B)_{\rho}\;\le\;\Hsandup(A|B)_{\rho}.
+\end{equation}
+The substitution $\Hsandup\to\Hsanddown$ inside a lower bound is therefore
+conservative, and the reverse is not.
+\end{definition}

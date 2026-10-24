@@ -1,0 +1,29 @@
+% ---
+% id: reductions/req:supplier-ledger-refusals
+% kind: req
+% title: "Refusal of a supplier ledger with a repeated or missing key"
+% summary: >-
+%   A supplied ledger that repeats a machine key is refused, and so is an
+%   artefact whose ledger lacks a key the supplier's own presence rules make
+%   present. A shortened list is never passed on in silence.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [req:supplier-ledger-pass-through]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The pass-through of Requirement~\ref{req:supplier-ledger-pass-through}
+carries the supplied keys as they stand, so a repeated key would be carried
+twice and a missing one would silently shorten what a consumer inherits.
+
+\begin{requirement}\label{req:supplier-ledger-refusals}
+The engine refuses a supplied ledger that carries one machine key more than
+once, and it refuses an artefact whose ledger lacks a key the supplier's own
+presence rules make present, rather than passing it on as a silently
+shortened list; both refusals carry the reason
+\iface{receiver_spec_not_accepted}.
+\end{requirement}

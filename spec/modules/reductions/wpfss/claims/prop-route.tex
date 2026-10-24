@@ -1,0 +1,173 @@
+% ---
+% id: reductions/wpfss/prop:route
+% kind: prop
+% title: "Certified weights routed from the receiver artifact"
+% summary: >-
+%   At absorbing bounded letters the receiver's per-setting high-photon bound
+%   survives the dark counts, sharpened by r_min, on every block of the joint
+%   family above the cutoff. Rounding it down onto the lattice keeps it
+%   certified, so the routed weights are certified weights for the flag-state
+%   targets.
+% prominence: standard
+% status: accepted
+% uses: [lem:descent, def:targets, def:weight-route, reductions/def:joint-family, reductions/lem:exactpsd, reductions/def:substrate, prop:weight-monotone, receiver/thm:click-povm, receiver/thm:coarse-graining, receiver/def:slot, receiver/prop:slotvalid, receiver/thm:emitted-bound, receiver/def:setting-family, receiver/cor:unconditioned-family, receiver/detector-imperfections/def:darkadm, receiver/detector-imperfections/thm:dark-counts]
+% mentions: [cor:oneabsorbing, req:column-stochastic-refusal, req:descent-decided-exactly, req:fibre-equality, req:absorbing-bounded-letters, foundations/req:rounding-direction]
+% assumes: [A-RECV]
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Item (iv) says which receiver claim supplies which hypothesis on the emission path, each a uses edge read under A-RECV, and which hypotheses are decided on input instead; its proof is that reading. For a setting family that a receiver submodule constructs, the claims behind it are named by the claim of this submodule that consumes that family."
+% ---
+
+The routed weight of Definition~\ref{def:weight-route} is certified for two
+reasons: the receiver's per-setting bound survives the dark counts at an
+absorbing letter, and the emitted weight is rounded down. Had that rounding
+been to nearest, or upwards, the second step would fail: an emitted weight
+above $\hat p_{(y_i,t)}$ leaves \eqref{eq:certweights} unproved, and it can
+make it false, the failure Assumption~\ref{ass:recv}'s ledger row calls a
+security break.
+\xref{foundations/req:rounding-direction} names the same direction for every
+emitted lower bound. The input conditions part~(iv) leaves to the declaration
+are decided by Requirements~\ref{req:column-stochastic-refusal},
+\ref{req:descent-decided-exactly}, \ref{req:fibre-equality}
+and~\ref{req:absorbing-bounded-letters}.
+
+\begin{proposition}\label{prop:route}
+Let $\{M_{y|t}\}_{y\in\Yset}$ be, for each $t\in\Tset$, a POVM on $\Chan$ block
+diagonal at the cutoff, and let $R$ descend through $\cg$ with descended matrix
+$R^{\cg}$ (Lemma~\ref{lem:descent}). Let $\{q_t\}$ be a probability
+distribution, and let $\{(\mathcal{O}_i,(p^{(t)}_i)_{t\in\Tset})\}_{i=1}^{r}$
+be the declared slot, with $\mathcal{O}_i=\cg^{-1}(y_i)$ for pairwise distinct
+letters $y_1,\dots,y_r$, with $0\le p^{(t)}_i\le1$, and with the per-setting
+guarantee $\blk{M}{\gtN}_{y_i|t}\succeq p^{(t)}_i\,\idon{}$ for every
+$t\in\Tset$ and every $i$. Suppose each bounded letter is \emph{absorbing},
+\begin{equation}\label{eq:absorbing}
+  R^{\cg}_{y_i|y_i}=1
+  \qquad\text{for every }i=1,\dots,r,
+  \tag{absorbing}
+\end{equation}
+and put $r_{\min,i}\coloneqq\min_{y'\ne y_i}R^{\cg}_{y_i|y'}$, with the
+convention $r_{\min,i}\coloneqq0$ when the minimum is over the empty set (that
+is, when $\Yset=\{y_i\}$), the conservative value, which reduces
+\eqref{eq:routebound} to the un-improved bound. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item The joint-alphabet POVM
+  $M_{(y,t)}\coloneqq q_t\sum_{y'}R^{\cg}_{y|y'}M_{y'|t}$ of
+  Definitions~\ref{def:joint-family} and~\ref{def:weight-route} satisfies, for
+  every $i$ and every $t\in\Tset$,
+  \begin{equation}\label{eq:routebound}
+    \blk{M}{\gtN}_{(y_i,t)}\ \succeq\
+    q_t\Big(\big(1-r_{\min,i}\big)\,p^{(t)}_i+r_{\min,i}\Big)\,\idon{}
+    \;=\;\hat p_{(y_i,t)}\,\idon{} .
+  \end{equation}
+  A slot whose weights do not depend on the setting, $p^{(t)}_i=p_i$ for
+  every $t$ (the $t$-uniform form, which every one-setting slot has), is the
+  special case, and there \eqref{eq:routebound} is the bound in $p_i$.
+\item The \emph{emitted} weight of \eqref{eq:weightroute} is certified, because
+  the rounding runs downwards. Every number on the right of
+  \eqref{eq:routebound} lies on the declared lattice: $q_t$ and $p^{(t)}_i$ by
+  declaration, and $r_{\min,i}$ as an entry of $R^{\cg}$, which is a sum of
+  declared entries and lies in $[0,1]$. So $\hat p_{(y_i,t)}$ is an exact
+  element of $\Fld$ formed from them; and
+  $p_{(y_i,t)}=\lat{\hat p_{(y_i,t)}}\le\hat p_{(y_i,t)}$ by
+  \eqref{eq:latdown}, whence
+  \begin{equation*}
+    \blk{M}{\gtN}_{(y_i,t)}\ \succeq\ p_{(y_i,t)}\,\idon{} ,
+  \end{equation*}
+  which is \eqref{eq:certroute}; so the emitted $(p_v)$ are
+  \tref{certified weights} in the sense of Definition~\ref{def:targets} and they lie on the declared
+  lattice.
+\item Under the sufficient condition \eqref{eq:canonicalcg} of
+  Lemma~\ref{lem:descent} and with the single entry $\mathcal{O}_1=\MCK$,
+  \eqref{eq:absorbing} holds at $y_1=y_{\mc}$, and its per-setting hypothesis
+  is the supplier's slot guarantee
+  $\sum_{S\in\MCK}\blk{M}{\gtN}_{S|t}\succeq p^{(t)}_1\,\idon{}$ at each $t$,
+  read through $\cg^{-1}(y_{\mc})=\MCK$.
+\item On the emission path the hypotheses about the supplier's objects hold
+  under Assumption~\ref{ass:recv}: the conditional families, and their
+  block diagonality in the photon number, block by block and so in
+  particular at the cutoff, are at every setting those of the coarse-grained
+  elements of the \tref{setting family} on which the supplier states its
+  weights, by item~(a) of \xref{receiver/def:setting-family} and
+  \xref{receiver/thm:coarse-graining}; for a receiver without probe inputs
+  that family is the one-setting family of
+  \xref{receiver/cor:unconditioned-family}, and the conditional families and
+  their block diagonality are given by the receiver's
+  \xref{receiver/thm:click-povm}\,(iii) and
+  \xref{receiver/thm:coarse-graining}; the
+  dark-count matrix $R$, and the block diagonality in the photon number of
+  the elements with the dark counts composed, by
+  \xref{receiver/detector-imperfections/def:darkadm} and
+  \xref{receiver/detector-imperfections/thm:dark-counts}; so every element of
+  the joint family of (i), and of the post-processed joint family that
+  Definition~\ref{def:weight-route} forms in either of its forms, is block
+  diagonal in the photon number in every block, below the cutoff as above
+  it; and the slot, its
+  per-setting guarantee (the first conclusion of
+  \xref{receiver/thm:emitted-bound}) and $0\le p^{(t)}_i\le1$,
+  $\sum_ip^{(t)}_i\le1$ at every $t$ by \xref{receiver/def:slot},
+  \xref{receiver/thm:emitted-bound} and \xref{receiver/prop:slotvalid}. The
+  other hypotheses are not supplier facts: that $R$ is column-stochastic and descends through $\cg$, that
+  $\mathcal{O}_i=\cg^{-1}(y_i)$ and \eqref{eq:absorbing} are decided exactly
+  on the declared data, a declaration failing one being
+  refused, and $\{q_t\}$ are the declared \tref{class weights}
+  (Definition~\ref{def:joint-family}).
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) Fix $i$ and $t$. Split the sum over columns and use \eqref{eq:absorbing}
+at that letter:
+\begin{align*}
+  \sum_{y'}R^{\cg}_{y_i|y'}M_{y'|t}
+  &=M_{y_i|t}+\sum_{y'\ne y_i}R^{\cg}_{y_i|y'}M_{y'|t}
+  \;\succeq\;M_{y_i|t}+r_{\min,i}\sum_{y'\ne y_i}M_{y'|t}\\
+  &=(1-r_{\min,i})\,M_{y_i|t}+r_{\min,i}\,\idon{},
+\end{align*}
+using $M_{y'|t}\succeq0$ and $R^{\cg}_{y_i|y'}\ge r_{\min,i}$ in the
+inequality and POVM completeness in the last step. All operators are block
+diagonal at the cutoff, so the inequality restricts to the $\gtN$ block, where
+$\blk{M}{\gtN}_{y_i|t}\succeq p^{(t)}_i\,\idon{}$ and $1-r_{\min,i}\ge0$, every
+entry of $R^{\cg}$ lying in $[0,1]$ by non-negativity and unit columns
+(Lemma~\ref{lem:descent}). Multiplying by $q_t\ge0$ gives
+\eqref{eq:routebound}. Nothing in the argument couples the entries: each $i$
+uses only its own row of $R^{\cg}$ and its own weight, which is why $r_{\min}$
+must be indexed (Corollary~\ref{cor:oneabsorbing} says what that costs).
+
+(ii) $\hat p_{(y_i,t)}$ is formed from $q_t$, $p^{(t)}_i$ and $r_{\min,i}$ by
+finitely many field operations in $\Fld$ (Lemma~\ref{lem:exactpsd},
+Definition~\ref{def:substrate}), so it \emph{is} the real value of
+\eqref{eq:weightroute}'s expression and \eqref{eq:routebound} is a statement
+about that value. Monotonicity of $\succeq$ in a scalar multiple of the
+identity, with $p_{(y_i,t)}\le\hat p_{(y_i,t)}$, gives \eqref{eq:certroute};
+and $p_{(y_i,t)}\ge0$ because $\hat p_{(y_i,t)}\ge0$ and $\lat{\cdot}$ carries
+a non-negative rational to a non-negative lattice value. No rounding-error
+budget is tracked and none is needed: the inequality is exact, and the only
+inexactness anywhere near it is a rounding that weakens it
+(Proposition~\ref{prop:weight-monotone}\,(i)).
+
+(iii) The proof of Lemma~\ref{lem:descent} under \eqref{eq:canonicalcg} gives
+$P(y_{\mc}|S')=1$ for every $S'\in\MCK$, hence
+$R^{\cg}_{y_{\mc}|y_{\mc}}=1$; and
+$M_{y_{\mc}|t}=\sum_{S\in\cg^{-1}(y_{\mc})}M_{S|t}=\sum_{S\in\MCK}M_{S|t}$ by
+the definition of the coarse-grained POVM.
+
+(iv) Each receiver claim cited there states the hypothesis it is cited for,
+of the objects the receiver artifact supplies, and
+Assumption~\ref{ass:recv} makes the artifact's facts hold of the numbers as
+declared. The supplier states its weights on a setting family
+(\xref{receiver/thm:emitted-bound}), whose elements at every setting commute
+with the photon number by item~(a) of \xref{receiver/def:setting-family},
+and a coarse-grained element is a sum of them
+(\xref{receiver/thm:coarse-graining}); for a receiver without probe inputs
+\xref{receiver/cor:unconditioned-family} identifies that family as the
+click-pattern POVM of \xref{receiver/thm:click-povm}, block diagonal by its
+item~(iii). The remaining hypotheses are the input decisions and the
+declaration named there. An element of the joint family of (i), and an
+element of the post-processed joint family in either form, is a combination
+with non-negative coefficients ($q_t$ and the entries of $R^{\cg}$, or $q_t$
+alone) of the receiver's elements, conditional or with the dark counts
+composed, which the claims cited give block diagonal in the photon number;
+and a sum of operators each block diagonal in the photon number is again
+block diagonal in it, block by block.
+\end{proof}

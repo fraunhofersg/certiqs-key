@@ -1,0 +1,90 @@
+% ---
+% id: protocol-compiler/ex:condfamily
+% kind: ex
+% title: "An exact weighted family built from incomplete conditional families"
+% summary: >-
+%   Two weights of one half and two one-element conditional families that are
+%   not POVMs give a weighted family passing checks V1 and V3 exactly. The
+%   emitted conditions therefore do not imply the per-choice ones, and the
+%   declared weight is then not the probability the declaration implements.
+% prominence: standard
+% status: accepted
+% uses: [def:weighted, def:exact, lem:weighted]
+% mentions: [def:validator, rem:condfamily, thm:choice-encoding, ass:coin, req:conditional-family-decision]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "An ex claim and not a lemma, so that nothing can use it."
+% ---
+
+\begin{example}\label{ex:condfamily}
+Let $S$ be two-dimensional carrying the single sector $\SecSet=\{s_0\}$ with
+$d_{s_0}=2$, so that a block list against that map is one $2\times2$ array and
+condition~(T) of Definition~\ref{def:exact} is the agreement of one identifier,
+one dimension and one block kind. Let $\Tpub=\{t_0,t_1\}$ with
+$q_{t_0}=q_{t_1}=\tfrac12$, let $\Uset_{t_0}=\Uset_{t_1}=\{u_0\}$ --- one
+outcome per choice value --- and let the conditional families be
+\begin{equation}\label{eq:condfam-bad}
+  N_{u_0|t_0}=\operatorname{diag}\big(\tfrac12,\tfrac32\big),\qquad
+  N_{u_0|t_1}=\operatorname{diag}\big(\tfrac32,\tfrac12\big).
+\end{equation}
+Every entry is an integer multiple of $2^{-1}$ and each weight is $\tfrac12$,
+so every product of \eqref{eq:weighted} is exactly a binary64 number and the
+representability decision of Definition~\ref{def:weighted} passes. The emitted
+family is
+\begin{equation*}
+  N_{u_0,t_0}=\operatorname{diag}\big(\tfrac14,\tfrac34\big),\qquad
+  N_{u_0,t_1}=\operatorname{diag}\big(\tfrac34,\tfrac14\big).
+\end{equation*}
+
+\emph{All five conditions hold of it.} (T): there is one block and one map.
+(H) and (P): both arrays are real, diagonal and entrywise non-negative. Its
+declared-order sum over $\Vset=\{(u_0,t_0),(u_0,t_1)\}$ is two binary64
+additions per entry, $0+\tfrac14$ then $\tfrac14+\tfrac34$ and $0+\tfrac34$
+then $\tfrac34+\tfrac14$, each exact, so
+(S) holds; and its value is $\operatorname{diag}(1,1)=\idon{S}$, so (C) holds.
+So check V3 passes on the emitted family --- it is V3 that decides (H), (P),
+(C) and (S) --- and check V1's four-component comparison passes on its map,
+which is where (T) is decided (Definition~\ref{def:validator}); and so does
+every decision on the weights:
+$q_t>0$ by sign, and $\tfrac12+\tfrac12=1$ exactly in the declared order of
+$\Tpub$.
+
+\emph{Neither conditional family is a POVM.} Their completeness sums are
+\begin{equation*}
+  \sum_{u\in\Uset_{t_0}}N_{u|t_0}
+    =\operatorname{diag}\big(\tfrac12,\tfrac32\big),\qquad
+  \sum_{u\in\Uset_{t_1}}N_{u|t_1}
+    =\operatorname{diag}\big(\tfrac32,\tfrac12\big),
+\end{equation*}
+each a one-term sum, whose single addition $0+N_{u_0|t}$ of
+\eqref{eq:declorder} is exact, and neither is $\idon{S}$: condition~(C) fails
+for both, of the
+declared numbers and through no rounding, while (T), (H), (P) and (S) hold of
+both. So there is no experiment ``draw $t$ with probability $q_t$, then measure
+$\{N_{u|t}\}_u$'' for these numbers, and the hypothesis of
+Definition~\ref{def:weighted} --- that each $\{N_{u|t}\}_u$ be a POVM on $S$
+--- is violated by a specification whose weighted family passes every decision
+taken on the emitted data.
+
+\emph{And the declaration then implements a choice probability the record does
+not declare.} At $\omega=\dyad{0}$ the choice marginal computed from the
+emitted declaration is $\sum_{u}\tr[N_{u,t_0}\,\omega]=\tfrac14$, while the
+record declares $q_{t_0}=\tfrac12$ and Assumption~\ref{ass:coin} reads that
+number as the bias of the coin Bob drew: \eqref{eq:choicemass} of
+Lemma~\ref{lem:weighted}\,(iii) is false of the pair, its hypothesis having
+failed, and with it the exactness Theorem~\ref{thm:choice-encoding}\,(ii) asserts.
+\emph{No slot of the declaration carries the wrong number} --- no
+public-choice weight is emitted outside a POVM element
+(Theorem~\ref{thm:choice-encoding}\,(iii)), and a consumer of the emitted operators sees a
+consistent POVM implementing $\tfrac14$. The failure is therefore between the
+specification and the declaration the module built from it, which is where a
+decision on the specification is the only thing that can catch it, and is why
+the per-choice reading is needed.
+
+\emph{The presentation is refused}, naming (C) at $t_0$ --- the first
+failure, the decision stopping there
+(Requirement~\ref{req:conditional-family-decision}); nothing here is
+rescaled, renormalised or repaired (Remark~\ref{rem:condfamily}).
+\end{example}

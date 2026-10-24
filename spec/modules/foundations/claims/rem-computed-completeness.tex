@@ -1,0 +1,34 @@
+% ---
+% id: foundations/rem:computed-completeness
+% kind: rem
+% title: "A complete computed sum from an incomplete family"
+% summary: >-
+%   Three positive binary64 numbers can have computed sum exactly one while
+%   their true sum exceeds one. A completeness test on the computed sum alone
+%   would admit them, which is why the rounds-nowhere condition belongs to
+%   exact admissibility.
+% prominence: standard
+% status: accepted
+% uses: [def:binary64, def:exact-admissibility, lem:exact-accumulation, lem:binary64-lattice]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:computed-completeness}
+Conditions (H) and (P) of Definition~\ref{def:exact-admissibility}, together
+with the identity of the \emph{computed} declared-order sum with the identity,
+do not imply (C). Take the one-block map of dimension one and the family
+$(1,2^{-54},2^{-54})$ in this declared order. Its entries are
+\tref{binary64 numbers},
+Hermitian and positive. By Lemma~\ref{lem:binary64-lattice}\,(ii) the binary64
+numbers in $[1,2)$ are the multiples of $2^{-52}$, so $1+2^{-54}$ lies strictly
+between the adjacent binary64 numbers $1$ and $1+2^{-52}$ and is nearer to $1$;
+hence $\mathrm{fl}(1+2^{-54})=1$ (Definition~\ref{def:binary64}\,(ii)), and
+the \tref{computed sequential sum} is
+$0,1,1,1$. The exact sum is $1+2^{-53}\neq1$, so (C) fails and the family is
+not a positive operator-valued measure. Condition (S) fails at the second
+addition; it is the condition under which the computed sum is the exact sum at
+every step (Lemma~\ref{lem:exact-accumulation}).
+\end{remark}

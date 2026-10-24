@@ -1,0 +1,41 @@
+% ---
+% id: reductions/req:supplier-version-accepted
+% kind: req
+% title: "Refusal of a supplier artefact of an unaccepted version"
+% summary: >-
+%   A supplier artefact of a version the caller does not declare accepted, or
+%   without its supplier's validation results, is refused. Outside the run,
+%   that the set names accepted versions and the artefact is genuine stays
+%   [[A-RECV]]; in the run, acceptance is the claims' effective status.
+% prominence: standard
+% status: implemented
+% uses: []
+% mentions: [ass:recv, req:supplier-ledger-refusals, req:recv-row-provenance]
+% assumes: []
+% refs: []
+% implements: certiqs_key.reductions.validation:rule_receiver_spec
+% provenance: newly-derived
+% lean:
+% ---
+
+The version an artefact declares and the presence of its supplier's
+validation results are declared data, decided on entry. The check is against
+the caller's declared set of accepted versions
+(\iface{accepted_receiver_versions}); that every version in that set is an
+accepted version of the supplying module and that the artefact is what it
+declares are Assumption~\ref{ass:recv}\,(i) for an artefact from outside the
+run, and that its facts hold of the device is Assumption~\ref{ass:recv}\,(ii)
+wherever the ledger carries its row. For every receiver artefact the run
+built itself, whether or not Requirement~\ref{req:recv-row-provenance} omits
+that row, acceptance is no premise but the effective status of the
+receiver's claims in the run's closure, which the record of the run
+reports.
+
+\begin{requirement}\label{req:supplier-version-accepted}
+The engine refuses a supplier artefact whose declared module version
+\iface{module_version} is not in the caller's declared set of accepted
+versions \iface{accepted_receiver_versions}, and one that does not carry the
+supplying module's validation results; both refusals carry the reason
+\iface{receiver_spec_not_accepted}, the reason the ledger refusals of
+Requirement~\ref{req:supplier-ledger-refusals} carry as well.
+\end{requirement}

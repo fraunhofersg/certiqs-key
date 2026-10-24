@@ -1,0 +1,172 @@
+% ---
+% id: meat-core/prop:optol-nobound
+% kind: prop
+% title: "Instability of the rate under measurement perturbations"
+% summary: >-
+%   Two exactly admissible measurements on Q within ϵ of each other can have
+%   rate bounds α/(α−1)·N bits per round apart, for every positive integer
+%   N ≤ 53 + log₂ϵ (up to 52). So closeness of the declared measurement
+%   cannot be relied on to carry a key-rate claim to a nearby declaration.
+% prominence: standard
+% status: accepted
+% uses: [def:feasible, def:declaration, prop:value-range, thm:keylength, def:max-key-length, prop:trivial-alice-system, foundations/def:kl, def:admissible-declaration]
+% mentions: [rem:representability-ceiling]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The statement is over declarable binary64 families, not real-valued ones, so its gap, between families of finite value (g_0 > 0), is capped by the number model (N at most 52); the exactly admissible family (0, 1) has h_low = +infinity and carries no key-length claim (req:infinite-value), so it is set aside; do not restate the finite gap as unbounded. Epsilon is any number in (0, 1/2] with 2^N <= epsilon 2^53, and Step 2 builds the families at the largest power of two epsilon' <= epsilon: the construction needs epsilon' 2^-N to be a multiple of 2^-53, which a general dyadic epsilon does not give (epsilon = 2^-2 (1 + 2^-52), N = 1). Part (i) is cited by number from rem:classes."
+% ---
+
+One might admit a declaration whose measurement operators are only close
+to exact ones, with an error allowance depending on the distance. The
+following proposition shows that no allowance computed from the declared
+dimensions, alphabet sizes and $\alpha$ can be useful. It compares values
+$\hlow$ of \eqref{eq:hlow-def}, the infimum of the objective
+\eqref{eq:objective} over the acceptance set and the feasible states. That
+objective adds to its entropy terms the acceptance-test penalty
+$\frac{\alpha}{\alpha-1}\sfD(\mathbf q\|\Phimap[\omega])$, where
+$\mathbf q$ is a frequency distribution from the acceptance set and
+$\Phimap[\omega]$ the distribution of the test statistic under $\omega$;
+the penalty grows without bound as $\mathbf q$ demands an outcome that
+$\omega$ makes improbable. The hypothesis $2^{N}\le\epsilon\,2^{53}$ is
+what the binary64 number model allows
+(Remark~\ref{rem:representability-ceiling}). Part~(iii) is arithmetic on
+the formula $\ell_{\max}$ of Definition~\ref{def:max-key-length}, which
+Theorem~\ref{thm:keylength} reads as a key length on $(1,2)$ under its own
+assumptions.
+
+\begin{proposition}\label{prop:optol-nobound}
+Let $\alpha\in(1,\infty)$ and $B>0$, write $N\coloneqq\lceil B\rceil$, and
+let $\epsilon\in(0,\tfrac12]$ satisfy $2^{N}\le\epsilon\,2^{53}$.
+Write $\Decl^{(i)}$ for the declaration obtained from a given one by
+replacing its measurement $\{F_v\}$ on $\Qsys$ by $\{F^{(i)}_v\}$, and
+$\hlow[\,\cdot\,]$ for the value \eqref{eq:hlow-def} of a declaration.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item There is a declaration $\Decl$ satisfying Definition~\ref{def:admissible-declaration}
+in full, with $\{F_v\}$ itself \tref{exactly admissible}, and there are two
+exactly admissible families $\{F^{(1)}_v\}$, $\{F^{(2)}_v\}$ with
+$\max_{v}\|F^{(i)}_v-F_v\|\le\epsilon$ for $i=1,2$, such that
+\begin{equation}\label{eq:optol-gap}
+  \hlow\big[\Decl^{(1)}\big]-\hlow\big[\Decl^{(2)}\big]\;\ge\;B .
+\end{equation}
+The dimensions and alphabets of $\Decl$ are $d_A=d_{\Qsys}=1$, one
+sector, $|\Xset|=1$, $|\Vset|=|\Chatset|=2$ and $d_Z=1$, the same for
+every $B$ and every $\epsilon$.
+\item Let $\mathrm{err}$ be a function of the declared dimensions,
+alphabet sizes and $\alpha$ whose value on the data of (i) is less than
+$\frac{\alpha}{\alpha-1}\,N$. Then the bound
+$\big|\hlow[\Decl^{(1)}]-\hlow[\Decl^{(2)}]\big|\le\mathrm{err}$, with
+$\mathrm{err}$ evaluated on the data of the declaration, fails for some
+declaration and some pair of exactly admissible families within
+$\epsilon$ of each other.
+\item For $\alpha\in(1,2)$ and every number $n$ of rounds, the
+\tref[maximal key length]{maximal admissible key lengths} $\ell_{\max}$ of
+$\Decl^{(1)}$ and $\Decl^{(2)}$
+(Definition~\ref{def:max-key-length}), computed with the same $\lEC$, $\eev$ and
+$\epa$, differ by at least $nB-1$ bits whenever the smaller of the two is
+positive.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\emph{Idea.} The instance has one-dimensional systems, so a single state;
+the measurement on $\Qsys$ has two outcomes, $0$ with probability $g_0$
+and $1$ with probability $g_1$; the acceptance test demands outcome~$0$ in
+every round; and no round contributes key, so no acceptance value is
+key-live. Then $\hlow$ is the acceptance-test penalty alone,
+$\frac{\alpha}{\alpha-1}\log_2\frac1{g_0}$. Dividing $g_0$, the largest
+power of two at most $\epsilon$, by $2^{N}$ raises $\hlow$ by
+$\frac{\alpha}{\alpha-1}N$ and moves each entry of the family by at most
+$\epsilon$, so the declared family and its perturbation lie within
+$\epsilon$ of each other.
+
+\emph{Step 1 (the instance).} Take the instance of
+Proposition~\ref{prop:value-range}\,(iii): $d_A=d_{\Qsys}=1$ (so both source modes
+coincide, Proposition~\ref{prop:trivial-alice-system}, and $\Feas=\{[1]\}$), one
+sector, $\Xset=\{0\}$ with $M_0=[1]$, $\Vset=\{0,1\}$, $a_A$ constant and
+$a_B=\idmap$, $\phi(\kappa)=c_B$ so that $\Chatset=\Vset$, all-fail
+sifting ($\varsigma\equiv\mathrm{fail}$, $r\equiv\perp$, $\hold=\mathsf B$
+with $r_{\mathsf B}\equiv\perp$, hence $\Chkey=\varnothing$),
+$\CList=\varnothing$, the default \tref{party partition}, and the singleton
+acceptance set $\acSet=\{(1,0)\}$. For scalars $g_0,g_1\ge0$ write
+$\Decl_{(g_0,g_1)}$ for the declaration whose measurement on $\Qsys$ is
+$F_0=[g_0]$, $F_1=[g_1]$. Every clause of Definition~\ref{def:admissible-declaration} other
+than the $\{F_v\}$-clause of (iii) holds for it: all systems and
+alphabets are finite, sifting is announcement-determined, the key map is
+party-computable with $r_{\mathsf B}\equiv\perp$,
+$\Feas=\{[1]\}\ne\varnothing$, $\acSet$ is closed and convex, and
+$\dim\Hs{\Etil}\ge1$. That clause holds exactly when $g_0+g_1=1$, and the
+family is exactly admissible in the sense of
+Definition~\ref{def:declaration} exactly when in addition both entries are
+\tref{binary64 numbers} and the one addition of \eqref{eq:declorder} is exact.
+Since $\Chkey=\varnothing$, the objective \eqref{eq:objective} keeps only
+its first sum, the acceptance-test penalty
+$\frac{\alpha}{\alpha-1}\sum_{\hat c}q(\hat c)\log_2\frac{q(\hat c)}{P_{\hat c}(\omega)}$,
+and $\hlow$ of \eqref{eq:hlow-def} is its infimum over
+$\mathbf q\in\acSet=\{(1,0)\}$ and $\omega\in\Feas$. $\Feas$ is the single
+state $[1]$, at which $P_{\hat c_0}=g_0$ and $P_{\hat c_1}=g_1$; with the
+convention $0\log_2\frac0v=0$ of \xref{foundations/def:kl} this gives
+\begin{equation}\label{eq:optol-instance}
+  \hlow\big[\Decl_{(g_0,g_1)}\big]
+  =\frac{\alpha}{\alpha-1}\Big(1\cdot\log_2\frac1{g_0}
+  +0\cdot\log_2\frac{0}{g_1}\Big)
+  =\frac{\alpha}{\alpha-1}\,\log_2\frac1{g_0}
+  \qquad (g_0>0,\ g_1\ge0),
+\end{equation}
+a computation that uses no property of $(g_0,g_1)$ beyond those two
+inequalities, in particular not $g_0+g_1=1$.
+
+\emph{Step 2 (part (i)).} Let $\epsilon'$ be the largest power of two
+with $\epsilon'\le\epsilon$, so $\epsilon'=2^{-k}$ for an integer
+$k\ge1$. The hypothesis says $2^{N-53}\le\epsilon$, and $2^{N-53}$ is a
+power of two, so $2^{N-53}\le\epsilon'$ as well. Take
+$\Decl\coloneqq\Decl_{(\epsilon',\,1-\epsilon')}$,
+$\{F^{(2)}_v\}\coloneqq\{F_v\}$ (distance $0$) and $\{F^{(1)}_v\}$ the
+POVM of $\Decl_{(\epsilon'2^{-N},\,1-\epsilon'2^{-N})}$, whose distance to
+$\{F_v\}$ is $\epsilon'(1-2^{-N})\le\epsilon'\le\epsilon$ in each of its
+two entries. All three families have non-negative entries summing to $1$;
+each has $|\Vset|=2$, so \eqref{eq:declorder} performs one addition. By
+$2^{N-53}\le\epsilon'$, $\epsilon'2^{-N}=2^{-k-N}$ is at least $2^{-53}$,
+so $\epsilon'2^{-N}$ and $\epsilon'$ are powers of two in
+$[2^{-53},\tfrac12]$, hence binary64 numbers and multiples of $2^{-53}$;
+$\epsilon=\tfrac12$ with $N\le52$ is one such choice. Then every entry is
+exactly representable ($1-\epsilon'$ and $1-\epsilon'2^{-N}$ are
+multiples of $2^{-53}$ in $[\tfrac12,1)$, where consecutive binary64
+numbers are $2^{-53}$ apart), and the single addition returns the
+representable $1$ and is therefore exact, which is the clause of
+Definition~\ref{def:declaration} that no addition of \eqref{eq:declorder}
+rounds. So all three families are exactly admissible and $\Decl$
+satisfies Definition~\ref{def:admissible-declaration} in full. By \eqref{eq:optol-instance},
+\begin{equation*}
+  \hlow\big[\Decl^{(1)}\big]-\hlow\big[\Decl^{(2)}\big]
+  =\frac{\alpha}{\alpha-1}
+  \Big(\log_2\frac{1}{\epsilon'2^{-N}}-\log_2\frac1{\epsilon'}\Big)
+  =\frac{\alpha}{\alpha-1}\,N\;\ge\;N\;\ge\;B ,
+\end{equation*}
+using $\frac{\alpha}{\alpha-1}>1$ for $\alpha>1$.
+
+\emph{Step 3 (part (ii)).} Let $\mathrm{err}$ be as in (ii). The
+declaration $\Decl$ of Step~2 has the dimensions and alphabets listed in
+(i), which are the same for every $B$ and $\epsilon$, so $\mathrm{err}$
+takes one value on its data, and that value is less than
+$\frac{\alpha}{\alpha-1}\,N$. The families $\{F^{(1)}_v\}$ and
+$\{F^{(2)}_v\}=\{F_v\}$ of Step~2 are exactly admissible and lie within
+$\epsilon$ of each other, and their values differ by
+$\frac{\alpha}{\alpha-1}\,N$, which exceeds the prescribed $B$ for every
+$B$ the representability condition admits and exceeds that value of
+$\mathrm{err}$. So the bound fails for this pair. Since the value of
+$\mathrm{err}$ does not depend on $B$, the argument may be run at the
+largest $N$ the representability condition admits.
+
+\emph{Step 4 (part (iii)).} Let $\alpha\in(1,2)$. By
+Definition~\ref{def:max-key-length}, for $n$ rounds
+\begin{equation*}
+  \ell_{\max}=\max\Big\{0,\Big\lfloor n\hlow-\lEC
+  -\Big\lceil\log_2\frac1{\eev}\Big\rceil
+  -\frac{\alpha}{\alpha-1}\log_2\frac1{\epa}+1\Big\rfloor\Big\};
+\end{equation*}
+the terms after $n\hlow$ do not depend on $\hlow$ and are the same for
+both declarations. Insert the gap \eqref{eq:optol-gap}: if the smaller of the
+two lengths is positive, the two lengths differ by at least $nB-1$ bits.
+\end{proof}

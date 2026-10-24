@@ -1,0 +1,165 @@
+% ---
+% id: meat-core/lem:rank-one-sector
+% kind: lem
+% title: "Linear deficit on a rank-one Alice sector"
+% summary: >-
+%   On an Alice sector of rank-one marginal every feasible block is the fixed
+%   pure state times an operator on Q, and with default readouts and Alice
+%   holding the key its deficit is linear, with constants from declared
+%   numbers. A uniform key bit gives one bit per unit of pass weight.
+% prominence: standard
+% status: implemented
+% uses: [def:declaration, def:joint-sectors, def:branch, def:maps, thm:branch-formula, def:feasible, lem:ensemble-form, def:admissible-declaration]
+% mentions: [lem:joint-sectors]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.joint:rank_one_deficit
+% lean:
+% notes: "What the computation of (iii) needs is that each pass class is a product set of Alice letters and measured letters and that the key value is a function of Alice's letter and the class; part (ii) proves both from default readouts and holder A for every transcript protocol, not only for two independent messages."
+% ---
+
+When Alice's marginal on a sector is pure, her part of every feasible block
+is fixed. With the default readouts and Alice holding the key, the deficit
+of the block then reduces to a Rényi quantity of her key value given the
+announcement, weighted linearly by the block's statistics.
+
+\begin{lemma}\label{lem:rank-one-sector}
+Let $\Decl$ satisfy Definition~\ref{def:admissible-declaration} in \tref{trusted-source mode}
+and the general format, and let $t\in\mathbb{T}$ with
+$\tau^{(t)}_A=p_t\dyad{\hat v}$, $p_t>0$, $\ket{\hat v}\in\Hs{A_t}$ a unit
+vector.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(product blocks)} Every list $(\omega^{(t,s)})_{s\in\SecSet}$ of
+positive semidefinite blocks with
+$\sum_s\tr_{\Qsys_s}\omega^{(t,s)}=\tau^{(t)}_A$, in particular the sector-$t$
+part of every $\omega\in\Feas$, has the form
+$\omega^{(t,s)}=\dyad{\hat v}\otimes\sigma_s$ with
+$\sigma_s\in\Pos{\Qsys_s}$ and $\sum_s\tr\sigma_s=p_t$.
+\item \emph{(\tref[pass class]{pass classes} are product sets)} If the
+\tref[readout map]{readout maps} are the default ones,
+$\rd{\mathsf A}(x,v)=x$ and $\rd{\mathsf B}(x,v)=v$, then for
+every \tref{transcript protocol} and every $\kappa\in\Kann$ there are sets
+$\Xset_{\kappa}\subseteq\Xset$, $\Vset_{\kappa}\subseteq\Vset$ with
+$a^{-1}(\kappa)=\Xset_{\kappa}\times\Vset_{\kappa}$; if moreover
+$\hold=\mathsf A$, then $r(x,v)=r_{\mathsf A}(x,\kappa)$ on $a^{-1}(\kappa)$.
+\item \emph{(linear deficit)} Under the hypotheses of (ii), let
+$\hat c\in\Chkey$, $s\in\SecSet$ and $\alpha\in(1,\infty)$, put
+$\mu_x\coloneqq\bra{\hat v}M^{(t)}_x\ket{\hat v}$ and, for
+$\kappa\in\Kann_{\mathrm{pass}}(\hat c)$ and $\mathsf z\in\Zval$,
+\begin{equation}\label{eq:rank-one-weights}
+  m_{\kappa}\coloneqq\sum_{x\in\Xset_{\kappa}}\mu_x,\qquad
+  m_{\kappa,\mathsf z}\coloneqq\sum_{x\in\Xset_{\kappa}:\,
+  r_{\mathsf A}(x,\kappa)=\mathsf z}\mu_x,\qquad
+  \eta_{\kappa}\coloneqq
+  \begin{cases}
+   1-\sum_{\mathsf z}\big(m_{\kappa,\mathsf z}/m_{\kappa}\big)^{\alpha},
+   & m_{\kappa}>0,\\ 0,& m_{\kappa}=0 .
+  \end{cases}
+\end{equation}
+Then for every $\sigma_s\in\Pos{\Qsys_s}$
+\begin{equation}\label{eq:rank-one-deficit}
+  f_{\hat c,(t,s)}\big(\dyad{\hat v}\otimes\sigma_s\big)
+  =-\sum_{\kappa\in\Kann_{\mathrm{pass}}(\hat c)}\eta_{\kappa}\,m_{\kappa}
+  \sum_{v\in\Vset_{\kappa}}\tr\big[F^{(s)}_v\sigma_s\big],
+\end{equation}
+a \emph{linear} function of $\sigma_s$, with $0\le\eta_{\kappa}<1$. In
+\tref{ensemble form} $\mu_x=\tr N^{(t)}_x/p_t$ and $p_t=\tr\tau^{(t)}_A$, declared
+numbers.
+\item \emph{(two values)} If within every pass class of $\hat c$ the key
+takes $d$ values of equal weight, $m_{\kappa,\mathsf z}=m_{\kappa}/d$, then
+$\eta_{\kappa}=1-d^{1-\alpha}$ and the sector contributes to
+$\frac{1}{1-\alpha}\log_2$ of the ratio $K/P$ \emph{as if the conditional
+entropy were $\log_2d$ on the pass weight}: one bit per unit of pass weight
+for a uniform key bit. The qualifier matters: what the
+expression assigns to the pair is its fail weight plus $d^{1-\alpha}$ times
+its pass weight, so with a non-zero fail weight in the same joint pair the
+contribution is strictly less than that of a sector of conditional entropy
+$\log_2d$, and equals it exactly when the pass weight is the whole of the
+pair's weight. If the key is
+constant on every $\Xset_{\kappa}\cap\{x:\mu_x>0\}$ then $\eta_{\kappa}=0$
+and $f_{\hat c,(t,s)}$ vanishes on these blocks.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) Let $\omega_t\coloneqq\bigoplus_s\omega^{(t,s)}\in\Pos{A_t\Qsys}$, so
+$\tr_{\Qsys}\omega_t=p_t\dyad{\hat v}$, and let
+$\Pi^{\perp}\coloneqq\idon{A_t}-\dyad{\hat v}$. Then
+$\tr[(\Pi^{\perp}\otimes\idon{})\omega_t]=p_t\tr[\Pi^{\perp}\dyad{\hat v}]=0$,
+and for a positive semidefinite $\omega_t$ this forces
+$(\Pi^{\perp}\otimes\idon{})\omega_t=0$. Hence
+$\omega_t=(\dyad{\hat v}\otimes\idon{})\omega_t(\dyad{\hat v}\otimes\idon{})
+=\dyad{\hat v}\otimes\sigma$ with
+$\sigma\coloneqq(\bra{\hat v}\otimes\idon{})\omega_t(\ket{\hat v}\otimes\idon{})
+\succeq0$, block diagonal along $\SecSet$ because $\omega_t$ is, with blocks
+$\sigma_s$; and $\tr\sigma=\tr\omega_t=p_t$. For $\omega\in\Feas$ the
+hypothesis is the marginal line of \eqref{eq:feas-general}.
+
+(ii) By \eqref{eq:transcript}, $a(x,v)=\kappa$ holds exactly when
+$a_m(\rd{\pi_m}(x,v),\kappa_1,\dots,\kappa_{m-1})=\kappa_m$ for every $m$:
+by induction on $m$, if the first $m-1$ components of $a(x,v)$ are
+$\kappa_1,\dots,\kappa_{m-1}$ then its $m$-th component is the left-hand
+side. With the default readouts the $m$-th condition is a condition on $x$
+alone when $\pi_m=\mathsf A$ and on $v$ alone when $\pi_m=\mathsf B$. So
+$a^{-1}(\kappa)=\Xset_{\kappa}\times\Vset_{\kappa}$ with $\Xset_{\kappa}$ the
+set of $x$ meeting all conditions with $\pi_m=\mathsf A$ and
+$\Vset_{\kappa}$ the set of $v$ meeting all those with $\pi_m=\mathsf B$. The
+last statement is \eqref{eq:partycomp} with $\rd{\mathsf A}(x,v)=x$.
+
+(iii) Fix $\kappa\in\Kann_{\mathrm{pass}}(\hat c)$ and write
+$\ket{m_x}\coloneqq\sqrt{M^{(t)}_x}\ket{\hat v}$, so
+$\braket{m_x}{m_x}=\mu_x$. By (ii) the operator $K^{(s)}_{\kappa}$ of
+\eqref{eq:kraus} satisfies, on vectors $\ket{\hat v}\otimes\ket{\xi}$,
+\begin{equation*}
+  K^{(s)}_{\kappa}\big(\ket{\hat v}\otimes\ket{\xi}\big)
+  =\ket{a_{\kappa}}\otimes\ket{\kappa}\otimes B_{\kappa}\ket{\xi},\qquad
+  \ket{a_{\kappa}}\coloneqq\sum_{x\in\Xset_{\kappa}}
+  \ket{r_{\mathsf A}(x,\kappa)}_R\ket{x}_X\ket{m_x}_A,\qquad
+  B_{\kappa}\coloneqq\sum_{v\in\Vset_{\kappa}}\ket{v}_Y\otimes\sqrt{F^{(s)}_v},
+\end{equation*}
+up to the fixed ordering of tensor factors. Hence
+$G_{\kappa}\coloneqq K^{(s)}_{\kappa}(\dyad{\hat v}\otimes\sigma_s)
+K^{(s)\dagger}_{\kappa}=\dyad{a_{\kappa}}\otimes\dyad{\kappa}\otimes
+\beta_{\kappa}$ with $\beta_{\kappa}\coloneqq B_{\kappa}\sigma_sB_{\kappa}^{\dagger}
+\succeq0$, and $\braket{a_{\kappa}}{a_{\kappa}}=m_{\kappa}$, the kets
+$\ket{x}_X$ being orthonormal. The operators $G_{\kappa}$ for different
+$\kappa$ are supported on the mutually orthogonal subspaces fixed by
+$\ket{\kappa}$, which are invariant under $\cZ$ and under powers, so as in
+the proof of Lemma~\ref{lem:joint-sectors}\,(ii) the functional $T$ and the
+trace add over $\kappa$, and
+$f_{\hat c,(t,s)}=\sum_{\kappa}\big(T(G_{\kappa})-\tr G_{\kappa}\big)$. If
+$m_{\kappa}=0$ then $G_{\kappa}=0$. Otherwise
+$\dyad{a_{\kappa}}=m_{\kappa}\Pi_a$ with $\Pi_a$ a rank-one projector, so
+$G_{\kappa}^{1/\alpha}=m_{\kappa}^{1/\alpha-1}\dyad{a_{\kappa}}\otimes
+\dyad{\kappa}\otimes\beta_{\kappa}^{1/\alpha}$. The vectors
+$\ket{a_{\kappa,\mathsf z}}\coloneqq Z_{\mathsf z}\ket{a_{\kappa}}$ are
+mutually orthogonal with squared norms $m_{\kappa,\mathsf z}$, and
+$Z_{\perp}\ket{a_{\kappa}}=0$ because $\kappa$ is a pass class, so
+$\cZ(G_{\kappa}^{1/\alpha})=m_{\kappa}^{1/\alpha-1}\sum_{\mathsf z}
+\dyad{a_{\kappa,\mathsf z}}\otimes\dyad{\kappa}\otimes
+\beta_{\kappa}^{1/\alpha}$. The summands have mutually orthogonal supports
+and $(\dyad{a_{\kappa,\mathsf z}})^{\alpha}
+=m_{\kappa,\mathsf z}^{\alpha-1}\dyad{a_{\kappa,\mathsf z}}$, hence
+\begin{equation*}
+  T(G_{\kappa})=m_{\kappa}^{1-\alpha}\sum_{\mathsf z}
+  m_{\kappa,\mathsf z}^{\alpha}\,\tr\beta_{\kappa}
+  =\Big(\sum_{\mathsf z}\big(m_{\kappa,\mathsf z}/m_{\kappa}\big)^{\alpha}\Big)
+  \tr G_{\kappa},\qquad
+  \tr G_{\kappa}=m_{\kappa}\tr\beta_{\kappa}
+  =m_{\kappa}\sum_{v\in\Vset_{\kappa}}\tr\big[F^{(s)}_v\sigma_s\big].
+\end{equation*}
+Subtracting gives \eqref{eq:rank-one-deficit}. The numbers
+$m_{\kappa,\mathsf z}/m_{\kappa}$ form a probability vector, so
+$0<\sum_{\mathsf z}(\cdot)^{\alpha}\le1$ and $0\le\eta_{\kappa}<1$. In
+ensemble form $\mu_x=\tr[M^{(t)}_x\tau^{(t)}_A]/p_t=\tr N^{(t)}_x/p_t$ by
+Lemma~\ref{lem:ensemble-form}\,(ii).
+
+(iv) With $d$ equal weights $\sum_{\mathsf z}(1/d)^{\alpha}=d^{1-\alpha}$. If
+every pass class of $\hat c$ has this form then, by (iii), on these blocks
+$P_{\hat c,(t,s)}+f_{\hat c,(t,s)}$ equals the fail weight plus
+$d^{1-\alpha}=2^{(1-\alpha)\log_2d}$ times the pass weight, which is the
+value the branch formula \eqref{eq:c5} assigns to conditional entropy
+$\log_2d$ on the pass weight. If the key is constant where $\mu_x>0$, one
+$m_{\kappa,\mathsf z}$ equals $m_{\kappa}$ and the others vanish.
+\end{proof}

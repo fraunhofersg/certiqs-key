@@ -1,0 +1,54 @@
+# LaTeX aux
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+*.egg-info/
+build/
+dist/
+.venv/
+
+# Scratch working files. `tmp/pdfs/` holds regenerable `pdftotext` dumps of
+# pinned reference PDFs; nothing here is an input to any artifact.
+tmp/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# OS
+Thumbs.db
+.DS_Store
+
+# MATLAB
+*.asv
+slprj/
+
+# Node
+node_modules/
+
+# Claude Code local settings
+.claude/settings.local.json
+# Agent worktrees, each a checkout of its own branch
+.claude/worktrees/
+
+# PDFs are tracked on purpose: each module's spec/modules/<id>/contract.pdf,
+# the review copy the assembler builds after every contract revision, and in
+# the maintainers' tree the pinned references (refs/papers/) and corpus notes
+# (context/). Only LaTeX's auxiliary output (above) is ignored.

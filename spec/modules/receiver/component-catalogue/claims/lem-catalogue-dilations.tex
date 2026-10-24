@@ -1,0 +1,195 @@
+% ---
+% id: receiver/component-catalogue/lem:catalogue-dilations
+% kind: lem
+% title: "Loss factors of the catalogue entries and the dilation of a graph"
+% summary: >-
+%   Every catalogue entry has a loss factor, one row per amplitude it can
+%   remove and no row on its lossless subfamily; a Gaussian-rational generic
+%   block has one from an exact decomposition, which exists. Stacked along a compiled graph with the efficiency layer's loss
+%   rows, they make a port dilation.
+% prominence: standard
+% status: implemented
+% uses: [def:catalogue-entries, receiver/def:port-dilation, receiver/def:compile, receiver/def:graph, receiver/def:embed, receiver/def:instrument, receiver/def:gram]
+% mentions: [thm:catalogue-admissibility, lem:attenuated, receiver/thm:factor-blocks]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.factor:port_dilation
+% lean:
+% notes: "Kept apart from thm:catalogue-admissibility so that its accepted text keeps its review scope. A row of a loss factor is omitted where the parameter that scales it makes it zero; the requirement that forms the dilation decides that on the declared value in exact arithmetic, so that losslessness is read off the declaration and never off a computed number."
+% ---
+
+Theorem~\ref{thm:catalogue-admissibility} writes every entry but the generic
+block as a unitary core with positive semidefinite attenuations on its sides
+(Lemma~\ref{lem:attenuated}). The amplitude an attenuation removes can be
+sent to new modes, one per attenuated mode: the core and the attenuation
+together with those rows are then an isometry, and the rows vanish exactly
+where nothing is attenuated. Done element by element along a compiled graph,
+and once more for the detector efficiencies, this gives a
+\tref{port dilation} of the receiver whose loss modes are only those its
+declared losses need, which Theorem~\ref{thm:factor-blocks} reads the
+photon-number blocks through.
+
+\begin{lemma}\label{lem:catalogue-dilations}
+For a diagonal matrix $D$ write $D^{\flat}$ for the matrix of the rows of $D$
+whose diagonal entry is not zero, so that
+$(D^{\flat})^{\dagger}D^{\flat}=D^{\dagger}D$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{Loss factors.} Let $\Gmat_\Sigma$ be the matrix of an entry type
+  of Definition~\ref{def:catalogue-entries} at a parameter tuple in its
+  declared domain, in the notation of that definition, and let $\Theta$ be
+  the matrix given for its type below, each of its rows indexed by a mode of
+  its own:
+  \begin{itemize}
+  \item C1: $\Theta=\big(\operatorname{diag}(\sqrt{y_1},\sqrt{y_2})^{\flat}\,\Bsp(x,\varphi)\big)\otimes\id_2$;
+  \item C2: $\Theta=\operatorname{diag}(\sqrt{y_1},\sqrt{y_1},\sqrt{y_2},\sqrt{y_2})^{\flat}\,
+    \Xi^{\dagger}\big[\Bsp(t_H,\varphi_H)\oplus\Bsp(t_V,\varphi_V)\big]\Xi$;
+  \item C3: $\Theta=\operatorname{diag}(\sqrt{y},\sqrt{y})^{\flat}$;
+  \item C4, C6 and C9: $\Theta$ with no row;
+  \item C5: $\Theta=\operatorname{diag}\big(\sqrt{1-R_H},\sqrt{1-R_V}\big)^{\flat}$;
+  \item C7: $\Theta=\operatorname{diag}\big(\sqrt{1-\eta_m}\big)_{m\in\Sigma}^{\flat}$;
+  \item C8: $\Theta=\operatorname{diag}\big(\sqrt{1-t},\sqrt{1-t_\perp}\big)^{\flat}\,\Rot(\theta)^{\transpose}$;
+  \item C10, with the entries of $\Gmat_\Sigma$ in $\mathbb{Q}(i)$:
+    $\Theta=D^{1/2}E$, where
+    $\id_\Sigma-\Gmat_\Sigma^{\dagger}\Gmat_\Sigma=E^{\dagger}DE$ with $D$
+    diagonal with positive rational diagonal entries and $E$ with entries in
+    $\mathbb{Q}(i)$; such a decomposition exists, with at most $|\Sigma|$
+    rows.
+  \end{itemize}
+  Then $\Gmat_\Sigma^{\dagger}\Gmat_\Sigma+\Theta^{\dagger}\Theta=\id_\Sigma$,
+  and $\Theta$ is a \emph{loss factor} of the entry. For C1--C9, $\Theta$ has
+  no row exactly on the lossless subfamily named in
+  Table~\ref{tab:catalogue}.
+\item \emph{The dilation of a compiled graph.} Let $\Recv$ be a
+  \tref{receiver instrument} whose \tref{instrument matrix} is the
+  \tref{compiled instrument matrix}
+  $\Gmat=D_\eta\Gmat^{\sigma}_{\Grph}$ of a well-formed graph $\Grph$ of
+  catalogue elements for a \tref{linear extension}
+  $\sigma=(e_1,\dots,e_L)$ (Definition~\ref{def:compile}), with ports
+  $\Port{1},\dots,\Port{K}$ and efficiencies $\eta_k$. For each $j$ let
+  $\Theta_j$ be a loss factor of (i) of the element $e_j$, its rows indexed
+  by a mode set $\Env_j$, and let
+  $\hat\Theta_j:\mathbb{C}^{\Modes}\to\mathbb{C}^{\Env_j}$ act as $\Theta_j$
+  on the modes of the support $\Sigma_{e_j}$ and as zero on the others. Let
+  $\Theta_\eta\coloneqq\big(\sum_{k}\sqrt{1-\eta_k}\,\Emd{\{k\}}\big)^{\flat}$,
+  its rows indexed by a mode set $\Env_\eta$, one for each mode of a port
+  with $\eta_k<1$, the sets $\Modes$, $\Env_\eta$ and the $\Env_j$ being
+  pairwise disjoint. With $\iota:\mathbb{C}^{\Inp}\to\mathbb{C}^{\Modes}$ the
+  inclusion of the \tref{declared input modes}, put $X_0\coloneqq\iota$ and
+  $X_j\coloneqq\hat\Gmat_{e_j}X_{j-1}$ for $j=1,\dots,L$, and let
+  \begin{equation}\label{eq:graph-dilation}
+    \Omega:\mathbb{C}^{\Inp}\to\mathbb{C}^{\Modes\sqcup\Env_\eta\sqcup\Env_L\sqcup\dots\sqcup\Env_1}
+  \end{equation}
+  have the rows $D_\eta X_L$ on $\Modes$, $\Theta_\eta X_L$ on $\Env_\eta$
+  and $\hat\Theta_jX_{j-1}$ on $\Env_j$. Then $\Omega$, with the ports
+  $\Port{1},\dots,\Port{K}$ of $\Recv$, is a port dilation of $\Recv$
+  (Definition~\ref{def:port-dilation}), and its rows on $\Modes$ are those of
+  $\Gmat_{\Inp}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{The flat matrix.} For $D=\operatorname{diag}(a_1,\dots,a_r)$,
+$(D^{\flat})^{\dagger}D^{\flat}=\sum_{i:\,a_i\ne0}\lvert a_i\rvert^{2}e_ie_i^{\dagger}
+=D^{\dagger}D$, the rows omitted being zero. So in every case of (i) but C10,
+$\Theta^{\dagger}\Theta$ is the same product with the full diagonal matrix,
+and below $\Theta^{\dagger}\Theta$ is computed with it.
+
+\emph{(i).} \emph{C1.} $\Bsp(x,\varphi)$ is unitary: its columns have
+squared norms $x+(1-x)=1$ and $(1-x)+x=1$, and their inner product is
+$\sqrt{x}\sqrt{1-x}\,e^{i\varphi}-\sqrt{1-x}\,e^{i\varphi}\sqrt{x}=0$. With
+$D_2\coloneqq\operatorname{diag}(\sqrt{1-y_1},\sqrt{1-y_2})$ and
+$(Z\otimes\id_2)^{\dagger}(Z\otimes\id_2)=Z^{\dagger}Z\otimes\id_2$,
+$\Gmat_\Sigma^{\dagger}\Gmat_\Sigma+\Theta^{\dagger}\Theta
+=\big(\Bsp^{\dagger}(D_2^{2}+\operatorname{diag}(y_1,y_2))\Bsp\big)\otimes\id_2
+=\Bsp^{\dagger}\Bsp\otimes\id_2=\id$.
+\emph{C2.} $V\coloneqq\Xi^{\dagger}[\Bsp(t_H,\varphi_H)\oplus\Bsp(t_V,\varphi_V)]\Xi$
+is unitary, a direct sum of unitaries conjugated by a permutation; with
+$D_2$ the diagonal prefactor of \eqref{eq:pbs},
+$\Gmat_\Sigma^{\dagger}\Gmat_\Sigma+\Theta^{\dagger}\Theta
+=V^{\dagger}\big(D_2^{2}+\operatorname{diag}(y_1,y_1,y_2,y_2)\big)V=V^{\dagger}V=\id$.
+\emph{C3.} $\Wplate(\delta,\theta)$ is unitary, a product of the real
+orthogonal $\Rot(\theta)$, the unitary $\operatorname{diag}(1,e^{i\delta})$,
+$\Rot(\theta)^{\transpose}$ and the unimodular $e^{-i\delta/2}$; so
+$\Gmat_\Sigma^{\dagger}\Gmat_\Sigma=(1-y)\id_2$ and
+$\Theta^{\dagger}\Theta=y\,\id_2$.
+\emph{C4, C6, C9.} $\Rot(\rho)$ is real orthogonal, a diagonal matrix with
+unimodular entries is unitary, and so is a permutation matrix; so
+$\Gmat_\Sigma^{\dagger}\Gmat_\Sigma=\id$, and $\Theta^{\dagger}\Theta=0$, an
+empty sum.
+\emph{C5.} The three factors of \eqref{eq:mirror} are diagonal, so they
+commute, $F^{\dagger}F=\id$ and
+$\lvert e^{i\varphi_H}\rvert=\lvert e^{i\varphi_V}\rvert=1$; so
+$\Gmat_\Sigma^{\dagger}\Gmat_\Sigma=\operatorname{diag}(R_H,R_V)$ and
+$\Theta^{\dagger}\Theta=\operatorname{diag}(1-R_H,1-R_V)$.
+\emph{C7.} $\Gmat_\Sigma^{\dagger}\Gmat_\Sigma=\operatorname{diag}(\eta_m)$
+and $\Theta^{\dagger}\Theta=\operatorname{diag}(1-\eta_m)$.
+\emph{C8.} With $\Rot\coloneqq\Rot(\theta)$ real orthogonal, the second form
+of \eqref{eq:polarizer} gives
+$\Gmat_\Sigma^{\dagger}\Gmat_\Sigma=\Rot\operatorname{diag}(t,t_\perp)\Rot^{\transpose}$,
+and $\Theta^{\dagger}\Theta=\Rot\operatorname{diag}(1-t,1-t_\perp)\Rot^{\transpose}$;
+their sum is $\Rot\Rot^{\transpose}=\id$.
+\emph{C10.} $\Theta^{\dagger}\Theta=E^{\dagger}(D^{1/2})^{2}E=E^{\dagger}DE
+=\id_\Sigma-\Gmat_\Sigma^{\dagger}\Gmat_\Sigma$, $D^{1/2}$ being the real
+diagonal matrix of the positive square roots. Such a decomposition exists. Put
+$H\coloneqq\id_\Sigma-\Gmat_\Sigma^{\dagger}\Gmat_\Sigma$: it is Hermitian,
+positive semidefinite, since $\Gmat_\Sigma^{\dagger}\Gmat_\Sigma\preceq\id$ on
+the declared domain (Definition~\ref{def:catalogue-entries}), and has entries
+in $\mathbb{Q}(i)$. A diagonal entry $H_{jj}=0$ forces $H_{jl}=0$ for every
+$l$, since $\lvert H_{jl}\rvert^{2}\le H_{jj}H_{ll}$ for a positive
+semidefinite $H$. If $H=0$, take $E$ and $D$ with no row. Otherwise some
+$h\coloneqq H_{pp}\neq0$; it is real and lies in $\mathbb{Q}(i)$, so it is a
+positive rational. Let $e$ be the row with entries $e_l\coloneqq H_{pl}/h$,
+in $\mathbb{Q}(i)$, and put $H'\coloneqq H-h\,e^{\dagger}e$, whose entries
+$H_{il}-H_{ip}H_{pl}/h$ lie in $\mathbb{Q}(i)$. For a vector $x$ put
+$c\coloneqq ex$ and $y\coloneqq x-c\,\delta_p$, $\delta_p$ the $p$-th
+coordinate vector; as $(Hx)_p=hc$,
+$y^{\dagger}Hy=x^{\dagger}Hx-2h\lvert c\rvert^{2}+h\lvert c\rvert^{2}
+=x^{\dagger}H'x$, so $H'$ is positive semidefinite. Row $p$ of $H'$ is zero,
+and so is every row of $H'$ whose row in $H$ is zero, its entry $H_{jp}$
+being zero; so $H'$ has fewer non-zero diagonal entries than $H$. Repeating
+the step on $H'$ ends after at most $|\Sigma|$ steps at the zero matrix, and
+$H$ is the sum of the terms $h\,e^{\dagger}e$ formed, which is $E^{\dagger}DE$
+with the rows $e$ stacked into $E$ and the pivots $h$ on the diagonal of $D$.
+In every case of C1--C9 the sum is $\id_\Sigma$. A matrix $D^{\flat}$ has no
+row exactly when every diagonal entry of $D$ is zero, and a product with it
+on the left then has none either; so $\Theta$ has no row exactly when
+$y_1=y_2=0$ for C1 and C2, $y=0$ for C3, $R_H=R_V=1$ for C5, every
+$\eta_m=1$ for C7 and $t=t_\perp=1$ for C8, and always for C4, C6 and C9:
+the subfamilies of Table~\ref{tab:catalogue}.
+
+\emph{(ii).} \emph{Each layer keeps the norm.} Fix $j$ and split
+$\mathbb{C}^{\Modes}=\mathbb{C}^{\Sigma}\oplus\mathbb{C}^{\Modes\setminus\Sigma}$
+with $\Sigma\coloneqq\Sigma_{e_j}$. The \tref{global embedding} is
+$\hat\Gmat_{e_j}=\Gmat_\Sigma\oplus\id$ (Definition~\ref{def:embed}) and
+$\hat\Theta_j=\big(\Theta_j\ \ 0\big)$, so
+$\hat\Gmat_{e_j}^{\dagger}\hat\Gmat_{e_j}+\hat\Theta_j^{\dagger}\hat\Theta_j
+=\big(\Gmat_\Sigma^{\dagger}\Gmat_\Sigma+\Theta_j^{\dagger}\Theta_j\big)\oplus\id
+=\id_{\Modes}$ by (i). The terminal layer
+$D_\eta=\sum_k\sqrt{\eta_k}\,\Emd{\{k\}}+\Emd{\Modes\setminus\bigcup_k\Port{k}}$
+(Definition~\ref{def:compile}) is real and diagonal, the ports being pairwise
+disjoint (Definition~\ref{def:instrument}\,(iii)), and
+$D_\eta^{2}+\Theta_\eta^{\dagger}\Theta_\eta
+=\sum_k\big(\eta_k+(1-\eta_k)\big)\Emd{\{k\}}+\Emd{\Modes\setminus\bigcup_k\Port{k}}
+=\id_{\Modes}$.
+\emph{Telescoping.} The first identity gives
+$X_j^{\dagger}X_j=X_{j-1}^{\dagger}\hat\Gmat_{e_j}^{\dagger}\hat\Gmat_{e_j}X_{j-1}
+=X_{j-1}^{\dagger}X_{j-1}-(\hat\Theta_jX_{j-1})^{\dagger}(\hat\Theta_jX_{j-1})$,
+and the blocks of rows of $\Omega$ lying on pairwise disjoint mode sets,
+\begin{equation*}
+  \Omega^{\dagger}\Omega
+  =X_L^{\dagger}\big(D_\eta^{2}+\Theta_\eta^{\dagger}\Theta_\eta\big)X_L
+   +\sum_{j=1}^{L}(\hat\Theta_jX_{j-1})^{\dagger}(\hat\Theta_jX_{j-1})
+  =X_L^{\dagger}X_L+\sum_{j=1}^{L}\big(X_{j-1}^{\dagger}X_{j-1}-X_j^{\dagger}X_j\big)
+  =X_0^{\dagger}X_0=\iota^{\dagger}\iota=\id_{\Inp}.
+\end{equation*}
+\emph{The ports.} $X_L=\hat\Gmat_{e_L}\cdots\hat\Gmat_{e_1}\iota
+=\Gmat^{\sigma}_{\Grph}\iota$ by \eqref{eq:compile}, so the rows of $\Omega$
+on $\Modes$ are $D_\eta\Gmat^{\sigma}_{\Grph}\iota=\Gmat\iota=\Gmat_{\Inp}$,
+the columns $\Inp$ of $\Gmat$ (Definition~\ref{def:instrument}). Every port
+$\Port{k}$ lies in $\Modes$, so the rows of $\Omega$ on it are those of
+$\Emd{\{k\}}\Gmat_{\Inp}$, and
+$\Omega^{\dagger}\Emd{\Port{k}}\Omega=\Gmat_{\Inp}^{\dagger}\Emd{\{k\}}\Gmat_{\Inp}=A_k$
+by \eqref{eq:gramdef}. The ports are pairwise disjoint subsets of the mode
+set of $\Omega$, so \eqref{eq:port-dilation} holds.
+\end{proof}

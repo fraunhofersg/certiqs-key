@@ -1,0 +1,94 @@
+% ---
+% id: foundations/req:support-safe-snap
+% kind: req
+% title: "Support-safe snaps of a measurement family"
+% summary: >-
+%   No snap of a measurement family revives an element, row or column that the
+%   data state to be zero: a positivity lift and a completeness residue go only
+%   where the receiving element's structural support holds them. Where that
+%   fails, a flagged uniform lift is the last resort.
+% prominence: standard
+% status: implemented
+% uses: [def:snap, def:exact-reference, def:exact-admissibility, def:sector-map]
+% mentions: [req:snap-reference, meat-core/prop:optol-nobound]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.snap:support_safe_snap_block
+% notes: "The concrete procedure is in spec/architecture.md section 2.9. Item (ii) admits, beside the per-coordinate addition, the mixture with a complete family whose elements are diagonal on their own structural supports, which is the coordinate-family lift of spec/architecture.md. Item (ii) admits, as the family mixed, the block of D itself where its entries are Gaussian rationals, so that a producer's mixture of its exact datum with its diagonal parts (reductions/def:emitnorm, the fidelity snap) is an instance of (ii). Item (iv) admits, as the family mixed, the procedure's output or the block of D itself where its entries are Gaussian rationals, and lets an element of U be zero where the element of D is structurally zero, so that a producer's last resort mixing its exact construction and leaving elements outside a sector's support at zero is an instance of (iv) (reductions/def:emitnorm, the last resort)."
+% lean:
+% ---
+
+What a key rate is sensitive to is a change of which outcomes a measurement
+treats as impossible, more than a change of size
+(\xref{meat-core/prop:optol-nobound}). A snap carries no guarantee about the
+supports of its elements beyond what it is built to keep, so the requirement
+asks of every snap the part that can be read off the data: an element, a row
+or a column that the data state to be zero stays zero. A uniform positivity
+lift, which mixes every element with a multiple of the identity, violates it
+on every element with a \tref{structurally zero} row or column, though not on a
+rank-deficient element whose \tref{structural support} is full, such as the
+projector onto a direction that is not a coordinate; a lift confined to the
+coordinates of each element's own structural support, and a residue placed
+only where the receiving element already lives, do not. The rule is
+structural, not spectral: an element that is rank-deficient on a direction
+that is not a coordinate can still gain support on that direction. The zeros
+it protects are the elements, rows and columns the data state to be zero:
+for a reference, those all of whose entries are enclosed with centre and
+radius both zero; a zero row of the model enclosed with a positive radius is
+not protected. Where the support-safe steps of a procedure cannot restore
+the conditions of a snap on a block, positivity above all, a uniform lift is
+kept as a last resort, so that the run proceeds; the block is then flagged as
+one whose supports may not have been preserved (a block all of whose elements
+have full structural support carries the flag although no element has gained
+structural support). An instance's procedure is specified with the shared
+numerical code (\repodoc{spec/architecture.md}), and which blocks a run rests
+on, last-resort ones among them, is Requirement~\ref{req:snap-reference}.
+
+\begin{requirement}\label{req:support-safe-snap}
+Every snap $F$ at a lattice exponent $k$ of an operator family $D$ read as a
+measurement (Definition~\ref{def:snap}), against a \tref{sector map} with blocks
+$s\in\mathsf{S}$ (Definition~\ref{def:sector-map}) and with constant $c$, by
+an instance of what it declares or by a producer of its own emission, with
+$D$ the data as they stand or a \tref{reference} of the family
+(Definition~\ref{def:exact-reference}), satisfies (i) to (iii) on every block
+$s$ and for every outcome $j$, save on a block snapped by the last resort of
+(iv).
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{No revival.} The \tref{structural support} of $F^{(s)}_j$ is
+  contained in that of $D^{(s)}_j$. In particular, if $D^{(s)}_j$ is
+  \tref{structurally zero}, then $F^{(s)}_j=0$; and for every index $i$ at
+  which both row $i$ and column $i$ of $D^{(s)}_j$ are structurally zero,
+  row $i$ and column $i$ of $F^{(s)}_j$ are zero, which for a reference is
+  every index whose row is structurally zero.
+\item \emph{Lift per coordinate.} A step of the snap that changes the
+  elements in order to make them positive semidefinite does one of two
+  things. Either it adds to $F^{(s)}_j$ only a matrix $\sum_it_ie_ie_i^{*}$
+  with $t_i\ge0$, $e_i$ the $i$-th coordinate vector of the block, and
+  $t_i>0$ only for indices $i$ in the structural support of $D^{(s)}_j$; or
+  it replaces the family on the block by $(1-w)E+wT$. Here
+  $w\in(0,1)$ is rational; $E$ is the family on the block as the
+  preceding steps of the snap left it or, where every entry of $D^{(s)}$ is a Gaussian rational, $D^{(s)}$
+  itself; and $T$ is a family complete at $c$ on the block whose element
+  $T^{(s)}_j$ is, for every $j$, a diagonal matrix with non-negative entries
+  that are non-zero only at indices in the structural support of
+  $D^{(s)}_j$.
+\item \emph{Residue.} A step of the snap that adds to an element what the sum
+  of the elements lacks of $c\,\idon{d_s}$, or a part of it, adds it to
+  $F^{(s)}_j$ only where the structural support of $D^{(s)}_j$ contains every
+  index $i$ such that row $i$ or column $i$ of what it adds has a non-zero
+  entry.
+\item \emph{Last resort.} Where a procedure meeting (i) to (iii) yields on a
+  block $s$ no family that satisfies the conditions of
+  Definition~\ref{def:snap}, the snap may, on that block alone, replace the
+  family by $(1-w)E+wU$ and then restore the lattice condition and
+  completeness; (i) to (iii) do not bind on that block. Here $w\in(0,1)$ is
+  rational; $E$ is the family that procedure produced on the block or, where
+  every entry of $D^{(s)}$ is a Gaussian rational, $D^{(s)}$ itself; and $U$
+  is a family complete at $c$ on the block whose element $U^{(s)}_j$ is, for
+  every $j$, a positive rational multiple of $\idon{d_s}$, or zero where
+  $D^{(s)}_j$ is structurally zero. The record of the snap flags the block
+  \iface{support_not_preserved}, since an element may then have support
+  where $D^{(s)}_j$ is structurally zero.
+\end{enumerate}
+\end{requirement}

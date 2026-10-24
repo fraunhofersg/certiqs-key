@@ -1,0 +1,31 @@
+% ---
+% id: meat-core/def:max-key-length
+% kind: def
+% title: "Maximal key length"
+% summary: >-
+%   The maximal key length ℓ_max is the right-hand side of the key-length
+%   bound rounded down to an integer and clamped at 0. The floor and the clamp
+%   are both in the safe direction.
+% prominence: standard
+% status: accepted
+% uses: [thm:keylength]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{definition}\label{def:max-key-length}
+The
+\term[The right-hand side of the key-length bound rounded down to an integer and clamped at zero.]{maximal key length}
+is
+\[
+  \ell_{\max}\coloneqq\max\{0,\lfloor
+  n\hlow-\lEC-\lceil\log_2\tfrac1{\eev}\rceil
+  -\tfrac{\alpha}{\alpha-1}\log_2\tfrac1{\epa}+1\rfloor\},
+\]
+the right-hand side of \eqref{eq:keylength} under a floor and a clamp at
+$0$; the floor and the clamp are both in the safe direction: an integer
+at most the floor of a number is at most that number, and a key of length
+$0$ is trivially secret and correct and claims no key.
+\end{definition}

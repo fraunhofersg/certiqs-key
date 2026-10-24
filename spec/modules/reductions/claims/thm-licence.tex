@@ -1,0 +1,175 @@
+% ---
+% id: reductions/thm:licence
+% kind: thm
+% title: "The attack-set licence"
+% summary: >-
+%   If each operator the squashing carries pulls back to a physical operator
+%   ≤, = or ≥ a multiple of the identity, every squashed physical attack
+%   respects the resulting constraint list in either source mode, factor by
+%   factor for per-factor bounds. Security against such attacks transfers with
+%   the same ε.
+% prominence: main
+% status: accepted
+% uses: [def:attset, def:roundmodel, cor:sequential, def:licensed, lem:sep, cor:pullback, cor:transported, lem:party-local, prop:tensor]
+% mentions: [meat-core/def:hqkd-list]
+% assumes: [A-CONST]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The consuming engine may restrict the squashed attacks to the admissible set
+of Definition~\ref{def:attset} only if every squashed physical attack lies in
+it. The theorem proves this from one hypothesis about the device, a spectral
+bound on each carried operator's physical pull-back, and uses nothing about
+the attack beyond its being a channel.
+
+\begin{theorem}\label{thm:licence}
+Let $(M;O)\dsq_{\Lambda}(F;\hat O)$ with $\Lambda\colon\Tcl{\Bsys}\to
+\Tcl{\Qsys}$, and suppose each carried operator has a \emph{spectral pull-back
+certificate}: for each $k$ there are $\bowtie_k\in\{\preceq,=,\succeq\}$ and
+$c_k\in\mathbb{R}$ with
+\begin{equation}\label{eq:certificate}
+  O_k\;=\;\Lambda^{\dagger}(\hat O_k)\;\bowtie_k\;c_k\,\idon{\Bsys}
+  \qquad\text{as operators on }\Hs{\Bsys}.
+\end{equation}
+Then, with $\CList\coloneqq\{(\hat O_k,\bowtie_k,c_k)\}_{k=1}^{m}$:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(trusted-source mode)} for all finite-dimensional $E',E''$ and
+  \emph{every} $\Aev\in\mathrm{CPTP}(E',\Bsys E'')$, the composite
+  $\Aev^{\sq}\coloneqq(\Lambda\otimes\idmap_{E''})\circ\Aev$ lies in
+  $\AttSet_{\CList}(E',\Qsys E'')$ of \eqref{eq:attset};
+\item \emph{(untrusted-source mode)} for every
+  $\Aev\in\mathrm{CPTP}(E',A\Bsys E'')$, the composite
+  $\Aev^{\sq}\coloneqq(\idmap_A\otimes\Lambda\otimes\idmap_{E''})\circ\Aev$
+  lies in $\AttSet_{\CList}(E',A\Qsys E'')$ of \eqref{eq:attsetun};
+\item \emph{(the licensed reduction, in the declared mode)} consequently, for
+  every attack sequence $(\Aev_j)_{j=1}^{n}$ against the physical protocol of
+  the type \eqref{eq:attackchannel} for the declared source mode, the sequence
+  $(\Aev^{\sq}_j)_j$ of the \emph{same} branch of \eqref{eq:composite} is
+  $\CList$-admissible --- by (i) with the trusted branch of
+  \eqref{eq:attackchannel}, by (ii) with the untrusted branch --- and produces
+  the \emph{same} protocol output state, by the correspondingly named branch of
+  Corollary~\ref{cor:sequential}; so security of the squashed round model
+  against $\CList$-admissible sequences implies security of the physical
+  protocol against all sequences of that type, with the same $\varepsilon$;
+\item \emph{(licensed entries)} $\CList$ is licensed for either source mode in
+  the sense of Definition~\ref{def:licensed}, with the same constants $c_k$;
+  on every reachable state $\sigma$ the transported entries hold in the form
+  with the marginal that is present,
+  $\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\sigma]\bowtie_kc_k\,\sigma_A$, and
+  so in the untrusted-source form
+  $\tr[(\idon{A}\otimes\hat O_k)\sigma]\bowtie_kc_k$; and the trusted-source
+  form $\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\sigma]\bowtie_kc_k\,\tau_A$
+  holds on every reachable state whose marginal on $A$ is $\tau_A$.
+\item \emph{(party-local entries, product measured system)} \emph{in place
+  of the hypotheses above}, which type $\hat O_k$ on $\Qsys$ and certify it
+  against $\Lambda$, let
+  $\Bsys=\bigotimes_f\Bsys_f$, let $M^{f}\dsq_{\Lambda_f}F^{f}$ for every
+  factor with $\Lambda_f\colon\Tcl{\Bsys_f}\to\Tcl{\Qsys_f}$, and put
+  $M\coloneqq\{\bigotimes_fM^{f}_{v_f}\}$, $F\coloneqq\{\bigotimes_fF^{f}_{v_f}\}$
+  and $\Lambda\coloneqq\bigotimes_f\Lambda_f$, so that $M\dsq_{\Lambda}F$
+  (Proposition~\ref{prop:tensor}). Let each entry of $\CList$ be scoped to a
+  factor $f_k$ with $\hat O_k\in\Lin{\Qsys_{f_k}}$ and a certificate
+  \emph{on that factor's channel},
+  $\Lambda_{f_k}^{\dagger}(\hat O_k)\bowtie_kc_k\,\idon{\Bsys_{f_k}}$. Then
+  for every attack $\Aev$ of either type of \eqref{eq:attackchannel}, the
+  squashed attack of the same branch of \eqref{eq:composite} satisfies
+  \eqref{eq:attsetpl} for every $k$, and also the scalar condition of
+  \eqref{eq:attset} or \eqref{eq:attsetun} for the lifted operator
+  $\idon{\Qsys_{f_k^c}}\otimes\hat O_k$ with the same $c_k$; every
+  \tref{squashed sequence} is admissible for $\CList$ read with any subset of its entries
+  tagged party-local, it produces the same protocol output state
+  as the physical sequence, and the security implication of (iii) holds
+  with the same $\varepsilon$. On every reachable state the entries hold in
+  the form \eqref{eq:partylocal-entry}.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) Fix $k$ and write $\Aev^{\sq\dagger}
+=\Aev^{\dagger}\circ(\Lambda\otimes\idmap_{E''})^{\dagger}$, which is
+\eqref{eq:pairing} applied twice. By Lemma~\ref{lem:sep}\,(ii),
+\begin{equation}\label{eq:compositeadjoint}
+  (\Lambda\otimes\idmap_{E''})^{\dagger}
+  \big(\hat O_k\otimes\idon{E''}\big)
+  =\Lambda^{\dagger}(\hat O_k)\otimes\idon{E''}
+  =O_k\otimes\idon{E''} .
+\end{equation}
+Suppose $\bowtie_k$ is $\succeq$. From $O_k\succeq c_k\idon{\Bsys}$ we get
+$O_k\otimes\idon{E''}\succeq c_k\,\idon{\Bsys E''}$, and $\Aev^{\dagger}$ is
+positive and unital because $\Aev$ is completely positive and trace preserving;
+hence
+\begin{equation*}
+  \Aev^{\sq\dagger}\big(\hat O_k\otimes\idon{E''}\big)-c_k\,\idon{E'}
+  =\Aev^{\dagger}\big(O_k\otimes\idon{E''}-c_k\,\idon{\Bsys E''}\big)
+  \;\succeq\;0 ,
+\end{equation*}
+using $\Aev^{\dagger}(\idon{\Bsys E''})=\idon{E'}$. For
+$\bowtie_k\,=\,\preceq$ apply the same argument to
+$c_k\idon{\Bsys}-O_k\succeq0$; for $\bowtie_k\,=\,=$ both directions hold, or
+directly $\Aev^{\dagger}(c_k\idon{})=c_k\idon{E'}$. Since $k$ was arbitrary,
+$\Aev^{\sq}\in\AttSet_{\CList}(E',\Qsys E'')$.
+
+(ii) Identical, with \eqref{eq:compositeadjoint} replaced by
+$(\idmap_A\otimes\Lambda\otimes\idmap_{E''})^{\dagger}
+\big(\idon{A}\otimes\hat O_k\otimes\idon{E''}\big)
+=\idon{A}\otimes O_k\otimes\idon{E''}$, again Lemma~\ref{lem:sep}\,(ii), and
+with $\idon{A}\otimes O_k\otimes\idon{E''}\bowtie_k c_k\,\idon{A\Bsys E''}$
+following from \eqref{eq:certificate} by tensoring with identities.
+
+(iii) In trusted-source mode, admissibility is (i) applied per round with
+$E'=E_{j-1}$, $E''=E'_j$ and the trusted branch of \eqref{eq:composite}; in
+untrusted-source mode it is (ii) with the untrusted branch, the lifted operator
+$\idon{A}\otimes\hat O_k\otimes\idon{E'_j}$ of \eqref{eq:attsetun} being
+exactly the one that branch's composite is tested against. The equality of
+output states is the correspondingly typed branch of
+Corollary~\ref{cor:sequential}, whose hypothesis is exactly $M\dsq_{\Lambda}F$
+in both modes; and the security implication is the last sentence of that
+corollary, the supremum over the $\CList$-admissible sequences dominating the
+value at $(\Aev^{\sq}_j)_j$. The two branches of \eqref{eq:seqcover} are
+$\AttSet_{\CList}(E_{j-1},\Qsys E'_j)$ and
+$\AttSet_{\CList}(E_{j-1},A\Qsys E'_j)$ respectively, by (i) and (ii).
+
+(iv) The right-hand sides are the scalars $c_k$ of \eqref{eq:certificate},
+which are declared constants of the reduction and not functions of any observed
+quantity (Assumption~\ref{ass:constdecl}); reading $c_k$ as $c_k\tau_A$ in
+trusted-source mode and as the real number $c_k$ in untrusted-source mode is
+Definition~\ref{def:licensed} in the two modes. That the entries hold on every
+reachable state $\sigma$ in the form with the marginal present is
+Corollary~\ref{cor:transported}\,(i) applied to the certificate
+\eqref{eq:certificate}, which is case (i) or (iii) of
+Corollary~\ref{cor:pullback}, read on the side it bounds, with $R=A$: that
+corollary delivers
+$\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\sigma]\bowtie_kc_k\,\sigma_A$, and its
+scalar form, the trace of both sides with $\tr\sigma_A=1$, is the
+untrusted-source form. In trusted-source mode the identification of the
+right-hand side with $c_k\tau_A$ is the \emph{declaration's} and not this
+contract's: it holds where $\sigma_A=\tau_A$, which is the consumer's
+marginal condition $\omega_A=\tau_A$ (defined in
+\xref{meat-core/def:hqkd-list} and asserted by the consuming contract under
+its own source-replacement assumption), and nothing in the hypotheses of this
+theorem restricts the marginal on $A$.
+
+(v) Fix $k$, write $f=f_k$, $\Lambda_{f^c}\coloneqq\bigotimes_{f'\ne f}
+\Lambda_{f'}$, and reorder tensor factors so that
+$\Lambda=\Lambda_f\otimes\Lambda_{f^c}$. Lemma~\ref{lem:party-local}\,(i),
+with $R=A$ in untrusted-source mode and $R$ trivial in trusted-source mode,
+and with the certificate on the factor as its hypothesis
+\eqref{eq:partcert}, is \eqref{eq:attsetpl} for the squashed attack, for
+every reference system $R'$. Its part (i) at $R'$ trivial and $X=\idon{}$,
+with unitality of the adjoint of the squashed attack, a channel, gives the scalar
+condition for the lifted operator; alternatively
+$\Lambda^{\dagger}(\idon{}\otimes\hat O_k)
+=\idon{\Bsys_{f^c}}\otimes\Lambda_f^{\dagger}(\hat O_k)\bowtie_k
+c_k\,\idon{\Bsys}$ by Lemma~\ref{lem:sep}\,(ii) and unitality, which is a
+certificate \eqref{eq:certificate} for $\Lambda$, so (i) and (ii) apply to
+it. Admissibility of the squashed sequence is this per round, with
+$E'=E_{j-1}$ and $E''=E'_j$. The equality of output states and the security
+implication are Corollary~\ref{cor:sequential} for the channel $\Lambda$,
+whose hypothesis $M\dsq_{\Lambda}F$ is Proposition~\ref{prop:tensor}; the
+supremum over the admissible sequences dominates the value at the squashed
+one, whichever entries are tagged. The state-level form is
+Lemma~\ref{lem:party-local}\,(ii), with $R'=A$ carrying Alice's retained
+system in trusted-source mode.
+\end{proof}

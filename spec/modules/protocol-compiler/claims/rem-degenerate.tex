@@ -1,0 +1,45 @@
+% ---
+% id: protocol-compiler/rem:degenerate
+% kind: rem
+% title: "The licensed-class gate in untrusted-source mode and at $d_A=1$"
+% summary: >-
+%   In untrusted-source mode gate (G3)(a) holds vacuously, so the constraint
+%   gate rests on the attack-set licence alone. At dimension one (G3)(a) is
+%   still a type check, so a general-tagged 1×1 entry is unlicensed, although
+%   it could always have been declared homogeneous.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [def:eligible, def:homog, req:vacuous-gate-report, meat-core/rem:cgate]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Gate (G3) of Definition~\ref{def:eligible} reads as two checks, a type check
+on the list and a presence test for the licence. This remark says what the
+type check amounts to in \tref{untrusted-source mode} and at $d_A=1$; what the gate
+report records of a vacuous pass is Requirement~\ref{req:vacuous-gate-report}.
+
+\begin{remark}\label{rem:degenerate}
+Gate (G3)(a) is a genuine restriction in \tref{trusted-source mode}: an entry
+declared \tref{general} fails it, and such an entry is exactly what an
+upstream module emits when it has an operator right-hand side rather than a
+scalar one. It is \emph{vacuously true} in \tref{untrusted-source mode} at any
+$d_A$, where every right-hand side is already a scalar by D(vi), so the gate
+degenerates there from a restriction into a type check that a
+\tref{well-formed declaration} passes by construction, and rests entirely on
+(G3)(b), which no program can verify.
+
+\emph{In trusted-source mode at $d_A=1$ the gate is not vacuous.} Every
+$1\times1$ Hermitian $\Theta_k$ is $\Theta_k\cdot[1]$, but under the declared
+tag an entry tagged general declares a matrix and fails a type check at every
+dimension: (G3)(a) is a type check at every $d_A$, so such an entry is
+unlicensed (Definition~\ref{def:homog}), and the consuming engine reads its
+gate the same way (\xref{meat-core/rem:cgate}). A declaration carrying one is
+emitted, not key-length-eligible. Its producer could have declared the entry
+homogeneous with the same condition, since at $d_A=1$ the constructed
+$c_k\tau_A=c_k[1]$ is the scalar itself, so there the gate rejects nothing a
+producer cannot trivially avoid.
+\end{remark}

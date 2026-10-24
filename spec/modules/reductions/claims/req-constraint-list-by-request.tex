@@ -1,0 +1,38 @@
+% ---
+% id: reductions/req:constraint-list-by-request
+% kind: req
+% title: "The constraint list and the licence decided by the request"
+% summary: >-
+%   Where the request carries no entry the engine emits an empty constraint list
+%   and no licence; where it carries entries it emits the instance's entries and
+%   the requested ones its claims admit, with the licence. A licence is present exactly when the
+%   list is non-empty.
+% prominence: standard
+% status: implemented
+% uses: [cor:entries, thm:licence]
+% mentions: [req:uncertified-operator-refused]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.validation:rule_licence_presence
+% lean:
+% ---
+
+A non-empty list without a licence would carry no key-length claim, and a
+licence without a list would attest to nothing; which case holds is the
+request's, as Corollary~\ref{cor:entries} states.
+
+\begin{requirement}\label{req:constraint-list-by-request}
+Where the request carries no entry (Corollary~\ref{cor:entries}), the engine
+emits an empty \iface{constraint_list}, whatever entries the instance's own
+list contains, and no \iface{attack_set_license}. Where the request carries
+entries, it emits in \iface{constraint_list} the instance's own entries, the
+class-marginal entry on request and any further requested entry that
+Corollary~\ref{cor:entries}\,(iii) admits
+(Requirement~\ref{req:uncertified-operator-refused}), and it emits
+the licence of Theorem~\ref{thm:licence} in \iface{attack_set_license}. The
+licence is present if and only if the list is non-empty
+(\iface{licence_presence}): a non-empty list without a licence is refused
+with \iface{licence_missing}, and a licence without a list with
+\iface{licence_without_constraints}.
+\end{requirement}

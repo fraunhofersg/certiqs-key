@@ -1,0 +1,252 @@
+% ---
+% id: transmitter/decoy/prop:tagging
+% kind: prop
+% title: "Tagging channel for weights at or below the Poisson weights"
+% summary: >-
+%   One channel, independent of the label, maps each tagged virtual state to its
+%   phase-randomised weak coherent state whenever the declared sector weights
+%   lie at or below the Poisson weights. The weights therefore need only a
+%   certified inequality, never an exact Poisson weight.
+% prominence: main
+% status: accepted
+% uses: [def:wcp-model, def:tagged-source, transmitter/def:source-link]
+% mentions: [rem:no-intensity-split, cor:emitted-decoy]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Lemma 9.2 with Eq. (145)"
+% provenance: newly-derived
+% lean:
+% notes: "Newly derived in full: the published Lemma 9.2 is the case of exact Poisson weights with N_ent = N_src, part (iv), and is cited as that special case only. The proposition is an identity among the model states and deliberately assumes no attestation: its assumption closure is empty, and the soundness-registry entry of the tagging kind carries A-WCP beside that closure rather than through it (transmitter/def:source-segment (A1))."
+% ---
+
+Recall the virtual source of Definition~\ref{def:tagged-source}\,(T3) and
+(T4): $\Avirt$ is the direct sum, over the sectors that some letter weights, of
+the quantum sectors $S_{\mathsf{n}}$ for $\mathsf{n}\le N_{\mathrm{ent}}$, the
+one-dimensional \tref[polarisation flag]{polarisation flags}
+$\mathbb{C}f_{\mathsf{n},a}$ for $N_{\mathrm{ent}}<\mathsf{n}\le N_{\mathrm{src}}$
+and the one-dimensional \tref[tail flag]{tail flags} $\mathbb{C}f_{a,\mu}$; the
+virtual state $\rvirt_x$ of a letter $x=(a,\mu,z)$ puts
+$\tilde p(\mathsf{n}\mid\mu)\dyad{\mathsf{n},a}$ on each quantum sector, the
+weight $\tilde p(\mathsf{n}\mid\mu)$ on the polarisation flag $f_{\mathsf{n},a}$
+of its own polarisation, and the \tref{tail weight} $\tilde w_\mu$ on its tail
+flag $f_{a,\mu}$. The tail flag absorbs whatever weight the declared sectors
+leave out, so the construction needs the sector weights only to lie at or below
+the \tref[Poisson weight]{Poisson weights}: a declared weight may be any number
+certified to lie in $[0,P_\mu(\mathsf{n})]$, and none need equal a Poisson
+weight. Lowering $\tilde p(\mathsf{n}\mid\mu)$ moves the
+difference into $\tilde w_\mu$, and so into the tail flag of every polarisation
+at that intensity; Corollary~\ref{cor:emitted-decoy}\,(v) says what else
+changes. Each flag, polarisation or tail, is sent to a state that depends on
+the flag alone, so one channel, fixed before a letter is drawn, serves every
+letter, which is what a \tref{source link} requires of its channel witness
+(Definition~\ref{def:source-link}). That holds for any flag family, the tail
+flags indexed by $\mu$ included; Remark~\ref{rem:no-intensity-split} says why
+the polarisation flags are nonetheless shared across intensities.
+
+\begin{proposition}\label{prop:tagging}
+Let a \tref{weak-coherent-pulse model} be given
+(Definition~\ref{def:wcp-model}): labels $x=(a,\mu,z)$ with $z$ the
+\tref{round type}, unit polarisation vectors
+$\ket{a}$, Poisson weights
+$P_\mu(\mathsf{n})=e^{-\mu}\mu^{\mathsf{n}}/\mathsf{n}!$ and model states
+$\rho_x=\sum_{\mathsf{n}\ge0}P_\mu(\mathsf{n})\,\dyad{\mathsf{n},a}$ on the
+two-mode Fock space. Let a tagged source be declared on it
+(Definition~\ref{def:tagged-source}) with cutoffs
+$0\le N_{\mathrm{ent}}\le N_{\mathrm{src}}$, virtual states $\rvirt_x$ of
+\eqref{eq:rvirt} and declared weights $\tilde p(\mathsf{n}\,|\,\mu)$,
+$\mathsf{n}\le N_{\mathrm{src}}$, satisfying the inequality
+\eqref{eq:weightineq} of Definition~\ref{def:tagged-source}\,(T2), which
+reads
+\begin{equation}\label{eq:tag-ineq}
+  0\le\tilde p(\mathsf{n}\,|\,\mu)\le P_\mu(\mathsf{n})
+  \qquad\text{for every intensity }\mu\text{ and every }
+  \mathsf{n}\le N_{\mathrm{src}} ,
+\end{equation}
+with tail weights
+$\tilde w_\mu=1-\sum_{\mathsf{n}\le N_{\mathrm{src}}}\tilde p(\mathsf{n}\,|\,\mu)$.
+Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(the tail states)} for every polarisation $a$ and every intensity
+$\mu$ with $\tilde w_\mu>0$,
+\begin{equation}\label{eq:tailstate}
+  \vartheta_{a,\mu}\coloneqq\frac{1}{\tilde w_\mu}\Big[
+  \sum_{\mathsf{n}\le N_{\mathrm{src}}}
+  \big(P_\mu(\mathsf{n})-\tilde p(\mathsf{n}\,|\,\mu)\big)\dyad{\mathsf{n},a}
+  +\sum_{\mathsf{n}>N_{\mathrm{src}}}P_\mu(\mathsf{n})\,\dyad{\mathsf{n},a}
+  \Big]
+\end{equation}
+is a state on the Fock space. Where $\tilde w_\mu=0$ the declaration carries no
+tail flag for $(a,\mu)$ (Definition~\ref{def:tagged-source}) and no tail state
+is defined.
+\item \emph{(one channel)} the map
+\begin{equation}\label{eq:xitag}
+\begin{aligned}
+  \Xi_{\mathrm{tag}}(\zeta)\coloneqq{}&
+  \sum_{\mathsf{n}\le N_{\mathrm{ent}}}
+    V_{\mathsf{n}}\,\Pi^{\mathrm v}_{\mathsf{n}}\,\zeta\,
+    \Pi^{\mathrm v}_{\mathsf{n}}V_{\mathsf{n}}^{\dagger}
+  +\sum_{N_{\mathrm{ent}}<\mathsf{n}\le N_{\mathrm{src}}}\sum_{a}
+    \bra{f_{\mathsf{n},a}}\zeta\ket{f_{\mathsf{n},a}}\,\dyad{\mathsf{n},a}\\
+  &+\sum_{(a,\mu):\,\tilde w_\mu>0}
+    \bra{f_{a,\mu}}\zeta\ket{f_{a,\mu}}\,\vartheta_{a,\mu} ,
+\end{aligned}
+\end{equation}
+in which $\Pi^{\mathrm v}_{\mathsf{n}}$ projects $\Hs{\Avirt}$ onto the quantum
+sector $S_{\mathsf{n}}$, $V_{\mathsf{n}}$ is the isometry that embeds that
+sector into the Fock space as $\operatorname{span}\{\ket{\mathsf{n},a}\}_a$,
+and every sum runs over the sectors of the declared index set $\mathbb{T}$
+only, is a channel from $\Avirt$ to the Fock space, and
+\begin{equation}\label{eq:tagid}
+  \Xi_{\mathrm{tag}}(\rvirt_x)=\rho_x\qquad\text{for every label }x .
+\end{equation}
+A quantum sector or a polarisation flag that no letter puts weight on is not a
+sector of $\Avirt$ by Definition~\ref{def:tagged-source}\,(T3) and contributes
+no term to \eqref{eq:xitag}, exactly as for the tail flags.
+The channel $\Xi_{\mathrm{tag}}$ depends on the declared weights and the
+cutoffs and on no label.
+\item \emph{(the role of the inequality)} \eqref{eq:tagid} holds for every
+family of weights satisfying \eqref{eq:tag-ineq}. Where \eqref{eq:tag-ineq}
+fails at an intensity $\mu$, its two halves fail differently.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item If $\tilde p(\mathsf{n}\,|\,\mu)>P_\mu(\mathsf{n})$ for some
+$\mathsf{n}\le N_{\mathrm{src}}$ and $\tilde w_\mu>0$, the operator
+\eqref{eq:tailstate} is not positive semidefinite, for every polarisation $a$,
+and the construction is not available: where a letter $x$ has intensity $\mu$,
+the map \eqref{eq:xitag} sends the state $\dyad{f_{a_x,\mu}}$ to
+$\vartheta_{a_x,\mu}$ and is not positive.
+\item If $\tilde p(\mathsf{n}\,|\,\mu)<0$ for some
+$\mathsf{n}\le N_{\mathrm{src}}$ while
+$\tilde p(\mathsf{n}'\,|\,\mu)\le P_\mu(\mathsf{n}')$ for every
+$\mathsf{n}'\le N_{\mathrm{src}}$, then $\tilde w_\mu>0$ and the operator
+\eqref{eq:tailstate} is a state for every polarisation $a$. What fails is the
+virtual state: for every letter $x$ of intensity $\mu$ the operator $\rvirt_x$
+of \eqref{eq:rvirt} is not positive semidefinite or has trace greater than
+one, so it is not a state.
+\end{enumerate}
+\item \emph{(the published case)} for
+$\tilde p(\mathsf{n}\,|\,\mu)=P_\mu(\mathsf{n})$ and
+$N_{\mathrm{ent}}=N_{\mathrm{src}}$ the virtual states are those of
+\cite[Eq.~(145)]{tupkary2026decoy} and \eqref{eq:tagid} is
+\cite[Lemma~9.2]{tupkary2026decoy}.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\emph{Idea.} The channel keeps each quantum sector, prepares from each
+polarisation flag the number state it stands for, and prepares from each tail
+flag the normalised remainder of the Poisson distribution, which the
+inequality makes a state.
+
+(i) Every coefficient of \eqref{eq:tailstate} is non-negative, the first family
+by \eqref{eq:tag-ineq}, and the vectors $\ket{\mathsf{n},a}$, $\mathsf{n}\ge0$,
+are orthonormal for a fixed $a$, being number states of the one mode of
+polarisation $a$ with the orthogonal mode in its vacuum. So the bracket is a
+positive trace-class operator with trace
+$\sum_{\mathsf{n}\ge0}P_\mu(\mathsf{n})
+-\sum_{\mathsf{n}\le N_{\mathrm{src}}}\tilde p(\mathsf{n}\,|\,\mu)
+=1-(1-\tilde w_\mu)=\tilde w_\mu$, and $\vartheta_{a,\mu}$ has unit trace.
+
+(ii) \emph{A channel.} The sector projectors $\Pi^{\mathrm v}_{\mathsf{n}}$,
+$\dyad{f_{\mathsf{n},a}}$ and $\dyad{f_{a,\mu}}$ are mutually orthogonal and sum
+to $\idon{\Avirt}$ (Definition~\ref{def:tagged-source}). Each of the three sums
+of \eqref{eq:xitag} is completely positive: the first is a sum of conjugations
+by $V_{\mathsf{n}}\Pi^{\mathrm v}_{\mathsf{n}}$; the second and third are
+measure-and-prepare maps, a rank-one projective measurement followed by the
+preparation of a fixed state, the states $\vartheta_{a,\mu}$ being states by
+(i). For the trace, $V_{\mathsf{n}}$ is an isometry on $S_{\mathsf{n}}$ and
+every prepared operator has unit trace, so
+$\tr\Xi_{\mathrm{tag}}(\zeta)=\sum_{\mathsf{n}\le N_{\mathrm{ent}}}
+\tr[\Pi^{\mathrm v}_{\mathsf{n}}\zeta]
++\sum_{\mathsf{n},a}\bra{f_{\mathsf{n},a}}\zeta\ket{f_{\mathsf{n},a}}
++\sum_{(a,\mu):\,\tilde w_\mu>0}\bra{f_{a,\mu}}\zeta\ket{f_{a,\mu}}
+=\tr\zeta$, the projectors summed being all the sector projectors of the
+declaration. The input is finite dimensional and every output operator is trace
+class, so $\Xi_{\mathrm{tag}}$ is a completely positive trace-preserving map
+into the trace class of the Fock space.
+
+\emph{The identity.} Fix $x=(a,\mu,z)$. By Definition~\ref{def:tagged-source},
+\begin{equation*}
+  \rvirt_x=\sum_{\mathsf{n}\le N_{\mathrm{ent}}}
+  \tilde p(\mathsf{n}\,|\,\mu)\,\dyad{\mathsf{n},a}_{S_{\mathsf{n}}}
+  +\sum_{N_{\mathrm{ent}}<\mathsf{n}\le N_{\mathrm{src}}}
+  \tilde p(\mathsf{n}\,|\,\mu)\,\dyad{f_{\mathsf{n},a}}
+  +\tilde w_\mu\,\dyad{f_{a,\mu}} ,
+\end{equation*}
+which is block diagonal along the sectors. The first sum of \eqref{eq:xitag}
+maps its first sum to $\sum_{\mathsf{n}\le N_{\mathrm{ent}}}
+\tilde p(\mathsf{n}\,|\,\mu)\dyad{\mathsf{n},a}$, the embedding carrying the
+vector $\ket{\mathsf{n},a}$ of $S_{\mathsf{n}}$ to the Fock vector of the same
+name. The second maps the flag $f_{\mathsf{n},a}$, which carries weight
+$\tilde p(\mathsf{n}\,|\,\mu)$ in $\rvirt_x$ while the flags
+$f_{\mathsf{n},a'}$ of the other polarisations $a'\ne a$ carry none, to
+$\tilde p(\mathsf{n}\,|\,\mu)\dyad{\mathsf{n},a}$.
+The third maps the one tail flag of $\rvirt_x$, where $\tilde w_\mu>0$, to
+$\tilde w_\mu\vartheta_{a,\mu}$, which by \eqref{eq:tailstate} is the bracket
+there. When $\tilde w_\mu=0$ there is no tail flag and $\rvirt_x$ has no third
+term; then \eqref{eq:tag-ineq} and $\sum_{\mathsf{n}}P_\mu(\mathsf{n})=1$ force
+$\tilde p(\mathsf{n}\,|\,\mu)=P_\mu(\mathsf{n})$ for
+$\mathsf{n}\le N_{\mathrm{src}}$ and $P_\mu(\mathsf{n})=0$ beyond, so the
+bracket vanishes as well. Adding the three,
+\begin{equation*}
+  \Xi_{\mathrm{tag}}(\rvirt_x)
+  =\sum_{\mathsf{n}\le N_{\mathrm{src}}}\tilde p(\mathsf{n}\,|\,\mu)
+   \dyad{\mathsf{n},a}
+  +\sum_{\mathsf{n}\le N_{\mathrm{src}}}
+   \big(P_\mu(\mathsf{n})-\tilde p(\mathsf{n}\,|\,\mu)\big)\dyad{\mathsf{n},a}
+  +\sum_{\mathsf{n}>N_{\mathrm{src}}}P_\mu(\mathsf{n})\dyad{\mathsf{n},a}
+  =\rho_x .
+\end{equation*}
+Nothing in \eqref{eq:xitag} refers to $x$: the state prepared from a flag, a
+polarisation flag indexed by $(\mathsf{n},a)$ or a tail flag indexed by
+$(a,\mu)$, is a function of the flag alone.
+
+(iii) The first sentence is (ii), whose only hypothesis on the weights is
+\eqref{eq:tag-ineq}.
+
+(a) For every $a$ the vectors $\ket{\mathsf{n}',a}$, $\mathsf{n}'\ge0$, are
+orthonormal (proof of (i)), so
+$\bra{\mathsf{n},a}\vartheta_{a,\mu}\ket{\mathsf{n},a}
+=\big(P_\mu(\mathsf{n})-\tilde p(\mathsf{n}\,|\,\mu)\big)/\tilde w_\mu<0$ and
+\eqref{eq:tailstate} is not positive semidefinite. A letter $x$ of intensity
+$\mu$ carries the tail flag $f_{a_x,\mu}$, which is a sector of $\mathbb{T}$ by
+\eqref{eq:tset} because $\tilde w_\mu>0$. On $\dyad{f_{a_x,\mu}}$ the first two
+sums of \eqref{eq:xitag} vanish, the sectors being orthogonal, and the third
+gives $\vartheta_{a_x,\mu}$; so \eqref{eq:xitag} maps a positive operator to
+one that is not positive semidefinite.
+
+(b) Here
+$\sum_{\mathsf{n}'\le N_{\mathrm{src}}}\tilde p(\mathsf{n}'\,|\,\mu)
+<\sum_{\mathsf{n}'\le N_{\mathrm{src}}}P_\mu(\mathsf{n}')\le1$, the inequality
+being strict at $\mathsf{n}'=\mathsf{n}$, where
+$\tilde p(\mathsf{n}\,|\,\mu)<0\le P_\mu(\mathsf{n})$, so $\tilde w_\mu>0$; and
+the proof of
+(i), which reads only the upper half of \eqref{eq:tag-ineq}, makes
+$\vartheta_{a,\mu}$ a state for every $a$. Let $x$ be a letter with
+$\mu_x=\mu$, write $a=a_x$, and let $t$ be the sector that carries the term of
+$\tilde p(\mathsf{n}\,|\,\mu)$ in \eqref{eq:rvirt}: $t=\mathsf{n}$ if
+$\mathsf{n}\le N_{\mathrm{ent}}$ and $t=(\mathsf{n},a)$ otherwise. If
+$t\in\mathbb{T}$, the component of $\rvirt_x$ in $S_t$ is
+$\tilde p(\mathsf{n}\,|\,\mu)$ times the dyad of the unit vector
+$\ket{\mathsf{n},a}$, resp.\ $f_{\mathsf{n},a}$, so the expectation of
+$\rvirt_x$ in that vector is $\tilde p(\mathsf{n}\,|\,\mu)<0$ and $\rvirt_x$ is
+not positive semidefinite. If $t\notin\mathbb{T}$, \eqref{eq:rvirt} has no term
+in $t$. By \eqref{eq:tset} every sector on which $x$ puts a positive weight lies
+in $\mathbb{T}$, the tail flag $f_{a,\mu}$ among them since $\tilde w_\mu>0$;
+so every term that \eqref{eq:rvirt} omits for $x$ has a weight
+$\tilde p(\mathsf{n}'\,|\,\mu)\le0$, the term at $\mathsf{n}$ among them, and by
+\eqref{eq:tailweight}
+\begin{equation*}
+  \tr\rvirt_x
+  =1-\sum_{\mathsf{n}'\ \text{omitted}}\tilde p(\mathsf{n}'\,|\,\mu)
+  \;\ge\;1-\tilde p(\mathsf{n}\,|\,\mu)\;>\;1 .
+\end{equation*}
+
+(iv) With $\tilde p=P_\mu$ and $N_{\mathrm{ent}}=N_{\mathrm{src}}$ the middle
+sum of $\rvirt_x$ is empty, the low sectors carry the exact Poisson weights on
+$\dyad{\mathsf{n},a}$, and the tail flag carries
+$1-\sum_{\mathsf{n}\le N_{\mathrm{src}}}P_\mu(\mathsf{n})$. This is the
+displayed state of the cited equation with its photon cutoff equal to
+$N_{\mathrm{src}}$ and its flag $\dyad{a,\mu}$ equal to $\dyad{f_{a,\mu}}$; the
+cited lemma asserts a channel with \eqref{eq:tagid} for every choice of $a$,
+$\mu$ and $z$.
+\end{proof}

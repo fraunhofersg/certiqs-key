@@ -1,0 +1,78 @@
+% ---
+% id: meat-core/thm:protocol-channel
+% kind: thm
+% title: "The declaration generates a protocol channel"
+% summary: >-
+%   For an admissible declaration ([[def:admissible-declaration]]) the
+%   single-round protocol map is a channel with classical
+%   key, acceptance and announcement registers, given by an explicit
+%   measurement formula. Its acceptance marginal is exactly the statistics map.
+% prominence: standard
+% status: implemented
+% uses: [def:maps, def:admissible-declaration]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.branch:generate_maps
+% lean:
+% ---
+
+\begin{theorem}
+\label{thm:protocol-channel}
+Under Definition~\ref{def:admissible-declaration}:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item Each of \eqref{eq:Vmsm}--\eqref{eq:VZ}, and hence $\Wprot$, is an
+isometry, and $\Mprot$ is a channel $A\Qsys\to Z\Chat I$ with $\Chat$, $I$,
+$Z$ classical.
+\item For every system $E$ and every $\omega\in\Sleq{A\Qsys E}$,
+\begin{equation}\label{eq:povm-form}
+\begin{split}
+  (\Mprot\otimes\idmap_E)(\omega)
+  ={}&\sum_{x,v}
+  \dyad{r(x,v)}_{Z}\otimes\dyad{\phi(a(x,v))}_{\Chat}\otimes{}\\
+  &\qquad\dyad{a(x,v)}_{I}\otimes
+  \tr_{A\Qsys}\!\big[(M_x\otimes F_v\otimes\idon{E})\,\omega\big].
+\end{split}
+\end{equation}
+\item The $\Chat$-marginal of $(\Mprot\otimes\idmap_E)(\omega)$ is the
+probability vector $\Phimap[\omega_{A\Qsys}]$; $\Phimap$ is affine, and
+$\Phimap[\omega]$ is a probability distribution on $\Chatset$ for every
+$\omega\in\Seq{A\Qsys}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) With $\{\ket{x,v}\}$ orthonormal,
+$\Vmsm^{\dagger}\Vmsm
+=\sum_{x,v}\sqrt{M_x}\sqrt{M_x}\otimes\sqrt{F_v}\sqrt{F_v}
+=\Big(\sum_xM_x\Big)\otimes\Big(\sum_vF_v\Big)
+=\idon{A}\otimes\idon{\Qsys}$
+by POVM completeness. Each of \eqref{eq:Vann}--\eqref{eq:VR} has the form
+$\sum_{\mu}\ket{g(\mu)}\otimes\dyad{\mu}$ for a function $g$ on the control
+alphabet, so $V^{\dagger}V=\sum_{\mu}\dyad{\mu}=\idon{}$ on the control
+register; $\VZ^{\dagger}\VZ=\sum_jZ_j=\idon{R}$. Compositions of isometries
+are isometries; conjugation by an isometry followed by a partial trace is
+CPTP. $Z$, $\Chat$, $I$ are classical because \eqref{eq:povm-form} exhibits
+the output diagonal in their computational bases.
+
+(ii) Write $K_{x,v}\coloneqq\sqrt{M_x}\otimes\sqrt{F_v}$, so that
+$\Vmsm\,\omega\,\Vmsm^{\dagger}
+=\sum_{x,v,x',v'}\ketbra{x,v}{x',v'}_{XY}\otimes
+(K_{x,v}\otimes\idon{E})\,\omega\,(K_{x',v'}\otimes\idon{E})^{\dagger}$.
+Every subsequent isometry in $\Wprot$, and $\VZ$, is controlled on $XY$
+directly or on a register whose content is a function of $XY$, so
+conjugation by them appends the labels
+$a(x,v)$, $a(x,v)$ (in $I$), $\phi(a(x,v))$, $r(x,v)$, $r(x,v)$ (in $Z$) to
+the ket side and the primed labels to the bra side of each term. The partial
+trace in \eqref{eq:Mprot} includes $\tr_{XY}$, and
+$\tr_{XY}\ketbra{x,v}{x',v'}=\delta_{xx'}\delta_{vv'}$, so only diagonal
+terms survive; on those, $\tr_{A\Qsys}[K_{x,v}\,\omega\,K_{x,v}^{\dagger}]
+=\tr_{A\Qsys}[(M_x\otimes F_v)\,\omega]$ by cyclicity of the partial trace
+over $A\Qsys$. This is \eqref{eq:povm-form}.
+
+(iii) Take the $\Chat$-marginal of \eqref{eq:povm-form} and group terms by
+$\hat c=\phi(a(x,v))$; tracing $E$ replaces the last factor by
+$\tr[(M_x\otimes F_v)\,\omega_{A\Qsys}]$. Affinity is manifest;
+normalization follows from
+$\sum_{x,v}\tr[(M_x\otimes F_v)\omega]=\tr[\omega]=1$.
+\end{proof}

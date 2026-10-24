@@ -1,0 +1,27 @@
+% ---
+% id: reductions/req:constraint-and-licence-slots
+% kind: req
+% title: "Constraint and licence slots on every artefact"
+% summary: >-
+%   Every artefact carries a constraint list and a licence slot, even when
+%   both are empty. A record without them would exclude device knowledge that
+%   no classical target can carry.
+% prominence: standard
+% status: accepted
+% uses: [prop:obstruction, rem:obstruction-scope]
+% mentions: [thm:licence]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}\label{req:constraint-and-licence-slots}
+The engine emits every artefact with a constraint list
+\iface{constraint_list} and a licence slot \iface{attack_set_license}, even
+when both are empty: a record without them excludes a class of device
+knowledge that no classical target can carry
+(Proposition~\ref{prop:obstruction}, Remark~\ref{rem:obstruction-scope}\,(a)),
+and the licence slot is where the licence of Theorem~\ref{thm:licence} is
+carried.
+\end{requirement}

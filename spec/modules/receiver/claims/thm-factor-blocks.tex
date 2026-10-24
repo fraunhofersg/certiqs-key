@@ -1,0 +1,219 @@
+% ---
+% id: receiver/thm:factor-blocks
+% kind: thm
+% title: "Photon-number blocks in enclosed factor form"
+% summary: >-
+%   Read through a port dilation, a non-negative combination of click-pattern
+%   blocks is a weighted sum of rank-one terms whose columns are permanents of
+%   the dilation, enclosed by the same rules as the blocks. With rational
+%   weights, columns and weights are a factor enclosure of the block.
+% prominence: standard
+% status: implemented
+% uses: [def:port-dilation, lem:fock-permanent-maps, lem:fock-functor, thm:click-povm, def:coarse, def:fock, def:gram, def:complex-enclosure, lem:enclosure-arithmetic, foundations/def:factor-enclosure]
+% mentions: [thm:enclosed-blocks, foundations/cor:rank-over-factor-enclosure]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.factor:factor_enclosures
+% lean:
+% notes: "Part (iii) takes any enclosures of the columns, so a computation in ball arithmetic serves as well as the rules of part (ii); what the block needs is that every enclosure contains its column. The weights cover the coarse-graining and the dark-count channel alike, which detector-imperfections composes into the emitted blocks."
+% ---
+
+Theorem~\ref{thm:enclosed-blocks} encloses every block entry by entry. A block
+whose rank is below its dimension and whose support no coordinate vectors
+span is then known only through a box that also contains matrices of higher
+rank, and no lower bound on a least eigenvalue over that box fixes its rank.
+The physical model gives such a block in another form. A click pattern is an
+event on the output modes that is diagonal in their occupation basis, so
+pulling it back through the measurement writes its block as a sum of
+rank-one terms, one for each output occupation vector with that pattern,
+whose columns are the pulled-back occupation vectors. A port dilation
+(Definition~\ref{def:port-dilation}) serves in place of the unitary dilation,
+and the columns are permanents of its entries
+(Lemma~\ref{lem:fock-permanent-maps}), enclosed by the rules that enclose the
+blocks. Read through its columns, the block keeps the rank they fix
+(\xref{foundations/cor:rank-over-factor-enclosure}). A coarse-graining, and
+a classical channel of dark counts on the recorded patterns, combine click
+patterns with non-negative weights, which keeps the form.
+
+\begin{theorem}\label{thm:factor-blocks}
+Let $\Recv$ be a \tref{receiver instrument} with
+\tref[port Gram matrices]{port Grams} $\{A_k\}_{k=1}^{K}$ on
+$\mathbb{C}^{\Inp}$ and click-pattern POVM $\{M_S\}_{S\subseteq[K]}$
+(Theorem~\ref{thm:click-povm}), and let
+$(\mathbb{O};\mathbb{O}_1,\dots,\mathbb{O}_K;\Omega)$ be a
+\tref{port dilation} of $\Recv$ (Definition~\ref{def:port-dilation}), with
+$S_{\vec m}$ the click pattern of an occupation vector $\vec m$ of
+$\mathbb{O}$. Read every block $\Symn{n}(\mathbb{C}^{\Inp})$ in its
+occupation basis listed in an order fixed for that block, and for an
+occupation vector $\vec m\in\mathbb{N}_0^{\mathbb{O}}$ of weight $n$ put
+\begin{equation}\label{eq:factor-column}
+  c_{\vec m}\coloneqq\Fock(\Omega)^{\dagger}\ket{\vec m}
+  \ \in\ \Symn{n}(\mathbb{C}^{\Inp}).
+\end{equation}
+Enclosures are \tref[complex enclosure]{complex enclosures}
+(Definition~\ref{def:complex-enclosure}), and ``the rules'' are those of
+Lemma~\ref{lem:enclosure-arithmetic}\,(i)--(iv).
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{The factor form.} For every $n\ge0$ and all reals $w_S\ge0$,
+  $S\subseteq[K]$,
+  \begin{equation}\label{eq:factor-form}
+    \sum_{S\subseteq[K]}w_S\,\blk{M}{\eqn}_S
+    \;=\;\sum_{\vec m:\,|\vec m|=n}w_{S_{\vec m}}\,c_{\vec m}c_{\vec m}^{\dagger},
+  \end{equation}
+  the sum on the right over the occupation vectors of $\mathbb{O}$ of weight
+  $n$. In particular $\blk{M}{\eqn}_S$ is the sum of the
+  $c_{\vec m}c_{\vec m}^{\dagger}$ with $S_{\vec m}=S$, and the block
+  $\blk{F}{\eqn}_v$ of the \tref{emitted POVM} of a
+  \tref{declared coarse-graining} $\cg$ (Definition~\ref{def:coarse}) is
+  \eqref{eq:factor-form} with $w_S=1$ for $S\in\cg^{-1}(v)$ and $w_S=0$
+  otherwise. The entry of $c_{\vec m}$ at an occupation vector $\vec m'$ of
+  $\Inp$ is
+  $\overline{\operatorname{per}\Omega[\vec m|\vec m']}\big/\sqrt{\vec m!\,\vec m'!}$,
+  with $\Omega[\vec m|\vec m']$ as in
+  Lemma~\ref{lem:fock-permanent-maps}\,(ii).
+\item \emph{Enclosed columns.} Let enclosures of the entries of $\Omega$ be
+  given, and, for all occupation vectors $\vec m$ of $\mathbb{O}$ and
+  $\vec m'$ of $\Inp$ of weight $n$, a \tref{square-root enclosure} of
+  $1/(\vec m!\,\vec m'!)$. The rules, applied to the conjugate of
+  $\operatorname{per}\Omega[\vec m|\vec m']$ times that square root, enclose
+  every entry of every $c_{\vec m}$. An entry so enclosed is exact where every
+  enclosure it is computed from is exact, and it is enclosed exactly as $0$
+  where every term of the permanent, a product of entries of $\Omega$, has a
+  factor enclosed exactly as $0$; in particular every entry of $c_{\vec m}$
+  is, where $\vec m$ has a photon in a mode whose row is enclosed exactly as
+  zero.
+\item \emph{The enclosure of the factor form.} Let $n\ge0$, let the weights $w_S\ge0$ be
+  rationals, let enclosures of the columns $c_{\vec m}$ be given, such as
+  those of (ii), and let $\mathcal{C}$ be the set of the occupation vectors
+  $\vec m$ of $\mathbb{O}$ of weight $n$ with $w_{S_{\vec m}}>0$ whose column
+  is not enclosed exactly as zero, listed in a fixed order. Let $(L_c,\varrho)$
+  be the \tref{matrix box} of complex
+  $\dim\Symn{n}(\mathbb{C}^{\Inp})\times|\mathcal{C}|$ matrices whose column
+  $\vec m$ has the centres and the radii of the enclosure of $c_{\vec m}$,
+  and $W\coloneqq\operatorname{diag}(w_{S_{\vec m}})_{\vec m\in\mathcal{C}}$.
+  Then $(L_c,\varrho,W)$ is a \tref{factor enclosure}
+  (\xref{foundations/def:factor-enclosure}) of the block
+  \eqref{eq:factor-form}, with $|\mathcal{C}|$ columns; where $\mathcal{C}$
+  is empty, that block is zero.
+\item \emph{Port dilations from factors.} Let
+  $\mathbb{O}_0,\mathbb{O}_1,\dots,\mathbb{O}_K$ be pairwise disjoint finite
+  mode sets and $Y_k:\mathbb{C}^{\Inp}\to\mathbb{C}^{\mathbb{O}_k}$ linear
+  maps with $Y_k^{\dagger}Y_k=A_k$ for $k=1,\dots,K$ and
+  $Y_0^{\dagger}Y_0=\defic$, the \tref{loss deficiency}
+  (Definition~\ref{def:gram}). Then the map $\Omega$ into
+  $\mathbb{O}\coloneqq\mathbb{O}_0\sqcup\mathbb{O}_1\sqcup\dots\sqcup\mathbb{O}_K$,
+  in any fixed order, whose rows on $\mathbb{O}_k$ are those of $Y_k$ for
+  $k=0,\dots,K$, is with the ports $\mathbb{O}_1,\dots,\mathbb{O}_K$ a port
+  dilation of $\Recv$. If a matrix $X$ is $E^{\dagger}DE$ with $D$ diagonal with
+  positive rational diagonal entries $d_i$ and $E$ with entries in
+  $\mathbb{Q}(i)$, then $Y\coloneqq D^{1/2}E$ satisfies $Y^{\dagger}Y=X$, and
+  the rules applied to the products of square-root enclosures of the $d_i$
+  with the entries of $E$ enclose $Y$, exactly in every row $i$ in which
+  $d_i$ is the square of a rational.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{(i).} By Lemma~\ref{lem:fock-permanent-maps}\,(i), $\Fock(\Omega)$ maps
+$\Symn{n}(\mathbb{C}^{\Inp})$ into $\Symn{n}(\mathbb{C}^{\mathbb{O}})$, and its
+adjoint $\Fock(\Omega^{\dagger})$ maps back, so $c_{\vec m}$ lies in
+$\Symn{n}(\mathbb{C}^{\Inp})$. For $J\subseteq[K]$ put
+$E_J\coloneqq\sum_{k\in J}\Emd{\mathbb{O}_k}$, a coordinate projector of
+$\mathbb{C}^{\mathbb{O}}$ since the ports are pairwise disjoint, and
+$\Pi_J\coloneqq\Fock(\id_{\mathbb{O}}-E_J)$. By the same lemma and
+\eqref{eq:port-dilation},
+\begin{equation*}
+  \Fock(\Omega)^{\dagger}\,\Pi_J\,\Fock(\Omega)
+  =\Fock\big(\Omega^{\dagger}(\id_{\mathbb{O}}-E_J)\Omega\big)
+  =\Fock\Big(\id_{\Inp}-\sum_{k\in J}A_k\Big)
+  =\Fock(\id_{\Inp}-A_J).
+\end{equation*}
+By Lemma~\ref{lem:fock-functor}\,(iv) on $\mathbb{C}^{\mathbb{O}}$, whose
+coordinate basis is adapted to the range and kernel of the coordinate
+projector $\id_{\mathbb{O}}-E_J$, $\Pi_J$ is the orthogonal projector onto the
+span of the occupation vectors with no photon in a mode of
+$\bigcup_{k\in J}\mathbb{O}_k$; the occupation vectors being an orthonormal
+basis, $\Pi_J\ket{\vec m}=\ket{\vec m}$ where $S_{\vec m}\cap J=\varnothing$
+and $\Pi_J\ket{\vec m}=0$ otherwise. Fix $S\subseteq[K]$. By
+Theorem~\ref{thm:click-povm}\,(ii) and the identity above,
+\begin{equation*}
+  M_S=\sum_{T\subseteq S}(-1)^{|T|}\,
+      \Fock\big(\id_{\Inp}-A_{([K]\setminus S)\cup T}\big)
+  =\Fock(\Omega)^{\dagger}P_S\,\Fock(\Omega),
+  \qquad
+  P_S\coloneqq\sum_{T\subseteq S}(-1)^{|T|}\,\Pi_{([K]\setminus S)\cup T}.
+\end{equation*}
+Let $\vec m$ be an occupation vector of $\mathbb{O}$. If $S_{\vec m}$ meets
+$[K]\setminus S$, every term of $P_S$ annihilates $\ket{\vec m}$. Otherwise
+$S_{\vec m}\subseteq S$, and the term of $T$ keeps $\ket{\vec m}$ exactly
+when $T\cap S_{\vec m}=\varnothing$, so
+$P_S\ket{\vec m}=\sum_{T\subseteq S\setminus S_{\vec m}}(-1)^{|T|}\ket{\vec m}
+=(1-1)^{|S\setminus S_{\vec m}|}\ket{\vec m}$, which is $\ket{\vec m}$ where
+$S_{\vec m}=S$ and $0$ otherwise. So $P_S$ restricted to
+$\Symn{n}(\mathbb{C}^{\mathbb{O}})$ is
+$\sum_{|\vec m|=n,\,S_{\vec m}=S}\ket{\vec m}\bra{\vec m}$, and since
+$\Fock(\Omega)$ maps $\Symn{n}(\mathbb{C}^{\Inp})$ into
+$\Symn{n}(\mathbb{C}^{\mathbb{O}})$, the block of $M_S$ on
+$\Symn{n}(\mathbb{C}^{\Inp})$ is
+\begin{equation*}
+  \blk{M}{\eqn}_S=\sum_{|\vec m|=n,\,S_{\vec m}=S}
+  \Fock(\Omega)^{\dagger}\ket{\vec m}\bra{\vec m}\Fock(\Omega)
+  =\sum_{|\vec m|=n,\,S_{\vec m}=S}c_{\vec m}c_{\vec m}^{\dagger}.
+\end{equation*}
+Every occupation vector has exactly one click pattern, so the sum of the
+$w_S\blk{M}{\eqn}_S$ is \eqref{eq:factor-form}. The emitted POVM is
+$F_v=\sum_{S\in\cg^{-1}(v)}M_S$ (Definition~\ref{def:coarse}), and every $M_S$
+is block diagonal in the photon number (Theorem~\ref{thm:click-povm}\,(iii)),
+so the block of $F_v$ is the sum of the blocks of its $M_S$. Finally,
+$\bra{\vec m'}c_{\vec m}=\bra{\vec m'}\Fock(\Omega)^{\dagger}\ket{\vec m}
+=\overline{\bra{\vec m}\Fock(\Omega)\ket{\vec m'}}$, which
+Lemma~\ref{lem:fock-permanent-maps}\,(ii) evaluates, the square root being a
+positive real.
+
+\emph{(ii).} The permanent of $\Omega[\vec m|\vec m']$ is a sum of products of
+entries of $\Omega$, each of them enclosed, and the entry of $c_{\vec m}$ is
+its conjugate times the square root; Lemma~\ref{lem:enclosure-arithmetic}\,(iv)
+encloses the value of this expression and keeps it exact where its inputs
+are. A product one of whose operands is enclosed exactly as $0$, with centre
+and radius $0$, receives by part (ii) of that lemma the centre $0$ and the
+radius $0\cdot r_y+0\cdot\lvert y_c\rvert_{1}+0\cdot r_y=0$, so a term of the
+permanent with such a factor is enclosed exactly as $0$, whatever order its
+factors are multiplied in; a sum of such terms is enclosed exactly as $0$ by
+part (i), and so are its conjugate and its product with the square root.
+Where $\vec m$ has a photon in a mode $i$, the letter $i$ occurs in the word
+$w_{\vec m}$, so every term of the permanent has a factor from the row of
+$i$; if that row is enclosed exactly as zero, every term has a factor
+enclosed exactly as $0$.
+
+\emph{(iii).} Let $L$ be the matrix whose columns are the $c_{\vec m}$,
+$\vec m\in\mathcal{C}$, in the fixed order. Each of its entries lies within
+the radius of the centre of its enclosure, so the box $(L_c,\varrho)$, whose
+centres have entries in $\mathbb{Q}(i)$ and whose radii are non-negative
+rationals (Definition~\ref{def:complex-enclosure}), contains $L$; and $W$ is
+diagonal with positive rational diagonal entries. A column enclosed exactly
+as zero is zero, an exact enclosure being equal to its centre. In
+\eqref{eq:factor-form} the terms with $w_{S_{\vec m}}=0$ and the terms whose
+column is zero vanish, and the remaining terms are those of $\mathcal{C}$, so
+the block is
+$\sum_{\vec m\in\mathcal{C}}w_{S_{\vec m}}c_{\vec m}c_{\vec m}^{\dagger}=LWL^{\dagger}$
+with $L$ in the box, which is what a factor enclosure asks of the matrix it
+encloses (\xref{foundations/def:factor-enclosure}). Where $\mathcal{C}$ is
+empty the sum is empty and the block is zero.
+
+\emph{(iv).} The rows of $\Omega$ on $\mathbb{O}_k$ are those of $Y_k$, so
+$\Omega^{\dagger}\Emd{\mathbb{O}_k}\Omega=Y_k^{\dagger}Y_k=A_k$ for
+$k=1,\dots,K$, and, the $\mathbb{O}_k$ partitioning $\mathbb{O}$,
+$\Omega^{\dagger}\Omega=\sum_{k=0}^{K}Y_k^{\dagger}Y_k
+=\defic+\sum_{k=1}^{K}A_k=\id_{\Inp}$ by \eqref{eq:deficiency}. The ports
+$\mathbb{O}_1,\dots,\mathbb{O}_K$ are pairwise disjoint, so this is
+\eqref{eq:port-dilation}. For the second sentence, $D^{1/2}$ is the real
+diagonal matrix of the positive square roots $\sqrt{d_i}$, so
+$Y^{\dagger}Y=E^{\dagger}D^{1/2}D^{1/2}E=E^{\dagger}DE=X$. The entry $(i,l)$
+of $Y$ is $\sqrt{d_i}\,E_{il}$, the product of $\sqrt{d_i}$, which a
+square-root enclosure of $d_i$ encloses, and of $E_{il}$, enclosed exactly
+by itself; part (ii) of Lemma~\ref{lem:enclosure-arithmetic} encloses it,
+exactly where the square-root enclosure is exact, which
+Definition~\ref{def:complex-enclosure} makes it where $d_i$ is the square of
+a rational.
+\end{proof}

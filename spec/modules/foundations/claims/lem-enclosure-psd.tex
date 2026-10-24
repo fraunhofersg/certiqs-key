@@ -1,0 +1,128 @@
+% ---
+% id: foundations/lem:enclosure-psd
+% kind: lem
+% title: "Positive semidefiniteness from an entrywise enclosure"
+% summary: >-
+%   A Hermitian matrix is at least μ times the identity when a Gaussian-rational
+%   centre within entrywise radii r is at least ρ + μ times it, ρ the largest
+%   row sum of r. Every hypothesis is a comparison of rationals, so matrices
+%   with irrational entries are decided in exact arithmetic.
+% prominence: standard
+% status: implemented
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.reference:enclosure_psd
+% lean:
+% ---
+
+A matrix with irrational entries, such as one with entries
+$S_{il}/\sqrt{n_in_l}$, is not a matrix of rationals, and an exact decision of
+its positive semidefiniteness cannot read its entries directly. The lemma replaces the decision by one on a rational centre, at the
+price of a margin. It is a sufficient condition only: a matrix whose least
+eigenvalue is smaller than the uncertainty of its enclosure is in general not
+certified, and a finer enclosure is the remedy.
+
+\begin{lemma}\label{lem:enclosure-psd}
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item Let $X$ be a Hermitian complex $d\times d$ matrix, $X_c$ a Hermitian
+  $d\times d$ matrix with entries in $\mathbb{Q}(i)$, and $r_{il}\ge0$
+  rationals with $|X_{il}-(X_c)_{il}|\le r_{il}$ for all $i,l$. Let $\rho$ be
+  a rational with
+  \begin{equation}\label{eq:enclosure-radius}
+    \rho\;\ge\;\max_{i}\sum_{l}r_{il}
+    \qquad\text{or}\qquad
+    \rho\ge0\ \text{ and }\ \rho^{2}\;\ge\;\sum_{i,l}r_{il}^{2},
+  \end{equation}
+  and $\mu\ge0$ a rational. If $X_c-(\rho+\mu)\,\idon{d}\succeq0$, then
+  $X\succeq\mu\,\idon{d}$; in particular $X\succeq0$, and $X$ is positive
+  definite when $\mu>0$. If $X_c-\rho\,\idon{d}$ is positive definite, then
+  $X$ is positive definite. Every hypothesis on $X_c$, $r$, $\rho$ and $\mu$
+  is a property of finitely many rationals and Gaussian rationals.
+\item Let $n_1,\dots,n_d$ be positive rationals and
+  $D\coloneqq\mathrm{diag}(\sqrt{n_1},\dots,\sqrt{n_d})$, and let $a_i,e_i$
+  be rationals with $0\le e_i\le a_i$ and
+  \begin{equation}\label{eq:sqrt-enclosure}
+    (a_i-e_i)^{2}\,n_i\;\le\;1\;\le\;(a_i+e_i)^{2}\,n_i .
+  \end{equation}
+  Then $|a_i-n_i^{-1/2}|\le e_i$. Let $S$ and $Y$ be Hermitian $d\times d$
+  matrices with entries in $\mathbb{Q}(i)$, put $X\coloneqq D^{-1}SD^{-1}-Y$,
+  $A\coloneqq\mathrm{diag}(a_1,\dots,a_d)$, $X_c\coloneqq ASA-Y$ and
+  \begin{equation}\label{eq:scaled-radii}
+    r_{il}\;\coloneqq\;\sigma_{il}\,\big(a_ie_l+e_ia_l+e_ie_l\big),
+    \qquad
+    \sigma_{il}\coloneqq|\mathrm{Re}\,S_{il}|+|\mathrm{Im}\,S_{il}| .
+  \end{equation}
+  Then $X$, $X_c$ and $r$ satisfy the hypotheses of (i) on $X$, $X_c$ and
+  $r$, and the radii do not depend on $Y$.
+\item Let $X$, $X_c$ and $r$ be as in (i), let $F$ be a Hermitian positive
+  semidefinite $d\times d$ matrix with entries in $\mathbb{Q}(i)$, and let
+  $q\in[0,1]$ be rational. Then $X-(1-q)F$, $X_c-(1-q)F$ and $r$ satisfy the
+  hypotheses of (i) on $X$, $X_c$ and $r$. If, for some $\rho$ and $\mu$ as
+  in (i), $X_c-(1-q)F-(\rho+\mu)\idon{d}\succeq0$, then
+  $X_c-(1-q')F-(\rho+\mu)\idon{d}\succeq0$ for every rational
+  $q'\in[q,1]$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) Put $Z\coloneqq X-X_c$, a Hermitian matrix, so $|Z_{il}|=|Z_{li}|$. Then
+$|Z_{il}|\le r'_{il}\coloneqq\min(r_{il},r_{li})$, and $r'$ is symmetric with
+$\sum_lr'_{il}\le\sum_lr_{il}$ for every $i$. Let $x\in\mathbb{C}^{d}$ be a
+unit vector. If $\rho\ge\max_i\sum_lr_{il}$, then, using
+$|x_i||x_l|\le\tfrac12(|x_i|^{2}+|x_l|^{2})$ and the symmetry of $r'$,
+\begin{equation*}
+  |\langle x,Zx\rangle|
+  \le\sum_{i,l}|x_i|\,r'_{il}\,|x_l|
+  \le\tfrac12\sum_{i,l}r'_{il}\big(|x_i|^{2}+|x_l|^{2}\big)
+  =\sum_i|x_i|^{2}\sum_lr'_{il}
+  \le\max_i\sum_lr_{il}\le\rho .
+\end{equation*}
+If instead $\rho\ge0$ and $\rho^{2}\ge\sum_{i,l}r_{il}^{2}$, the
+Cauchy--Schwarz inequality on the $d^{2}$ numbers $r_{il}$ and
+$|x_i||x_l|$ gives
+\begin{equation*}
+  |\langle x,Zx\rangle|\le\sum_{i,l}r_{il}\,|x_i||x_l|
+  \le\Big(\sum_{i,l}r_{il}^{2}\Big)^{1/2}\Big(\sum_{i,l}|x_i|^{2}|x_l|^{2}\Big)^{1/2}
+  =\Big(\sum_{i,l}r_{il}^{2}\Big)^{1/2}\le\rho ,
+\end{equation*}
+since $\sum_{i,l}|x_i|^{2}|x_l|^{2}=\big(\sum_i|x_i|^{2}\big)^{2}=1$. In both
+cases $\langle x,Xx\rangle=\langle x,X_cx\rangle+\langle x,Zx\rangle
+\ge(\rho+\mu)-\rho=\mu$, because $X_c-(\rho+\mu)\idon{d}\succeq0$. As $X$ is
+Hermitian and $x$ was an arbitrary unit vector, $X\succeq\mu\,\idon{d}$. If
+instead $X_c-\rho\,\idon{d}$ is positive definite, the same bounds on
+$|\langle x,Zx\rangle|$ give
+$\langle x,Xx\rangle\ge\langle x,X_cx\rangle-\rho
+=\langle x,(X_c-\rho\,\idon{d})x\rangle>0$ for every unit vector $x$, so $X$
+is positive definite. The
+hypotheses are a finite set of comparisons of rationals and the positive
+semidefiniteness of the matrix $X_c-(\rho+\mu)\idon{d}$ with entries in
+$\mathbb{Q}(i)$.
+
+(ii) The map $t\mapsto t^{2}n_i$ is strictly increasing on $[0,\infty)$, and
+$a_i-e_i\ge0$, $n_i^{-1/2}>0$, $(n_i^{-1/2})^{2}n_i=1$; so
+\eqref{eq:sqrt-enclosure} gives $a_i-e_i\le n_i^{-1/2}\le a_i+e_i$. Write
+$n_i^{-1/2}=a_i+\varepsilon_i$ with $|\varepsilon_i|\le e_i$. The entry
+$(i,l)$ of $D^{-1}SD^{-1}$ is
+$S_{il}(a_i+\varepsilon_i)(a_l+\varepsilon_l)$, and that of $ASA$ is
+$S_{il}a_ia_l$, so
+\begin{equation*}
+  |X_{il}-(X_c)_{il}|
+  =|S_{il}|\,\big|a_i\varepsilon_l+\varepsilon_ia_l+\varepsilon_i\varepsilon_l\big|
+  \le\sigma_{il}\,\big(a_ie_l+e_ia_l+e_ie_l\big)=r_{il},
+\end{equation*}
+using $a_i,a_l\ge0$ and $|z|\le|\mathrm{Re}\,z|+|\mathrm{Im}\,z|$. The matrix
+$X$ is Hermitian, $D^{-1}$ being real diagonal and $S$, $Y$ Hermitian; $X_c$
+is Hermitian with entries in $\mathbb{Q}(i)$ for the same reasons; the $r_{il}$
+are non-negative rationals, and $Y$ does not enter them.
+
+(iii) $X-(1-q)F$ is Hermitian, and $X_c-(1-q)F$ is Hermitian with entries in
+$\mathbb{Q}(i)$, $q$ being rational and $F$ having entries in
+$\mathbb{Q}(i)$. Since
+$\big(X-(1-q)F\big)_{il}-\big(X_c-(1-q)F\big)_{il}=X_{il}-(X_c)_{il}$, the
+radii $r$ still bound the differences entry by entry. Finally,
+$X_c-(1-q')F-(\rho+\mu)\idon{d}
+=\big(X_c-(1-q)F-(\rho+\mu)\idon{d}\big)+(q'-q)F$ is a sum of two positive
+semidefinite matrices, since $q'-q\ge0$ and $F\succeq0$.
+\end{proof}

@@ -1,0 +1,30 @@
+% ---
+% id: receiver/req:graph-refusal
+% kind: req
+% title: "Refusal of a graph that is not well formed"
+% summary: >-
+%   A declared element graph failing any of (E1) to (E3) is refused with the
+%   failing condition named, and the offending element or edge for (E1) or
+%   element pair for (E3). No matrix is emitted and no ordering is invented.
+% prominence: standard
+% status: implemented
+% uses: [thm:compilation-well-defined, def:graph]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.graph:check_element_graph
+% lean:
+% ---
+
+Theorem~\ref{thm:compilation-well-defined}\,(iv) makes each condition of a well-formed graph
+decidable by finite inspection; this requirement says what the engine does
+when one fails.
+
+\begin{requirement}\label{req:graph-refusal}
+The engine refuses a \tref{declared element graph} (input \iface{element_graph})
+that fails any of conditions (E1)--(E3) of Definition~\ref{def:graph}, with
+the failing condition named, together with the offending element or edge
+for (E1) and the offending element pair for (E3); no matrix is
+emitted, and no ordering is invented to repair it. The refusal follows the
+\iface{fail_closed} convention.
+\end{requirement}

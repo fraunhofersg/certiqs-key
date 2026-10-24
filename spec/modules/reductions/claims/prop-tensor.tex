@@ -1,0 +1,33 @@
+% ---
+% id: reductions/prop:tensor
+% kind: prop
+% title: "Tensor products of squashing relations"
+% summary: >-
+%   Two squashing relations give one for the product measurement, through the
+%   tensor product of their channels. Independent components can therefore be
+%   reduced separately and assembled without a fresh existence proof.
+% prominence: standard
+% status: accepted
+% uses: [def:squashing, lem:sep]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Squashing relations for independent components combine by tensor product,
+because the adjoint of a tensor product of channels is the tensor product of
+their adjoints, also when the physical systems are infinite-dimensional
+(Lemma~\ref{lem:sep}\,(ii)).
+
+\begin{proposition}\label{prop:tensor}
+If $M\dsq_{\Lambda}F$ and $M'\dsq_{\Lambda'}F'$ then
+$\{M_v\otimes M'_{v'}\}_{(v,v')}\dsq_{\Lambda\otimes\Lambda'}
+\{F_v\otimes F'_{v'}\}_{(v,v')}$.
+\end{proposition}
+
+\begin{proof}
+$(\Lambda\otimes\Lambda')^{\dagger}(F_v\otimes F'_{v'})
+=\Lambda^{\dagger}(F_v)\otimes\Lambda'^{\dagger}(F'_{v'})$ by
+Lemma~\ref{lem:sep}\,(ii).
+\end{proof}

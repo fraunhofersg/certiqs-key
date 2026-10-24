@@ -1,0 +1,153 @@
+% ---
+% id: foundations/lem:least-eigenvalue-bound
+% kind: lem
+% title: "Least-eigenvalue lower bound from an approximate eigenbasis"
+% summary: >-
+%   For a Hermitian matrix and any real V whose Gram matrix lies within θ < 1
+%   of the identity in Frobenius norm, the Gershgorin bound γ of the real
+%   embedding conjugated by V gives λ_min ≥ γ/(1+θ), or γ/(1−θ) if γ < 0. On
+%   rational data every step is exact, and V decides tightness only.
+% prominence: standard
+% status: implemented
+% uses: []
+% mentions: [def:exact-island]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.dyadic:least_eigenvalue_bound
+% lean:
+% ---
+
+An eigensolver in binary64 returns approximate eigenvectors, and nothing is
+established of them by the arithmetic that produced them. The lemma turns any
+such basis into a lower bound on the least eigenvalue that holds exactly: it
+asks of the basis only a bound on its defect from orthogonality, so the
+quality of the basis decides how close the bound lies to the least eigenvalue
+and never whether it is one. The real embedding lets the computation run over
+the reals, a Hermitian matrix having the Rayleigh quotients of its embedding,
+and on rational data every quantity is rational, so the bound is a
+certification of the \tref{exact island} (Definition~\ref{def:exact-island}).
+
+\begin{lemma}\label{lem:least-eigenvalue-bound}
+Let $n\ge1$, let $R$ be a Hermitian complex $n\times n$ matrix, and let
+\begin{equation}\label{eq:real-embedding}
+  \widetilde R\;\coloneqq\;
+  \begin{pmatrix}\mathrm{Re}\,R&-\mathrm{Im}\,R\\
+  \mathrm{Im}\,R&\mathrm{Re}\,R\end{pmatrix}\in\mathbb{R}^{2n\times2n},
+\end{equation}
+the real and imaginary parts taken entrywise. Let $V$ be any real
+$2n\times2n$ matrix, put
+\begin{equation*}
+  B\coloneqq V^{\transpose}\widetilde R\,V,\qquad
+  E\coloneqq V^{\transpose}V-\idon{2n},\qquad
+  \gamma\coloneqq\min_{1\le i\le2n}\Big(B_{ii}-\sum_{l\ne i}|B_{il}|\Big),
+\end{equation*}
+and let $\theta$ be a real number with $0\le\theta<1$ and
+$\sum_{i,l}E_{il}^{2}\le\theta^{2}$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item $\widetilde R$ is real symmetric, and $\lmin(\widetilde R)=\lmin(R)$.
+\item $V$ is invertible, and
+\begin{equation}\label{eq:least-eigenvalue-bound}
+  \lmin(R)\;\ge\;
+  \begin{cases}
+    \gamma/(1+\theta), & \gamma\ge0,\\
+    \gamma/(1-\theta), & \gamma<0.
+  \end{cases}
+\end{equation}
+\item If the entries of $R$ lie in $\mathbb{Q}(i)$, the entries of $V$ are
+  rational and $\theta$ is rational, then $\widetilde R$, $B$ and $E$ have
+  rational entries, $\gamma$ is rational, the hypothesis on $\theta$ is a
+  comparison of rationals, and the right-hand side of
+  \eqref{eq:least-eigenvalue-bound} is a rational number.
+\item Applied to $-R$, (ii) bounds the largest eigenvalue of $R$, which is
+  $-\lmin(-R)$, from above.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{(i).} Write $A\coloneqq\mathrm{Re}\,R$ and $C\coloneqq\mathrm{Im}\,R$.
+Since $R$ is Hermitian, $\overline{R_{li}}=R_{il}$ for all $i,l$, so
+$A_{li}=A_{il}$ and $C_{li}=-C_{il}$: $A$ is symmetric and $C$ is
+antisymmetric. Hence
+$\widetilde R^{\transpose}=\begin{pmatrix}A^{\transpose}&C^{\transpose}\\
+-C^{\transpose}&A^{\transpose}\end{pmatrix}
+=\begin{pmatrix}A&-C\\C&A\end{pmatrix}=\widetilde R$. For
+$x=\begin{pmatrix}a\\b\end{pmatrix}\in\mathbb{R}^{2n}$, with
+$a,b\in\mathbb{R}^{n}$, put $u\coloneqq a+ib\in\mathbb{C}^{n}$. Then
+$Ru=(Aa-Cb)+i(Ca+Ab)$ and
+\begin{equation*}
+  u^{\dagger}Ru
+  =a^{\transpose}(Aa-Cb)+b^{\transpose}(Ca+Ab)
+  +i\big(a^{\transpose}(Ca+Ab)-b^{\transpose}(Aa-Cb)\big).
+\end{equation*}
+The number $u^{\dagger}Ru$ is real, $R$ being Hermitian, so it equals its
+real part
+$a^{\transpose}Aa-a^{\transpose}Cb+b^{\transpose}Ca+b^{\transpose}Ab$, which
+is $x^{\transpose}\widetilde Rx$ written out by blocks; and
+$u^{\dagger}u=a^{\transpose}a+b^{\transpose}b=x^{\transpose}x$. The map
+$x\mapsto u$ is a bijection of $\mathbb{R}^{2n}$ onto $\mathbb{C}^{n}$ that
+sends $0$ to $0$, so the set of Rayleigh quotients
+$u^{\dagger}Ru/u^{\dagger}u$, $u\ne0$, equals the set of
+$x^{\transpose}\widetilde Rx/x^{\transpose}x$, $x\ne0$. By the spectral
+theorem the least eigenvalue of a Hermitian matrix is the minimum of its
+Rayleigh quotient over non-zero complex vectors, and the least eigenvalue of
+a real symmetric matrix, which has a real orthonormal eigenbasis, is the
+minimum of its Rayleigh quotient over non-zero real vectors. So
+$\lmin(\widetilde R)=\lmin(R)$.
+
+\emph{(ii), the Gram matrix.} For $y\in\mathbb{R}^{2n}$,
+$\|Vy\|^{2}=y^{\transpose}V^{\transpose}Vy=\|y\|^{2}+y^{\transpose}Ey$.
+By the Cauchy--Schwarz inequality applied to each row of $E$,
+$\|Ey\|^{2}=\sum_i\big(\sum_lE_{il}y_l\big)^{2}
+\le\sum_i\sum_lE_{il}^{2}\,\|y\|^{2}\le\theta^{2}\|y\|^{2}$, and again by
+the Cauchy--Schwarz inequality $|y^{\transpose}Ey|\le\|y\|\,\|Ey\|
+\le\theta\|y\|^{2}$. Therefore
+\begin{equation}\label{eq:gram-sandwich}
+  (1-\theta)\|y\|^{2}\;\le\;\|Vy\|^{2}\;\le\;(1+\theta)\|y\|^{2}
+  \qquad\text{for every }y\in\mathbb{R}^{2n}.
+\end{equation}
+As $\theta<1$, $Vy=0$ forces $y=0$, so the square matrix $V$ is injective
+and hence invertible.
+
+\emph{(ii), Gershgorin's bound on the quadratic form.} $B$ is real symmetric,
+$B^{\transpose}=V^{\transpose}\widetilde R^{\transpose}V=B$ by (i). For
+$y\in\mathbb{R}^{2n}$, using $|y_iy_l|\le\tfrac12(y_i^{2}+y_l^{2})$, so that
+$B_{il}y_iy_l\ge-|B_{il}|\,|y_iy_l|\ge-\tfrac12|B_{il}|(y_i^{2}+y_l^{2})$
+whatever the signs of $B_{il}$, $y_i$ and $y_l$, and
+$|B_{il}|=|B_{li}|$,
+\begin{equation*}
+  y^{\transpose}By=\sum_iB_{ii}y_i^{2}+\sum_{i\ne l}B_{il}y_iy_l
+  \ge\sum_iB_{ii}y_i^{2}-\tfrac12\sum_{i\ne l}|B_{il}|\big(y_i^{2}+y_l^{2}\big)
+  =\sum_iy_i^{2}\Big(B_{ii}-\sum_{l\ne i}|B_{il}|\Big)
+  \ge\gamma\,\|y\|^{2},
+\end{equation*}
+the equality because the two halves of the double sum are equal after the
+indices are exchanged, $|B_{il}|$ being symmetric in $i$ and $l$.
+
+\emph{(ii), the bound.} Let $x\in\mathbb{R}^{2n}$, $x\ne0$, and put
+$y\coloneqq V^{-1}x\ne0$. Then
+$x^{\transpose}\widetilde Rx=y^{\transpose}V^{\transpose}\widetilde RVy
+=y^{\transpose}By\ge\gamma\|y\|^{2}$, and $\|x\|^{2}=\|Vy\|^{2}$ lies
+between $(1-\theta)\|y\|^{2}$ and $(1+\theta)\|y\|^{2}$ by
+\eqref{eq:gram-sandwich}. If $\gamma\ge0$, then
+$\|y\|^{2}\ge\|x\|^{2}/(1+\theta)$ gives
+$\gamma\|y\|^{2}\ge\gamma\|x\|^{2}/(1+\theta)$. If $\gamma<0$, then
+$\|y\|^{2}\le\|x\|^{2}/(1-\theta)$, the denominator being positive, gives
+$\gamma\|y\|^{2}\ge\gamma\|x\|^{2}/(1-\theta)$. In either case the Rayleigh
+quotient $x^{\transpose}\widetilde Rx/x^{\transpose}x$ is at least the
+right-hand side of \eqref{eq:least-eigenvalue-bound}. Since $x$ was
+arbitrary, so is $\lmin(\widetilde R)$, the minimum of that quotient, and
+$\lmin(\widetilde R)=\lmin(R)$ by (i).
+
+\emph{(iii).} The real and imaginary parts of an element of
+$\mathbb{Q}(i)$ are rational, so $\widetilde R$ is rational; $B$ and $E$
+are sums of products of rationals; $|B_{il}|$, the sums and the minimum
+defining $\gamma$ are rational; $\sum_{i,l}E_{il}^{2}\le\theta^{2}$,
+$0\le\theta$ and $\theta<1$ compare rationals; and $1\pm\theta>0$ is
+rational, so the quotient is.
+
+\emph{(iv).} $-R$ is Hermitian, its real embedding is $-\widetilde R$, and
+its eigenvalues are those of $R$ with the sign reversed, so the largest
+eigenvalue of $R$ is $-\lmin(-R)$, and a lower bound on $\lmin(-R)$ from
+(ii) gives an upper bound on it.
+\end{proof}

@@ -1,0 +1,101 @@
+% ---
+% id: receiver/component-catalogue/ex:bb84
+% kind: ex
+% title: "A BB84 receiver compiled from the catalogue"
+% summary: >-
+%   A four-detector BB84 receiver with a probe path, declared from three
+%   catalogue entries, compiles to a unitary instrument matrix with rank-one
+%   channel port Grams. Its dropped wave-plate phase is invisible at the ports,
+%   and eliminating the vacuum probe inputs is exact.
+% prominence: standard
+% status: accepted
+% uses: [receiver/cor:phases, receiver/def:compile, receiver/cor:compiled-instrument, thm:catalogue-admissibility, receiver/thm:representation-independence, receiver/lem:vacelim, receiver/thm:port-grams]
+% mentions: [ex:bb84bound, def:catalogue-entries]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "receiver/cor:compiled-instrument is in uses because the example applies results stated of a receiver instrument (thm:representation-independence (iii) and (iv), lem:vacelim, thm:port-grams (iv)) to the matrix it compiles from a declared element graph."
+% ---
+
+A four-detector BB84 receiver with a probe path can be declared from three
+\tref{catalogue entries}. The example shows that the catalogue and its conventions
+express such a receiver, exhibits a case where a dropped wave-plate phase is
+harmless \emph{for the reason Corollary~\ref{cor:phases} gives}, and supplies
+the numbers used in Example~\ref{ex:bb84bound}.
+
+\begin{example}\label{ex:bb84}
+Declare eight modes: a channel path $\Chan$ with $(\Chan_H,\Chan_V)$, a probe
+path $\Prb$ with $(\Prb_H,\Prb_V)$, a $Z$ arm with $(Z_H,Z_V)$ and an $X$ arm
+with $(X_H,X_V)$. Declare $\InpC=\{\Chan_H,\Chan_V\}$,
+$\InpS=\{\Prb_H,\Prb_V\}$, and four single-mode ports
+$\Port{H}=\{Z_H\}$, $\Port{V}=\{Z_V\}$, $\Port{+}=\{X_H\}$,
+$\Port{-}=\{X_V\}$, with unit efficiencies
+$\eta_H=\eta_V=\eta_+=\eta_-=1$ on the four ports, so that the
+\tref{terminal detector-efficiency layer} $D_\eta$ of Definition~\ref{def:compile} is the
+identity and the \tref{compiled instrument matrix}
+$\Gmat=D_\eta\Gmat_\Grph$ is $\Gmat_\Grph$ itself. Declare the chain
+\begin{enumerate}[label=(\arabic*),leftmargin=2.2em]
+\item C1 with $x=p_Z$, $\varphi=0$, $y_1=y_2=0$, on the ordered path pair
+  $(\Chan,\Prb)$, so that (per polarization) the first output, on the
+  $\Chan$ path, carries $\sqrt{p_Z}\,\Chan+\sqrt{p_X}\,\Prb$ and the second,
+  on the $\Prb$ path, carries $\sqrt{p_X}\,\Chan-\sqrt{p_Z}\,\Prb$, with
+  $p_X=1-p_Z$;
+\item C9 on all eight modes, the permutation exchanging $\Chan_H,\Chan_V$
+  with $Z_H,Z_V$ and $\Prb_H,\Prb_V$ with $X_H,X_V$, so that
+  $Z\leftarrow\sqrt{p_Z}\,\Chan+\sqrt{p_X}\,\Prb$ and
+  $X\leftarrow\sqrt{p_X}\,\Chan-\sqrt{p_Z}\,\Prb$;
+\item C3 preset $\mathrm{HWP}(\pi/8)$ on the $X$ arm only.
+\end{enumerate}
+Every two of these elements whose supports intersect are ordered by the
+declared chain ((1) and (2) share the $\Chan$ and $\Prb$ modes, (2) and (3)
+the $X$ arm), so (E3) holds; (E1) holds because the three declared
+entries carry in-domain parameters, and (E2) because the declaration is a
+chain and a chain has no cycle. With (E1), (E2) and (E3) the declaration is
+\tref{well formed}, so by Corollary~\ref{cor:compiled-instrument} this declaration is
+a \tref{receiver instrument}, and the results stated of a receiver
+instrument apply to it. Compiling by \eqref{eq:compile} and reading
+off $\Gmat_{\Inp}$ with rows ordered $(H,V,+,-)$ and columns ordered
+$(\Chan_H,\Chan_V,\Prb_H,\Prb_V)$:
+\begin{equation}\label{eq:bb84G}
+  \Gmat_{\Inp}=
+  \begin{pmatrix}
+    \sqrt{p_Z} & 0 & \sqrt{p_X} & 0\\
+    0 & \sqrt{p_Z} & 0 & \sqrt{p_X}\\
+    -i\sqrt{\tfrac{p_X}{2}} & -i\sqrt{\tfrac{p_X}{2}} &
+      \phantom{-}i\sqrt{\tfrac{p_Z}{2}} & \phantom{-}i\sqrt{\tfrac{p_Z}{2}}\\
+    -i\sqrt{\tfrac{p_X}{2}} & \phantom{-}i\sqrt{\tfrac{p_X}{2}} &
+      \phantom{-}i\sqrt{\tfrac{p_Z}{2}} & -i\sqrt{\tfrac{p_Z}{2}}
+  \end{pmatrix},
+\end{equation}
+which is unitary: each column has squared norm $p_Z+2\cdot\frac{p_X}{2}=1$ or
+$p_X+2\cdot\frac{p_Z}{2}=1$, and the six pairwise inner products vanish
+(for instance
+$\langle\Chan_H,\Chan_V\rangle=\frac{p_X}{2}-\frac{p_X}{2}=0$ and
+$\langle\Chan_H,\Prb_H\rangle=\sqrt{p_Zp_X}-2\cdot\frac{\sqrt{p_Zp_X}}{2}=0$).
+
+\emph{The phase.} Rows $3$ and $4$ of \eqref{eq:bb84G} carry the overall factor
+$-i$: it is the physical retarder phase $e^{-i\delta/2}$ of
+\eqref{eq:retarder} at $\delta=\pi$, which an implementation that writes
+$\mathrm{HWP}$ as the real matrix
+$\left(\begin{smallmatrix}\cos2\theta&\sin2\theta\\
+\sin2\theta&-\cos2\theta\end{smallmatrix}\right)$ silently drops. Here that
+factor is a \emph{per-port} phase --- both affected rows belong to ports that
+are never recombined --- so by Theorem~\ref{thm:representation-independence}\,(iii) the port Grams, and
+hence the POVM, are identical either way. That is a statement about this
+receiver and this factor, not about phases in general.
+
+\emph{The channel-only receiver.} With the probe off (vacuum on $\InpS$),
+Lemma~\ref{lem:vacelim} lets the $\Prb$ columns be dropped: the channel-only
+instrument is the left $4\times2$ block of \eqref{eq:bb84G}, and the
+channel port Grams are
+\begin{equation}\label{eq:bb84grams}
+  A_H=p_Z\dyad{H},\quad A_V=p_Z\dyad{V},\quad
+  A_+=p_X\dyad{+},\quad A_-=p_X\dyad{-},
+\end{equation}
+each of rank one --- so by Theorem~\ref{thm:representation-independence}\,(iv) this receiver \emph{is}
+exactly a one-mode-per-port device, and
+$A_\Sigma=p_Z(\dyad{H}+\dyad{V})+p_X(\dyad{+}+\dyad{-})=\id_2$: lossless, as
+the construction promises. Dropping the $\Prb$ columns is the vacuum
+elimination of Theorem~\ref{thm:port-grams}\,(iv), not a second model.
+\end{example}

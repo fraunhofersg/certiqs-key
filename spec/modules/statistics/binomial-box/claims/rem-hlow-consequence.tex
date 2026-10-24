@@ -1,0 +1,65 @@
+% ---
+% id: statistics/binomial-box/rem:hlow-consequence
+% kind: rem
+% title: "Scope of the statements on infeasibility and minimal divergence"
+% summary: >-
+%   Under [[A-REACH]] a box built from the honest envelope contains the
+%   statistics of a feasible state, which rules out an infinite value and a
+%   positive minimal divergence in the consuming engine. The assumption is
+%   never verified here; a positive bound on that divergence refutes it.
+% prominence: standard
+% status: accepted
+% uses: [thm:honest-containment]
+% mentions: [meat-core/rem:hlow-range, meat-core/req:infinite-value, meat-core/prop:minimal-divergence, meat-core/req:unreachable-acceptance-set]
+% assumes: [A-REACH]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:hlow-consequence}
+The consuming engine's contract identifies \eqref{eq:infeasible} as the source of
+$\hlow=+\infty$ (\xref{meat-core/rem:hlow-range}) and requires that value to
+propagate rather than be clamped (\xref{meat-core/req:infinite-value}).
+Theorem~\ref{thm:honest-containment}\,(ii) rules that
+condition out for a set built by $\mathsf{Acc}$ from an
+\tref{honest envelope} one of whose laws is reachable --- for a single law,
+from a reachable honest distribution --- which is the precise sense in which
+this module \emph{surfaces} infeasibility rather than passing it through: the
+construction is ruled out as a source of \eqref{eq:infeasible}, so when the
+consuming engine meets that condition on a set built by $\mathsf{Acc}$, the
+contrapositive of Theorem~\ref{thm:honest-containment}\,(ii) identifies its
+cause as a failure of A-REACH, an incompatibility of the declared honest
+envelope with the declaration, instead of leaving an extended-real value with
+no diagnosis.
+
+The same pair has a finite counterpart. Under A-REACH,
+Theorem~\ref{thm:honest-containment}\,(ii) gives
+$\mathbf{p}^{\mathrm{hon}}\in\acSet$ with
+$\mathbf{p}^{\mathrm{hon}}=\Phimap[\omega^{\mathrm{hon}}]$ and
+$\omega^{\mathrm{hon}}\in\Feas$, so the minimal divergence between the
+accepted distributions and the statistics of the feasible set, the quantity
+$\sfD_{\min}$ of \xref{meat-core/prop:minimal-divergence}, is zero for a set
+built by $\mathsf{Acc}$, and the consuming engine's value has no positive
+penalty floor. Contrapositively, a positive lower bound on $\sfD_{\min}$,
+which the consuming engine forms on the runs it checks
+(\xref{meat-core/req:unreachable-acceptance-set}), shows that A-REACH fails
+for the declared envelope and the declaration. The converse does not hold:
+the box contains the envelope set and may meet the statistics of the
+feasible set where no law of the envelope set does, so a bound that is not
+positive says nothing about A-REACH.
+
+The statement has two limits. First, it is conditional on A-REACH
+(Assumption~\ref{ass:reach}), which this module never verifies, and which the
+consuming engine can refute but never establish: whether some
+law of the declared honest envelope is producible by the declared protocol
+is a joint property of whoever declares the honest model and of the
+declaration, and asserting it here would assert something this module cannot
+see. Second, it excludes the condition \eqref{eq:infeasible}; whether $\hlow$
+is then finite is a statement about the consuming engine's objective and
+belongs to that contract, which is why it is quoted here and used nowhere in
+a proof. At $\hlow=+\infty$ the consuming engine emits no key-length claim
+and reports the mismatch between the declaration and the acceptance set
+(\xref{meat-core/req:infinite-value}), and nothing here changes that.
+\end{remark}

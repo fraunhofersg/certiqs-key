@@ -1,0 +1,50 @@
+% ---
+% id: statistics/ass:reach
+% kind: ass
+% title: "An honest law produced by a feasible state"
+% summary: >-
+%   Some feasible state of the consuming declaration produces a law of the
+%   declared honest envelope, for a single declared law that law itself. It
+%   rules out an incompatibility of the honest model with the declaration.
+% prominence: standard
+% status: accepted
+% uses: [def:envelope]
+% mentions: [protocol-compiler/def:feasible]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-REACH
+% verification: never
+% category: honest-model
+% affects: [secrecy, completeness]
+% user_statement: >-
+%   Your honest model fits your protocol declaration: a state the
+%   declaration admits as feasible produces acceptance statistics in your
+%   declared honest envelope, or equal to your single declared honest law. If
+%   it fails, the declared devices do not describe the statistics and a key
+%   length for them is not warranted. The engine's own honest models
+%   are built to match the declared Alice marginal; nothing proves this
+%   premise for them. Unless switched off, the engine checks every run whose
+%   honest statistics you supply or whose declaration carries a constraint
+%   you declared: from a proven mismatch it states a cap on the probability
+%   that devices behaving as the declaration says pass your acceptance test,
+%   and refuses the run where that cap is at most one half, a threshold you
+%   can set. On an unchecked run a mismatch goes
+%   undetected and this premise is yours to vouch for.
+% lean:
+% notes: "affects lists secrecy although no proof of secrecy uses the assumption: its failure is evidence that the device premises a secret key rests on do not hold for what produced the statistics, and the divergence penalty then lets the key length grow with the mismatch (meat-core/prop:minimal-divergence). verification stays never: the engine refutes the assumption on the runs meat-core/req:unreachable-acceptance-set checks, where it forms a positive bound on an acceptance set built from the envelope (statistics/binomial-box/rem:hlow-consequence), and decides it true on no route."
+% ---
+
+The premise is an obligation of whoever declares the honest model, together
+with the declaration: it is a joint property of the declared
+\tref{honest envelope} and of the protocol declaration the \tref{consumer}
+solves.
+
+\begin{assumption}\label{ass:reach}
+(i) There exists $\omega^{\mathrm{hon}}\in\Feas$, the feasible set of the
+consuming declaration (\xref{protocol-compiler/def:feasible}), with
+$\Phimap[\omega^{\mathrm{hon}}]\in\mathsf{H}$, the \tref{envelope set} of the
+declared honest envelope (Definition~\ref{def:envelope}); for a single
+declared law $\honest$ (the degenerate envelope, $\mathsf{H}=\{\honest\}$)
+this reads $\Phimap[\omega^{\mathrm{hon}}]=\honest$.
+\end{assumption}

@@ -1,0 +1,44 @@
+% ---
+% id: protocol-compiler/req:chain-refusals
+% kind: req
+% title: "Refusals of the interface conditions on a chain"
+% summary: >-
+%   A chain failing a condition on it is refused where it is consumed, before a
+%   declaration exists, with a reason naming the condition; the licensed-only
+%   and source-mode rules have reasons of their own. No refusal emits a
+%   declaration.
+% prominence: standard
+% status: accepted
+% uses: [def:chaincond, thm:chain-consumption]
+% mentions: [rem:source-segment-rules]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.chain:check_chain
+% lean:
+% notes: "The one-factor receiver segment is check_chain's; the per-factor segments, the source segment, the licensed-only rule and the source-mode rule are realised by chain:check_factor_chains, chain:check_source_segment, chain:check_licensed_only and the source-segment admission step of compile."
+% ---
+
+Theorem~\ref{thm:chain-consumption}\,(i) and (i$'$) make (C1)--(C5),
+(S1)--(S4), (A1)--(A3), the licensed-only rule and the declared-source-mode
+rule decidable by finite computation on the presented record. The grounds of
+the two source-segment rules are Remark~\ref{rem:source-segment-rules}.
+
+\begin{requirement}\label{req:chain-refusals}
+The engine decides the \tref{interface conditions on a chain} of
+Definition~\ref{def:chaincond} where the chain is consumed, before a
+declaration exists, and refuses a chain that fails one; no refusal emits a
+declaration.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item A chain failing one of (C1)--(C5) or (S1)--(S4) is refused with
+  \iface{chain_interface_condition_failed}, naming the condition and, for
+  (C1)--(C5) in the general format, the factor, and, for (C4) and (S3), the outcome or
+  signal index at which the first entry disagreed. A non-empty
+  \tref{source segment} failing one of (A1)--(A3) is refused.
+\item Beside a non-empty source segment, an entry declared general is refused
+  with \iface{general_entry_beside_source_segment}, naming the entry.
+\item A declaration carrying a non-empty source segment in
+  \tref{untrusted-source mode} is refused with
+  \iface{source_segment_in_untrusted_mode}.
+\end{enumerate}
+\end{requirement}

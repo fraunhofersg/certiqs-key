@@ -1,0 +1,464 @@
+% ---
+% id: meat-core/frank-wolfe/req:certified-evaluation
+% kind: req
+% title: "The certified evaluation of the first-order bound"
+% summary: >-
+%   The engine forms the bracket again at the final points, every step exact
+%   or rigorously enclosed, and reports the best at the certified tier;
+%   if a companion certifies none, on the searched declaration under
+%   [[A-SNAP]] unless strict_snaps is set. Else the first-order number
+%   stays, or a strict run refuses.
+% user_statement: >-
+%   After the search, the engine recomputes the bound at the few points the
+%   reported number came from, in an arithmetic that encloses every rounding,
+%   from the declaration's data. Where that succeeds at some point, the key
+%   rate is certified: no step between the declaration and the number rests
+%   on floating-point arithmetic being accurate enough. Where it fails on the
+%   model the engine holds of your device, it is tried again on the moved
+%   measurement the search ran on, unless the run sets strict_snaps; a rate
+%   certified there is reported as certified, and the report names the
+%   premise that your device performs the moved measurement on the blocks
+%   concerned ([[A-SNAP]]). Where both fail, for instance because a detector
+%   element has a rank no enclosure fixes or a multiclick weight was computed
+%   in floating point, the report keeps the first-order number and says why;
+%   a strict run is refused instead.
+% prominence: standard
+% status: implemented
+% uses: [lem:certified-bracket, lem:certified-bracket-enclosed, cor:certified-keylength, cor:certified-keylength-reference, thm:firstorder, lem:feasible-side-dual, def:first-order-setting, rem:acc-side, req:verified-feasible-side, req:bracket-on-reference, req:first-order-withdrawal, req:acceptance-geometries, req:acceptance-iterate-exact, req:first-order-clamp, meat-core/lem:kraus-freedom, meat-core/cor:full-gradient, meat-core/lem:branch-support, meat-core/req:reported-key-length, meat-core/def:max-key-length, meat-core/thm:choi, meat-core/def:support-frame, foundations/def:tiers, foundations/req:tiers, foundations/req:exact-island, foundations/req:rounding-direction, foundations/req:snap-reference, foundations/lem:least-eigenvalue-bound, foundations/cor:least-eigenvalue-over-enclosure, foundations/cor:rank-over-factor-enclosure, foundations/def:factor-enclosure, foundations/lem:matrix-function-perturbation, foundations/lem:recentred-enclosure]
+% mentions: [rem:fo-arithmetic, rem:certified-scope, receiver/req:eig-ledger-row, receiver/req:evaluation-label, reductions/wpfss/def:weight-route, foundations/ass:snapped-measurement]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.certified:evaluate
+% lean:
+% notes: "The cross-check of (iv)(c) sets nothing aside that the claims allow: by (H-FAC) and the entrywise enclosure property the companion's block lies in both enclosures, so an inconsistency is a defect of a carrier, and it fails every point of the companion and withdraws the companion's bracket, since no rule can tell which of the two enclosures is wrong and the statistics and the first-order number read the entrywise one. Its fix is no change to the declaration: it is an engine defect in the carriers, to be reported. The fallback of (i) is not run under strict_snaps: a number it formed would rest on A-SNAP, which that option refuses, while the companion's first-order number rests on no snap premise for the blocks the companion carries. The factor rule of (iv) has no full-rank case through an enclosure of L W L*: an element of full rank is decided by the entrywise rule on every device measured, and the case adds code no measured run reads."
+% ---
+
+The first-order number is formed in binary64, from maps, a frame and a
+gradient that no claim bounds (Remark~\ref{rem:fo-arithmetic}). Lemma~\ref{lem:certified-bracket}
+needs, at a point, only enclosures of the gradient, and
+Corollary~\ref{cor:certified-keylength} turns the best certified bracket into
+a key length. The gradient's maps can be built from factors whose rank is
+fixed (Lemma~\ref{lem:kraus-freedom}), every matrix function then acts on a
+positive definite matrix whose spectrum an enclosure bounds
+(\xref{foundations/lem:matrix-function-perturbation}), and an enclosure of an
+element of the measured family fixes its rank where its non-zero part is
+positive definite throughout
+(\xref{foundations/cor:least-eigenvalue-over-enclosure}) or, for an element
+carried with an enclosed factor, where the factor's columns are independent
+throughout (\xref{foundations/cor:rank-over-factor-enclosure}). A computation
+in ball arithmetic is \tref{rigorously enclosed}; it lies outside the
+\tref{exact island} and is no error budget
+(\xref{foundations/req:exact-island}). Of the search the evaluation reads
+the points, and the multipliers of its solves as candidates of which nothing
+is assumed; any point at which the lemma's hypotheses are established serves,
+and a point that fails anywhere is dropped, never repaired. Certifying only
+a few of the points the first-order number reads keeps the evaluation a
+small fraction of the run's cost; a maximum over fewer certified brackets is
+still a lower bound. Where a
+companion certifies no point, the evaluation is made once more on the
+declaration the run searched: a number certified there bounds that
+declaration's value, so the blocks the companion carried rest on the snap
+premise (\xref{foundations/ass:snapped-measurement}), and the number is
+never combined with the companion's. Remark~\ref{rem:certified-scope} says
+what the resulting number still rests on.
+
+\begin{requirement}\label{req:certified-evaluation}
+On every run that forms a first-order number, unless it sets the option
+\iface{certified_evaluation} to \iface{off}, its default being \iface{on},
+the engine forms a certified number as follows, after the first-order number
+is formed and before a key length is reported.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{The declaration and the points.} It works on the declaration the
+  run's first-order number is formed on, at the points that number is formed
+  from: on an admitted reference companion where
+  Requirement~\ref{req:bracket-on-reference}\,(iii) applies, at the at most
+  five of the points part~(i) of that requirement evaluates, of the search
+  and of the polish together, that contribute there with the largest
+  brackets on the companion, a point that is in both sets counted once and
+  ties broken by the sequence in which the search and then the polish
+  consumed them, each with the solve part~(ii) of it
+  makes there; otherwise on the declaration the run searched, at the at most
+  four members of the index set of its bound
+  (Requirement~\ref{req:first-order-withdrawal}) with the largest brackets,
+  ties broken by the order of the run, and the last point the search
+  assessed, each with the search's solve there. \emph{The fallback}: where it
+  has worked on a companion by (ii)--(v) and certified no point there, it
+  works once more, by (ii)--(v), on the declaration the run searched, at the
+  points and with the solves of the second case, unless the run declares the
+  strict option \iface{strict_snaps} of
+  \xref{foundations/req:snap-reference}\,(iv); the companion's results are
+  kept for the record (ix). The fallback runs nowhere else: not where a point
+  of the companion is certified, not where no companion's bracket counts, not
+  where the companion's bracket is withdrawn by (iv), and not where the
+  arithmetic the evaluation needs is not available. Where the companion's
+  bracket is withdrawn by (iv), the run's first-order number is formed on the
+  declaration the run searched (Requirement~\ref{req:bracket-on-reference}\,(iv)),
+  and the evaluation works once more there, by the second case above, as on
+  any run whose first-order number is formed there. Each point
+  is taken exactly: its acceptance-side component as the exact rational
+  iterate formed on the exact island
+  (Requirement~\ref{req:acceptance-iterate-exact}), a point whose component
+  was not so formed being not certified
+  (\iface{acceptance_iterate_not_exact}), and each Choi block as the exact
+  Hermitian part of the dyadic matrix its binary64 entries are.
+\item \emph{The data.} Every quantity is formed from the data of the
+  declaration it works on, taken exactly, every binary64 number as the dyadic
+  rational it is and the acceptance set as its exact rational data, and, for
+  the blocks a reference companion replaces, from the exact centres and radii
+  of the entrywise enclosures its compilation carries, recentred as
+  \xref{foundations/lem:recentred-enclosure} recentres them, and from the
+  exact centres and radii of the \tref{matrix box} and the exact core of
+  every \tref{factor enclosure} its compilation carries
+  (\xref{foundations/def:factor-enclosure}). No map, frame,
+  gradient, support, rank, eigenvalue or check value the engine computed in
+  binary64 enters it. In \tref{trusted-source mode} the frame of each Alice
+  sector is $W_{\mathsf t}$ of Theorem~\ref{thm:choi} for the
+  \tref{support frame} the engine constructed
+  (Definition~\ref{def:support-frame}), held as an enclosure formed by a
+  rigorously enclosed computation; where the engine forms none, every point
+  is not certified (\iface{frame_not_enclosed}).
+\item \emph{The maps in factor form.} At every joint pair that is not
+  \tref{key-inert}, every kept one under a \tref{dropped set}, the branch
+  operators and their pinched blocks are formed through factors
+  $S'_{xv}$ with the Gram matrices of
+  Lemma~\ref{lem:kraus-freedom}\,(v), built from factor forms
+  $E^{\dagger}\widetilde XE$ of the elements of Alice's measurement or
+  ensemble and of the measured family that enter them, $\widetilde X$
+  positive definite and $E$ either an exact matrix of full row rank
+  (\xref{foundations/cor:least-eigenvalue-over-enclosure}\,(iii)) or, on a
+  block whose rank the factor rule of (iv) fixes, the adjoint $L^{\dagger}$
+  of a factor $L$ of its factor enclosure, held through the box of the
+  adjoints, of full row rank at every factor
+  (\xref{foundations/cor:rank-over-factor-enclosure}\,(ii)), with
+  $\widetilde X$ the exact core: on exact data from an exact factorisation,
+  on a block a companion carries with a positive radius by the rule of (iv).
+  In the general format an element of the measured family is the tensor
+  product of its blocks, one per measured factor, and its factor form is
+  the tensor product of theirs (Lemma~\ref{lem:certified-bracket-enclosed}\,(b)),
+  $E$ and $\widetilde X$ the tensor products of the blocks' $E$ and
+  $\widetilde X$, however many of its blocks a companion replaces and
+  however many of them are held through boxes: $E$ is then held through an
+  enclosure of the Kronecker product of their enclosures, which contains it
+  at every member, and has full row rank at every member, $EE^{\dagger}$
+  being the tensor product of the blocks' $EE^{\dagger}$, each positive
+  definite. No rank is read off a computed spectrum, and a matrix function applied to
+  an operator $A$, a branch operator $X$ or a pinched block
+  $(Z_j\otimes\id)X^{p}(Z_j\otimes\id)$ of one, acts on its compression
+  $Q^{\dagger}AQ$ by an isometry $Q$, held through an enclosure, as follows.
+  \begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+  \item \emph{Containment.} The range of $Q$ is established to contain
+    $\operatorname{supp}A$, exactly or by an argument on the factors and the
+    enclosures that holds at every value they enclose. The range of the
+    side-by-side listing of the pair's pass-class factors contains the support
+    of every branch operator they form, and the pinching projector applied to
+    a subspace containing $\operatorname{supp}X$ contains the support of the
+    pinched block (Lemma~\ref{lem:kraus-freedom}\,(iv)(a)). Where the
+    listing factors as $T_{\mathrm{out}}\widetilde B\,T_{\mathrm{in}}$, with
+    $\widetilde B$ an exact matrix of full column rank, formed exactly,
+    $T_{\mathrm{out}}$ the maps applied after it, certified injective by a
+    Gram matrix certified positive definite, and $T_{\mathrm{in}}$ the maps
+    applied before it, an orthonormal basis of
+    $\operatorname{ran}(T_{\mathrm{out}}\widetilde B)$ is established from
+    $\widetilde B$. On exact data $\widetilde B$ comes from an exact rank
+    factorisation of the exact matrix of the factors of the
+    \tref[pass class]{pass classes}, and $T_{\mathrm{in}}$ holds the rest of
+    that factorisation and the frame $W_{\mathsf t}\otimes\id$ in the Choi
+    form. Where an element is held through the box of the adjoints of the
+    factors of one or more of its blocks, $\widetilde B$ is, for each pass class, the exact factor of
+    Lemma~\ref{lem:certified-bracket-enclosed}\,(b), formed by exact rank
+    factorisations of the rows whose factors are exact and, per tuple of the
+    blocks held through boxes, of the stack of Alice's factors tensored with
+    the exact factors of the elements whose blocks held through boxes are
+    that tuple, the kind that lemma fixes for a block being the third for a
+    block that the factor rule of (iv)(b) decides not zero, fixing its rank,
+    the first for a block decided zero, and the second otherwise, an exact
+    block included. The
+    rows of such elements are grouped by their tuples, each block named by
+    its factor, its sector and its letter, and never by the equality of
+    their boxes: elements whose tuples name the same blocks share a group,
+    whatever their boxes, and two distinct blocks with equal boxes are
+    distinct entries of the tuples. Where the form the engine holds of such
+    an element is not of this shape (its parts and the blocks naming them
+    differing in number, a split into exact and boxed parts held where no
+    block of the element is held through a box or missing where one is, or
+    one tuple of blocks at two positions or of two dimensions), no claim
+    admits it, and every point is not certified
+    (\iface{boxed_form_inconsistent}), a defect of the engine and not of the
+    declaration. $T_{\mathrm{in}}$ holds that lemma's
+    matrix $C$, the stack of $C_0$ and of each tuple's
+    $(C_{\beta}\otimes E^{\mathrm{box}}_{\beta})U_{\beta}$, the columns of
+    each such block permuted by its own $U_{\beta}$ and by no other
+    permutation, which lies in an enclosure containing it at every member,
+    and the frame. That range contains the range of the listing at every member,
+    and equals it at every member where the product of the maps in
+    $T_{\mathrm{in}}$ is established to have full row rank at every member;
+    otherwise the basis spans a subspace containing the range, which (a)
+    admits and the floor of (b) decides. $T_{\mathrm{out}}$ is block
+    diagonal over the outcome pairs, so the pinching projectors commute with
+    it, and $(Z_j\otimes\id)\operatorname{ran}(T_{\mathrm{out}}\widetilde B)
+    =\operatorname{ran}\big(T_{\mathrm{out}}(Z_j\otimes\id)\widetilde B\big)$,
+    whose basis comes in the same way from an exact rank factorisation of
+    $(Z_j\otimes\id)\widetilde B$. A point at which containment is not
+    established is not certified (\iface{support_not_established}).
+  \item \emph{The floor.} A positive lower bound on $\lmin(Q^{\dagger}AQ)$
+    is then established, over the enclosures at every value they contain,
+    which with (a) proves $\operatorname{ran}Q=\operatorname{supp}A$
+    (Lemma~\ref{lem:kraus-freedom}\,(iv)(b)) at every member and makes the
+    compression that of part (iv)(c) of that lemma. A point at which it is
+    not is not certified (\iface{floor_not_certified}).
+  \end{enumerate}
+\item \emph{The rank rule over an enclosure.} A block a companion carries
+  with a positive radius is decided, and its rank fixed, by the first of
+  two rules that does so.
+  \begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+  \item \emph{The entrywise rule.} The block is decided when every entry of
+    its entrywise enclosure has centre and radius $0$, then zero, or some
+    entry's centre exceeds its radius in modulus, then not zero. Its factor
+    form is that of
+    \xref{foundations/cor:least-eigenvalue-over-enclosure}\,(iv): the rows
+    and columns whose every entry has centre and radius $0$ are dropped, and
+    the rest must have a positive lower bound on its least eigenvalue over
+    the enclosure.
+  \item \emph{The factor rule}, where the compilation carries a factor
+    enclosure of the block and the entrywise rule leaves the block
+    undecided or fixes no rank for it. With no column the block is decided
+    zero (\xref{foundations/cor:rank-over-factor-enclosure}\,(i)). With
+    $k\ge1$ columns and a floor of part (ii) of that corollary established,
+    $G$ and $\rho$ formed as its part (iii) forms them or by a rigorously
+    enclosed computation of $L^{\dagger}L$ over the box, the block is
+    decided not zero and its factor form is $L^{\dagger}$, held through the
+    box of the adjoints, with the core as $\widetilde X$.
+  \item \emph{The cross-check}, wherever the compilation carries a factor
+    enclosure of the block, whichever rule fixes its rank. The engine
+    encloses $LWL^{\dagger}$ entry by entry over the box of the factor
+    enclosure, in exact rational arithmetic or by a rigorously enclosed
+    computation, so that the enclosure contains $LWL^{\dagger}$ for every
+    factor $L$, every member of the factor enclosure; and it decides, as (b)
+    decides them, whether the factor enclosure has no column and, where it
+    has columns, whether a floor of part (ii) of
+    \xref{foundations/cor:rank-over-factor-enclosure} is established.
+  \end{enumerate}
+  A block that neither rule decides is undecided, and a block whose rank
+  neither fixes has no certified rank. The two enclosures of a block are
+  \emph{inconsistent} where the enclosure of $LWL^{\dagger}$ of (c) and the
+  block's entrywise enclosure are disjoint at some entry, or where one of the
+  two decides the block zero and the other decides it not zero, as (a) and
+  (c) decide them. The companion's own block lies in its entrywise enclosure
+  and, by (H-FAC) of Lemma~\ref{lem:certified-bracket-enclosed}, is a member
+  of its factor enclosure, so it lies in both enclosures and both decisions
+  hold of it: an inconsistency shows that one of the two was not formed or
+  carried as the claims that establish it say. Where the two enclosures of a
+  block are inconsistent, the factor rule is set aside for the block, every
+  point of the companion is not certified
+  (\iface{factor_enclosure_inconsistent}), whatever joint pairs the block is a
+  factor at, key-inert or not, and whichever rule would fix its rank, and the
+  companion's bracket is withdrawn with that cause
+  (Requirement~\ref{req:bracket-on-reference}\,(iv)), its first-order number
+  reading the entrywise enclosure, which may be the defective one. On a recentred
+  enclosure, the entrywise rule leaves a block undecided exactly when its
+  centre vanishes and some radius does not, its enclosure then deciding
+  neither that it vanishes nor that it does not. Where an undecided block is
+  a factor of an element of an outcome pair of a \tref{pass class} of a
+  \tref{key-live acceptance value} whose element of Alice's is not zero, or
+  a block with no certified rank is such a factor at a joint pair that is
+  not key-inert, every point is not certified (\iface{rank_not_certified}),
+  save where another block of that element is decided zero, an exact block
+  that is zero or a block a rule decides zero: the element is then zero for
+  every member, whatever its other blocks.
+  What the rule establishes is the hypothesis of
+  Lemma~\ref{lem:certified-bracket-enclosed} that such blocks are decided
+  and of fixed rank, in the sense of that lemma; its hypothesis (H-FAC), that
+  the companion's block is a member of the factor enclosure carried with it,
+  is established by the claims of the modules that form and carry that
+  enclosure, and decided by no rule here.
+\item \emph{What is established at a point.} At each point the engine
+  establishes, each step in exact rational arithmetic or in a rigorously
+  enclosed computation at a working precision of at least $128$ bits:
+  \begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+  \item every Choi block positive definite, by a positive lower bound of
+    \xref{foundations/lem:least-eigenvalue-bound} on its exact Hermitian
+    part (\iface{block_not_positive_definite}), which gives (H-SUPP) by
+    Lemma~\ref{lem:branch-support}\,(i);
+  \item (H-POS), with $q_t(\hat c)>0$ decided exactly and the lower ends of
+    the enclosures of $P^{J}_{\hat c}(J_t)$ and $K^{J}_{\hat c}(J_t)$
+    positive (\iface{positivity_not_certified}), on the exact
+    \tref{acceptance support} $\Chacc$ of \eqref{eq:chacc-def}, which is
+    also where $\hat g$ of (c) lives: for a singleton the support of its
+    one point, and for a polytope the union of the supports of its exact
+    vertices (Remark~\ref{rem:acc-side});
+  \item an enclosure $(\hat g,\delta)$ of the acceptance-side gradient and,
+    for every block $p$ of every group, an exact Hermitian $M_p$ and a
+    rational $\rho_p$ with $\|R_p-M_p\|_{\mathrm F}\le\rho_p$ for the
+    residual of Lemma~\ref{lem:certified-bracket}\,(iii), both formed by a
+    rigorously enclosed computation of the gradient of
+    Corollary~\ref{cor:full-gradient} at the point (of the dropped objective
+    under a dropped set) and of the frame: the enclosure of $R_p$ is made
+    Hermitian-centred with symmetric radii by
+    \xref{foundations/lem:recentred-enclosure}\,(iv), $M_p$ is its centre
+    rounded entrywise to dyadic rationals and kept Hermitian, and $\rho_p$
+    is a rational at least the radius that
+    \xref{foundations/cor:least-eigenvalue-over-enclosure}\,(ii) gives for
+    that centre plus a rational bound on the Frobenius norm of the
+    rounding, so that the triangle inequality gives
+    $\|R_p-M_p\|_{\mathrm F}\le\rho_p$. On a companion, the computation
+    reads each block of the measured family through its entrywise enclosure
+    where it forms $P^{J}_{\hat c}$, the term $P^{J}_{\hat c}$ of
+    $K^{J}_{\hat c}$ and the $\Gamma^{(s')}_{\hat c}$, and, where it forms
+    the deficits and the $\Delta^{(s')}_{\hat c}$, through the enclosure
+    that holds the block's factor form of (iii), its entrywise enclosure
+    where the entrywise rule of (iv) fixed the rank and its factor
+    enclosure where the factor rule did, so that the enclosures of (b) and
+    (c) hold at every pair of a set as in
+    Lemma~\ref{lem:certified-bracket-enclosed}\,(c). The
+    multipliers $Y$ and $\Lambda_r$ are read off the dual of that point's
+    solve as Requirement~\ref{req:verified-feasible-side}\,(ii) reads them in
+    these respects only: the operators the dual's multipliers represent,
+    each replaced by its exact Hermitian part; zero where the solve returned
+    no finite dual; and the exact shift that makes the multiplier of an
+    inequality row positive semidefinite. The rule of that item that zeroes
+    the row multipliers of an Alice sector without a bound on its frame's
+    error is not read, the rows here being built from the enclosed exact
+    frame;
+  \item $b^{\mathrm A}_t$ as the exact minimum of
+    $\langle\hat g,\cdot\rangle$ over $\acSet$ for a geometry of
+    Requirement~\ref{req:acceptance-geometries} that it solves exactly, less
+    $\delta$, a point of any other geometry being not certified
+    (\iface{acceptance_geometry_not_certified}); and $b^{\mathrm F}_t$ by
+    Lemma~\ref{lem:certified-bracket}\,(iii), each $\ell_p$ from
+    \xref{foundations/lem:least-eigenvalue-bound}, in exact rational
+    arithmetic;
+  \end{enumerate}
+  and the point's certified bracket $b^{\mathrm A}_t+b^{\mathrm F}_t$. A
+  point at which any of these is not established is not certified, with the
+  reason named, and contributes nothing.
+\item \emph{The number, its key length and its tier.} Where some point is
+  certified, the run's certified number
+  $\underline{h}^{\mathrm{cert}}_{\alpha}$ (\iface{certified_bound}) is the
+  largest certified bracket, \eqref{eq:hcert}, an exact rational, entering
+  every binary64 use rounded toward $-\infty$ as
+  \xref{foundations/req:rounding-direction} rounds an emitted bound; the run
+  reports it at the \tref{certified} tier (\xref{foundations/req:tiers}).
+  The key length it reports is that of
+  Corollary~\ref{cor:certified-keylength} (on a reference companion, for the
+  protocol it declares, Corollary~\ref{cor:certified-keylength-reference}) at
+  $h\coloneqq\max\{0,\underline{h}^{\mathrm{cert}}_{\alpha}\}$, with the
+  parameters of the run, and it is the \tref{maximal key length} of
+  Definition~\ref{def:max-key-length} with $h$ in place of $\hlow$, computed
+  exactly: $c\coloneqq n\,h-\lEC-\lceil\log_2(1/\eev)\rceil+1$ is formed
+  exactly, a rational, $\lceil\log_2(1/\eev)\rceil$ being the least integer
+  $k$ with $2^{k}\ge1/\eev$, decided by comparing the rational $1/\eev$ with
+  powers of two; the order $\alpha$ is taken exactly, as the dyadic rational
+  its binary64 value is, so that $\frac{\alpha}{\alpha-1}$ is a non-zero
+  rational; the term
+  $\tau\coloneqq\frac{\alpha}{\alpha-1}\log_2(1/\epa)$ exactly where
+  $1/\epa$ is a power of two, $\tau$ being then rational, and otherwise
+  through an enclosure $[L,U]\ni\tau$ formed in exact arithmetic or by a
+  rigorously enclosed computation and refined until
+  $\lfloor c-U\rfloor=\lfloor c-L\rfloor$, which is then
+  $\lfloor c-\tau\rfloor$; the refinement ends, $\tau$ being irrational
+  there, as a non-zero rational multiple of $\log_2(1/\epa)$, which is
+  irrational for a dyadic rational $\epa$ whose reciprocal is not a power
+  of two, so that $c-\tau$ is not an integer. The key length is
+  $\max\{0,\lfloor c-\tau\rfloor\}$, and the rule of
+  Requirement~\ref{req:reported-key-length} is met as written. The clamp is
+  recorded as
+  Requirement~\ref{req:first-order-clamp} records it. The
+  first-order number and the key length formed from it, by
+  Requirement~\ref{req:bracket-on-reference}\,(iii) or without a companion,
+  are recorded beside it (\iface{first_order_key_length}). In the fallback
+  of (i), the certified number is the largest certified bracket on the
+  declaration the run searched, a lower bound on that declaration's value
+  and not on the companion's, and its key length is that of
+  Corollary~\ref{cor:certified-keylength} on that declaration, never that of
+  Corollary~\ref{cor:certified-keylength-reference}; it is reported at the
+  certified tier, and the blocks that
+  Requirement~\ref{req:bracket-on-reference}\,(v) names for the fallback
+  rest on \xref{foundations/ass:snapped-measurement}. The companion's
+  first-order number stays the run's first-order number, recorded beside it
+  with its key length, and no number is formed from the two together: the
+  key length is that of the fallback's certified number alone, whether the
+  companion's first-order number gives a larger key length or a smaller one.
+  Where the companion's bracket is withdrawn by (iv), the run's first-order
+  number is that of Requirement~\ref{req:bracket-on-reference}\,(iv) on the
+  declaration the run searched, a number certified there is a lower bound on
+  that declaration's value with the key length of
+  Corollary~\ref{cor:certified-keylength}, and the blocks the companion
+  carried rest on \xref{foundations/ass:snapped-measurement} with the cause
+  \iface{factor_enclosure_inconsistent}; a run that declares
+  \iface{strict_snaps} refuses there (\xref{foundations/req:snap-reference}\,(iv)).
+  Where no point is certified, or the arithmetic the evaluation needs is not
+  available to the engine (\iface{certifier_unavailable}), the run's number,
+  key length and tier are those it has without this requirement, recorded
+  with the reason \iface{not_certified} and the reasons of every point.
+\item \emph{Premises and evaluations upstream of the declaration.} A run is
+  not reported at the certified tier where (a) an assumption of the category
+  numerical-trust is invoked on it, reason
+  \iface{numerical_trust_premise}: an assumption of its assumption closure
+  counts as invoked unless the module that owns it records that it was
+  invoked nowhere on the run, as the receiver records its eigenvalue-slack
+  assumption beside the settings at which it was invoked
+  (\xref{receiver/req:eig-ledger-row}); or (b) the declaration it is formed
+  on carries a weight routed from a receiver's high-photon weights
+  (\xref{reductions/wpfss/def:weight-route}) into which a per-setting weight
+  enters that the receiver's artifact records as evaluated in floating point
+  (\xref{receiver/req:evaluation-label}), the uniform weight of a slot entry
+  counting the weight of every setting as entering it, reason
+  \iface{receiver_weight_floating_point}. Its certified number is then
+  recorded with the reason, and the run's number, key length and tier are
+  those it has without this requirement.
+\item \emph{The strict option.} A run that sets
+  \iface{certified_evaluation} to \iface{strict} and is not reported at the
+  certified tier by (vi) and (vii) refuses
+  (\iface{certification_refused}), naming the reasons, and reports no key
+  length. A run reported at the certified tier through the fallback of (i)
+  is so reported under this option too and does not refuse: the premise it
+  rests on there, \xref{foundations/ass:snapped-measurement}, is named in its
+  record, and the option that refuses a run resting on it is
+  \iface{strict_snaps}, under which the fallback does not run.
+\item \emph{The record.} The run records the option; per point, whether it
+  was certified, $b^{\mathrm A}_t$, $b^{\mathrm F}_t$, its certified bracket,
+  the largest radius of its enclosure of the gradient and its reasons; and
+  per run $\underline{h}^{\mathrm{cert}}_{\alpha}$, the largest such radius
+  over the certified points (\iface{max_gradient_radius}), the working
+  precision (\iface{working_precision_bits}), the library of the
+  rigorous arithmetic with its version (\iface{arithmetic_library}), and,
+  as a diagnostic, $\underline{h}^{\mathrm{cert}}_{\alpha}$ less the
+  first-order number on the same declaration, with its sign
+  (\iface{certified_minus_first_order}), which in the fallback is the bound
+  on the searched declaration that
+  Requirement~\ref{req:bracket-on-reference}\,(iii) records and is absent
+  where that declaration has none. It records further the declaration the
+  per-point entries were evaluated on (\iface{declaration}:
+  \iface{reference_companion} or \iface{searched}); the premise at the
+  snap the certified number rests on (\iface{premises}): the short id of
+  \xref{foundations/ass:snapped-measurement} wherever a moved block or class
+  of the declaration the number is formed on rests on that assumption
+  (\xref{foundations/req:snap-reference}\,(iii)), among them, on the
+  declaration the run searched, every moved block or class it has, in the
+  fallback, without a companion and where the companion's bracket is
+  withdrawn alike, and, on a companion, every moved block on which it carries
+  the snapped block and every moved block of another snap it shares with the
+  declaration the run searched, such as that of another measured factor;
+  and none otherwise; with it, the blocks and classes that
+  rest on it (\iface{resting_blocks}), with their groups and causes as the
+  record of the run names them where the key length is formed from a number
+  on that declaration, those of
+  Requirement~\ref{req:bracket-on-reference}\,(v) among them in the
+  fallback, with the cause \iface{companion_not_certified}; and, wherever
+  the fallback ran or the companion's bracket was withdrawn by (iv), the
+  companion's points, each with whether it was certified and its reasons
+  (\iface{companion_points}), which say why. The fields \iface{premises}
+  and \iface{resting_blocks} describe the declaration that
+  \iface{declaration} names, whatever the status: they name what a number
+  certified there rests on, also where none is reported at the certified
+  tier. In a fallback not reported at the certified tier, the status being
+  \iface{withheld} or \iface{not_certified}, they therefore name the blocks
+  of Requirement~\ref{req:bracket-on-reference}\,(v) with the cause
+  \iface{companion_not_certified}, under which that item names them where
+  the fallback's number forms the key length, while the run's key length is
+  formed from the companion's first-order number and the record of the run
+  names those blocks as evaluated off their snap. None of these but
+  $\underline{h}^{\mathrm{cert}}_{\alpha}$ enters a number.
+\end{enumerate}
+\end{requirement}

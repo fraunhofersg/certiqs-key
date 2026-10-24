@@ -1,0 +1,284 @@
+% ---
+% id: foundations/lem:register-compression
+% kind: lem
+% title: "Compressing a register onto a finite-dimensional subspace"
+% summary: >-
+%   Compressing one register of a state onto a finite-dimensional subspace moves the state by at most 2√δ + δ in trace norm, δ being its weight outside the subspace, whatever the other systems are. The moves add along a sequence of channels, and every channel extends by an identity of any dimension.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [def:pinching, meat-core/lem:memory-lift]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Def. A.1, Eq. (A1)"
+%   - "tupkary2026decoy, Lemma A.1, Eqs. (A2)-(A5)"
+% provenance: newly-derived
+% lean:
+% notes: "The compression keeps the weight outside the subspace on a fixed state inside it, where tupkary2026decoy Def. A.1 sends it to a flag orthogonal to the space; both are channels, and this form needs no enlarged space. Part (ii) gives an explicit bound where the source cites a textbook for the convergence (its Eq. (A2)) and gives no rate. No separability is used: the subspace of (ii) is spanned by eigenvectors of the register's reduced state."
+% ---
+
+A register of any dimension is approximated by a finite one by compressing
+it: the part of a state on a finite-dimensional subspace is kept, and the
+weight outside it is moved onto a fixed state of the subspace. The lemma
+bounds what that costs in trace norm, with no condition on the other systems,
+and adds the costs along a sequence of channels; the compressed register can
+then be read as a finite-dimensional one, and channels acting on the other
+systems do not see the difference. \xref{meat-core/lem:memory-lift} applies
+it to the adversary's registers of a run. The route is that of
+\cite[Def.~A.1, Lemma~A.1, Eqs.~(A2)--(A5)]{tupkary2026decoy}, re-derived
+here with an explicit bound.
+
+\begin{lemma}\label{lem:register-compression}
+\emph{Setting.} In this lemma a Hilbert space may have any dimension, finite
+or infinite, separable or not, in departure from the convention of
+Definition~\ref{def:pinching}, and every system named is of this kind.
+$\Tcl{Z}$ is the space of trace-class operators on $\Hs{Z}$ with the trace
+norm $\|\cdot\|_1$, and $RM$ is the Hilbert-space tensor product of $R$ and
+$M$. A \emph{channel} $\Tcl{Z}\to\Tcl{Z'}$ is a trace-preserving linear map
+$\Phi$ that is completely positive: for every $k\ge1$ the map that applies
+$\Phi$ to every entry of a $k\times k$ matrix of trace-class operators, which
+is $\Tcl{\mathbb{C}^kZ}$, is positive. $\tr_R\colon\Tcl{RM}\to\Tcl{M}$ is the
+partial trace, fixed by $\tr[X\tr_R(\sigma)]=\tr[(\idon{R}\otimes X)\sigma]$
+for every bounded operator $X$ on $\Hs{M}$, and $\tr_M$ likewise.
+\begin{enumerate}[label=(\roman*),leftmargin=2.6em]
+\item \emph{(compression and inclusion)} Let $M^{\circ}$ be a non-zero
+  finite-dimensional subspace of $\Hs{M}$, $V$ its inclusion isometry into
+  $\Hs{M}$, $\Pi\coloneqq VV^{\dagger}$ the orthogonal projection onto it,
+  $\Pi^{\perp}\coloneqq\idon{M}-\Pi$, and $\psi$ a state on $M^{\circ}$. For
+  every system $R$ put, for $\sigma\in\Tcl{RM}$ and
+  $\tau\in\Tcl{RM^{\circ}}$,
+  \begin{equation}\label{eq:compression}
+  \begin{gathered}
+    \mathcal{P}_R(\sigma)\coloneqq
+      (\idon{R}\otimes V)^{\dagger}\sigma(\idon{R}\otimes V)
+      +\tr_M\big[(\idon{R}\otimes\Pi^{\perp})\,\sigma\,
+        (\idon{R}\otimes\Pi^{\perp})\big]\otimes\psi ,\\
+    \iota_R(\tau)\coloneqq(\idon{R}\otimes V)\,\tau\,(\idon{R}\otimes V)^{\dagger},
+  \end{gathered}
+  \end{equation}
+  and write $\mathcal{P}$ and $\iota$ for the case of a one-dimensional $R$.
+  Then $\mathcal{P}_R\colon\Tcl{RM}\to\Tcl{RM^{\circ}}$ and
+  $\iota_R\colon\Tcl{RM^{\circ}}\to\Tcl{RM}$ are channels,
+  $\mathcal{P}_R\circ\iota_R$ is the identity, $\|\iota_R(\tau)\|_1=\|\tau\|_1$
+  for every $\tau$, and $\mathcal{P}_R(x\otimes y)=x\otimes\mathcal{P}(y)$ and
+  $\iota_R(x\otimes z)=x\otimes\iota(z)$ for $x\in\Tcl{R}$, $y\in\Tcl{M}$ and
+  $z\in\Tcl{M^{\circ}}$; more generally, for $R=R_1R_2$,
+  $\mathcal{P}_{R_1R_2}(x\otimes y)=x\otimes\mathcal{P}_{R_2}(y)$ and
+  $\iota_{R_1R_2}(x\otimes z)=x\otimes\iota_{R_2}(z)$ for $x\in\Tcl{R_1}$,
+  $y\in\Tcl{R_2M}$ and $z\in\Tcl{R_2M^{\circ}}$. The channel
+  $\mathcal{C}_R\coloneqq\iota_R\circ\mathcal{P}_R$ on $\Tcl{RM}$ is the
+  \emph{compression of $M$ onto $M^{\circ}$}.
+\item \emph{(one compression)} For every state $\sigma$ on $RM$, with
+  $\delta\coloneqq\tr\big[(\idon{R}\otimes\Pi^{\perp})\sigma\big]$,
+  \begin{equation}\label{eq:compression-bound}
+    \big\|\mathcal{C}_R(\sigma)-\sigma\big\|_1\;\le\;2\sqrt{\delta}+\delta .
+  \end{equation}
+  For every state $\sigma$ on $RM$ and every $\eta>0$ there is a non-zero
+  finite-dimensional subspace $M^{\circ}$, spanned by finitely many
+  eigenvectors of $\tr_R(\sigma)$, at which $\delta\le\eta$.
+\item \emph{(a sequence of channels)} Let $Z_0,\dots,Z_m$ be systems, $\omega$
+  a state on $Z_0$, $\Phi_k\colon\Tcl{Z_{k-1}}\to\Tcl{Z_k}$ channels for
+  $k=1,\dots,m$, and $\mathcal{C}_k$ a channel on $\Tcl{Z_k}$ for
+  $k=0,\dots,m$. Put $\sigma_0\coloneqq\omega$ and
+  $\sigma_k\coloneqq\Phi_k(\sigma_{k-1})$. Then
+  \begin{equation}\label{eq:compression-sequence}
+    \big\|\mathcal{C}_m\Phi_m\mathcal{C}_{m-1}\cdots\Phi_1\mathcal{C}_0(\omega)
+      -\sigma_m\big\|_1
+    \;\le\;\sum_{k=0}^{m}\big\|\mathcal{C}_k(\sigma_k)-\sigma_k\big\|_1 .
+  \end{equation}
+\item \emph{(maps on different factors)} Let $G\colon\Tcl{R}\to\Tcl{R'}$ and
+  $H\colon\Tcl{M}\to\Tcl{M'}$ be linear maps, and let
+  $G_M\colon\Tcl{RM}\to\Tcl{R'M}$, $G_{M'}\colon\Tcl{RM'}\to\Tcl{R'M'}$,
+  $H_R\colon\Tcl{RM}\to\Tcl{RM'}$ and $H_{R'}\colon\Tcl{R'M}\to\Tcl{R'M'}$ be
+  linear maps, bounded in trace norm, with $G_M(x\otimes y)=G(x)\otimes y$,
+  $G_{M'}(x\otimes y')=G(x)\otimes y'$, $H_R(x\otimes y)=x\otimes H(y)$ and
+  $H_{R'}(x'\otimes y)=x'\otimes H(y)$ for all $x\in\Tcl{R}$,
+  $x'\in\Tcl{R'}$, $y\in\Tcl{M}$, $y'\in\Tcl{M'}$. Then
+  $H_{R'}\circ G_M=G_{M'}\circ H_R$. In particular, with $H=\mathcal{P}$ or
+  $H=\iota$, whose extensions are $\mathcal{P}_R$, $\mathcal{P}_{R'}$,
+  $\iota_R$ and $\iota_{R'}$ by (i),
+  \begin{equation}\label{eq:compression-commute}
+    \mathcal{P}_{R'}\circ G_M=G_{M^{\circ}}\circ\mathcal{P}_R,
+    \qquad
+    G_M\circ\iota_R=\iota_{R'}\circ G_{M^{\circ}} .
+  \end{equation}
+\item \emph{(extension by an identity)} For every channel
+  $\Phi\colon\Tcl{Z}\to\Tcl{Z'}$ and every system $K$ there is exactly one
+  linear map $\Phi_K\colon\Tcl{ZK}\to\Tcl{Z'K}$, bounded in trace norm, with
+  $\Phi_K(x\otimes y)=\Phi(x)\otimes y$ for all $x\in\Tcl{Z}$ and
+  $y\in\Tcl{K}$; it is a channel, written $\Phi\otimes\idmap_K$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Idea.} Each map of (i) is built from conjugations, a partial trace and
+the appending of a state. For (ii), the projected state differs from the
+state by terms that the weight outside the subspace controls, vector by
+vector in a spectral decomposition. Part (iii) is a telescoping sum, every
+channel contracting the trace norm of a Hermitian operator, and (iv) holds on
+product operators, which span a dense subspace. Part (v) builds the extension
+from finite-dimensional subspaces of $K$, as the limit along which part (ii)
+lets the state be compressed.
+
+\emph{Step 1 (two facts on channels).} A positive trace-preserving linear map
+$\Phi$ satisfies $\|\Phi(Z)\|_1\le\|Z\|_1$ for every Hermitian trace-class
+$Z$, and a positive linear map $\Phi$ with $\tr\Phi(Z)\le\tr Z$ for $Z\succeq0$
+does too: write $Z=Z^{+}-Z^{-}$ by the spectral decomposition, with positive
+$Z^{\pm}$ and $\|Z\|_1=\tr Z^{+}+\tr Z^{-}$; then
+$\|\Phi(Z)\|_1\le\|\Phi(Z^{+})\|_1+\|\Phi(Z^{-})\|_1
+=\tr\Phi(Z^{+})+\tr\Phi(Z^{-})\le\|Z\|_1$, a positive trace-class operator
+having trace norm equal to its trace. Such a map is bounded in trace norm:
+every $\tau$ is $H_1+iH_2$ with the Hermitian
+$H_1=\tfrac12(\tau+\tau^{\dagger})$ and $H_2=\tfrac1{2i}(\tau-\tau^{\dagger})$,
+each of trace norm at most $\|\tau\|_1$, so $\|\Phi(\tau)\|_1\le2\|\tau\|_1$.
+
+\emph{Step 2 (part (i)).} A conjugation $\sigma\mapsto B\sigma B^{\dagger}$ by a
+bounded operator is completely positive: applied entrywise to a
+$k\times k$ matrix it is the conjugation by $\idon{\mathbb{C}^k}\otimes B$. The
+partial trace is completely positive, applied entrywise being the partial
+trace on $\mathbb{C}^kRM$; appending the state $\psi$, $Y\mapsto Y\otimes\psi$,
+is completely positive; and sums and compositions of completely positive maps
+are. So $\mathcal{P}_R$ and $\iota_R$ are completely positive. Trace: for
+trace-class $\sigma$ and bounded $B$, $\tr[B^{\dagger}\sigma B]=\tr[\sigma
+BB^{\dagger}]$, so
+$\tr\mathcal{P}_R(\sigma)=\tr[(\idon{R}\otimes\Pi)\sigma]
++\tr[(\idon{R}\otimes\Pi^{\perp})\sigma]=\tr\sigma$, and
+$\tr\iota_R(\tau)=\tr[\tau(\idon{R}\otimes V^{\dagger}V)]=\tr\tau$ since $V$ is an
+isometry. $\mathcal{P}_R\circ\iota_R$ is the identity because
+$(\idon{R}\otimes V)^{\dagger}(\idon{R}\otimes V)=\idon{RM^{\circ}}$ and
+$\Pi^{\perp}V=0$, which makes the second term of $\mathcal{P}_R$ vanish on
+$\iota_R(\tau)$. For an isometry $W$, $|W\tau W^{\dagger}|=W|\tau|W^{\dagger}$,
+since $W|\tau|W^{\dagger}$ is positive with square
+$W\tau^{\dagger}\tau W^{\dagger}=(W\tau W^{\dagger})^{\dagger}(W\tau W^{\dagger})$;
+taking traces, $\|W\tau W^{\dagger}\|_1=\|\tau\|_1$, which is the claim for
+$W=\idon{R}\otimes V$. On products,
+$(\idon{R}\otimes V)^{\dagger}(x\otimes y)(\idon{R}\otimes V)=x\otimes
+V^{\dagger}yV$ and
+$\tr_M[(\idon{R}\otimes\Pi^{\perp})(x\otimes y)(\idon{R}\otimes\Pi^{\perp})]
+=\tr[\Pi^{\perp}y\Pi^{\perp}]\,x$, which together give
+$x\otimes\mathcal{P}(y)$; the product form of $\iota_R$ is the same
+computation. For $R=R_1R_2$ and $x\in\Tcl{R_1}$, $y\in\Tcl{R_2M}$, the
+operators $\idon{R_1R_2}\otimes V$ and $\idon{R_1R_2}\otimes\Pi^{\perp}$ are
+$\idon{R_1}\otimes(\idon{R_2}\otimes V)$ and
+$\idon{R_1}\otimes(\idon{R_2}\otimes\Pi^{\perp})$, so the conjugations act on
+$x\otimes y$ as $x$ tensored with the conjugations of $y$, and the partial
+trace over $M$ of $x\otimes Y$ is $x\otimes\tr_M Y$ for $Y$ on $R_2M$, by its
+defining property tested on products; together they give
+$x\otimes\mathcal{P}_{R_2}(y)$, and likewise for $\iota$.
+
+\emph{Step 3 (part (ii)).} Write $P\coloneqq\idon{R}\otimes\Pi$ and
+$Q\coloneqq\idon{R}\otimes\Pi^{\perp}$, so that $\delta=\tr[Q\sigma]$ and, by
+\eqref{eq:compression},
+\begin{equation*}
+  \mathcal{C}_R(\sigma)-\sigma
+  =\big(P\sigma P-\sigma\big)
+  +\tr_M\big[Q\sigma Q\big]\otimes V\psi V^{\dagger} .
+\end{equation*}
+The second term is positive, being the partial trace of the positive
+$Q\sigma Q$ tensored with a state, so its trace norm is its trace,
+$\tr[Q\sigma Q]=\tr[Q\sigma]=\delta$. For the first, let
+$\sigma=\sum_l\mu_l\dyad{w_l}$ be a spectral decomposition, with
+$\mu_l\ge0$, $\sum_l\mu_l=1$ and orthonormal $w_l$, a series converging in
+trace norm; the conjugation by $P$ is bounded in trace norm, so
+$P\sigma P-\sigma=\sum_l\mu_l\big(\dyad{Pw_l}-\dyad{w_l}\big)$. Since
+$w=Pw+Qw$,
+$\dyad{Pw}-\dyad{w}=-\ketbra{Qw}{w}-\ketbra{Pw}{Qw}$, and a rank-one operator
+$\ketbra{a}{b}$ has trace norm $\|a\|\,\|b\|$, so for a unit vector $w$
+the trace norm of this difference is at most $2\|Qw\|$. Hence, by the
+Cauchy--Schwarz inequality for the weights $\mu_l$,
+\begin{equation*}
+  \|P\sigma P-\sigma\|_1\le2\sum_l\mu_l\|Qw_l\|
+  \le2\Big(\sum_l\mu_l\|Qw_l\|^2\Big)^{1/2}
+  =2\Big(\sum_l\mu_l\bra{w_l}Q\ket{w_l}\Big)^{1/2}
+  =2\sqrt{\tr[Q\sigma]}=2\sqrt{\delta},
+\end{equation*}
+using $\|Qw\|^2=\bra{w}Q\ket{w}$ for the projection $Q$. The triangle
+inequality gives \eqref{eq:compression-bound}. For the second sentence, the
+partial trace $\sigma_M\coloneqq\tr_R(\sigma)$ is a positive trace-class
+operator of trace one, with a spectral decomposition
+$\sigma_M=\sum_l\lambda_l\dyad{e_l}$, finite or countable, with $\lambda_l>0$,
+$\sum_l\lambda_l=1$ and orthonormal $e_l$, and it has at least one term. By
+the defining property of the partial trace,
+$\delta=\tr[(\idon{R}\otimes\Pi^{\perp})\sigma]=\tr[\Pi^{\perp}\sigma_M]$. At
+$M^{\circ}=\mathrm{span}\{e_1,\dots,e_d\}$, with $d$ at most the number of
+terms, $\Pi^{\perp}e_l=0$ for $l\le d$ and $\Pi^{\perp}e_l=e_l$ for $l>d$, so
+$\delta=\sum_{l>d}\lambda_l$, the tail of a convergent series of positive
+terms; it is at most $\eta$ for $d$ large enough, and zero once $d$ reaches a
+finite number of terms.
+
+\emph{Step 4 (part (iii)).} For $k=0,\dots,m$ let
+$\mathcal{W}_k\coloneqq\mathcal{C}_m\Phi_m\cdots\mathcal{C}_{k+1}\Phi_{k+1}$,
+the identity for $k=m$, and put
+$\chi_k\coloneqq\mathcal{W}_k\mathcal{C}_k(\sigma_k)$ and
+$\chi_{m+1}\coloneqq\sigma_m$. Then $\chi_0$ is the first state in
+\eqref{eq:compression-sequence}, and for $k<m$,
+$\chi_{k+1}=\mathcal{W}_{k+1}\mathcal{C}_{k+1}\Phi_{k+1}(\sigma_k)
+=\mathcal{W}_k(\sigma_k)$, so that
+$\chi_k-\chi_{k+1}=\mathcal{W}_k\big(\mathcal{C}_k(\sigma_k)-\sigma_k\big)$
+for every $k\le m$, the case $k=m$ reading
+$\mathcal{C}_m(\sigma_m)-\sigma_m$. Each $\mathcal{W}_k$ is a channel and
+$\mathcal{C}_k(\sigma_k)-\sigma_k$ is Hermitian, so by Step~1 its image has
+trace norm at most $\|\mathcal{C}_k(\sigma_k)-\sigma_k\|_1$. Summing
+$\chi_0-\chi_{m+1}=\sum_{k=0}^{m}(\chi_k-\chi_{k+1})$ and applying the
+triangle inequality gives \eqref{eq:compression-sequence}.
+
+\emph{Step 5 (part (iv)).} The two composites $H_{R'}\circ G_M$ and
+$G_{M'}\circ H_R$ are linear and bounded in trace norm, as compositions of
+bounded maps, a channel being bounded by
+Step~1. On a product $x\otimes y$,
+$H_{R'}G_M(x\otimes y)=H_{R'}(G(x)\otimes y)=G(x)\otimes H(y)
+=G_{M'}(x\otimes H(y))=G_{M'}H_R(x\otimes y)$.
+Products span a trace-norm dense subspace of $\Tcl{RM}$: finite-rank operators are dense, by truncating the
+singular value decomposition $\tau=\sum_ls_l\ketbra{u_l}{v_l}$, whose tail
+beyond $L$ terms has trace norm at most $\sum_{l>L}s_l$, with
+$\sum_ls_l=\|\tau\|_1$; a rank-one $\ketbra{a}{b}$ is the trace-norm limit of
+$\ketbra{a_t}{b_t}$ for finite sums $a_t\to a$ and $b_t\to b$ of product
+vectors, which are dense in the tensor product, since
+$\|\ketbra{a}{b}-\ketbra{a_t}{b_t}\|_1\le\|a-a_t\|\,\|b\|+\|a_t\|\,\|b-b_t\|$;
+and $\ketbra{\sum_s\alpha_s\otimes\beta_s}{\sum_t\gamma_t\otimes\delta_t}
+=\sum_{s,t}\ketbra{\alpha_s}{\gamma_t}\otimes\ketbra{\beta_s}{\delta_t}$ is a
+finite sum of products. Two bounded linear maps that agree on a set spanning
+a dense subspace agree everywhere. For $H=\mathcal{P}$ and $H=\iota$ the
+maps $\mathcal{P}_R$, $\mathcal{P}_{R'}$, $\iota_R$ and $\iota_{R'}$ are
+channels with the product forms of (i), so \eqref{eq:compression-commute} is
+the general identity at these maps.
+
+\emph{Step 6 (part (v)).} For a finite-dimensional subspace $K_0$ of
+$\Hs{K}$, with inclusion isometry $W_0$ and $P_0\coloneqq\idon{Z}\otimes
+W_0W_0^{\dagger}$, let $\Phi\otimes\idmap_{K_0}$ be the map that applies
+$\Phi$ to every entry of an operator on $ZK_0$ written as a matrix in a basis
+of $K_0$; it is a channel by complete positivity, and it acts on products as
+$\Phi(x)\otimes y$, which determines it, since products span $\Tcl{ZK_0}$.
+Put $F_0(\tau)\coloneqq(\idon{Z'}\otimes W_0)\,(\Phi\otimes\idmap_{K_0})
+\big((\idon{Z}\otimes W_0)^{\dagger}\tau(\idon{Z}\otimes W_0)\big)\,
+(\idon{Z'}\otimes W_0)^{\dagger}$, a composite of channels and a
+conjugation, so $\|F_0(\tau)\|_1\le2\|\tau\|_1$ by Step~1. For
+$K_0\subseteq K_1$, writing the matrices in a basis of $K_1$ that extends one
+of $K_0$ shows $F_0(\tau)=F_1(P_0\tau P_0)$, and $F_1(\tau)=F_1(P_1\tau P_1)$,
+so
+\begin{equation*}
+  \|F_1(\tau)-F_0(\tau)\|_1\le2\|P_1\tau P_1-P_0\tau P_0\|_1
+  \le2\|P_1\tau P_1-\tau\|_1+2\|\tau-P_0\tau P_0\|_1 .
+\end{equation*}
+For a positive $\tau$, the estimate of Step~3, read for $\tau/\tr\tau$, gives
+$\|\tau-P_0\tau P_0\|_1\le2\big(\tr\tau\cdot
+\tr[(\idon{Z}\otimes(\idon{K}-W_0W_0^{\dagger}))\tau]\big)^{1/2}$, and the last
+trace is $\tr[(\idon{K}-W_0W_0^{\dagger})\tr_Z\tau]$, which does not increase
+as $K_0$ grows and is below any $\eta>0$ once $K_0$ contains finitely many
+eigenvectors of $\tr_Z\tau$ (Step~3). A general $\tau$ is a combination of
+four positive ones (Step~1). So, along the finite-dimensional subspaces of
+$\Hs{K}$ ordered by inclusion, $F_0(\tau)$ is a Cauchy net in the complete
+space $\Tcl{Z'K}$; let $\Phi_K(\tau)$ be its limit. $\Phi_K$ is linear, with
+$\|\Phi_K(\tau)\|_1\le2\|\tau\|_1$. For $y$ of finite rank with range and
+support in $K_0$, $F_1(x\otimes y)=\Phi(x)\otimes y$ for every $K_1\supseteq
+K_0$, so $\Phi_K(x\otimes y)=\Phi(x)\otimes y$; both sides are continuous in
+$y$, and finite-rank operators are dense (Step~5), so this holds for every
+$y$. It is unique because products span a dense subspace (Step~5). Trace:
+$\tr F_0(\tau)=\tr[P_0\tau]\to\tr\tau$. Complete positivity: for $k\ge1$,
+applying $F_0$ to every entry of a positive $k\times k$ matrix $\omega$ of
+trace-class operators conjugates $\omega$ by $\idon{\mathbb{C}^k}\otimes
+\idon{Z}\otimes W_0^{\dagger}$, applies $\Phi$ to every entry of a matrix of
+size $k\dim K_0$, which is positive, and conjugates back, so the result is
+positive; entrywise, these converge in trace norm to $\Phi_K$ applied to every
+entry, and a trace-norm limit of positive operators is positive.
+\end{proof}

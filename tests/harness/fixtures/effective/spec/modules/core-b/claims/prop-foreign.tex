@@ -1,0 +1,23 @@
+% ---
+% id: core-b/prop:foreign
+% kind: prop
+% title: A bound declaring another module's assumption
+% summary: A bound declaring another module's assumption, as the checker's tests need it.
+% prominence: standard
+% status: accepted
+% uses: [core-a/def:base]
+% assumes: [A-SHAKY]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{proposition}
+\label{prop:foreign}
+Under \xref{core-a/ass:shaky}, \xref{core-a/def:base} bounds $y$ by
+$1$.
+\end{proposition}
+
+\begin{proof}
+Immediate.
+\end{proof}

@@ -1,0 +1,106 @@
+% ---
+% id: receiver/component-catalogue/ex:bb84exact
+% kind: ex
+% title: "Exact window on the BB84 receiver"
+% summary: >-
+%   The exact two-photon multiclick block of the channel-only BB84 receiver
+%   shows the slack in the analytic bound. An exact window of depth two reaches
+%   at cutoff one, less the declared eigenvalue slack, the weight the analytic
+%   bound reaches only at cutoff two.
+% prominence: standard
+% status: accepted
+% uses: [receiver/def:compile, receiver/def:exactbnd, receiver/lem:fock-functor, receiver/def:pmc, receiver/def:pmcex, receiver/thm:multiclick-bound]
+% mentions: [ex:bb84bound, ex:bb84, receiver/rem:flag-instances]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+An exact window takes, on the first blocks above the cutoff, the larger of
+the analytic bound and a computed block eigenvalue less the
+\tref{eigenvalue slack}. On the BB84 receiver the two-photon block can be
+diagonalised by hand, which shows what the window buys.
+
+\begin{example}\label{ex:bb84exact}
+Continue with the channel-only receiver of Example~\ref{ex:bb84bound}: $K=4$,
+$\gamma=\beta_k=1$, $\InpC=\{\Chan_H,\Chan_V\}$ so $D=|\InpC|=2$, and the Grams
+\eqref{eq:bb84grams} with $A_\Sigma=\id_2$. Here $B=A_\Sigma=\id_2$ and
+$B_k=A_{[K]\setminus\{k\}}=\id-A_k$, so $\id-B=0$ and $\id-B_k=A_k$, and
+\eqref{eq:exactbnd} reads, for $n\ge1$,
+\begin{equation}\label{eq:bb84exactblock}
+  \blk{M}{\eqn}_{\mc}=\id^{(=n)}-\sum_{k}\Fock(A_k)^{(n)}
+  =\id^{(=n)}-p_Z^{\,n}\big(\dyad{n_H}+\dyad{n_V}\big)
+   -p_X^{\,n}\big(\dyad{n_+}+\dyad{n_-}\big).
+\end{equation}
+Two steps: $\Fock(0)^{(n)}=0$ for $n\ge1$ kills the $\gamma$ term; and for a
+rank-one $A_k=p\dyad{\psi}$, $(p\dyad{\psi})^{\otimes n}$ is $p^{\,n}$ times
+the orthogonal projector onto $(\operatorname{span}\ket{\psi})^{\otimes n}$,
+whose restriction to $\Symn{n}$ is $\dyad{n_\psi}$ with
+$\ket{n_\psi}=\ket{\psi}^{\otimes n}$ the occupation vector carrying all $n$
+photons in $\ket{\psi}$ (Lemma~\ref{lem:fock-functor}\,(iv) with
+$P=\dyad{\psi}$).
+
+\emph{The two-photon block.} The space $\Symn{2}(\mathbb{C}^2)$ has
+dimension $\binom{2+2-1}{2}=3$ and occupation basis
+$\{\ket{2_H},\ket{1_H1_V},\ket{2_V}\}$, so
+$\dyad{2_H}+\dyad{2_V}=\id-\dyad{1_H1_V}$; likewise
+$\dyad{2_+}+\dyad{2_-}=\id-\dyad{1_+1_-}$. Expanding
+$\ket{\pm}=(\ket{H}\pm\ket{V})/\sqrt2$,
+\begin{equation}\label{eq:bb84exactvec}
+  \ket{1_+1_-}=\tfrac{1}{\sqrt2}\big(\ket{+}\otimes\ket{-}
+   +\ket{-}\otimes\ket{+}\big)
+  =\tfrac{1}{\sqrt2}\big(\ket{2_H}-\ket{2_V}\big),
+\end{equation}
+which is orthogonal to $\ket{1_H1_V}$. Substituting into
+\eqref{eq:bb84exactblock} at $n=2$,
+\begin{equation}\label{eq:bb84exact2}
+  \blk{M}{(=2)}_{\mc}=\big(1-p_Z^2-p_X^2\big)\,\id
+   +p_Z^2\,\dyad{1_H1_V}+p_X^2\,\dyad{1_+1_-},
+\end{equation}
+whose spectrum is therefore $\{1-p_X^2,\ 1-p_Z^2,\ 1-p_Z^2-p_X^2\}$, the
+first two on the two displayed orthonormal vectors, the third on
+$(\ket{2_H}+\ket{2_V})/\sqrt2$. So
+\begin{equation}\label{eq:bb84exactvalue}
+  \Bnd^{\ast}(2)=1-p_Z^2-p_X^2
+  \qquad\text{against}\qquad
+  \Bnd(2)=1-2p_Z^2-2p_X^2 ,
+\end{equation}
+a gap of $p_Z^2+p_X^2>0$ at every $(p_Z,p_X)$.
+
+\emph{At the cutoff that matters.} Take $p_Z=p_X=\tfrac12$, where
+$\Bnd(n)=1-2^{2-n}$ and $\Bnd^{\ast}(2)=\tfrac12$. At the cutoff $N=1$,
+Definition~\ref{def:pmc} emits $\max\{0,\Bnd(2)\}=0$: the two-photon block is
+discarded entirely, although half of its weight is guaranteed. Declare the
+minimal \tref[exact-window depth]{depth} $m^{\ast}=N+1=2$. Predicate~(X) holds (this receiver declares
+$\InpS=\varnothing$), so \eqref{eq:pmcex} takes branch~1 with the remainder
+$\Bnd(m^{\ast}+1)=\Bnd(3)=\tfrac12$, and, at an evaluation
+$\widehat\Bnd^{\ast}(2)=\Bnd^{\ast}(2)$,
+\begin{equation}\label{eq:bb84exactemit}
+  \pmc=\max\big\{0,\ \min\big\{\ell(2),\ \Bnd(3)\big\}\big\}
+   =\max\big\{0,\ \tfrac12-\varepsilon_{\mathrm{eig}}\big\} ,
+\end{equation}
+since $\ell(2)=\max\{\Bnd(2),\widehat\Bnd^{\ast}(2)
+-\varepsilon_{\mathrm{eig}}\}=\max\{0,\tfrac12-\varepsilon_{\mathrm{eig}}\}$,
+which is $\le\tfrac12=\Bnd(3)$ on the whole declared domain
+$\varepsilon_{\mathrm{eig}}\in[0,1)$, so the minimum is $\ell(2)$ throughout.
+The value is $\tfrac12-\varepsilon_{\mathrm{eig}}$ at
+$\varepsilon_{\mathrm{eig}}\le\tfrac12$ and $0$ above it; the outer
+$\max\{0,\cdot\}$ is carried through the chain rather than dropped, because
+the declared domain reaches past $\tfrac12$.
+The declared slack is subtracted once, from the computed block eigenvalue
+$\widehat\Bnd^{\ast}(2)=\tfrac12$.
+
+\emph{What that buys, and what it does not change.}
+Example~\ref{ex:bb84bound} reaches $\pmc=\tfrac12$ only at the cutoff $N=2$;
+the exact window reaches $\max\{0,\tfrac12-\varepsilon_{\mathrm{eig}}\}$ at
+$N=1$, from a single $3\times3$ eigenvalue
+problem, and $N$ is the parameter every downstream target dimension grows with.
+Theorem~\ref{thm:multiclick-bound} is untouched: $\Bnd(3)=\tfrac12$ is still
+the remainder covering every block above the second, and the analytic bound is
+still what makes the quantifier over $n>N$ finite. Note also that the
+declaration must supply $\varepsilon_{\mathrm{eig}}$ and $\varepsilon_6$ to
+declare the depth at all, and that this receiver still declares no tail
+window, predicate~(X) holding
+(Remark~\ref{rem:flag-instances}).
+\end{example}

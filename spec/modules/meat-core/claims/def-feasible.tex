@@ -1,0 +1,116 @@
+% ---
+% id: meat-core/def:feasible
+% kind: def
+% title: "Feasible set and computable objective"
+% summary: >-
+%   The program minimises an entropy objective over the compiler's feasible set
+%   ([[protocol-compiler/def:feasible]]), read as normalised block-diagonal
+%   states meeting the declared marginal and constraints. Its infimum over the
+%   acceptance set, h_low, is the value a key length is computed from.
+% prominence: standard
+% status: implemented
+% uses: [def:hqkd-list, def:homog, foundations/def:kl, def:declaration, protocol-compiler/def:feasible]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.objective:check_feasible
+% lean:
+% notes: "The set, its conditions in both formats and its convexity and compactness are protocol-compiler/def:feasible's and are cited. The displays eq:feas, eq:feas-modes and eq:feas-general stand here under this contract's labels, in this module's reading of a block list as the block-diagonal operator it denotes, because the implementation and the tests name those labels and the implementation's refusal messages quote the line tags of eq:feas-general, the party-local line by the entry's data value party_local. The normalization paragraph, the objective and h_low are this module's own."
+% ---
+
+The set over which this module's program minimises is the compiler's
+\tref{feasible set} (\xref{protocol-compiler/def:feasible}); the objective and
+$\hlow$ are this module's alone.
+
+\begin{definition}\label{def:feasible}
+For a declaration $\Decl$, $\Feas$ is the \tref{feasible set} of
+\xref{protocol-compiler/def:feasible}. Read as a set
+of operators on $A\Qsys$, a list of sector blocks being the block-diagonal
+operator it denotes, it is
+\begin{equation}\label{eq:feas}
+  \Feas\coloneqq\Big\{\!\omega\in\Pos{A\Qsys}:\
+  (\idon{A}\otimes\Pi_s)\,\omega\,(\idon{A}\otimes\Pi_{s'})=0
+  \ \forall s\ne s',\quad
+  \tr\omega=1,\quad
+  \omega\models\Decl,\quad
+  \omega\models\CList\Big\},
+\end{equation}
+writing $\omega_s$ for the sector blocks, with $\omega\models\Decl$ the
+marginal condition of \eqref{eq:margcond} and $\omega\models\CList$ the
+constraint conditions in the form
+Definition~\ref{def:homog} gives them for the declared mode. Written
+out, $\Feas$ is
+\begin{equation}\label{eq:feas-modes}
+\begin{aligned}
+  \text{trusted:}\quad&
+  \omega_A=\tau_A,\quad
+  \tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\,\omega]\bowtie_k\Theta_k\
+  \ \forall k;\\
+  \text{untrusted:}\quad&
+  \text{(no marginal condition)},\quad
+  \tr[(\idon{A}\otimes\hat O_k)\,\omega]\bowtie_k c_k\ \ \forall k .
+\end{aligned}
+\end{equation}
+The normalization $\tr\omega=1$ is written \emph{explicitly} in
+\eqref{eq:feas}, and is not derived from anything: in
+\tref{trusted-source mode} it also follows from $\omega_A=\tau_A$ (whence
+$\tr\omega=\tr\tau_A=1$), but that derivation is unavailable in
+\tref{untrusted-source mode}, where normalization is the \emph{only}
+unconditional constraint the feasible set carries. Leaving it implied
+would empty the untrusted-mode program of its one defining condition.
+$\Feas$ is convex and compact in either mode and in either format
+(\xref{protocol-compiler/def:feasible}). For
+$\alpha\in(1,\infty)$,
+$\mathbf q$ a distribution on $\Chatset$ and $\omega\in\Feas$, define the
+\term[The function of an acceptance distribution and a feasible state that the program minimises: a divergence penalty plus one entropy term per key-live acceptance value.]{objective}
+\begin{equation}\label{eq:objective}
+  O_{\alpha}(\mathbf q,\omega)\coloneqq
+  \frac{\alpha}{\alpha-1}\sum_{\hat c\notin\Chkey}
+  q(\hat c)\log_2\frac{q(\hat c)}{P_{\hat c}(\omega)}
+  +\sum_{\hat c\in\Chkey}\left[
+  q(\hat c)\log_2\frac{q(\hat c)}{P_{\hat c}(\omega)}
+  +\frac{q(\hat c)}{\alpha-1}\log_2\frac{q(\hat c)}{K_{\hat c}(\omega)}
+  \right],
+\end{equation}
+with the conventions of \xref{foundations/def:kl} at vanishing arguments
+($0\log_2\frac0v=0$; $u\log_2\frac u0=+\infty$ for $u>0$), and
+\begin{equation}\label{eq:hlow-def}
+  \hlow\coloneqq\inf_{\mathbf q\in\acSet}\ \inf_{\omega\in\Feas}\
+  O_{\alpha}(\mathbf q,\omega).
+\end{equation}
+
+\emph{The general format.} For a declaration in the general format of
+Definition~\ref{def:declaration}, $\Feas$ is the set of lists over the
+\tref[joint sector]{joint sectors} of \xref{protocol-compiler/def:feasible},
+$\omega=\bigoplus_{(t,s)}\omega^{(t,s)}$, with the $s$-block
+$\hat O^{\uparrow(s)}_k$ of the \tref{lifted operator} of an entry scoped to $f_k$
+and, for a party-local entry scoped to $f$, the split $s=(s_{f^c},s_f)$ and
+the product $\Qsys_{f^c,s_{f^c}}$ of the other factors' blocks written
+there, with every block positive semidefinite; its conditions read, block by
+block,
+\begin{equation}\label{eq:feas-general}
+\begin{aligned}
+  &\textstyle\sum_{(t,s)}\tr\omega^{(t,s)}=1
+  &&\text{(normalization)};\\
+  &\textstyle\sum_{s}\tr_{\Qsys_s}\omega^{(t,s)}=\tau^{(t)}_A
+  \quad\forall t
+  &&\text{(marginal, trusted-source mode)};\\
+  &\textstyle\sum_{s}\tr_{\Qsys_s}\!\big[(\idon{A_t}\otimes
+  \hat O^{\uparrow(s)}_k)\,\omega^{(t,s)}\big]\bowtie_k\Theta^{(t)}_k
+  \quad\forall t
+  &&\text{(trusted; }\Theta^{(t)}_k=c_k\tau^{(t)}_A
+  \text{ if homogeneous)};\\
+  &\textstyle\sum_{(t,s)}\tr\!\big[(\idon{A_t}\otimes
+  \hat O^{\uparrow(s)}_k)\,\omega^{(t,s)}\big]\bowtie_kc_k
+  &&\text{(scalar entry, untrusted-source mode)};\\
+  &\textstyle\sum_{s_f\in\SecSet^{f}}\tr_{\Qsys_{f,s_f}}\!\Big[\big(\idon{}
+  \otimes(\hat O^{(s_f)}_k-c_k\idon{})\big)\,
+  \omega^{(t,(s_{f^c},s_f))}\Big]\bowtie_k0
+  \quad\forall(t,s_{f^c})
+  &&\text{(party-local, either mode)},
+\end{aligned}
+\end{equation}
+the last as an operator on $\Hs{A_t}\otimes\Hs{\Qsys_{f^c,s_{f^c}}}$. The
+objective \eqref{eq:objective} and $\hlow$ of \eqref{eq:hlow-def} are
+defined on this $\Feas$ by the same formulas.
+\end{definition}

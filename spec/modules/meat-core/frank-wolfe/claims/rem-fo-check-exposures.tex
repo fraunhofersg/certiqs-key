@@ -1,0 +1,69 @@
+% ---
+% id: meat-core/frank-wolfe/rem:fo-check-exposures
+% kind: rem
+% title: "One-sided exposures of the runtime checks"
+% summary: >-
+%   The rank comparison for (H-SUPP) and the three iterate checks are computed
+%   in binary64 and leave three one-sided exposures, two on the unsafe side,
+%   that no claim of this module bounds. A reference rank computed too large is
+%   harmless, and the acceptance factor, exact by construction, adds none.
+% prominence: standard
+% status: accepted
+% uses: [thm:firstorder, rem:fo-danger, rem:acc-side]
+% mentions: [rem:fo-one-ruler, rem:fo-iterate-checks, req:verified-feasible-side, rem:fo-arithmetic]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:fo-check-exposures}
+The rank comparison of Remark~\ref{rem:fo-one-ruler} buys a refusal on the
+safe side in the common case, a rank-deficient block being refused rather
+than differentiated. It does not buy the hypothesis, and there are
+\emph{three} one-sided residual exposures, the first two on the unsafe side
+of Remark~\ref{rem:fo-danger} and the third on the membership hypothesis.
+\emph{First}, a block whose true support is a proper subspace of
+$W_{\hat c,s}$ but whose smallest relevant eigenvalue is reported above the
+cutoff by the arithmetic of the spectral decomposition is differentiated on
+a non-maximal face silently. \emph{Second}, a $\dim W_{\hat c,s}$ computed
+\emph{too small} --- a direction of $W_{\hat c,s}$ that is genuinely present
+but whose relative weight in
+$\mathbf K_{\hat c,s}\mathbf K_{\hat c,s}^{\dagger}$, $\sigma^2$ over the
+largest $\sigma^2$, is at most the cutoff, and which is therefore not
+counted --- lowers the bar in \eqref{eq:hsupp-check} and passes a
+rank-deficient block for the same reason. A $\dim W_{\hat c,s}$ computed too
+\emph{large} is harmless for the claim: it can only fail the comparison,
+which removes the iterate's bracket from $\hlb$ --- at every iterate, so
+that $\hlb$ is withdrawn, if it counts a direction no
+$\operatorname{rank}X_{\hat c,s}$ can count, which is why the two sides are
+read with one ruler. \emph{Third}, and belonging to the checks of
+Remark~\ref{rem:fo-iterate-checks} rather than to the rank comparison: each
+of the three quantities those checks compare is itself computed in binary64.
+$\lmin$ of an iterate block is computed, so a block whose true minimum
+eigenvalue is negative within the eigensolver's own backward error passes at
+exactly $0$ and is not repaired, and the reassembly of a block that
+\emph{is} repaired is itself rounded; and the coupling residual
+$\|\sum_s\tr_{\Qsys_s}J_s-\idon{A_0}\|_{\max}$ and each $\bowtie_k$ residual
+are formed by partial traces and sums that round, so a point whose
+\emph{true} residual exceeds its window can be measured inside it. So the
+consumed point lies in $\Feas^{J}(\varepsilon)$ by construction only up to
+that arithmetic.
+
+\emph{The acceptance factor adds no fourth exposure to this list}: it is not
+measured at all, being exact by construction on the \tref{exact island}
+(Remark~\ref{rem:acc-side}), so the count is three because the three are the
+$J$-side checks, and the product's other factor is established in a way
+that has no residual to expose. Nor does the feasible side of a bracket:
+its value is a certification computed exactly from the numbers it is given
+(Requirement~\ref{req:verified-feasible-side}) and decides nothing at a
+window, the rounding of the frame its rows are built with being charged
+within it, and how far the gradient it is given lies from the exact one is
+the binary64 evaluation of Remark~\ref{rem:fo-arithmetic}, not a check. No
+claim of this module bounds any of the
+three errors; what the declared thresholds and the exact-$0$ check buy is
+that each comparison is well posed, that its reference is fixed by this
+module rather than chosen by an implementation, and that no window
+\emph{this module declares} admits a point at which the theorem does not
+apply.
+\end{remark}

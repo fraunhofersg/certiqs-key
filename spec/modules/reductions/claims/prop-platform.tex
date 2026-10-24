@@ -1,0 +1,150 @@
+% ---
+% id: reductions/prop:platform
+% kind: prop
+% title: "Measurement factorization of the platform's protocol channel"
+% summary: >-
+%   For a well-formed declaration with one sector on A, one measured system,
+%   POVM form, two messages neither reading the other and no party-scoped
+%   entry, the round channel and its physical counterpart factor as in
+%   [[def:protocol]]. A squashing relation carries the one output to the other.
+% prominence: standard
+% status: accepted
+% uses: [cor:sequential, def:protocol, def:msm, lem:sep]
+% mentions: [meat-core/def:declaration, meat-core/def:admissible-declaration, meat-core/thm:protocol-channel]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The statement is over the format meat-core/def:declaration is first written for (one sector on A, one measured system, Alice's measurement a POVM, two messages neither of which reads the other, no party-scoped entry), because the proof quotes the closed form of meat-core/thm:protocol-channel (ii) and nothing else about the declaration. meat-core/thm:protocol-channel and meat-core/def:admissible-declaration are mentions because this module does not depend on meat-core, so meat-core/def:admissible-declaration is a hypothesis of the statement and not a node of this claim's closure. The physical map is defined by the same closed form rather than generated from a declaration, because a measured system that may be infinite-dimensional lies outside meat-core/def:declaration."
+% ---
+
+The consuming engine's protocol channel is generated from a declaration. For a
+declaration in the format its hypothesis fixes, the following proposition
+shows that this channel, and the physical one defined by the same closed form
+on the physical system, have the measurement factorization of
+Definition~\ref{def:protocol}, so that Corollary~\ref{cor:sequential} applies
+to them: an adversary who chooses round $j$ after seeing the announcements of
+rounds $1,\dots,j-1$ is covered, since $E_{j-1}$ may carry the public record,
+and the substitution is unchanged --- one $\Lambda$ per round, absorbed round
+by round.
+
+\begin{proposition}\label{prop:platform}
+Let $\Decl$ be a protocol declaration in the sense of
+\xref{meat-core/def:declaration} that satisfies the conditions of
+\xref{meat-core/def:admissible-declaration}, in the format in which $A$ carries one sector, one
+system is measured, Alice's measurement is declared as a POVM
+$\{M_x\}_{x\in\Xset}$, the public discussion is two messages neither of which
+reads the other, and no entry is scoped to a party. Write $a$ for its joint
+announcement map, $\phi$ for its acceptance-statistic map and $r$ for its
+raw-key map, and let $\Mprot^{\sq}$ be the single-round protocol channel it
+generates, on $A\Qsys$ with the declared POVM $F=\{F_v\}_{v\in\Vset}$ on the
+measured system $\Qsys$, the system the declaration's measuring parties hold
+(Definition~\ref{def:protocol}). Let $M=\{M_v\}_{v\in\Vset}$ be a POVM on a
+separable $\Bsys$, and let $\Mprot^{\mathrm{ph}}$ be the map that the same
+components define with $(\Bsys,M)$ in place of $(\Qsys,F)$,
+\begin{equation}\label{eq:platformph}
+  \Mprot^{\mathrm{ph}}(\omega)\coloneqq\sum_{x,v}
+  \dyad{r(x,v)}_{Z}\otimes\dyad{\phi(a(x,v))}_{\Chat}\otimes
+  \dyad{a(x,v)}_{I}\;\tr\big[(M_x\otimes M_v)\,\omega\big],
+  \qquad\omega\in\Tcl{A\Bsys}.
+\end{equation}
+Then:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item both maps satisfy the hypothesis of Definition~\ref{def:protocol} with
+  one remaining processing $\bar{\Grnd}$,
+  \begin{equation*}
+    \Mprot^{\sq}=\bar{\Grnd}\circ\big(\idmap_A\otimes\redNmsm_F\big),
+    \qquad
+    \Mprot^{\mathrm{ph}}=\bar{\Grnd}\circ\big(\idmap_A\otimes\redNmsm_M\big),
+  \end{equation*}
+  where $\bar{\Grnd}$ measures $A$ with Alice's POVM $\{M_x\}$ and applies to
+  the pair $(x,v)$ the classical map $\dyad{x,v}\mapsto
+  \dyad{r(x,v)}_{Z}\otimes\dyad{\phi(a(x,v))}_{\Chat}\otimes\dyad{a(x,v)}_{I}$.
+  Alice's measurement is thus a step of $\bar{\Grnd}$, where
+  Definition~\ref{def:protocol} places the measurement of a party the
+  declaration does not name as measuring, and not of the measurement channel;
+\item if $M\dsq_{\Lambda}F$, then for every finite-dimensional $E$ and every
+  $\omega\in\Sleq{A\Bsys E}$
+  \begin{equation}\label{eq:platformfact}
+    \big(\Mprot^{\mathrm{ph}}\otimes\idmap_E\big)(\omega)
+    =\big(\Mprot^{\sq}\otimes\idmap_E\big)
+     \big((\idmap_A\otimes\Lambda\otimes\idmap_E)(\omega)\big).
+  \end{equation}
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\emph{Step 1 (the two closed forms).} Under the conditions of
+\xref{meat-core/def:admissible-declaration}, the closed form of \xref{meat-core/thm:protocol-channel}\,(ii)
+reads, verbatim, with $\Mprot=\Mprot^{\sq}$,
+\begin{equation}\label{eq:povmform}
+\begin{split}
+  (\Mprot\otimes\idmap_E)(\omega)
+  ={}&\sum_{x,v}
+  \dyad{r(x,v)}_{Z}\otimes\dyad{\phi(a(x,v))}_{\Chat}\otimes{}\\
+  &\qquad\dyad{a(x,v)}_{I}\otimes
+  \tr_{A\Qsys}\!\big[(M_x\otimes F_v\otimes\idon{E})\,\omega\big]
+\end{split}
+\end{equation}
+for every system $E$ and every $\omega\in\Sleq{A\Qsys E}$. Index letters
+carry the whole distinction here: in \eqref{eq:povmform},
+\eqref{eq:platformph} and \eqref{eq:jointtransport}, $M_x$ is Alice's element
+on $A$, quoted from the declaration, while $M_v$ is the physical element on
+the measured system $\Bsys$ as defined in this contract; they act on
+different tensor factors and the squashing channel touches only the second.
+The map \eqref{eq:platformph} has the same form with $(\Bsys,M)$ in place of
+$(\Qsys,F)$: for a finite-dimensional $E$ with orthonormal basis
+$\{\ket{i}\}_i$, every $\omega\in\Tcl{A\Bsys E}$ is
+$\sum_{i,j}\omega_{ij}\otimes\ketbra{i}{j}_E$ with $\omega_{ij}\in\Tcl{A\Bsys}$,
+and $\sum_{i,j}\tr[(M_x\otimes M_v)\,\omega_{ij}]\,\ketbra{i}{j}_E
+=\tr_{A\Bsys}[(M_x\otimes M_v\otimes\idon{E})\,\omega]$, so by linearity
+\begin{equation}\label{eq:povmformph}
+\begin{split}
+  (\Mprot^{\mathrm{ph}}\otimes\idmap_E)(\omega)
+  ={}&\sum_{x,v}
+  \dyad{r(x,v)}_{Z}\otimes\dyad{\phi(a(x,v))}_{\Chat}\otimes{}\\
+  &\qquad\dyad{a(x,v)}_{I}\otimes
+  \tr_{A\Bsys}\!\big[(M_x\otimes M_v\otimes\idon{E})\,\omega\big].
+\end{split}
+\end{equation}
+
+\emph{Step 2 (the factorization).} Let $(S,G)$ be $(\Qsys,F)$ or
+$(\Bsys,M)$. For $\omega\in\Tcl{AS}$, \eqref{eq:msm} gives
+$(\idmap_A\otimes\redNmsm_G)(\omega)
+=\sum_v\tr_S\big[(\idon{A}\otimes G_v)\,\omega\big]\otimes\dyad{v}_Y$, and
+$\bar{\Grnd}$ maps $\tau\otimes\dyad{v}_Y$, $\tau\in\Tcl{A}$, to
+$\sum_x\tr[M_x\tau]\,\dyad{r(x,v)}_{Z}\otimes\dyad{\phi(a(x,v))}_{\Chat}
+\otimes\dyad{a(x,v)}_{I}$. Hence
+\begin{equation*}
+  \bar{\Grnd}\big((\idmap_A\otimes\redNmsm_G)(\omega)\big)
+  =\sum_{x,v}\dyad{r(x,v)}_{Z}\otimes\dyad{\phi(a(x,v))}_{\Chat}\otimes
+  \dyad{a(x,v)}_{I}\;\tr\big[(M_x\otimes G_v)\,\omega\big],
+\end{equation*}
+which for $(\Bsys,M)$ is \eqref{eq:platformph} and for $(\Qsys,F)$ is
+\eqref{eq:povmform} at trivial $E$, extended from $\Sleq{A\Qsys}$ to
+$\Tcl{A\Qsys}$ by linearity, the finite-dimensional $A\Qsys$ being spanned by
+its states. $\bar{\Grnd}$ is a channel, a measurement of $A$ followed by a
+classical map, and it touches neither $\Qsys$ nor $\Bsys$; that is the
+hypothesis of Definition~\ref{def:protocol} for both maps.
+
+\emph{Step 3 (the substitution).} For \eqref{eq:platformfact} it therefore
+suffices, by \eqref{eq:povmformph} and \eqref{eq:povmform}, that for all $x$
+and $v$
+\begin{equation}\label{eq:jointtransport}
+  \tr_{A\Bsys}\!\big[(M_x\otimes M_v\otimes\idon{E})\,\omega\big]
+  =\tr_{A\Qsys}\!\big[(M_x\otimes F_v\otimes\idon{E})\,
+    (\idmap_A\otimes\Lambda\otimes\idmap_E)(\omega)\big]
+\end{equation}
+as operators on $E$, the state $(\idmap_A\otimes\Lambda\otimes\idmap_E)(\omega)$
+lying in $\Sleq{A\Qsys E}$. Test both sides against an arbitrary
+$X\in\Lin{E}$. By \eqref{eq:pairing} applied to
+$\idmap_A\otimes\Lambda\otimes\idmap_E$ and Lemma~\ref{lem:sep}\,(ii),
+\begin{equation*}
+  \tr\big[(M_x\otimes F_v\otimes X)(\idmap_A\otimes\Lambda\otimes\idmap_E)(\omega)\big]
+  =\tr\big[\big(M_x\otimes\Lambda^{\dagger}(F_v)\otimes X\big)\,\omega\big]
+  =\tr\big[(M_x\otimes M_v\otimes X)\,\omega\big],
+\end{equation*}
+and operators on the finite-dimensional $E$ separate, so the two partial traces
+agree. Substituting into \eqref{eq:povmformph} and \eqref{eq:povmform} gives
+\eqref{eq:platformfact}.
+\end{proof}

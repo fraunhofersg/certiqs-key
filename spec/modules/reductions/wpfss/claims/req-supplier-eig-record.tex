@@ -1,0 +1,28 @@
+% ---
+% id: reductions/wpfss/req:supplier-eig-record
+% kind: req
+% title: "Invocation record of the eigenvalue-slack assumption in the ledger"
+% summary: >-
+%   Where the emitted ledger carries [[A-RECV]], it carries the supplier's
+%   [[A-EIG]] there beside the settings at which the supplier says it was
+%   invoked. It is the one supplier record carried beside its key; every other
+%   key is carried alone.
+% prominence: technical
+% status: accepted
+% uses: [rem:receiver-imports]
+% mentions: [receiver/ass:eig, reductions/ass:recv, reductions/req:recv-row-provenance]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}\label{req:supplier-eig-record}
+On the row of Assumption~\ref{ass:recv}, wherever the emitted assumption
+ledger \iface{assumption_ledger} carries it
+(Requirement~\ref{req:recv-row-provenance}), the engine records the
+supplier's eigenvalue-slack assumption A-EIG (\xref{receiver/ass:eig})
+beside the settings at which the supplier says it was invoked. Of the supplier's record behind a key, only A-EIG's is carried
+beside it; every other key is carried alone, and its record stays in the
+artifact, which the entry names by version.
+\end{requirement}

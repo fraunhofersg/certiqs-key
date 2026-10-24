@@ -1,0 +1,151 @@
+% ---
+% id: receiver/def:tolmap
+% kind: def
+% title: "Receiver tolerances and the exact conditions they decide"
+% summary: >-
+%   Each exact condition on declared data that the receiver decides in floating
+%   point has one receiver tolerance and one test, and every other validation is
+%   a domain comparison, a finite inspection or a residual test. Admitting an
+%   instrument matrix does not admit the bound data derived from it.
+% prominence: standard
+% status: implemented
+% uses: [def:pmcex, def:gram, def:residuals, def:bounddata, thm:multiclick-bound, def:instrument, def:graph, def:pmc, lem:windowtail, def:setting-family]
+% mentions: [receiver/detector-imperfections/def:darktol, receiver/detector-imperfections/def:darkadm, thm:exact-and-evaluated, receiver/component-catalogue/def:catalogue-entries, receiver/component-catalogue/def:c10-tolerance, foundations/def:declared-data, foundations/req:tolerance-scope, req:residual-refusal, receiver/detector-imperfections/req:dark-route-exclusive, req:reserved-tolerance-field, req:exact-window-declaration, def:evaluation-model, ass:eig, ass:exact, def:modes, rem:exacteig]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.numerics:tolerances_from_declaration
+% lean:
+% ---
+
+The receiver is a \tref{supplier} in the sense of
+\xref{foundations/def:declared-data}\,(ii): it decides its own conditions on the
+data it reads and emits in floating point, at slacks an instance declares to
+it. Those slacks are declared numbers of their own, never the instance's
+\tref{declared tolerance} (\xref{foundations/req:tolerance-scope}\,(iii)); this
+definition names them and says which condition each one decides. The
+floating-point evaluation model in which they decide is
+Definition~\ref{def:evaluation-model}. Among the engine's obligations behind the
+validations of kinds (a) to (c) are the reserved tolerance field
+(Requirement~\ref{req:reserved-tolerance-field}), the exclusive dark-count
+routes (Requirement~\ref{req:dark-route-exclusive}), the exact-window
+declaration (Requirement~\ref{req:exact-window-declaration}) and the residual
+refusal (Requirement~\ref{req:residual-refusal}); Remark~\ref{rem:exacteig}
+says why $\varepsilon_{\mathrm{eig}}$ is no test.
+
+\begin{definition}
+\label{def:tolmap}
+Several conditions this contract states are \emph{exact} statements about
+\tref{declared data} that this contract nevertheless decides in floating point. Each is decided by a declared number, fixed here,
+and by no other threshold. The \term[The eight declared numbers at which the receiver decides its exact conditions on declared data, bounds its residuals and spends its eigenvalue slack; not the instance's declared tolerance.]{receiver tolerances} are the declared
+$\varepsilon_1,\dots,\varepsilon_6$, $\varepsilon_{\mathrm{gap}}$ and
+$\varepsilon_{\mathrm{eig}}$, each in the declared domain $[0,1)$; every quantitative statement below uses
+that upper bound and says where. Items (i) to (v) spend $\varepsilon_1$,
+$\varepsilon_2$ and $\varepsilon_4$; $\varepsilon_3$, $\varepsilon_5$,
+$\varepsilon_6$ and $\varepsilon_{\mathrm{gap}}$ decide no exact condition on
+declared data and bound computed quantities only (kind (c) below); and
+$\varepsilon_{\mathrm{eig}}$ decides nothing at all. It is subtracted from a
+computed eigenvalue in \eqref{eq:elldef}, so it is the one declared number this
+contract spends on a \emph{hypothesis} (Assumption~\ref{ass:eig}) rather than
+on a test.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{Route-(i) Gram admissibility}, $A_k\succeq0$ and
+  $\sum_kA_k\preceq\id$ (Definition~\ref{def:gram}), is decided at
+  $\varepsilon_2$: the family is admitted when $\lmin(A_k)\ge-\varepsilon_2$
+  for every $k$ and $\lmax(A_\Sigma)\le1+\varepsilon_2$. $\varepsilon_2$ is the
+  tolerance the contract already attaches to Gram positivity through
+  \eqref{eq:res2}, so the same declared number bounds the residual and decides
+  the admission, in the same units.
+\item \emph{The route-(i) rank consistency check} $\rk A_k\le|\Port{k}|$ is
+  decided by the $\varepsilon_2$-rank
+  \begin{equation}\label{eq:eps2rank}
+    \rk_{\varepsilon_2}(X)\ \coloneqq\
+    \#\big\{\,i:\ \lambda_i\big(\tfrac12(X+X^\dagger)\big)>\varepsilon_2\,\big\}
+    \qquad\text{(eigenvalues with multiplicity)},
+  \end{equation}
+  the check being $\rk_{\varepsilon_2}(A_k)\le|\Port{k}|$ for every $k$. The
+  threshold is \emph{absolute} and it is $\varepsilon_2$; no separate tolerance
+  is added.
+\item \emph{Dark-channel admissibility} for a \emph{declared} $R$ is decided
+  in the detector-imperfections submodule, Definition~\ref{def:darktol}, which
+  extends this list; the tolerances that definition spends are the
+  $\varepsilon_4$ and $\varepsilon_2$ of this list.
+\item \emph{Bound-data admissibility}, $0\le c$ in \eqref{eq:bounddata}, is
+  decided at $\varepsilon_2$: the data are admitted when
+  $c=1-\lmax(B)\ge-\varepsilon_2$. \emph{Nothing is clamped}: the computed
+  $c$ enters \eqref{eq:beta} exactly as it stands. The remaining inequalities of
+  \eqref{eq:bounddata}, $\gamma\le\beta_k\le1$ and $c\le d_k\le1$, are
+  \emph{not} separately tested and no threshold decides them: they are
+  redundant by theorem, discharged by the admissibility paragraph of
+  Theorem~\ref{thm:multiclick-bound} from \eqref{eq:bbkhyp} and from
+  $\gamma\le\beta_k$, both hypotheses of the setting family
+  (Definition~\ref{def:setting-family}\,(b)), and their floating-point
+  evaluation is governed by Theorem~\ref{thm:exact-and-evaluated}\,(ii) like every other
+  computed quantity.
+
+  \emph{Item (iv) decides this admission alone, on every input route, and
+  item~(v) does not decide it.} Whenever $\varepsilon_1>\varepsilon_2$ the band
+  \begin{equation}\label{eq:tolmapband}
+    c\in\big[-\varepsilon_1,\,-\varepsilon_2\big)
+  \end{equation}
+  is non-empty, admitted by item~(v)'s test and refused by item (iv)'s, and
+  item (iv) wins on it: the band is refused.
+\item \emph{Route-(ii) contractivity, and (E1) at catalogue entry C10.}
+  $\Gmat^\dagger\Gmat\preceq\id$ (Definition~\ref{def:instrument}) is decided
+  at $\varepsilon_1$: the matrix is admitted when
+  $\lmax(\Gmat^\dagger\Gmat)\le1+\varepsilon_1$. The same test decides the (E1)
+  predicate of the catalogue's \tref{generic block} entry C10
+  (Definition~\ref{def:c10-tolerance} of the component-catalogue submodule).
+
+  The tolerance that bounds the residual $r_1$ also decides this admission.
+  $\Gmat^\dagger\Gmat$ is Hermitian positive semidefinite, so
+  $\big(\Gmat^\dagger\Gmat-\id\big)_+$ has eigenvalues
+  $\big(\lambda_i(\Gmat^\dagger\Gmat)-1\big)_+$ and therefore
+  \begin{equation}\label{eq:r1islmax}
+    r_1=\big\lVert\big(\Gmat^\dagger\Gmat-\id\big)_{+}\big\rVert
+      =\big(\lmax(\Gmat^\dagger\Gmat)-1\big)_{+} ,
+  \end{equation}
+  so ``$r_1\le\varepsilon_1$'' and ``$\lmax(\Gmat^\dagger\Gmat)\le
+  1+\varepsilon_1$'' are the \emph{same test on the same number}, and no
+  separate tolerance is added.
+\end{enumerate}
+\emph{The five items, together with the two extensions the submodules declare
+in the same form, Definition~\ref{def:darktol}, which is item (iii)'s content,
+and Definition~\ref{def:c10-tolerance}, are the complete set of exact conditions
+about \emph{declared} data that this module and its submodules decide under a
+threshold.} Every other validation they state is one of three kinds, and none
+of them adds a threshold this definition has not named:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item a comparison of declared data against a declared domain: every parameter
+  domain of Table~\ref{tab:catalogue} except C10's, the detector-layer ranges,
+  $m_t>N$, $m^{\ast}_t>N$, $m^{\ast}_t\le m_t$, $N\ge0$, the domain of the
+  receiver tolerances itself, the test of
+  the reserved tolerance field of Assumption~\ref{ass:exact}, and the diagonal
+  non-negativity of $\Gamma^{(t)}$;
+\item a combinatorial predicate on the declaration decided by finite
+  inspection: (E2) and (E3) of Definition~\ref{def:graph}, route exclusivity,
+  the port map's disjointness, totality and surjectivity of $\cg$, the
+  single-valued $\tau$ of Definition~\ref{def:modes}, the exclusivity of the
+  two dark-count routes of Definition~\ref{def:darkadm}, predicate~(X) of
+  Definition~\ref{def:pmc}, and the conditional presence of
+  $\varepsilon_{\mathrm{eig}}$ and $\varepsilon_6$ at a declaration carrying an
+  exact-window depth;
+\item the residual tests themselves: $r_3$, $r_4$, $r_5$, $r_6$ against
+  $\varepsilon_3$, $\varepsilon_4$, $\varepsilon_5$, $\varepsilon_6$, and the
+  residual gap $g_{N,m_t}$ against $\varepsilon_{\mathrm{gap}}$. These are
+  threshold decisions, but on \emph{computed} quantities rather than on
+  declared data, and each is a declared-threshold decision, for the residuals of
+  Definition~\ref{def:residuals} and for the residual gap \eqref{eq:resgap},
+  so nothing undeclared decides them either. The tests $r_1\le\varepsilon_1$
+  and $r_2\le\varepsilon_2$ are of this kind too, except where they coincide
+  with an item: on route (ii), where $\Gmat$ is declared, the test
+  $r_1\le\varepsilon_1$ \emph{is} item (v) by \eqref{eq:r1islmax}, and on
+  route (i), where the Grams are declared, $r_2\le\varepsilon_2$ is the
+  positivity half of item (i) written as a residual; on route (iii) $r_1$
+  tests the compiled $\Gmat$, and on routes (ii) and (iii) $r_2$ tests
+  computed Grams. Neither is
+  $\varepsilon_{\mathrm{eig}}$, which is not a test of any kind: it is
+  subtracted from $\widehat\Bnd^{\ast}$ in \eqref{eq:elldef} and changes an
+  emitted value, not an admission.
+\end{enumerate}
+\end{definition}

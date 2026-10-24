@@ -1,0 +1,9 @@
+id: core-b
+kind: core
+version: 0.1.0
+title: Core B
+one_line: A second core whose claim declares the first core's assumption.
+depends_on: [core-a]
+notation_version: "0.4.0"
+order:
+  - prop:foreign

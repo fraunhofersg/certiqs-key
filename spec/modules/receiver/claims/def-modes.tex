@@ -1,0 +1,38 @@
+% ---
+% id: receiver/def:modes
+% kind: def
+% title: "Declared mode space"
+% summary: >-
+%   A declared mode space is a finite, totally ordered set of optical modes,
+%   each labelled by a path, a polarization and a reserved temporal or spectral
+%   index that takes one declared value. Matrices on the modes follow this
+%   order; on the input modes the channel modes come first ([[def:instrument]]).
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [receiver/component-catalogue/def:catalogue-entries]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The temporal or spectral index of a mode label is reserved: it takes a single
+value in this contract, so mode labels carry no temporal semantics. The order compares polarizations last,
+so the $H$ and $V$ modes of a path are adjacent.
+
+\begin{definition}\label{def:modes}
+A \term[A finite, totally ordered set of optical mode labels together with the Hilbert space whose orthonormal basis they index.]{declared mode space} is a finite totally ordered set $\Modes$, each of
+whose elements is an \term[A label recording a spatial path, a polarization and a reserved temporal or spectral index.]{optical mode}, together with the Hilbert space
+$\mathbb{C}^{\Modes}$ carrying the orthonormal basis $\{\ket{m}\}_{m\in\Modes}$
+indexed in the \tref{declared order}. A mode is a label $m=(p,\pi,\tau)$ recording a
+spatial path $p$, a polarization $\pi\in\{H,V\}$ and a temporal/spectral index
+$\tau$; the order is lexicographic in $(p,\tau,\pi)$ with $H$ before $V$. The
+index $\tau$ is \emph{reserved}: it is carried in the label and in the emitted
+artifact, it may take only a single \tref{declared value} in this contract, and no
+catalogue entry (Definition~\ref{def:catalogue-entries}) reads or writes it.
+For $\Sigma\subseteq\Modes$ we write
+$\Emd{\Sigma}=\sum_{m\in\Sigma}\dyad{m}$ for the coordinate projector, and
+$\Modes$ is identified with $\{0,\dots,|\Modes|-1\}$ when matrix indices are
+needed.
+\end{definition}

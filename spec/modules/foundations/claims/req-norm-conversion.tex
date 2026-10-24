@@ -1,0 +1,36 @@
+% ---
+% id: foundations/req:norm-conversion
+% kind: req
+% title: "Explicit conversion between norms"
+% summary: >-
+%   A bound stated in one norm is never read as a bound in another. A declared
+%   number derived from a bound in another norm carries the conversion factor
+%   between the two norms, written down and recorded by the party that declares
+%   it.
+% prominence: standard
+% status: accepted
+% uses: [lem:floor-stricter, def:tolerance, def:declared-data]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The operator norm and the entrywise maximum modulus differ by up to the
+dimension, and the factor is attained (Lemma~\ref{lem:floor-stricter}); at
+dimensions in the thousands, reading one as the other would put that factor
+inside a security decision.
+
+\begin{requirement}\label{req:norm-conversion}
+No bound stated in one norm is read as a bound in another. The defects of
+Definition~\ref{def:tolerance} are entrywise maximum moduli and the
+\tref{positivity floor} is a bound on a least eigenvalue, and neither is
+converted, implicitly, into the other or into a bound in any other norm.
+A declared number that is
+derived from the declared tolerance, or from any bound stated in one norm, for
+use as a bound in another norm is derived explicitly by the party that
+declares it, with the conversion factor between the two norms concerned
+written down (for the operator norm and the entrywise maximum modulus, that of
+Lemma~\ref{lem:floor-stricter}\,(i)), and it is recorded together with that
+factor.
+\end{requirement}

@@ -1,0 +1,200 @@
+% ---
+% id: meat-core/frank-wolfe/lem:certified-bracket
+% kind: lem
+% title: "The certified bracket from enclosures of the gradient"
+% summary: >-
+%   At a point with positive definite blocks and positive probabilities the
+%   gradient paired with the point is the objective, so the bracket is the sum
+%   of its two lower bounds and needs only enclosures of the gradient.
+% prominence: standard
+% status: implemented
+% uses: [thm:firstorder, lem:feasible-side-dual, lem:fo-khyp, def:first-order-setting, def:relaxed-feasible-set, cor:fo-dropped, meat-core/lem:objective-homogeneous, meat-core/cor:full-gradient, meat-core/thm:gradient, meat-core/lem:branch-support, meat-core/thm:branch-formula, meat-core/thm:choi, meat-core/def:declaration, meat-core/def:admissible-declaration, meat-core/def:admissible-acceptance-set, meat-core/def:joint-sectors, meat-core/lem:joint-sectors, meat-core/def:keyinert, meat-core/def:keyactive, meat-core/def:dropped, meat-core/prop:drop-bound, foundations/def:kl, foundations/cor:least-eigenvalue-over-enclosure]
+% mentions: [lem:certified-bracket-enclosed, cor:certified-keylength, req:certified-evaluation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.certified:certified_bracket
+% lean:
+% ---
+
+Part~(iv) of Theorem~\ref{thm:firstorder} lets lower bounds on the two linear
+minima stand in for the pairings with an oracle's return. The objective is
+positively homogeneous of degree one
+(Lemma~\ref{lem:objective-homogeneous}), so its derivative along the point
+itself is its value there, and the bracket loses the objective and the two
+pairings with the point: it is the sum of the two lower bounds, part~(i).
+What remains to be bounded is the gradient alone, and parts~(ii) and~(iii)
+say how an enclosure of it yields the two lower bounds, the feasible one from
+a residual known up to a ball around an exact matrix, the frame of the rows
+enclosed with it, so that no deduction for the frame arises.
+Corollary~\ref{cor:certified-keylength} takes the key length from this
+lemma, and Requirement~\ref{req:certified-evaluation} is how a run forms
+it. Lemma~\ref{lem:certified-bracket-enclosed} says when one enclosure of
+the gradient serves a reference companion known through enclosures.
+
+\begin{lemma}\label{lem:certified-bracket}
+Let $\alpha\in(1,\infty)$, let $\Decl$ be a tuple of the form of
+Definition~\ref{def:declaration}, in the \tref{basic format} or the general
+format, that satisfies conditions (i)--(vi) and (viii) of
+Definition~\ref{def:admissible-declaration}, and let $\acSet$ satisfy
+Definition~\ref{def:admissible-acceptance-set}. Let $x=(\mathbf q,J)$ with
+$\mathbf q\in\acSet$ and every block of $J$ positive definite, on every
+\tref{joint sector} in the general format, satisfy (H-POS) of
+Theorem~\ref{thm:firstorder}, and let $(\lmoq,\lmoJ)$ be the gradient of
+$O^{J}_{\alpha}$ at $x$ assembled by Corollary~\ref{cor:full-gradient},
+read with Lemma~\ref{lem:fo-khyp}\,(iii) and, in the general format, on the
+joint sectors as Theorem~\ref{thm:firstorder} reads it.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{(The Euler form.)}
+  \begin{equation}\label{eq:euler-form}
+    \langle\lmoq,\mathbf q\rangle+\langle\lmoJ,J\rangle=O^{J}_{\alpha}(x).
+  \end{equation}
+  Consequently, for real numbers $b^{\mathrm A}$ and $b^{\mathrm F}$ with
+  $b^{\mathrm A}\le\min_{\mathbf q'\in\acSet}\langle\lmoq,\mathbf q'\rangle$
+  and $b^{\mathrm F}\le\min_{J'\in\Feas^{J}}\langle\lmoJ,J'\rangle$, the
+  minimum over the exact $\Feas^{J}$, the bracket of
+  Theorem~\ref{thm:firstorder}\,(iv) at $x$ with both pairings replaced is
+  $b^{\mathrm A}+b^{\mathrm F}$, and
+  \begin{equation}\label{eq:certified-bracket}
+    \max\{0,\,b^{\mathrm A}+b^{\mathrm F}\}\;\le\;\hlow ,
+  \end{equation}
+  in exact real arithmetic.
+\item \emph{(The acceptance side from an enclosure.)} If
+  $\hat g\in\mathbb{R}^{\Chacc}$ and $\delta\ge0$ satisfy
+  $|\lmoq(\hat c)-\hat g(\hat c)|\le\delta$ for every $\hat c\in\Chacc$, then
+  $\min_{\mathbf q'\in\acSet}\langle\lmoq,\mathbf q'\rangle\ge
+  \min_{\mathbf q'\in\acSet}\langle\hat g,\mathbf q'\rangle-\delta$.
+\item \emph{(The feasible side from enclosed residuals.)} For each group of
+  Lemma~\ref{lem:feasible-side-dual}\,(ii), an Alice sector $\mathsf t$ in
+  \tref{trusted-source mode}, its rows built from the exact frame
+  $W_{\mathsf t}$ of Theorem~\ref{thm:choi}, or the one group in
+  \tref{untrusted-source mode}, let $Y$ and the $\Lambda_r$ be as in
+  Lemma~\ref{lem:feasible-side-dual}\,(i), let $R_p$ be the residual
+  \eqref{eq:dual-residual} formed with $\lmoJ$, and for every block $p$ of the
+  group let $M_p$ be a Hermitian matrix, $\rho_p\ge0$ with
+  $\|R_p-M_p\|_{\mathrm F}\le\rho_p$, the Frobenius norm of
+  \xref{foundations/cor:least-eigenvalue-over-enclosure}, and $\ell_p$ a
+  lower bound on $\lmin(M_p)$. Then the group's
+  $\lambda\coloneqq\min_p(\ell_p-\rho_p)$ satisfies $\lambda\le\lmin(R_p)$
+  for every $p$, and the sum over the groups of $b(\lmoJ;Y,\Lambda,\lambda)$
+  of \eqref{eq:feasible-side-dual} is a number
+  $b^{\mathrm F}\le\min_{J'\in\Feas^{J}}\langle\lmoJ,J'\rangle$.
+\item \emph{(The \tref{dropped program}.)} In the setting of
+  Corollary~\ref{cor:fo-dropped}, with a \tref{dropped set} $\mathcal{D}$,
+  (i)--(iii) hold with $O^{J,\mathcal{D}}_{\alpha}$ in place of
+  $O^{J}_{\alpha}$, (H-POS$^{\mathcal{D}}$) in place of (H-POS), its gradient
+  of (H-NOPERT$^{\mathcal{D}}$) in place of $(\lmoq,\lmoJ)$, the kept pairs in
+  place of the pairs that are not key-inert, and
+  $\underline{h}^{\mathcal{D}}_{\alpha}$ in place of $\hlow$; and
+  $\underline{h}^{\mathcal{D}}_{\alpha}\le\hlow$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Idea.} Homogeneity makes the derivative along the point equal to the
+value, and the gradient's formulas give the same derivative as the pairing
+with the point; the two lower bounds then carry the whole bracket. An
+entrywise enclosure of the acceptance-side gradient moves its minimum over a
+set of distributions by at most the radius, and a ball around the residual
+moves its least eigenvalue by at most the ball's radius.
+
+\emph{(i), Step 1 (the point is admissible to the theorem).} Every block of
+$J$ is positive semidefinite, and each residual of
+Definition~\ref{def:relaxed-feasible-set} at $J$, of the coupling condition,
+of the normalisation and of every declared row, is a finite number, so $J$
+lies in $\Feas^{J}(\varepsilon)$ for every $\varepsilon$ at least each of
+them, the normalisation's divided by the dimension factor its clause
+carries; with
+$\mathbf q\in\acSet$, $x\in\acSet\times\Feas^{J}(\varepsilon)$. Every block
+being positive definite, every key-active branch operator attains its
+\tref{maximal branch support} (Lemma~\ref{lem:branch-support}\,(i), per joint
+sector in the general format), which is (H-SUPP); and $(\lmoq,\lmoJ)$ is the
+gradient at $x$ itself, which is (H-NOPERT).
+
+\emph{Step 2 (the value along the ray).} By (H-POS) and
+Lemma~\ref{lem:fo-khyp}\,(i), $q(\hat c)>0$ exactly on $\Chacc$, and
+$P^{J}_{\hat c}(J)>0$ there, $K^{J}_{\hat c}(J)>0$ on $\Chkey\cap\Chacc$, so
+every term of $O^{J}_{\alpha}(x)$ indexed in $\Chacc$ is real, and every
+term indexed outside it has $q(\hat c)=0$ and is $0$ by
+\xref{foundations/def:kl}, the second arguments being non-negative by the
+cone clause of Theorem~\ref{thm:branch-formula}. So $O^{J}_{\alpha}(x)$ is
+real. By Lemma~\ref{lem:objective-homogeneous}\,(iii),
+$O^{J}_{\alpha}((1+\tau)x)=(1+\tau)\,O^{J}_{\alpha}(x)$ for every
+$\tau>-1$, so $\tau\mapsto O^{J}_{\alpha}(x+\tau x)$ is differentiable at
+$\tau=0$ with derivative $O^{J}_{\alpha}(x)$.
+
+\emph{Step 3 (the same derivative from the gradient).} The terms indexed
+outside $\Chacc$ vanish at every $(1+\tau)x$, $\tau>-1$, by Step~2 applied to
+the scaled point, $(1+\tau)q(\hat c)=0$ there; they contribute $0$ to the
+derivative, and the pairing $\langle\lmoq,\mathbf q\rangle$ of
+Definition~\ref{def:first-order-setting} and the sums of \eqref{eq:grad-J}
+read with Lemma~\ref{lem:fo-khyp}\,(iii) omit them. For $\hat c\in\Chacc$
+the term is a smooth function of $(q(\hat c),P^{J}_{\hat c},K^{J}_{\hat c})$
+near the point, these being positive at $x$ and scaling with $1+\tau$
+(Lemma~\ref{lem:objective-homogeneous}\,(i)). Along $\tau$,
+$q(\hat c)$ and $P^{J}_{\hat c}$ move linearly, with derivatives $q(\hat c)$
+and $P^{J}_{\hat c}(J)=\sum_{s'}\tr[\Gamma^{(s')}_{\hat c}J_{s'}]$
+(\eqref{eq:grad-pieces}). Each deficit of a key-active pair is
+$f^{J}_{\hat c,s}(J_s+\tau J_s)=T(X+\tau X)-\tr(X+\tau X)$ with
+$X\coloneqq\cG^{J}_{\hat c,s}(J_s)$, the \tref{branch map} being linear; the
+direction $X$ is Hermitian with support $\operatorname{supp}X$, so
+Theorem~\ref{thm:gradient}\,(i) gives the derivative
+$\tr[\nabla T(X)\,X]-\tr X=\tr\big[(\nabla T(X)-\id)\,\cG^{J}_{\hat c,s}(J_s)\big]
+=\tr\big[\chi^{\dagger}_{\Qsys_s}\big(\cG^{\dagger}_{\hat c,s}[\nabla T(X)-\id]\big)
+J_s\big]$, which is $\tr[\Delta^{(s)}_{\hat c}J_s]$ of \eqref{eq:grad-pieces};
+the deficits of key-inert pairs are identically $0$
+(Definition~\ref{def:keyactive}, Lemma~\ref{lem:joint-sectors}\,(iii)).
+The chain rule through $u\log_2\frac uv$ at $u,v>0$, exactly as in the proof
+of Corollary~\ref{cor:full-gradient}, then gives the derivative of the term as
+its coefficients of \eqref{eq:grad-q} and \eqref{eq:grad-J} paired with
+$q(\hat c)$ and with the blocks of $J$, and summing over $\Chacc$, the
+derivative of $\tau\mapsto O^{J}_{\alpha}(x+\tau x)$ at $0$ is
+$\langle\lmoq,\mathbf q\rangle+\langle\lmoJ,J\rangle$. With Step~2 this is
+\eqref{eq:euler-form}.
+
+\emph{Step 4 (the bracket).} By Step~1, Theorem~\ref{thm:firstorder}\,(iiib)
+with its part~(iv) applies to the one point $x$ with both pairings replaced,
+where $\Decl$ satisfies condition~(vii) as well; its bracket is
+$O^{J}_{\alpha}(x)+b^{\mathrm A}-\langle\lmoq,\mathbf q\rangle
++b^{\mathrm F}-\langle\lmoJ,J\rangle=b^{\mathrm A}+b^{\mathrm F}$ by
+\eqref{eq:euler-form}, and the theorem gives \eqref{eq:certified-bracket}.
+Where condition~(vii) fails, Theorem~\ref{thm:firstorder}\,(v) gives the same,
+$\hlow=+\infty$.
+
+\emph{(ii).} Let $\mathbf q'\in\acSet$, a non-empty set as it contains
+$\mathbf q$. It is a probability vector vanishing outside $\Chacc$
+(Lemma~\ref{lem:fo-khyp}\,(i)), so $q'(\hat c)\ge0$ and
+$\sum_{\hat c\in\Chacc}q'(\hat c)=1$. Hence
+$\langle\lmoq,\mathbf q'\rangle=\langle\hat g,\mathbf q'\rangle
++\sum_{\hat c\in\Chacc}(\lmoq(\hat c)-\hat g(\hat c))q'(\hat c)
+\ge\langle\hat g,\mathbf q'\rangle-\delta
+\ge\min_{\mathbf q''\in\acSet}\langle\hat g,\mathbf q''\rangle-\delta$, the
+minimum attained, $\acSet$ being compact
+(Definition~\ref{def:admissible-acceptance-set}) and the map linear. The
+minimum over $\mathbf q'$ of the left-hand side is therefore at least the
+right-hand side.
+
+\emph{(iii).} $R_p$ is Hermitian, $\lmoJ$, $Y\otimes\id$ and every
+$L^{*}_{r,p}(\Lambda_r)$ being so
+(Lemma~\ref{lem:feasible-side-dual}\,(i), (ii)). By
+\xref{foundations/cor:least-eigenvalue-over-enclosure}\,(i),
+$\lmin(R_p)\ge\lmin(M_p)-\rho_p\ge\ell_p-\rho_p\ge\lambda$. So $\lambda$ is
+admissible in Lemma~\ref{lem:feasible-side-dual}\,(i) for the group, whose
+rows, built from the exact frame, cut out the factor of the exact
+$\Feas^{J}$ (part~(ii)(a) of that lemma; part~(ii)(b) in untrusted-source
+mode), and the sum over the groups bounds $\langle\lmoJ,J'\rangle$ from
+below for every $J'\in\Feas^{J}$, which is
+\eqref{eq:feasible-side-sum}.
+
+\emph{(iv).} $O^{J,\mathcal{D}}_{\alpha}$ is positively homogeneous of degree
+one (Lemma~\ref{lem:objective-homogeneous}\,(iii)), and Steps~2 and~3 run
+unchanged with $K^{J,\mathcal{D}}_{\hat c}$ in place of $K^{J}_{\hat c}$
+and the deficits of the kept pairs only, the dropped ones being absent from
+\eqref{eq:KD}; (H-SUPP$^{\mathcal{D}}$) holds at a positive definite block as
+in Step~1. Step~4 runs with Corollary~\ref{cor:fo-dropped}, whose
+conclusion \eqref{eq:hlb-dropped} admits the lower bounds of
+Theorem~\ref{thm:firstorder}\,(iv), in place of the theorem. Parts (ii) and
+(iii) do not read the objective. Finally
+$\underline{h}^{\mathcal{D}}_{\alpha}\le\hlow$ is
+Proposition~\ref{prop:drop-bound}.
+\end{proof}

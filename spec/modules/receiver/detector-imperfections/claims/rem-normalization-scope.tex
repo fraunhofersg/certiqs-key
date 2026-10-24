@@ -1,0 +1,76 @@
+% ---
+% id: receiver/detector-imperfections/rem:normalization-scope
+% kind: rem
+% title: "What the normalization factors out and what it leaves in place"
+% summary: >-
+%   Only the per-port efficiencies are divided: declared mode-dependent loss
+%   stays, undeclared efficiency mismatch is outside the assumptions either
+%   way, and a probe-fed receiver is not covered. The full normalization can
+%   remove the loss the noise floor needs, which a larger factor keeps.
+% prominence: standard
+% status: accepted
+% uses: [prop:efficiency-normalization, def:normalized-station, thm:efficiency, prop:noise-floor]
+% mentions: [receiver/ass:modes, receiver/ass:port, rem:powervsclick, req:efficiency-normalization]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: >-
+%   The engine's handling at the full normalization, which is the reason the
+%   default factor of req:efficiency-normalization keeps a margin below
+%   99/100, is a property of the code that no claim establishes; it is
+%   stated in the receiver's design.md (structural decision 14), not in this
+%   remark, and is revised there once the engine handles a singular block
+%   at the full normalization. On a BBM92 point at efficiency 0.8 a run lost
+%   part of the key at t = 0.80001 (about 1e-5 relative above eta_max), all
+%   of it at t = 0.800001, and none at t = 0.8001 (about 1e-4).
+% ---
+
+\begin{remark}\label{rem:normalization-scope}
+\emph{Only the terminal scalars are divided.} The family $\{A^{\circ}_k\}$ of
+Definition~\ref{def:normalized-station} is kept: every loss declared in the
+element graph, a polarizer's extinction, and an attenuation that varies
+within a port (Theorem~\ref{thm:efficiency}\,(ii)) stay in the normalized
+station unchanged. A detector whose efficiency depends on a spatial, spectral
+or temporal mode is declared as such a mode-dependent loss in front of its
+port, and the normalization leaves it where it is.
+
+\emph{Efficiency mismatch is a separate problem.} The identity of
+Proposition~\ref{prop:efficiency-normalization}\,(i) holds of the declared
+instrument. That it describes the physical receiver, clause (iii), rests on
+Assumptions~\ref{ass:modes} and~\ref{ass:port}: an efficiency that differs
+between degrees of freedom the adversary can address but the declaration
+does not carry violates one of them, with or without the normalization, which
+neither creates such a mismatch nor removes one.
+
+\emph{A probe-fed receiver is not covered.} With declared source modes the
+probe light passes the same detectors, so a uniform loss moved to the front
+would act on the probe modes too and replace each probe state by its image
+under the loss; no claim here states that form.
+
+\emph{The choice of the factor.} The identity holds at every
+$t\in[\eta_{\max},1]$. At the full normalization $t=\eta_{\max}$ with lossless
+optics the normalized station can have $\lmax(A'_\Sigma)=1$, and then some
+element of its dark-composed family is singular on every block with a photon,
+dark counts or not (Proposition~\ref{prop:noise-floor}\,(iv)). At
+$t>\eta_{\max}$ the largest efficiency of the station is $\eta_{\max}/t<1$,
+so $\lmax(A'_\Sigma)\le\eta_{\max}/t$ and, with a dark count in every port,
+every such element is positive definite with the floor of
+Proposition~\ref{prop:noise-floor}\,(iii) at $\eta_{\max}/t$. Where
+$\eta_{\max}<99/100$, the default factor
+$t=\eta_{\max}/(99/100)$ of Requirement~\ref{req:efficiency-normalization}
+is of this kind, with $\lmax(A'_\Sigma)\le99/100$; where
+$\eta_{\max}\ge99/100$ the default is $t=1$, the declared receiver, whose
+largest efficiency can itself be one. Which factor in $[\eta_{\max},1]$ a run
+is better served by is a matter of the engine's evaluation, not of the
+identity.
+
+\emph{Only declared efficiencies are factored.} The proof of
+Proposition~\ref{prop:efficiency-normalization}\,(i) uses only $A_k=t\,A'_k$
+with $\{A'_k\}$ admissible, which holds for every
+$t\in[\lmax(A_\Sigma),1]$ with $t>0$ and $A'_k=A_k/t$; such a factor can be smaller
+than $\eta_{\max}$, but it is an eigenvalue rather than a declared number.
+A Gram family declared from click data, with every efficiency declared as one
+(Remark~\ref{rem:powervsclick}), has $\eta_{\max}=1$, and nothing is factored
+from it.
+\end{remark}

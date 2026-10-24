@@ -1,0 +1,207 @@
+% ---
+% id: reductions/thm:two-sided
+% kind: thm
+% title: "The two-sided reduction in trusted-source mode"
+% summary: >-
+%   In trusted-source mode the source map and the squashing reduction compose,
+%   in either order, into one exact operational reduction into the admissible
+%   attack set. Security of the virtual squashed model thus transfers with the
+%   same ε to the specified physical protocol, against attacks of its type.
+% prominence: main
+% status: accepted
+% uses: [def:opreduction, lem:opreduction-transfer, lem:source-transfer, lem:precomposition, cor:sequential, thm:licence, def:attset, def:licensed, def:criterion, def:roundmodel, def:system-setting, transmitter/def:source-segment]
+% mentions: [rem:source-transfer-registers, transmitter/def:source-spec, transmitter/ass:ens, transmitter/decoy/ass:wcp]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Current caveat: (ii) applies thm:licence to the pre-composed attack, whose input register is the finite-dimensional virtual transmitted system, and reads that theorem's finite-dimensional typing exactly as it stands; the route through lem:precomposition would need thm:licence at the specified transmitted system, which may be infinite-dimensional."
+% ---
+
+The theorem is about trusted-source mode, as Lemma~\ref{lem:source-transfer}
+is and for its reasons: in untrusted-source mode there is no source segment to
+transfer, the specification carrying no certificate and no marginal and the
+retained system being an output of the attack
+(Definition~\ref{def:roundmodel}, untrusted branch), and what remains there is
+the receiver-side instance alone, Corollary~\ref{cor:sequential} with
+Theorem~\ref{thm:licence}\,(ii), (iii); nothing in the theorem is asserted of
+that mode. In part (iii) the specified-source physical protocol pairs the
+specified source with the physical receiver. That the physical source is the
+specified one is the transmitter's physical-source premise, A-ENS (\xref{transmitter/ass:ens}), or A-WCP
+(\xref{transmitter/decoy/ass:wcp}) for the decoy model, and the theorem does
+not assume it.
+
+\begin{theorem}\label{thm:two-sided}
+Assume the hypotheses of Lemma~\ref{lem:source-transfer}: a trusted-source
+specification with virtual ensemble $\{p_x,\rvirt_x\}$, a source segment
+whose composite $\Xi$ satisfies the source identity
+\eqref{eq:sourceidentity}, a source-replacement certificate satisfying
+(SR1)--(SR3), and A-SEQ. Assume in addition $M\dsq_{\Lambda}F$ together with
+a spectral pull-back certificate \eqref{eq:certificate} for the list
+$\CList=\{(\hat O_k,\bowtie_k,c_k)\}$, or the factorwise hypotheses of
+Theorem~\ref{thm:licence}\,(v) for a list with entries carrying the
+party-local tag. Let $\mathsf{P}^{\mathrm{sp}}$ be the specified-source
+presentation of Lemma~\ref{lem:source-transfer}, its receiver measuring $M$
+on $\Bsys_j$, and let $\mathsf{P}^{\mathrm{v},\sq}_{\CList}$ be the
+presentation whose protocol has the virtual source and the target $F$ on
+$\Qsys_j$ and whose strategies are the $\CList$-admissible sequences of the
+virtual type (Definition~\ref{def:attset}). Define
+\begin{equation}\label{eq:twosidedmap}
+  r_{\mathrm{two}}\big(\zeta,(\Aev_j)_j\big)
+  \coloneqq\big(\zeta,(\Aev^{\mathrm{v},\sq}_j)_j\big),
+  \qquad
+  \Aev^{\mathrm{v},\sq}_1
+    \coloneqq\lambda_1\circ\Aev_1\circ
+      \big(\Xi^{\otimes n}\otimes\idmap_{E_0}\big),
+  \quad
+  \Aev^{\mathrm{v},\sq}_j\coloneqq\lambda_j\circ\Aev_j\ \ (j\ge2),
+\end{equation}
+where $\lambda_j\coloneqq\Lambda\otimes\idmap_{E'_j}$ is the trusted-source
+branch of \eqref{eq:composite}, the only branch the strategies
+\eqref{eq:srcstrategy} of $\mathsf{P}^{\mathrm{sp}}$ are typed in.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(one map, and the order of the two replacements is immaterial)}
+  $r_{\mathrm{two}}=r_{\sq}\circ r_{\mathrm{src}}
+  =r_{\mathrm{src}}\circ r_{\sq}$, where $r_{\mathrm{src}}$ is the source map
+  \eqref{eq:srcmap-strategy} and $r_{\sq}$ the squashing map
+  $(\Aev_j)_j\mapsto(\Aev^{\sq}_j)_j$ of \eqref{eq:composite}; both composites
+  are defined on the same strategies and agree there. And $r_{\mathrm{two}}$ is
+  an exact operational reduction from $\mathsf{P}^{\mathrm{sp}}$ to the
+  virtual, \tref{squashed protocol} taken with \emph{all} strategies of its type;
+\item \emph{(the image is admissible)} let $E_0$, every $E'_j$ and $\Qsys$ be
+  finite-dimensional, as the round model of Definition~\ref{def:roundmodel}
+  makes the adversary's registers, every register of it being
+  finite-dimensional, and Definition~\ref{def:system-setting} makes the
+  target space, and let
+  $\Hs{\Avirt}$ be finite-dimensional, as it is in both
+  cases of \xref{transmitter/def:source-spec}: trivially for an ensemble
+  declared as matrices, and by its clause (b) for a separable specified
+  system. Then every $\Aev^{\mathrm{v},\sq}_j$ of \eqref{eq:twosidedmap}
+  lies in the set Definition~\ref{def:attset} assigns to its round, so
+  $r_{\mathrm{two}}$ has its image in the strategy set of
+  $\mathsf{P}^{\mathrm{v},\sq}_{\CList}$ and is an exact operational reduction
+  into it. \emph{No hypothesis on the specified transmitted system is needed}:
+  $\Hs{\Asig}$ may be separable and infinite-dimensional, as the transmitted
+  system of a source model is, and it is not a register
+  Definition~\ref{def:system-setting} or the round model ranges over
+  but a system in transit;
+\item \emph{(transfer, with the same $\varepsilon$)} consequently, if the
+  virtual, squashed protocol is $\varepsilon$-secure against every
+  $\CList$-admissible sequence of the virtual type, a \tref{security criterion} in
+  the sense of Definition~\ref{def:criterion} taking a value at most
+  $\varepsilon$ at each of them, then the specified-source physical protocol
+  is $\varepsilon$-secure against \emph{every} \tref{attack sequence} of its
+  type, with the \emph{same} $\varepsilon$ and simultaneously for every such
+  criterion;
+\item \emph{(in the description the certificate presents)} (i) to (iii) hold
+  with the virtual protocol read entanglement-based, Alice retaining $A_j$,
+  which trusted-source mode is the mode that gives her, and measuring
+  $\{M_x\}$, this being the description the consuming engine analyses;
+\item \emph{(the empty source segment)} where the source segment is empty,
+  $\Xi$ is the identity, $\Avirt=\Asig$, $\rvirt_x=\rho_x$,
+  $r_{\mathrm{src}}$ is the identity map on strategies and $r_{\mathrm{two}}$ is
+  $r_{\sq}$; (i) to (iii) are then Corollary~\ref{cor:sequential} and
+  Theorem~\ref{thm:licence}\,(iii) word for word, and the theorem states
+  nothing new about the case this module emits.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) Both composites are defined: $r_{\sq}$ is defined at an attack sequence of
+either the specified or the virtual type, being the insertion of $\lambda_j$
+after $\Aev_j$ and reading nothing about the attack's input register; and
+$r_{\mathrm{src}}$ is defined at a sequence with either receiver, being the
+insertion of $\Xi^{\otimes n}\otimes\idmap_{E_0}$ before $\Aev_1$ and reading
+nothing about the attack's output systems. Applying them in either order gives,
+in round one,
+$\lambda_1\circ\big(\Aev_1\circ(\Xi^{\otimes n}\otimes\idmap_{E_0})\big)
+=\big(\lambda_1\circ\Aev_1\big)\circ(\Xi^{\otimes n}\otimes\idmap_{E_0})$ by
+associativity of composition, and in every later round $\lambda_j\circ\Aev_j$;
+so both equal $r_{\mathrm{two}}$. The two insertions are at disjoint places
+of one composite: $\Xi^{\otimes n}$ acts on the transmitted systems, which are
+inputs of $\Aev_1$, and $\lambda_j$ on the measured system, which is an output
+of $\Aev_j$, and neither acts on a system the other acts on.
+
+For exactness, apply Lemma~\ref{lem:opreduction-transfer}\,(v) to
+$r_{\mathrm{src}}$, an exact operational reduction from
+$\mathsf{P}^{\mathrm{sp}}$ to the virtual-source protocol with the physical
+receiver (Lemma~\ref{lem:source-transfer}\,(i)), and to $r_{\sq}$ on that
+protocol. That $r_{\sq}$ is an exact operational reduction there is
+Corollary~\ref{cor:sequential}: its first sentence is the equality of the two
+output states, at every attack sequence of the type of
+\eqref{eq:attackchannel}, and the strategies of the virtual-source protocol are
+sequences of that type, \eqref{eq:srcstrategy} naming the first round's input
+register and nothing else. Both reductions are over the same output registers,
+which are those of $\Kfin$ together with $E_n$ in all three presentations, so
+(R1) holds along the composition.
+
+(ii) Fix $j\ge2$. Theorem~\ref{thm:licence}\,(i), which is its trusted-source
+part, applied at $E'=E_{j-1}$ and $E''=E'_j$, gives
+$\lambda_j\circ\Aev_j\in\AttSet_{\CList}(E_{j-1},\Qsys E'_j)$; for a list with
+tagged entries it is its part (v), read at the trusted branch of
+\eqref{eq:attackchannel}, which gives both the party-local condition
+\eqref{eq:attsetpl} and the scalar one.
+
+For $j=1$ the same parts are applied \emph{to the pre-composed attack}, and
+that is why no hypothesis on $\Hs{\Asig}$ is needed. Write
+$\Gamma\coloneqq\Xi^{\otimes n}\otimes\idmap_{E_0}$ and
+$\Aev^{\mathrm{v}}_1\coloneqq\Aev_1\circ\Gamma$, so that
+$\Aev^{\mathrm{v},\sq}_1=\lambda_1\circ\Aev^{\mathrm{v}}_1$ by
+\eqref{eq:twosidedmap} and associativity of composition. Being a composition of
+two channels, $\Aev^{\mathrm{v}}_1$ is a channel
+$\Tcl{\Avirt^{n}E_0}\to\Tcl{\Bsys_1E'_1}$, of exactly the type
+Theorem~\ref{thm:licence}\,(i) and (v) quantify over, and its
+\emph{input} register $\Avirt^{n}E_0$ is finite-dimensional by hypothesis.
+Applying that theorem at $E'=\Avirt^{n}E_0$ and $E''=E'_1$ therefore gives
+$\Aev^{\mathrm{v},\sq}_1\in\AttSet_{\CList}(\Avirt^{n}E_0,\cdot)$ outright.
+The separable system $\Asig^{n}$ occurs nowhere in this step: it is an
+intermediate system of one channel (Remark~\ref{rem:source-transfer-registers}),
+and the trusted branch of \eqref{eq:attackchannel} types an attack by the
+systems it \emph{outputs}, the measured system and the outgoing memory,
+placing no condition on the register the round receives beyond its being that
+register.
+
+\emph{The other order lands on the same set and needs a hypothesis this one
+does not.} Applying Theorem~\ref{thm:licence} to $\Aev_1$ first requires
+$E'=\Asig^{n}E_0$, which that theorem types finite-dimensional, and then
+Lemma~\ref{lem:precomposition} at $E_{\mathrm{pre}}=\Avirt^{n}E_0$,
+$E'=\Asig^{n}E_0$ and the same $\Gamma$, its part (i) and its part (iii) for
+the tagged entries, gives the same membership. That lemma asks only that the
+two input registers be separable, so what makes the second route the narrower
+one is Theorem~\ref{thm:licence}'s own typing and nothing else; that the two
+routes agree is (i) read at the level of admissible sets. The image of
+$r_{\mathrm{two}}$ therefore lies in the strategy set of
+$\mathsf{P}^{\mathrm{v},\sq}_{\CList}$. Equation~\eqref{eq:opreduction} holds
+at every strategy by (i) and does not read the analysed set, and condition (R3)
+of Definition~\ref{def:opreduction} now holds for the smaller set, so
+$r_{\mathrm{two}}$ is an exact operational reduction into it.
+
+(iii) Lemma~\ref{lem:opreduction-transfer}\,(i) applied to the reduction of
+(ii), with $f$ the criterion at the adversary system of the presentation:
+$\sup$ over the physical strategies equals $\sup$ over the image and is at most
+$\sup$ over the $\CList$-admissible sequences, which is at most $\varepsilon$.
+No property of the criterion is used, which is why the conclusion is
+simultaneous in all of them.
+
+(iv) By Lemma~\ref{lem:source-transfer}\,(ii) the identity map on strategies is
+an exact operational reduction between the prepare-and-measure and the
+entanglement-based presentations of the virtual protocol, in either direction,
+and the squashing replacement touches only $\Bsys_j$, a system neither
+description of the source names. Composing with the identity map changes
+neither the strategies nor their images, so
+Lemma~\ref{lem:opreduction-transfer}\,(v) carries (i) to (iii) across
+unchanged.
+
+(v) The closing paragraph of \xref{transmitter/def:source-segment} states
+that when $L_{\mathrm s}=0$ the segment is empty, $\Xi$ is the identity,
+$\Avirt=\Asig$ and $\rvirt_x=\rho_x$, so
+$\Aev^{\mathrm{v}}_1=\Aev_1$ in \eqref{eq:srcmap-strategy} and
+$r_{\mathrm{src}}$ is the identity; then \eqref{eq:twosidedmap} is
+$\Aev^{\sq}_j=\lambda_j\circ\Aev_j$ of \eqref{eq:composite}. Part (i) is then
+the output equality of Corollary~\ref{cor:sequential}, part (ii) is
+Theorem~\ref{thm:licence}\,(i) or (v) per round, and part (iii) is that
+corollary's last sentence as Theorem~\ref{thm:licence}\,(iii) states it. In
+\emph{untrusted}-source mode there is no source segment to transfer and this
+theorem asserts nothing, so what is left there is exactly those two claims,
+read at the untrusted branch.
+\end{proof}

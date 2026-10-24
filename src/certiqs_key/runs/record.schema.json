@@ -1,0 +1,881 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fraunhofer.sg/certiqs-key/runs/record.schema.json",
+  "title": "CERTIQS-KEY run record",
+  "description": "What one run did at every module boundary it crossed. NOT an envelope artefact: no module produced it, so it has no honest module_version and it carries the consumed module versions as payload data instead (spec/architecture.md 3.3, 4.4). The four content-addressing fields of a later provenance envelope -- artifact_id, content_hash, input_artifact_hashes, provenance -- are absent, and accepting one that nothing fills would give it a meaning incompatible with the one it will carry (spec/future-scope.md section 1); the payload's own provenance block names only the engine that wrote the record and is not that block. CHECKED IN so that a consumer generates types from it and a change to the record's shape is visible in review; tests/unit/test_runs_record_schema.py validates a produced record against it.",
+  "type": "object",
+  "required": ["kind", "schema_version", "created_by", "payload"],
+  "additionalProperties": false,
+  "properties": {
+    "kind": {"const": "run-record"},
+    "schema_version": {
+      "type": "string",
+      "description": "Bumped when the payload shape changes, and by a rename of a SliceStage value or a refusal reason code, both of which a consumer files on. Independent of every module version and of the operator-bundle format version."
+    },
+    "created_by": {
+      "type": "string",
+      "description": "What drove the run. Never an absolute machine path, a timestamp or a run id (spec/architecture.md 2.6)."
+    },
+    "payload": {"$ref": "#/$defs/payload"}
+  },
+  "$defs": {
+    "alpha_bound": {
+      "description": "A bound the outer alpha search saw and the alpha it was formed at.",
+      "type": "object",
+      "required": ["alpha", "h_lb"],
+      "additionalProperties": false,
+      "properties": {"alpha": {"type": "number"}, "h_lb": {"type": "number"}}
+    },
+    "alpha_search": {
+      "description": "The outer alpha search of the run tier (runs/alpha_search.py AlphaSearchResult.as_payload), in the solve stage's alpha child. It reads the honest model at a fixed configuration and no observed data, so the order is fixed before the protocol runs (A-FIXED). Each evaluation is one run at its alpha; score is the key length where positive, otherwise the unclamped key-length bound at h_lb used for ranking only, and null on a run without a key length. Each evaluation also carries h_low, relative_gap ((h_low - h_lb)/|h_low| with both on the declaration the solve searched: where the reported h_lb is the reference companion's, the run's reference_bracket.snapped.h_lb is used; null where not finite) and set_aside (why the search set it aside because its bracket stayed wide, or null), and the search its set_aside_rule and refinement_stopped (why the refinement stopped before its steps were spent, or null). The search carries contradiction_alpha, the alpha whose evaluation was refused with entropy_bound_above_key_ceiling, or null, and contradiction_rule: such an evaluation proves that no feasible state reproduces any accepted statistic, which does not depend on alpha, so the search stops there, chooses no alpha (chosen_alpha null, the child's status contradiction) and the run is refused as a whole with that evaluation's refusal; the evaluations are every one made up to it. It carries no_positive_key and no_positive_key_rule: where some evaluation formed a bound and none reported a positive key length, no alpha is chosen (chosen_alpha null, the child's status no_positive_key) and the record is the run of the evaluation with the largest h_low (reported_alpha, h_low; a tie to the first evaluated, with no finite h_low the highest score); largest_h_lb is the largest h_lb any evaluation reported and largest_h_lb_searched, where the reported h_lb is the reference companion's, the largest bound on the declaration the solve searched, both diagnostics with their alpha; reason says why the key is 0. Null where some evaluation gives a positive key length, every evaluation refused or one proved a contradiction.",
+      "type": "object",
+      "required": ["searched", "rule", "reads", "settings", "chosen_alpha", "evaluations", "set_aside_rule", "refinement_stopped", "contradiction_alpha", "contradiction_rule", "no_positive_key", "no_positive_key_rule"],
+      "properties": {
+        "searched": {"const": true},
+        "rule": {"type": "string"},
+        "reads": {"type": "string"},
+        "settings": {
+          "type": "object",
+          "required": ["lower_alpha_minus_one", "upper_alpha_minus_one", "coarse_points", "refine_steps"]
+        },
+        "chosen_alpha": {"type": ["number", "null"]},
+        "set_aside_rule": {"type": "string"},
+        "refinement_stopped": {"type": ["string", "null"]},
+        "contradiction_alpha": {"type": ["number", "null"]},
+        "contradiction_rule": {"type": "string"},
+        "no_positive_key": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["reported_alpha", "h_low", "largest_h_lb", "largest_h_lb_searched", "reason"],
+              "additionalProperties": false,
+              "properties": {
+                "reported_alpha": {"type": "number"},
+                "h_low": {"type": ["number", "null"]},
+                "largest_h_lb": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/alpha_bound"}]},
+                "largest_h_lb_searched": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/alpha_bound"}]},
+                "reason": {"type": "string"}
+              }
+            }
+          ]
+        },
+        "no_positive_key_rule": {"type": "string"},
+        "evaluations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["alpha", "phase", "key_length", "h_lb", "score", "reason", "seconds", "h_low", "relative_gap", "set_aside"],
+            "properties": {
+              "alpha": {"type": "number"},
+              "phase": {"enum": ["coarse", "refine"]},
+              "key_length": {"type": ["integer", "null"]},
+              "h_lb": {"type": ["number", "null"]},
+              "score": {"type": ["number", "null"]},
+              "reason": {"type": ["string", "null"]},
+              "seconds": {"type": "number"},
+              "h_low": {"type": ["number", "null"]},
+              "relative_gap": {"type": ["number", "null"]},
+              "set_aside": {"type": ["string", "null"]}
+            }
+          }
+        }
+      }
+    },
+    "plausibility": {
+      "description": "The run tier's plausibility check (runs/plausibility.py PlausibilityCheck.as_record), on the refused solve stage and in the solve stage's detail in composition_flow. It carries comparison, ceiling_upper, relative_slack, threshold, first_order_bound and objective_split.",
+      "type": "object",
+      "required": ["bound_name", "bound", "first_order_bound", "h_low", "ceiling", "ceiling_upper", "key_value_count", "key_live_mass", "comparison", "relative_slack", "slack", "threshold", "compared", "exceeded", "objective_split"],
+      "properties": {
+        "bound_name": {"enum": ["h_lb", "h_lb_dropped", "h_cert"]},
+        "bound": {"type": ["number", "null"]},
+        "first_order_bound": {"type": ["number", "null"]},
+        "ceiling_upper": {"type": "number"},
+        "comparison": {"enum": ["exact", "relative"]},
+        "relative_slack": {"type": "number"},
+        "slack": {"type": "number"},
+        "threshold": {"type": "number"},
+        "objective_split": {
+          "type": ["object", "null"],
+          "required": ["divergence_penalty", "entropy_terms", "penalty_share"],
+          "properties": {
+            "divergence_penalty": {"type": "number"},
+            "entropy_terms": {"type": "number"},
+            "penalty_share": {"type": ["number", "null"]}
+          }
+        }
+      }
+    },
+    "payload": {
+      "type": "object",
+      "required": ["config", "refused", "contracts", "stages", "composition_flow", "instance", "provenance", "protocol_document", "statistics_consistency"],
+      "properties": {
+        "statistics_consistency": {"description": "The check of the acceptance set against the statistics of the feasible set (runs/record.py; meat-core/req:unreachable-acceptance-set (iv), (v); certiqs_key.meat_core.finitekey.consistency StatisticsConsistency.as_record), on completed and refused records alike. checked says whether the run is checked (its honest statistics supplied as numbers, or a constraint entry the caller declared, and statistics_check on); where not, unchecked_reason (out_of_scope or opted_out) and unchecked_premise A-REACH, the caller's to vouch for. min_model_pass_probability is tau of item (iv), an exact rational p/q in (0, 1]. On a checked run solve holds the once-per-run solve of the dropped program with every pair dropped, on the declaration the run searches, at alpha_0: bound (b, rounded toward -inf) with bound_tier, dmin_lower_bound ((alpha_0-1)/alpha_0 b), or no_bound_reason; stop_cause, budget_share and budget_seconds where the solve ran; estimate (O_0), estimate_negative (a diagnostic that refuses nothing) and estimate_relaxed_member where it returned a point; gap (O_0 - b) where b was formed. alpha_0_rule says which rule of item (i) fixed alpha_0. Where b > 0: model_pass_exponent_bits, the exponent x = n (alpha_0-1)/alpha_0 b rounded toward -inf, so that 2^(-x) at it bounds the probability that devices the declaration admits pass the acceptance test (meat-core/prop:model-pass-bound (ii)); model_pass_exponent_tier, the tier of b; and model_pass_decision, how x >= log2(1/tau) was decided (exact where tau is a power of two, enclosure against a rigorous enclosure of log2(1/tau), undecided where x lies inside it, which refuses). All three null where there is no cap, no_cap_reason then saying why on a checked run whose solve ran (bound_not_positive or no_bound_formed). refused is item (iv)'s decision on the exact x: the run is refused as a whole with acceptance_set_unreachable and evaluated at no order. orders holds each order the run evaluated, in order: alpha and proven_part_bits (n f, rounded toward -inf) where a bound was formed, a diagnostic. No number of the run reads these entries. Null only on an outcome no run_slice returned.", "type": ["object", "null"], "required": ["checked", "unchecked_reason", "unchecked_premise", "statistics_check", "honest_statistics_supplied", "caller_constraint_entries", "min_model_pass_probability", "rounds", "alpha_0_rule", "solve", "model_pass_exponent_bits", "model_pass_exponent_tier", "model_pass_decision", "no_cap_reason", "refused", "orders"], "properties": {"checked": {"type": "boolean"}, "unchecked_reason": {"enum": ["out_of_scope", "opted_out", null]}, "unchecked_premise": {"enum": ["A-REACH", null]}, "statistics_check": {"enum": ["on", "off"]}, "honest_statistics_supplied": {"type": "boolean"}, "caller_constraint_entries": {"type": "integer", "minimum": 0}, "min_model_pass_probability": {"type": "string"}, "rounds": {"type": "integer", "minimum": 1}, "alpha_0_rule": {"enum": ["fixed_order", "lowest_evaluated_order", "domain_lower_end", null]}, "solve": {"type": ["object", "null"], "required": ["declaration", "alpha_0", "bound", "bound_tier", "dmin_lower_bound", "no_bound_reason", "stop_cause", "estimate", "estimate_relaxed_member", "gap"], "properties": {"declaration": {"const": "searched"}, "alpha_0": {"type": "number"}, "bound": {"type": ["number", "null"]}, "bound_tier": {"enum": ["certified", "first-order", null]}, "dmin_lower_bound": {"type": ["number", "null"]}, "no_bound_reason": {"enum": ["alpha_0_outside_objective_domain", "first_order_withdrawn", "solve_not_completed", null]}, "stop_cause": {"type": ["string", "null"]}, "budget_share": {"type": ["string", "null"]}, "budget_seconds": {"type": ["number", "null"]}, "estimate": {"type": ["number", "string", "null"]}, "estimate_negative": {"type": ["boolean", "null"]}, "estimate_relaxed_member": {"type": ["boolean", "null"]}, "gap": {"type": ["number", "null"]}}}, "model_pass_exponent_bits": {"type": ["number", "null"], "minimum": 0}, "model_pass_exponent_tier": {"enum": ["certified", "first-order", null]}, "model_pass_decision": {"enum": ["exact", "enclosure", "undecided", null]}, "no_cap_reason": {"enum": ["bound_not_positive", "no_bound_formed", null]}, "refused": {"type": "boolean"}, "orders": {"type": "array", "items": {"type": "object", "required": ["alpha", "proven_part_bits"], "additionalProperties": false, "properties": {"alpha": {"type": "number"}, "proven_part_bits": {"type": ["number", "null"]}}}}}, "additionalProperties": false},
+        "protocol_document": {
+          "description": "The protocol document the run was lowered from (instances/declared), carried verbatim by the run tier, or null where a Python instance or a hand-composed caller ran. Present on completed and refused records alike.",
+          "type": ["object", "null"],
+          "required": ["format_version", "id", "packaged", "digest", "canonical", "conversions", "expansion", "unmatched", "user_declared"],
+          "additionalProperties": false,
+          "properties": {
+            "format_version": {"const": "1"},
+            "id": {"type": "string"},
+            "packaged": {"type": "boolean", "description": "Whether the document is a packaged template, instances/<id>/protocol.yaml."},
+            "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "canonical_digest of the canonical tree."},
+            "canonical": {"type": "object", "description": "The canonical tree that was computed on: JSON integers, strings, Booleans, null, lists and objects only."},
+            "conversions": {"type": "array", "items": {"type": "object"}, "description": "The canonicalisation records (numeric_input_conversion at site document:<json pointer>)."},
+            "expansion": {
+              "type": "object",
+              "description": "Every rule table as expanded, by table name: variables, rows [key..., value, rule_index] (the mappings handed to the compiler) and the unmatched keys.",
+              "additionalProperties": {
+                "type": "object",
+                "required": ["variables", "rows", "unmatched"],
+                "properties": {
+                  "variables": {"type": "array", "items": {"type": "string"}},
+                  "rows": {"type": "array", "items": {"type": "array"}},
+                  "unmatched": {"type": "array", "items": {"type": "array", "items": {"type": "string"}}}
+                }
+              }
+            },
+            "unmatched": {
+              "type": "object",
+              "description": "Per table, the keys no rule matched (left out; totality is the compiler's check).",
+              "additionalProperties": {"type": "array", "items": {"type": "array", "items": {"type": "string"}}}
+            },
+            "user_declared": {
+              "type": "array",
+              "description": "The premises the document supplies itself, each flagged in the key-rate report: kind, the JSON pointer into the document, a label, the text a user reads, and the short ids of the assumptions it stands under (empty for a witness).",
+              "items": {
+                "type": "object",
+                "required": ["kind", "path", "label", "text", "assumptions"],
+                "additionalProperties": false,
+                "properties": {
+                  "kind": {"enum": ["constraint_entry", "attack_set_license", "feasibility_witness", "receiver_povm", "retention_attestation", "receiver_characterisation"]},
+                  "path": {"type": "string"},
+                  "label": {"type": "string"},
+                  "text": {"type": "string"},
+                  "assumptions": {"type": "array", "items": {"type": "string", "pattern": "^A-[A-Z0-9-]+$"}}
+                }
+              }
+            },
+            "absent": {
+              "type": "array",
+              "description": "Each optional field the configuration left absent, with what it was read as (an exact_window that is a parameter the configuration does not carry: no window). Optional: a record may omit it.",
+              "items": {
+                "type": "object",
+                "required": ["path", "parameter", "read_as"],
+                "additionalProperties": false,
+                "properties": {
+                  "path": {"type": "string"},
+                  "parameter": {"type": "string"},
+                  "read_as": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "config": {"$ref": "#/$defs/config"},
+        "refused": {"type": "boolean"},
+        "contracts": {
+          "type": "object",
+          "description": "The module version of every module that contributed, taken from the envelope of each consumed artefact -- except statistics, which emits none and whose consumed version is read from the generated claim-closure table (spec/modules/statistics/module.yaml).",
+          "additionalProperties": {"type": "string"}
+        },
+        "honest_model_note": {
+          "description": "WHICH honest model produced the distribution, verbatim and uninterpreted. Null where no caller named one.",
+          "type": ["object", "null"]
+        },
+        "assumption_manifest": {"$ref": "#/$defs/manifest"},
+        "composition_flow": {"$ref": "#/$defs/flow"},
+        "instance": {
+          "description": "Which instance ran -- its descriptor (id, title, summary, readme) and its parameter table (runs/surface.py ParameterSpec.as_payload, one per parameter) -- or null where the caller named none (runs/surface.py InstanceIdentity).",
+          "type": ["object", "null"],
+          "required": ["id", "title", "summary", "readme", "parameters"],
+          "properties": {
+            "id": {"type": "string"},
+            "title": {"type": "string"},
+            "summary": {"type": "string"},
+            "readme": {"type": "string"},
+            "parameters": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "section", "kind", "quantity", "unit", "default", "domain", "snapped", "meaning"],
+                "properties": {
+                  "name": {"type": "string"},
+                  "section": {"enum": ["model", "device"]},
+                  "meaning": {"type": "string"}
+                }
+              }
+            }
+          }
+        },
+        "provenance": {
+          "description": "The engine that wrote the record (runs/provenance.py engine_identity). Inside the payload, naming the producing code only; not the deferred envelope's provenance block, of which it would be a subset. git_commit and git_dirty are null outside a git checkout.",
+          "type": "object",
+          "required": ["engine"],
+          "additionalProperties": false,
+          "properties": {
+            "engine": {
+              "type": "object",
+              "required": ["distribution_version", "git_commit", "git_dirty"],
+              "additionalProperties": false,
+              "properties": {
+                "distribution_version": {"type": ["string", "null"]},
+                "git_commit": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+                "git_dirty": {"type": ["boolean", "null"]}
+              }
+            }
+          }
+        },
+        "channel_interface": {
+          "description": "source_shape distinguishes mode_and_intensity and bipartite sources. Its absence retains the finite prepare-and-measure interface. Receiver photon_cutoff is an evaluation cutoff, never a finite dimension assigned to a physical WCP source. Every interface that carries a receiver's photon_blocks carries that receiver's factored_loss t beside them (receiver/detector-imperfections/req:loss-before-evaluation; runs/channel.py) -- the finite interface at its top level, arm and each arms[i] on their own -- exact p/q (\"1\" at one) as the receiver artefact's efficiency_record.normalization records it. The pure-loss channel Lambda^loss_t acts on the channel modes before photon_blocks are evaluated: where t < 1 the blocks are the normalized station's, and a consumer computing statistics from them evaluates them on Lambda^loss_t of its channel's output, each station with its own t. Null on the declared-finite-POVM interface, which has no blocks.",
+          "type": ["object", "null"],
+          "properties": {
+            "source_shape": {"enum": ["mode_and_intensity", "bipartite"]},
+            "source_model": {"type": "string"},
+            "intensities": {"type": "object", "additionalProperties": {"type": "string"}},
+            "source_cutoff": {"type": "integer", "minimum": 0},
+            "factored_loss": {"type": ["string", "null"]},
+            "arm": {"type": "object"},
+            "arms": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "object"}}
+          }
+        },
+        "compiled": {
+          "type": "object",
+          "description": "The full public and source tables, transcribed from the compiler's own emitted record.",
+          "required": ["public", "source"],
+          "properties": {
+            "public": {
+              "type": "object",
+              "properties": {
+                "choice_weightings": {
+                  "description": "The def:weighted public choices the measured factors declared, transcribed from the compiler's choice_weighting_record: one entry per measured factor at which a weighting was applied, in the factors' order, each naming its factor (protocol-compiler/req:choice-weighting-record); empty where none was declared. matrix is keyed '<setting>|<choice>' with exact 'p/q' values; support rows are [label, v, f].",
+                  "type": "array",
+                  "items": {
+                  "type": "object",
+                  "required": ["factor", "setting_alphabet", "choice_alphabet", "matrix", "setting_map", "source_alphabet", "support"],
+                  "properties": {
+                    "factor": {"type": "string"},
+                    "setting_alphabet": {"type": "array", "items": {"type": "string"}},
+                    "choice_alphabet": {"type": "array", "items": {"type": "string"}},
+                    "matrix": {"type": "object", "additionalProperties": {"type": "string"}},
+                    "setting_map": {"type": "object", "additionalProperties": {"type": "string"}},
+                    "source_alphabet": {"type": "array", "items": {"type": "string"}},
+                    "support": {"type": "array", "items": {"type": "array", "items": {"type": "string"}, "minItems": 3, "maxItems": 3}}
+                  }
+                  }
+                }
+              }
+            },
+            "source": {"type": "object"}
+          }
+        },
+        "snaps": {"$ref": "#/$defs/snaps"},
+        "final_iterate": {
+          "description": "A completed general-format run's final iterate, written beside record.json by the run tier's one writer (runs/iterate_file.py attach_final_iterate): the file name, relative to the record's directory, and the sha256 of its bytes, which is what a warm start names. Absent on a refusal.",
+          "type": "object",
+          "required": ["file", "sha256"],
+          "properties": {
+            "file": {"type": "string"},
+            "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+          }
+        },
+        "stages": {
+          "type": "object",
+          "properties": {
+            "acceptance_construction": {
+              "type": "object",
+              "description": "The acceptance construction's outputs (runs/record.py _acceptance_payload): geometry, support, the certified completeness, the outcomes, the honest distribution and the endpoint rule. box is the acceptance box [q-, q+] per outcome, keyed by the record's outcome labels, each bound an exact rational p/q string; null where the acceptance set is not in canonical box form. An accepted run's frequency of every outcome lies in its interval, ends included.",
+              "properties": {
+                "box": {
+                  "oneOf": [
+                    {"type": "null"},
+                    {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "required": ["lower", "upper"],
+                        "additionalProperties": false,
+                        "properties": {"lower": {"type": "string", "pattern": "^-?[0-9]+(/[0-9]+)?$"}, "upper": {"type": "string", "pattern": "^-?[0-9]+(/[0-9]+)?$"}}
+                      }
+                    }
+                  ]
+                }
+              }
+            },
+            "key_rate": {
+              "description": "meat-core's result with every field that withholds a claim (runs/record.py _key_rate_payload). Every run writes the general record here (one Frank-Wolfe driver). It carries estimate_point_relaxed_member: whether the point h_low is taken at passes positivity at 0, the coupling window and the row windows (a record, not a gate). Its joint_solver carries q_rule: box-partial-minimum on a canonical-box acceptance set, vertex-step elsewhere (evidence, read by no number). Each per_iterate entry carries the verified feasible side of its bracket (meat-core/frank-wolfe/req:verified-feasible-side (vi)): feasible_side_bound (null where no bracket was formed), frame_deduction, row_multiplier_norm, oracle_pairing and dual_gap (diagnostics) and feasible_side_multipliers per group; nothing is checked on the oracle's return.",
+              "required": ["h_low", "reported_tier", "map_validation_report", "key_length", "key_length_reason", "key_length_reason_code", "reason_text", "security_parameter", "net_key_length", "constraint_entries_through_a_reductions_chain"],
+              "properties": {
+                "key_length": {"type": ["integer", "null"], "minimum": 0},
+                "key_length_reason": {"type": "string"},
+                "key_length_reason_code": {
+                  "description": "The code key_length_reason opens with, from a closed list (solvers/frank_wolfe/general_keyrate.py KEY_LENGTH_REASON_CODES): first_order_reported or certified_reported exactly when a key length is reported, certified_reported where the run is reported at the certified tier and the length is formed from the certified number; otherwise a withdrawal or other assurance reason (objective_infinite at h_low = +inf), security_gate_closed, alpha_outside_key_length_domain or declaration_not_compiled.",
+                  "enum": ["first_order_reported", "certified_reported", "security_gate_closed", "alpha_outside_key_length_domain", "declaration_not_compiled", "gradient_hypothesis_positivity", "gradient_hypothesis_support", "gradient_perturbation_applied", "iterate_not_feasible", "objective_infinite", "first_order_no_bracket", "acceptance_set_empty", "acceptance_set_ill_formed"]
+                },
+                "reason_text": {"type": ["string", "null"], "description": "One sentence for key_length_reason_code (general_keyrate.py KEY_LENGTH_REASON_TEXT), null for a code without one."},
+                "security_parameter": {"type": ["number", "null"], "description": "Eps_PA + eps_EV + 2 eps_auth of cor:composed-security (iii), at or above the exact sum; null exactly when key_length is."},
+                "net_key_length": {"type": ["integer", "null"], "description": "Key_length - k_auth, unclamped; null exactly when key_length is."},
+                "constraint_entries_through_a_reductions_chain": {"type": "integer", "minimum": 0, "description": "Provenance: how many of the declaration's constraint entries a reductions chain transported. It decides nothing (A-SOUND is not emitted); it is the one place a reader sees it."},
+                "solver_request": {"type": ["object", "null"], "description": "Resolved common candidate-search request; proof thresholds are solver-owned."},
+                "reference_bracket": {
+                  "type": ["object", "null"],
+                  "description": "The first-order bound on the reference companion (meat-core/frank-wolfe/req:bracket-on-reference), on a run handed a compiled companion, null otherwise. status counted (h_lb above IS the bound on the companion and the key length is formed from it), withdrawn (no evaluated point contributed, reason reference_bracket_withdrawn: h_lb is the bound on the searched declaration) or not_evaluated (the companion was not admitted, or a dropped program ran). snapped.h_lb is the bound on the searched, snapped declaration and snapped.key_length the length it would give, both diagnostics; difference is h_lb_reference - snapped.h_lb with its sign; points holds both brackets per evaluated point; admission the companion's evaluation-only admission (no run of its own) with its measurements. The points are of two sets (req:bracket-on-reference (i)), each point's set naming its own: search (at most the four best contributing iterates of the search on the snapped declaration and its last, with bracket_snapped) and polish (at most the four best contributing points of the polish, a short search on the companion's own program started at the search set's point with the largest snapped bracket, and its last; bracket_snapped null); polish records the polish: ran, reason where it did not run (start_not_exact where its start point's acceptance-side component was not formed on the exact island), start_index (its start's index in the search set), share (reference_polish_share, 1/10, of the wall budget of one evaluation, set aside before the search), budget_seconds (null where the evaluation has none), seconds, method (corrective, or fw where the acceptance geometry admits no corrective search), iteration_cap, points_assessed, stop_cause (share_spent, iteration_cap, stagnated, gap_target, or a failure: oracle_failure, numerical_failure, assessment_failure, preparation_failure) and detail; null where nothing was evaluated on the companion.",
+                  "required": ["status", "reason", "cause", "h_lb_reference", "counted", "snapped", "difference", "points", "admission"],
+                  "properties": {
+                    "status": {"enum": ["counted", "withdrawn", "not_evaluated"]},
+                    "reason": {"type": ["string", "null"]},
+                    "cause": {"oneOf": [{"type": "null"}, {"enum": ["factor_enclosure_inconsistent"]}], "description": "Null, or the second cause of req:bracket-on-reference (iv): the certified evaluation found the two enclosures of a block the companion carries inconsistent (req:certified-evaluation (iv)(c)) and withdrew a bracket that counted; h_lb is then the bound on the searched declaration."},
+                    "h_lb_reference": {"type": ["number", "null"]},
+                    "counted": {"type": "boolean"},
+                    "snapped": {
+                      "type": "object",
+                      "required": ["h_lb", "key_length"],
+                      "properties": {
+                        "h_lb": {"type": ["number", "null"]},
+                        "key_length": {"type": ["integer", "null"]}
+                      }
+                    },
+                    "difference": {"type": ["number", "null"]},
+                    "polish": {"type": ["object", "null"], "required": ["ran", "reason", "start_index", "share", "budget_seconds", "seconds", "method", "iteration_cap", "points_assessed", "stop_cause"], "properties": {"ran": {"type": "boolean"}, "reason": {"type": ["string", "null"]}, "start_index": {"type": ["integer", "null"]}, "share": {"type": "string"}, "budget_seconds": {"type": ["number", "null"]}, "seconds": {"type": "number"}, "method": {"enum": ["corrective", "fw", null]}, "iteration_cap": {"type": ["integer", "null"]}, "points_assessed": {"type": "integer", "minimum": 0}, "stop_cause": {"type": ["string", "null"]}}},
+                    "points": {"type": "array", "items": {"type": "object", "required": ["set", "iteration", "roles", "bracket_snapped", "bracket_reference", "withdrawal_reference"], "properties": {"set": {"enum": ["search", "polish"]}, "feasible_side_reference": {"type": ["object", "null"], "description": "The record meat-core/frank-wolfe/req:verified-feasible-side (vi) asks of the bracket on the companion at this point, null where none was formed: feasible_side_bound (the verified lower bound on the feasible-side minimum as it entered the bracket, rounded toward -inf), frame_deduction, row_multiplier_norm, oracle_pairing and dual_gap (diagnostics), and feasible_side_multipliers per group (backend, zero or rows_zeroed)."}}}},
+                    "admission": {"type": ["object", "null"]}
+                  }
+                },
+                "certified": {
+                  "type": ["object", "null"],
+                  "description": "The certified evaluation of the first-order bound (meat-core/frank-wolfe/req:certified-evaluation (ix)) on a run that forms a first-order number, null otherwise. status certified (the key length is formed from certified_bound, reported_tier certified), not_certified (no point certified, or certifier_unavailable), withheld (a point was certified, the tier withheld for numerical_trust_premise or receiver_weight_floating_point) or off. certified_bound is h_cert rounded toward -inf, the only field that enters a number; first_order_key_length the key length of the first-order number beside it; certified_minus_first_order a diagnostic with its sign. Per point: index, iteration, certified, acceptance_side_bound and feasible_side_bound (b^A and b^F of the certified bracket, not the first-order bracket's fields), certified_bracket, gradient_radius, reasons and detail.",
+                  "required": ["certified_evaluation", "status", "certified_bound", "first_order_key_length", "certified_minus_first_order", "max_gradient_radius", "working_precision_bits", "arithmetic_library", "reasons", "points", "declaration", "premises", "resting_blocks"],
+                  "properties": {
+                    "certified_evaluation": {"enum": ["on", "off", "strict"]},
+                    "status": {"enum": ["certified", "not_certified", "withheld", "off"]},
+                    "certified_bound": {"type": ["number", "null"]},
+                    "reasons": {"type": "array", "items": {"enum": ["not_certified", "certifier_unavailable", "numerical_trust_premise", "receiver_weight_floating_point", "certified_evaluation_off"]}},
+                    "points": {"type": "array", "items": {"type": "object", "required": ["index", "certified", "acceptance_side_bound", "feasible_side_bound", "certified_bracket", "gradient_radius", "reasons"], "properties": {"set": {"enum": ["search", "polish", null], "description": "The set of req:bracket-on-reference (i) the point belongs to; null where the caller named none."}, "sequence": {"type": ["integer", "null"], "description": "The order the search and then the polish consumed the point in, which breaks ties in req:certified-evaluation (i)'s selection."}, "reasons": {"type": "array", "items": {"enum": ["acceptance_iterate_not_exact", "frame_not_enclosed", "rank_not_certified", "factor_enclosure_inconsistent", "block_not_positive_definite", "positivity_not_certified", "support_not_established", "floor_not_certified", "acceptance_geometry_not_certified", "boxed_form_inconsistent"]}}}}},
+                    "declaration": {"oneOf": [{"type": "null"}, {"enum": ["reference_companion", "searched"]}], "description": "The declaration the per-point entries were evaluated on; null with the option off."},
+                    "premises": {"type": "array", "items": {"enum": ["A-SNAP"]}, "description": "[\"A-SNAP\"] wherever a moved block or class of the declaration the certified number is formed on rests on A-SNAP (req:certified-evaluation (ix)), else []."},
+                    "resting_blocks": {"type": "array", "items": {"type": "object", "required": ["origin", "block", "group", "cause"]}, "description": "Those blocks and classes, as snaps.reference_companion.resting_blocks names them; in the fallback the blocks the companion carried, cause companion_not_certified."},
+                    "companion_points": {"type": "array", "items": {"type": "object", "required": ["index", "certified", "acceptance_side_bound", "feasible_side_bound", "certified_bracket", "gradient_radius", "reasons"], "properties": {"reasons": {"type": "array", "items": {"enum": ["acceptance_iterate_not_exact", "frame_not_enclosed", "rank_not_certified", "factor_enclosure_inconsistent", "block_not_positive_definite", "positivity_not_certified", "support_not_established", "floor_not_certified", "acceptance_geometry_not_certified", "boxed_form_inconsistent"]}}}}, "description": "Present only where the evaluation ran on a companion and then on the searched declaration (the fallback, or a bracket withdrawn on factor_enclosure_inconsistent): the companion's points with their reasons."}
+                  }
+                },
+                "search_report": {"type": "object", "description": "Search methods, budgets, switches and termination, separate from qualification of the reported bound."},
+                "map_validation_report": {
+                  "description": "Every completed run carries it here, and in the solve stage's map_generation_and_cross_validation child. It holds hsupp_reference_band: support_cutoff, factor_support_cutoff (its square root) and pairs[<chat>][<pair>], per key-active pair the number of directions of the pair's Kraus stack whose singular value lies in (support_cutoff, sqrt(support_cutoff)] relative to the largest -- directions the (H-SUPP) reference dim W does not count (meat-core/frank-wolfe/rem:fo-one-ruler). A diagnostic; it decides nothing.",
+                  "properties": {
+                    "hsupp_reference_band": {
+                      "type": "object",
+                      "required": ["support_cutoff", "factor_support_cutoff", "pairs"],
+                      "properties": {
+                        "support_cutoff": {"type": "number"},
+                        "factor_support_cutoff": {"type": "number"},
+                        "pairs": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "object",
+                            "additionalProperties": {"type": "integer", "minimum": 0}
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "reduction": {
+              "type": "object",
+              "description": "reductions' emitted artefact at the granularity a reader needs (runs/record.py reduction_payload), or its refusal. No requirement emits a domination link, and every entry the declared route asks for is in force.",
+              "not": {"anyOf": [{"required": ["domination_record"]}, {"required": ["entries_not_in_force"]}]},
+              "properties": {
+                "emission_record": {"type": "object"},
+                "receiver_row_omitted_on_provenance": {"type": "array", "items": {"type": "string"}, "description": "Per reductions/req:recv-row-provenance (runs/record.py reduction_payload): empty where the artefact's ledger carries the A-RECV row; where it omits it, the receiver artefact's version, the run having built that receiver artefact itself with a model admissible exactly and every weight evaluated rigorously (the run's receiver_provenance attestation, runs/receiver_provenance.py). Each stations[i].reduction carries the same key in its machine record. The compiler's ledger carries no A-RECV row on any route."},
+                "reference_companion": {"type": ["object", "null"], "description": "The reference companion emitted beside the artefact (reductions/req:reference-companion (v)): emitted true with the per-block record (handed reference or snapped block, kind, largest radius after recentring), the datum's largest radius, each relaxed entry's delta and a SHA-256 of the exact data; or emitted false with the reason. It is formed also where no block is handed but the emission normaliser moved a class (formed_from handed_datum: the producer's exact construction, every block carried snapped), and the reason of its absence is no_block_handed_no_class_moved or no_h_ref_claim; the requested entries formed on it are named with what established their certificate there (requested_entries_formed) and those not formed with the reason (requested_entries_not_formed, objects). It carries factor_enclosures (reductions/req:reference-companion (vii)): claim, the claim the builder names that its rule is a non-negative combination (reductions/wpfss/cor:flat-companion), or null; cause, null or no_non_negative_combination_claim; carried, the number of elements of the datum that carry a factor enclosure; and elements, per joint outcome (outcome) and data sector (data_sector), carried with its columns, or the cause: combining_block_without_factor, or no_non_negative_combination_claim where no claim is named."}
+              }
+            },
+            "solve": {
+              "type": "object",
+              "description": "Present on a refused record whose solve stage refused: refused, reason and detail. meat-core refuses there, reason acceptance_set_unreachable with refused_by meat-core, on a checked run whose cap 2^(-x) on the probability that devices as declared pass the acceptance test is at most min_model_pass_probability, an undecided comparison included (meat-core/req:unreachable-acceptance-set (iv)), refused as a whole before any order is evaluated, so it carries no plausibility; its numbers are in statistics_consistency. The strict option refuses there after the search, reason strict_snaps, wherever a moved block or data sector is not evaluated off its snap (foundations/req:snap-reference (iv)). The run tier's own refusal there, reason entropy_bound_above_key_ceiling (runs/errors.py RunRefusalReason; runs/plausibility.py), carries refused_by runs and plausibility: the bound the key length is computed from (bound_name h_lb or h_lb_dropped, bound), the ceiling log2(key_value_count + 1) * key_live_mass with its factors (meat-core/prop:value-range (ii)), the slack, h_low beside them, compared and exceeded. The comparison is exact where the key length is formed from the certified number (comparison exact, bound_name h_cert, bound its lower end, against ceiling_upper with slack 0) and relative otherwise (comparison relative: the binary64 bound against ceiling_upper plus relative_slack times it, relative_slack 2^-10; slack and threshold in bits per round); first_order_bound is the first-order number beside it, and objective_split the divergence penalty, the entropy terms and the penalty's share at the returned point (a diagnostic, null where not finite). The detail says that the accepted statistics contradict the declared model; on a searched run it adds that the search refused the run as a whole at that alpha. The solve stage of composition_flow carries the same block in its detail on every run that solved.",
+              "properties": {
+                "refused": {"type": "boolean"},
+                "reason": {"type": "string"},
+                "detail": {"type": "string"},
+                "refused_by": {"enum": ["runs", "meat-core"]},
+                "plausibility": {"$ref": "#/$defs/plausibility"}
+              }
+            },
+            "stations": {
+              "type": "array", "minItems": 1,
+              "description": "Ordered supplier artifacts and preparation displacement per station; no product POVM datum is substituted for them. factor and party are the station's declared identity (runs/pipeline.py Station): the measured factor of the compiled declaration this station's receiver became, and that factor's party, held against the declaration before the record exists.",
+              "items": {
+                "type": "object",
+                "required": ["index", "factor", "party", "receiver_route", "receiver", "reduction", "rows_adaptation"],
+                "properties": {
+                  "index": {"type": "integer", "minimum": 0},
+                  "factor": {"type": "string"},
+                  "party": {"type": "string"},
+                  "receiver_route": {"description": "How this station's receiver was given.", "enum": ["port-grams", "instrument-matrix", "element-graph"]}
+                }
+              }
+            },
+            "receiver_construction": {
+              "type": "object",
+              "required": ["route", "receiver_route"],
+              "properties": {
+                "route": {"enum": ["compiled_receiver", "declared_finite_povm"]},
+                "assumption_ledger": {"type": ["array", "null"], "items": {"type": "object", "required": ["id", "machine_key", "never_verified", "constrains"]}, "description": "Per reductions/req:recv-row-provenance (iii) (runs/record.py receiver_payload): the receiver artefact's own assumption ledger, row for row, each with the declared values it constrains, as the artefact's payload writes it, on the single-receiver route. Null on the declared-finite-POVM route, which has no receiver artefact, and on a multi-station run, where each stations[i].receiver carries its own artefact's ledger under the same key. Where the reductions artefact omits its A-RECV row, the supplier's keys reach the record from there."},
+                "efficiency_normalization": {
+                  "description": "Per receiver/detector-imperfections/req:normalization-record (runs/record.py receiver_payload): the receiver's efficiency normalization as its artefact's efficiency_record.normalization carries it -- factored_loss t (exact p/q), factor_declared (whether t was declared in the request or set by req:efficiency-normalization's default), applied (exactly where t < 1), reason (where not applied, the first that holds of source_modes_declared, all_efficiencies_zero, factor_one -- the factor one, declared or by default; null where applied), ports (each port's declared_efficiency beside the compiled_efficiency eta_k/t, exact p/q) and measurement (where t < 1, the statement that the blocks are the normalized station's; else null). null on the declared-finite-POVM route. Each stations[i].receiver carries the same object under efficiency_record.normalization, beside the declared loss parameters under efficiency_record.rows (each row's value under `value`).",
+                  "type": ["object", "null"]
+                },
+                "receiver_route": {
+                  "description": "How the run's receiver was given (runs/record.py receiver_route), read off the artefacts' presences -- receiver_construction present: element-graph; residuals r_1 and r_3 emitted: instrument-matrix; neither: port-grams; no receiver artefact at all: declared-finite-povm (Band A); stations given differently: per-station, each stations[i] naming its own.",
+                  "enum": ["port-grams", "instrument-matrix", "element-graph", "declared-finite-povm", "per-station"]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "config": {
+      "type": "object",
+      "description": "The composition: the values selected TOGETHER for one run. Exact rationals are 'p/q' strings and never floats; declared_tolerance is a JSON number because it IS its binary64 datum.",
+      "required": [
+        "rounds",
+        "completeness_budget",
+        "declared_tolerance",
+        "parameters",
+        "model",
+        "device",
+        "endpoint_rule",
+        "tail_evaluation",
+        "config_digest"
+      ],
+      "properties": {
+        "rounds": {"type": "integer", "minimum": 1},
+        "completeness_budget": {"type": "string"},
+        "declared_tolerance": {"type": "number", "minimum": 0, "exclusiveMaximum": 1},
+        "parameters": {
+          "type": "object",
+          "description": "The key-length parameters of meat-core Section 2.4 and A-AUTH's two run inputs: eps_auth in [0, 1) and k_auth a non-negative number of bits, default 0, always written here (the key-rate report flags a zero as not counted); RunConfig.to_payload, and so config_digest, carries them only where they are not 0. The snap run parameters (foundations/req:snap-reference (i), (iv)), always written here, and in the configuration's payload and digest where not their default: reference_enclosure (default true) and strict_snaps (default false). A configuration payload naming certify_snaps, certified_weight_ceiling or strict_certification is refused (retired_parameter).",
+          "required": ["alpha", "eps_pa", "eps_ev", "lambda_ec", "eps_auth", "k_auth", "reference_enclosure", "strict_snaps"],
+          "not": {"anyOf": [{"required": ["certify_snaps"]}, {"required": ["certified_weight_ceiling"]}, {"required": ["strict_certification"]}]},
+          "properties": {
+            "alpha": {"type": "number"},
+            "eps_pa": {"type": "number"},
+            "eps_ev": {"type": "number"},
+            "lambda_ec": {"type": "integer", "minimum": 0},
+            "eps_auth": {"type": "number", "minimum": 0, "exclusiveMaximum": 1},
+            "k_auth": {"type": "integer", "minimum": 0},
+            "reference_enclosure": {"type": "boolean", "description": "Whether enclosed references are used; off, the instance hands only the blocks of its reference known exactly, and every other moved block rests on A-SNAP in the group no_usable_reference (cause enclosure_not_used)."},
+            "strict_snaps": {"type": "boolean", "description": "The strict option: it refuses wherever a moved block or class would rest on A-SNAP, and needs no other option."},
+            "statistics_check": {"enum": ["on", "off"], "description": "Always written on a record (the configuration's payload and digest carry it where not on): the check of the acceptance set against the feasible statistics (meat-core/req:unreachable-acceptance-set), default on; off opts a run in scope out, recorded under statistics_consistency."},
+            "min_model_pass_probability": {"type": "string", "description": "Always written on a record (the configuration's payload and digest carry it where not 1/2): tau of meat-core/req:unreachable-acceptance-set (iv), an exact rational p/q in (0, 1]."}
+          }
+        },
+        "model": {"type": "object"},
+        "device": {"type": "object"},
+        "alpha": {"type": ["number", "null"]},
+        "alpha_search": {
+          "description": "The opt-in outer alpha search the configuration asked for (RunConfig.alpha_search), written only where set, and so absent from the configuration digest otherwise. Where present, alpha is null and the solve stage's alpha child in composition_flow carries searched true with the search: its settings, every evaluation and the chosen alpha.",
+          "type": "object",
+          "required": ["lower_alpha_minus_one", "upper_alpha_minus_one", "coarse_points", "refine_steps"],
+          "properties": {
+            "lower_alpha_minus_one": {"type": "number"},
+            "upper_alpha_minus_one": {"type": "number"},
+            "coarse_points": {"type": "integer", "minimum": 2},
+            "refine_steps": {"type": "integer", "minimum": 0}
+          }
+        },
+        "constrained": {"type": ["array", "null"]},
+        "solver": {
+          "description": "Null means the solver's own defaults, which are the solver's to move and are not copied here. The block has two tiers: the ordinary method (auto or fw), budget_seconds and max_iterations, and the expert choices under advanced, written only where one is chosen.",
+          "type": ["object", "null"],
+          "properties": {
+            "max_iterations": {"type": ["integer", "null"]},
+            "method": {"enum": ["auto", "fw"], "description": "The ordinary method; absent means the run tier's default (runs/surface.py DEFAULT_METHOD)."},
+            "budget_seconds": {"type": "number", "exclusiveMinimum": 0},
+            "advanced": {
+              "description": "The expert choices, each written only where chosen; the block is absent where none is.",
+              "type": "object",
+              "properties": {
+                "method": {"enum": ["pairwise", "factor", "entropy", "corrective"], "description": "An expert method, which overrides the ordinary one (never both set)."},
+                "oracle": {"enum": ["qics", "spectral"], "description": "General format only; absent means the solver's own (qics)."},
+                "gap_tolerance": {"type": "number", "exclusiveMinimum": 0, "description": "A diagnostic gap target; absent means the solver's own."},
+                "certified_evaluation": {"enum": ["on", "off", "strict"], "description": "meat-core/frank-wolfe/req:certified-evaluation's option; absent means on."},
+                "warm_start": {
+                  "description": "A prior point's final iterate: the file it was read from and the sha256 of that file, which is the seed's identity. Absent means a cold start.",
+                  "type": "object",
+                  "required": ["file", "sha256"],
+                  "properties": {
+                    "file": {"type": "string"},
+                    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "endpoint_rule": {"enum": ["exact", "bernstein"]},
+        "tail_evaluation": {"enum": ["sweep", "enclosure"]},
+        "config_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "description": "spec/architecture.md 4.4. Machine-generated, never hand-written. The route-exact assumption set of the run (runs/assumptions.py). No emitter emits A-EVE-DIM (meat-core/ass:eve-dim, superseded), and the key-length roots' closures hold A-LINK, A-SPEC and A-ALICE-MEAS (meat-core/thm:keylength): each is listed as engaged where the compiler's ledger emits it, and otherwise under not_engaged (A-LINK with discharged_by where a root of the run discharges it).",
+      "required": ["roots", "claim_closure", "assumptions", "not_engaged", "discrepancies", "module_versions", "reported_tier"],
+      "additionalProperties": false,
+      "properties": {
+        "roots": {
+          "description": "Per module that ran, the top-level results this run used (runs/assumptions.py run_claim_roots); a module that did not run has no key. meat-core's are the key-rate result's claim_roots, plus the secrecy, correctness and composition roots on a reported key length.",
+          "type": "object",
+          "additionalProperties": {"type": "array", "items": {"type": "string"}}
+        },
+        "assumptions": {
+          "description": "One entry per assumption a row of the run engaged, deduplicated across emitters, sorted by short id. Each carries the closure table's snapshot of its text and fields, every emitter that engaged it and the declared values its rows bind.",
+          "type": "array",
+          "items": {"$ref": "#/$defs/assumptionEntry"}
+        },
+        "not_engaged": {
+          "description": "Members of the run's claim closure that a module which ran did not emit on this route: once per such module, with its emission rule or condition as the reason, and discharged_by where a root of the run discharges the member on this route.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["short_id", "module", "reason"],
+            "additionalProperties": false,
+            "properties": {
+              "short_id": {"type": "string"},
+              "module": {"type": "string"},
+              "reason": {"type": "string"},
+              "discharged_by": {"type": "string"}
+            }
+          }
+        },
+        "discrepancies": {
+          "description": "Where the emitted rows and the claim closures disagree. Recorded, never refused (the listed side is the safe one); tests make them fatal.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["short_id", "kind", "emitted_by", "detail"],
+            "additionalProperties": false,
+            "properties": {
+              "short_id": {"type": "string"},
+              "kind": {"enum": ["emitted_not_in_closure", "in_closure_no_emitter", "emitted_where_discharged"]},
+              "emitted_by": {"type": "array", "items": {"$ref": "#/$defs/emitter"}},
+              "detail": {"type": "string"}
+            }
+          }
+        },
+        "module_versions": {"type": "object", "additionalProperties": {"type": "string"}},
+        "claim_closure": {
+          "description": "Keyed by every root of the run (the union over the modules of roots, in that order), not only the key-rate result's claim_roots. claims is the root followed by its transitive uses closure, assumptions maps every assumption short id those claims declare to the assumption claim that owns it (what python -m harness.check_claims --assumptions <root> lists). Read from the generated package data certiqs_key/domain/claim_closure.json (harness/generate_claim_closure.py).",
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "object",
+            "required": ["claims", "assumptions"],
+            "additionalProperties": false,
+            "properties": {
+              "claims": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+              "assumptions": {"type": "object", "additionalProperties": {"type": "string"}}
+            }
+          }
+        },
+        "reported_tier": {"enum": ["estimate", "first-order", "certified"]}
+      }
+    },
+    "emitter": {
+      "type": "object",
+      "required": ["module", "station", "party"],
+      "properties": {
+        "module": {"type": "string"},
+        "station": {"type": ["integer", "null"], "minimum": 0},
+        "party": {"enum": ["A", "B", null], "description": "The party of a row its emitter emits once per party of the declaration (meat-core's A-LAB), null on every other row."}
+      }
+    },
+    "assumptionEntry": {
+      "type": "object",
+      "description": "One engaged assumption of the run. Every field but short_id, section, emitted_by and bindings is the closure table's snapshot of the assumption's header (certiqs_key/domain/claim_closure.json), copied so that the record stays readable after the engine moves.",
+      "required": ["short_id", "section", "machine_key", "owner", "verification", "verification_sentence", "title", "summary", "user_statement", "category", "affects", "refines", "status", "effective_status", "contract", "emitted_by", "bindings"],
+      "additionalProperties": false,
+      "properties": {
+        "short_id": {"type": "string", "pattern": "^A-[A-Z0-9-]+$"},
+        "section": {"enum": ["assumptions", "numerics"], "description": "numerics for a numerical-trust premise (A-EIG), assumptions for every other."},
+        "machine_key": {"type": "string"},
+        "owner": {"type": "string", "description": "The claim id of the assumption file."},
+        "verification": {"enum": ["never", "partly"]},
+        "verification_sentence": {"type": "string"},
+        "title": {"type": "string"},
+        "summary": {"type": "string"},
+        "user_statement": {"type": ["string", "null"]},
+        "category": {"type": ["string", "null"]},
+        "affects": {"type": ["array", "null"], "items": {"type": "string"}},
+        "refines": {"type": ["string", "null"]},
+        "presupposes": {"type": "array", "items": {"type": "string"}, "description": "The roles a run must have for the assumption's text to hold, copied by the snapshot from the presupposes header field; empty where its header names none."},
+        "status": {"type": "string"},
+        "effective_status": {"type": "string"},
+        "contract": {
+          "type": "object",
+          "required": ["pdf", "anchor"],
+          "properties": {"pdf": {"type": "string"}, "anchor": {"type": "string"}}
+        },
+        "emitted_by": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["module", "station", "party", "machine_key", "inherited_from"],
+            "additionalProperties": false,
+            "properties": {
+              "module": {"type": "string"},
+              "station": {"type": ["integer", "null"], "minimum": 0},
+              "party": {"enum": ["A", "B", null], "description": "The party of a row emitted once per party (meat-core's A-LAB), null on every other row."},
+              "machine_key": {"type": "string"},
+              "inherited_from": {"type": ["string", "null"], "description": "The supplier version a reductions A-RECV row was accepted against."}
+            }
+          }
+        },
+        "bindings": {
+          "description": "The declared values the assumption's rows bind, each with the emitters that bound it; identical values from several emitters are one binding. A value is JSON data: exact rationals as 'p/q', operators by shape.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "value", "emitted_by"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {"type": "string"},
+              "value": true,
+              "emitted_by": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/emitter"}}
+            }
+          }
+        }
+      }
+    },
+    "flow": {
+      "type": "object",
+      "description": "The ordered stage list IS the provenance graph, and the Mermaid text is rendered from it. One source, not a parallel schema.",
+      "required": ["stages", "mermaid"],
+      "properties": {
+        "mermaid": {"type": "string"},
+        "stages": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/stage"}
+        }
+      }
+    },
+    "artefact_kind": {
+      "description": "What an emitted artefact IS (runs/flow.py ArtefactKind). docked_declaration is the docking stage's emission, through which the recorded graph shows the honest model reaching the solve.",
+      "enum": [
+        "receiver_artifact",
+        "reduction_chain",
+        "transmitter_artifact",
+        "declaration",
+        "honest_distribution",
+        "acceptance_set",
+        "docked_declaration",
+        "bundle",
+        "key_rate_result"
+      ]
+    },
+    "stage": {
+      "type": "object",
+      "required": ["stage", "station", "module", "status", "consumes", "emits", "children"],
+      "properties": {
+        "station": {
+          "description": "The station this stage ran for: the factor of the payload.stages.stations entry it belongs to, on each device-prologue stage (receiver_construction, receiver_docking, reduction) of a multi-station route, planned and not_executed entries included; null on every other stage and on every stage of a single-device route.",
+          "type": ["string", "null"]
+        },
+        "stage": {
+          "enum": [
+            "receiver_construction",
+            "receiver_docking",
+            "reduction",
+            "compilation",
+            "honest_model",
+            "acceptance_construction",
+            "docking",
+            "bundle_write",
+            "bundle_read",
+            "solve"
+          ]
+        },
+        "module": {"type": "string"},
+        "status": {"enum": ["executed", "refused", "not_executed", "planned"]},
+        "reason": {
+          "description": "The refusing module's own machine-readable code. Null on a stage that did not refuse. The honest_model stage may refuse under the run tier's own factored_loss_not_applied (runs/errors.py RunRefusalReason; receiver/detector-imperfections/req:loss-before-evaluation): a station's receiver was compiled at a factored loss below one and the honest provider does not declare that it applies that loss; also where the raw joint provider over X x V does not declare it (runs/pipeline.py LossAppliedRawProvider), refused before the raw law is formed.",
+          "type": ["string", "null"]
+        },
+        "refusal_detail": {"type": ["string", "null"]},
+        "detail": {"type": "object"},
+        "wall_time_s": {"type": ["number", "null"]},
+        "consumes": {
+          "type": "object",
+          "required": ["config", "artefacts", "artefact_kinds"],
+          "properties": {
+            "config": {"type": "array", "items": {"type": "string"}},
+            "artefacts": {
+              "description": "The ids of the upstream artefacts this stage was PASSED, at the moment it was passed. Empty on a planned entry: an id names a thing that has been computed.",
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "artefact_kinds": {
+              "description": "The kinds this stage consumes. On an executed or refused entry they are read back off the ids beside them, which carry them; on a PLANNED entry they are the declared table (runs/flow.py PLANNED_ARTEFACT_KINDS), which is what lets a preparation's graph have artefact edges at all.",
+              "type": "array",
+              "items": {"$ref": "#/$defs/artefact_kind"}
+            }
+          }
+        },
+        "emits": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "kind", "digest", "record_key"],
+            "properties": {
+              "id": {"type": "string"},
+              "kind": {"$ref": "#/$defs/artefact_kind"},
+              "digest": {
+                "description": "The run tier's own sha256 of the artefact's payload as the record serialises it. For bundle and docked_declaration it covers the manifest and every array's layout, shape, dtype and byte sha256 (runs/flow.py bundle_digest).",
+                "type": "string", "pattern": "^[0-9a-f]{64}$"
+              },
+              "record_key": {
+                "description": "Where the run record holds this artefact, as a dotted path with [i] for a list index, e.g. payload.stages.stations[1].reduction for a station's reduction chain. Null where the artefact reaches the record only through another (the docked declaration, through the bundle).",
+                "type": ["string", "null"]
+              }
+            }
+          }
+        },
+        "children": {
+          "description": "The steps inside the solve, read off the result (runs/pipeline.py _solve_children). Its alpha child names the alpha the run solved at with searched false; on a run chosen by the outer alpha search (runs/alpha_search.py), it carries searched true and the search: rule, reads, settings, chosen_alpha (null where every evaluation refused, the child's status then none_chosen) and evaluations, one per run in the order run. A refused or unexecuted solve then has that alpha child too. The status is contradiction where an evaluation proved one (contradiction_alpha): the search stopped there and the record is that evaluation's refusal. It is acceptance_set_unreachable where meat-core/req:unreachable-acceptance-set refuses the run as a whole: an evaluation was refused there (reason solve: acceptance_set_unreachable) and none reported a key length; the record is the first such evaluation's refusal. It is no_positive_key where evaluations formed bounds and none reported a positive key length: no alpha is chosen and the record is the run of the evaluation with the largest h_low (no_positive_key).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "status", "detail", "wall_time_s"],
+            "properties": {
+              "name": {"type": "string"},
+              "status": {"type": "string"},
+              "detail": {"type": "object"},
+              "wall_time_s": {"type": ["number", "null"]}
+            },
+            "if": {
+              "required": ["name", "detail"],
+              "properties": {
+                "name": {"const": "alpha"},
+                "detail": {"required": ["searched"], "properties": {"searched": {"const": true}}}
+              }
+            },
+            "then": {"properties": {"detail": {"$ref": "#/$defs/alpha_search"}}}
+          }
+        }
+      }
+    },
+    "snaps": {
+      "type": "object",
+      "description": "Every snap this run performed, from the two places entitled to one -- the instance on what it declared, the producer on its own emission. A consumer never appears here, and its absence is the invariant the block exists to make visible.",
+      "required": [
+        "declared_tolerance",
+        "instance",
+        "producer",
+        "snap_max_defect",
+        "snap_max_displacement"
+      ],
+      "properties": {
+        "declared_tolerance": {"type": "number"},
+        "instance": {"$ref": "#/$defs/instanceSnaps"},
+        "producer": {
+          "type": ["object", "null"],
+          "description": "The emission normaliser's own snap (reductions/req:emission-record). Its blocks are the per-class records beside run_settings, reference_kind (always exact) and snapped_measurement_assumption. A class is kept or moved, a moved one with its step (snap_for_fidelity or last_resort), hosts and mixing weight; a sector's evaluated_off_snap is true only where it holds a moved class the run evaluated off its snap.",
+          "properties": {
+            "run_settings": {"type": "object", "required": ["strict_snaps", "enclosed_references_used"]},
+            "reference_kind": {"const": "exact"},
+            "snapped_measurement_assumption": {"type": ["object", "null"]},
+            "blocks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["block_index", "already_on_lattice", "displacement", "displacement_squared", "classes"],
+                "not": {"anyOf": [{"required": ["designated_element"]}, {"required": ["lift_weight"]}, {"required": ["lift_probability_vector"]}, {"required": ["emission_weight"]}]},
+                "properties": {
+                  "classes": {"type": "array", "items": {"type": "object", "required": ["class", "status", "step", "hosts", "mixing_weight", "support_not_preserved"], "properties": {"status": {"enum": ["kept", "moved", "not_admissible"]}, "step": {"oneOf": [{"type": "null"}, {"enum": ["snap_for_fidelity", "last_resort"]}]}}}},
+                  "evaluated_off_snap": {"type": "boolean"}
+                }
+              }
+            }
+          }
+        },
+        "snap_max_defect": {
+          "description": "The largest MEASURED pre-snap defect over the run, or null where none was measured: nothing was snapped, or every snap was made against a reference (defects_ground 'reference'), whose defects are zero by its definition. 0.0 would say a measured snap ran and moved nothing.",
+          "type": ["number", "null"]
+        },
+        "snap_max_displacement": {"type": ["number", "null"]},
+        "reference_companion": {
+          "type": "object",
+          "description": "The run's decision on the direct route (meat-core/frank-wolfe/req:bracket-on-reference (v); runs/direct_route.py). status counted, withdrawn, not_evaluated, not_compiled or absent; evaluated_off_snap lists the instance's MOVED snap blocks evaluated off their snap (m=<m>, t=<setting>, per station), evaluated_off_snap_count counts them, emission_evaluated_off_snap names per station the data sectors with a moved class that were; kept_blocks names the blocks the snap kept, counted in neither list; resting_blocks are the moved blocks and sectors that still rest on A-SNAP, each with its group (no_usable_reference, reference_bracket_withdrawn, reference_bracket_not_evaluated, last_resort), cause and fix, and rests_on_a_snap says whether any does; compiled is the compiled companion's record or why none was compiled.",
+          "required": ["status", "reason", "evaluated_off_snap", "evaluated_off_snap_count", "emission_evaluated_off_snap", "kept_blocks", "resting_blocks", "rests_on_a_snap", "compiled"],
+          "properties": {
+            "status": {"enum": ["counted", "withdrawn", "not_evaluated", "not_compiled", "absent"]},
+            "reason": {"type": ["string", "null"]},
+            "fallback": {"type": "boolean", "description": "The companion's bound counts but the key length is formed from a number certified on the searched declaration (meat-core/frank-wolfe/req:certified-evaluation (i)), so the blocks it carried rest on A-SNAP with the cause companion_not_certified."},
+            "evaluated_off_snap": {"type": "array", "items": {"type": "object", "required": ["station", "factor", "block"]}},
+            "evaluated_off_snap_count": {"type": "integer", "minimum": 0},
+            "emission_evaluated_off_snap": {"type": "array", "items": {"type": "object", "required": ["station", "factor", "data_sectors"]}},
+            "kept_blocks": {"type": "array", "items": {"type": "object", "required": ["station", "factor", "block"]}},
+            "resting_blocks": {"type": "array", "items": {"type": "object", "required": ["origin", "block", "group", "cause"], "properties": {"group": {"enum": ["no_usable_reference", "reference_bracket_withdrawn", "reference_bracket_not_evaluated", "last_resort"]}}}},
+            "rests_on_a_snap": {"type": "boolean"},
+            "compiled": {"type": ["object", "null"]}
+          }
+        }
+      }
+    },
+    "instanceSnaps": {
+      "type": ["object", "null"],
+      "description": "The instance's rows adaptation, verbatim (runs/pipeline.py RowsAdapter), with the run's decision written on every block of its measurement snaps (runs/direct_route.py). An instance that snaps its receiver's measurement family writes its run settings, photon_blocks_form, one measurement_snaps record per probe setting and the instance_snap record it hands reductions (foundations/req:who-snaps). The settings are snap_settings (reference_enclosure, strict_snaps). A multi-station run carries one per station under stations, and the run's decision on each block is at stages.stations[i].rows_adaptation; input_preparation may sit beside them.",
+      "not": {"type": "object", "anyOf": [{"required": ["snaps"]}, {"required": ["certification"]}]},
+      "properties": {
+        "snap_settings": {"type": "object", "required": ["reference_enclosure", "strict_snaps"]},
+        "photon_blocks_form": {"enum": ["dark_composed"]},
+        "measurement_snaps": {"type": "array", "items": {"$ref": "#/$defs/measurementSnap"}},
+        "instance_snap": {"type": "object", "required": ["blocks"]},
+        "stations": {"type": "array", "items": {"$ref": "#/$defs/instanceSnaps"}}
+      }
+    },
+    "measurementSnap": {
+      "type": "object",
+      "description": "One probe setting's measurement-family snap (foundations/req:who-snaps): the run settings it was made under, the cause where the declarer holds no usable reference, the reference the receiver offered (kind per block, radii, SHA-256 of the enclosures; receiver/detector-imperfections/req:dark-composed-reference), its blocks, and the receiver's fix per block (req:snap-fix). It names its moved_blocks and handed_blocks; resting_blocks and assumption follow the run's decision on a completed run.",
+      "required": ["site", "setting", "alphabet", "lattice_exponent", "run_settings", "cause", "reference", "blocks", "moved_blocks", "handed_blocks", "resting_blocks", "support_not_preserved_blocks", "receiver_fixes"],
+      "not": {"anyOf": [{"required": ["status"]}, {"required": ["reference_kind"]}]},
+      "properties": {
+        "setting": {"type": ["string", "null"]},
+        "run_settings": {"type": "object", "required": ["reference_enclosure", "strict_snaps"]},
+        "reference": {"type": ["object", "null"], "description": "The reference the receiver offered at this setting (receiver/detector-imperfections/req:dark-composed-reference), null where none was. Each offered block carries factor_enclosures, per letter: {carried: true, columns, largest_radius, largest_radius_float}, or {carried: false, cause, detail}, the cause one of probe_conditioned, no_port_dilation, columns_exceed_dimension and enclosed_references_not_used (item (vii)); where some block carries one, identity.establishing_claims ends with receiver/thm:factor-blocks (iii) and receiver/component-catalogue/lem:catalogue-dilations (ii); and enclosures_sha256 covers the factor enclosures carried."},
+        "blocks": {"type": "array", "items": {"$ref": "#/$defs/blockSnap"}},
+        "moved_blocks": {"type": "array", "items": {"type": "string"}},
+        "handed_blocks": {"type": "array", "items": {"type": "string"}},
+        "resting_blocks": {"type": "array", "items": {"type": "string"}},
+        "support_not_preserved_blocks": {"type": "array", "items": {"type": "string"}},
+        "receiver_fixes": {"type": "object", "additionalProperties": {"type": "string"}}
+      }
+    },
+    "blockSnap": {
+      "type": "object",
+      "description": "One block of a measurement-family snap: its status, kept or moved (foundations/def:snap); the reference kind the snap ran on (exact, the centres of an exact reference, or none, the data); the reference handed beside it (handed_reference, with its kind, largest radius and input radius) or, where none is, its cause (no_reference, reference_failed, enclosure_not_used); the steps of the procedure; the support_not_preserved flag of the last resort; and its displacement. On a completed run the run's decision is written on it: evaluated_off_snap, and on a moved block that rests on A-SNAP rests_on_assumption with its cause, group and fixes (foundations/req:snap-reference (iii)).",
+      "required": ["block", "status", "reference_kind", "handed_reference", "cause", "group", "fix", "receiver_fix", "support_not_preserved", "rests_on_assumption", "displacement"],
+      "not": {"anyOf": [{"required": ["weight"]}, {"required": ["attainable_weight"]}, {"required": ["absorbing_outcome"]}, {"required": ["underlying_cause"]}]},
+      "properties": {
+        "block": {"type": "string"},
+        "status": {"enum": ["kept", "moved"]},
+        "reference_kind": {"enum": ["exact", "none"]},
+        "handed_reference": {"oneOf": [{"type": "null"}, {"type": "object", "required": ["kind", "largest_radius", "input_radius"], "properties": {"kind": {"enum": ["exact", "enclosed"]}}}]},
+        "handed_reference_kind": {"oneOf": [{"type": "null"}, {"enum": ["exact", "enclosed"]}], "description": "The kind of the reference the instance hands beside its snap on this block, null where none is handed."},
+        "cause": {"oneOf": [{"type": "null"}, {"enum": ["no_reference", "reference_failed", "enclosure_not_used", "reference_bracket_withdrawn", "factor_enclosure_inconsistent", "companion_not_certified", "reference_bracket_not_evaluated"]}], "description": "factor_enclosure_inconsistent and companion_not_certified are two causes of the group reference_bracket_withdrawn (foundations/req:snap-reference (iii)(b))."},
+        "fix": {"type": ["string", "null"]},
+        "group": {"oneOf": [{"type": "null"}, {"enum": ["no_usable_reference", "reference_bracket_withdrawn", "reference_bracket_not_evaluated", "last_resort"]}], "description": "The group of foundations/req:snap-reference (iii) of a moved block that rests on A-SNAP (last_resort for a block the last resort snapped); the cause is its detail."},
+        "group_fix": {"type": ["string", "null"], "description": "The group's fix, which the cause's fix details."},
+        "receiver_fix": {"type": ["string", "null"], "description": "The receiver's fix (receiver/detector-imperfections/req:snap-fix). The run's decision completes it: null on a block evaluated off its snap, and on a block resting for a cause of the run's (reference bracket withdrawn or not evaluated) that cause's fix, beside the receiver's noise fix where the last resort snapped it."},
+        "support_not_preserved": {"type": "boolean"},
+        "rests_on_assumption": {"type": "boolean"},
+        "evaluated_off_snap": {"type": "boolean", "description": "On a completed run: whether the run evaluated this block off its snap (foundations/def:evaluated-off-snap): it is moved, its first-order number is the bound on the reference companion, which carries the handed reference here, so the block rests on the receiver model and not on A-SNAP. False on a kept block, which rests on nothing."},
+        "displacement": {"type": "number"}
+      }
+    }
+  }
+}

@@ -1,0 +1,34 @@
+% ---
+% id: protocol-compiler/rem:coin-scope
+% kind: rem
+% title: Scope of the private-coin assumption
+% summary: >-
+%   A state-dependent marginal of a setting-conditioned public choice is not a
+%   violation of [[A-COIN]]: it is the output-state model of the reductions
+%   module. A violation is repaired by no encoding, only by a different protocol
+%   description.
+% prominence: standard
+% status: accepted
+% uses: [def:weighted]
+% mentions: [ass:coin, lem:weighted, thm:choice-encoding, rem:relabel, reductions/ass:tsm]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:coin-scope}
+No encoding repairs a violation of Assumption~\ref{ass:coin}; the remedy is a
+different protocol description. Under a violation the weighted POVM
+misdescribes the round: for the \tref{setting-independent form}
+\eqref{eq:choicemass} no longer gives the physical choice statistics, and for
+the setting-dependent form the relabelled family of Remark~\ref{rem:relabel}
+no longer describes how $f$ was drawn; a choice correlated with the adversary,
+or with the device outcome beyond its setting, is exactly the attack the
+encoding assumes away. The state-dependent \emph{marginal} of $f$
+that the setting-dependent form of Definition~\ref{def:weighted} produces is
+not a violation: it is the output-state model of
+\xref{reductions/ass:tsm}, and
+Lemma~\ref{lem:weighted}\,(iii) is asserted for the setting-independent form
+only (Theorem~\ref{thm:choice-encoding}).
+\end{remark}

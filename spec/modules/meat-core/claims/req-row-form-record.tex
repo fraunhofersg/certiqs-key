@@ -1,0 +1,30 @@
+% ---
+% id: meat-core/req:row-form-record
+% kind: req
+% title: "Record of the form each constraint row was imposed in"
+% summary: >-
+%   In trusted-source mode a run records, for every declared constraint row,
+%   whether it imposed the conjugated or the frame-free form, per Alice sector
+%   in the general format.
+% prominence: standard
+% status: implemented
+% uses: [prop:frame-free-rows]
+% mentions: [req:frame-recorded]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.joint_driver:joint_run_metadata
+% lean:
+% ---
+
+The two forms of a row define the same set on a tight frame and in general
+not on another (Proposition~\ref{prop:frame-free-rows}), so which one a run imposed is part
+of what its reported iterates mean.
+
+\begin{requirement}\label{req:row-form-record}
+In trusted-source mode a run records, for every declared constraint row,
+which of the two forms of Proposition~\ref{prop:frame-free-rows} it
+imposed, per Alice sector in the general format, as
+\iface{constraint_row_form} in \iface{optimizer_certificate}, beside the
+frame it records under Requirement~\ref{req:frame-recorded}.
+\end{requirement}

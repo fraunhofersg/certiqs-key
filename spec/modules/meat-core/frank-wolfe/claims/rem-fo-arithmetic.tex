@@ -1,0 +1,175 @@
+% ---
+% id: meat-core/frank-wolfe/rem:fo-arithmetic
+% kind: rem
+% title: "Exact real arithmetic in the first-order bound"
+% summary: >-
+%   Both linear minima are bounded exactly over the exact sets, but for the
+%   gradient as computed: the objective, the gradient and the maps and frame
+%   behind them are binary64, and a reference's centres move the measured
+%   family. So a computed h_lb may exceed h_low, and the zero clamp repairs
+%   neither.
+% prominence: standard
+% status: accepted
+% uses: [thm:firstorder, cor:fo-keylength, cor:fo-reference, lem:feasible-side-dual, meat-core/prop:optol-nobound, meat-core/rem:optol-direction]
+% mentions: [req:certified-evaluation, lem:certified-bracket-enclosed, rem:certified-scope, foundations/ass:snapped-measurement, req:iterate-checks, req:bound-estimate-difference, req:bracket-on-reference, req:verified-feasible-side, rem:acc-side, rem:fo-check-exposures, meat-core/thm:choi, meat-core/req:companion-admission, foundations/req:exact-island, foundations/def:exact-island, foundations/def:tiers, foundations/lem:recentred-enclosure, reductions/lem:row-relaxation, reductions/req:reference-companion]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:fo-arithmetic}
+Theorem~\ref{thm:firstorder}\,(ii), respectively~(iiib) --- the part a
+run is in, its iterates being established only in the relaxed set
+(Requirement~\ref{req:iterate-checks}) --- with the lower bounds of its
+part~(iv) in place of both pairings, which is how a run forms every bracket
+(Remark~\ref{rem:acc-side}, Requirement~\ref{req:verified-feasible-side}),
+concludes $\hlb\le\hlow$ in exact real arithmetic, for the exact objective
+and the exact gradient. No assumption about a solver enters it. What the
+theorem still asks, and a run cannot verify, is exact real arithmetic in
+the terms a run computes in binary64. What that means for a number a run
+prints is narrower than the theorem, and a reader who takes \eqref{eq:hlb}
+for a runtime invariant is wrong in the unsafe direction.
+
+\emph{What is exact, and of what.} The two lower bounds that stand in for
+the minima are certified exactly
+(\xref{foundations/def:exact-island}\,(ii), (iii)), and both are bounds over
+the exact sets, but of the linear form at the gradient as the run computed
+it. The acceptance-side one is the exact minimum over $\acSet$ of that
+linear form. The feasible-side one is at most the minimum over the exact
+$\Feas^{J}$ of that linear form: the run builds its constraint rows with a
+binary64 frame $\widetilde W_{\mathsf t}$ in place of the frame
+$W_{\mathsf t}$ of Theorem~\ref{thm:choi}, which carries a square root of
+the declared marginal, and Lemma~\ref{lem:feasible-side-dual}\,(iv) charges
+the difference, a deduction linear in the row multipliers and in a bound on
+$\opn{\widetilde W_{\mathsf t}-W_{\mathsf t}}$; where no such bound is
+formed the row multipliers are zero and the rows are not read. So no status
+of the backend, no dual it returns and no rounding of the frame can raise
+the feasible-side bound above that minimum. Without the deduction it could
+be raised: Lemma~\ref{lem:feasible-side-dual}\,(i) applied to rows built
+from $\widetilde W_{\mathsf t}$ bounds the minimum over the set those rows
+cut out, which need not contain $\Feas^{J}$ and may be empty, and over an
+empty set every number is a lower bound.
+
+\emph{The conclusion is not a floating-point invariant.} The objective
+$O^{J}_{\alpha}(x_t)$, the gradient $(\lmoq_t,\lmoJ_t)$ and the subtracted
+pairings $\langle\lmoq_t,\mathbf q_t\rangle$ and $\langle\lmoJ_t,J_t\rangle$
+are computed in binary64 (\xref{foundations/req:exact-island}), and so are
+the data the engine derives from the declaration for them: the
+\tref{statistics map}, the \tref[branch map]{branch maps} and their supports, and the frame
+$\widetilde W_{\mathsf t}$
+through which they read Alice's side. The gap between the gradient as
+computed and the exact gradient is part of that unbudgeted evaluation
+arithmetic, and no claim of this module bounds it. A computed $\hlb$ may
+therefore exceed the computed estimate, and may exceed the true $\hlow$, by
+an amount no claim of this module bounds. Two consequences follow, and
+neither is a defect of the theorem.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{$\max\{0,\hlb\}$ does not repair it.} The clamp is sound and
+  it is what Corollary~\ref{cor:fo-keylength} consumes, but it corrects
+  only the \emph{low} side: clamping at zero cannot bring down a bracket
+  that came out too high. The clamp is no general safety net, and a run is
+  not to be written, or read, as if it were.
+\item \emph{A comparison of $\hlb$ against the reported estimate is a
+  diagnostic, never an assertion.} The ordering of $\hlb$ below the
+  objective at the returned point is a consequence of exact arithmetic and
+  of the returned point's exact membership in $\acSet\times\Feas^{J}$
+  (Theorem~\ref{thm:firstorder}\,(i) and~(ii)), neither of which this module
+  establishes for a run: its returned point is established at most in the
+  relaxed set, where the objective is bounded below only by
+  $\hlow[\Feas^{J}(\varepsilon)]\le\hlow$
+  (Theorem~\ref{thm:firstorder}\,(iiia)), and near convergence, where
+  $\hlb$ is close to $\hlow$, that alone can put the estimate below $\hlb$.
+  The difference $\hlb$ minus the estimate is recorded with its sign
+  (Requirement~\ref{req:bound-estimate-difference}), and a positive
+  difference, a bound above the estimate, is evidence about the arithmetic
+  or about the relaxation, and not by itself evidence that the first-order
+  tier is unsound.
+\end{enumerate}
+
+\emph{Evaluation on a reference companion.} Where the bound is formed on a
+compiled reference companion $\Decl^{\mathrm{ref}}$
+(Corollary~\ref{cor:fo-reference},
+Requirement~\ref{req:bracket-on-reference}), the theorem is applied to the
+companion, a declaration of the reference model, but what is evaluated is
+not that declaration. Its measured family is known through an entrywise
+enclosure, recentred so that every entry whose enclosure contains zero has
+centre zero (\xref{foundations/lem:recentred-enclosure}), and it is
+evaluated at the binary64 numbers nearest to the centres. The evaluated
+family differs from the companion's, entry by entry, by at most the radius
+and one rounding, and it need not be a POVM: its completeness defect and its
+least eigenvalue are measured and recorded, never decided
+(Requirement~\ref{req:companion-admission}\,(iii)). The objective, the
+gradient, the \tref[branch map]{branch maps} and their supports, the key-inert pairs and the
+rank comparison behind (H-SUPP) are all formed from those numbers, and so is
+the linear form whose minimum the feasible-side bound bounds. Recentring is
+applied to the handed
+blocks and again to the companion's datum after the construction has
+combined their entries (\xref{reductions/req:reference-companion}\,(i)), so
+that an entry of the datum whose exact value is a sum that cancels to zero
+is not left with a centre that is not zero. After it, a centre is not zero
+only where its enclosure excludes zero; the compiler's weighting multiplies
+a centre by a weight and its radius by the weight's modulus, and a product of
+factor families multiplies single entries, so the compiled family keeps that
+property, and rounding a centre to binary64 can turn it to zero but never
+the reverse. The evaluated family therefore has a non-zero entry only where
+the companion's family has one; it may lack one where the companion's entry
+is no larger than the recentred radius there, and a support,
+or a key-active pair, that the companion has through such entries alone is
+not seen by the evaluation. What the theorem asks of the point itself,
+(H-SUPP), holds of the companion whenever every block of $J_t$ is positive
+definite (Corollary~\ref{cor:fo-reference}\,(ii)). This exposure is
+larger in kind than the binary64 evaluation of the objective and the
+gradient on any declaration. There the inputs are exact and only the
+formulas are evaluated in binary64. Here the measured family itself is
+displaced, by up to the radius and one rounding per entry, with a relative
+error up to order one on an entry not much larger than its radius. The
+displacement from the companion to its evaluation is a perturbation of the
+measured family, and Proposition~\ref{prop:optol-nobound} applies to it:
+closeness of two measured families bounds the change of the value by
+nothing, and the change may point either way
+(Remark~\ref{rem:optol-direction}); the evaluated family need not even be a
+POVM. Its size is set by the radius of the enclosure, and not by binary64
+rounding alone, save on an exact reference, whose radius is zero. No claim
+of this module bounds its effect, and the largest radius, which the record
+carries, is the only handle on it. Evaluating on the companion removes the
+premise that the device measures the snapped family
+(\xref{foundations/ass:snapped-measurement}); it does not remove this
+exposure, which narrows only with the enclosure. The companion's entries are
+not part of this exposure: they are emitted in binary64 as the oracle reads
+them, their rounding absorbed into their constants
+(\xref{reductions/lem:row-relaxation}), so they are the companion's own
+exact rows, and the feasible-side bound is over the companion's exact
+$\Feas^{J}$, the frame's rounding charged as on any declaration. The
+first-order number is not evaluated over the enclosure; the certified number
+of Requirement~\ref{req:certified-evaluation} is, where every element the
+gradient reads has a rank fixed throughout the enclosure
+(Lemma~\ref{lem:certified-bracket-enclosed}), and it then holds of the
+companion itself.
+
+\emph{Where the exposure is.} Of the ingredients of \eqref{eq:hlb}, the
+objective and the gradient are evaluated by formulas this module states
+in closed form, at points where (H-POS) keeps every denominator bounded
+away from zero; the subtracted pairings are inner products; and the two
+lower bounds are certifications of the \tref{exact island} over the exact
+sets, for the gradient as computed. No ingredient is a solver's return: the
+oracle's point and its status are diagnostics
+(Requirement~\ref{req:verified-feasible-side}), and a solve that stopped
+short of its optimum, or failed, loosens a bracket and cannot raise it
+above the value it has at the exact minima of the computed linear forms.
+What a run leaves unverified is named: the binary64 evaluation of the
+objective, of the gradient and of the maps and frame they are built from,
+of the subtracted pairings, and of the checks whose one-sided exposures
+Remark~\ref{rem:fo-check-exposures} names; and on a reference companion
+the displacement to its centres. It is \emph{unbudgeted}: no claim of this
+module bounds it, and no assumption of this module covers it, the engine
+computing outside the exact island without an error budget, as
+\xref{foundations/req:exact-island} allows. That is what the
+\tref{first-order} tier costs: it is weaker than a verified numerical
+certificate of $\hlow$, a first-order number being a lower bound
+established under the hypotheses that the claim stating it names
+(\xref{foundations/def:tiers}), evaluated in arithmetic that no claim of this
+module budgets. The \tref{certified} tier of the same definition is the bound
+formed again with that arithmetic exact or enclosed, and what it still rests
+on is Remark~\ref{rem:certified-scope}.
+\end{remark}

@@ -1,0 +1,42 @@
+% ---
+% id: statistics/binomial-box/req:rule-in-force
+% kind: req
+% title: "The rule the request selects"
+% summary: >-
+%   The engine builds the box with the endpoint rule and tail evaluation the
+%   request selects: the exact rule evaluated by its closed forms, which is the
+%   default, the enclosure evaluation of the exact rule, or the Bernstein rule.
+%   It runs no other rule.
+% prominence: standard
+% status: implemented
+% uses: [def:endpoint-rule, def:interval]
+% mentions: [prop:rule-exact, prop:rule-bernstein, prop:bracketed-endpoints, def:construction, req:completeness-report]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.rules:resolve_rule
+% lean:
+% ---
+
+Each rule of this submodule is an \tref{admissible endpoint rule}, so every
+result stated for all such rules holds for the box the engine builds,
+whichever the request chooses; a result that needs more of the rule, such as
+monotonicity in the allocation, holds on the rules whose propositions prove
+it.
+
+\begin{requirement}\label{req:rule-in-force}
+The engine builds the box of Definition~\ref{def:construction} with the rule
+that the request's \iface{endpoint_rule} and \iface{tail_evaluation} select,
+and with no other: \iface{endpoint_rule: exact} with
+\iface{tail_evaluation: sweep}, the \tref{exact binomial quantile rule} of
+Definition~\ref{def:interval} with its tail comparisons decided on the
+closed forms, exactly or against upper bounds on the tails as
+Proposition~\ref{prop:rule-exact}\,(vii) admits, which is the default; \iface{endpoint_rule: exact} with
+\iface{tail_evaluation: enclosure}, the enclosure evaluation
+$R_{\mathrm{encl}}$ of the exact rule
+(Proposition~\ref{prop:bracketed-endpoints}), an admissible relaxation of it;
+and \iface{endpoint_rule: bernstein}, the Bernstein rule of
+Proposition~\ref{prop:rule-bernstein}, on which \iface{tail_evaluation}
+selects only how the completeness figure is computed
+(Requirement~\ref{req:completeness-report}).
+\end{requirement}

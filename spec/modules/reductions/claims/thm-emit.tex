@@ -1,0 +1,377 @@
+% ---
+% id: reductions/thm:emit
+% kind: thm
+% title: "Exact emission of a reduction instance"
+% summary: >-
+%   The emitted target is computed exactly, decided exactly admissible before
+%   emission, and squashes the declared model exactly; nearness to the handed
+%   model bounds nothing. On blocks the record names as resting on [[A-SNAP]],
+%   the run's conclusions about the device rest on that premise.
+% prominence: main
+% status: implemented
+% uses: [def:reduction-instance, def:joint-family, def:exactadm, def:emitnorm, lem:exactpsd, lem:latsum, def:substrate, cor:blockdiag, thm:transfer, thm:chain, def:link, def:chain, foundations/def:snap]
+% mentions: [cor:reference-companion, cor:entries, rem:claimscope, cor:emitted-identity, thm:emitted-product, req:emission-refusal, req:emission-record, req:no-approximate-relations, foundations/req:exact-emission, foundations/def:exact-admissibility, foundations/req:rounding-direction, meat-core/def:admissible-declaration, protocol-compiler/def:declaration, meat-core/prop:optol-nobound, foundations/def:evaluated-off-snap, meat-core/frank-wolfe/req:certified-evaluation]
+% assumes: [A-SNAP]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.emit:reduce
+% lean:
+% ---
+
+This is the theorem every emission of the module rests on: what is emitted,
+the displacement record aside, is computed exactly, is decided before it is
+emitted, and is about the declared model of Definition~\ref{def:emitnorm}.
+The identity instance applies it through
+Corollary~\ref{cor:emitted-identity}, and each submodule's instance through
+its own emitted corollary. Part~(v) says what relates the declared model to
+the handed one: nothing proved, and in particular not the size of the move,
+since a family near the constructed one need not have a key length near its
+own. A run that forms the number its key length is formed from on the
+reference companion (Corollary~\ref{cor:reference-companion}) needs no such
+relation: it reads
+the emitted target only to find points, and every data sector is
+\tref{evaluated off its snap} (\xref{foundations/def:evaluated-off-snap}).
+Elsewhere, where the normalizer moved a class, a run on that emission rests
+on the premise that \xref{foundations/ass:snapped-measurement}\,(ii) states
+for a producer's snap of its own emission: every conclusion about the device
+that the run draws from the emitted target holds with the declared datum in
+place of the handed one on the sectors concerned. Since the emitted target
+squashes the declared model exactly (part~(iii)), that premise holds in
+particular where the device measures the declared model there. A moved
+block of the declaring instance's own snap of the measurement the handed
+datum is formed from is in the same position; there the premise is
+clause~(i) of the same assumption.
+Part~(vi) states what a run on the emission then rests on. It is
+conditional: it asserts nothing of a run whose record names no such block,
+so that the premise is engaged exactly where the record names a block as
+resting on it. A run whose key length is formed from a number on the
+reference companion (Corollary~\ref{cor:reference-companion}) names no data
+sector of this emission among them, since the companion carries none of the
+normalizer's data, and of the declaring instance's snap only the blocks on
+which the companion carries the snapped block; the bound then reads the
+companion, and this theorem describes the target the search ran on.
+Where the key length is formed instead from a number certified on the
+snapped declaration, because the companion's bound counts but no point of it
+can be certified (\xref{meat-core/frank-wolfe/req:certified-evaluation}\,(i)),
+the run reads the emitted target there, and names the data sectors with a
+moved class among the blocks resting on the premise. The six conditions of part~(ii) are those of
+\xref{foundations/req:exact-emission}, and that no status is emitted for an
+approximate relation is Requirement~\ref{req:no-approximate-relations}.
+
+\begin{theorem}\label{thm:emit}
+Let the \tref{declared data} pass every refusal rule of this module's
+interface, so that every declared block and scalar it reads is
+\tref{exactly admissible on the declared lattice}
+(Definition~\ref{def:exactadm}). Let $\mathcal{J}$ be a reduction instance
+(Definition~\ref{def:reduction-instance}) with handed datum $A$, and let $A'$
+be the declared datum the normalizer of Definition~\ref{def:emitnorm}
+produces from it (where the normalizer refuses, nothing is emitted). Let
+$\{F_v\}\coloneqq F[A']$, $\Lambda\coloneqq\Lambda[A']$ and
+$\CList\coloneqq\CList[A']$ be the target, the channel and the entry list of
+the instance at $A'$, and $\Mdec=M[A']$ the declared model
+\eqref{eq:declmodel}. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(everything on the list below is computed exactly, and the
+  displacement $\Delta_s$ is the one emitted number that is not on it)} every
+  number on the following list is obtained from the numbers the instance was
+  handed by finitely many operations in $\Fldi$, floors and comparisons: the
+  data-sector values $A'^{(s)}_v$; the \tref[scalar value]{scalar values}
+  $\phi_s(v)$; the sector projectors; and every emitted constraint operator
+  and constant of Corollary~\ref{cor:entries}. \emph{That list is everything
+  this module emits with exactly one exception}: the emission displacement
+  $\Delta_s$ of \eqref{eq:displacement}, an entrywise maximum \emph{modulus}
+  and hence the square root of an exact rational, in general irrational, which
+  is emitted only as a record of what the emission normalizer did and which
+  no statement of this contract reads. \emph{No floating-point
+  comparison, no eigenvalue routine, no enclosure and no interval occurs
+  anywhere in that list}; the intermediate numbers an instance forms on the
+  way to its datum and its scalar values are listed by the corollary that
+  instantiates this theorem for it;
+\item \emph{(the emitted family is \tref{exactly admissible}, and is decided so
+  before it is emitted)} the family $\{F_v\}$, presented as the sector-block list
+  \eqref{eq:instance-target}, satisfies conditions (a)--(e) of
+  Definition~\ref{def:exactadm} together with \eqref{eq:latinv} of every
+  entry --- six conditions --- and each of the six is \emph{decided}, exactly, on the numbers
+  about to be emitted: (a) by comparison of declared labels against the
+  instance's \tref{sector map}; (b) and (d) by entrywise equality and (c) by
+  Lemma~\ref{lem:exactpsd}, per sector block; (e) by Lemma~\ref{lem:latsum}, whose hypothesis
+  \eqref{eq:latsumcond} is a declared input condition; and \eqref{eq:latinv}
+  entry by entry. \emph{A family for which any of the six cannot be
+  established is not emitted}.
+  \emph{And the same numbers discharge what the consuming declaration asks of
+  a party's side}: the tuple $\big(\Qsys,\SecSet,\{F_v\}_{v\in\Vset}\big)$
+  \emph{together with the party partition} of
+  Definition~\ref{def:reduction-instance}\,(I2) --- the
+  \tref{default party partition}, every factor Bob's, unless the instance
+  declares another party's label, in which case every factor is that party's
+  --- satisfies the well-formedness conditions the consuming declaration
+  places on \emph{that party's} side (\xref{meat-core/def:admissible-declaration}\,(i) and
+  (iii), with the party labels per tensor factor demanded through its (viii))
+  ---
+  \begin{equation}\label{eq:emitwellformed}
+    F_v=F_v^{\dagger},\qquad
+    F_v\succeq0,\qquad
+    \sum_{v\in\Vset}F_v=\idon{\Qsys},
+  \end{equation}
+  with every $F_v$ block diagonal for $\SecSet$ and
+  $\Hs{\Qsys}=\bigoplus_{s\in\SecSet}\Hs{\Qsys_s}$ finite-dimensional, every
+  factor of every $\Hs{\Qsys_s}$ the instance's declared party's and Bob's by
+  default. \emph{Those are conditions on a party partition and not on a
+  defect}, and they are a \emph{different} condition from the conditions of
+  \xref{foundations/def:exact-admissibility} that (a)--(e) discharge, which
+  say nothing about who owns which factor;
+\item \emph{(the defining identity is about the numbers emitted, and it is an
+  identity on $\Bsys$)} for every $v\in\Vset$,
+  \begin{equation}\label{eq:emitidentity}
+    \Lambda^{\dagger}(F_v)\;=\;\Mdec_v
+    \qquad\text{exactly},
+  \end{equation}
+  \emph{both sides operators on $\Bsys$}, which is where $\Lambda^{\dagger}$
+  lands, $\Lambda$ being a channel $\Tcl{\Bsys}\to\Tcl{\Qsys}$. \emph{Only the
+  data sectors carry anything the normalizer produced}: $\Mdec$ is the handed
+  model with the datum replaced by $A'$ as the instance's model map defines
+  it, and everything the hypotheses (H) are about is the declared one,
+  unchanged. Moreover every claim of the instance holds verbatim of the
+  declared model --- the relation \eqref{eq:instance-relation} with its
+  \tref{transported set} and pull-backs, every certificate of
+  \eqref{eq:instance-entry}, and the \tref{class-marginal identity}
+  \eqref{eq:instance-classmarginal} where the instance discharges it --- and
+  Theorem~\ref{thm:transfer} and Theorem~\ref{thm:chain} hold of the one-link
+  \tref{receiver segment} (Definition~\ref{def:link}) whose
+  \tref{source family} is $(\Bsys,\Mdec)$, whose target is $(\Qsys,F)$ and
+  whose \tref{channel witness} is $\Lambda$, with
+  $\textsf{status}=\textsf{exact}$;
+\item \emph{(the emitted bounds, and the direction each is rounded in)} every
+  scalar value that was rounded to reach the lattice was rounded
+  \emph{down}, as the lower bound of the quantity it certifies, and every
+  complementary value was \emph{recomputed} from the rounded ones and never
+  rounded on its own (Definition~\ref{def:reduction-instance}\,(I2)); and a
+  caller-declared constant of modulus at most one off the lattice is rounded
+  in the direction that enlarges the feasible set for its declared relation
+  (Corollary~\ref{cor:entries}\,(iii)), an equality constant off the lattice
+  and any constant of modulus above one being refused. \emph{Every other
+  number this module emits is exact, the displacement record $\Delta_s$ of
+  (i) aside}; these are all the rounding directions there are among the
+  numbers a statement of this contract reads, and the direction of each is
+  recorded;
+\item \emph{(what relates the declared model to the handed one)} where some
+  $\Delta_s>0$ the emitted numbers are a declaration of a family near the
+  constructed one, and nearness is not what relates them: \emph{no bound
+  relates a key length computed from $\Mdec$ alone to one computed from the
+  handed model $M[A]$, or from the supplier's own output}, and this contract
+  has no theorem converting an operator perturbation of the target into a
+  security penalty, nor any other relation between $A'$ and $A$ on a moved
+  class: the consuming contract's impossibility
+  (\xref{meat-core/prop:optol-nobound}) is the whole of what is proved
+  there; what a run rests on there instead is~(vi);
+\item \emph{(what a run on the emission rests on where it reads a moved
+  block, and only there)} let $B=B_{\mathrm{snap}}\sqcup B_{\mathrm{em}}$
+  be the blocks that the record of the run names, for this artefact, as
+  resting on \xref{foundations/ass:snapped-measurement}, kept as two
+  disjoint parts, since they are blocks of two different snaps and their
+  labels may coincide: $B_{\mathrm{em}}$ holds the data sectors of the
+  emission so named, and $B_{\mathrm{snap}}$, where $A$ is formed from
+  measurement blocks of a snap (\xref{foundations/def:snap}) that the
+  declaring party made of the measurement it states, the blocks of that
+  snap so named; the declaring party is the instance that states the
+  measurement of the device, or a reference of it, from which $A$ is formed.
+  Where $B$ is empty, this part asserts nothing, and no part of this theorem
+  rests on that assumption. Where $B$ is not empty, let that assumption
+  hold. Then on every block in $B_{\mathrm{snap}}$, the block of the
+  measurement the device performs is the snapped block, with the entries
+  recorded for that snap, from which $A$ is formed, in place of the block of
+  the model the declaring party states; and every conclusion about the
+  device that the claims of the run draw from the emitted target, under
+  their hypothesis that its data sectors carry the handed datum $A$, holds
+  when they carry the declared datum $A'$ on every data sector in
+  $B_{\mathrm{em}}$, which by~(iii) is the datum whose model $\Mdec$ the
+  emitted target squashes exactly. The run carries no bound relating its key
+  length to the declaring party's model on the blocks in
+  $B_{\mathrm{snap}}$, nor to $M[A]$ on the data sectors in
+  $B_{\mathrm{em}}$: no claim relates that model to the snapped block on a
+  block in $B_{\mathrm{snap}}$, nor $A$ to $A'$ on a data sector in
+  $B_{\mathrm{em}}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} Parts (i) and (ii) follow what the instance and the normalizer
+compute and what the six conditions ask of it; part (iii) is the
+\tref{stability clause} of the instance applied at the declared datum; part
+(iv) is the rounding rule of the instance's scalar values and of a caller's
+constants; part (vi) applies the two clauses of the snapped-measurement
+assumption to the blocks the record names.
+
+\emph{Part (i).} Every entry of a declared block and every declared scalar is
+a dyadic rational (Definition~\ref{def:exactadm}\,(a),(b)), hence an element
+of $\Fldi$ resp.\ $\Fld$. The handed datum is formed from them by finitely
+many operations in $\Fldi$ (Definition~\ref{def:reduction-instance}\,(I1));
+the scalar values by finitely many operations in $\Fld$ and downward
+roundings $\lat{\cdot}$, each a floor and a comparison in $\Fld$ (I2); the
+sector projectors are the indicator values $0$ and $1$; each emitted
+constraint operator of Corollary~\ref{cor:entries} is a real combination
+\eqref{eq:instance-entry} of emitted blocks and sector projectors with
+lattice coefficients, and each constant is declared or rounded by a floor or
+a ceiling in $\Fld$; and each of the normalizer's steps (1)--(4) is a
+rounding to nearest, a comparison, an addition, a subtraction, a product
+with a rational number, a positive semidefiniteness decision, or a test of
+which entries are zero, and its mixing weights are the dyadic numbers
+$2^{-l}$. Field operations, comparisons and floors in $\Fldi$ are exact by the
+definition of the substrate (Definition~\ref{def:substrate}), and the only
+non-arithmetical predicate that occurs --- positive semidefiniteness, the
+form every operator inequality of this contract takes, the L\"owner order
+being the only order it uses --- is decided by sign comparisons in $\Fld$
+(Lemma~\ref{lem:exactpsd}\,(i), \eqref{eq:psdtest}); the other conditions
+of\,(ii) above are equalities, compared entry by entry in $\Fldi$, and
+comparisons of declared labels. \emph{No bound in the operator norm is decided
+here or anywhere on the emission path}: Lemma~\ref{lem:exactpsd}\,(ii) is
+correct as it stands and is carried without a client. \emph{The one emitted
+number the list omits is $\Delta_s$}, and it is omitted because
+\eqref{eq:displacement} takes an entrywise maximum \emph{modulus} of a complex
+difference, which is a square root of an exact rational and in general leaves
+$\Fld$. It is emitted only as a record
+(Requirement~\ref{req:emission-record}), so the statement above is a
+statement about the enumerated list and about everything this module emits
+except that one number; no step of this proof, and no statement of this
+contract, is proved from its value (Remark~\ref{rem:claimscope}).
+
+\emph{Part (ii).} Each of the six is decidable on a finite list of elements
+of $\Fldi$: (a) is a comparison of declared labels; (b) is an entrywise
+equality; (c) is \eqref{eq:psdtest}; (d) is an entrywise equality between two
+finite sums; \eqref{eq:latinv} is, per entry, integrality of $2^{\kappa}x$
+together with $|x|\le1$, two comparisons in $\Fld$; and (e) is
+Lemma~\ref{lem:latsum}, whose hypothesis is the declared input condition
+\eqref{eq:latsumcond} and whose conclusion covers every entry position, the
+accumulation being entrywise.
+\emph{That (b), (c) and (d) hold of the emitted family} is, on a data sector,
+Definition~\ref{def:emitnorm}, whose step (1) keeps exactly admissible
+classes, whose steps (2) and (3) establish Hermiticity, \eqref{eq:latinv}
+and class completeness for a moved class and establish or decide its
+positivity, and whose step (4) decides all six on the result ---
+completeness over $\Vset$ following from class completeness and
+$\sum_tq_t=1$ (Definition~\ref{def:reduction-instance}, first consequence);
+and, on a \tref{scalar sector}, the \tref[declared value]{declared values}
+$\phi_s(v)\in[0,1]$ on the
+lattice with $\sum_v\phi_s(v)=1$ exactly (I2), which give a real, positive
+semidefinite and complete block outright.
+\emph{So the decision of step~(4) is a defensive exact check}: on declared
+data that pass the refusal rules, as the theorem assumes, every path of the
+normalizer produces a family the six conditions hold of, and no path reaches
+the refusal it guards. The refusal of a class that can occur is the strict
+option's refusal of a moved class (Requirement~\ref{req:emission-refusal}).
+\emph{The consuming declaration's own conditions follow from what has just
+been established}: (b), (c) and (d) are \eqref{eq:emitwellformed} --- the
+families are POVMs and every $F_v$ is sector-block-diagonal --- which is
+\xref{meat-core/def:admissible-declaration}\,(iii), block diagonality for $\SecSet$ being by
+construction; and $\dim\Hs{\Qsys}=\sum_{s\in\SecSet}d_s$ is a finite sum of
+declared dimensions (Definition~\ref{def:reduction-instance}\,(I2), its fifth
+consequence), so $\Hs{\Qsys}$ is finite-dimensional and the alphabet $\Vset$
+finite, which is the part of its (i) this tuple is about. \emph{And the
+default party partition assigns every factor of every $\Hs{\Qsys_s}$ to Bob,
+which is the assignment the physical model already makes}: the target
+describes what reaches Bob's receiver, the instance's system $\Bsys$ being
+his. Where the instance declares another party's label
+(Definition~\ref{def:reduction-instance}\,(I2)) the same sentence holds of
+that party, whose system $\Bsys$ then is; what is emitted is the declared
+label either way, no step above reads its value, and an emission of several
+\tref{measuring parties} carries one label per factor
+(Theorem~\ref{thm:emitted-product}\,(i)). \emph{The party labels themselves
+are neither (i) nor (iii)}: a declaration names a party partition $\Party$
+(\xref{protocol-compiler/def:declaration}) and \xref{meat-core/def:admissible-declaration}\,(viii) is
+what demands it; what is emitted here is that partition's value on the
+target's sectors. Nothing in this paragraph is measured and nothing is
+concluded from a returned number.
+
+\emph{Part (iii).} By Definition~\ref{def:emitnorm}\,(1)--(4),
+$A'\in\mathcal{D}_{\kappa}\subseteq\mathcal{D}_{\mathrm{adm}}$: it is
+\tref{class complete} at $q_t$ by (1) or by the step of (2) and (3) that
+snapped the class, the last step that changes an element on every path, and
+Hermitian, positive semidefinite and on the lattice per data sector by the
+decision of (4). By
+the second property of that definition the normalizer read no object the
+hypotheses (H) are about, so (H) holds of $M[A']$ by the stability clause of
+Definition~\ref{def:reduction-instance}\,(I1), and $M[A']=\Mdec$ is a POVM on
+$\Bsys$ by (I1). Parts (I3) and (I4) of the instance are established for
+\emph{every} \tref{admissible datum} under (H); at $A'$ they read
+$(\Mdec;O[A'])\dsq_{\Lambda}(F;\hat O[A'])$, whose first clause is
+\eqref{eq:emitidentity}, together with every certificate of $\CList$ and,
+where the flag says so, \eqref{eq:instance-classmarginal} at $A'$. That is
+what ``holds verbatim of the declared model'' asserts, and nothing was
+re-proved: the instance at $A'$ is the same construction with a different
+admissible datum, which is what the stability clause was stated for. The
+sector pinching in front of $\Lambda_0[A']$ changes none of it
+(Corollary~\ref{cor:blockdiag}\,(i), the second consequence of
+Definition~\ref{def:reduction-instance}). Theorem~\ref{thm:transfer} needs
+only the relation just established; the one-link segment with source family
+$(\Bsys,\Mdec)$, target $(\Qsys,F)$, channel witness $\Lambda$, the transported
+pair $(\hat O[A'],O[A'])$, the \tref{reachable-set statement} of that channel
+and the entry list $\CList$ is a receiver-stage link of
+Definition~\ref{def:link} and a chain of Definition~\ref{def:chain} with an
+empty \tref{source segment}, and Theorem~\ref{thm:chain}\,(iv) gives it
+$\textsf{status}=\textsf{exact}$ because \eqref{eq:emitidentity} carries no
+error term. \emph{Every remaining ingredient is common to the handed model and
+the declared one}: $\Bsys$, the alphabet with its classes and weights, the
+sector map, the supports, the scalar values, the constructor, and every object
+of (H), which the normalizer never reads.
+
+\emph{Part (iv).} The scalar values are (I2) of
+Definition~\ref{def:reduction-instance}, which requires the downward direction
+and the recomputed complement; the constants are
+Corollary~\ref{cor:entries}\,(iii). \emph{That a complement is recomputed
+rather than rounded is what makes a scalar sector's completeness an identity
+of lattice values}: the rounded values and their complement are formed from
+the same finitely many rounded quantities, so $\sum_v\phi_s(v)=1$ holds
+exactly, and Lemma~\ref{lem:latsum} makes the accumulation that checks it
+exact as well. Rounding the two independently would leave a residue of up to
+$2^{-\kappa}$ on the sector and would fail (d) --- which is the case that
+\xref{foundations/req:rounding-direction} closes by requiring the
+complementary quantity to be recomputed.
+
+\emph{Part (v).} It asserts the absence of a bound and of a relation and
+needs no proof; the consuming contract rules the same inference out from its
+own side (\xref{meat-core/prop:optol-nobound}).
+
+\emph{Part (vi).} Where $B$ is empty there is nothing to prove, and no step
+of the proofs of (i)--(v) reads
+\xref{foundations/ass:snapped-measurement}. Otherwise each of
+$B_{\mathrm{snap}}$ and $B_{\mathrm{em}}$ is, for its own snap, the set that
+the assumption calls $B$: the blocks of that snap the record of the run
+names as resting on it. The assumption is applied to the two snaps
+separately, and a label in both parts names two different blocks.
+
+\emph{Blocks in $B_{\mathrm{snap}}$.} By the statement of (vi), the
+declaring party is the instance that states the measurement $A$ is formed
+from, so the snap whose blocks form
+$B_{\mathrm{snap}}$ is the declaring instance's snap of the measurement of
+the device, or of a reference of it, that it states. Its $D$ is therefore
+data an instance states as the measurement of a device, or a reference of
+it, and clause~(i) of the assumption applies: on each block in
+$B_{\mathrm{snap}}$ the block of the measurement the device performs is the
+snapped family with the entries recorded for the snap, which are the entries
+$A$ is formed from on that block, and a statement of another assumption of
+the run that the declaring party's model describes the device there is not
+asserted.
+
+\emph{Data sectors in $B_{\mathrm{em}}$.} A data sector of the emission is a
+block of the normalizer's snap of the handed datum $A$ to the declared datum
+$A'$ (Definition~\ref{def:emitnorm}), a producer's snap of what it emits
+whose exact construction is $A$, so clause~(ii) applies to it with $A'$ as
+the snap: every conclusion about the device that the claims of the run draw
+from the emitted family, under their hypothesis that it is $A$, holds when
+it is $A'^{(s)}$ on every data sector $s\in B_{\mathrm{em}}$. The data
+sectors of the emitted target carry the values $A'^{(s)}_v$ (part~(i)), and
+the target squashes $\Mdec=M[A']$ exactly (part~(iii)).
+
+\emph{What the run does not carry.} The argument is that of part~(v): a
+nearness of the families relates no key lengths
+(\xref{meat-core/prop:optol-nobound}), and no claim of these contracts
+relates a moved block of a snap to the data it was made from. A block in
+$B_{\mathrm{snap}}$ is a moved block of the declaring instance's snap, by the
+assumption's definition of $B$, and a data sector in $B_{\mathrm{em}}$ holds
+a moved class of the normalizer's; so the run carries no relation on these
+blocks. The sentence is confined to them: it says nothing of a relation to
+$M[A]$ on a block in $B_{\mathrm{snap}}$, where $A$ is formed from the
+snapped block and part~(iii) stands as it is established for the data
+sectors, and nothing of a block of either snap that the record does not
+name.
+\end{proof}

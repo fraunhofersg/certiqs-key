@@ -1,0 +1,72 @@
+% ---
+% id: receiver/def:pmcex
+% kind: def
+% title: "Exact-window weight of a setting with a declared depth"
+% summary: >-
+%   At a setting with a declared depth, the weight uses on each block above the
+%   cutoff up to the depth the larger of the analytic bound and the computed
+%   block eigenvalue less the eigenvalue slack, and keeps the setting's
+%   analytic remainder above. A depth changes only its own setting's weight.
+% prominence: standard
+% status: implemented
+% uses: [def:exactbnd, lem:exactwindow, lem:collapse, lem:windowtail, def:pmc, def:setting-family]
+% mentions: [rem:notsharp, rem:exact-window-remainders, req:exact-window-declaration, ass:eig]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.bound:ExactWindowRecord
+% lean:
+% ---
+
+The analytic weight of Definition~\ref{def:pmc} bounds three operators
+separately and so loses slack (Remark~\ref{rem:notsharp}). Where a
+declaration asks for it, the exact window uses, on finitely many blocks
+above the cutoff, the larger of the analytic value and a computed block
+eigenvalue less a declared slack, and keeps the setting's analytic
+remainder above those blocks; Lemma~\ref{lem:exactwindow} makes the
+combination a bound under Assumption~\ref{ass:eig}, and
+Remark~\ref{rem:exact-window-remainders} explains the remainder each branch
+keeps. What a declaration must supply, and which depths are refused, is
+Requirement~\ref{req:exact-window-declaration}.
+
+\begin{definition}
+\label{def:pmcex}
+Let $t\in\Tset$ be a setting whose declaration carries an
+\term[The declared integer up to which the weight of a setting uses, block by block, the larger of the analytic bound and a computed block eigenvalue less the eigenvalue slack.]{exact-window depth}
+$m^{\ast}_t$: an integer with $m^{\ast}_t>N$ and, where predicate~(X)
+fails at $t$, also $m^{\ast}_t\le m_t$. Write $\widehat\Bnd^{\ast(t)}(n)$ for
+the value an implementation computes for $\Bnd^{\ast(t)}(n)$ of
+\eqref{eq:exactbnd} at that setting, let $\varepsilon_{\mathrm{eig}}$ be the
+declared
+\term[The declared number subtracted from each computed block eigenvalue of an exact window.]{eigenvalue slack},
+and put
+\begin{equation}\label{eq:elldef}
+  \ell^{(t)}(n)\ \coloneqq\
+  \max\big\{\ \Bnd^{(t)}(n),\ \ \widehat\Bnd^{\ast(t)}(n)
+   -\varepsilon_{\mathrm{eig}}\ \big\},
+  \qquad N<n\le m^{\ast}_t .
+\end{equation}
+Then
+\begin{equation}\label{eq:pmcex}
+  \pmc^{(t)}\coloneqq
+  \begin{cases}
+    \max\Big\{0,\ \min\big\{\ \min\limits_{N<n\le m^{\ast}_t}\ell^{(t)}(n),
+      \ \ \Bnd^{(t)}\big(m^{\ast}_t+1\big)\ \big\}\Big\}
+      &\text{if (X) holds at }t,\\[10pt]
+    \max\Big\{0,\ \min\big\{\ \min\limits_{N<n\le m^{\ast}_t}\ell^{(t)}(n),
+      \ \ \min\limits_{m^{\ast}_t<n\le m_t}\Bnd^{(t)}(n),
+      \ \ T^{(t)}_{m_t}\ \big\}\Big\}
+      &\text{otherwise,}
+  \end{cases}
+\end{equation}
+the middle minimum in the second case running over the empty index set ---
+and so equal to $+\infty$ and inactive --- when $m^{\ast}_t=m_t$.
+
+\emph{Per setting.} The depth is optional and per setting, and each
+per-setting weight $\pmc^{(t)}$ is its own setting's: a depth changes the
+weight of the setting that declares it and of no other. A declaration that
+carries a depth at some settings and not at others therefore obtains the
+exact-window value as the weight of each setting with one, while the uniform
+weight $\pmc=\min_{t\in\Tset}\pmc^{(t)}$ is bounded by the settings without
+one.
+\end{definition}

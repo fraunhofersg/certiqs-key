@@ -1,0 +1,296 @@
+% ---
+% id: meat-core/thm:keylength
+% kind: thm
+% title: "Secrecy of the key from the accumulated entropy"
+% summary: >-
+%   For a Rényi order α in (1, 2), a key of length ℓ ≤ n·h_low − λ_EC −
+%   ⌈log₂(1/ε_EV)⌉ − α/(α−1)·log₂(1/ε_PA) + 1 is ε_PA-secret on the accepted
+%   state at every all-at-once finite-register attack the reduction chain
+%   carries onto the round model ([[A-LINK]]). [[cor:composed-security]]
+%   extends it to every attack.
+% user_statement: >-
+%   Over n rounds the attacker's uncertainty about the raw key accumulates
+%   to n times the per-round bound h_low, less a term for how unlikely the
+%   acceptance test is to pass, which cancels over all runs; the bound h_low
+%   holds over every attack compatible with your declared devices and with
+%   passing statistics. Subtracted are the
+%   error-correction transcript of λ_EC bits, the verification hash of
+%   ⌈log₂(1/ε_EV)⌉ bits and a finite-size penalty of α/(α−1)·log₂(1/ε_PA)
+%   bits; one bit is added back. The remaining key of ℓ bits is secret,
+%   counted over all runs: it is within the secrecy parameter ε_PA of a
+%   uniform key independent of the attacker's memory and every public
+%   message. It is proved for a finite-memory attacker receiving every
+%   signal at once; [[cor:composed-security]] covers every attacker.
+%   The Rényi order α in (1, 2) is fixed before the run ([[A-FIXED]]) and
+%   changes the key's length, never its secrecy.
+% prominence: main
+% status: implemented
+% uses: [lem:memory-lift, def:postprocessing-model, thm:accumulated-entropy, def:homog, thm:reduction, cor:reduction-constrained, def:feasible, def:roundmodel, thm:constrained-accumulation, foundations/def:renyi, def:admissible-declaration]
+% mentions: [cor:constrained-key-length, rem:plus2, def:authenticated-channel, cor:composed-security, protocol-compiler/thm:band-a, protocol-compiler/rem:obligations-discharged, reductions/thm:two-sided, reductions/cor:sequential, reductions/thm:licence]
+% assumes: [A-KEYREG, A-HASH, A-ATK, A-SEED, A-FIXED, A-CONFORM, A-LAB, A-SEQ, A-LINK, A-ENS, A-SPEC, A-ALICE-MEAS]
+% refs:
+%   - "tomamichel2016finite, Lemmas 5.3-5.4, Eq. (5.94)"
+%   - "tomamichel2016finite, Thm. 4.1, Eq. (4.82)"
+%   - "kamin2025renyi, Thm. 4, Eq. (13)"
+%   - "tupkary2026decoy, Lemma 6.5, Rem. 6.1"
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.keylength:key_length
+% lean:
+% notes: "The acceptance flag of error verification is part of the public transcript, so secrecy holds on the accepted state at the cost of one bit: the constant +2 of the derivation this theorem generalises becomes +1 here, and with that derivation's weaker convention (secrecy conditioned on the acceptance test only) its constant is recovered (rem:plus2). The side information E_tot holds the public seeds S; they cost nothing, being independent of the raw key and the adversary's other registers."
+% ---
+
+The accumulated entropy bound feeds the fixed-length post-processing model:
+error correction with a transcript of fixed length, error verification whose
+one-bit outcome is announced, and privacy amplification by an ideal
+two-universal hash. Announcing the verification outcome costs one bit and
+makes the secrecy statement hold on the accepted state
+(Remark~\ref{rem:plus2}).
+
+The theorem is stated at the attacks the analysis is carried out for: those
+with finite registers whose first channel receives every transmitted signal,
+which the \tref{reduction chain} carries onto the \tref{round model}, as
+hypothesis (H-CHAIN) says. Its link part is proved, not attested, on the
+identity link of \tref{Band A} (\xref{protocol-compiler/thm:band-a}) and for
+a chain the reductions module emits with status exact
+(\xref{reductions/thm:two-sided}, \xref{reductions/cor:sequential},
+\xref{reductions/thm:licence}), where A-LINK is discharged
+(\xref{protocol-compiler/rem:obligations-discharged}); for any other chain
+it rests on A-LINK. With constraints, the part that makes the attacks
+admissible for the constraint list rests on A-ATK on every route, Band A
+included, wherever the list carries an entry no theorem licenses.
+Corollary~\ref{cor:composed-security} extends the bound to every attack,
+whatever the adversary's memory.
+
+\begin{theorem}\label{thm:keylength}
+Let the protocol run the \tref{fixed-length post-processing model}
+(Definition~\ref{def:postprocessing-model}) in the
+\tref{honest-authentication setting}, with the registers
+\eqref{eq:pp-registers}. Let one of the two accumulation branches hold:
+\emph{(unconstrained)} the hypotheses of
+Theorem~\ref{thm:accumulated-entropy} with $\CList=\varnothing$; or
+\emph{(constrained)} the hypotheses of
+Theorem~\ref{thm:constrained-accumulation} ($\CList$
+\tref{licensed for the declared source mode}, Definition~\ref{def:homog};
+A-ATK (\xref{protocol-compiler/ass:atk})), in either branch save the
+condition $\Pr[\OmAT]>0$ that the accumulation theorem places on the
+attack, which the attack below need not meet. Let the run be as in
+Lemma~\ref{lem:memory-lift}\,(a), as A-SPEC (\xref{protocol-compiler/ass:spec})\,(i)
+attests for its measurement, with A-ALICE-MEAS
+(\xref{protocol-compiler/ass:alice-meas})\,(i) for Alice's measurement where
+no \tref{source-replacement certificate} is demanded, and A-ENS
+(\xref{transmitter/ass:ens}), or the
+premise a \tref{source model} declares in its place, for its source states;
+let it be attacked by an attack in the sense of
+Lemma~\ref{lem:memory-lift}\,(b) that is all-at-once and has finite
+registers; and let the \tref{reduction chain} from which the declaration was
+compiled carry it onto the round model, as A-LINK
+(\xref{protocol-compiler/ass:link})\,(i)(a), (i)(b), (ii)(a) and (iv) attest,
+the existence of each link's channel, the pull-back identity, the source
+identity and complete positivity, with A-ATK in the constrained branch:
+\begin{itemize}[leftmargin=2.4em]
+\item[(H-CHAIN)] the marginal on $Z_1^n\Chat_1^nI_1^nE_n$ of the run's state
+  after the $n$ rounds is the state the
+  \tref[round channel]{round channels} of Definition~\ref{def:roundmodel}
+  produce under an \tref{attack sequence} of that definition,
+  $\CList$-admissible in the constrained branch, from an input state as in
+  the branch's accumulation theorem; the run's state is an extension of it,
+  holding the parties' further records.
+\end{itemize}
+Let Assumptions~\ref{ass:keyreg}, \ref{ass:hash}, \ref{ass:seed},
+\ref{ass:fixed}, \ref{ass:conform} and~\ref{ass:lab}, the last at each of
+the two parties, and A-SEQ (\xref{transmitter/ass:seq}) hold, let
+$\alpha\in(1,2)$ and $\epa,\eev\in(0,1]$. If the output length satisfies
+\begin{equation}\label{eq:keylength}
+  \ell\;\le\;n\,\hlow-\lEC-\Big\lceil\log_2\frac1{\eev}\Big\rceil
+  -\frac{\alpha}{\alpha-1}\log_2\frac1{\epa}+1,
+\end{equation}
+then, under that attack, the protocol is $\epa$-secret on the accepted
+state:
+\begin{equation*}
+  \frac12\Big\|\rho_{K\,E_{\mathrm{tot}}\wedge\Omega_{\mathrm{acc}}}
+  -\frac{\idon{K}}{2^{\ell}}\otimes
+  \rho_{E_{\mathrm{tot}}\wedge\Omega_{\mathrm{acc}}}\Big\|_1\le\epa .
+\end{equation*}
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} Secrecy is first proved on the state conditioned on the
+acceptance test: the chain rule for a classical register charges the whole
+public transcript $L$ against the accumulated entropy, the public seeds cost
+nothing because they are independent of everything else, and the R\'enyi
+leftover-hashing lemma turns the result into a trace-distance bound, whose
+acceptance-probability factor cancels. A contraction then passes from the
+acceptance test to the accepted state, on which the announced flag
+$F_{\mathrm{acc}}$ is a register of the adversary's side information. An
+attack under which the test never passes is disposed of first.
+
+\emph{Step 0 (an attack that never passes the test).} The event $\OmAT$ is
+a function of $\Chat_1^n$, so by (H-CHAIN) its probability under the
+attack is the one in the round model. If $\Pr[\OmAT]=0$, then
+$\Omega_{\mathrm{acc}}=\OmAT\wedge\{F_{\mathrm{acc}}=\mathrm{acc}\}$
+(Definition~\ref{def:postprocessing-model}) has probability zero, so
+$\rho_{K\,E_{\mathrm{tot}}\wedge\Omega_{\mathrm{acc}}}=0$ and
+$\rho_{E_{\mathrm{tot}}\wedge\Omega_{\mathrm{acc}}}=0$, and the left-hand
+side of the secrecy criterion is $0\le\epa$. From now on $\Pr[\OmAT]>0$,
+and the hypotheses of the branch's accumulation theorem hold in full.
+
+\emph{Step 1 (secrecy on the acceptance test).} Abbreviate
+$B\coloneqq\Chat_1^nI_1^n\Ehat$. By (H-CHAIN) the rounds of the run under the
+attack leave, on $Z_1^n\Chat_1^nI_1^nE_n$, the state the
+\tref[round channel]{round channels} of Definition~\ref{def:roundmodel}
+produce under an attack sequence of that definition, to which the
+accumulation theorem of the branch applies, the run's further records being
+an extension of it, and
+the register $E_{\mathrm{tot}}=B\,S\,L\,G$ is what the adversary holds at the
+end of the protocol. By A-SEQ (\xref{transmitter/ass:seq})\,(i), (ii)
+and~(iv), every message of a round is sent after every measurement of that
+round, no operation on a quantum system of a round depends on that round's
+messages, and the classical post-processing is applied after the $n$
+rounds, so each round is the measurement of its round channel followed by
+announcements that the model hands to the adversary, and the post-processing
+acts on the state the $n$ round channels produce. By
+Assumption~\ref{ass:lab} at each of the two parties, during the protocol
+nothing about the raw string, the keys or the parties' local randomness
+leaves either laboratory, other than as the protocol's output, except
+through the systems the \tref{round model} hands to the adversary and the
+public messages, and the adversary acts on neither laboratory except through
+the systems and messages the model routes to it. By
+Assumption~\ref{ass:conform}\,(ii) the classical messages after the rounds
+are exactly those of the model and of the authentication post-processing
+(Definition~\ref{def:authenticated-channel}\,(c)). In the
+honest-authentication setting no message fails authentication, so the
+messages of the authentication post-processing are accept or abort
+decisions that are functions of $\Omega_{\mathrm{acc}}$, hence of
+$\Chat_1^n$ and $F_{\mathrm{acc}}$, which $E_{\mathrm{tot}}$ holds;
+appending them is a channel acting on $E_{\mathrm{tot}}$ alone, which does
+not increase the trace distance of the secrecy criterion and keeps its ideal
+term of the same form, so they cost nothing. By
+Assumption~\ref{ass:fixed}, $n$, $\acSet$, $\ell$, $\lEC$, $\epa$ and $\eev$
+are constants of the run, so the event $\OmAT$, the dimension $2^{\lambda}$
+of $L$ and the output length do not depend on the run's data, and by
+Assumption~\ref{ass:conform}\,(i) and~(iv) the run applies that test and
+outputs the $\ell$-bit key the model computes, or $\perp$. The
+post-processing is executable: the key holder computes $Z_1^n$ from its own
+readout and the announcements (Definition~\ref{def:admissible-declaration}\,(viii)), and every
+object the post-processing forms is a function of registers present in the
+state that Theorem~\ref{thm:accumulated-entropy} bounds, together with the
+public seeds.
+
+The state after the public phase, conditioned on $\OmAT$, is classical on
+$L$; by the chain rule for conditioning on a classical register
+\cite[Lemmas~5.3--5.4, Eq.~(5.94)]{tomamichel2016finite}, applied with
+the classical system $L$ of dimension $2^{\lambda}$ and the conditioning
+system $B\,S$ (the $\alpha$-domain
+restriction to $(1,2)$ is this module's, inherited from the
+leftover-hashing lemma applied next; the cited chain rule is stated for the
+sandwiched family of \cite[Def.~5.2, Eqs.~(5.18)--(5.19)]%
+{tomamichel2016finite} on its data-processing range
+$\alpha\in[\frac12,\infty]$, the range on which
+\cite[Thm.~4.1, Eq.~(4.82)]{tomamichel2016finite} grounds data
+processing, and $(1,2)\subset[\frac12,\infty]$),
+\begin{equation}\label{eq:chainrule}
+\begin{aligned}
+  \Hsandup\big(Z_1^n\big|B\,S\,L\big)_{\rho_{|\OmAT}}
+  &\;\ge\;\Hsandup\big(Z_1^n\big|B\,S\big)_{\rho_{|\OmAT}}-\lambda
+  \;\ge\;\Hsandup\big(Z_1^n\big|B\big)_{\rho_{|\OmAT}}-\lambda\\
+  &\;\ge\;n\,\hlow-\frac{\alpha}{\alpha-1}\log_2\frac{1}{\Pr[\OmAT]}
+  -\lambda .
+\end{aligned}
+\end{equation}
+The second inequality holds because the seeds cost nothing. By
+Assumption~\ref{ass:seed} they are drawn after the rounds, independently of
+every other register, so that
+$\rho_{Z_1^nBS|\OmAT}=\rho_{Z_1^nB|\OmAT}\otimes\omega_S$ for the law
+$\omega_S$ of $S$, $\OmAT$ being a function of $\Chat_1^n$. For every
+$\sigma_B\in\Seq{B}$ the state $\sigma_B\otimes\omega_S$ is admissible in the
+infimum that defines $\Hsandup(Z_1^n|BS)$ (\xref{foundations/def:renyi}), and
+with $\gamma\coloneqq\frac{1-\alpha}{2\alpha}$, powers taken on supports,
+\[
+  (\idon{Z}\otimes\sigma_B\otimes\omega_S)^{\gamma}
+  (\rho_{Z_1^nB}\otimes\omega_S)
+  (\idon{Z}\otimes\sigma_B\otimes\omega_S)^{\gamma}
+  =\big((\idon{Z}\otimes\sigma_B)^{\gamma}\rho_{Z_1^nB}
+  (\idon{Z}\otimes\sigma_B)^{\gamma}\big)\otimes\omega_S^{1/\alpha};
+\]
+the trace of the $\alpha$-th power of a tensor product is the product of the
+traces, $\tr[(\omega_S^{1/\alpha})^{\alpha}]=\tr\omega_S=1$, and the support
+condition holds for the product exactly when it holds for the first factor.
+Hence
+$\Dsand(\rho_{Z_1^nB}\otimes\omega_S\|\idon{Z}\otimes\sigma_B\otimes\omega_S)
+=\Dsand(\rho_{Z_1^nB}\|\idon{Z}\otimes\sigma_B)$, and the infimum over
+$\sigma_B$ gives $\Hsandup(Z_1^n|BS)\ge\Hsandup(Z_1^n|B)$.
+
+The third inequality of \eqref{eq:chainrule} uses
+Theorem~\ref{thm:accumulated-entropy} with
+Theorem~\ref{thm:reduction} ($\hqkd\ge\hlow$) in the unconstrained
+branch, and Theorem~\ref{thm:constrained-accumulation} with
+Corollary~\ref{cor:reduction-constrained} --- that is,
+Corollary~\ref{cor:constrained-key-length} --- in the constrained branch;
+here and in the rest of the proof $\hlow$ is \eqref{eq:hlow-def} over the
+declared $\Feas$, so in the constrained branch it is the constrained value
+$\hlow(\CList)$, and the remainder of the proof consumes only the
+displayed bound, supplied by either branch. The chain rule holds for an
+arbitrary jointly distributed classical $L$ of dimension $2^{\lambda}$ ---
+no functional dependence of $L$ on $Z_1^n$ is required --- so it covers
+$F_{\mathrm{acc}}$, which depends also on the partner's reconstruction
+$\hat Z_1^n$. The third inequality of \eqref{eq:chainrule} applies to the
+post-processed state because
+$\Hsandup(Z_1^n|B)$ is a functional of the $(Z_1^n,B)$ marginal only, and
+the post-processing leaves that marginal unchanged: the registers traced out
+by the \tref[round channel]{round channels} (the partner's outcome and
+announcement copies;
+Definition~\ref{def:roundmodel}) still exist in the physical protocol as an
+extension of the modelled state, and every appended object ---
+$S$ drawn independently, $L_{\mathrm{EC}}$ and $T_{\mathrm{EV}}$ from
+classical copies of $Z_1^n$ and the public seeds, $F_{\mathrm{acc}}$ from
+$T_{\mathrm{EV}}$ and the partner's data (Assumption~\ref{ass:keyreg}) --- is
+generated by channels acting trivially on $Z_1^nB$. Hence the accumulation
+bound of the branch in force, Theorem~\ref{thm:accumulated-entropy} or
+Theorem~\ref{thm:constrained-accumulation}, applies verbatim. Now apply the
+R\'enyi leftover-hashing lemma \cite[Thm.~4, Eq.~(13)]{kamin2025renyi}
+(stated there for $\alpha\in(1,2)$; this is what confines the theorem to
+that domain), under the ideal-family hypothesis of
+Assumption~\ref{ass:hash}\,(i) (\cite[Lemma~6.5, Rem.~6.1]{tupkary2026decoy};
+a merely two-universal family costs one further bit there) and with $G$
+drawn with the law of its family independently of $Z_1^nBSL$
+(Assumption~\ref{ass:seed}), to the normalized state $\rho_{|\OmAT}$ with
+side information $E\coloneqq B\,S\,L$ and hash register $G$:
+\begin{equation*}
+  \frac12\Big\|\rho_{K\,EG|\OmAT}-\frac{\idon{K}}{2^{\ell}}\otimes
+  \rho_{EG|\OmAT}\Big\|_1
+  \;\le\;2^{\frac{2(1-\alpha)}{\alpha}}\,
+  2^{\frac{1-\alpha}{\alpha}\left(
+  \Hsandup(Z_1^n|BSL)_{\rho_{|\OmAT}}-\ell\right)} .
+\end{equation*}
+Multiply both sides by $\Pr[\OmAT]$ to pass to the subnormalized
+$\wedge\OmAT$ state, and insert \eqref{eq:chainrule}: with
+$\kappa\coloneqq\frac{\alpha-1}{\alpha}>0$, the factor
+$2^{\kappa\log_2(1/\Pr[\OmAT])}=1/\Pr[\OmAT]$ cancels the prefactor
+$\Pr[\OmAT]$, leaving
+\begin{equation}\label{eq:secrecy-at}
+  \frac12\Big\|\rho_{K\,E_{\mathrm{tot}}\wedge\OmAT}
+  -\frac{\idon{K}}{2^{\ell}}\otimes
+  \rho_{E_{\mathrm{tot}}\wedge\OmAT}\Big\|_1
+  \;\le\;2^{-2\kappa}\,2^{-\kappa\left(n\hlow-\lambda-\ell\right)} .
+\end{equation}
+Requiring the right side to be at most $\epa$ is equivalent to
+$n\hlow-\lambda-\ell\ge\frac1{\kappa}\log_2\frac1{\epa}-2$, i.e.\ to
+\eqref{eq:keylength} after inserting
+$\lambda=\lEC+\lceil\log_2\frac1{\eev}\rceil+1$.
+
+\emph{Step 2 (from $\OmAT$ to $\Omega_{\mathrm{acc}}$).} The flag
+$F_{\mathrm{acc}}$ is a register of $E_{\mathrm{tot}}$ (it is part of
+$L$). Let $\Pi\coloneqq\dyad{\mathrm{acc}}_{F_{\mathrm{acc}}}$, acting on
+$E_{\mathrm{tot}}$ only. The selection map
+$X\mapsto(\idon{K}\otimes\Pi)X(\idon{K}\otimes\Pi)$ is trace-norm
+contractive ($\|AXB\|_1\le\|A\|_{\infty}\|X\|_1\|B\|_{\infty}$ with
+$\|\Pi\|_{\infty}=1$), maps
+$\rho_{\wedge\OmAT}\mapsto\rho_{\wedge\Omega_{\mathrm{acc}}}$, and maps
+the ideal term to
+$\frac{\idon{K}}{2^{\ell}}\otimes
+\Pi\rho_{E_{\mathrm{tot}}\wedge\OmAT}\Pi
+=\frac{\idon{K}}{2^{\ell}}\otimes
+\rho_{E_{\mathrm{tot}}\wedge\Omega_{\mathrm{acc}}}$, preserving the ideal
+form because $\Pi$ does not act on $K$. Applying it to
+\eqref{eq:secrecy-at} gives the claimed accepted-state secrecy.
+\end{proof}

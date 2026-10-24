@@ -1,0 +1,41 @@
+% ---
+% id: receiver/ass:thresh
+% kind: ass
+% title: "Threshold detectors without memory"
+% summary: >-
+%   Each detector reports one bit per gate, with no photon-number resolution,
+%   no memory or timing effects, and no correlations beyond the declared
+%   dark-count channel. It fixes the click-or-no-click outcome alphabet the
+%   receiver's measurement is built on.
+% prominence: standard
+% status: accepted
+% uses: [def:modes]
+% mentions: [receiver/detector-imperfections/def:darkadm]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-THRESH
+% verification: never
+% category: receiver
+% affects: [secrecy]
+% refines: A-TRUST
+% user_statement: >-
+%   Your detectors are threshold (click or no-click) detectors read once per
+%   gate. They have no photon-number resolution, no dead time, no afterpulsing
+%   and no timing jitter. Gates and detectors are correlated only through the
+%   dark-count model you declared. Dark counts are independent from round to
+%   round, and between detectors unless you declared a correlated dark-count
+%   channel. Detectors with dead time or afterpulsing at your gate rate
+%   violate this.
+% lean:
+% ---
+
+\begin{assumption}\label{ass:thresh}
+(i) Each detector reports one bit per detection gate: click or no click;
+(ii) there is no photon-number resolution, no dead time, no afterpulsing and
+no timing jitter;
+(iii) there is no correlation of any kind between gates or between detectors
+beyond the declared \tref{dark-count channel};
+(iv) dark counts are independent across rounds, and across ports unless a
+correlated channel is declared explicitly (Definition~\ref{def:darkadm}).
+\end{assumption}

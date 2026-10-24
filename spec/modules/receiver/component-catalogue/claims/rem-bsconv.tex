@@ -1,0 +1,79 @@
+% ---
+% id: receiver/component-catalogue/rem:bsconv
+% kind: rem
+% title: "Beamsplitter conventions and the port Grams"
+% summary: >-
+%   The symmetric beamsplitter differs from the catalogue's real one by a phase
+%   on each side. The two conventions give the same port Grams whenever the
+%   element is terminal with each output path inside one port and the
+%   input-side phase is a scalar on the declared input space.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [receiver/cor:phases, receiver/thm:port-grams, def:catalogue-entries]
+% assumes: [A-VAC]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A reader who imports a beamsplitter matrix written in another convention needs
+to know which of its phase factors is free. The catalogue fixes one
+convention, the core $\Bsp(x,\varphi)$ of \eqref{eq:bs}, and the interface
+transcribes it (\repodoc{spec/modules/receiver/interface.yaml}).
+
+\begin{remark}\label{rem:bsconv}
+The ``symmetric'' beamsplitter convention
+$\Bsp_{\mathrm{sym}}(x)\coloneqq
+\left(\begin{smallmatrix}\sqrt x&i\sqrt{1-x}\\
+i\sqrt{1-x}&\sqrt x\end{smallmatrix}\right)$ differs from $\Bsp(x,0)$ by
+phases on \emph{both} sides, and it matters which side each one is on. Writing
+$\Upsilon\coloneqq\operatorname{diag}(1,i)$ on the ordered path pair, multiplication
+gives
+\begin{equation}\label{eq:bssym}
+  \Upsilon\,\Bsp(x,0)\,\Upsilon
+  =\begin{pmatrix}1&0\\0&i\end{pmatrix}
+   \begin{pmatrix}\sqrt x&\sqrt{1-x}\\ \sqrt{1-x}&-\sqrt x\end{pmatrix}
+   \begin{pmatrix}1&0\\0&i\end{pmatrix}
+  =\begin{pmatrix}\sqrt x& i\sqrt{1-x}\\ i\sqrt{1-x}&\sqrt x\end{pmatrix}
+  =\Bsp_{\mathrm{sym}}(x) ,
+\end{equation}
+the sign of the $(2,2)$ entry being restored by $i\cdot i=-1$. The two factors
+have different status.
+\begin{itemize}[leftmargin=1.6em]
+\item The \emph{left} factor is an output-side phase. If the element is
+  terminal and each of its two output paths lies inside one detector port,
+  Corollary~\ref{cor:phases} applies and it changes no port Gram.
+\item The \emph{right} factor is an \emph{input}-side phase, which
+  Corollary~\ref{cor:phases} does not cover. Consider the case in which the
+  element acts directly on the inputs, each of its two input paths being
+  either \tref{declared input modes} or an undeclared vacuum port
+  (Assumption~\ref{ass:vac}), so that the factor acts on
+  $\mathbb{C}^{\Inp}$ as a fixed diagonal unitary $\widetilde\Upsilon$,
+  the vacuum columns being eliminated exactly
+  (Theorem~\ref{thm:port-grams}\,(iv)). (With optics upstream of the element the
+  pull-back of a diagonal phase need be neither diagonal nor unitary on
+  $\mathbb{C}^{\Inp}$, and the comparison that follows is not the right one to
+  make; the conclusion, to convert before declaring, still holds, and more
+  strongly.) The two conventions then give
+  $A_k^{\mathrm{sym}}=\widetilde\Upsilon^{\dagger}A_k\widetilde\Upsilon$ for
+  every $k$: the \emph{same} family only up to that conjugation. The
+  conjugation is the identity map exactly when $\widetilde\Upsilon$ is a
+  scalar on $\mathbb{C}^{\Inp}$, that is, when every declared input mode
+  receives the same phase from the factor, as when the element's one declared
+  input path is the whole declared input space and the other input path is
+  the vacuum port: a global phase on all of $\mathbb{C}^{\Inp}$ cancels in
+  $A_k=\Gmat_{\Inp}^\dagger\Emd{\{k\}}\Gmat_{\Inp}$. When declared input modes
+  receive different phases, as when both input paths are declared,
+  $\widetilde\Upsilon$ is a genuine relative phase between them, and the two
+  conventions can describe \emph{different} devices, whose Grams differ by
+  that conjugation.
+\end{itemize}
+So the two conventions agree on the port Grams, and hence on the POVM,
+whenever both conditions hold: the element is terminal with each of its
+output paths inside one detector port, and the input-side factor is a scalar
+on the declared input space.
+Neither is automatic, which is why the catalogue fixes the one convention
+$\Bsp(x,\varphi)$ of \eqref{eq:bs}, and why no catalogue entry drops a phase
+it could have absorbed.
+\end{remark}

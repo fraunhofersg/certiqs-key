@@ -1,0 +1,162 @@
+% ---
+% id: transmitter/def:source-segment
+% kind: def
+% title: "Source segment and its interface conditions"
+% summary: >-
+%   A source segment chains source links from the virtual ensemble to the
+%   specified one, preserving labels and weights, with the source identity
+%   decided exactly for data links. A link kind is admitted only with a
+%   soundness claim, and a consumer decides its registry entry, ledger and
+%   provenance.
+% prominence: standard
+% status: implemented
+% uses: [def:source-spec, def:source-link]
+% mentions: [def:srcert, rem:segment-scope]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.links:check_source_link
+% lean:
+% notes: "The admission rule on the kind is deliberately not a fifth numbered interface condition: protocol-compiler/def:chaincond and protocol-compiler/thm:chain-consumption decide (S1)-(S4) by name, and the admission rule is applied where a link is admitted, not by the compiler reading a presented chain. (S1)-(S4) are also decided by certiqs_key.protocol_compiler.chain:check_chain. This definition has one of the largest dependent sets of the tree (check_claims --dependents transmitter/def:source-segment): a substantive change here moves the effective status of most of three modules."
+% ---
+
+Where the source of a protocol is not declared directly as the ensemble the
+security analysis is about, a chain of source links connects the two. The
+definition fixes what a consumer decides of such a chain and which link kinds
+may appear in it at all; Remark~\ref{rem:segment-scope} says what these
+conditions leave to other claims. The conditions are read by the modules
+that consume the artefact this module emits: the declared data with the
+segment, a soundness registry of admitted link kinds, and an assumption
+ledger listing the assumptions the artefact rests on.
+
+\begin{definition}
+\label{def:source-segment}
+The \term[The ordered, possibly empty list of source links leading from the virtual ensemble to the specified one.]{source segment} of a reduction chain is an ordered list
+$\Chsrc=(\Xi_1,\dots,\Xi_{L_{\mathrm s}})$ of source links
+(Definition~\ref{def:source-link}), $L_{\mathrm s}\ge0$, whose links act on
+the transmitted system and replace Alice's signal ensemble; it is presented
+together with a \tref{source specification} $\Spec_{\mathrm{src}}$
+(Definition~\ref{def:source-spec}). The segment satisfies the
+\term[The conditions (S1) to (S4) a source segment satisfies: descriptor match, index preservation, the source identity, and the slots each link carries.]{interface conditions} when the following hold.
+\begin{enumerate}[label=(S\arabic*),leftmargin=3.0em]
+\item \emph{(descriptor match)} the target descriptor of $\Xi_i$ equals the
+source descriptor of $\Xi_{i+1}$ for $1\le i<L_{\mathrm s}$; the target
+descriptor of $\Xi_{L_{\mathrm s}}$ is the specified pair, the transmitted
+system $\Asig$ named by $\Spec_{\mathrm{src}}$ with the specified ensemble
+$\{p_x,\rho_x\}$ on it; and the source descriptor of $\Xi_1$ is the virtual
+pair, the \term[The transmitted system of the virtual ensemble, where the source segment starts.]{virtual transmitted system} $\Avirt$ with the
+\term[The finite-dimensional ensemble the source segment starts from and the certificate is written against.]{virtual ensemble} $\{p_x,\rvirt_x\}_{x\in\Xset}$ on it, on which the
+\tref{source-replacement certificate} is written (Definition~\ref{def:srcert}).
+Every descriptor of
+this segment is an Alice-side descriptor: no condition of the segment
+mentions the receiver's systems, its outcome alphabets or its measurements;
+\item \emph{(index preservation)} each link carries the signal index $x$
+through unchanged: it maps a family indexed by $\Xset$ to a family indexed
+by $\Xset$, with the weights $p_x$ untouched;
+\item \emph{(source identity, where checkable)} writing
+$\Xi\coloneqq\Xi_{L_{\mathrm s}}\circ\dots\circ\Xi_1$ for the composite
+when every link supplies its channel as data,
+\begin{equation}\label{eq:srcmap}
+  \Xi(\rvirt_x)=\rho_x\qquad\text{for every }x\in\Xset ,
+\end{equation}
+an \emph{exact} matrix identity, decided entry by entry. The composite
+$\Xi$ is \emph{formed} in exact arithmetic as well, so that the identity
+decided is the identity written; that the operands are binary64 is not what
+makes the decision exact (the number model of
+Definition~\ref{def:source-spec}). The channel runs from the \emph{virtual}
+states to the \emph{specified} ones, and the object a consumer receives is
+the virtual protocol, the protocol with the virtual ensemble in the place of
+the specified one. \emph{Where a link supplies its channel as a theorem
+constructor} (Definition~\ref{def:source-link}\,(c2)) the identity of
+\emph{that} link is not decided on numbers: it is the conclusion of the claim
+the link's obligation record names, at the member of that claim's declared
+descriptor family which the link's descriptors are, and the identity of the
+composite is the composition of the per-link identities --- each one either
+decided, where its link supplies data, or concluded by its named claim, where
+its link supplies a constructor. In a segment that mixes the two kinds of
+witness, each data link's identity is therefore decided link by link. So
+\eqref{eq:srcmap} is what the composite satisfies in every case, and what
+changes with the kind of witness is
+\emph{by what} it is established and therefore what a consumer may re-decide:
+nothing of a constructor link's identity, which is why the obligation
+travels;
+\item \emph{(slots)} each link carries its constraint entries and its
+licence slot, both possibly empty, and its status tag; a link whose channel
+is a theorem constructor carries in addition its obligation record, the claim
+and the assumptions it names, which are the strings (A2) below decides.
+\end{enumerate}
+
+\emph{Which kinds are admitted, and what a consumer decides.} \emph{No
+source link kind is admitted unless the submodule that declares it supplies
+its soundness claim}: a link of kind $k$ may appear in a segment only where a
+submodule of this module declares $k$ and supplies, as a claim of this
+repository, the statement that the link's witness satisfies the identity of
+Definition~\ref{def:source-link}\,(c1) at every member of its declared
+descriptor family --- decided there, for a data link, or proved there, for a
+constructor link. A link of a kind for which no such claim exists is
+\emph{refused}, and so is a link with a non-empty list of transported
+constraint entries, whatever its kind: no claim of this repository transports
+an Alice-side entry.
+
+That much is a condition on the \emph{kind}, and a consumer cannot decide it
+of a claim it does not read. What a consumer decides is the following, and it
+is decided on data.
+\begin{enumerate}[label=(A\arabic*),leftmargin=3.0em]
+\item \emph{(the soundness registry)} this module emits, with every artefact,
+a finite list --- the \term[The closed list, emitted with every artefact, of admitted source-link kinds with their soundness claims and carried assumptions.]{soundness registry} --- with one entry per
+admitted source-link kind, \emph{closed} in that a kind without an entry is
+not admitted (Definition~\ref{def:source-link}\,(a)), each entry the triple
+\begin{equation}\label{eq:registry}
+  \big(\textsf{kind},\ \text{the id of its soundness claim},\
+  \mathcal{A}(\textsf{kind})\big) ,
+\end{equation}
+written out in the module's interface and emitted verbatim. \emph{The third
+component $\mathcal{A}(\textsf{kind})$ is the assumptions the obligation
+carries}, and it has two sources, both of which a registry entry lists:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item the \emph{assumption closure of the soundness claim}: the assumptions
+in the transitive closure of that claim under its \emph{uses} and
+\emph{assumes} edges, the claims and assumptions each claim lists as its
+dependencies; it may be empty, and is empty if and only if no claim of that
+closure, the soundness claim included, lists an assumption among its
+dependencies;
+\item the \emph{physical-source assumption the submodule declares for the
+source model the claim is stated over}, where the claim is stated over one.
+That assumption is not a premise of the soundness claim and must not be made
+one: what it attests is that the model the claim is about describes the
+physical device, which is what an obligation on a physical source owes and a
+mathematical identity does not.
+\end{enumerate}
+The registry of an artefact is the registry of the version of this module that
+emitted it, not a datum a request supplies.
+\item \emph{(the triple is decided)} a presented chain's link is
+\emph{refused} unless the triple (its \textsf{kind}, the claim id of its
+obligation record, the assumption short ids of that record) appears in the
+registry of the artefact that carries it --- a comparison of finitely many
+declared strings, taken entry by entry --- and unless every assumption of that
+entry is in the artefact's assumption ledger, the list of assumptions the
+artefact rests on. \emph{Both components of
+$\mathcal{A}(\textsf{kind})$ are compared}, so a link that names the soundness
+claim's closure and omits the model's attestation is refused exactly as one
+that names neither. A link supplying its channel as data carries no obligation
+record and is decided by (S3) instead.
+\item \emph{(provenance)} a non-empty source segment is accepted only inside
+an artefact emitted by the module that admits its links. A segment assembled
+from links a consumer received in any other way is refused, whatever its
+triples: the registry says which kinds this repository has proved, not that a
+particular link was built by the module that proved them.
+\end{enumerate}
+The admission rule on the kind is applied where a link is admitted, which is
+this module and the submodule whose kind it is; it is not among the conditions
+(S1) to (S4), which are the conditions a consumer decides on a presented
+chain, and (A1) to (A3) are conditions on the artefact and its registry rather
+than on the segment's descriptors.
+
+\emph{The empty segment.} When $L_{\mathrm s}=0$ the segment is empty, $\Xi$
+is the identity, $\Avirt=\Asig$ and $\rvirt_x=\rho_x$, so \eqref{eq:srcmap}
+holds by inspection. That is the case of every specification whose ensemble
+is declared as matrices and that carries no link. A specification whose
+ensemble is declared by a source model is presented with a non-empty segment
+(Definition~\ref{def:source-spec}, case (b)), which is the other case and the
+one the conditions above are written for.
+\end{definition}

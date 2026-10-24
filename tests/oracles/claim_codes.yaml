@@ -1,0 +1,274 @@
+# The oracle claim codes, and the claims of this repository that carry
+# each one's mathematics.
+#
+# WHAT THIS FILE IS. The frozen oracle registries beside it pin claims by
+# oracle codes, in their
+# `claims` and `supports` fields: C1-C22 of meat-core, PC1-PC12 of
+# protocol-compiler, RC1-RC12 of receiver-povm, PR1-PR13 of proof-reductions
+# and SA1-SA9 of statistics-acceptance. This file maps each code to full claim
+# ids (`<module>/<label>` or `<module>/<submodule>/<label>`) and names the
+# owner of every registry file. It is the one place the two vocabularies meet;
+# the interface tests read it through claim_codes.py, and test_claim_codes.py
+# checks it against the registries and the claim files.
+#
+# WHY IT EXISTS. A frozen registry is never edited (PRINCIPLES.md section 2.3),
+# so its codes stay. The contracts do not carry them: a claim is named by its
+# id (spec/claim-format.md). The correspondence was harvested from the
+# interface tests' own tables, the claim titles, the `origin` header fields and
+# running text.
+#
+# NEVER REGENERATED FROM CODE. Every entry is transcribed by hand from the
+# evidence its section names, and a change to it is a reviewed edit that names
+# its evidence. harness/relabel.py keeps the ids current: it rewrites every
+# full id in every file under tests/, which is why every id here is a full id
+# and never a bare label.
+#
+# THE SECTIONS. `registries`: each registry file and what it moves with.
+# `codes`: a code and the claims that carry it. `no_claim`: a code that
+# resolves to no claim of any module, with the ground. `unresolved`: a code
+# the evidence does not settle, with the candidate claims and the evidence,
+# never a guess. `titles`: every claim whose title began with a code before
+# the codes were taken out of them, with the code as the title spelled it
+# (sub-parts such as C10d included); a record of the titles, pinned by no registry.
+# Keys in natural order (letters, then number, then suffix; ids alphabetical).
+#
+# NOT CLAIM CODES, though they look like them: the receiver's catalogue entry
+# types C1-C10 (registry_receiver_povm.py, CATALOGUE_IDS and entry_id), the
+# compiler's validator conditions C1-C5 (registry_protocol_compiler.py,
+# verdicts and failing_condition) and the weight-route case ids RC2 and RC3
+# of registry_reductions.py. No registry pins a claim with them.
+
+# What each registry file moves with: a core of spec/modules.yaml, or, for an
+# instance's registry, the instance directory (an instance is data and no
+# claim, PRINCIPLES.md section 5). registry_per_setting_floors.py pins claims
+# of two cores (groups PSF-A and PSF-B the reductions submodule wpfss, and the
+# receiver's slot) and names both, as does registry_per_setting_floors_probe.py,
+# its group PSF-C (the receiver) cut from it with every group's oracle entries.
+registries:
+  tests/oracles/registry.py: meat-core
+  tests/oracles/registry_efficiency_normalization.py: [receiver, reductions]
+  tests/oracles/registry_instances_bb84.py: instances/bb84
+  tests/oracles/registry_instances_bbm92.py: instances/bbm92
+  tests/oracles/registry_instances_decoy_bb84.py: instances/decoy_bb84
+  tests/oracles/registry_per_setting_floors.py: [receiver, reductions]
+  tests/oracles/registry_per_setting_floors_probe.py: [receiver, reductions]
+  tests/oracles/registry_protocol_compiler.py: protocol-compiler
+  tests/oracles/registry_receiver_povm.py: receiver
+  tests/oracles/registry_reductions.py: reductions
+  tests/oracles/registry_statistics_acceptance.py: statistics
+  tests/oracles/registry_statistics_rules.py: statistics
+  tests/oracles/registry_transmitter.py: transmitter
+  tests/oracles/registry_transmitter_c1.py: transmitter
+
+codes:
+  # meat-core, C1-C22. Transcribed from WHERE_EACH_NUMBER_WENT and
+  # WHERE_C22_WENT, the tables of test_meat_core_registry_interface.py, labels
+  # made full ids. C22 is the submodule
+  # frank-wolfe's. C13 and C18-C20 are under no_claim.
+  C1: [meat-core/def:maps, meat-core/thm:protocol-channel]
+  C2: [meat-core/def:branch, meat-core/lem:branch-maps]
+  C3: [meat-core/fact:meat, meat-core/def:roundmodel, meat-core/def:hqkd-list, meat-core/thm:accumulated-entropy]
+  C4: [foundations/fact:pinch-id]
+  C5: [meat-core/thm:branch-formula]
+  C6: [foundations/lem:pinchmono, meat-core/cor:f-nonpos]
+  C7: [meat-core/def:keyinert, meat-core/prop:exact-cancellation, meat-core/def:keyactive]
+  C8: [meat-core/def:feasible, meat-core/thm:reduction, meat-core/cor:reduction-constrained]
+  C9a: [foundations/fact:concavity, meat-core/cor:concavity]
+  C9b: [foundations/lem:kernel, meat-core/thm:convexity]
+  C10: [meat-core/def:classes, meat-core/thm:removal, meat-core/prop:retention, meat-core/prop:no-averaging]
+  C11: [meat-core/lem:choi-marginal, meat-core/thm:choi]
+  C12: [meat-core/lem:dk, meat-core/thm:gradient, meat-core/cor:full-gradient]
+  C14: [meat-core/thm:keylength]
+  C15: [meat-core/prop:monotone, meat-core/cor:keylength-bound]
+  C16: [meat-core/lem:b-derivative, meat-core/thm:oracle]
+  C17: [meat-core/thm:constrained-accumulation, meat-core/cor:constrained-key-length]
+  C21: [meat-core/lem:cone-concavity, meat-core/prop:optol-nobound, meat-core/rem:optol-direction]
+  C22: [meat-core/frank-wolfe/lem:fo-face, meat-core/frank-wolfe/lem:fo-khyp, meat-core/frank-wolfe/thm:firstorder, meat-core/frank-wolfe/cor:fo-keylength]
+
+  # protocol-compiler, PC1-PC12. PC1-PC9 are transcribed from
+  # WHERE_EACH_LABEL_WENT, the table of test_protocol_compiler_registry_interface.py.
+  # PC10 and PC11 belong to transmitter: the frozen header of registry_transmitter.py states the split
+  # ("PC10 -> transmitter/fact:sr and rem:import; PC11 -> transmitter/def:srcert,
+  # thm:pc11, rem:xreg, rem:boundary and cor:noncanonical"), and the titles of
+  # fact:sr ("PC10: ...") and thm:pc11 ("PC11: ...") agree. PC12 is under no_claim.
+  PC1: [protocol-compiler/def:compile, protocol-compiler/thm:typing]
+  PC2: [protocol-compiler/thm:measurements-and-statistics, protocol-compiler/def:phi]
+  PC3: [protocol-compiler/def:weighted, protocol-compiler/lem:weighted, protocol-compiler/thm:choice-encoding]
+  PC4: [protocol-compiler/thm:sifting-and-key]
+  PC5: [protocol-compiler/thm:feasibility, protocol-compiler/def:feasible]
+  PC6: [protocol-compiler/def:validator, protocol-compiler/thm:validator-soundness]
+  PC7: [protocol-compiler/def:chaincond, protocol-compiler/thm:chain-consumption]
+  PC8: [protocol-compiler/def:banda, protocol-compiler/thm:band-a]
+  PC9: [protocol-compiler/def:eligible, protocol-compiler/thm:gates]
+  PC10: [transmitter/fact:sr, transmitter/rem:import]
+  PC11: [transmitter/def:srcert, transmitter/thm:certificate-sufficiency, transmitter/rem:xreg, transmitter/rem:boundary, transmitter/cor:noncanonical]
+
+  # reductions, PR1-PR13. Each was a SECTION of the original contract, of
+  # several claims, listed below as the code's candidates. Listed is the
+  # claim whose title carried the code ("PR2: ..."), PR6 having two. PR7 has no
+  # such title: it is the corollary that spec/modules.yaml ("PR7 flags are
+  # enough (a calculus lemma)") and the frozen group PR-G of
+  # registry_reductions.py ("flags are enough on the zero-weight block") name,
+  # titled "Flags are enough". PR1, PR4 and PR5 are unresolved.
+  PR2: [reductions/thm:factorization]
+  PR3: [reductions/thm:transfer]
+  PR6: [reductions/wpfss/prop:chain, reductions/wpfss/prop:route]
+  PR7: [reductions/cor:flagsenough]
+  PR8: [reductions/thm:mixture]
+  PR10: [reductions/prop:obstruction]
+  PR11: [reductions/thm:licence]
+  PR12: [reductions/thm:chain]
+  PR13: [reductions/thm:emit]
+
+  # receiver, RC1-RC12, the rows of the original claims table. Each code
+  # is the claims whose original label, recorded in the claim's `origin`,
+  # carries it (lem:fock-functor, thm:multiclick-bound, thm:conditional-povm, ...), in contract
+  # order. RC10 is also receiver/lem:deficiency, whose `origin` records it as
+  # "thm:efficiency (v) and the part (v) of its proof ... moved into the core".
+  RC1: [receiver/prop:mode-algebra, receiver/lem:fock-functor, receiver/lem:fock-block-spectrum, receiver/lem:fock-monotone]
+  RC2: [receiver/thm:compilation-well-defined]
+  RC3: [receiver/component-catalogue/thm:catalogue-admissibility]
+  RC4: [receiver/thm:port-grams]
+  RC5: [receiver/thm:representation-independence]
+  RC6: [receiver/thm:click-povm]
+  RC7: [receiver/thm:coarse-graining]
+  RC8: [receiver/thm:multiclick-bound, receiver/thm:emitted-bound]
+  RC9: [receiver/thm:exact-and-evaluated]
+  RC10: [receiver/detector-imperfections/thm:efficiency, receiver/lem:deficiency]
+  RC11: [receiver/detector-imperfections/thm:dark-counts]
+  RC12: [receiver/probe-conditioning/thm:conditional-povm, receiver/probe-conditioning/thm:gaussian-schur, receiver/probe-conditioning/thm:channel-block-diagonal]
+
+  # statistics, SA1-SA9. Transcribed from CLAIM_LABELS, the table of
+  # test_statistics_acceptance_registry_interface.py. SA3 is split into the exact rule's proposition and the
+  # rule-independent guard, and the registry's SA3 entries pin values of both.
+  SA1: [statistics/thm:geometry-validation]
+  SA2: [statistics/thm:binomial-tails]
+  SA3: [statistics/binomial-box/prop:rule-exact, statistics/binomial-box/lem:guard]
+  SA4: [statistics/binomial-box/thm:box-construction]
+  SA5: [statistics/binomial-box/thm:completeness-bound]
+  SA6: [statistics/binomial-box/thm:honest-containment]
+  SA7: [statistics/binomial-box/thm:monotonicity-limits]
+  SA8: [statistics/thm:box-oracle]
+  SA9: [statistics/singleton/thm:singleton-completeness]
+
+no_claim:
+  C13: >-
+    The numerical lower-bound certificate, which meat-core 1.0.0
+    deleted and this repository builds in no form
+    (PRINCIPLES.md section 10). Every frozen entry naming it is marked in
+    registry.py, which test_registry_integrity.py checks.
+  C18: >-
+    The numerical lower-bound certificate, which meat-core 1.0.0
+    deleted and this repository builds in no form
+    (PRINCIPLES.md section 10). Every frozen entry naming it is marked in
+    registry.py, which test_registry_integrity.py checks.
+  C19: >-
+    The numerical lower-bound certificate, which meat-core 1.0.0
+    deleted and this repository builds in no form
+    (PRINCIPLES.md section 10). Every frozen entry naming it is marked in
+    registry.py, which test_registry_integrity.py checks.
+  C20: >-
+    The numerical lower-bound certificate, which meat-core 1.0.0
+    deleted and this repository builds in no form
+    (PRINCIPLES.md section 10). Every frozen entry naming it is marked in
+    registry.py, which test_registry_integrity.py checks.
+  PC12: >-
+    The worked BB84 declaration. It is the instance instances/bb84
+    (instances/bb84/specification.py), data and no claim of any module.
+  PR9: >-
+    A section of the original contract whose claims are a removable
+    submodule's, which this tree does not carry.
+
+unresolved:
+  PR1:
+    candidates: [reductions/lem:sep, reductions/def:squashing, reductions/lem:statistics, reductions/rem:dictionary, reductions/cor:pullback, reductions/rem:notchannel]
+    evidence: >-
+      No title or `origin` carries PR1. It was a section of the original
+      contract, and these six of its claims are in the core (fact:sep as
+      lem:sep).
+      spec/modules.yaml reads "PR1-PR3 squashing relation, security transfer,
+      reachable states and sound constraints", and the frozen group PR-A of
+      registry_reductions.py pins "the WP3 relation", the pulled-back POVM,
+      statistics equality and the uniqueness of the adjoint. No source says
+      which of the six carry the code.
+  PR4:
+    candidates: [reductions/prop:preorder, reductions/cor:monotone, reductions/lem:linear, reductions/rem:intertwining, reductions/prop:pinching, reductions/cor:blockdiag, reductions/prop:tensor, reductions/lem:obstructions, reductions/rem:obstructiondecide]
+    evidence: >-
+      No title or `origin` carries PR4. It was a section of the original
+      contract, and these nine of its claims are in the core. spec/modules.yaml reads
+      "PR4-PR5 the calculus (pre-order, linearity, pinching, tensor), the
+      branching rule and the master lemma", and the frozen group PR-D of
+      registry_reductions.py pins post-processing by a column-stochastic
+      matrix, the joint alphabet with a private setting, pinching and both
+      legs of lem:obstructions. No source says which of the nine carry the
+      code.
+  PR5:
+    candidates: [reductions/lem:top, reductions/lem:master, reductions/rem:reading-master, reductions/rem:master-scope, reductions/cor:instances, reductions/prop:common]
+    evidence: >-
+      No title or `origin` carries PR5. It was a section of the original
+      contract, and these six of its claims are in the core. spec/modules.yaml reads
+      "PR4-PR5 ... the branching rule and the master lemma", and the frozen
+      group PR-E of registry_reductions.py pins the two-branch instrument,
+      the branch-weight constraint in its operator and scalar forms, and the
+      flag PVM as top element. No source says which of the six carry the
+      code.
+
+titles:
+  foundations/lem:pinchmono: C6
+  meat-core/cor:full-gradient: C12c
+  meat-core/cor:reduction-constrained: C8
+  meat-core/frank-wolfe/cor:fo-dropped: C22d
+  meat-core/frank-wolfe/cor:fo-keylength: C22c
+  meat-core/frank-wolfe/lem:fo-face: C22a
+  meat-core/frank-wolfe/lem:fo-khyp: C22b
+  meat-core/frank-wolfe/thm:firstorder: C22
+  meat-core/lem:b-derivative: C16a
+  meat-core/lem:branch-maps: C2
+  meat-core/lem:choi-factor: C11c
+  meat-core/lem:choi-marginal: C11a
+  meat-core/lem:dk: C12a
+  meat-core/prop:exact-cancellation: C7
+  meat-core/prop:monotone: C15
+  meat-core/prop:no-averaging: C10c
+  meat-core/prop:removal-compose: C10d
+  meat-core/prop:retention: C10b
+  meat-core/thm:accumulated-entropy: C3
+  meat-core/thm:branch-formula: C5
+  meat-core/thm:choi: C11b
+  meat-core/thm:constrained-accumulation: C17
+  meat-core/thm:convexity: C9b
+  meat-core/thm:gradient: C12b
+  meat-core/thm:keylength: C14
+  meat-core/thm:oracle: C16b
+  meat-core/thm:protocol-channel: C1
+  meat-core/thm:reduction: C8
+  meat-core/thm:removal: C10a
+  protocol-compiler/thm:band-a: PC8
+  protocol-compiler/thm:chain-consumption: PC7
+  protocol-compiler/thm:choice-encoding: PC3
+  protocol-compiler/thm:feasibility: PC5
+  protocol-compiler/thm:gates: PC9
+  protocol-compiler/thm:measurements-and-statistics: PC2
+  protocol-compiler/thm:sifting-and-key: PC4
+  protocol-compiler/thm:typing: PC1
+  protocol-compiler/thm:validator-soundness: PC6
+  reductions/prop:obstruction: PR10
+  reductions/thm:chain: PR12
+  reductions/thm:emit: PR13
+  reductions/thm:factorization: PR2
+  reductions/thm:licence: PR11
+  reductions/thm:mixture: PR8
+  reductions/thm:transfer: PR3
+  reductions/thm:two-sided: PR14
+  reductions/wpfss/prop:chain: PR6
+  reductions/wpfss/prop:route: PR6
+  statistics/binomial-box/thm:box-construction: SA4
+  statistics/binomial-box/thm:completeness-bound: SA5
+  statistics/binomial-box/thm:honest-containment: SA6
+  statistics/binomial-box/thm:monotonicity-limits: SA7
+  statistics/singleton/thm:singleton-completeness: SA9
+  statistics/thm:binomial-tails: SA2
+  statistics/thm:box-oracle: SA8
+  statistics/thm:geometry-validation: SA1
+  transmitter/fact:sr: PC10
+  transmitter/thm:certificate-sufficiency: PC11

@@ -1,0 +1,101 @@
+% ---
+% id: protocol-compiler/rem:gate-by-certificate-form
+% kind: rem
+% title: "The source gate on each certificate form"
+% summary: >-
+%   Gate (G2) refuses every block-form certificate by its form, pure or not,
+%   and admits an ensemble presentation, whose blocks are rank one by theorem;
+%   the refusal rests on scope, not on that difference. At several Alice
+%   sectors a presentation is not globally pure, and the gate does not demand it.
+% prominence: standard
+% status: accepted
+% uses: [def:eligible]
+% mentions: [def:declaration, thm:gates, transmitter/rem:certificate-forms, transmitter/thm:certificate-sufficiency, transmitter/lem:ensemble-presentation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Gate (G2) of Definition~\ref{def:eligible} re-decides a pure-form
+certificate, refuses a block-form one and decides an ensemble presentation by
+what it declares. What purity adds to a certificate, and why the certificate
+has a block form and an ensemble presentation at all, is
+\xref{transmitter/rem:certificate-forms}; this remark says what separates the
+forms at the gate.
+
+\begin{remark}\label{rem:gate-by-certificate-form}
+\emph{The block form.} Gate (G2) decides $\Psi^2=\Psi$ of a pure-form
+certificate and refuses a \tref[block form]{block-form} certificate by its
+declared form, whatever its blocks (Definition~\ref{def:eligible}). Most
+block-form certificates fail $\Psi^2=\Psi$ as well --- every one with two or
+more non-zero blocks, and every one whose one non-zero block is not a
+rank-one projector --- but one whose one non-zero block is a rank-one
+projector is pure and is refused all the same. So (G2) is not the consumer that
+\xref{transmitter/rem:certificate-forms} describes, which demands purity of
+every certificate and refuses a block form for want of it: the ground of the
+refusal is the scope rule stated at the end of this remark.
+
+\emph{What separates a general block form from an ensemble presentation} is
+not the word ``purity'', which is waived on both sides once Alice carries
+several sectors. A general block form declares blocks that are positive
+semidefinite and \emph{not known to be rank one}, so the ``only if'' half of
+\xref{transmitter/thm:certificate-sufficiency}\,(ii) --- proved for a block
+form exactly where every non-zero block is a positive multiple of a rank-one
+projector --- is lost with it, and a source/POVM mismatch would then be
+excluded only by the POVM condition decided on its own. A presentation's
+blocks are rank one \emph{by theorem}, so that half is not lost.
+
+\emph{An ensemble presentation at one Alice sector.} For an \tref{ensemble
+presentation} there is no declared $\Psi$ and no declared $\{M_x\}$ to
+re-decide: purity of the blocks, (SR1) and (SR2) are \emph{theorems} of the
+presentation (\xref{transmitter/lem:ensemble-presentation}\,(i), (ii)), that
+lemma's (ii) giving every non-zero block as a positive multiple of a rank-one
+projector. At one Alice sector no purity requirement is waived: there the
+$\Psi$ the presentation defines is that one block, of unit trace, hence a
+rank-one projector, so the five conditions of (G2) hold of it as theorems
+rather than as decisions, and the gate demands of such a presentation
+everything it demands of a pure-form certificate.
+
+\emph{At two or more Alice sectors.} There the defined operator is
+$\Psi=\bigoplus_t\Psi_t$ with $\tr\Psi_t=g_t$ and $\sum_tg_t=1$, so
+$\Psi^2=\bigoplus_tg_t\Psi_t\ne\Psi$ as soon as two blocks are non-zero, by
+the same arithmetic by which a block form with two non-zero blocks fails
+$\Psi^2=\Psi$. Global purity is therefore not
+demanded of a presentation with several Alice sectors. What the gate rests on
+there instead is two statements of the transmitter's, both available for a
+presentation, of which a general block form has only the second.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item Every block is rank one by theorem
+  (\xref{transmitter/lem:ensemble-presentation}\,(ii)), which is exactly the
+  hypothesis under which \xref{transmitter/thm:certificate-sufficiency}\,(ii)
+  holds in \emph{both} directions.
+\item \xref{transmitter/thm:certificate-sufficiency}\,(iii), the sufficiency
+  statement at the \tref{module boundary}, assumes (SR1)--(SR3) and that
+  module's sequential assumption and \emph{reads purity nowhere}.
+\end{enumerate}
+The asymmetry in (a) is not relied on. The ``only if'' direction is what a
+consumer that does \emph{not} decide the POVM condition separately would need,
+and this module decides it at check V3 in either form ---
+$\sum_xM^{(t)}_x=\idon{A_t}$ in \tref{POVM form}, the ensemble identity of
+\eqref{eq:ensembleform} in ensemble form (D(iii)) --- which is stronger than
+the compressed condition that converse delivers; and for a presentation there
+is in any case no mismatch to detect, $\{M_x\}$ being \emph{defined} by the
+presentation rather than declared and gate (G2) pinning the declaration's
+Alice slots to the transposed declared blocks entry for entry, so that
+direction holds vacuously. Clause (a) records what the two forms differ in;
+it does not carry the refusal of a general block form, which rests on scope:
+admitting one would widen (G2) in the unsafe direction, to certificates that
+can accompany a declaration in the \tref{basic format}.
+
+\emph{Where a presentation can occur.} A presentation is admitted only beside
+an ensemble-form declaration, and no declaration in the basic format is in
+ensemble form.
+
+\emph{No form's (SR1)--(SR2) is assumed.} In none of its forms are the
+conditions (SR1)--(SR2) of a \tref{source-replacement certificate} an
+assumption of this module: what gate (G2) decides of each form is
+Definition~\ref{def:eligible}'s and Theorem~\ref{thm:gates}'s, and
+(SR1)--(SR2) are named as a hypothesis at the one place a derivation uses
+them, \xref{transmitter/thm:certificate-sufficiency}.
+\end{remark}

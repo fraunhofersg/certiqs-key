@@ -1,0 +1,34 @@
+% ---
+% id: meat-core/req:gradient-at-maximal-support
+% kind: req
+% title: "Gradient evaluation at maximal support"
+% summary: >-
+%   The engine evaluates a gradient of the pinched trace power only at an
+%   iterate whose support is kept maximal, for instance after an explicit
+%   perturbation. At lower support a direction that enlarges the support can
+%   have an infinite one-sided derivative ([[thm:gradient]] (ii)).
+% prominence: standard
+% status: implemented
+% uses: [thm:gradient, lem:branch-support]
+% mentions: [def:branch-support, meat-core/frank-wolfe/lem:fo-face, meat-core/frank-wolfe/rem:fo-nopert, meat-core/frank-wolfe/req:first-order-withdrawal]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.gradient:deficit_gradient
+% lean:
+% ---
+
+Theorem~\ref{thm:gradient}\,(ii) places every infinite one-sided
+derivative at a direction that strictly enlarges the support, and at
+maximal support no feasible direction does (Lemma~\ref{lem:fo-face}). A
+gradient taken after an explicit perturbation is the gradient of another
+function (Remark~\ref{rem:fo-nopert}), and on the first-order path it
+removes that iterate's bracket from the bound
+(Requirement~\ref{req:first-order-withdrawal}).
+
+\begin{requirement}\label{req:gradient-at-maximal-support}
+The engine evaluates a gradient of the pinched trace power only at an
+iterate whose support is (kept) maximal, maximality being that of
+\eqref{eq:Wcs} for the branch operators, for instance after an explicit
+perturbation.
+\end{requirement}

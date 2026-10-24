@@ -1,0 +1,47 @@
+% ---
+% id: reductions/wpfss/req:normalized-link-record
+% kind: req
+% title: "The link of a normalized station records the factored loss"
+% summary: >-
+%   At a factored loss below one, four slots of the emitted link change: the
+%   witness and the carried pull-backs gain the pure-loss channel in front,
+%   the source family is the receiver's, the reachable set the composite's.
+%   Target, weights, entries and constants do not change.
+% prominence: standard
+% status: implemented
+% uses: [cor:normalized-flat, cor:emitted-flat, reductions/lem:precomposed-instance]
+% mentions: [reductions/def:link, reductions/req:channel-witness, reductions/def:sound]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.wpfss.construction:normalized_precomposition
+% lean:
+% ---
+
+Corollary~\ref{cor:normalized-flat} makes the precomposed instance, and not
+the flat instance of the \tref{normalized station}, the reduction of the receiver.
+By Lemma~\ref{lem:precomposed-instance}\,(ii) the two links of
+Definition~\ref{def:link} differ in four slots: the \tref{channel witness},
+the \tref{source family}, the pull-backs of the carried tuple and the
+\tref{reachable-set statement}. Every slot is part of what a link carries to
+be re-checked (Requirement~\ref{req:channel-witness}), so the record states
+all four.
+
+\begin{requirement}\label{req:normalized-link-record}
+Where the receiver artefact's \iface{efficiency_record} carries a
+\tref{factored loss} $t<1$, the engine emits the artefact of the precomposed
+instance $\mathcal{J}'_{\mathrm{flat}}\circ\Lambda^{\mathrm{loss}}_t$ of
+Corollary~\ref{cor:normalized-flat}, and its link records, in place of the
+normalized station's: (i) the channel witness as the flat instance's witness
+preceded by the \tref{pure-loss channel} of transmittance $t$ on the
+\tref{channel modes}, with $t$ recorded under \iface{factored_loss}; (ii) the
+source family as the receiver's measurement; (iii) each pull-back of the
+carried tuple as the pull-back through that loss of the flat instance's
+pull-back, not as the flat instance's pull-back itself; and (iv) the
+reachable-set statement as the one for that composite channel
+(Definition~\ref{def:sound}). The emitted target, \tref{routed weights},
+transported operators, entries, constants, certificate cases and
+\tref{licence record} are those emitted for the normalized station, unchanged. The reference
+companion's link is recorded the same way: its channel and pull-backs carry
+the same loss in front, and its target and entries are unchanged.
+\end{requirement}

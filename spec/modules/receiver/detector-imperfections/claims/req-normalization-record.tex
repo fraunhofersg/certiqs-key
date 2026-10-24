@@ -1,0 +1,43 @@
+% ---
+% id: receiver/detector-imperfections/req:normalization-record
+% kind: req
+% title: "The efficiency record names the normalization"
+% summary: >-
+%   The efficiency record carries the factored loss and whether it was
+%   declared, every declared efficiency beside the one compiled, and whether
+%   the normalization was applied, exactly where t < 1, and why not. Where
+%   t < 1 the artefact says that its measurement is the normalized station's.
+% prominence: standard
+% status: implemented
+% uses: [prop:efficiency-normalization, def:normalized-station]
+% mentions: [req:efficiency-normalization, req:efficiency-record]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.efficiency:EfficiencyNormalization
+% lean:
+% ---
+
+A consumer of the artefact reads a measurement that is the receiver's only
+after the factored loss is put in front of it
+(Proposition~\ref{prop:efficiency-normalization}), so the factor travels with
+the blocks. Requirement~\ref{req:efficiency-normalization} fixes the factor,
+and Requirement~\ref{req:efficiency-record} the rows of the declared
+transmittances. For a probe-free receiver at $t=1$ the normalized station is
+the declared receiver,
+however the factor was reached, so whether the normalization was applied is
+read off $t$ alone, and who chose $t$ is recorded beside it.
+
+\begin{requirement}\label{req:normalization-record}
+The emitted \iface{efficiency_record} carries the factored loss $t$, whether
+$t$ was declared in the request or set by
+Requirement~\ref{req:efficiency-normalization}, every declared efficiency
+$\eta_k$ beside the exact rational $\eta_k/t$ at which the receiver was
+compiled, and whether the normalization was applied, which it was exactly
+where $t<1$. Where it was not, it carries the reason, the first that holds of:
+source modes declared, every efficiency zero, or the factor one, declared or
+by default. Where $t<1$ the artefact states that its blocks, multiclick
+weights and dark-composed family are those of the normalized station at $t$,
+whose pull-back through the \tref{pure-loss channel} of transmittance $t$ is the
+receiver's measurement.
+\end{requirement}

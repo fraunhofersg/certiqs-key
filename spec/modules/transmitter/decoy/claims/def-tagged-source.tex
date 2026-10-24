@@ -1,0 +1,206 @@
+% ---
+% id: transmitter/decoy/def:tagged-source
+% kind: def
+% title: "Tagged virtual source: cutoffs, flags and sector map"
+% summary: >-
+%   A tagged declaration is a finite virtual source on the sectors a letter
+%   weights: quantum to the entropy cutoff, then to the source cutoff a flag per
+%   photon number and polarisation shared by all intensities, then a tail flag
+%   per polarisation and intensity. Its weights are at most the Poisson ones.
+% prominence: standard
+% status: implemented
+% uses: [def:wcp-model, transmitter/def:source-link, transmitter/def:source-segment]
+% mentions: [prop:tagging, prop:decoy-cert, rem:cutoffs, rem:no-intensity-split, ass:wcp, lem:poisson-enclosure, req:sector-weight-bound, req:signal-dyads, transmitter/def:srcert, transmitter/def:source-spec, transmitter/lem:ensemble-presentation]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Lemma 9.2, Eq. (145)"
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.decoy.tagged:TaggedSourceDeclaration
+% lean:
+% notes: "The published Eq. (145) is an equality with the exact Poisson weights and has no polarisation-flag summand: the inequality of (T2), the flags of (T3) and the sector map of (T5) are derived here, and the citation is not their authority. The weights depend on the intensity and not on the round type because the tail flag is shared across round types, and one flag vector cannot be sent to two different tail states by one channel; a dependence on the polarisation would be admissible, the tail flag carrying the polarisation, and is deliberately not declared, so that the declaration has one weight table per intensity. The index set is read off the weights so that no sector is empty, a retained block of dimension zero being excluded by the source specification."
+% ---
+
+The model's states live on an infinite-dimensional Fock space, which no
+declaration can carry as matrices. The tagged declaration replaces them by a
+finite virtual source with three bands of photon numbers: up to the entropy
+cutoff each photon-number sector stays quantum; above it, up to the source
+cutoff, each photon number and polarisation keeps a one-dimensional flag; and
+the remaining weight goes to one tail flag per polarisation and intensity. Only
+the sectors that some letter weights are declared. A polarisation flag is
+shared by every intensity, so that the weight of one photon number at different
+intensities sits on one sector; that relation is the decoy content of the
+declaration (Remark~\ref{rem:no-intensity-split} gives the detail). The
+Poisson weights $P_\mu(\mathsf{n})$ the sector weights are bounded by are not
+declared numbers, so the inequality of (T2) is not decided against them: the
+emission decides it against a rational lower bound on $P_\mu(\mathsf{n})$
+that it forms from the declared intensity
+(Lemma~\ref{lem:poisson-enclosure}, Requirement~\ref{req:sector-weight-bound}).
+The polarisation vectors, the number states and the basis of each quantum
+sector are objects of the model as well, so the entries of the signal dyads in
+that basis are not declared either: the emission forms them by a construction
+(Requirement~\ref{req:signal-dyads}). The
+construction generalises the virtual source of
+\cite[Eq.~(145)]{tupkary2026decoy}, which is the case
+$N_{\mathrm{src}}=N_{\mathrm{ent}}$ with the exact Poisson weights
+(Proposition~\ref{prop:tagging}\,(iv)): here the declared weights need only lie
+at or below the Poisson weights, and the polarisation flags between the two
+cutoffs and the sector map are new. Remark~\ref{rem:cutoffs} compares the two
+cutoffs with the receiver's.
+
+\begin{definition}\label{def:tagged-source}
+Let a weak-coherent-pulse model be declared (Definition~\ref{def:wcp-model}). A
+\term[A finite virtual source over a weak-coherent-pulse model: two cutoffs, sector weights at most the Poisson weights, flags and one tagging link]{tagged source declaration}
+over it consists of the following.
+\begin{enumerate}[label=(T\arabic*),leftmargin=3.0em]
+\item \emph{(the two cutoffs)} integers $N_{\mathrm{ent}}$ and
+$N_{\mathrm{src}}$ with $0\le N_{\mathrm{ent}}\le N_{\mathrm{src}}$: the
+\term[The largest photon number whose sector of the virtual source stays quantum]{entropy cutoff},
+the largest photon number whose sector stays quantum, and the
+\term[The largest photon number that keeps a sector of its own in the virtual source]{source cutoff},
+the largest photon number that keeps a sector of its own.
+\item \emph{(the sector weights)} declared numbers $\tilde p(\mathsf{n}\mid\mu)$
+for $0\le\mathsf{n}\le N_{\mathrm{src}}$ and $\mu\in\mathrm{Int}$, depending on
+the intensity alone and not on the polarisation or the round type, satisfying
+\begin{equation}\label{eq:weightineq}
+  0\;\le\;\tilde p(\mathsf{n}\mid\mu)\;\le\;P_{\mu}(\mathsf{n})
+  \qquad\text{for every }\mathsf{n}\le N_{\mathrm{src}},\ \mu\in\mathrm{Int} ,
+\end{equation}
+and the
+\term[One minus the sum of an intensity's declared sector weights, the weight its tail flags carry]{tail weight}
+\begin{equation}\label{eq:tailweight}
+  \tilde w_{\mu}\;\coloneqq\;
+  1-\sum_{\mathsf{n}=0}^{N_{\mathrm{src}}}\tilde p(\mathsf{n}\mid\mu) ,
+\end{equation}
+the sum formed in increasing $\mathsf{n}$ and rounding nowhere. Then
+$\tilde w_{\mu}\ge0$, because
+$\sum_{\mathsf{n}\le N_{\mathrm{src}}}\tilde p(\mathsf{n}\mid\mu)
+\le\sum_{\mathsf{n}\le N_{\mathrm{src}}}P_{\mu}(\mathsf{n})\le1$ by
+\eqref{eq:weightineq}.
+\item \emph{(the sector index set and the \tref{virtual transmitted system})} a
+sector that no letter of $\Xset$ puts positive weight on is not declared: the
+\term[The ordered sectors of the virtual source, those that some letter puts positive weight on]{sector index set}
+carries the sectors the declaration uses and is read off the weights,
+\begin{equation}\label{eq:tset}
+\begin{aligned}
+  \mathbb{T}\;=\;
+  &\{\mathsf{n}\le N_{\mathrm{ent}}:\
+     \tilde p(\mathsf{n}\mid\mu_x)>0\text{ for some }x\in\Xset\}\\
+  \cup\;&\{(\mathsf{n},a):N_{\mathrm{ent}}<\mathsf{n}\le N_{\mathrm{src}},\
+     \tilde p(\mathsf{n}\mid\mu_x)>0\text{ for some }x\in\Xset
+     \text{ with }a_x=a\}\\
+  \cup\;&\{(a,\mu):\tilde w_{\mu}>0\text{ and }(a,\mu)=(a_x,\mu_x)
+     \text{ for some }x\in\Xset\} ,
+\end{aligned}
+\end{equation}
+in that declared order: the quantum sectors in increasing photon number, then
+the polarisation flags in the declared order of $(\mathsf{n},a)$, then the tail
+flags in the declared order of $(a,\mu)$. The finite-dimensional virtual
+transmitted system is the orthogonal direct sum over it,
+\begin{equation}\label{eq:avirt}
+  \Avirt\;=\;\bigoplus_{t\in\mathbb{T}}S_t ,\qquad
+  S_t=\begin{cases}
+    S_{\mathsf{n}} & t=\mathsf{n}\le N_{\mathrm{ent}},\\
+    \mathbb{C}f_{\mathsf{n},a} & t=(\mathsf{n},a),\\
+    \mathbb{C}f_{a,\mu} & t=(a,\mu),
+  \end{cases}
+\end{equation}
+with the basis of each summand described next; it is the declared basis of
+$\Avirt$ in the sense of Definition~\ref{def:srcert}, the basis in which
+the blocks of the declaration are written. At a quantum sector
+$t=\mathsf{n}$ the summand is the space $S_{\mathsf{n}}$ of
+Definition~\ref{def:wcp-model}\,(W3), taken into the direct sum with its
+vectors $\ket{\mathsf{n},a}$ and an orthonormal basis of $S_{\mathsf{n}}$;
+like those vectors, that basis is a mathematical object of the model and not
+an array of declared numbers (Proposition~\ref{prop:tagging} returns
+$S_{\mathsf{n}}$ to the Fock space by an isometry $V_{\mathsf{n}}$). There is
+one
+\term[A one-dimensional sector for one photon number between the two cutoffs and one polarisation, shared by all intensities]{polarisation flag}
+$f_{\mathsf{n},a}$ per photon number above the entropy cutoff and per
+polarisation of a letter that weights it, shared across intensities and round
+types; and one
+\term[A one-dimensional sector for one polarisation and one intensity, carrying the weight the declared sectors leave out]{tail flag}
+$f_{a,\mu}$ per pair a letter carries with
+$\tilde w_{\mu}>0$, shared across round types. The flag vectors are declared
+orthonormal, the summands of \eqref{eq:avirt} are mutually orthogonal in
+$\Avirt$, and $\Pi^{\mathrm v}_t$ is the projector onto $S_t$. Every flag
+sector is one dimensional, and so is the quantum sector $\mathsf{n}=0$. The
+index set is a function of the declared weights.
+\item \emph{(the \tref{virtual ensemble})} for $x=(a,\mu,z)\in\Xset$,
+\begin{equation}\label{eq:rvirt}
+  \rvirt_x\;=\;
+  \sum_{\mathsf{n}\le N_{\mathrm{ent}}}
+    \tilde p(\mathsf{n}\mid\mu)\,\dyad{\mathsf{n},a}
+  \;+\;
+  \sum_{N_{\mathrm{ent}}<\mathsf{n}\le N_{\mathrm{src}}}
+    \tilde p(\mathsf{n}\mid\mu)\,\dyad{f_{\mathsf{n},a}}
+  \;+\;
+  \tilde w_{\mu}\,\dyad{f_{a,\mu}} ,
+\end{equation}
+every sum running over the sectors of the index set \eqref{eq:tset} only: a
+quantum sector or a polarisation flag that no letter puts positive weight on is
+not a sector of $\Avirt$ by (T3) and contributes no term, as the tail flag
+contributes none where $\tilde w_{\mu}=0$. Each $\rvirt_x$ is a state on
+$\Avirt$ that is block diagonal along $\mathbb{T}$. Its component in a quantum
+sector $\mathsf{n}\le N_{\mathrm{ent}}$ is
+$\tilde p(\mathsf{n}\mid\mu)\dyad{\mathsf{n},a}$; in the polarisation flag
+sector $(\mathsf{n},a')$ it is $\tilde p(\mathsf{n}\mid\mu)$ if $a'=a$ and zero
+otherwise; in the tail flag sector $(a',\mu')$ it is $\tilde w_{\mu}$ if
+$(a',\mu')=(a,\mu)$ and zero otherwise. It is positive semidefinite, being a
+sum of non-negative multiples of rank-one projectors, and its trace is
+$\sum_{\mathsf{n}\le N_{\mathrm{src}}}\tilde p(\mathsf{n}\mid\mu)
++\tilde w_{\mu}=1$ by \eqref{eq:tailweight}, the absent terms contributing
+nothing to it: a sector that \eqref{eq:tset} leaves out is one on which
+$\tilde p(\mathsf{n}\mid\mu)$ vanishes for every letter, this one included, or
+a tail flag with $\tilde w_{\mu}=0$. Two labels of the same polarisation and
+different intensities put weight on the same polarisation flag, and two labels
+of the same polarisation and intensity and different round types put weight on
+the same tail flag.
+\item \emph{(the matched sector map)} the retained system and its
+\tref{sector structure} are not declared: a tagged source is presented as an
+\tref{ensemble presentation} (Definition~\ref{def:srcert}: a certificate defined from declared
+weighted blocks rather than declared), in which $A$, its structure, $\tau_A$
+and $\{M_x\}$ are the objects \eqref{eq:enspres} defines, $A_t$ being a copy of
+$S_t$ sector by sector and in the same order. In particular
+$\dim\Hs{A_t}=\dim\Hs{S_t}$ whatever the rank of the sector's marginal
+(Proposition~\ref{prop:decoy-cert}\,(iii)). The matched pair
+$(\{\Pi^{A}_t\},\{\Pi^{\mathrm v}_t\})$, with $\Pi^{A}_t$ the projectors onto
+Alice's sectors (Definition~\ref{def:source-spec}), is the structure of (T3)
+read on both sides. It is the \tref{retained-register sector map} of the link of
+(T6), the slot (e) of Definition~\ref{def:source-link}, which fixes how the
+certificate, $\tau_A$ and $\{M_x\}$ are presented, sector by sector. It is a
+statement about those three objects only: it does not assert that any joint
+state of $A$ and another system is block diagonal
+(Definition~\ref{def:source-spec}).
+\item \emph{(the link)} the channel $\Xi_{\mathrm{tag}}$ that
+Proposition~\ref{prop:tagging} constructs and proves to carry each $\rvirt_x$
+to $\rho_x$, recorded as one \tref{source link}
+(Definition~\ref{def:source-link}) with the following slots: the kind
+\textsf{tagging} (slot (a)); the \tref{source descriptor}
+$(\Avirt,\{p_x,\rvirt_x\})$ of (T3) and (T4) and the \tref{target descriptor}
+$(\Asig,\{p_x,\rho_x\})$ of the model (slot (b)); the channel witness supplied
+as a \tref{theorem constructor}, namely Proposition~\ref{prop:tagging}, with an
+\tref{obligation record} that names Assumption~\ref{ass:wcp} (slot (c2)); the
+\tref{declared descriptor family}, every tagged source declaration over every
+weak-coherent-pulse model (slot (d)); the retained-register sector map, the
+matched pair of (T5) (slot (e)); an empty list of
+\tref{transported constraint entries}, so that no constraint is carried
+across the link, and hence no licence record, a licence being present only
+beside a non-empty list (slot (f)); and the status \textsf{exact}, the identity
+holding with no error term (slot (g)).
+\end{enumerate}
+The cutoffs of (T1), the weights $\tilde p(\mathsf{n}\mid\mu)$ of (T2), and the
+model's alphabet, polarisation labels, intensities and label weights are
+\emph{declared}. The polarisation vectors $\ket{a}$, the number states
+$\ket{\mathsf{n},a}$ and the orthonormal basis of each quantum sector
+$S_{\mathsf{n}}$ of (T3) are objects of the model and are not declared
+numbers. The tail weight \eqref{eq:tailweight}, the index set \eqref{eq:tset}
+and the \tref{weighted members} $p_x\rvirt_x$ of \eqref{eq:rvirt} are
+\emph{formed}: the tail weight and the index set from the declared numbers in
+exact arithmetic, and each entry of a weighted member, in the basis of its
+sector, as the product of declared numbers with an entry of the dyad of the
+sector's signal vector in that basis, a number fixed by the model and the
+basis. They are the declaration's own data: read sector by sector, the
+weighted members are the blocks that the ensemble presentation of (T5) takes as
+its data. Everything on Alice's side --- $A$, $\tau_A$, $\{M_x\}$ and the
+certificate --- is defined from those blocks and declared by no one.
+\end{definition}

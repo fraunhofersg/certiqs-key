@@ -1,0 +1,290 @@
+% ---
+% id: transmitter/thm:certificate-sufficiency
+% kind: thm
+% title: "Checkability and sufficiency of the source-replacement certificate"
+% summary: >-
+%   In any form (pure projector, sector blocks, ensemble presentation) the
+%   certificate's algebraic conditions are finitely many exact decisions
+%   making Alice's measurement reproduce the virtual ensemble. Under retention
+%   and sequential rounds she may measure before or after any attack: source
+%   replacement.
+% prominence: main
+% status: implemented
+% uses: [def:srcert, def:source-spec, lem:ensemble-presentation]
+% mentions: [rem:xreg, fact:sr, rem:certificate-forms]
+% assumes: [A-SEQ, A-SRC]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.certificate:verify_certificate
+% lean:
+% notes: "fact:sr is a mention and not a use: the proof of (iii)(b) names its source state only to identify the prepare-and-measure source state, the equality itself coming from (SR2). The implication (SR1) => tau_A in S_=(A) of (i) is used by no claim; req:marginal-decided is the rule that the marginal is decided directly. Also realised by certiqs_key.transmitter.certificate:consistency_criterion."
+% ---
+
+The theorem licenses source replacement at the boundary of this module.
+Recall the conditions of Definition~\ref{def:srcert}: (SR1)
+$\tr_{\Avirt}\Psi=\tau_A$, (SR2)
+$\tr_A[(M_x\otimes\idon{\Avirt})\Psi]=p_x\rvirt_x$, and the attestation (SR3)
+that nothing but Alice's measurement acts on $A$; an \tref{ensemble presentation}
+has instead the decided conditions (E1) to (E3), positive declared blocks,
+normalised weights and per-sector sums that round nowhere. Part (i) is about
+declared data before its conditions are known to hold, and says that the
+conditions other than the attestation (SR3) can be decided. Part (ii) relates
+a certificate to Alice's measurement and is stated for any Hermitian family,
+since its converse concerns a family that fails the POVM condition on the
+support of $\tau_A$, that is, $\Pi(\sum_xM_x)\Pi\ne\Pi$ for the projector
+$\Pi$ onto that support, which no \tref{source specification} declares, a
+mismatch the \tref{pure form} detects (Remark~\ref{rem:certificate-forms}). Part
+(iii) shows that her measurement may be moved across any attack that leaves
+her retained system and her outcome register alone and starts from an
+adversary register in a product state with the source. Its identities hold
+for every channel of that form; the attestation (SR3) of
+Assumption~\ref{ass:src} and Assumption~\ref{ass:seq} are what make the
+attack of a round such a channel, and Remark~\ref{rem:xreg} shows that the
+restriction on the attack is necessary and not a weakening of the intended
+reading.
+
+\begin{theorem}
+\label{thm:certificate-sufficiency}
+Let a \tref{source specification} (Definition~\ref{def:source-spec}) carry a
+\tref{source-replacement certificate} $\Psi$ for $(A,\mathbb{T},\tau_A,\{M_x\})$
+against the \tref{virtual ensemble} $\{p_x,\rvirt_x\}$, in any form of
+Definition~\ref{def:srcert}. In (ii) and (iii) and their proofs an ensemble
+presentation is read as the block-form certificate it defines
+(Lemma~\ref{lem:ensemble-presentation}\,(i)), so that ``either form'' below
+covers it.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(checkability)} the conditions on $\Psi$ of its declared form
+--- in pure form Hermiticity, $\Psi^2=\Psi$ and $\tr\Psi=1$; in \tref{block form}
+Hermiticity and positive semidefiniteness of every block and
+$\sum_t\tr\Psi_t=1$ --- together with (SR1) and (SR2), are finitely many
+exact identities and exact decisions on the declared data, decided by
+finitely many arithmetic operations. In block form (SR1) and (SR2) are decided
+as the block identities \eqref{eq:srblock} together with the block diagonality
+of every weighted virtual member $\sigma^{\mathrm v}_x$ along $(S_t)_t$,
+decided entry by entry, which by Definition~\ref{def:srcert} is their
+conjunction; \eqref{eq:srblock} alone decides (SR2) only against the pinched
+members $\bigoplus_t\Pi^{\mathrm v}_t\sigma^{\mathrm v}_x\Pi^{\mathrm v}_t$.
+For a certificate given by an ensemble
+presentation the decided conditions are (E1) to (E3) of
+Definition~\ref{def:srcert}, equally finite and exact, and the conditions
+of the block form hold of the defined certificate by
+Lemma~\ref{lem:ensemble-presentation}\,(i) without being decided. (SR3) is
+an attestation and is decided by no function of the declared data. (SR1)
+moreover implies $\tau_A\in\Seq{A}$, $\tr_{\Avirt}\Psi$ being positive
+semidefinite with trace $\tr\Psi=1$. In an ensemble presentation $\tau_A$ is
+not declared: it is formed as the transposed sum of (E3), and that it is a
+state is Lemma~\ref{lem:ensemble-presentation}\,(i).
+\item \emph{(consistency)} more generally than in a source specification,
+let $\{M_x\}$ be any family of Hermitian operators on $A$, presented as block
+lists against the \tref{sector structure}, of which $\sum_xM_x=\idon{A}$ is not
+assumed; let $\Psi$ meet the conditions on $\Psi$ of its form listed in (i)
+and (SR1); and let $p_x\rvirt_x$ stand for
+$\tr_A[(M_x\otimes\idon{\Avirt})\Psi]$, so that (SR2) holds. Writing
+$U=\operatorname{supp}\tau_A$ with projector $\Pi_U$, the certificate's
+signal-side marginal and the virtual average signal state agree,
+\begin{equation}\label{eq:srconsist}
+  \sum_xp_x\rvirt_x=\tr_A\Psi ,
+\end{equation}
+\emph{if} $\Pi_U\big(\sum_xM_x\big)\Pi_U=\Pi_U$, in either form; in
+particular they agree for the certificate of a source specification, whose
+$\{M_x\}$ is a POVM by Definition~\ref{def:source-spec}. The converse,
+\emph{only if}, holds in pure form, and in block form whenever every non-zero
+block $\Psi_t$ is a positive multiple of a rank-one projector; it fails for a
+general positive block.
+\item \emph{(sufficiency at the module boundary)} Assume (SR1), (SR2), the
+attestation (SR3) of Assumption~\ref{ass:src}, and
+Assumption~\ref{ass:seq}; in block form (SR2) is the identity of operators on
+$\Avirt$ against the weighted virtual members $p_x\rvirt_x$ themselves, and
+not against their diagonal blocks alone: for a declared block form (i) decides
+it with their block diagonality, and for an ensemble presentation it is
+proved by Lemma~\ref{lem:ensemble-presentation}\,(i). Let $\pcNmsm$ be Alice's measurement map, from
+her retained system $A$ to the classical outcome register $X$,
+\begin{equation}\label{eq:Nmsm}
+  \pcNmsm(\xi)\coloneqq\sum_{x\in\Xset}\tr[M_x\,\xi]\;\dyad{x}_{X},
+  \qquad \xi\in\Lin{A} ,
+\end{equation}
+and let $\mathcal{E}$ be \emph{any} channel from $\Avirt E$ to $E'$, where
+$E$ is the adversary's initial register and $E'$ collects her output
+registers including whatever is delivered to the receiver. Thus
+$\mathcal{E}$ models the adversary's attack and the remainder of the round
+\emph{on the \tref[virtual transmitted system]{transmitted system} and the adversary's registers}, and it
+acts on neither $A$ nor $X$: it is not permitted to depend on Alice's
+outcome. Write
+$\rho_{X\Avirt}\coloneqq\sum_{x\in\Xset}p_x\,\dyad{x}_X\otimes\rvirt_x$ for
+the virtual prepare-and-measure source state. Then:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{(the interchange)}
+\begin{equation}\label{eq:srmain}
+  (\idmap_{X}\otimes\mathcal{E})\circ(\pcNmsm\otimes\idmap_{\Avirt E})
+  \;=\;\pcNmsm\otimes\mathcal{E}\;=\;
+  (\pcNmsm\otimes\idmap_{E'})\circ(\idmap_{A}\otimes\mathcal{E})
+\end{equation}
+as linear maps on $\Lin{A\Avirt E}$, hence in particular on
+$\Psi\otimes\sigma$ for every state $\sigma$ on $E$: Alice's measurement may
+be performed before the attack or after it, indifferently. This uses no
+property of the certificate, only that the two maps act on complementary
+registers;
+\item \emph{(the source identification)} for every state $\sigma$ on $E$,
+\begin{equation}\label{eq:srident}
+  (\pcNmsm\otimes\mathcal{E})\big(\Psi\otimes\sigma\big)
+  \;=\;(\idmap_{X}\otimes\mathcal{E})\big(\rho_{X\Avirt}\otimes\sigma\big) ,
+\end{equation}
+and both sides are states on $XE'$. Together with (a): on every register
+other than $A$, the declared entanglement-based description and the
+virtual prepare-and-measure description produce the same state, against
+every attack of this form. The states $\rvirt_x$ in $\rho_{X\Avirt}$ are the
+declared virtual states, in block form as in every form, and not their
+pinching along $(S_t)_t$.
+\end{enumerate}
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} Part (i) counts the operations each condition needs and
+observes that they are formed exactly. Part (ii) reduces the consistency
+identity to the vanishing of the compression $\Pi_UY\Pi_U$ of the defect
+$Y=\sum_xM_x-\idon{A}$, using that $\Psi$ lives on the support of $\tau_A$.
+Part (iii) is the interchange law for a tensor product of maps on
+complementary registers, followed by (SR2).
+
+(i) In pure form the conditions on $\Psi$ compare $(d_A\dim\Hs{\Avirt})^2$
+entries each --- $\Psi=\Psi^{\dagger}$ and $\Psi^2=\Psi$ --- and one
+accumulated trace; in block form they are, per block, one comparison of
+$(d_{A_t}\dim\Hs{S_t})^2$ entries for Hermiticity and one exact decision of
+positive semidefiniteness --- a symmetric elimination over the Gaussian
+rationals in which a negative pivot refuses the block and a zero pivot
+requires its whole row and column to vanish, the block being refused
+otherwise, which decides that every principal minor is non-negative --- and
+one accumulated trace over all blocks; in an ensemble presentation the same
+decision per declared block, the traces of (E2) and the entrywise sums of
+(E3); in pure form (SR1) compares $d_A^2$ entries after a partial trace and
+(SR2) compares $|\Xset|$ matrices of size $\dim\Hs{\Avirt}$, each obtained
+from $\Psi$ by a multiplication and a partial trace; in block form
+\eqref{eq:srblock} compares, per sector, $d_{A_t}^2$ entries and $|\Xset|$
+matrices of size $\dim\Hs{S_t}$, each obtained from $\Psi_t$ in the same way,
+and the block diagonality compares with zero the entries of every
+$\sigma^{\mathrm v}_x$ outside its diagonal blocks, at most
+$|\Xset|(\dim\Hs{\Avirt})^2$ of them. By Definition~\ref{def:srcert} the block
+identities and the block diagonality together are (SR1) and (SR2) of $\Psi$:
+the partial traces of $\Psi$ are the direct sums of those of its blocks, and
+the one of (SR2) is block diagonal along $(S_t)_t$, so it equals
+$\sigma^{\mathrm v}_x$ exactly when $\sigma^{\mathrm v}_x$ has no entry
+outside its diagonal blocks and those blocks satisfy the second identity of
+\eqref{eq:srblock}. Each is a finite comparison, and each
+is \emph{formed as well as taken} in exact arithmetic on the declared
+dyadic entries (the number model of Definition~\ref{def:source-spec}): the
+products entering $\Psi^2$ and (SR2), and the additions entering the
+partial traces and the accumulated trace, are exact, so what is compared is
+the quantity written and not a rounded image of it. That the operands are
+exactly represented does not on its own deliver that; the exact formation
+does. For the implication: $\tr_{\Avirt}\Psi$ is positive semidefinite as
+the partial trace of a positive semidefinite operator --- in pure form
+$\Psi$ is a projector, hence $\Psi=\Psi^{\dagger}\Psi\succeq0$; in block
+form $\Psi$ is a direct sum of positive semidefinite blocks --- and its
+trace is $\tr\Psi=1$; (SR1) is a matrix identity, so $\tau_A\in\Seq{A}$.
+(SR3) is a statement about the apparatus, not about matrices, and no matrix
+function decides it; it is the attestation of Assumption~\ref{ass:src}.
+
+(ii) Put $Y\coloneqq\sum_xM_x-\idon{A}$, which is Hermitian, each $M_x$
+being Hermitian by hypothesis and a sum of Hermitian matrices less
+$\idon{A}$ being Hermitian; $Y$ is block diagonal along the sector structure,
+every $M_x$ being presented as a block list. Summing (SR2) over $x$ gives
+\begin{equation*}
+  \tr_A\!\Big[\Big(\big(\textstyle\sum_xM_x\big)\otimes\idon{}\Big)\Psi\Big]
+  =\sum_xp_x\rvirt_x ,
+\end{equation*}
+and the left-hand side is $\tr_A[(Y\otimes\idon{})\Psi]+\tr_A\Psi$ by
+linearity of the partial trace, so \eqref{eq:srconsist} holds if and only
+if $\tr_A[(Y\otimes\idon{})\Psi]=0$.
+
+\emph{If, in either form.} $\Psi\succeq0$ in either form. Let $\ket{\phi}$
+be a unit vector of $\Hs{A}$ orthogonal to $U$ and put
+$P\coloneqq\dyad{\phi}\otimes\idon{\Avirt}$. By (SR1),
+$\tr[P\Psi]=\bra{\phi}\tau_A\ket{\phi}=0$, so
+$\Psi^{1/2}P\Psi^{1/2}$ is a positive semidefinite operator of trace zero,
+hence zero, hence $P\Psi^{1/2}=0$ and $P\Psi=0$. Summing over an orthonormal
+basis of the orthogonal complement of $U$ gives
+$\Psi=(\Pi_U\otimes\idon{})\Psi(\Pi_U\otimes\idon{})$, and then
+\begin{equation*}
+  \tr_A\!\big[(Y\otimes\idon{})\,\Psi\big]
+  =\tr_A\!\big[(Y\Pi_U\otimes\idon{})\,\Psi\,(\Pi_U\otimes\idon{})\big]
+  =\tr_A\!\big[(\Pi_UY\Pi_U\otimes\idon{})\,\Psi\big] ,
+\end{equation*}
+the partial trace over $A$ being cyclic under operators that act on $A$
+alone. This vanishes when $\Pi_UY\Pi_U=0$, i.e.\ when
+$\Pi_U(\sum_xM_x)\Pi_U=\Pi_U$. If $\{M_x\}$ is a POVM then $Y=0$ and the
+condition holds outright, and Definition~\ref{def:source-spec} delivers
+exactly that: $\sum_xM^{(t)}_x=\idon{A_t}$ for every $t$ as an identity of
+the declared numbers, its declared-order sum decided exactly.
+
+\emph{Only if, in pure form.} $\Psi=\dyad{\psi}$ for a unit vector
+$\ket{\psi}$; take a Schmidt decomposition
+$\ket{\psi}=\sum_i\sqrt{\mu_i}\ket{e_i}_A\ket{f_i}_{\Avirt}$ with every
+$\mu_i>0$ and $\{\ket{e_i}\}$, $\{\ket{f_i}\}$ orthonormal. By (SR1),
+$\tau_A=\tr_{\Avirt}\Psi=\sum_i\mu_i\dyad{e_i}$, which is a spectral
+decomposition, so $\{\ket{e_i}\}$ is an orthonormal basis of
+$U=\operatorname{supp}\tau_A$. Then
+\begin{equation*}
+  \tr_A\!\big[(Y\otimes\idon{})\,\Psi\big]
+  =\sum_{i,j}\sqrt{\mu_i\mu_j}\,\bra{e_j}Y\ket{e_i}\,\ketbra{f_i}{f_j},
+\end{equation*}
+and since the $\ket{f_i}$ are orthonormal and every $\mu_i>0$, this
+operator vanishes if and only if $\bra{e_j}Y\ket{e_i}=0$ for all $i,j$,
+i.e.\ if and only if $\Pi_UY\Pi_U=0$.
+
+\emph{Only if, in block form with rank-one blocks.} Let
+$\Psi_t=w_t\dyad{\psi_t}$ with $w_t>0$ and $\ket{\psi_t}$ a unit vector of
+$\Hs{A_tS_t}$ for every non-zero block. $Y=\bigoplus_tY_t$ is block diagonal
+because every $M_x$ is, so
+$\tr_A[(Y\otimes\idon{})\Psi]=\bigoplus_tw_t\,
+\tr_{A_t}[(Y_t\otimes\idon{S_t})\dyad{\psi_t}]$, a direct sum along
+$(S_t)_t$, which vanishes if and only if every summand does. The pure-form
+argument, applied to $\ket{\psi_t}$ with $\tau^{(t)}_A/w_t$ in the place of
+$\tau_A$, shows that the $t$-th summand vanishes if and only if
+$\Pi_{U,t}Y_t\Pi_{U,t}=0$, where $\Pi_{U,t}$ projects onto
+$\operatorname{supp}\tau^{(t)}_A$; and
+$\Pi_U=\bigoplus_t\Pi_{U,t}$, so the conjunction over $t$ is
+$\Pi_UY\Pi_U=0$.
+
+\emph{The converse fails for a general positive block.} Take one sector,
+$\Psi=\tau_A\otimes\varsigma$ for a state $\varsigma$ on $\Avirt$, and any
+Hermitian $Y$ with $\tr[Y\tau_A]=0$ and $\Pi_UY\Pi_U\ne0$; such a $Y$
+exists whenever $\dim U\ge2$, and scaled so that $\idon{A}+Y\succeq0$ it is
+realised by the one-letter family $M=\idon{A}+Y$, Hermitian and positive
+semidefinite but not a POVM, which the hypothesis of (ii) admits, with
+$p\rvirt=\tr_A[(M\otimes\idon{})\Psi]$ as in the statement. The block
+$\Psi$ is positive semidefinite of unit trace and satisfies (SR1). Then
+$\tr_A[(Y\otimes\idon{})\Psi]=\tr[Y\tau_A]\,\varsigma=0$.
+
+(iii)(a) \emph{The interchange.} The registers do the work, and no
+numerical hypothesis enters. The input operator lives on $A\Avirt E$. By
+hypothesis $\pcNmsm$ is a linear map out of $A$ alone and $\mathcal{E}$ a
+channel out of $\Avirt E$ alone, and $A$ and $\Avirt E$ are complementary
+tensor factors of the input; the outputs $X$ and $E'$ are likewise
+distinct registers. Hence both composites equal the tensor product
+$\pcNmsm\otimes\mathcal{E}$ of the two maps, which is \eqref{eq:srmain};
+this is the elementary interchange law for a tensor product of linear maps
+and needs nothing about the particular $\pcNmsm$, $\mathcal{E}$ or input
+operator. That $\mathcal{E}$ does not act on $A$ is (SR3); that it does not
+act on $X$ is a hypothesis of the statement, and Remark~\ref{rem:xreg}
+shows it cannot be dropped.
+
+(iii)(b) \emph{The source identification.} Applying
+$\pcNmsm\otimes\idmap_{\Avirt E}$ to $\Psi\otimes\sigma$ gives, by
+\eqref{eq:Nmsm} and (SR2),
+\begin{equation*}
+  \sum_x\dyad{x}_X\otimes
+  \tr_A\!\big[(M_x\otimes\idon{\Avirt})\,\Psi\big]\otimes\sigma
+  =\sum_xp_x\,\dyad{x}_X\otimes\rvirt_x\otimes\sigma
+  =\rho_{X\Avirt}\otimes\sigma ,
+\end{equation*}
+the right-hand side being exactly the classical-quantum source state from
+which Fact~\ref{fact:sr} starts, under the symbol map stated with that
+fact. Applying the linear map $\idmap_X\otimes\mathcal{E}$ to both
+sides gives \eqref{eq:srident}, the left-hand side being
+$(\pcNmsm\otimes\mathcal{E})(\Psi\otimes\sigma)$ by (a). That both sides
+are states: $\{M_x\}$ is a POVM by Definition~\ref{def:source-spec}, so
+$\pcNmsm$ is a channel; $\Psi$ is a state, being positive semidefinite of
+unit trace in either form; and $\mathcal{E}$ is a channel by hypothesis.
+Nothing in (iii) reads $\Psi^2=\Psi$.
+\end{proof}

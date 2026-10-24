@@ -1,0 +1,429 @@
+% GENERATED FILE -- DO NOT EDIT.
+%
+% Produced by harness/assemble_contract.py from module.yaml and claims/*.tex.
+% Edit the claim files and regenerate; `--check` fails if this file is stale.
+\documentclass[11pt,a4paper]{article}
+\pdftrailerid{c2312062bd916090c8b34d77bc16c7d5}
+%% --- 1. Mathematics (order matters: physics after braket wins \ket, \tr) ---
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{dsfont}
+\usepackage{braket}
+\usepackage{physics}
+%% --- 2. Page furniture ------------------------------------------------------
+\usepackage{xcolor}
+\usepackage{array}    % >{...} column prefixes in the wide tables of some claims
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xltabular}              % front- and back-matter tables across pages
+\usepackage{needspace}
+\usepackage{xurl}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+%% --- 3. Links and navigation (hyperref late; bookmark, refcount after it) ---
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{refcount}
+%% --- 4. Colours: every distinction also has a shape (rule, caps, size, weight)
+\definecolor{nnGrey}{gray}{0.40}      % non-normative text
+\definecolor{metaGrey}{gray}{0.30}    % the generated meta line
+\definecolor{techGrey}{gray}{0.45}    % heading of a technical claim
+\definecolor{mainRule}{RGB}{0,110,140}
+\definecolor{reqAccent}{RGB}{165,70,0}
+\definecolor{linkBlue}{RGB}{0,62,150}
+\definecolor{extLink}{RGB}{120,40,140}  % links into another PDF
+\hypersetup{colorlinks=true, linkcolor=linkBlue, citecolor=linkBlue,
+  urlcolor=linkBlue, filecolor=extLink, bookmarksnumbered=true,
+  bookmarksopen=true, bookmarksopenlevel=1, pdfdisplaydoctitle=true}
+% A link into another PDF (\href to a .pdf, \hyperref{file}..., xr-hyper) is a
+% relative URI, <file>#nameddest=<destination>, in the file-link colour:
+% browser viewers (Edge, Chrome) ignore hyperref's default GoToR action.
+\makeatletter
+\renewcommand*{\hyper@linkfile}[3]{% anchor text, file name, destination
+  \begingroup
+    \ifx\\#3\\\def\CQ@target{#2}\else\def\CQ@target{#2\hyper@hash nameddest=#3}\fi
+    \let\@urlcolor\@filecolor
+    \hyper@linkurl{#1}{\CQ@target}%
+  \endgroup}
+\makeatother
+%% --- 5. The mapped Unicode set (harness/contract_navigation.py, UNICODE_TEX)
+\DeclareUnicodeCharacter{03B1}{\ensuremath{\alpha}}
+\DeclareUnicodeCharacter{03B2}{\ensuremath{\beta}}
+\DeclareUnicodeCharacter{03B3}{\ensuremath{\gamma}}
+\DeclareUnicodeCharacter{03B4}{\ensuremath{\delta}}
+\DeclareUnicodeCharacter{03B5}{\ensuremath{\varepsilon}}
+\DeclareUnicodeCharacter{03F5}{\ensuremath{\epsilon}}
+\DeclareUnicodeCharacter{03B6}{\ensuremath{\zeta}}
+\DeclareUnicodeCharacter{03B7}{\ensuremath{\eta}}
+\DeclareUnicodeCharacter{03B8}{\ensuremath{\theta}}
+\DeclareUnicodeCharacter{03D1}{\ensuremath{\vartheta}}
+\DeclareUnicodeCharacter{03B9}{\ensuremath{\iota}}
+\DeclareUnicodeCharacter{03BA}{\ensuremath{\kappa}}
+\DeclareUnicodeCharacter{03BB}{\ensuremath{\lambda}}
+\DeclareUnicodeCharacter{03BC}{\ensuremath{\mu}}
+\DeclareUnicodeCharacter{03BD}{\ensuremath{\nu}}
+\DeclareUnicodeCharacter{03BE}{\ensuremath{\xi}}
+\DeclareUnicodeCharacter{03C0}{\ensuremath{\pi}}
+\DeclareUnicodeCharacter{03C1}{\ensuremath{\rho}}
+\DeclareUnicodeCharacter{03F1}{\ensuremath{\varrho}}
+\DeclareUnicodeCharacter{03C3}{\ensuremath{\sigma}}
+\DeclareUnicodeCharacter{03C2}{\ensuremath{\varsigma}}
+\DeclareUnicodeCharacter{03C4}{\ensuremath{\tau}}
+\DeclareUnicodeCharacter{03C5}{\ensuremath{\upsilon}}
+\DeclareUnicodeCharacter{03C6}{\ensuremath{\varphi}}
+\DeclareUnicodeCharacter{03D5}{\ensuremath{\phi}}
+\DeclareUnicodeCharacter{03C7}{\ensuremath{\chi}}
+\DeclareUnicodeCharacter{03C8}{\ensuremath{\psi}}
+\DeclareUnicodeCharacter{03C9}{\ensuremath{\omega}}
+\DeclareUnicodeCharacter{0393}{\ensuremath{\Gamma}}
+\DeclareUnicodeCharacter{0394}{\ensuremath{\Delta}}
+\DeclareUnicodeCharacter{0398}{\ensuremath{\Theta}}
+\DeclareUnicodeCharacter{039B}{\ensuremath{\Lambda}}
+\DeclareUnicodeCharacter{039E}{\ensuremath{\Xi}}
+\DeclareUnicodeCharacter{03A0}{\ensuremath{\Pi}}
+\DeclareUnicodeCharacter{03A3}{\ensuremath{\Sigma}}
+\DeclareUnicodeCharacter{03A5}{\ensuremath{\Upsilon}}
+\DeclareUnicodeCharacter{03A6}{\ensuremath{\Phi}}
+\DeclareUnicodeCharacter{03A8}{\ensuremath{\Psi}}
+\DeclareUnicodeCharacter{03A9}{\ensuremath{\Omega}}
+\DeclareUnicodeCharacter{00E1}{\'a}
+\DeclareUnicodeCharacter{00E0}{\`a}
+\DeclareUnicodeCharacter{00E2}{\^a}
+\DeclareUnicodeCharacter{00E4}{\"a}
+\DeclareUnicodeCharacter{00E5}{\aa{}}
+\DeclareUnicodeCharacter{00E9}{\'e}
+\DeclareUnicodeCharacter{00E8}{\`e}
+\DeclareUnicodeCharacter{00EA}{\^e}
+\DeclareUnicodeCharacter{00EB}{\"e}
+\DeclareUnicodeCharacter{00ED}{\'{\i}}
+\DeclareUnicodeCharacter{00EF}{\"{\i}}
+\DeclareUnicodeCharacter{00F3}{\'o}
+\DeclareUnicodeCharacter{00F2}{\`o}
+\DeclareUnicodeCharacter{00F4}{\^o}
+\DeclareUnicodeCharacter{00F6}{\"o}
+\DeclareUnicodeCharacter{00F8}{\o{}}
+\DeclareUnicodeCharacter{00FA}{\'u}
+\DeclareUnicodeCharacter{00F9}{\`u}
+\DeclareUnicodeCharacter{00FB}{\^u}
+\DeclareUnicodeCharacter{00FC}{\"u}
+\DeclareUnicodeCharacter{00F1}{\~n}
+\DeclareUnicodeCharacter{00E7}{\c{c}}
+\DeclareUnicodeCharacter{00DF}{\ss{}}
+\DeclareUnicodeCharacter{00C4}{\"A}
+\DeclareUnicodeCharacter{00C5}{\AA{}}
+\DeclareUnicodeCharacter{00C9}{\'E}
+\DeclareUnicodeCharacter{00D6}{\"O}
+\DeclareUnicodeCharacter{00DC}{\"U}
+\DeclareUnicodeCharacter{2013}{\textendash{}}
+\DeclareUnicodeCharacter{2014}{\textemdash{}}
+\DeclareUnicodeCharacter{2018}{`}
+\DeclareUnicodeCharacter{2019}{'}
+\DeclareUnicodeCharacter{201C}{``}
+\DeclareUnicodeCharacter{201D}{''}
+\DeclareUnicodeCharacter{2026}{\ldots{}}
+\DeclareUnicodeCharacter{00A0}{~}
+\DeclareUnicodeCharacter{00A7}{\S{}}
+\DeclareUnicodeCharacter{2264}{\ensuremath{\le}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\ge}}
+\DeclareUnicodeCharacter{2260}{\ensuremath{\neq}}
+\DeclareUnicodeCharacter{2248}{\ensuremath{\approx}}
+\DeclareUnicodeCharacter{2261}{\ensuremath{\equiv}}
+\DeclareUnicodeCharacter{223C}{\ensuremath{\sim}}
+\DeclareUnicodeCharacter{2243}{\ensuremath{\simeq}}
+\DeclareUnicodeCharacter{2245}{\ensuremath{\cong}}
+\DeclareUnicodeCharacter{221D}{\ensuremath{\propto}}
+\DeclareUnicodeCharacter{226A}{\ensuremath{\ll}}
+\DeclareUnicodeCharacter{226B}{\ensuremath{\gg}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\to}}
+\DeclareUnicodeCharacter{2190}{\ensuremath{\leftarrow}}
+\DeclareUnicodeCharacter{2194}{\ensuremath{\leftrightarrow}}
+\DeclareUnicodeCharacter{21D2}{\ensuremath{\Rightarrow}}
+\DeclareUnicodeCharacter{21D0}{\ensuremath{\Leftarrow}}
+\DeclareUnicodeCharacter{21D4}{\ensuremath{\Leftrightarrow}}
+\DeclareUnicodeCharacter{21A6}{\ensuremath{\mapsto}}
+\DeclareUnicodeCharacter{2208}{\ensuremath{\in}}
+\DeclareUnicodeCharacter{2209}{\ensuremath{\notin}}
+\DeclareUnicodeCharacter{2286}{\ensuremath{\subseteq}}
+\DeclareUnicodeCharacter{2282}{\ensuremath{\subset}}
+\DeclareUnicodeCharacter{2287}{\ensuremath{\supseteq}}
+\DeclareUnicodeCharacter{2283}{\ensuremath{\supset}}
+\DeclareUnicodeCharacter{2229}{\ensuremath{\cap}}
+\DeclareUnicodeCharacter{222A}{\ensuremath{\cup}}
+\DeclareUnicodeCharacter{2216}{\ensuremath{\setminus}}
+\DeclareUnicodeCharacter{2205}{\ensuremath{\emptyset}}
+\DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
+\DeclareUnicodeCharacter{2203}{\ensuremath{\exists}}
+\DeclareUnicodeCharacter{2115}{\ensuremath{\mathbb{N}}}
+\DeclareUnicodeCharacter{2124}{\ensuremath{\mathbb{Z}}}
+\DeclareUnicodeCharacter{211A}{\ensuremath{\mathbb{Q}}}
+\DeclareUnicodeCharacter{211D}{\ensuremath{\mathbb{R}}}
+\DeclareUnicodeCharacter{2102}{\ensuremath{\mathbb{C}}}
+\DeclareUnicodeCharacter{00B7}{\ensuremath{\cdot}}
+\DeclareUnicodeCharacter{00D7}{\ensuremath{\times}}
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}
+\DeclareUnicodeCharacter{00B1}{\ensuremath{\pm}}
+\DeclareUnicodeCharacter{2213}{\ensuremath{\mp}}
+\DeclareUnicodeCharacter{221A}{\ensuremath{\surd}}
+\DeclareUnicodeCharacter{2211}{\ensuremath{\sum}}
+\DeclareUnicodeCharacter{220F}{\ensuremath{\prod}}
+\DeclareUnicodeCharacter{222B}{\ensuremath{\int}}
+\DeclareUnicodeCharacter{221E}{\ensuremath{\infty}}
+\DeclareUnicodeCharacter{2202}{\ensuremath{\partial}}
+\DeclareUnicodeCharacter{2207}{\ensuremath{\nabla}}
+\DeclareUnicodeCharacter{2297}{\ensuremath{\otimes}}
+\DeclareUnicodeCharacter{2295}{\ensuremath{\oplus}}
+\DeclareUnicodeCharacter{2218}{\ensuremath{\circ}}
+\DeclareUnicodeCharacter{2308}{\ensuremath{\lceil}}
+\DeclareUnicodeCharacter{2309}{\ensuremath{\rceil}}
+\DeclareUnicodeCharacter{230A}{\ensuremath{\lfloor}}
+\DeclareUnicodeCharacter{230B}{\ensuremath{\rfloor}}
+\DeclareUnicodeCharacter{27E8}{\ensuremath{\langle}}
+\DeclareUnicodeCharacter{27E9}{\ensuremath{\rangle}}
+\DeclareUnicodeCharacter{2016}{\ensuremath{\|}}
+\DeclareUnicodeCharacter{2113}{\ensuremath{\ell}}
+\DeclareUnicodeCharacter{00B0}{\ensuremath{^{\circ}}}
+\DeclareUnicodeCharacter{00B2}{\ensuremath{^{2}}}
+\DeclareUnicodeCharacter{00B3}{\ensuremath{^{3}}}
+\DeclareUnicodeCharacter{00B9}{\ensuremath{^{1}}}
+\DeclareUnicodeCharacter{2080}{\ensuremath{_{0}}}
+\DeclareUnicodeCharacter{2081}{\ensuremath{_{1}}}
+\DeclareUnicodeCharacter{2082}{\ensuremath{_{2}}}
+\DeclareUnicodeCharacter{207F}{\ensuremath{^{n}}}
+\DeclareUnicodeCharacter{2096}{\ensuremath{_{k}}}
+%% --- 6. Numbering: one counter per section -----------------------
+\numberwithin{equation}{section}
+\setcounter{tocdepth}{1}
+%% --- 7. The project macro set, then the claim environments -----------------
+% spec/macros.tex, read relative to this module's directory (latexmk -cd).
+\input{../macros}
+\makeatletter
+\newcommand*{\ClaimHeadFont}{\bfseries}   % switched by prominence
+\newcommand*{\ClaimNoteFont}{\mdseries}
+\newcommand*{\ClaimShortId}{}
+\newcommand*{\SetShortId}[1]{\renewcommand*{\ClaimShortId}{#1}}
+\newcommand*{\RestatedName}{}
+% Upright bodies throughout: italic is reserved for non-normative text.
+% \@endparpenalty\@M keeps the meta line on the statement's page.
+\newtheoremstyle{claim}{\topsep}{\topsep}{\normalfont\@endparpenalty\@M}{}%
+  {\ClaimHeadFont}{.}{.5em}{\thmname{#1}\thmnumber{ #2}\thmnote{ {\ClaimNoteFont(#3)}}}
+\newtheoremstyle{claimass}{\topsep}{\topsep}{\normalfont\@endparpenalty\@M}{}%
+  {\ClaimHeadFont}{.}{.5em}{\thmname{#1}\thmnumber{ #2}%
+  \ifx\ClaimShortId\@empty\else\ [\textsf{\ClaimShortId}]\fi%
+  \thmnote{ {\ClaimNoteFont(#3)}}}
+\newtheoremstyle{claimremark}{.5\topsep}{.5\topsep}{\small\@endparpenalty\@M}{}%
+  {\itshape}{.}{.5em}{\thmname{#1}\thmnumber{ #2}\thmnote{ {\upshape(#3)}}}
+\newtheoremstyle{claimreq}{\topsep}{\topsep}{\normalfont\@endparpenalty\@M}{}%
+  {\color{reqAccent}\scshape}{.}{.5em}%
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ {\upshape(#3)}}}
+\makeatother
+\theoremstyle{claim}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{restatedclaim}{\RestatedName}
+\theoremstyle{claimass}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{restatedassumption}{\RestatedName}
+\theoremstyle{claimremark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{claimreq}
+\newtheorem{requirement}[theorem]{Requirement}
+\newtheorem*{restatedrequirement}{\RestatedName}
+%% --- 8. Prominence: main results a margin rule and a bold heading ----------
+\newtcolorbox{mainclaim}{enhanced jigsaw, breakable, blanker,
+  borderline west={1.5pt}{-8pt}{mainRule}, left=0pt, right=0pt, top=0pt, bottom=0pt,
+  boxsep=0pt, before skip=\topsep, after skip=\topsep, parbox=false,
+  before upper={\renewcommand*{\ClaimNoteFont}{\bfseries}}}
+\newenvironment{technicalclaim}{\renewcommand*{\ClaimHeadFont}{\mdseries\color{techGrey}}%
+  \renewcommand*{\ClaimNoteFont}{}}{}
+%% --- 9. Non-normative text, the meta line, navigation ------------------------
+\makeatletter
+% Tie what follows to this paragraph: no page break, no list penalty before
+% the next theorem head (the \@nobreak route a section heading uses).
+\newcommand{\keepwithnext}{\par\nobreak\vspace{3pt}\@nobreaktrue
+  \everypar{\if@nobreak\@nobreakfalse\clubpenalty\@M\else\clubpenalty\@clubpenalty\everypar{}\fi}}
+\newcommand{\claimsummary}[2]{% #1 claim id (named destination), #2 summary
+  \par\addvspace{\bigskipamount}\Needspace{6\baselineskip}%
+  {\small\itshape\color{nnGrey}\noindent\hypertarget{claim-#1}{}#2\par}\keepwithnext}
+\newcommand{\claimanchor}[1]{% a claim without a summary: the destination alone
+  \par\addvspace{\bigskipamount}\Needspace{6\baselineskip}%
+  \phantomsection\hypertarget{claim-#1}{}\keepwithnext}
+\newcommand{\claimleadin}[1]{{\color{nnGrey}\noindent#1\par}\keepwithnext}
+\newcommand{\claimmeta}[1]{\par\nobreak\vspace{2pt}%
+  {\footnotesize\color{metaGrey}\raggedright\interlinepenalty\@M\noindent#1\par}%
+  \addvspace{\medskipamount}}
+% After an assumption: the sentence generated from its verification field; after
+% any claim with one: its plain-text reading (user_statement). Both
+% non-normative, both grey.
+\newcommand{\claimverification}[1]{\par\nobreak\vspace{2pt}%
+  {\footnotesize\color{metaGrey}\noindent#1\par}\nobreak}
+\newcommand{\claimreading}[1]{\par\nobreak\vspace{2pt}%
+  {\footnotesize\color{nnGrey}\noindent\emph{Reading:}\enspace#1\par}\nobreak}
+\makeatother
+\newcommand{\claimbookmark}[4]{% #1 id, #2 kind word, #3 label, #4 plain title
+  \bookmark[dest=claim-#1,level=2]{#2 \getrefnumber{#3} #4}}
+\newcommand{\metasep}{\unskip\enspace\textperiodcentered\enspace\ignorespaces}
+\newcommand{\metalabel}[1]{\emph{#1}\enspace}
+\newcommand{\sectionintro}[1]{{\color{nnGrey}\noindent#1\par}\smallskip}
+\newcommand{\sectionimports}[1]{{\footnotesize\color{metaGrey}\raggedright\noindent\metalabel{Imports}#1\par}\smallskip}
+\newenvironment{overview}{\par\color{nnGrey}\itshape\noindent\ignorespaces}{\par}
+% References: the whole "Def. 2.1" is the link; ids are the fallback text of
+% every link into another PDF (a relative URI to a named destination).
+\newcommand{\mref}[2]{\hyperref[#2]{#1~\ref*{#2}}}
+\newcommand{\aref}[2]{\hyperref[#2]{\textsf{#1}}}
+\DeclareUrlCommand{\claimid}{\urlstyle{sf}\def\UrlBreaks{\do\/\do\:\do\-\do\.\do\_}%
+  \def\UrlBigBreaks{}\def\UrlNoBreaks{}}
+\newcommand{\extref}[2]{\hyperref{#1}{}{claim-#2}{\claimid{#2}}}
+\newcommand{\extaref}[3]{\hyperref{#1}{}{claim-#2}{\textsf{#3}}}
+\newcommand{\coderef}[2]{\href{#1}{\claimid{#2}}}
+% Claim-body commands (spec/claim-format.md section 4): \xref{<full id>} prints
+% the kind, title and id of a claim of another contract, linked to its stable
+% destination in that contract's PDF (one \DeclareXref per cited claim below);
+% \term[gloss]{phrase} marks a defined phrase for the index (the gloss feeds
+% the Terms table); \tref[phrase]{text} is a use of a defined term. The
+% assembler rewrites both in the body into \termdef (the definition's named
+% destination term-<slug>) and \termref / \exttermref (a link to it, in this
+% or another contract's PDF); the fallbacks below serve text it copies
+% elsewhere, such as the digest. \iface is an interface key.
+\makeatletter
+\newcommand{\DeclareXref}[4]{% id, kind word, title, contract PDF
+  \@namedef{xref@#1}{\hyperref{#4}{}{claim-#1}{#2 ``#3'' ({\small\claimid{#1}})}}}
+\newcommand{\xref}[1]{\@ifundefined{xref@#1}%
+  {\textbf{[unresolved \nolinkurl{#1}]}\@latex@warning{Unresolved xref #1}}%
+  {\@nameuse{xref@#1}}}
+\makeatother
+\DeclareUrlCommand{\iface}{\urlstyle{tt}}
+\newcommand{\term}[2][]{\emph{#2}\index{#2}}
+\newcommand{\tref}[2][]{#2}
+\newcommand{\termdef}[2]{\hypertarget{#1}{}\emph{#2}\index{#2}}
+\newcommand{\termref}[2]{\hyperlink{#1}{#2}}
+\newcommand{\exttermref}[3]{\hyperref{#1}{}{#2}{#3}}
+\hypersetup{pdftitle={CERTIQS-KEY -- overview of the contracts}}
+\DeclareXref{foundations/ass:snapped-measurement}{Assumption}{The device measures the snapped family where the run reads the snap}{../modules/foundations/contract.pdf}
+\DeclareXref{foundations/def:declared-data}{Definition}{Declared data and the parties to a module boundary}{../modules/foundations/contract.pdf}
+\DeclareXref{foundations/def:exact-admissibility}{Definition}{Exact admissibility of a declared operator family}{../modules/foundations/contract.pdf}
+\DeclareXref{foundations/def:exact-reference}{Definition}{Reference of a measurement family, exact or enclosed}{../modules/foundations/contract.pdf}
+\DeclareXref{foundations/def:round-model}{Definition}{Round model, attack sequences and attack sets}{../modules/foundations/contract.pdf}
+\DeclareXref{foundations/def:sector-map}{Definition}{Sector maps and block-list operators}{../modules/foundations/contract.pdf}
+\DeclareXref{foundations/def:snap}{Definition}{Snapping declared data onto a lattice}{../modules/foundations/contract.pdf}
+\DeclareXref{foundations/def:tiers}{Definition}{The tiers of a reported key rate}{../modules/foundations/contract.pdf}
+\DeclareXref{foundations/lem:exact-accumulation}{Lemma}{Exactness of a sum that rounds nowhere}{../modules/foundations/contract.pdf}
+\DeclareXref{foundations/req:boundary-admission}{Requirement}{Exact admissibility at every module boundary}{../modules/foundations/contract.pdf}
+\DeclareXref{foundations/req:exact-emission}{Requirement}{Exact verification before emission}{../modules/foundations/contract.pdf}
+\DeclareXref{meat-core/ass:auth}{Assumption}{Authentication of the classical channel by a keyed scheme}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/ass:conform}{Assumption}{The implementation runs the analysed post-processing}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/ass:fixed}{Assumption}{Protocol parameters fixed before the run}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/ass:hash}{Assumption}{Ideal two-universal privacy amplification}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/ass:keyreg}{Assumption}{Dedicated key register and one-way reconciliation}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/ass:lab}{Assumption}{Each party's laboratory is sealed}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/ass:seed}{Assumption}{Private, independent and fresh local randomness}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/ass:separate-executions}{Assumption}{Executions that share no key and no device state}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/cor:composed-security}{Corollary}{Security of the protocol and its net key}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/cor:constrained-key-length}{Corollary}{Key length from the constrained value}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/cor:keylength-bound}{Corollary}{Key length from any lower bound on the value}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/cor:separate-executions}{Corollary}{Security parameters of separate executions add}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/def:admissible-acceptance-set}{Definition}{Admissible acceptance set}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/def:dropped}{Definition}{Dropped set and dropped program}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/def:hqkd-list}{Definition}{Constrained target set and single-round rate}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/def:postprocessing-model}{Definition}{Fixed-length post-processing model}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/fact:meat}{Fact}{Marginal-constrained entropy accumulation, sequential form}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/ass:lmo}{Assumption}{Exact linear minimisation over the feasible set}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/cor:certified-keylength}{Corollary}{Key length from the certified bracket}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/cor:certified-keylength-reference}{Corollary}{Key length on a reference companion from the certified bracket}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/cor:fo-dropped}{Corollary}{First-order bound for the dropped program}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/cor:fo-keylength}{Corollary}{Key length from the first-order bound}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/cor:fo-reference}{Corollary}{The first-order bound on the reference companion}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/lem:certified-bracket}{Lemma}{The certified bracket from enclosures of the gradient}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/lem:feasible-side-dual}{Lemma}{A lower bound on the feasible-side minimum from any multipliers}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/rem:fo-arithmetic}{Remark}{Exact real arithmetic in the first-order bound}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/req:bracket-on-reference}{Requirement}{The first-order bound evaluated on the reference companion}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/req:certified-evaluation}{Requirement}{The certified evaluation of the first-order bound}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/thm:firstorder}{Theorem}{The estimate and the first-order lower bound}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/lem:estimate}{Lemma}{Upper estimate of the value at any feasible point}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/lem:ev-correctness}{Lemma}{Correctness from error verification}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/lem:memory-lift}{Lemma}{Approximating an attack by all-at-once attacks with finite memory}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/lem:product-marginal}{Lemma}{Product marginal of Alice's retained systems}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/prop:optol-nobound}{Proposition}{Instability of the rate under measurement perturbations}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/prop:reference-companion}{Proposition}{The compiled reference companion is an admissible declaration}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/rem:plus2}{Remark}{The constant in the key length and the source's convention}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/req:hash-penalty}{Requirement}{Key-length penalty for a merely two-universal family}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/thm:accumulated-entropy}{Theorem}{Accumulated entropy bound under adaptive attacks}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/thm:constrained-accumulation}{Theorem}{Constrained accumulation under the attack-set licence}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/thm:keylength}{Theorem}{Secrecy of the key from the accumulated entropy}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/thm:protocol-channel}{Theorem}{The declaration generates a protocol channel}{../modules/meat-core/contract.pdf}
+\DeclareXref{meat-core/thm:reduction}{Theorem}{Reduction of the rate to the convex program}{../modules/meat-core/contract.pdf}
+\DeclareXref{protocol-compiler/ass:alice-meas}{Assumption}{Alice's declared measurement where no source certificate is demanded}{../modules/protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/ass:atk}{Assumption}{Attack-set licence}{../modules/protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/ass:coin}{Assumption}{Public choices as private coins of declared bias}{../modules/protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/ass:ideal}{Assumption}{Ideal qubit receiver on the Band-A route}{../modules/protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/ass:link}{Assumption}{Soundness of every reduction link}{../modules/protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/ass:rhom}{Assumption}{Round homogeneity of the declaration}{../modules/protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/ass:spec}{Assumption}{Specification faithful to the apparatus}{../modules/protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/def:declaration}{Definition}{Protocol declaration}{../modules/protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/def:eligible}{Definition}{Key-length eligibility}{../modules/protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/def:spec}{Definition}{Protocol specification}{../modules/protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/rem:obligations-discharged}{Remark}{Discharge of the chain obligations by the reductions module}{../modules/protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/thm:band-a}{Theorem}{The Band-A route}{../modules/protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/thm:gates}{Theorem}{The emission gates and their outcomes}{../modules/protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/thm:validator-soundness}{Theorem}{Soundness, completeness and decidability of the validator}{../modules/protocol-compiler/contract.pdf}
+\DeclareXref{receiver/ass:eig}{Assumption}{Declared slack on the computed block eigenvalues}{../modules/receiver/contract.pdf}
+\DeclareXref{receiver/ass:exact}{Assumption}{Exact declared parameters}{../modules/receiver/contract.pdf}
+\DeclareXref{receiver/ass:modes}{Assumption}{Completeness of the declared modes}{../modules/receiver/contract.pdf}
+\DeclareXref{receiver/ass:nosel}{Assumption}{Device fixed independently of the adversary}{../modules/receiver/contract.pdf}
+\DeclareXref{receiver/ass:passive}{Assumption}{Passive linear optics}{../modules/receiver/contract.pdf}
+\DeclareXref{receiver/ass:port}{Assumption}{Mode-insensitive port response}{../modules/receiver/contract.pdf}
+\DeclareXref{receiver/ass:round}{Assumption}{Round homogeneity of the instrument, probe and dark counts}{../modules/receiver/contract.pdf}
+\DeclareXref{receiver/ass:thresh}{Assumption}{Threshold detectors without memory}{../modules/receiver/contract.pdf}
+\DeclareXref{receiver/ass:trust}{Assumption}{Trusted and exactly characterised receiver}{../modules/receiver/contract.pdf}
+\DeclareXref{receiver/ass:vac}{Assumption}{Vacuum on undeclared input modes}{../modules/receiver/contract.pdf}
+\DeclareXref{receiver/component-catalogue/thm:catalogue-admissibility}{Theorem}{Admissibility of the catalogue entries}{../modules/receiver/contract.pdf}
+\DeclareXref{receiver/def:evaluation-model}{Definition}{The evaluation model: floating point, enclosures and rigour}{../modules/receiver/contract.pdf}
+\DeclareXref{receiver/detector-imperfections/thm:dark-counts}{Theorem}{Dark counts on a photon-number block-diagonal POVM}{../modules/receiver/contract.pdf}
+\DeclareXref{receiver/detector-imperfections/thm:efficiency}{Theorem}{Detector efficiency in the port Grams}{../modules/receiver/contract.pdf}
+\DeclareXref{receiver/thm:click-povm}{Theorem}{Click-pattern POVM}{../modules/receiver/contract.pdf}
+\DeclareXref{receiver/thm:coarse-graining}{Theorem}{Coarse-graining of the click-pattern POVM}{../modules/receiver/contract.pdf}
+\DeclareXref{receiver/thm:emitted-bound}{Theorem}{Multiclick bounds carried by the emitted weights}{../modules/receiver/contract.pdf}
+\DeclareXref{reductions/ass:constdecl}{Assumption}{Declared constants of the constraint list}{../modules/reductions/contract.pdf}
+\DeclareXref{reductions/ass:meas}{Assumption}{Each measuring party's device as one POVM per round}{../modules/reductions/contract.pdf}
+\DeclareXref{reductions/ass:probe}{Assumption}{The station's private setting drawn from its own declared randomness}{../modules/reductions/contract.pdf}
+\DeclareXref{reductions/ass:recv}{Assumption}{Supplier artefact whose claims hold of the device}{../modules/reductions/contract.pdf}
+\DeclareXref{reductions/ass:round}{Assumption}{Round homogeneity of the physical measurement}{../modules/reductions/contract.pdf}
+\DeclareXref{reductions/ass:tsm}{Assumption}{Output-state test statistics}{../modules/reductions/contract.pdf}
+\DeclareXref{reductions/def:licensed}{Definition}{Licensed entries and the party-local form}{../modules/reductions/contract.pdf}
+\DeclareXref{reductions/thm:emit}{Theorem}{Exact emission of a reduction instance}{../modules/reductions/contract.pdf}
+\DeclareXref{reductions/thm:licence}{Theorem}{The attack-set licence}{../modules/reductions/contract.pdf}
+\DeclareXref{reductions/thm:transfer}{Theorem}{Security transfer from a constrained squashed model}{../modules/reductions/contract.pdf}
+\DeclareXref{reductions/thm:two-sided}{Theorem}{The two-sided reduction in trusted-source mode}{../modules/reductions/contract.pdf}
+\DeclareXref{reductions/wpfss/cor:emitted-flat}{Corollary}{Exact emission of the flat instance}{../modules/reductions/contract.pdf}
+\DeclareXref{reductions/wpfss/prop:chain}{Proposition}{Flag-state squashers: existence, chain and encoded weights}{../modules/reductions/contract.pdf}
+\DeclareXref{statistics/ass:alphabet}{Assumption}{An acceptance value recorded in every round}{../modules/statistics/contract.pdf}
+\DeclareXref{statistics/ass:hon}{Assumption}{Honest i.i.d. rounds}{../modules/statistics/contract.pdf}
+\DeclareXref{statistics/ass:hon-env}{Assumption}{Honest rounds inside a declared envelope}{../modules/statistics/contract.pdf}
+\DeclareXref{statistics/ass:reach}{Assumption}{An honest law produced by a feasible state}{../modules/statistics/contract.pdf}
+\DeclareXref{statistics/binomial-box/thm:box-construction}{Theorem}{Properties of the constructed box}{../modules/statistics/contract.pdf}
+\DeclareXref{statistics/binomial-box/thm:completeness-bound}{Theorem}{The completeness bound}{../modules/statistics/contract.pdf}
+\DeclareXref{statistics/singleton/thm:singleton-completeness}{Theorem}{Completeness of a singleton acceptance set}{../modules/statistics/contract.pdf}
+\DeclareXref{statistics/thm:box-oracle}{Theorem}{Acceptance support and the exact box oracle}{../modules/statistics/contract.pdf}
+\DeclareXref{statistics/thm:geometry-validation}{Theorem}{Validity of the admissible geometries}{../modules/statistics/contract.pdf}
+\DeclareXref{transmitter/ass:ens}{Assumption}{Emission of the specified ensemble}{../modules/transmitter/contract.pdf}
+\DeclareXref{transmitter/ass:seq}{Assumption}{Sequential round structure}{../modules/transmitter/contract.pdf}
+\DeclareXref{transmitter/ass:src}{Assumption}{Retention of the system A in trusted-source mode}{../modules/transmitter/contract.pdf}
+\DeclareXref{transmitter/decoy/ass:wcp}{Assumption}{Emission of the declared weak-coherent-pulse states}{../modules/transmitter/contract.pdf}
+\DeclareXref{transmitter/decoy/cor:emitted-decoy}{Corollary}{The emitted decoy declaration}{../modules/transmitter/contract.pdf}
+\DeclareXref{transmitter/decoy/prop:tagging}{Proposition}{Tagging channel for weights at or below the Poisson weights}{../modules/transmitter/contract.pdf}
+\DeclareXref{transmitter/lem:ensemble-presentation}{Lemma}{Certificate defined by an ensemble presentation}{../modules/transmitter/contract.pdf}
+\DeclareXref{transmitter/lem:matched-pinching}{Lemma}{Matched pinching of a block certificate}{../modules/transmitter/contract.pdf}
+\DeclareXref{transmitter/thm:certificate-sufficiency}{Theorem}{Checkability and sufficiency of the source-replacement certificate}{../modules/transmitter/contract.pdf}
+
+\begin{document}
+\input{intro}
+\end{document}

@@ -1,0 +1,53 @@
+% ---
+% id: foundations/lem:binary64-lattice
+% kind: lem
+% title: "Binary64 numbers on dyadic lattices"
+% summary: >-
+%   Every lattice value at an exponent k ≤ 53 is a binary64 number, and between
+%   two consecutive powers of two the binary64 numbers are the multiples of one
+%   power of two, in [1/2, 1) those of two to the power −53. Representability of
+%   a declared entry is therefore a divisibility condition.
+% prominence: standard
+% status: accepted
+% uses: [def:binary64]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{lemma}\label{lem:binary64-lattice}
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item For every lattice exponent $k$, every real lattice value at $k$ is a
+  binary64 number, and every complex lattice value at $k$ lies in
+  $\mathbb{B}_{\mathbb{C}}$.
+\item For every integer $e$ with $-1022\le e\le1023$,
+  \begin{equation}\label{eq:binade}
+    \mathbb{B}\cap\big[2^{e},2^{e+1}\big)
+    \;=\;2^{e-52}\,\mathbb{Z}\cap\big[2^{e},2^{e+1}\big).
+  \end{equation}
+  In particular the binary64 numbers in $[\tfrac12,1)$ are the multiples of
+  $2^{-53}$ in that interval, and those in $[1,2)$ are the multiples of
+  $2^{-52}$ in it.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) Let $x$ be a real lattice value at $k$ (Definition~\ref{def:binary64}\,(iv))
+and write $x=n\,2^{-k}$ with $n\in\mathbb{Z}$; then
+$|n|=2^{k}|x|\le2^{k}\le2^{53}$. If $|n|<2^{53}$, then $x=n\,2^{q}$ with
+$q=-k\in[-53,-1]\subseteq[-1074,971]$, so $x\in\mathbb{B}$ by
+Definition~\ref{def:binary64}\,(i). Otherwise $|n|=2^{53}$, which forces
+$k=53$ and $|x|=1$, and $x=(\pm1)\,2^{0}\in\mathbb{B}$. A complex lattice value
+has its real and imaginary parts on the lattice, hence in $\mathbb{B}$.
+
+(ii) Let $x=n\,2^{e-52}$ with $n\in\mathbb{Z}$ and $2^{e}\le x<2^{e+1}$. Then
+$2^{52}\le n<2^{53}$, and $q\coloneqq e-52$ satisfies $-1074\le q\le971$
+because $-1022\le e\le1023$; so $x\in\mathbb{B}$. Conversely, let
+$x=m\,2^{q}\in\mathbb{B}$, as in Definition~\ref{def:binary64}\,(i), with
+$2^{e}\le x<2^{e+1}$. Then $m>0$, and $m<2^{53}$ gives
+$2^{q}=x/m>2^{e}\,2^{-53}$, so the integer $q$ satisfies $q>e-53$, that is
+$q\ge e-52$. Hence $x=\big(m\,2^{q-e+52}\big)\,2^{e-52}$ with
+$m\,2^{q-e+52}\in\mathbb{Z}$, which proves \eqref{eq:binade}. The two
+particular cases are $e=-1$ and $e=0$.
+\end{proof}

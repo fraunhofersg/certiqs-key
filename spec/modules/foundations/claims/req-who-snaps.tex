@@ -1,0 +1,77 @@
+% ---
+% id: foundations/req:who-snaps
+% kind: req
+% title: "Snapping by the declarer only"
+% summary: >-
+%   Only the declarer of data snaps them, once and before any consumer reads
+%   them: an instance its own declaration, a producer its own emission. No
+%   party alters data it was handed, save a consumer rounding an emitted bound
+%   in a direction its producer licenses as weakening, and every snap is recorded.
+% prominence: standard
+% status: implemented
+% uses: [def:snap, def:declared-data, def:tolerance, def:exact-reference, def:evaluated-off-snap]
+% mentions: [req:declared-tolerance, req:declared-lattice, req:exact-emission, req:consumer-decides-exactly, req:snap-reference, req:support-safe-snap, ass:snapped-measurement]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.snap:MeasurementSnapRecord
+% notes: "The enclosed kind records the largest radius of the enclosures of the irrational inputs (square roots, trigonometric values) from which the constructing module computed the centres exactly, as that module's claims state it; it records no precision of the centres, which is undefined for exact Gaussian-rational centres. A kept block is recorded as kept and is never counted among the blocks evaluated off their snap: the snap is the identity there, and no premise about it arises."
+% lean:
+% ---
+
+A snap repairs what a party asserts, before anything consumes it. It is never
+a repair of what one module hands another, which a consumer decides and, where
+it fails, refuses.
+
+\begin{requirement}\label{req:who-snaps}
+Declared data are snapped (Definition~\ref{def:snap}) only by their declarer,
+at most once, and before any consumer reads them: an instance snaps what it
+declares about its device and its protocol, on the admission that
+Requirement~\ref{req:declared-tolerance} states (for an operator family
+snapped on the centres of an \tref{exact reference}, the decisions on the
+reference that Requirement~\ref{req:snap-reference}\,(i) lists; for a
+probability vector prepared from numerical inputs, the rule of the input
+preparation; otherwise within the declared tolerance), and a producer snaps
+only its own emission. No party snaps data it was handed, and no party
+otherwise alters them, with the one exception that
+Requirement~\ref{req:consumer-decides-exactly} states and limits: a consumer
+may replace a scalar bound that a producer emits by that bound rounded in a
+direction that the producer's own claims license as weakening it, recording
+the direction. Every snap is recorded: an instance's in the record of the run,
+with the defects it measured, or decided to be zero, before the snap
+(Definition~\ref{def:tolerance}),
+the displacement and the rule it applied, and a producer's in its emission,
+with the disclosures of Requirement~\ref{req:exact-emission}. The record of a
+snap of an operator family read as a measurement carries, besides, the
+identity of every \tref{reference} the declarer uses or hands beside the snap
+(the model, the exact parameters from which it is formed, and its
+\tref[entrywise enclosure]{entrywise enclosures} where any radius is not
+zero, with the claims that establish them;
+Definition~\ref{def:exact-reference}); the \emph{reference kind} of the snap
+per block (\emph{exact}, where the snap runs on the centres of an exact
+reference of the block, or \emph{none}, where it runs on the data as they
+stand); whether the run declares that enclosed references are not used; the
+status of every block, \tref{kept} or \tref{moved}
+(Definition~\ref{def:snap}); the steps of the procedure that made each moved
+block (Requirement~\ref{req:support-safe-snap}); and the flag
+\iface{support_not_preserved} of every block snapped by the last resort
+(Requirement~\ref{req:support-safe-snap}\,(iv)). Where the declarer hands the
+reference beside the snap (Definition~\ref{def:evaluated-off-snap}\,(i)), the
+record names the handed blocks, with the kind of the reference handed on each
+(\emph{exact}, every radius zero, or \emph{enclosed}, with the largest radius
+of the block and the largest radius of the enclosures of irrational inputs
+(square roots, trigonometric values) from which the constructing module
+computed the centres exactly, as its claims state it), and, for every block
+on which it hands none, the cause of
+Requirement~\ref{req:snap-reference}\,(iii)(a). The record of the run names
+every moved block of the snap that is \tref{evaluated off its snap}
+(Definition~\ref{def:evaluated-off-snap}\,(ii)), and every moved block that
+rests on Assumption~\ref{ass:snapped-measurement}, with its cause, group and
+fix (Requirement~\ref{req:snap-reference}\,(iii)); a kept block is named as
+kept and in neither list. Handing the reference alters neither the snap nor
+the reference. A producer that declares a \tref{lattice exponent}
+re-establishes its lattice at each emission whose exact construction lies off
+it, by a snap of that emission or by refusing it
+(Requirements~\ref{req:declared-lattice} and~\ref{req:exact-emission}); a
+producer that declares no lattice exponent snaps nothing.
+\end{requirement}

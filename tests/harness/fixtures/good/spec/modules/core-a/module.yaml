@@ -1,0 +1,14 @@
+id: core-a
+kind: core
+version: 0.2.0
+title: Core A
+one_line: The core module of the passing fixture.
+depends_on: []
+notation_version: "0.4.0"
+submodules: [sub-x]
+order:
+  - def:base
+  - fact:ext
+  - thm:main
+  - ass:leaf
+  - rem:aside

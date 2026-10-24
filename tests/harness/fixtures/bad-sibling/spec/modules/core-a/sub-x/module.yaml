@@ -1,0 +1,9 @@
+id: sub-x
+kind: submodule
+version: 0.1.0
+title: Sub X
+one_line: A submodule whose claim uses the core's definition.
+depends_on: [sub-y]
+notation_version: "0.4.0"
+order:
+  - lem:helper

@@ -1,0 +1,64 @@
+% ---
+% id: foundations/def:binary64
+% kind: def
+% title: "Binary64 numbers, declared values and dyadic lattices"
+% summary: >-
+%   A declared value is a binary64 number and denotes exactly the dyadic
+%   rational it is, with no exact object behind it. A binary64 addition is
+%   exact precisely when the true sum is a binary64 number, and a lattice value
+%   at k is an integer multiple of two to the power −k of modulus at most one.
+% prominence: standard
+% status: implemented
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.exact:scalar_is_binary64
+% lean:
+% ---
+
+\begin{definition}\label{def:binary64}
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item Let $\mathbb{B}$ be the set of real numbers $m\,2^{q}$ with
+  $m,q\in\mathbb{Z}$, $|m|<2^{53}$ and $-1074\le q\le971$, and let
+  $\mathbb{B}_{\mathbb{C}}\coloneqq\{x+iy:\ x,y\in\mathbb{B}\}$. The elements
+  of $\mathbb{B}$ are the \term[the finite values of the IEEE 754 binary64
+  format, each a dyadic rational]{binary64 numbers}, the finite values of the
+  IEEE~754 binary64 format. Every binary64 number is a dyadic rational, an
+  element of $\mathbb{Z}[\tfrac12]$.
+\item For a real number $x$ with $|x|<2^{1024}-2^{970}$, $\mathrm{fl}(x)$ is
+  $x$ rounded to the nearest element of $\mathbb{B}$, a tie going to the
+  element whose $m$ is even in its representation of (i) with the least $q$.
+  For $|x|\ge2^{1024}-2^{970}$, $\mathrm{fl}(x)\coloneqq+\infty$ if $x>0$ and
+  $-\infty$ if $x<0$; the threshold is the midpoint between the largest
+  element $(2^{53}-1)\,2^{971}$ of $\mathbb{B}$ and $2^{1024}$, which is where
+  IEEE~754 rounding to nearest overflows. Further,
+  $\mathrm{fl}(\pm\infty+y)\coloneqq\pm\infty$ for $y\in\mathbb{B}$. The
+  \term[fl(a + b), the exact sum of a and b rounded to the nearest binary64
+  number, ties to even, or to an infinity on overflow]{binary64 sum} of $a$
+  and $b$ is $\mathrm{fl}(a+b)$. On
+  $\mathbb{B}_{\mathbb{C}}$, and on matrices over it, $\mathrm{fl}$ acts on the
+  real and on the imaginary part of every entry separately. Two properties of
+  $\mathrm{fl}$ are all that is used of it: on real input its value lies in
+  $\mathbb{B}\cup\{\pm\infty\}$, and $\mathrm{fl}(x)=x$ for $x\in\mathbb{B}$.
+  The binary64 sum of $a$ and $b$ is \emph{exact} when it equals $a+b$; by
+  those two properties it is exact if and only if the real and the imaginary
+  part of every entry of $a+b$ lie in $\mathbb{B}$.
+\item A \term[a binary64 number stated as a datum, which denotes exactly that
+  dyadic rational and approximates nothing]{declared value} is a binary64
+  number stated as a datum. It
+  denotes that dyadic rational and nothing else: there is no exact object
+  behind it of which it is an approximation, and every predicate stated of
+  declared values is a predicate of those rationals. A declared complex value
+  is an element of $\mathbb{B}_{\mathbb{C}}$, and a declared matrix is a
+  matrix of declared complex values.
+\item A \term[an integer k with 1 ≤ k ≤ 53]{lattice exponent} is an integer
+  $k$ with $1\le k\le53$. A real number $x$ is a \term[at a lattice exponent
+  k, a real number that is an integer multiple of two to the power −k and has
+  modulus at most one; a complex number or a matrix is one when the real and
+  the imaginary part of every entry are]{lattice value} at $k$ when
+  $2^{k}x\in\mathbb{Z}$ and
+  $|x|\le1$; a complex number, or a matrix, is one when the real and the
+  imaginary part of every entry are.
+\end{enumerate}
+\end{definition}

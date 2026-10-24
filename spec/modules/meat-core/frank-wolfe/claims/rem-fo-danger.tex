@@ -1,0 +1,51 @@
+% ---
+% id: meat-core/frank-wolfe/rem:fo-danger
+% kind: rem
+% title: "Failure of maximal support lies on the unsafe side"
+% summary: >-
+%   Where maximal support fails, a support-enlarging direction can give the
+%   objective a −∞ one-sided derivative, so the linearisation over-estimates the
+%   objective and the bracket can exceed h_low. That is why (H-SUPP) is a
+%   hypothesis of [[thm:firstorder]] and a failed check drops the iterate.
+% prominence: standard
+% status: accepted
+% uses: [thm:firstorder, meat-core/thm:branch-formula, meat-core/thm:gradient]
+% mentions: [rem:fo-check-exposures, meat-core/lem:cone-concavity, req:support-rank-check, req:first-order-withdrawal]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Which way a hypothesis of Theorem~\ref{thm:firstorder} fails decides what
+the runtime checks of it are worth (Remark~\ref{rem:fo-check-exposures}). For
+(H-SUPP) the failure is on the unsafe side.
+
+\begin{remark}\label{rem:fo-danger}
+The functional $T$ is \emph{concave} on the positive semidefinite cone
+(Lemma~\ref{lem:cone-concavity}), hence so is each deficit
+$f_{\hat c,s}$ of \eqref{eq:f-def} and so is
+$K_{\hat c}=P_{\hat c}+\sum_sf_{\hat c,s}$ of \eqref{eq:fK}. The objective
+carries $K_{\hat c}$ only through the term
+$\frac{q(\hat c)}{\alpha-1}\log_2\frac{q(\hat c)}{K_{\hat c}}$, whose
+partial derivative in $K_{\hat c}$ is
+$-\frac{q(\hat c)\log_2\mathrm e}{(\alpha-1)K_{\hat c}}<0$ for
+$\alpha>1$, $q(\hat c)>0$, $K_{\hat c}>0$: the objective is
+\emph{decreasing} in $K_{\hat c}$, through a negated logarithm.
+Consequently, at a point where some branch operator does \emph{not} attain
+maximal support and a feasible direction $h$ enlarges it, the
+$+\infty$ one-sided derivative that
+Theorem~\ref{thm:gradient}\,(ii) permits for $T$, and hence for
+$K_{\hat c}$, becomes a $-\infty$ one-sided derivative for
+$O^{J}_{\alpha}$ along $h$. Two things follow. First, no subgradient of
+$O^{J}_{\alpha}$ exists at such a point in such a direction, so
+\eqref{eq:fo-subgrad} is not merely unproved there, it is false for the
+split-form gradient: the objective falls away faster than any linear
+model. Second, the split-form gradient then makes the linearisation
+\emph{over}-estimate $O^{J}_{\alpha}$ away from the face, so the bracket
+\eqref{eq:hlb} can exceed $\hlow$. The failure is on the \emph{unsafe}
+side. That is why (H-SUPP) is a hypothesis of the theorem rather than a
+convenience of the implementation, and why a failed check of it
+(Requirement~\ref{req:support-rank-check}) removes that iterate's bracket
+from the bound (Requirement~\ref{req:first-order-withdrawal}).
+\end{remark}

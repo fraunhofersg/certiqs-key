@@ -1,0 +1,65 @@
+% ---
+% id: reductions/lem:linear
+% kind: lem
+% title: "Linearity: post-processing, private settings and mixtures"
+% summary: >-
+%   A squashing relation survives a stochastic post-processing of both sides,
+%   and conditional relations with one common channel give relations for the
+%   weighted joint family and for its mixture. A private setting therefore
+%   enters as part of the outcome and opens no block of the target space.
+% prominence: standard
+% status: accepted
+% uses: [def:squashing]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Linearity of $\Lambda^{\dagger}$ lets both sides of a relation be reprocessed
+together. It does so in three ways, which differ only in what happens to a
+classical variable: it is post-processed, kept as an outcome, or averaged out.
+A comma in a subscript denotes a joint outcome and a bar a conditional POVM
+(\repodoc{spec/notation.md#26-comma-vs-bar-on-povm-subscripts}).
+
+\begin{lemma}\label{lem:linear}
+Let $\Lambda\colon\Tcl{\Bsys}\to\Tcl{\Qsys}$ be a channel.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(post-processing)} If $M\dsq_{\Lambda}F$ and $P(z|v)$ is a
+  stochastic matrix from $\Vset$ to a finite alphabet $\mathcal{U}$, then the
+  post-processed families $(PM)_z\coloneqq\sum_vP(z|v)M_v$ and
+  $(PF)_z\coloneqq\sum_vP(z|v)F_v$ are POVMs and
+  $PM\dsq_{\Lambda}PF$.
+\item \emph{(a private classical variable)} For each $t\in\Tset$ let
+  $\{M_{y|t}\}_{y\in\Yset}$ be a \emph{conditional} POVM on $\Bsys$ ---
+  complete for each fixed $t$, $\sum_yM_{y|t}=\idon{\Bsys}$ --- and let
+  $\{F_{y|t}\}_{y\in\Yset}$ be conditional POVMs
+  on the same $\Qsys$ with $M_{|t}\dsq_{\Lambda}F_{|t}$ for \emph{one common}
+  $\Lambda$. Let $(q_t)_{t\in\Tset}$ be a probability distribution. Then, over
+  the \emph{joint} alphabet $\Vset=\Yset\times\Tset$,
+  \begin{equation}\label{eq:private}
+    \big\{q_tM_{y|t}\big\}_{(y,t)}\;\dsq_{\Lambda}\;
+    \big\{q_tF_{y|t}\big\}_{(y,t)} ,
+  \end{equation}
+  which in the comma notation reads
+  $\{M_{y,t}\}\dsq_{\Lambda}\{F_{y,t}\}$ with $M_{y,t}=q_tM_{y|t}$ and
+  $F_{y,t}=q_tF_{y|t}$.
+\item \emph{(mixtures)} In the setting of (ii),
+  $\big\{\sum_tq_tM_{y|t}\big\}_y\dsq_{\Lambda}
+   \big\{\sum_tq_tF_{y|t}\big\}_y$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) $(PM)_z\succeq0$ and $\sum_z(PM)_z=\sum_v\big(\sum_zP(z|v)\big)M_v
+=\sum_vM_v=\idon{\Bsys}$, likewise for $PF$; and
+$\Lambda^{\dagger}\big((PF)_z\big)=\sum_vP(z|v)\Lambda^{\dagger}(F_v)
+=\sum_vP(z|v)M_v=(PM)_z$.
+(ii) $\Lambda^{\dagger}\big(q_tF_{y|t}\big)=q_t\Lambda^{\dagger}(F_{y|t})
+=q_tM_{y|t}$ by linearity and the relation at each fixed $t$; and both joint
+families are POVMs since
+$\sum_{y,t}q_tM_{y|t}=\sum_tq_t\big(\sum_yM_{y|t}\big)
+=\sum_tq_t\idon{\Bsys}=\idon{\Bsys}$, using completeness of each conditional
+POVM, and likewise for $F$.
+(iii) is (ii) followed by (i) for the stochastic matrix that forgets $t$.
+\end{proof}

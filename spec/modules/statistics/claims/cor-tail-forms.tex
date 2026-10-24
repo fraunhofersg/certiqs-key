@@ -1,0 +1,47 @@
+% ---
+% id: statistics/cor:tail-forms
+% kind: cor
+% title: "The two strict binomial tails"
+% summary: >-
+%   For every count k from 0 to n the strict tails of a binomial count N, the
+%   probabilities that N lies below k and above k, are regularised incomplete
+%   beta integrals, zero at k = 0 and at k = n respectively. These are the two
+%   tails the endpoint rules compare with their budgets.
+% prominence: standard
+% status: implemented
+% uses: [thm:binomial-tails]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.tails:upper_tail
+% lean:
+% ---
+
+An endpoint rule compares the probability that the count falls strictly below
+a lower endpoint, or strictly above an upper one, with a budget. Both strict
+tails follow from Theorem~\ref{thm:binomial-tails} by a shift of the count.
+
+\begin{corollary}\label{cor:tail-forms}
+Let $n\ge1$, $p\in[0,1]$ and let $\Ncount{}$ be binomial with parameters
+$(n,p)$, as in Theorem~\ref{thm:binomial-tails}. Then, for $0\le k\le n$,
+\begin{equation}\label{eq:tails-used}
+\begin{aligned}
+  \Pr[\Ncount{}<k]&=\Pr[\Ncount{}\le k-1]
+  =\begin{cases}0,&k=0,\\[2pt] \Ireg{1-p}{n-k+1}{k},&1\le k\le n,\end{cases}\\[4pt]
+  \Pr[\Ncount{}>k]&=\Pr[\Ncount{}\ge k+1]
+  =\begin{cases}\Ireg{p}{k+1}{n-k},&0\le k\le n-1,\\[2pt] 0,&k=n.\end{cases}
+\end{aligned}
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+Both are obtained from \eqref{eq:uppertail}--\eqref{eq:lowertail} by
+substituting $k-1$ and $k+1$ respectively, $\Ncount{}$ being integer-valued.
+For the first form: at $k=0$ the boundary value $\Pr[\Ncount{}\le k-1]=0$ for
+$k-1<0$ of Theorem~\ref{thm:binomial-tails} applies; for $1\le k\le n$ one has
+$0\le k-1\le n-1$, and \eqref{eq:lowertail} at $k-1$ gives
+$\Ireg{1-p}{n-(k-1)}{(k-1)+1}=\Ireg{1-p}{n-k+1}{k}$. For the second form: for
+$0\le k\le n-1$ one has $1\le k+1\le n$, and \eqref{eq:uppertail} at $k+1$
+gives $\Ireg{p}{k+1}{n-(k+1)+1}=\Ireg{p}{k+1}{n-k}$; at $k=n$ the boundary
+value $\Pr[\Ncount{}\ge k+1]=0$ for $k+1>n$ of Theorem~\ref{thm:binomial-tails} applies.
+\end{proof}

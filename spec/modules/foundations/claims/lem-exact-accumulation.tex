@@ -1,0 +1,61 @@
+% ---
+% id: foundations/lem:exact-accumulation
+% kind: lem
+% title: "Exactness of a sum that rounds nowhere"
+% summary: >-
+%   A sequential sum rounds nowhere exactly when every exact partial sum is a
+%   binary64 number, and then the computed sum equals the exact sum at every
+%   step. A predicate stated on such a sum is a predicate on the declared values
+%   themselves.
+% prominence: main
+% status: accepted
+% uses: [def:declared-order, def:binary64]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{lemma}\label{lem:exact-accumulation}
+Let $(x_1,\dots,x_n)$ be a finite sequence of elements of
+$\mathbb{B}_{\mathbb{C}}$, or of matrices of one shape over
+$\mathbb{B}_{\mathbb{C}}$, such as declared values or the computed inner sums
+of a sum of sums, with sequential sum $(S_i)_{i=0}^{n}$ and computed
+sequential sum $(\hat S_i)_{i=0}^{n}$ (Definition~\ref{def:declared-order}).
+The following are equivalent:
+\begin{enumerate}[label=(\alph*),leftmargin=2.4em]
+\item the accumulation rounds nowhere;
+\item $\hat S_i=S_i$ for every $0\le i\le n$;
+\item for every $1\le i\le n$, the real and the imaginary part of every entry
+  of $S_i$ are binary64 numbers.
+\end{enumerate}
+If they hold, the computed sum $\hat S_n$ is the exact sum
+$\sum_{i=1}^{n}x_i$.
+\end{lemma}
+
+\begin{proof}
+The map $\mathrm{fl}$ acts on the real and the imaginary part of every entry
+separately (Definition~\ref{def:binary64}\,(ii)), and $S_i$ and $\hat S_i$ are
+formed entry by entry, so it suffices to prove the lemma for a sequence of
+real numbers $x_i\in\mathbb{B}$.
+
+(a)$\Rightarrow$(b). By induction on $i$: $\hat S_0=0=S_0$, and if
+$\hat S_{i-1}=S_{i-1}$, then (a) gives
+$\hat S_i=\hat S_{i-1}+x_i=S_{i-1}+x_i=S_i$.
+
+(b)$\Rightarrow$(c). Let $1\le i\le n$. The value
+$\hat S_i=\mathrm{fl}(\hat S_{i-1}+x_i)$ lies in $\mathbb{B}\cup\{\pm\infty\}$,
+by the first property of $\mathrm{fl}$ where $\hat S_{i-1}$ is finite and by
+its definition on $\pm\infty$ otherwise. By (b) it equals the real number
+$S_i$, so $S_i\in\mathbb{B}$.
+
+(c)$\Rightarrow$(a). We show by induction on $i$ that $\hat S_i=S_i$ and that
+the $i$-th addition is exact. For $i=0$, $\hat S_0=S_0=0$. Let $1\le i\le n$
+and $\hat S_{i-1}=S_{i-1}$. Then $\hat S_{i-1}$ is finite, and
+$\hat S_{i-1}+x_i=S_i\in\mathbb{B}$ by (c), so the second property of
+$\mathrm{fl}$ gives $\hat S_i=\mathrm{fl}(S_i)=S_i=\hat S_{i-1}+x_i$: the
+$i$-th addition is exact, and $\hat S_i=S_i$.
+
+Finally, if (b) holds then $\hat S_n=S_n=\sum_{i=1}^{n}x_i$ by
+\eqref{eq:seqsum}.
+\end{proof}

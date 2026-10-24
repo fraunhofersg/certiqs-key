@@ -1,0 +1,53 @@
+% ---
+% id: protocol-compiler/rem:completeness
+% kind: rem
+% title: "The two directions of the validator"
+% summary: >-
+%   Soundness keeps an ill-formed declaration from being emitted; completeness,
+%   which holds for every target condition but feasibility, makes a refusal
+%   name a real defect. A refusal at V7 means only that no verified feasible
+%   state was shown.
+% prominence: standard
+% status: accepted
+% uses: [thm:validator-soundness, thm:feasibility]
+% mentions: [req:witness-refusal-meaning, req:feasibility-witness]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:completeness}
+The two directions do different jobs and it matters which one is available
+where. \emph{Soundness} --- Theorem~\ref{thm:validator-soundness}\,(i), and it holds for all
+eight conditions --- is the safety direction: without it the compiler could
+emit a declaration that passes every check and is nonetheless ill-formed, which
+is the failure this module exists to prevent, since a downstream engine
+consumes D(i)--D(viii) as hypotheses without re-deriving them. \emph{Completeness}
+is what makes a \emph{refusal} informative: where it holds, a well-formed
+declaration is never rejected, so a refusal names a real defect and not a
+limitation of the checker. It holds for D(i)--D(vi) and D(viii)
+(Theorem~\ref{thm:validator-soundness}\,(ii)); both directions of each of those pairs are
+proved, not just the one that keeps bad declarations out. Both directions
+are read on the declared numbers: a pass buys D(i)--D(viii) of the declared
+numbers, which is what the consuming engine requires of them, and a
+declaration well-formed of those numbers passes every check but V7.
+
+Completeness does \emph{not} hold for D(vii), and that is a limitation of
+this checker (Theorem~\ref{thm:validator-soundness}\,(iii)). \emph{Its scope is the third
+branch of V7 and no wider}: a declaration with an empty constraint list
+passes on branch (a), and one whose feasible set contains the default
+candidate \eqref{eq:witness-empty} passes on branch (b), with nothing supplied
+in either case. What is refused is a well-formed declaration with a non-empty
+constraint list whose feasible set does not contain the default candidate and
+for which no witness was supplied. Three consequences follow. A refusal at V7
+means ``I was not shown a feasible state, and the one I tried is not one'',
+never ``there is none'' (Requirement~\ref{req:witness-refusal-meaning}).
+Whoever presents a declaration refused for that reason has a remedy inside
+this interface --- supply $\omega^{\star}$
+(Requirement~\ref{req:feasibility-witness}) --- and no other check has that
+character. And the asymmetry is the deliberate one: the direction that is
+missing costs a rejected good declaration, while the direction that is present
+is the one whose absence would cost a consumed bad one.
+\end{remark}

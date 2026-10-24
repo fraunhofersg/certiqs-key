@@ -1,0 +1,50 @@
+% ---
+% id: reductions/rem:variants
+% kind: rem
+% title: "Variants of the factorization"
+% summary: >-
+%   The factorization holds verbatim for round-dependent squashers, for a
+%   private per-round setting squashed by one common channel, and for a
+%   correlated n-round device. A setting-dependent squashing channel does not
+%   fit, and hands the setting register to the adversary.
+% prominence: standard
+% status: accepted
+% uses: [thm:factorization]
+% mentions: [lem:linear, def:joint-family, req:round-homogeneous-emission, ass:probe]
+% assumes: [A-ROUND-SQ]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:variants}
+The proof of Theorem~\ref{thm:factorization} uses only linearity and the
+single-round identity, so it applies verbatim to round-dependent squashers
+($M^{(j)}\dsq_{\Lambda_j}F^{(j)}$, composite channel
+$\bigotimes_j\Lambda_j$); to a private per-round setting drawn from a family
+$\{M^{(s)}\}_s$ squashed by a \emph{common} channel with
+$\Lambda^{\dagger}(F^{(s)}_v)=M^{(s)}_v$, where the controlled measurement
+channel factorizes through $\idmap_S\otimes\Lambda$; and to a genuinely
+correlated $n$-round device, where a joint POVM $\{M_{\vec v}\}$ on
+$\Bsys^{n}$ and a channel $\Lambda^{(n)}$ with
+$\Lambda^{(n)\dagger}(F_{v_1}\otimes\dots\otimes F_{v_n})=M_{\vec v}$ give the
+same conclusion. A device with detector memory across rounds, which
+Assumption~\ref{ass:round} excludes, is a joint POVM on $\Bsys^{n}$, so
+where a channel $\Lambda^{(n)}$ as above exists, \eqref{eq:sameoutput} holds
+for it at a fixed input; nothing is asserted of it in the round model. What
+Assumption~\ref{ass:round} fixes is that one physical POVM describes every
+round, with no memory across rounds; that the declared inputs describe one
+round and are applied to all $n$, with one squashing channel for every round,
+is the case the engine emits
+(Requirement~\ref{req:round-homogeneous-emission}).
+A setting-\emph{dependent} family $\Lambda^{(s)}$ does
+\emph{not} fit this scheme and yields only the weaker model in which the
+setting register is handed to the adversary; that is why the probe setting
+enters this contract as a joint outcome under one common channel
+(Definition~\ref{def:joint-family}, Lemma~\ref{lem:linear}\,(ii)) and never as
+a setting-dependent squasher. If the setting is not drawn as
+Assumption~\ref{ass:probe} says, the \tref{joint family} $\{q_tM_{y|t}\}$ is not a
+POVM with a common squashing channel and the setting register would have to
+be handed to the adversary; a probe setting the adversary can predict or
+influence also breaks the countermeasure it models, outside this contract.
+\end{remark}

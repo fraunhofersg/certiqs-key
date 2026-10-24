@@ -1,0 +1,45 @@
+% ---
+% id: meat-core/ass:eve-dim
+% kind: ass
+% title: "The adversary's registers are finite-dimensional"
+% summary: >-
+%   Every register of the adversary, her initial register and her memories, is
+%   finite-dimensional, with no bound on its dimension. No claim rests on it:
+%   the analysed models have such registers by definition, and
+%   [[cor:composed-security]] reaches an adversary whose memory has any dimension.
+% prominence: standard
+% status: superseded
+% uses: [foundations/def:round-model]
+% assumes: []
+% refs:
+%   - "arqand2025meat, Sec. 2, the convention stated below its Table 1"
+% provenance: newly-derived
+% short_id: A-EVE-DIM
+% verification: never
+% category: channel-and-adversary
+% affects: [secrecy]
+% user_statement: >-
+%   No run rests on this assumption: the security statement of a run holds
+%   against an attacker whose quantum memory has any size, finite or infinite
+%   ([[cor:composed-security]]). The assumption states that the attacker's quantum
+%   memory is finite-dimensional, of any size she likes.
+% lean:
+% notes: "Superseded for every run: no claim assumes A-EVE-DIM. The analysed models keep finite-dimensional adversary registers as part of their definitions (the round model of foundations/def:round-model, and the strategies of reductions/lem:source-transfer), at every fixed dimension, and cor:composed-security carries the run's security statement to registers of any dimension through lem:memory-lift. Its ledger row and machine key stay in the interface's unemitted rows, because the claim-closure table lists every assumption, superseded ones included, with its key."
+% ---
+
+The source of the imported accumulation theorem states its convention as
+``we will assume that all systems are finite-dimensional, but we will not
+impose any bounds on the system dimensions unless otherwise specified''
+\cite[Sec.~2, the convention stated below its Table~1]{arqand2025meat}. Read for the adversary's registers, that convention would
+be a premise about her, and this assumption states it. The analysed models
+of these contracts keep it instead as part of their definitions, at every
+fixed finite dimension, and the security statement of a run reaches an
+adversary whose memory has any dimension by a limit over those dimensions;
+so no claim assumes it.
+
+\begin{assumption}\label{ass:eve-dim}
+(i) Every register of the adversary in the \tref{round model}
+(\xref{foundations/def:round-model}), her initial register $E_0$, her
+outgoing memories $E'_j$ and her registers $E_j$ for $j=1,\dots,n$, is
+finite-dimensional, of arbitrary finite dimension.
+\end{assumption}

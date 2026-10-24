@@ -1,0 +1,204 @@
+# The bb84 instance as a protocol document: the packaged template.
+#
+# It IS the instance: instances/bb84/surface.py loads it. Its
+# descriptor, parameter table, presets, default_config, specification and run
+# record are held equal by the equivalence gate:
+# tests/unit/test_declared_lowering.py holds it equal to
+# instances/bb84/specification.py's bb84_specification and to the reference
+# preparation built from that declaration.
+#
+# PACKAGED, so it may write the instance's own identity: the id bb84, its
+# readme, and the record_label bb84 (the instance string its honest-model note
+# records). Only a document loaded from instances/<id>/protocol.yaml is
+# packaged (instances.declared.load_packaged).
+#
+# TO START A CUSTOM PROTOCOL FROM IT (the MCP server serves it as
+# get_reference("template", name="bb84")): copy it, give identity a new id,
+# title and summary, delete identity.readme and identity.record_label, edit
+# what differs, and check it with describe_instance(document=...). The format
+# guide is instances/declared/README.md.
+format: certiqs-key/protocol-document
+format_version: '1'
+identity:
+  id: bb84
+  title: Ideal qubit BB84
+  summary: Trusted-source BB84 with configurable basis weights, a directly declared
+    qubit measurement and an explicit identity reduction link. The honest channel
+    is depolarizing and is parameterized by its quantum bit error rate. This instance
+    provides a simple reference for optical BB84 runs.
+  readme: instances/bb84/README.md
+  record_label: bb84
+parameters:
+  model_absent: refuse
+  device_absent: refuse
+  table:
+  - name: qber
+    section: model
+    kind: fraction
+    quantity: probability
+    default: 0
+    domain:
+      form: interval
+      lower: 0
+      upper: 1/2
+      upper_open: true
+    snapped: false
+    meaning: Error rate Q of the honest depolarizing channel in either basis; a model
+      input, not an observed rate
+  - name: alice_z
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 1/2
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+      lower_open: true
+      upper_open: true
+    snapped: false
+    meaning: Probability that Alice prepares in the Z basis; Alice's two basis weights
+      sum to one
+  - name: alice_x
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 1/2
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+      lower_open: true
+      upper_open: true
+    snapped: false
+    meaning: Probability that Alice prepares in the X basis; Alice's two basis weights
+      sum to one
+  - name: bob_z
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 1/2
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+      lower_open: true
+      upper_open: true
+    snapped: false
+    meaning: Probability that Bob measures in the Z basis; Bob's two basis weights
+      sum to one
+  - name: bob_x
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 1/2
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+      lower_open: true
+      upper_open: true
+    snapped: false
+    meaning: Probability that Bob measures in the X basis; Bob's two basis weights
+      sum to one
+presets:
+- name: BB84-w1
+  note: the balanced instance; every weight dyadic, so the products are exact.
+  device:
+    alice_z: 1/2
+    alice_x: 1/2
+    bob_z: 1/2
+    bob_x: 1/2
+- name: BB84-w2
+  note: asymmetric and still dyadic.
+  device:
+    alice_z: 3/4
+    alice_x: 1/4
+    bob_z: 1/2
+    bob_x: 1/2
+- name: BB84-w3
+  note: DELIBERATELY NON-DYADIC, so that the exact-to-binary64 boundary is forced
+    into the open rather than hidden behind fixtures that happen to convert without
+    loss. The registry's own words.
+  device:
+    alice_z: 2/3
+    alice_x: 1/3
+    bob_z: 4/5
+    bob_x: 1/5
+snap:
+  lattice_exponent: 40
+  groups: [[alice_z, alice_x], [bob_z, bob_x]]
+run_defaults:
+  rounds: 10000
+  completeness_budget: 1/1000000
+  declared_tolerance: 0
+  parameters: {alpha: 1.5, eps_pa: 2^-30, eps_ev: 2^-30, lambda_ec: 0}
+  sections: replace
+alphabets:
+  signal: {product: {dims: {basis: [Z, X], bit: [0, 1]}, label: "({basis},{bit})"}}
+  ann:
+    union:
+      - {enum: [{label: Z, basis: Z}]}
+      - {product: {dims: {bit: [0, 1]}, label: "(X,{bit})"}, attrs: {basis: X}}
+source:
+  kind: trusted_ensemble
+  alphabet: signal
+  alice_dim: 2
+  transmitted_dim: 2
+  weights:
+    (Z,0): {expr: alice_z / 2}
+    (Z,1): {expr: alice_z / 2}
+    (X,0): {expr: alice_x / 2}
+    (X,1): {expr: alice_x / 2}
+  states:
+    (Z,0): {matrix: [[1, 0], [0, 0]]}
+    (Z,1): {matrix: [[0, 0], [0, 1]]}
+    (X,0): {matrix: [[1/2, 1/2], [1/2, 1/2]]}
+    (X,1): {matrix: [[1/2, -1/2], [-1/2, 1/2]]}
+  alice:
+    choice_family:
+      choices: [Z, X]
+      weights: {Z: {param: alice_z}, X: {param: alice_x}}
+      conditional_alphabets: {Z: [0, 1], X: [0, 1]}
+      conditional_elements: conjugate_states
+      joint_label: "({choice},{outcome})"
+  alice_marginal: {scale: {factor: 1/2, of: {identity: 2}}}
+  certificate:
+    form: pure
+    psi: {outer: {vector: [1, 0, 0, 1], squared_norm: 2}}
+    virtual_dim: 2
+stations:
+  - id: bob
+    party: B
+    measurement:
+      kind: declared_povm
+      dimension: 2
+      choice_family:
+        choices: [Z, X]
+        weights: {Z: {param: bob_z}, X: {param: bob_x}}
+        conditional_alphabets: {Z: [0, 1], X: [0, 1]}
+        conditional_elements:
+          Z: {"0": {matrix: [[1, 0], [0, 0]]}, "1": {matrix: [[0, 0], [0, 1]]}}
+          X:
+            "0": {matrix: [[1/2, 1/2], [1/2, 1/2]]}
+            "1": {matrix: [[1/2, -1/2], [-1/2, 1/2]]}
+        joint_label: "({choice},{outcome})"
+    reduction: {links: [{kind: identity}]}
+public:
+  partition: default
+  announcements:
+    alice: {alphabet: ann, map: [{when: {x.basis: Z}, value: Z}, {value: "(X,{x.bit})"}]}
+    bob: {alphabet: ann, map: [{when: {v.choice: Z}, value: Z}, {value: "(X,{v.outcome})"}]}
+  sifting: [{when: {A: Z, B: Z}, value: pass}, {value: fail}]
+  key: {holder: A, alphabet: [0, 1], rule: [{value: {int: o.bit}}]}
+  acceptance:
+    alphabet: [gen, ok, err, disc]
+    map:
+      - {when: {A: Z, B: Z}, value: gen}
+      - {when: {A.basis: X, B.basis: X, A.bit: {eq: B.bit}}, value: ok}
+      - {when: {A.basis: X, B.basis: X}, value: err}
+      - {value: disc}
+honest:
+  library: depolarized_bell_pair
+  bind: {qber: {param: qber}}
+channel_interface: {variant: qubit_identity}

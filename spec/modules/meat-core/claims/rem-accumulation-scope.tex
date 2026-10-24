@@ -1,0 +1,36 @@
+% ---
+% id: meat-core/rem:accumulation-scope
+% kind: rem
+% title: "Scope of the accumulated entropy bound"
+% summary: >-
+%   The bound of [[thm:accumulated-entropy]] covers adaptive attacks with a
+%   finite-dimensional memory of any size, the tensor-product state model being
+%   a special case. In untrusted-source mode it holds with a smaller
+%   single-round rate, the price of not assuming a trusted source.
+% prominence: standard
+% status: accepted
+% uses: [thm:accumulated-entropy]
+% mentions: [lem:memory-lift, cor:composed-security]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:accumulation-scope}
+The bound \eqref{eq:c3} of Theorem~\ref{thm:accumulated-entropy} covers
+every attack in which Eve adapts each round to all earlier announcements and
+keeps a quantum memory between rounds, finite-dimensional and of any size as
+every register of the round model is; the security of the key, which this
+bound feeds, extends to a memory of any dimension
+(Corollary~\ref{cor:composed-security}, through
+Lemma~\ref{lem:memory-lift}). The tensor-product state
+model ($\rho=\Mprot^{\otimes n}[\omega]$,
+$\omega_{A_1^n}=\tau_A^{\otimes n}$) is the special case in which each
+$\Aev_j$ routes a pre-prepared register to $\Qsys$. In
+untrusted-source mode the left-hand side and the constant
+$\hqkd$ are the same expressions read with $\omega$ unconstrained
+beyond normalization; the bound is then weaker (a larger inner feasible
+set gives a smaller $\hqkd$), which is the direction of conservatism
+and the price of not assuming a trusted source.
+\end{remark}

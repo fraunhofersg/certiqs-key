@@ -1,0 +1,28 @@
+% ---
+% id: receiver/detector-imperfections/req:efficiency-schema
+% kind: req
+% title: "Detector efficiency and component loss in separate fields"
+% summary: >-
+%   The input schema keeps a detector efficiency and a C7 element in different
+%   fields, so a C7 element is never read as a detector efficiency. The two
+%   enter the compiled matrix at different sites ([[thm:efficiency]] (iii)).
+% prominence: standard
+% status: implemented
+% uses: [thm:efficiency]
+% mentions: [receiver/def:compile]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.request:DetectorPort
+% lean:
+% ---
+
+A detector efficiency enters the compiled matrix only through the terminal
+factor $D_\eta$ of Definition~\ref{def:compile}
+(Theorem~\ref{thm:efficiency}\,(iii)); a C7 element is a component of the graph,
+applied at its own position in the chain.
+
+\begin{requirement}\label{req:efficiency-schema}
+A C7 element is not a detector efficiency, and the engine's input schema keeps
+the two in different fields.
+\end{requirement}

@@ -1,0 +1,53 @@
+% ---
+% id: statistics/binomial-box/def:construction
+% kind: def
+% title: "The construction map"
+% summary: >-
+%   The construction map bounds each constrained outcome by its guarded count
+%   endpoints divided by the round count, gives every other outcome the bounds
+%   0 and 1, and intersects the box with the probability simplex. Its output
+%   is a polytope in canonical box form built from the honest envelope.
+% prominence: standard
+% status: implemented
+% uses: [def:endpoint-rule, def:interval, statistics/def:taxonomy, statistics/def:envelope]
+% mentions: [req:rule-in-force]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.construction:construct
+% lean:
+% ---
+
+The map is defined for every \tref{admissible endpoint rule}; which rule is
+used, by default the \tref{exact binomial quantile rule} of
+Definition~\ref{def:interval}, is Requirement~\ref{req:rule-in-force}.
+
+\begin{definition}\label{def:construction}
+Let
+$(\Chatset,{\honest}^{-},{\honest}^{+},n,\ecomp,\Chatcon,\varepsilon^{-},\varepsilon^{+})$
+be the data of an \tref{admissible input} (Definition~\ref{def:endpoint-rule}),
+where $({\honest}^{-},{\honest}^{+})$ is its \tref{honest envelope}
+(Definition~\ref{def:envelope}) --- an input $\honest$ in the
+\tref{point form} being read as the \tref{degenerate envelope}
+$(\honest,\honest)$ --- and let $R$ be an \tref{admissible endpoint rule}
+(Definition~\ref{def:endpoint-rule}). With the \tref{guarded endpoints}
+$k^{\pm}$ of $R$, \eqref{eq:guard}, define
+\begin{equation}\label{eq:boxbounds}
+  q^{-}(\hat c)\coloneqq
+  \begin{cases}k^{-}(\hat c)/n,&\hat c\in\Chatcon,\\[2pt] 0,&\hat c\notin\Chatcon,\end{cases}
+  \qquad
+  q^{+}(\hat c)\coloneqq
+  \begin{cases}k^{+}(\hat c)/n,&\hat c\in\Chatcon,\\[2pt] 1,&\hat c\notin\Chatcon.\end{cases}
+\end{equation}
+The \term[The map that turns an admissible input and an admissible endpoint
+rule into the acceptance box: the guarded count endpoints over n on the
+constrained outcomes, 0 and 1 elsewhere, intersected with the
+simplex.]{construction map} $\mathsf{Acc}_R$ --- written $\mathsf{Acc}$
+where the rule is clear or is the default --- returns the
+$\mathrm{polytope}$ geometry in \tref{canonical box form} with these
+$(\qlo,\qhi)$, i.e.\ the data \eqref{eq:boxrows}, and
+\begin{equation}\label{eq:accset}
+  \acSet\ \coloneqq\ \{\mathbf{q}\in\simplex{\Chatset}:\
+  q^{-}(\hat c)\le q(\hat c)\le q^{+}(\hat c)\ \ \forall\hat c\in\Chatset\}.
+\end{equation}
+\end{definition}

@@ -1,0 +1,74 @@
+% ---
+% id: reductions/cor:instances
+% kind: cor
+% title: "Three special cases of instrument-conditioned squashing"
+% summary: >-
+%   The branching rule applies to a convex mixture with a known weight, to a
+%   measurement block diagonal for an orthogonal decomposition and to a
+%   register read by a POVM. Only the known mixture fixes the branch weight as
+%   a number without further information.
+% prominence: standard
+% status: accepted
+% uses: [lem:master, lem:top]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Three choices of the generalized instrument recur in this module's
+constructions: a known mixture, a split of the input space into orthogonal
+blocks, and a POVM measurement of a register that arrives with the light.
+
+\begin{corollary}\label{cor:instances}
+Let $\Lambda_j$ and $F^{(j)}$ be branch channels and branch targets as in
+Lemma~\ref{lem:master}.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(convex mixture with a known weight)} If
+  $M_v=(1-q)G_v+qR_v$ for POVMs $G,R$ on $\Bsys$ and $q\in[0,1]$, with
+  $G\dsq_{\Lambda_G}F^{(G)}$ and $R$ \emph{arbitrary}, then
+  $M\dsq\big\{F^{(G)}_v\dsum\dyad{v}_{\Flag}\big\}_v$, with the sound branch
+  constraints $\tr[\Pi_1\sigma]=1-q$ and $\tr[\Pflag\sigma]=q$, in the operator
+  form of Lemma~\ref{lem:master}\,(iv).
+\item \emph{(block-wise squashing)} Let $\Hs{\Bsys}=\bigoplus_j\Hs{\Bsys_j}$ be
+  a finite orthogonal decomposition and let every $M_v$ be block diagonal,
+  $M_v=\bigoplus_jM^{(j)}_v$, with $M^{(j)}\dsq_{\Lambda_j}F^{(j)}$. Then
+  $M\dsq\bigoplus_jF^{(j)}$.
+\item \emph{(POVM-conditioned squashing)} If $\Bsys=\Bsys_0D$ with a POVM
+  $\{N_j\}_{j\in J}$ on $D$ and $M_v=\sum_jM_{v|j}\otimes N_j$ with
+  $M_{|j}\dsq_{\Lambda_j}F_{|j}$ on $\Qsys_j$, then
+  $\{M_v\}_v\dsq_{\Lambda}\big\{\bigoplus_jF_{v|j}\big\}_v$ with
+  \begin{equation}\label{eq:povmcond}
+    \Lambda(\rho)=\bigoplus_{j\in J}\Lambda_j\Big(
+      \tr_{D}\big[(\idon{\Bsys_0}\otimes N_j^{1/2})\,\rho\,
+      (\idon{\Bsys_0}\otimes N_j^{1/2})\big]\Big).
+  \end{equation}
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+Apply Lemma~\ref{lem:master} with, respectively:
+
+(i) $\Ins_1=(1-q)\idmap$ and $\Ins_2=q\,\idmap$, branch targets $F^{(G)}$ and
+the flag PVM of Lemma~\ref{lem:top} (which exists for the unknown $R$), so that
+$M_{v,1}=(1-q)G_v$ and $M_{v,2}=qR_v$ and part~(iii) gives
+$\sum_jM_{v,j}=M_v$. Here $\Ins_j^{\dagger}(\idon{})$ is a multiple of
+$\idon{\Bsys}$, which is the hypothesis of part~(iv).
+
+(ii) $\Ins_j(\rho)\coloneqq P_j\rho P_j$ read as an operator on $\Bsys_j$, for
+$P_j$ the projection onto $\Hs{\Bsys_j}$; then $\Ins_j^{\dagger}(X_j)$ is
+$X_j$ embedded in the $j$-th block, so $M_{v,j}$ is $M^{(j)}_v$ so embedded and
+part~(iii) gives $\sum_jM_{v,j}=M_v$. The instrument condition is
+$\sum_jP_j=\idon{\Bsys}$.
+
+(iii) $\Ins_j(\rho)\coloneqq
+\tr_{D}\big[(\idon{\Bsys_0}\otimes N_j^{1/2})\rho(\idon{\Bsys_0}\otimes
+N_j^{1/2})\big]$, which is CP as a Kraus map followed by a partial trace, and
+satisfies $\sum_j\tr\Ins_j(\rho)=\sum_j\tr[(\idon{}\otimes N_j)\rho]=\tr\rho$.
+Its adjoint is
+$\Ins_j^{\dagger}(X)=(\idon{}\otimes N_j^{1/2})(X\otimes\idon{D})
+(\idon{}\otimes N_j^{1/2})=X\otimes N_j$, the two factors commuting because
+they act on different tensor factors; hence
+$M_{v,j}=M_{v|j}\otimes N_j$ and part~(iii) gives
+$\sum_jM_{v,j}=\sum_jM_{v|j}\otimes N_j=M_v$.
+\end{proof}

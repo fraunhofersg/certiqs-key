@@ -1,0 +1,33 @@
+% ---
+% id: meat-core/frank-wolfe/req:per-sector-coupling
+% kind: req
+% title: "Coupling residual and record per Alice sector"
+% summary: >-
+%   In the general format a run decides the coupling condition of the relaxed
+%   feasible set per Alice sector, one residual per sector at the one declared
+%   coupling window, and records the frame and the row form per sector.
+% prominence: standard
+% status: implemented
+% uses: [rem:fo-general-format, prop:relaxed-set-properties]
+% mentions: [def:relaxed-feasible-set, meat-core/thm:choi, meat-core/req:row-form-record, meat-core/req:frame-recorded]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.joint_driver:coupling_residuals
+% lean:
+% ---
+
+In the general format the Choi program carries one coupling constraint per
+Alice sector (Theorem~\ref{thm:choi}), and the relaxed feasible set is read
+with the coupling constraint per Alice sector
+(Remark~\ref{rem:fo-general-format}\,(3)).
+
+\begin{requirement}\label{req:per-sector-coupling}
+On a declaration in the general format the engine decides the coupling
+condition of the relaxed feasible set of
+Definition~\ref{def:relaxed-feasible-set} per Alice sector, one coupling
+residual per Alice sector, each at the declared window
+\iface{iterate_coupling}; and the record names the frame and the row form
+per Alice sector (Requirements~\ref{req:frame-recorded}
+and~\ref{req:row-form-record}).
+\end{requirement}

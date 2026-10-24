@@ -1,0 +1,63 @@
+% ---
+% id: statistics/binomial-box/def:interval
+% kind: def
+% title: "The exact binomial quantile rule"
+% summary: >-
+%   The exact rule takes the largest lower count and the smallest upper count
+%   whose binomial tails meet their budgets, the lower at the envelope's lower
+%   value and the upper at its upper value. The guard then widens this raw
+%   interval to contain the envelope interval.
+% prominence: standard
+% status: implemented
+% uses: [def:endpoint-rule, statistics/def:envelope]
+% mentions: [prop:rule-exact, req:rule-in-force]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.intervals:extremal_endpoints
+% lean:
+% ---
+
+The exact binomial quantile rule takes the extremal binomial quantiles. It is an
+\tref{admissible endpoint rule}, \tref{monotone in the allocation}, by
+Proposition~\ref{prop:rule-exact}\,(ii), and it is the default rule
+(Requirement~\ref{req:rule-in-force}).
+
+\begin{definition}\label{def:interval}
+Fix an \tref{admissible input} (Definition~\ref{def:endpoint-rule}), with its
+round count $n\ge1$, its \tref{honest envelope} $({\honest}^{-},{\honest}^{+})$
+(Definition~\ref{def:envelope}; a single law $\honest$ is the
+\tref{degenerate envelope}), its constrained outcomes
+$\Chatcon\subseteq\Chatset$, its completeness budget $\ecomp\in[0,1)$ and its
+budget allocation $\varepsilon^{-},\varepsilon^{+}:\Chatcon\to\mathbb{Q}_{\ge0}$
+with $\sum_{\hat c\in\Chatcon}(\varepsilon^{-}(\hat c)+\varepsilon^{+}(\hat
+c))\le\ecomp$; in particular $0\le\varepsilon^{\pm}(\hat c)\le\ecomp<1$ for
+every $\hat c\in\Chatcon$. For $\hat c\in\Chatcon$ let $p_{\hat c}$ be the
+rule's argument --- by the \tref{side-wise reading} of
+Definition~\ref{def:endpoint-rule}, $p_{\hat c}=p^{-}_{\hat c}$ in
+\eqref{eq:kappaminus} and $p_{\hat c}=p^{+}_{\hat c}$ in \eqref{eq:kappaplus},
+both equal to $\honest(\hat c)$ for the degenerate envelope --- and let
+$\Ncount{\hat c}$ be binomial with parameters $(n,p_{\hat c})$. Define the
+\term[The largest lower count and the smallest upper count in 0 to n whose
+binomial tails meet their allocated budgets.]{extremal endpoints}
+\begin{align}
+  \kappa^{-}(\hat c)&\coloneqq\max\big\{k\in\{0,\dots,n\}:\
+    \Pr[\Ncount{\hat c}<k]\le\varepsilon^{-}(\hat c)\big\},
+    \label{eq:kappaminus}\\
+  \kappa^{+}(\hat c)&\coloneqq\min\big\{k\in\{0,\dots,n\}:\
+    \Pr[\Ncount{\hat c}>k]\le\varepsilon^{+}(\hat c)\big\}.
+    \label{eq:kappaplus}
+\end{align}
+The \term[The endpoint rule that returns the extremal endpoints, the
+extremal binomial quantiles of the two tail budgets.]{exact binomial quantile
+rule} is the endpoint rule
+$R^{\mp}_{\mathrm{ex}}(n,p_{\hat c},\varepsilon^{\mp}(\hat c))
+\coloneqq\kappa^{\mp}(\hat c)$. Its \tref{guarded endpoints} are those of
+\eqref{eq:guard} with $R^{\mp}=\kappa^{\mp}(\hat c)$, $\kappa^{-}(\hat c)$
+taken at $p^{-}_{\hat c}$ and $\kappa^{+}(\hat c)$ at $p^{+}_{\hat c}$, i.e.\
+\begin{equation*}
+  k^{-}(\hat c)=\min\big\{\kappa^{-}(\hat c),\ \lfloor n\,p^{-}_{\hat c}\rfloor\big\},
+  \qquad
+  k^{+}(\hat c)=\max\big\{\kappa^{+}(\hat c),\ \lceil n\,p^{+}_{\hat c}\rceil\big\}.
+\end{equation*}
+\end{definition}

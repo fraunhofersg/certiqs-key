@@ -1,0 +1,35 @@
+% ---
+% id: protocol-compiler/req:stochastic-weights
+% kind: req
+% title: "Stochastic matrix of a setting-dependent weighting"
+% summary: >-
+%   The declared matrix of a setting-dependent weighting is decided exactly:
+%   every entry non-negative by its sign and every row sum equal to one in the
+%   declared order without rounding. A negative entry or a row not summing
+%   exactly to one is refused with its own reason.
+% prominence: standard
+% status: implemented
+% uses: [def:weighted, thm:choice-encoding]
+% mentions: [foundations/req:declared-order]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.weights:setting_weighted_family
+% lean:
+% ---
+
+The setting-dependent form is built from a stochastic matrix $P$, and
+Theorem~\ref{thm:choice-encoding}\,(viii) states that a $P$ that is not one is
+refused; its proof gives the reason.
+
+\begin{requirement}\label{req:stochastic-weights}
+The engine decides the conditions of Definition~\ref{def:weighted} on the
+declared matrix $P$ of the \tref{setting-dependent form}: every entry
+$P(f\,|\,t)\ge0$ by its sign, and every row sum $\sum_fP(f\,|\,t)=1$ exactly,
+accumulated in the \tref{declared order} of the \tref{choice alphabet}
+(\xref{foundations/req:declared-order}) and required to
+\tref[rounds nowhere]{round nowhere}; the \tref{support of the weighting} is
+decided by the sign of each entry. A negative entry, or a row whose
+declared-order sum is not exactly $1$, is refused with
+\iface{choice_weight_not_stochastic}.
+\end{requirement}

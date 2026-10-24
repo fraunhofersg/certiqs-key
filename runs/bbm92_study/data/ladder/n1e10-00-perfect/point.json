@@ -1,0 +1,26 @@
+{
+ "alpha": "search",
+ "device": {},
+ "f_ec": 1.1,
+ "id": "n1e10-00-perfect",
+ "labels": {
+  "coincidences": null,
+  "effect": "perfect",
+  "loss_db": 0.0,
+  "rounds": 10000000000,
+  "rung": 0,
+  "source": "",
+  "value": ""
+ },
+ "model": {
+  "alice_transmittance": "1",
+  "bob_transmittance": "1"
+ },
+ "parameters": {},
+ "rounds": 10000000000,
+ "solver": {
+  "budget_seconds": 600,
+  "max_iterations": null,
+  "method": "auto"
+ }
+}

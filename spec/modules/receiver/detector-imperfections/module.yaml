@@ -1,0 +1,138 @@
+id: detector-imperfections
+kind: submodule
+version: 0.13.0
+title: "Detector imperfections"
+abstract: >-
+  This submodule adds detector efficiency and dark counts to the passive
+  receiver, and its two main results say how each acts on the measurement.
+  Efficiency uniform within a port scales that port's Gram and
+  enters at the single terminal layer of the compiled matrix
+  ([[thm:efficiency]]); efficiency that varies within a port is not a scalar and
+  can lower a Gram's rank. Dark counts are a classical channel on the
+  recorded click pattern that adds clicks and never removes them. Such a
+  channel preserves the POVM structure and improves the multiclick bound
+  p_mc to (1 − r_min)p_mc + r_min, r_min being the least favourable
+  transition from every non-multiclick outcome, the no-click outcome
+  included ([[thm:dark-counts]]). A declared channel is admitted at two
+  receiver tolerances, and the bound a downstream module composes with
+  carries their cost explicitly. The emitted blocks are those of the
+  dark-composed family, enclosed rigorously for any declared parameters and
+  exact where the enclosures have radius zero; loss and a dark count in
+  every port make each of its elements positive definite on every block,
+  and neither can be dropped ([[prop:noise-floor]]), which is the floor a
+  model needs if no snap of its blocks is to revive a zero row. A receiver
+  without a probe is a uniform loss of transmittance t followed by a
+  normalized station whose efficiencies are divided by t, for any t from its
+  largest efficiency η_max to one, so that loss can be handed to the
+  adversary with the observed statistics unchanged
+  ([[prop:efficiency-normalization]]); by default the engine compiles the
+  normalized station at t = η_max/(99/100), and the declared receiver
+  (t = 1) where η_max ≥ 99/100.
+reading_groups:
+- title: Detector efficiency
+  start: thm:efficiency
+  abstract: >-
+    The main result, [[thm:efficiency]], is that detector efficiency is a
+    parameter of the terminal layer, applied after every chain element, that
+    multiplies each port Gram by its efficiency when uniform within the port.
+    The remarks show a within-port
+    attenuation that lowers a rank, why a product of transmittances is the
+    wrong loss audit in an interferometer, and why power data and click data
+    differ by exactly the efficiencies.
+- title: Dark counts
+  start: def:darkadm
+  abstract: >-
+    A dark-count channel is column-stochastic and monotone. The main result,
+    [[thm:dark-counts]], is that at every setting it keeps the composed family
+    a photon-number block-diagonal POVM, never moves weight out of the
+    multiclick set, and
+    improves the multiclick bound; the minimum defining the improvement must
+    run over the no-click column too. A declared channel is admitted at two receiver
+    tolerances, and the composed inequality that holds for every admitted
+    channel carries both slacks ([[prop:dark-slack-bound]]).
+- title: The dark-composed family and the noise floor
+  start: def:dark-composed
+  abstract: >-
+    The dark-composed family applies the dark-count channel to every
+    setting's click patterns and then the coarse-graining
+    ([[def:dark-composed]]). A dark-count channel has rational entries and
+    carries enclosures of the click-pattern blocks to enclosures of the
+    dark-composed ones, which form the reference handed beside the snap
+    ([[cor:exact-dark-composed]]). The main
+    point of the section is [[prop:noise-floor]]: loss and a dark-count
+    probability in (0, 1) in every port make every dark-composed element
+    positive definite on every photon-number block, with an explicit floor,
+    and without either some element is singular. The closing remark says
+    what a declaration should therefore model, why an ideal device measuring
+    in a rotated basis dominates no lattice family beyond one photon at a
+    small weight (for the two-photon block of the passive BB84 receiver at a
+    balanced basis choice, 1/4), and why a run at a cutoff of two or more
+    photons that uses no enclosed reference typically rests on its snap.
+- title: Efficiency normalization
+  start: def:pure-loss
+  abstract: >-
+    A common factor of the port Grams is a uniform loss that commutes with
+    every passive element, so it can be moved in front of the receiver and
+    counted as part of the channel. The section defines the pure-loss channel
+    and the normalized station, whose efficiencies are the receiver's divided
+    by a factored loss t, and its main point is
+    [[prop:efficiency-normalization]]: every click pattern of the receiver,
+    and every dark-count composition of them, is the pull-back of the
+    normalized station's through the pure-loss channel of transmittance t.
+    The remarks show that at low efficiency the normalization removes a
+    squared-efficiency factor from the two-photon multiclick block, and say
+    what it leaves in place, efficiency mismatch included.
+- title: Requirements
+  start: req:efficiency-schema
+  abstract: >-
+    The engine keeps detector efficiency and component loss in separate
+    declared fields, and it records every declared transmittance and the
+    efficiency convention of the declared numbers. It compiles a receiver
+    without a probe at its normalized station, by default at the largest
+    declared efficiency divided by 99/100, just short of the full
+    normalization, or at one where that efficiency is at least 99/100,
+    records the factored loss, and has the loss applied
+    to every input on which the emitted measurement stands for the
+    receiver's statistics. It refuses a request that
+    declares a dark-count matrix while some per-port dark-count probability
+    is non-zero, and it emits the dark-count channel with
+    the scalars of the composed bound. The emitted blocks are the
+    dark-composed ones and carry their reference, recorded block by block as
+    exact, enclosed or absent; the snap itself runs only on the exact ones.
+    A moved block of their snap that rests on the snap premise is recorded
+    with its cause, the group of the cause and the fix for it; a block
+    snapped by the last resort is flagged; only a run that declares the
+    strict option refuses.
+order:
+  - thm:efficiency
+  - rem:effrank
+  - rem:wrongcheck
+  - rem:powervsclick
+  - rem:sperlingeta
+  - def:darkadm
+  - thm:dark-counts
+  - def:darktol
+  - prop:dark-slack-bound
+  - rem:rmintrap
+  - rem:d2slack
+  - rem:corrdark
+  - def:dark-composed
+  - cor:exact-dark-composed
+  - prop:noise-floor
+  - rem:noise-floor-receiver
+  - def:pure-loss
+  - def:normalized-station
+  - lem:pure-loss-lift
+  - prop:efficiency-normalization
+  - rem:normalization-gain
+  - rem:normalization-scope
+  - req:efficiency-schema
+  - req:efficiency-record
+  - req:efficiency-convention
+  - req:efficiency-normalization
+  - req:normalization-record
+  - req:loss-before-evaluation
+  - req:dark-route-exclusive
+  - req:dark-channel-record
+  - req:dark-composed-reference
+  - req:snap-fix

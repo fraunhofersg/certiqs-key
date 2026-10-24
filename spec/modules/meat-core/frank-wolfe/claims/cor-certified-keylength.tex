@@ -1,0 +1,110 @@
+% ---
+% id: meat-core/frank-wolfe/cor:certified-keylength
+% kind: cor
+% title: "Key length from the certified bracket"
+% summary: >-
+%   The largest bracket formed by [[lem:certified-bracket]] over finitely many
+%   points is a first-order bound of [[thm:firstorder]], so it is at most the
+%   value of the declaration it is formed on and gives that declaration's
+%   fixed-length key length exactly as h_lb does.
+% user_statement: >-
+%   The certified key rate is the best of a few brackets, each formed from
+%   enclosures of the gradient at a point the search found, with every
+%   arithmetic step from the declaration's data exact or rigorously enclosed.
+%   It is a lower bound on the minimum h_low of the declaration it is formed
+%   on, and the key length built from it is secret and correct under the same
+%   premises as the first-order key length: the declaration's modelling
+%   premises remain, but no premise about how a number was computed is added,
+%   the key length itself being computed exactly, its one logarithm
+%   enclosed until the integer part is decided.
+%   It is not a bound on any other declaration, so a run formed on the snapped
+%   declaration still rests where its record says on the premise that the
+%   device measures the snapped family.
+% prominence: main
+% status: implemented
+% uses: [lem:certified-bracket, thm:firstorder, cor:fo-keylength, cor:fo-dropped, def:relaxed-feasible-set, meat-core/def:admissible-declaration, meat-core/cor:keylength-bound, meat-core/prop:drop-bound]
+% mentions: [cor:certified-keylength-reference, req:certified-evaluation, rem:certified-scope]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.keylength:certified_key_length
+% lean:
+% ---
+
+By Lemma~\ref{lem:certified-bracket}\,(i) the sum of the two lower bounds is
+the bracket of Theorem~\ref{thm:firstorder}\,(iv) at its point, so the best
+of finitely many such sums is a first-order bound like any other, and the
+key-length corollaries take it unchanged. What makes it certified is how the
+two lower bounds are formed (Requirement~\ref{req:certified-evaluation}),
+and what it still rests on is Remark~\ref{rem:certified-scope}. On a
+reference companion, Corollary~\ref{cor:certified-keylength-reference}
+carries the conclusion over to the protocol the companion declares.
+
+\begin{corollary}\label{cor:certified-keylength}
+Let $\alpha$, $\Decl$ and $\acSet$ be as in
+Lemma~\ref{lem:certified-bracket}, let $\Itset$ be a finite non-empty set of
+points $x_t=(\mathbf q_t,J_t)$ each satisfying the hypotheses of that lemma,
+and let $b^{\mathrm A}_t$ and $b^{\mathrm F}_t$ be real numbers with
+\eqref{eq:lmo-bounds} at the gradient at $x_t$, as parts (ii) and (iii) of
+that lemma form them. Put
+\begin{equation}\label{eq:hcert}
+  \underline{h}^{\mathrm{cert}}_{\alpha}\coloneqq
+  \max_{t\in\Itset}\big(b^{\mathrm A}_t+b^{\mathrm F}_t\big).
+\end{equation}
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item $\underline{h}^{\mathrm{cert}}_{\alpha}$ is the value of \eqref{eq:hlb}
+  at the points of $\Itset$ with both pairings replaced as
+  Theorem~\ref{thm:firstorder}\,(iv) replaces them, and
+  $\max\{0,\underline{h}^{\mathrm{cert}}_{\alpha}\}\le\hlow$ in exact real
+  arithmetic.
+\item Where $\Decl$ satisfies Definition~\ref{def:admissible-declaration} and
+  the hypotheses of Corollary~\ref{cor:fo-keylength} hold, its conclusions
+  hold with $\underline{h}^{\mathrm{cert}}_{\alpha}$ in place of $\hlb$ in
+  \eqref{eq:keylength-fo}: the key length so formed is $\epa$-secret and
+  $\eev$-correct, with the composed-security and monotonicity conclusions of
+  that corollary, the secrecy and security statements at every output
+  state, whatever the dimension of the adversary's registers and the order
+  in which the source releases its signals.
+\item Under a dropped set, with the lemma's part (iv),
+  $\max\{0,\underline{h}^{\mathrm{cert}}_{\alpha}\}\le
+  \underline{h}^{\mathcal{D}}_{\alpha}\le\hlow$; and where $\Decl$
+  satisfies Definition~\ref{def:admissible-declaration} and the hypotheses
+  of Corollary~\ref{cor:keylength-bound} other than
+  \eqref{eq:lower-bound-h} hold, the conclusions of that corollary hold at
+  $h=\underline{h}^{\mathrm{cert}}_{\alpha}$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(i) By Step~1 of the proof of Lemma~\ref{lem:certified-bracket}, each $x_t$
+lies in $\acSet\times\Feas^{J}(\varepsilon_t)$ for some $\varepsilon_t\ge0$
+and satisfies (H-POS), (H-SUPP) and (H-NOPERT); every point then lies in
+$\acSet\times\Feas^{J}(\varepsilon)$ with $\varepsilon\coloneqq
+\max_t\varepsilon_t$, the relaxed sets growing with $\varepsilon$
+(Definition~\ref{def:relaxed-feasible-set}, each clause bounding a quantity
+by a multiple of $\varepsilon$). By Lemma~\ref{lem:certified-bracket}\,(i)
+the bracket of Theorem~\ref{thm:firstorder}\,(iv) at $x_t$ with both
+pairings replaced is $b^{\mathrm A}_t+b^{\mathrm F}_t$, so
+$\underline{h}^{\mathrm{cert}}_{\alpha}$ is \eqref{eq:hlb} so formed, and
+Theorem~\ref{thm:firstorder}\,(iiib) and (iv), or (v) where condition (vii)
+of Definition~\ref{def:admissible-declaration} fails, give the inequality.
+
+(ii) Corollary~\ref{cor:fo-keylength} holds for any $\hlb$ of
+Theorem~\ref{thm:firstorder}\,(iiib) with the lower bounds of its part (iv)
+in place of the pairings, under its hypotheses, and (i) shows that
+$\underline{h}^{\mathrm{cert}}_{\alpha}$ is one; it depends on the points,
+the lower bounds and the declaration, and on none of
+$(\lEC,\eev,\epa)$.
+
+(iii) Lemma~\ref{lem:certified-bracket}\,(iv) gives
+$\max\{0,b^{\mathrm A}_t+b^{\mathrm F}_t\}\le
+\underline{h}^{\mathcal{D}}_{\alpha}$ at each point and
+$\underline{h}^{\mathcal{D}}_{\alpha}\le\hlow$
+(Proposition~\ref{prop:drop-bound}), so
+$\underline{h}^{\mathrm{cert}}_{\alpha}$ is a lower bound on $\hlow$, the
+hypothesis \eqref{eq:lower-bound-h} of
+Corollary~\ref{cor:keylength-bound}, and it depends on none of
+$(\lEC,\eev,\epa)$, the condition of that corollary's clause (a). Its
+remaining hypotheses are those the second clause of (iii) assumes, so its
+conclusions hold there at $h=\underline{h}^{\mathrm{cert}}_{\alpha}$.
+\end{proof}

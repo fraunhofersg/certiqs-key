@@ -1,0 +1,32 @@
+% ---
+% id: reductions/wpfss/lem:ple1
+% kind: lem
+% title: "Bound on the total certified weight"
+% summary: >-
+%   Certified weights are non-negative, and their total is at most one whenever
+%   the space above the cutoff is non-trivial. On a trivial space above the
+%   cutoff the certified-weight condition is vacuous and bounds the total not
+%   at all.
+% prominence: technical
+% status: accepted
+% uses: [def:targets]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The hypothesis on the space above the cutoff is needed: where that block is
+trivial, \eqref{eq:certweights} is vacuous and constrains $p$ not at all.
+
+\begin{lemma}\label{lem:ple1}
+For any \tref{certified weights}, $p\ge0$; and $p\le1$ whenever
+$\Hs{\Bsys_{\gtN}}\ne\{0\}$.
+\end{lemma}
+
+\begin{proof}
+Summing \eqref{eq:certweights} over $v$ and using block completeness
+$\sum_v\blk{M}{\gtN}_v=\idon{\Bsys_{\gtN}}$ gives
+$\idon{\Bsys_{\gtN}}\succeq p\,\idon{\Bsys_{\gtN}}$, hence $p\le1$ whenever
+$\Hs{\Bsys_{\gtN}}\ne\{0\}$; and $p\ge0$ termwise.
+\end{proof}

@@ -1,0 +1,128 @@
+% ---
+% id: meat-core/frank-wolfe/def:relaxed-feasible-set
+% kind: def
+% title: "The relaxed feasible set"
+% summary: >-
+%   At a window ε ≥ 0 the relaxed feasible set keeps positivity and the block
+%   structure exact and relaxes the marginal or coupling condition, the declared
+%   rows and, with them, the normalisation. At ε = 0 it is the feasible set of
+%   the program, in the state form and in the Choi form.
+% prominence: standard
+% status: implemented
+% uses: [meat-core/def:feasible, meat-core/thm:choi]
+% mentions: [meat-core/def:untrusted-choi, prop:relaxed-set-properties, foundations/lem:floor-stricter, foundations/req:norm-conversion, meat-core/def:declaration]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.joint_driver:_check_point
+% lean:
+% ---
+
+The conditions defining $\Feas$ in \eqref{eq:feas}--\eqref{eq:feas-modes}
+are of two kinds. Some compare the variable against \tref{declared data}:
+the marginal condition against $\tau_A$, and each relation $\bowtie_k$
+against $\Theta_k$ or $c_k$. The others, positive semidefiniteness, the
+sector-block structure and the normalisation $\tr\omega=1$, name no
+declared datum. A run establishes membership of its iterates only up to
+windows on computed residuals, so the set is read at a tolerance; positive
+semidefiniteness and the block structure stay exact. The normalisation is
+relaxed with the condition that couples the sector blocks because it is an
+arithmetic consequence of that condition, and in one mode it is that
+condition: in the state form in \tref{trusted-source mode}, $\tr\omega=1$
+follows from $\omega_A=\tau_A$; in \tref{untrusted-source mode},
+$\sum_s\tr\omega_s=1$ is the coupling condition itself
+(Definition~\ref{def:untrusted-choi}\,(b)); in the Choi form,
+$\tr[\chi_{\Qsys}(J)]=1$ follows from
+$\sum_s\tr_{\Qsys_s}J_s=\idon{A_0}$ (proof of Theorem~\ref{thm:choi}).
+Holding the normalisation exact beside a relaxed coupling condition would
+exclude every point whose coupling residual $R$ has
+$\tr[\iota^{\dagger}\tau_A\iota\,R]\ne0$
+(Proposition~\ref{prop:relaxed-set-properties}\,(c$'$)): the generic point
+with a nonzero residual, the residual being the drift over the convex
+combinations that built the iterate, and a nonzero residual is what the
+coupling check of a run accepts in the normal case. The dimension factors
+$d_A$ and $d_{A_0}$ of the normalisation clauses of
+Definition~\ref{def:relaxed-feasible-set} are written into them as \xref{foundations/req:norm-conversion} requires.
+
+\begin{definition}\label{def:relaxed-feasible-set}
+For $\varepsilon\ge0$ the
+\term[The feasible set read at a window: positivity and the sector-block structure kept exact, the marginal or coupling condition, the declared constraint rows and the normalisation each relaxed at the window.]{relaxed feasible set}
+$\Feas(\varepsilon)$ is the set of sector-block-diagonal
+$\omega\in\Pos{A\Qsys}$ satisfying, in trusted-source mode,
+\begin{equation}\label{eq:feas-eps}
+  \big\|\omega_A-\tau_A\big\|_{\max}\le\varepsilon,
+  \quad
+  \big|\tr\omega-1\big|\le d_A\varepsilon,
+  \quad
+  \begin{cases}
+  \lmin\big(\Theta_k-A_k(\omega)\big)\ge-\varepsilon, & \bowtie_k\ =\ \preceq,\\
+  \lmin\big(A_k(\omega)-\Theta_k\big)\ge-\varepsilon, & \bowtie_k\ =\ \succeq,\\
+  \big\|A_k(\omega)-\Theta_k\big\|_{\max}\le\varepsilon, & \bowtie_k\ =\ =,
+  \end{cases}
+\end{equation}
+where $A_k(\omega)\coloneqq\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\,\omega]$
+is the left-hand side of the $k$-th declared relation of
+\eqref{eq:feas-modes}, and, in untrusted-source mode, the normalisation
+$\big|\sum_s\tr\omega_s-1\big|\le\varepsilon$ together with the scalar
+forms
+$a_k(\omega)\le c_k+\varepsilon$, $a_k(\omega)\ge c_k-\varepsilon$,
+$|a_k(\omega)-c_k|\le\varepsilon$, with
+$a_k(\omega)\coloneqq\tr[(\idon{A}\otimes\hat O_k)\,\omega]$ and no
+marginal condition. In the Choi form $\Feas^{J}(\varepsilon)$ is the set of
+$(J_s)_s$ with $J_s\in\Pos{A_0\Qsys_s}$,
+$\big|\tr[\chi_{\Qsys}(J)]-1\big|\le d_{A_0}\varepsilon$,
+$\big\|\sum_s\tr_{\Qsys_s}J_s-\idon{A_0}\big\|_{\max}\le\varepsilon$ and
+the same relaxation of the $\bowtie_k$ rows.
+
+The normalisation clause of each form is implied by the clause written
+before it, by the marginal in trusted-source mode and by the coupling
+residual in the Choi form, and is written out only so that the set can be
+read without re-deriving it; Proposition~\ref{prop:relaxed-set-properties}\,(c$'$)
+proves both implications and derives the two dimension factors. In
+untrusted-source mode there is no clause before it: there the
+normalisation \emph{is} the relaxed coupling condition
+(Definition~\ref{def:untrusted-choi}\,(b)), which is why it carries no
+dimension factor.
+
+Which predicate is which is part of the definition and is never
+converted: an inequality between operators is relaxed by a \emph{spectral
+floor} $\lmin(\cdot)\ge-\varepsilon$, an operator equality by an
+\emph{entrywise} ball $\|\cdot\|_{\max}\le\varepsilon$, a scalar equality
+by an interval, and these are different quantities against the same number
+(\xref{foundations/lem:floor-stricter}: the entrywise reading and the
+spectral floor). The factors $d_A$ and $d_{A_0}$ are not such a
+conversion: each is the dimension factor of an explicit trace bound
+derived in Proposition~\ref{prop:relaxed-set-properties}\,(c$'$), written
+into the clause, and neither reads an entrywise defect as a spectral one.
+
+At $\varepsilon=0$ both sets reduce to \eqref{eq:feas} and
+\eqref{eq:choi-feas} respectively: each normalisation clause is then the
+exact $\tr\omega=1$, respectively $\tr[\chi_{\Qsys}(J)]=1$, which the
+coupling condition already forces, so re-imposing it changes nothing. We
+write $\Feas$ for $\Feas(0)$ and $\Feas^{J}$ for $\Feas^{J}(0)$
+throughout.
+
+\emph{In the general format} of Definition~\ref{def:declaration} both sets
+are read on lists over the \tref[joint sector]{joint sectors}, with every
+line of \eqref{eq:feas-general}, respectively of the general-format Choi
+set of Theorem~\ref{thm:choi}, relaxed by the predicate its relation calls
+for, as in \eqref{eq:feas-eps}, the \tref{party-local} rows included. The
+marginal condition and the coupling condition are then read per Alice
+sector:
+$\|\sum_s\tr_{\Qsys_s}\omega^{(\mathsf t,s)}-\tau^{(\mathsf t)}_A\|_{\max}
+\le\varepsilon$, respectively
+$\|R_{\mathsf t}\|_{\max}\le\varepsilon$ with
+$R_{\mathsf t}\coloneqq\sum_s\tr_{\Qsys_s}J_{(\mathsf t,s)}
+-\idon{A_{0,\mathsf t}}$, for every $\mathsf t\in\mathbb{T}$. The residual
+of the single marginal clause of \eqref{eq:feas-eps}, respectively of the
+single coupling clause of the Choi form, is then the block-diagonal operator
+$\omega_A-\tau_A=\bigoplus_{\mathsf t}(\sum_s\tr_{\Qsys_s}
+\omega^{(\mathsf t,s)}-\tau^{(\mathsf t)}_A)$, respectively
+$\bigoplus_{\mathsf t}R_{\mathsf t}$ with
+$J_s\coloneqq\bigoplus_{\mathsf t}J_{(\mathsf t,s)}$, whose entrywise
+maximum is the largest over $\mathsf t$ of the blocks' ones; so the clauses
+per Alice sector together are that single clause. The normalisation clauses
+are those of the first paragraph of this definition. At $\varepsilon=0$ the
+two sets are $\Feas$ of \eqref{eq:feas-general} and the general-format
+$\Feas^{J}$ of Theorem~\ref{thm:choi}.
+\end{definition}

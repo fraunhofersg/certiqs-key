@@ -1,0 +1,88 @@
+% ---
+% id: foundations/def:exact-island
+% kind: def
+% title: "The exact island"
+% summary: >-
+%   The exact island holds every decision that data meet their declared
+%   conditions, those on a reference among them, a producer's construction of
+%   its emission, and certificates of the optimiser's two linear minima. The
+%   tolerance ceiling, the rest of the optimiser and binary64 proposals are
+%   outside it.
+% prominence: standard
+% status: accepted
+% uses: [def:declared-data, def:exact-admissibility, def:snap, def:tolerance, def:exact-reference]
+% mentions: [req:consumer-decides-exactly, req:declared-tolerance]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A consumer replaces an emitted scalar bound only under the exception of
+Requirement~\ref{req:consumer-decides-exactly}, and the decision against the
+\tref{declared tolerance}, which the definition places off the island, is the one
+that Requirement~\ref{req:declared-tolerance} specifies.
+
+\begin{definition}\label{def:exact-island}
+The \term[the computations of the engine, its instances' declarations
+included, by which a consumer of data or the declarer about to declare them
+decides whether they satisfy the conditions their declaration states, a
+declarer computes and decides the reference of a measurement family, a
+consumer's replacement of an emitted scalar bound is decided to lie on the
+bound's weakening side, a producer constructs the operator data it emits,
+the acceptance side of the optimisation is constructed and certified, or a
+lower bound on a linear minimum over the feasible side of the optimisation
+is certified]{exact island} is
+the following set of computations of the engine,
+the declarations of its instances included.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{The admission boundary}: every decision that data satisfy a
+  condition their declaration states of them --- among them the conditions of
+  Definition~\ref{def:exact-admissibility}, a trace, a column sum, an identity
+  between declared operators and a lattice condition --- taken by a consumer
+  of \tref{declared data} it reads, or by a declarer, an instance or a producer
+  (Definition~\ref{def:declared-data}), of data it is about to declare; the
+  decisions by which a snap establishes the conditions of its output
+  (Definition~\ref{def:snap}) are among the latter. So are, for a
+  \tref{reference} of an operator family that a declarer uses or hands beside
+  its snap (Definition~\ref{def:exact-reference}), the computation of the
+  centres and radii of its \tref[entrywise enclosure]{entrywise enclosures},
+  whose enclosure of the reference, \eqref{eq:entrywise-enclosure}, the claims
+  of the module that constructs the reference establish, the decisions on
+  those centres and radii and, for an \tref{exact reference}, on its
+  positivity and completeness; and, for any snap of an operator family read
+  as a measurement, the decisions by which the snap keeps a block, and the
+  decisions on which entries are \tref{structurally zero}. It
+  contains, further, a
+  producer's construction, block by block, of the operator data it emits, and,
+  for each scalar bound that a consumer replaces as in
+  Definition~\ref{def:declared-data}\,(iii), the decision that the
+  replacement lies on the weakening side of the bound emitted.
+\item \emph{The acceptance side of the optimisation}, the honest model and
+  the completeness budget being declared as exact rational data: the
+  construction of an acceptance set from them; the exact establishment that
+  the optimiser's acceptance-side iterate lies in the acceptance set it reads,
+  for its initial point and for each update as a convex combination, with
+  exact rational weights, of points so established; and the exact
+  certification of the minimum of a linear functional over that set, or of a
+  lower bound on that minimum. The acceptance set the optimiser reads is the
+  set so declared: the constructed set as its producer emits it, with each
+  scalar bound that a consumer has replaced as in
+  Definition~\ref{def:declared-data}\,(iii) at its replaced value.
+\item \emph{The feasible side of the optimisation}: the certification of a
+  lower bound on the minimum of a linear functional over the set the
+  optimiser's linear oracle is asked to minimise over, formed from the
+  functional, from the data of that set and from multipliers, each given to
+  it as values, together with the bounds on least eigenvalues that the
+  certification computes on the way.
+\end{enumerate}
+The decision whether data an instance is about to declare lie
+\tref{within the declared tolerance} (Definition~\ref{def:tolerance}) is not on
+the exact island. The optimiser's iterate apart from
+its acceptance side, the optimiser's oracle, the objective and its gradient lie
+outside the exact island, and so does a binary64 computation that only
+proposes a candidate, such as a point or a multiplier, for a decision or a
+certification of the island. A certification of (iii) holds of the
+functional and the data as they are given to it, and not of the quantities
+that a binary64 computation of them approximates.
+\end{definition}

@@ -1,0 +1,55 @@
+% ---
+% id: reductions/cor:flagsenough
+% kind: cor
+% title: "Arbitrary unpopulated block in a flag-extended target"
+% summary: >-
+%   In a flag-extended target, the block the squashing channel never
+%   populates may carry any POVM, and the target does not depend on the
+%   device. An uncharacterized branch can therefore be represented without a
+%   device model for it.
+% prominence: standard
+% status: accepted
+% uses: [lem:top]
+% mentions: [req:unpadded-branch-blocks]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Lemma~\ref{lem:top} says every POVM squashes to a flag PVM. The following
+sharpening is what a construction needs: in a \emph{flag-extended} target, the
+block the \tref{squashing channel} never populates may be replaced by any POVM
+at all. An uncharacterized branch therefore needs no model, neither an
+approximate nor a conservative one, and one target covers every device with
+the same flag structure. The branch blocks of a composite target \emph{may}
+accordingly be padded to a common size; a reduction instance emits them as its
+branches supply them, and a padded variant only where a submodule's interface
+declares it (Requirement~\ref{req:unpadded-branch-blocks}).
+
+\begin{corollary}\label{cor:flagsenough}
+Let $\{G_v\}_{v\in\Vset}$ be any POVM on a finite-dimensional space
+$\Bsys_0$ and let $\{H_v\}_{v\in\Vset}$ be any POVM on $\Bsys_0$. Then, on
+$\Hs{\Bsys_0}\dsum\Hs{\Flag}$,
+\begin{equation}\label{eq:flagsenough}
+  \big\{G_v\dsum\dyad{v}_{\Flag}\big\}_v
+  \;\dsq_{\Lambda}\;
+  \big\{H_v\dsum\dyad{v}_{\Flag}\big\}_v,
+  \qquad
+  \Lambda(\rho)\coloneqq
+   0_{\Bsys_0}\dsum\sum_v\tr\big[(G_v\dsum\dyad{v})\rho\big]\,\dyad{v}_{\Flag}.
+\end{equation}
+In particular $H_v=\tfrac{1}{|\Vset|}\idon{\Bsys_0}$ is admissible, and the
+squashing channel depends on $G$ while the target does not.
+\end{corollary}
+
+\begin{proof}
+$\Lambda$ is a measure-and-prepare channel, hence CP; it is trace preserving
+because $\sum_v(G_v\dsum\dyad{v})=\idon{\Bsys_0}\dsum\idon{\Flag}$. Its output
+is supported in the flag block, so
+$\Lambda^{\dagger}\big(X_{\Bsys_0}\dsum X_{\Flag}\big)
+=\sum_v\bra{v}X_{\Flag}\ket{v}\,\big(G_v\dsum\dyad{v}\big)$, the
+$\Bsys_0$-part of the observable contributing nothing, and evaluating at
+$X_{\Bsys_0}=H_v$, $X_{\Flag}=\dyad{v}$ returns $G_v\dsum\dyad{v}$. That
+$\{H_v\dsum\dyad{v}\}$ is a POVM follows from $\sum_vH_v=\idon{\Bsys_0}$.
+\end{proof}

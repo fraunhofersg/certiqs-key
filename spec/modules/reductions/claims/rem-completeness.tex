@@ -1,0 +1,34 @@
+% ---
+% id: reductions/rem:completeness
+% kind: rem
+% title: "Completeness statements in the physical and squashed models"
+% summary: >-
+%   A completeness criterion compares the protocol against an honest reference
+%   channel and is outside the form that transfers. No gap opens: the squashed
+%   model reproduces the physical statistics exactly, so a completeness
+%   statement computed in one model holds in the other.
+% prominence: standard
+% status: accepted
+% uses: [def:criterion, thm:factorization, lem:statistics]
+% assumes: []
+% refs:
+%   - "portmann2022security, Eq. (9)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:completeness}
+A criterion comparing the protocol against an \emph{honest reference channel}
+--- ``on the honest channel the protocol aborts with probability at most
+$\varepsilon$'', the completeness criterion of
+\cite[Eq.~(9)]{portmann2022security} (robustness is its phrasing at that
+paper's Eq.~(15)) --- is not of the form
+\eqref{eq:criterion} evaluated on an adversarial input, and
+Theorem~\ref{thm:factorization} says nothing about it.
+No gap opens: the squashed model reproduces the physical outcome statistics
+\emph{exactly} (Lemma~\ref{lem:statistics}\,(ii)), so the honest distribution
+on $\Vset$ is the same object in both models, and a completeness statement
+computed in one is literally the statement in the other. Completeness budgets
+belong to the statistics module, and nothing in this contract carries one.
+\end{remark}

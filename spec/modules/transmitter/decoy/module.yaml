@@ -1,0 +1,129 @@
+# spec/modules/transmitter/decoy/module.yaml -- the decoy submodule of the
+# transmitter: a weak-coherent-pulse source model, the tagged virtual source
+# built over it, the tagging link and the emitted decoy declaration.
+
+id: decoy
+kind: submodule
+version: 0.8.0
+title: "Decoy-state sources and the tagging channel"
+abstract: >-
+  The decoy submodule declares a phase-randomised weak-coherent-pulse source and
+  turns it into a finite virtual source that the engine can read. The physical
+  states live on an infinite-dimensional two-mode Fock space, so they are
+  declared as a source model, with the attestation [[A-WCP]] in the place of
+  [[A-ENS]]. Up to an entropy cutoff the photon-number sectors stay quantum;
+  above it and up to a source cutoff each photon number and polarisation carries
+  one flag shared by every intensity, which ties a photon number's weight across
+  intensities; the remaining weight sits on one tail flag per polarisation and
+  intensity. Its main results are [[prop:tagging]], one channel carrying this
+  virtual ensemble to the physical states for any sector weights at or below the
+  Poisson weights, and [[cor:emitted-decoy]], by which the emitted declaration,
+  an ensemble presentation, has an exact source-replacement certificate wherever
+  its declared blocks meet the conditions of that form, and a tagging link whose
+  source identity holds at the emitted descriptors. Every number is used as
+  declared: the Poisson weights are met by a certified inequality and never by
+  an equality, and no square root or quotient is ever declared. The submodule
+  states no key rate and compares none, and its emission, the step that outputs
+  the declaration, refuses entropy cutoffs above two, quantum sectors whose
+  signal dyads it cannot form exactly, flag families finer than the tagged
+  declaration's and formed entries that are not binary64 numbers.
+depends_on: []               # inherits the transmitter's list, which is empty
+notation_version: "0.4.0"    # the core's pinned notation version
+reading_groups:
+- title: The source model and the tagged declaration
+  start: def:wcp-model
+  abstract: >-
+    The weak-coherent-pulse model fixes the declared labels, intensities and
+    phase-averaged coherent states on the two-mode Fock space, which no finite
+    matrix can carry. The tagged declaration [[def:tagged-source]] replaces it by
+    a finite virtual source in three bands: quantum photon-number sectors up to
+    the entropy cutoff; above it and up to the source cutoff, one
+    one-dimensional polarisation flag per photon number and polarisation,
+    shared by all intensities; and one tail flag per polarisation and intensity
+    for the rest. Sharing a flag across intensities is what relates a photon
+    number's weight at different intensities, the decoy content of the
+    declaration. Its sector weights are declared numbers bounded by the Poisson
+    weights, and its sector list is read off them; [[lem:poisson-enclosure]]
+    encloses each Poisson weight between two rationals formed from the declared
+    intensity, which is how that bound is decided. [[rem:cutoffs]] separates its
+    two cutoffs from the receiver's.
+- title: The tagging channel
+  start: prop:tagging
+  abstract: >-
+    The virtual and the physical source are linked by one channel, the tagging
+    channel, which is fixed before a letter is drawn. The main result of the
+    section, [[prop:tagging]], constructs it for any sector weights at or below the
+    Poisson weights: it keeps each quantum sector, prepares from each
+    polarisation flag the number state it stands for, and prepares from each
+    tail flag the normalised remainder of the Poisson distribution. So a
+    declared weight need only satisfy a certified inequality, never equal a
+    Poisson weight. [[rem:no-intensity-split]] explains why a polarisation flag
+    is shared across intensities: a finer family would still admit such a
+    channel but would lose the relation across intensities that is the decoy
+    content of the declaration.
+- title: The certificate and the emitted declaration
+  start: prop:decoy-cert
+  abstract: >-
+    The emission, the step of this submodule that outputs a tagged declaration
+    as a decoy declaration, declares the weighted virtual blocks sector by
+    sector and nothing on Alice's side. [[prop:decoy-cert]] shows that these
+    blocks satisfy the positivity and weight conditions (E1) and (E2) of an
+    ensemble presentation, which gives an exact certificate, and computes the
+    marginal and the numbers it forms; whether those numbers are binary64, as
+    (E3) requires, is decided on each declaration and not there. The main
+    result of the section, [[cor:emitted-decoy]], states what the emitted declaration
+    satisfies: an exact certificate against the tagged ensemble where its blocks
+    meet (E1) to (E3), the source identity at the emitted descriptors as a
+    conclusion of [[prop:tagging]], block-diagonal states after any attack, the
+    entries on which exactness is decided, and that lowering a weight gives
+    another tagged declaration. [[rem:decoy-consumers]] says how the consuming
+    modules receive it.
+- title: The physical-source assumption
+  start: ass:wcp
+  abstract: >-
+    One attestation carries the model to the device: [[A-WCP]] asserts that the
+    physical source emits the declared phase-randomised weak coherent states,
+    exactly and independently in every round. It refines [[A-ENS]] and takes
+    its place for a specification declared by this model, and an artefact
+    emitted from a tagged declaration carries A-WCP and not A-ENS in its
+    assumption ledger ([[req:decoy-emission]]). No function of the declared data
+    decides it. [[rem:wcp-virtual-model]] reads it as making the tagged
+    declaration, with its tagging link and at the declared numbers exactly, a
+    virtual model of the device.
+- title: Emission and refusals
+  start: req:decoy-emission
+  abstract: >-
+    These requirements bind the engine, the implementation, where it turns a
+    tagged declaration into a decoy declaration. Recall the three bands: photon
+    numbers up to the entropy cutoff keep quantum sectors, those up to the
+    source cutoff one flag per polarisation, and the rest sits on the tail
+    flags. What the emission outputs is the tagged ensemble as declared, with no
+    number altered and with the entries of its signal dyads formed by the
+    engine. It refuses, each with a named reason, cutoffs that are not
+    integers or are out of order, entropy cutoffs above two, quantum sectors
+    whose signal dyads the construction it carries does not cover, sector
+    weights that are negative or exceed the rational lower bound it forms on
+    their Poisson weights or are presented as equalities, flag families finer
+    than the tagged declaration's, formed entries that are not binary64
+    numbers, and blocks or weight sums that fail the conditions of an ensemble
+    presentation.
+order:
+  - def:wcp-model
+  - def:tagged-source
+  - lem:poisson-enclosure
+  - rem:cutoffs
+  - prop:tagging
+  - rem:no-intensity-split
+  - prop:decoy-cert
+  - cor:emitted-decoy
+  - rem:decoy-consumers
+  - ass:wcp
+  - rem:wcp-virtual-model
+  - req:decoy-emission
+  - req:cutoff-order
+  - req:entropy-cutoff
+  - req:signal-dyads
+  - req:sector-weight-bound
+  - req:shared-flags
+  - req:exact-decoy-blocks
+  - req:decoy-ensemble-conditions

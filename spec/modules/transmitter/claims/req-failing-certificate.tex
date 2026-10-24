@@ -1,0 +1,31 @@
+% ---
+% id: transmitter/req:failing-certificate
+% kind: req
+% title: "Refusal of a certificate that fails a decided condition"
+% summary: >-
+%   A request whose certificate is present and fails a condition decided of
+%   its form, pure, block or ensemble presentation, is refused at every
+%   dimension, including dimension one, where none is demanded. A certificate
+%   that does not verify is a defect in the supplied data, not a weaker claim.
+% prominence: standard
+% status: accepted
+% uses: [rem:da1, def:srcert]
+% implements: certiqs_key.transmitter.artifact:emit_artifact
+% mentions: [req:licence-scope]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}\label{req:failing-certificate}
+The engine refuses a request whose certificate is present and fails one of
+the conditions Definition~\ref{def:srcert} decides of its form --- in \tref{pure
+form} the three on $\Psi$, (SR1) and (SR2); in \tref{block form} Hermiticity and
+positive semidefiniteness of every block, the trace, the block diagonality of
+every weighted virtual member along the matched sectors, and
+\eqref{eq:srblock}; in an \tref{ensemble presentation} (E1) to (E3) --- at every
+$d_A$, including $d_A=1$, where no certificate is demanded
+(Requirement~\ref{req:licence-scope}): a certificate that does not verify is
+a defect in the supplied data, not a weaker claim.
+\end{requirement}

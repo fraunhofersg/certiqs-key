@@ -1,0 +1,130 @@
+% ---
+% id: meat-core/rem:declared-measurement
+% kind: rem
+% title: "The declared measurement as a premise of the rate"
+% summary: >-
+%   A tiny change of the declared measurement can move the key rate by many
+%   bits per round, so the model is a premise of the rate. Where a handed
+%   reference's companion counts and the key length is formed on it, the snap
+%   only steers the search; nothing bounds model to device.
+% user_statement: >-
+%   The key rate is computed from the measurement model you declare for your
+%   receiver, and that model is a premise of the number: nothing checks that
+%   your device measures what it says (for a receiver the engine models,
+%   [[A-TRUST]]). A change of the model too small to see in its entries,
+%   notably one that makes an outcome nearly or exactly impossible, can move
+%   the rate by many bits per round in either direction; no result bounds
+%   that gap. The engine also moves your model onto its exact number grid (the
+%   snap) for its search. Where your model reaches the engine as a reference,
+%   the bound is evaluated on your model itself and needs no premise about the
+%   snap, unless the rate is certified only on the moved model, as the report
+%   then says; any other block rests on [[A-SNAP]], or the run refuses if it
+%   declares the strict option. Validate the model, above all which outcomes
+%   it treats as impossible.
+% prominence: standard
+% status: accepted
+% uses: [prop:optol-nobound, prop:value-range, def:declaration, rem:optol-direction, req:infinite-value, prop:reference-companion, foundations/def:snap, foundations/req:snap-reference, foundations/rem:noise-floor, foundations/def:evaluated-off-snap]
+% mentions: [thm:keylength, foundations/ass:snapped-measurement, receiver/ass:trust, meat-core/frank-wolfe/cor:fo-reference, meat-core/frank-wolfe/req:bracket-on-reference, meat-core/frank-wolfe/req:certified-evaluation, meat-core/frank-wolfe/rem:fo-arithmetic, req:companion-admission, reductions/req:reference-companion]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A key rate of this contract is computed from a declaration whose
+measurement on $\Qsys$ is a model of a device, and
+Proposition~\ref{prop:optol-nobound} shows how much the number rests on that
+model. A domination weight declared for the device, outright or derived from
+ranges of its efficiencies and dark-count probabilities, would carry part of
+the gap between model and device into the flags of a \tref{domination link}; it is
+future scope (\repodoc{spec/future-scope.md}~\S13).
+
+\begin{remark}\label{rem:declared-measurement}
+The value $\hlow$ is not controlled by a tolerance on the declared
+measurement $\{F_v\}$ on $\Qsys$ (Definition~\ref{def:declaration}) at any
+tolerance down to $2^{-52}$. For every $\epsilon\in(0,\tfrac12]$ and
+every positive integer $N$ with $2^{N}\le\epsilon\,2^{53}$ there is a
+declaration on which two \tref{exactly admissible} families within
+$\epsilon$ of each other in every element give values
+$\frac{\alpha}{\alpha-1}N$ bits per round apart, and no allowance computed
+from the declared dimensions, alphabet sizes and $\alpha$ below that scale
+bounds the change (Proposition~\ref{prop:optol-nobound}\,(i)--(ii)); below
+$\epsilon=2^{-52}$ the proposition exhibits no such pair. For
+$\alpha\in(1,2)$ the gap reaches the key length of
+Theorem~\ref{thm:keylength}: over $n$ rounds the two lengths differ by at
+least $nN-1$ bits whenever the smaller is positive
+(Proposition~\ref{prop:optol-nobound}\,(iii)). The gap is bought by a ratio,
+not by a size: on the instance of that proposition
+$\hlow=\frac{\alpha}{\alpha-1}\log_2\frac1{g_0}$, where $g_0$ is the
+probability of the one outcome the acceptance test demands, and moving
+$g_0$ from $\epsilon'$, the largest power of two at most $\epsilon$, to
+$\epsilon'2^{-N}$ changes the element by at most $\epsilon$ and the
+probability by the factor $2^{N}$. Its limit is a change of support: at
+$g_0=0$ the measurement treats the demanded outcome as impossible, no
+feasible state gives it positive probability, and $\hlow=+\infty$
+(Proposition~\ref{prop:value-range}\,(iv)), a value that carries no
+key-length claim (Requirement~\ref{req:infinite-value}). A change of which
+outcomes the measurement treats as impossible, or nearly so, can thus move
+the rate by far more than the size of the change, in either direction; it
+need not, since the proposition exhibits one declaration on which it does
+and states no property of every declaration
+(Remark~\ref{rem:optol-direction}). The declared measurement model is
+therefore itself a premise of every number computed from it.
+
+Between the device and the declared measurement lie two moves. The first is
+the \tref{snap} of a family read as a measurement onto its lattice, whose
+displacement, however small, bounds the change of the rate by nothing.
+Where the declarer holds a \tref{reference} of the family and hands it
+beside the snap, a claim establishes for the instance that the construction
+may run on it (\xref{reductions/req:reference-companion}), the companion is
+compiled and admitted (Requirement~\ref{req:companion-admission}), and the
+run's bound on the companion counts
+(Requirement~\ref{req:bracket-on-reference}\,(iii)) and its key length is
+formed from a number on the companion, not from one certified on the snapped
+declaration in the fallback of
+Requirement~\ref{req:certified-evaluation}\,(i), the run need
+not bound that change at all. Its first-order bound is then evaluated on the compiled reference companion
+(Proposition~\ref{prop:reference-companion}), at the points the search on the
+snapped declaration produced and at those of a short search continued on the
+companion from them (Corollary~\ref{cor:fo-reference},
+Requirement~\ref{req:bracket-on-reference}); the snap only steers the choice
+of those points, and a bound that holds at any admissible point holds at
+them. Every
+block on which the companion carries the reference is
+\tref{evaluated off its snap} (\xref{foundations/def:evaluated-off-snap}),
+nothing the key length rests on reads its snapped data, and it rests on no
+premise about the snap. In that fallback the number the key length is formed
+from reads the snapped data of those blocks, which are then among the blocks
+the run does not evaluate off its snap, below
+(Requirement~\ref{req:bracket-on-reference}\,(v)). Outside that fallback,
+the key length is one of the model the reference describes, and what lies between it and
+the device is the second move below. The evaluation of an enclosed
+reference at its centres is itself a displacement of the measured family, of
+the size of the enclosure's radius, to which
+Proposition~\ref{prop:optol-nobound} applies as it does to the snap's: the
+premise about the snap is gone, the exposure to the radius is not, and the
+recorded largest radius is the only handle on it
+(Remark~\ref{rem:fo-arithmetic}). The rest of this paragraph concerns the
+blocks a run does not evaluate off its snap. A block kept because its
+reference is exact and already on the lattice rests on nothing, the snap
+being the identity there. Every other block is a \tref{moved} block of the
+snap (\xref{foundations/def:snap}), and no claim relates it to the
+reference: domination, which would bound the snapped family by the
+reference, is not established for a snap, and an idealised model may
+dominate no lattice family at a small weight at all
+(\xref{foundations/rem:noise-floor}). On such a block the run proceeds,
+unless even the last resort yields no snap, resting on
+\xref{foundations/ass:snapped-measurement}: that on the blocks its record
+names the device measures the snapped family, or, where the snapped family is
+a producer's emission, that what the run concludes from the emission holds
+of the snapped family. No claim then relates its key length to the
+reference, and a run that declares the strict option refuses instead
+(\xref{foundations/req:snap-reference}\,(iv)). The second move is
+the gap between the model as declared, or its reference, and the physical
+device. No claim bounds it: the run assumes, without checking, that the
+model describes the device, for a receiver that the receiver module models
+through \xref{receiver/ass:trust}, and by
+Proposition~\ref{prop:optol-nobound} a small distance between model and
+device bounds the change of the rate no more than a small distance between
+two declared families does.
+\end{remark}

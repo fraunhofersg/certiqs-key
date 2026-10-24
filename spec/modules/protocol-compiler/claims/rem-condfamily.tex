@@ -1,0 +1,144 @@
+% ---
+% id: protocol-compiler/rem:condfamily
+% kind: rem
+% title: "Deciding the conditional families"
+% summary: >-
+%   Each conditional family is decided by the compilation map, not the
+%   validator, since the emitted family's conditions do not imply it; the
+%   converse gives (T), (H), (P) and, with (S), (C). For a choice-weighted
+%   physical family, only its own (S) is left to decide on the family itself.
+% prominence: standard
+% status: accepted
+% uses: [def:weighted, def:exact, lem:weighted, def:compile, def:validator, thm:validator-soundness]
+% mentions: [ex:condfamily, thm:choice-encoding, rem:exactness, ass:spec, ass:coin, req:physical-family-decision, def:chaincond, req:conditional-family-decision, rem:summation-condition, foundations/req:exact-emission]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:condfamily}
+A choice-weighted presentation is two declared things and one constructed one:
+the weights, the conditional families $\{N_{u|t}\}_{u\in\Uset_t}$, and the
+products the compiler forms from them --- the \emph{weighted family}, which is
+the emitted one where the presentation is Alice's or where the receiver segment
+is the identity, and is the \emph{physical} family handed to the chain where it
+is Bob's at a non-trivial one. The compiler decides all three
+(Definition~\ref{def:weighted},
+Requirement~\ref{req:conditional-family-decision}) --- the weights by sign and
+by an exact declared-order sum, each conditional family for exact
+admissibility in the sense of Definition~\ref{def:exact}, and every product it
+forms for representability, with the five conditions decided once more on the
+weighted family wherever that family is the emitted one. This remark records
+why the middle decision cannot be dropped in favour of the last, what it buys
+where the weighted family is \emph{not} emitted, and what it does not disturb.
+
+\emph{It is a decision of the compilation map and not a check of the
+validator.} The conditional families are declared input: they are no slot of
+the emitted declaration, their index $(u,t)$ is not an emitted index, and the
+family the consumer receives is the one product family. So the decision is
+taken where the presentation is read, before any product is formed
+(Requirement~\ref{req:conditional-family-decision}), beside the decisions on the weights and not
+among V1--V8. Nothing in Definition~\ref{def:validator} gains or loses a
+conjunct by it, and Theorem~\ref{thm:validator-soundness}\,(i) and~(ii) pair the same checks
+with the same target conditions whether or not the decision is taken: the
+target conditions D(i)--D(viii) quantify over the emitted declaration, which
+this decision does not change, and a candidate that meets them is refused at
+no check because of it. What the decision affects is which
+\emph{specifications} reach a candidate at all, which is the compilation map's
+business and not the validator's.
+
+\emph{The emitted family's conditions do not imply the conditional families'.}
+Example~\ref{ex:condfamily} is two weights and two one-element conditional
+families, neither of them a POVM, whose weighted family satisfies (T), (H),
+(P), (C) and (S) and passes V1's map comparison and check V3 with every product
+exactly representable.
+The reason it can happen is visible in the arithmetic: (C) on the emitted
+family is one identity, $\sum_{t}q_t\sum_uN_{u|t}=\idon{S}$, and the inner sums
+enter it only through that one combination, so a deficit under one choice value
+is paid for by a surplus under another. Deciding the outer identity therefore
+says nothing about the inner ones, and \eqref{eq:condfam-bad} is what ``nothing''
+looks like.
+
+\emph{The converse does hold, in four of the five, and it is stated of the
+weighted family --- whether or not that family is the emitted one.} Suppose the
+conditional families of one presentation all carry one map and are each
+\tref{exactly admissible} for it, the weights satisfy $q_t>0$ and
+$\sum_tq_t=1$ with that sum rounding nowhere, and the representability
+decision has passed on the products, so that every entry of the weighted
+family \emph{is} the real product $q_tN_{u|t}$. Then, of that family: (T)
+holds \emph{against that same map} --- the map the conditional families
+carry, which for a physical presentation is that of the module presenting it
+and not $\Smap$ --- the weighting acting blockwise
+(Lemma~\ref{lem:weighted}\,(ii)); (H) holds, a real multiple of a Hermitian
+block being Hermitian; (P) holds, $q_t>0$ and $N_{u|t}^{(s)}\succeq0$ giving
+$q_tN_{u|t}^{(s)}\succeq0$, the product being exact; and the \emph{real} sum
+over the alphabet that indexes it is the
+identity on each block, which is the computation of
+Lemma~\ref{lem:weighted}\,(i) read on the declared numbers --- it is available
+as an identity of those numbers precisely because (S) and (C) were decided of
+each conditional family and of the weights. What does \emph{not} follow is (S)
+on the weighted family's own declared-order sum: that condition is on binary64
+additions --- of weighted operands, accumulated across the boundaries between
+choice values --- and no hypothesis on the operands controls them
+(Remark~\ref{rem:summation-condition}). \emph{Only the order restricts, never
+the condition}: the order the conditional family's (S) is read in is the
+restriction of the order on the alphabet that indexes the weighted family
+(Definition~\ref{def:weighted}), and the two conditions are independent in
+both directions. Given (S), (C) follows, the computed sum then being the real
+one. So (S) is the one of the five that still needs its own decision, and the
+emission decision of Definition~\ref{def:weighted} is not made redundant by
+this one.
+
+\emph{And here the two cases part company.} Where the weighted family
+\emph{is} the emitted one --- a presentation on Alice's side, or one on Bob's
+where the receiver segment is the identity --- (H), (P), (C) and (S) are decided
+on it again by check V3 and its map (T) again by check V1
+(Definition~\ref{def:validator}), because those are the conditions the
+consumer's admission rule reads and this module decides what it emits rather
+than inferring it (\xref{foundations/req:exact-emission}); what the converse
+buys there is not a check saved but the knowledge that the surviving refusals
+are (S)'s and representability's (Remark~\ref{rem:exactness}). Where it is
+\emph{not} --- a physical receiver family presented choice-weighted at a
+non-trivial receiver segment, which lives on the physical receiver space and
+is no $\Qsys$-operator family --- the converse is what the decision on it
+rests on (Requirement~\ref{req:physical-family-decision}): (T), (H) and (P)
+hold of it by the decision on its conditional families, (S) on its own
+declared-order sum is the one condition decided of the family itself, and (C)
+of it follows from that (S) together with the conditional (C), (S) and the
+weight sum. The emitted
+family at such a segment is a different object, the \tref[target povm]{target POVM} of the last
+link, and its own five are (C3)'s and then V1's and V3's
+(Definition~\ref{def:chaincond}).
+
+\emph{The setting-dependent form has no second subject.} There the family that
+is weighted is the single family $\{F_v\}_{v\in\Vset}$ the last link of
+$\Chrec$ delivered, and the choice value is drawn \emph{after} the
+measurement, with probability $P(f\,|\,t(v))$; there is no family of
+measurements indexed by $f$, and $\{N_{v,f}\}_v$ at fixed $f$ is not one and
+is not meant to be (Lemma~\ref{lem:weighted}\,(iv),
+Theorem~\ref{thm:choice-encoding}\,(vii)). Read through the overlap of the two forms ---
+$P(f\,|\,t)=q_f$ for every $t$, where the one conditional family is $\{F_v\}$
+itself --- the decision above applies with that family as its subject, and it
+was taken already: condition~(C3) of Definition~\ref{def:chaincond} decides
+the exact admissibility of the family the last link delivered, per block. So
+no conditional family of the setting-dependent form goes undecided and no
+second decision is added there; what the compiler decides of $P$ is what
+Definition~\ref{def:weighted} states of it.
+
+\emph{What stays assumed.} A specification whose
+conditional families are not measurements is refused: what is lost is a
+declaration whose per-choice reading is false, and Example~\ref{ex:condfamily}
+shows that such a declaration implements a probability of the choice value
+other than the one the declared public-choice record states and
+Assumption~\ref{ass:coin} reads. Assumption~\ref{ass:spec}
+keeps what no function of the \tref{declared data} decides --- that the declared
+dimensions, alphabets and tables describe the apparatus and the
+declared measurements it names are the ones performed. The physical
+receiver family as presented is decided on every route
+(Requirement~\ref{req:physical-family-decision}); where it is presented in
+choice-weighted form, its conditional families are read here like any other
+and their five conditions are decided, so what is decided of the presented
+family itself shrinks to condition~(S) on its own declared-order sum ---
+from which its (C) then follows, by the converse above.
+\end{remark}

@@ -1,0 +1,36 @@
+% ---
+% id: transmitter/decoy/rem:wcp-virtual-model
+% kind: rem
+% title: "The tagged declaration as a virtual model of the device"
+% summary: >-
+%   Under [[A-WCP]] the tagged declaration with its tagging link is a virtual
+%   model of the device: the states the tagging channel produces are the ones
+%   it emits. The assumption carries no arithmetic identity, so it says nothing
+%   of a declaration whose numbers were altered.
+% prominence: standard
+% status: accepted
+% uses: [def:wcp-model, def:tagged-source]
+% mentions: [ass:wcp, cor:emitted-decoy, prop:tagging]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:wcp-virtual-model}
+Assumption~\ref{ass:wcp} is asserted of the \tref{tagged source declaration}
+of Definition~\ref{def:tagged-source}, with the cutoffs, the weights and the
+polarisations it declares, which is what the emitted decoy declaration of
+Corollary~\ref{cor:emitted-decoy} presents. That declared virtual source,
+together with its tagging link, is then a virtual model of the physical
+source: the states $\Xi_{\mathrm{tag}}(\rvirt_x)=\rho_x$ that the link's
+channel is proved to produce (Proposition~\ref{prop:tagging}\,(ii)) are the
+states the device emits, the device being the one
+Assumption~\ref{ass:wcp} describes at those intensities and polarisations.
+The assumption asserts no arithmetic identity: the source identity of the
+link is a theorem about the declared numbers and holds of them exactly
+(Corollary~\ref{cor:emitted-decoy}\,(ii)), and if a declared number is
+altered in any way, rounded or shifted included, the assumption says nothing
+about the result. This contract asserts Assumption~\ref{ass:wcp} of no
+particular apparatus.
+\end{remark}

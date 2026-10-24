@@ -1,0 +1,38 @@
+% ---
+% id: statistics/binomial-box/req:completeness-report
+% kind: req
+% title: "The reported completeness figure"
+% summary: >-
+%   The engine reports ε* itself on the exact rule evaluated by its closed
+%   forms, and otherwise the figure its route's row names: the allocation sum
+%   or an upward-rounded evaluation of the tails clamped at the budget. It
+%   never reports a downward-rounded figure.
+% prominence: standard
+% status: implemented
+% uses: [rem:epsstar, rem:completeness-on-rules, thm:completeness-bound]
+% mentions: [foundations/req:rounding-direction]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.construction:report_completeness
+% lean:
+% ---
+
+A completeness figure bounds how often an honest run aborts, so it may be
+loose but never low: it is rounded in the direction in which
+\xref{foundations/req:rounding-direction} rounds an emitted upper bound.
+
+\begin{requirement}\label{req:completeness-report}
+The engine reports under \iface{completeness_certified} the following figure.
+On \iface{endpoint_rule: exact} with \iface{tail_evaluation: sweep} it
+reports $\varepsilon^{\star}$ of Theorem~\ref{thm:completeness-bound} itself, and where it
+cannot evaluate a tail exactly it rounds the tail upward and reports
+$\min\{\ecomp,\tilde\varepsilon\}$ for the resulting
+$\tilde\varepsilon\ge\varepsilon^{\star}$ (Remark~\ref{rem:epsstar}). On
+every other route it reports the admissible figure of
+Remark~\ref{rem:completeness-on-rules} that the route's row of
+\iface{completeness_report} names: the allocation sum, or
+$\min\{\ecomp,\tilde\varepsilon\}$ for an upward-rounded evaluation
+$\tilde\varepsilon\ge\varepsilon^{\star}$ of the tails at the emitted
+endpoints. It never reports a downward-rounded figure.
+\end{requirement}

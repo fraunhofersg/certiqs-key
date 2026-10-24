@@ -1,0 +1,121 @@
+% ---
+% id: statistics/thm:binomial-tails
+% kind: thm
+% title: "Binomial tails in closed form"
+% summary: >-
+%   The upper and lower tails of a binomial count are regularised incomplete
+%   beta integrals, with every boundary case of the count stated. The upper
+%   tail is non-decreasing in the success probability.
+% prominence: standard
+% status: implemented
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.tails:binomial_cdf
+% lean:
+% ---
+
+The count of one outcome over independent rounds with one law is binomial,
+and the box construction compares its two tails with their budgets. The
+theorem writes both tails as regularised incomplete beta integrals, deriving
+the normalisation of the beta integral inside the proof.
+
+\begin{theorem}\label{thm:binomial-tails}
+Let $n\ge1$, $p\in[0,1]$, and let $\Ncount{}$ be a binomial random variable
+with parameters $(n,p)$, i.e.\
+$\Pr[\Ncount{}=i]=\binom{n}{i}p^{i}(1-p)^{n-i}$ for $0\le i\le n$. Write
+\begin{equation}\label{eq:ireg}
+  \Ireg{x}{a}{b}\coloneqq
+  \frac{\int_0^{x}t^{a-1}(1-t)^{b-1}\,\mathrm{d}t}
+       {\int_0^{1}t^{a-1}(1-t)^{b-1}\,\mathrm{d}t},
+  \qquad x\in[0,1],\ a,b\ge1 .
+\end{equation}
+Then
+\begin{align}
+  \Pr[\Ncount{}\ge k]&=\frac{n!}{(k-1)!\,(n-k)!}
+    \int_0^{p}t^{k-1}(1-t)^{n-k}\,\mathrm{d}t
+    =\Ireg{p}{k}{n-k+1}, &&1\le k\le n,
+    \label{eq:uppertail}\\
+  \Pr[\Ncount{}\le k]&=1-\Pr[\Ncount{}\ge k+1]
+    =\Ireg{1-p}{n-k}{k+1}, &&0\le k\le n-1,
+    \label{eq:lowertail}
+\end{align}
+together with the boundary values $\Pr[\Ncount{}\ge k]=1$ for $k\le0$,
+$\Pr[\Ncount{}\ge k]=0$ for $k>n$, $\Pr[\Ncount{}\le k]=0$ for $k<0$ and
+$\Pr[\Ncount{}\le k]=1$ for $k\ge n$. Moreover $p\mapsto\Pr[\Ncount{}\ge k]$
+is non-decreasing on $[0,1]$ for every $k\ge1$.
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} The upper tail is a polynomial in $p$ vanishing at $p=0$ whose
+derivative telescopes to a single term; integrating that term gives the first
+form of \eqref{eq:uppertail}, and its value at $p=1$ gives the normalisation.
+The lower tail is the upper tail of $n-\Ncount{}$.
+
+\emph{Step 1 (the derivative of the upper tail).} Fix $k$ with $1\le k\le n$
+and define the polynomial
+$G(p)\coloneqq\sum_{i=k}^{n}\binom{n}{i}p^{i}(1-p)^{n-i}$, so that
+$G(p)=\Pr[\Ncount{}\ge k]$ and $G(0)=0$ (every summand carries $p^{i}$ with
+$i\ge k\ge1$). Set
+\begin{equation*}
+  a_i\coloneqq n\binom{n-1}{i-1}p^{i-1}(1-p)^{n-i},
+  \qquad 1\le i\le n ,
+\end{equation*}
+a polynomial in $p$ for every such $i$: the exponent $n-i$ is non-negative
+throughout, so no negative power of $1-p$ occurs anywhere in this proof and no
+division is performed. Differentiate the summands of $G$ separately in the two
+cases.
+
+For $k\le i\le n-1$, the product rule and the absorption identities
+$i\binom{n}{i}=n\binom{n-1}{i-1}$ and $(n-i)\binom{n}{i}=n\binom{n-1}{i}$ give
+\begin{equation*}
+  \frac{\mathrm{d}}{\mathrm{d}p}\Big[\binom{n}{i}p^{i}(1-p)^{n-i}\Big]
+  =i\binom{n}{i}p^{i-1}(1-p)^{n-i}-(n-i)\binom{n}{i}p^{i}(1-p)^{n-i-1}
+  =a_i-a_{i+1},
+\end{equation*}
+where $i\ge k\ge1$ makes the first power non-negative, $i\le n-1$ makes the
+second one non-negative, and $a_{i+1}=n\binom{n-1}{i}p^{i}(1-p)^{n-i-1}$ by
+substituting $i+1$ for $i$ in the definition of $a_i$, which is legitimate
+because $i+1\le n$. For $i=n$ the summand is $p^{n}$, whose derivative is
+$np^{n-1}=a_n$; this is the case the general formula would have written with a
+factor $(1-p)^{-1}$, and it is treated separately for exactly that reason.
+Summing the two cases, the sum telescopes,
+\begin{equation*}
+  G'(p)=\sum_{i=k}^{n-1}\big(a_i-a_{i+1}\big)+a_n
+       =\big(a_k-a_n\big)+a_n
+       =a_k ,
+\end{equation*}
+which is also correct at $k=n$, where the telescoping sum is empty and
+$G'(p)=a_n=a_k$.
+
+\emph{Step 2 (the integral form and its normalisation).} Spelling $a_k$ out,
+$G'(p)=n\binom{n-1}{k-1}p^{k-1}(1-p)^{n-k}$, and by the fundamental
+theorem of calculus with $G(0)=0$,
+\begin{equation}\label{eq:Gint}
+  G(p)=n\binom{n-1}{k-1}\int_0^{p}t^{k-1}(1-t)^{n-k}\,\mathrm{d}t,
+  \qquad
+  n\binom{n-1}{k-1}=\frac{n!}{(k-1)!\,(n-k)!}.
+\end{equation}
+This is the first equality of \eqref{eq:uppertail}. For the second, evaluate
+\eqref{eq:Gint} at $p=1$: there $\Ncount{}=n$ with probability one and $k\le
+n$, so $G(1)=1$, whence
+$\int_0^{1}t^{k-1}(1-t)^{n-k}\,\mathrm{d}t=\frac{(k-1)!\,(n-k)!}{n!}$;
+dividing \eqref{eq:Gint} by this value gives exactly
+$\Ireg{p}{k}{n-k+1}$ as defined in \eqref{eq:ireg}, with $a=k\ge1$ and
+$b=n-k+1\ge1$.
+
+\emph{Step 3 (the lower tail).} For \eqref{eq:lowertail}, note first that
+$\{\Ncount{}\le k\}$ and $\{\Ncount{}\ge k+1\}$ partition the sample space.
+Next, $n-\Ncount{}$ is binomial with parameters $(n,1-p)$, because
+$\Pr[n-\Ncount{}=i]=\Pr[\Ncount{}=n-i]
+=\binom{n}{n-i}p^{n-i}(1-p)^{i}=\binom{n}{i}(1-p)^{i}p^{n-i}$. Hence, for
+$0\le k\le n-1$ (so that $n-k\ge1$),
+$\Pr[\Ncount{}\le k]=\Pr[n-\Ncount{}\ge n-k]=\Ireg{1-p}{n-k}{k+1}$ by
+\eqref{eq:uppertail} applied to $n-\Ncount{}$.
+
+\emph{Step 4 (boundary values and monotonicity).} The boundary values are
+immediate from $0\le\Ncount{}\le n$. Monotonicity in $p$ follows from
+$G'(p)=n\binom{n-1}{k-1}p^{k-1}(1-p)^{n-k}\ge0$ on $[0,1]$ for $1\le k\le n$;
+for $k>n$ the tail is the constant $0$ by the boundary values.
+\end{proof}

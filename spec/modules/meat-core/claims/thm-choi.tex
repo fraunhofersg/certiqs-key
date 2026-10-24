@@ -1,0 +1,204 @@
+% ---
+% id: meat-core/thm:choi
+% kind: thm
+% title: "The Choi program"
+% summary: >-
+%   In trusted-source mode the program is exactly a jointly convex
+%   minimisation over sector Choi blocks, with one coupling constraint per
+%   Alice sector and affine or conic rows. Every support frame gives the value
+%   h_low, since only surjectivity of the parametrisation enters it.
+% prominence: standard
+% status: implemented
+% uses: [lem:choi-marginal, def:support-frame, def:feasible, lem:admissible-alice-subspace, def:keyactive, thm:convexity, lem:choi-factor, lem:joint-sectors, def:joint-sectors, def:declaration, prop:exact-cancellation, foundations/def:sector-map]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.choi:choi_parametrization
+% lean:
+% ---
+
+Applied block by block along the sectors, the parametrisation of
+Lemma~\ref{lem:choi-marginal} rewrites the program of
+Definition~\ref{def:feasible} in Choi blocks, the variables a solver works
+in, without changing its value on any support frame.
+
+\begin{theorem}\label{thm:choi}
+Let the declaration be in \tref{trusted-source mode}, fix a
+\tref{support frame} (Definition~\ref{def:support-frame}), apply
+Lemma~\ref{lem:choi-marginal} with $B'=\Qsys$, and restrict to
+sector-block-diagonal operators. Then the assignment
+$J=\bigoplus_{s}J_s\mapsto\omega=\chi_{\Qsys}(J)$, with
+$\omega_s=\chi_{\Qsys_s}(J_s)\coloneqq
+(W_{\tau}\otimes\idon{\Qsys_s})J_s(W_{\tau}^{\dagger}\otimes\idon{\Qsys_s})$,
+maps
+\begin{equation}\label{eq:choi-feas}
+  \Feas^{J}\coloneqq\Big\{\!(J_s)_{s\in\SecSet}:\ J_s\in\Pos{A_0\Qsys_s},\
+  \sum_{s\in\SecSet}\tr_{\Qsys_s}J_s=\idon{A_0},\
+  W_{\tau}\Big(\textstyle\sum_s
+  \tr_{\Qsys_s}[(\idon{A_0}\otimes\hat O^{(s)}_k)J_s]\Big)
+  W_{\tau}^{\dagger}\bowtie_k\Theta_k\ \forall k\!\Big\}
+\end{equation}
+\emph{onto} $\Feas$ of \eqref{eq:feas}, bijectively when the support frame
+is tight (Lemma~\ref{lem:choi-marginal}), and, if $\Feas\ne\varnothing$ and
+$\dim\Hs{\Qsys}\ge2$, only then. Writing
+$\Phimap_{J}[J]\coloneqq\Phimap[\chi_{\Qsys}(J)]$,
+$\cG^{J}_{\hat c,s}\coloneqq\cG_{\hat c,s}\circ\chi_{\Qsys_s}$,
+$f^{J}_{\hat c,s}\coloneqq f_{\hat c,s}\circ\chi_{\Qsys_s}$,
+$P^{J}_{\hat c}(J)\coloneqq\Phimap_J[J](\hat c)$ and
+$K^{J}_{\hat c}(J)\coloneqq P^{J}_{\hat c}(J)
++\sum_{s\in\SecSet_K(\hat c)}f^{J}_{\hat c,s}(J_s)$, the value
+\eqref{eq:hlow-def} equals
+\begin{equation}\label{eq:choi-program}
+\boxed{\ \
+\begin{aligned}
+  \hlow=\inf_{\mathbf q,\ (J_s)_s}\quad
+  &\frac{\alpha}{\alpha-1}\sum_{\hat c\notin\Chkey}
+  q(\hat c)\log_2\frac{q(\hat c)}{P^{J}_{\hat c}(J)}
+  +\sum_{\hat c\in\Chkey}\left[
+  q(\hat c)\log_2\frac{q(\hat c)}{P^{J}_{\hat c}(J)}
+  +\frac{q(\hat c)}{\alpha-1}
+  \log_2\frac{q(\hat c)}{K^{J}_{\hat c}(J)}\right]\\
+  \text{s.t.}\quad
+  &\mathbf q\in\acSet,\qquad (J_s)_s\in\Feas^{J},
+\end{aligned}\ \ }
+\end{equation}
+an \emph{exact} reformulation (not a relaxation), jointly convex in
+$(\mathbf q,(J_s)_s)$, with all constraints affine or conic.
+
+\emph{In the general format} of Definition~\ref{def:declaration}, let the
+frame be a direct sum $\iota=\bigoplus_{t\in\mathbb{T}}\iota_t$ with every
+$\iota_t\in\Linn{A_{0,t}}{A_t}$ satisfying \eqref{eq:iota} for
+$\tau^{(t)}_A$ --- either construction of Definition~\ref{def:support-frame}
+applied sector by sector --- and put $W_t\coloneqq(\tau^{(t)}_A)^{1/2}\iota_t$. Let $\Feas^{J}$
+be the set of lists $(J_{t,s})$ over the \tref[joint sector]{joint sectors} with
+$J_{t,s}\in\Pos{A_{0,t}\Qsys_s}$, the coupling constraints
+$\sum_s\tr_{\Qsys_s}J_{t,s}=\idon{A_{0,t}}$ for every $t$, and for every
+entry the row of \eqref{eq:feas-general} evaluated at
+$\omega^{(t,s)}=(W_t\otimes\idon{})J_{t,s}(W_t^{\dagger}\otimes\idon{})$: for
+an entry read through its \tref{lifted operator},
+$W_t\big(\sum_s\tr_{\Qsys_s}[(\idon{A_{0,t}}\otimes\hat O^{\uparrow(s)}_k)
+J_{t,s}]\big)W_t^{\dagger}\bowtie_k\Theta^{(t)}_k$ for every $t$, and for a
+\tref{party-local} entry the last line of \eqref{eq:feas-general} at $J$,
+conjugated by $W_t\otimes\idon{}$. Then $(J_{t,s})\mapsto(\omega^{(t,s)})$
+maps $\Feas^{J}$ onto $\Feas$ of \eqref{eq:feas-general}, bijectively when
+every sector's frame is tight, and, if $\Feas\ne\varnothing$ and
+$\dim\Hs{\Qsys}\ge2$, only then, and \eqref{eq:choi-program} holds with
+$K^{J}_{\hat c}(J)=P^{J}_{\hat c}(J)+\sum_{(t,s)\in\mathbb{J}_K(\hat c)}
+f_{\hat c,(t,s)}(\omega^{(t,s)})$. Every constraint of $\Feas^{J}$ involves
+the blocks of one Alice sector only, so $\Feas^{J}=\prod_t\Feas^{J}_t$, and a
+linear function of $(J_{t,s})$ is minimised over $\Feas^{J}$ by minimising,
+independently for each $t$, its part on the blocks of $t$ over
+$\Feas^{J}_t$.
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} The map $\chi_{\Qsys}$ acts on the $A$ factor alone, so it
+respects the sector blocks and carries every constraint row over by
+substitution. Surjectivity is that of Lemma~\ref{lem:choi-marginal},
+completed on one sector by a block that $W_{\tau}$ annihilates; the value
+follows by substituting into the objective, and injectivity is not needed.
+
+\emph{The map.} Lemma~\ref{lem:choi-marginal} restricts to
+sector-block-diagonal operators because $\chi_{\Qsys}$ acts only on the
+$A$ factor and therefore commutes with the sector projectors
+$\idon{}\otimes\Pi_s$; the global trace-preservation condition
+$\tr_{\Qsys}J=\idon{A_0}$ is the single coupling constraint
+$\sum_s\tr_{\Qsys_s}J_s=\idon{A_0}$, which by the lemma \emph{implies}
+$\omega_A=\tau_A$ and is implied by it up to the fibre the lemma
+describes. The $\CList$ rows transfer by substitution, using
+$\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\chi_{\Qsys}(J)]
+=W_{\tau}(\tr_{\Qsys}[(\idon{A_0}\otimes\hat O_k)J])W_{\tau}^{\dagger}$
+--- which holds because
+$(\idon{A}\otimes\hat O_k)(W_{\tau}\otimes\idon{})
+=(W_{\tau}\otimes\idon{})(\idon{A_0}\otimes\hat O_k)$ --- and
+block-diagonality of $\hat O_k$: the $k$-th row of \eqref{eq:choi-feas}
+\emph{is} the $k$-th row of \eqref{eq:feas-modes} evaluated at
+$\omega=\chi_{\Qsys}(J)$, so it holds for $J$ exactly when it holds for
+its image. Normalization $\tr\omega=1$ follows from the coupling
+constraint and \eqref{eq:iota}, since
+$\tr\omega=\tr[W_{\tau}^{\dagger}W_{\tau}\cdot\tr_{\Qsys}J]
+=\tr[W_{\tau}^{\dagger}W_{\tau}]
+=\tr[\iota^{\dagger}\tau_A\iota]=\tr[\tau_A\,\iota\iota^{\dagger}]
+=\tr[\Pi_{\iota}\tau_A]=\tr\tau_A=1$. Together with positivity and
+block-diagonality, which $\chi_{\Qsys_s}$ preserves, this gives
+$\chi_{\Qsys}(\Feas^{J})\subseteq\Feas$.
+
+\emph{Onto.} Fix $\omega\in\Feas$. Put
+$J_{0,s}\coloneqq(W_{\tau}^{+}\otimes\idon{})\,\omega_s\,
+(W_{\tau}^{+\dagger}\otimes\idon{})\succeq0$ for every $s$; then
+$\chi_{\Qsys_s}(J_{0,s})=\omega_s$ exactly as in
+Lemma~\ref{lem:choi-marginal} (each $\omega_s$ is supported on
+$\operatorname{supp}\tau_A\otimes\Hs{\Qsys_s}$, which is
+Lemma~\ref{lem:admissible-alice-subspace} with $\Sadm$ of \eqref{eq:SA}), and
+$\sum_s\tr_{\Qsys_s}J_{0,s}
+=W_{\tau}^{+}\big(\sum_s\tr_{\Qsys_s}\omega_s\big)W_{\tau}^{+\dagger}
+=W_{\tau}^{+}\tau_AW_{\tau}^{+\dagger}=P_{\iota}$. Choose one
+$s_0\in\SecSet$ ($\SecSet$ is non-empty, being the index set of a \tref{sector map},
+\xref{foundations/def:sector-map}) and any
+state $\varphi$ on $\Hs{\Qsys_{s_0}}$, and set
+$J_s\coloneqq J_{0,s}+\delta_{s,s_0}\,(\idon{A_0}-P_{\iota})
+\otimes\varphi$. Each $J_s\succeq0$;
+$\sum_s\tr_{\Qsys_s}J_s=P_{\iota}+(\idon{A_0}-P_{\iota})=\idon{A_0}$; and
+$W_{\tau}(\idon{A_0}-P_{\iota})=0$ kills the added block under both
+$\chi_{\Qsys_{s_0}}$ and the conjugated constraint rows, so
+$\chi_{\Qsys}(J)=\omega$ and every row of \eqref{eq:choi-feas} reads the
+corresponding row of \eqref{eq:feas-modes} at $\omega$, which holds.
+Hence $(J_s)_s\in\Feas^{J}$ and $\chi_{\Qsys}(\Feas^{J})=\Feas$.
+Injectivity, when the frame is tight, is the lemma's. If the frame is not
+tight, $\idon{A_0}-P_{\iota}\ne0$; if moreover $\Feas\ne\varnothing$ and
+$\dim\Hs{\Qsys}\ge2$, there are two different choices of $(s_0,\varphi)$ ---
+two sectors, or two states on one sector of dimension at least two --- and
+for a fixed $\omega\in\Feas$ they give two different lists $(J_s)_s$ in
+$\Feas^{J}$, differing in the added block, with the same image $\omega$.
+
+\emph{The value.} $O^{J}_{\alpha}=O_{\alpha}\circ(\idmap\times
+\chi_{\Qsys})$ by construction --- the objective transfers by
+substitution of $\omega_s=\chi_{\Qsys_s}(J_s)$ into
+\eqref{eq:objective}, using Definition~\ref{def:keyactive} for the
+restriction of the $K$-sum to key-active sectors (an identity, by
+Proposition~\ref{prop:exact-cancellation}) --- so
+$\inf_{\acSet\times\Feas^{J}}O^{J}_{\alpha}
+=\inf_{\mathbf q\in\acSet}\inf_{\omega\in\chi_{\Qsys}(\Feas^{J})}
+O_{\alpha}(\mathbf q,\omega)
+=\inf_{\mathbf q\in\acSet}\inf_{\omega\in\Feas}O_{\alpha}(\mathbf q,\omega)
+=\hlow$, which is \eqref{eq:choi-program}. Only surjectivity enters this
+chain and injectivity does not, so a non-tight support frame changes no
+value.
+
+\emph{Convexity.} Each $\chi_{\Qsys_s}$ is linear, so
+Theorem~\ref{thm:convexity} applies composed with a linear map; the
+constraint set \eqref{eq:choi-feas} is an intersection of the PSD cones
+with affine conditions (for $\bowtie_k\in\{\preceq,\succeq\}$, a
+conjugated affine-semidefinite condition), hence convex and compact ---
+compact because $J_s\succeq0$ with
+$\sum_s\tr J_s=\tr\idon{A_0}=d_{A_0}$.
+
+\emph{The general format.} By Lemma~\ref{lem:choi-factor}\,(ii), applied with
+the factors $W_t$ (factors of $\tau^{(t)}_A$ by \eqref{eq:WWtau} for each
+sector), the assignment maps the lists satisfying the coupling constraints
+onto the lists over the joint sectors with positive semidefinite blocks and
+marginal $\tau_A$, injectively when every $\ker W_t=0$, which is
+tightness of every sector's frame. Where some $\ker W_t\ne0$ and
+$\dim\Hs{\Qsys}\ge2$, the onto step of that lemma's proof, run for $W_t$
+with two different sector-block-diagonal states $\varphi\ne\varphi'$ (states
+on two sectors, or two states on one sector of dimension at least two), gives
+two different preimages of any point, differing by
+$(\idon{A_{0,t}}-P_{W_t})\otimes(\varphi-\varphi')$; having the same
+image, they satisfy the same rows, which $\Feas^{J}$ reads at the image
+point, so at a point of a non-empty $\Feas$ both lie in $\Feas^{J}$.
+Normalization follows from the marginal
+condition and $\tr\tau_A=1$. The rows of $\Feas^{J}$ are by definition the
+rows of \eqref{eq:feas-general} at the image point, so a list lies in
+$\Feas^{J}$ exactly when it satisfies the coupling constraints and its image
+lies in $\Feas$; for the lifted-operator rows the displayed conjugated form
+is the substitution made in the paragraph \emph{The map}, sector by sector. Hence the image of
+$\Feas^{J}$ is $\Feas$. The value: substitute into \eqref{eq:objective} and
+use Lemma~\ref{lem:joint-sectors}\,(ii), (iii) for $K_{\hat c}$ and the
+restriction of its sum to $\mathbb{J}_K(\hat c)$; surjectivity gives the
+equality of the infima as before. Convexity and compactness are as before,
+each coupling constraint bounding $\sum_s\tr J_{t,s}=d_{A_{0,t}}$. The
+product structure: the coupling constraint of $t$, the lifted-operator rows
+of $t$ and the party-local rows at $(t,s_{f^c})$ each involve only blocks
+$J_{t,s}$ with that $t$, and a linear function on a Cartesian product is a
+sum of linear functions of the factors, minimised factor by factor.
+\end{proof}

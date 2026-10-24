@@ -1,0 +1,77 @@
+% ---
+% id: statistics/lem:hon-degenerate
+% kind: lem
+% title: "The envelope assumption at a degenerate envelope"
+% summary: >-
+%   Every round's conditional honest law lying in a degenerate envelope is the
+%   same as independent, identically distributed honest rounds with that one
+%   law. The envelope assumption therefore generalises the single-law
+%   assumption.
+% prominence: standard
+% status: accepted
+% uses: [def:envelope]
+% mentions: [ass:hon, ass:hon-env]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "It rests on neither assumption: it relates their statements, so both are mentions and neither is in assumes."
+% ---
+
+The completeness statements read one of two honest-round premises: independent
+rounds with one law (Assumption~\ref{ass:hon}), or rounds whose conditional
+laws stay inside a declared envelope (Assumption~\ref{ass:hon-env}). At a
+degenerate envelope the two premises coincide.
+
+\begin{lemma}\label{lem:hon-degenerate}
+Let $\honest\in\simplex{\Chatset}\cap\mathbb{Q}^{\Chatset}$ and let
+$\Chat_1,\dots,\Chat_n$ be $\Chatset$-valued random variables on one
+probability space. The following are equivalent:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item the statement of Assumption~\ref{ass:hon-env} holds for the degenerate
+envelope $(\honest,\honest)$ of Definition~\ref{def:envelope}: there is a
+filtration $\mathcal{F}_0\subseteq\dots\subseteq\mathcal{F}_n$ with $\Chat_j$
+$\mathcal{F}_j$-measurable and
+$\Pr[\Chat_j=\hat c\,|\,\mathcal{F}_{j-1}]=\honest(\hat c)$ almost surely,
+for every $j$ and $\hat c$;
+\item the statement of Assumption~\ref{ass:hon} holds: $\Chat_1,\dots,\Chat_n$
+are independent and identically distributed with law $\honest$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+With a degenerate envelope, \eqref{eq:hon-env} reads
+$\honest(\hat c)\le\Pr[\Chat_j=\hat c\,|\,\mathcal{F}_{j-1}]\le\honest(\hat
+c)$, i.e.\ the equality displayed in (a).
+
+\emph{(a)$\Rightarrow$(b).} Fix $j$. For every $A\in\mathcal{F}_{j-1}$ and
+every $\hat c$, the defining property of conditional probability gives
+\begin{equation*}
+  \Pr\big[\{\Chat_j=\hat c\}\cap A\big]
+  =\mathbb{E}\big[\mathbf{1}_A\,\Pr[\Chat_j=\hat c\,|\,\mathcal{F}_{j-1}]\big]
+  =\honest(\hat c)\,\Pr[A].
+\end{equation*}
+Taking $A$ the whole space shows $\Pr[\Chat_j=\hat c]=\honest(\hat c)$, so
+the display says $\Pr[\{\Chat_j=\hat c\}\cap A]=\Pr[\Chat_j=\hat c]\Pr[A]$:
+$\Chat_j$ is independent of $\mathcal{F}_{j-1}$ and has law $\honest$. Since
+$\Chat_i$ is $\mathcal{F}_i$-measurable and $\mathcal{F}_i\subseteq
+\mathcal{F}_{j-1}$ for $i<j$, the event
+$A=\{\Chat_1=\hat c_1,\dots,\Chat_{j-1}=\hat c_{j-1}\}$ lies in
+$\mathcal{F}_{j-1}$, whence
+$\Pr[\Chat_1=\hat c_1,\dots,\Chat_j=\hat c_j]
+=\honest(\hat c_j)\,\Pr[\Chat_1=\hat c_1,\dots,\Chat_{j-1}=\hat c_{j-1}]$
+for all $\hat c_1,\dots,\hat c_j\in\Chatset$. Induction on $j$ from $1$ to $n$
+gives $\Pr[\Chat_1=\hat c_1,\dots,\Chat_n=\hat c_n]=\prod_{j=1}^{n}\honest(\hat
+c_j)$, the product law: the $\Chat_j$ are independent, each with law
+$\honest$.
+
+\emph{(b)$\Rightarrow$(a).} Take the natural filtration: $\mathcal{F}_0$ the
+trivial $\sigma$-algebra and $\mathcal{F}_j\coloneqq\sigma(\Chat_1,\dots,
+\Chat_j)$. Each $\Chat_j$ is $\mathcal{F}_j$-measurable. By independence,
+$\Chat_j$ is independent of $\mathcal{F}_{j-1}$, so for every
+$A\in\mathcal{F}_{j-1}$,
+$\mathbb{E}[\mathbf{1}_A\mathbf{1}\{\Chat_j=\hat c\}]=\honest(\hat c)\Pr[A]
+=\mathbb{E}[\mathbf{1}_A\,\honest(\hat c)]$; the constant $\honest(\hat c)$
+is $\mathcal{F}_{j-1}$-measurable, hence a version of
+$\Pr[\Chat_j=\hat c\,|\,\mathcal{F}_{j-1}]$, and (a) holds.
+\end{proof}

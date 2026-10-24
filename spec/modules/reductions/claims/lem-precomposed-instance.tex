@@ -1,0 +1,127 @@
+% ---
+% id: reductions/lem:precomposed-instance
+% kind: lem
+% title: "Precomposition of a reduction instance with a channel"
+% summary: >-
+%   A squashing relation precomposed with a channel on the physical system is
+%   again one, with the same target and every spectral certificate at the same
+%   constant. A reduction instance so precomposed is again one, with the same
+%   datum, target, entries and emission.
+% prominence: standard
+% status: implemented
+% uses: [def:squashing, lem:sep, def:reduction-instance, def:emitnorm, prop:pinching]
+% mentions: [thm:licence, prop:preorder]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.instance:precompose
+% lean:
+% ---
+
+Proposition~\ref{prop:preorder} composes two squashing relations whose
+middle system is a finite target. The lemma below precomposes with a channel
+between two physical systems instead, possibly infinite-dimensional ones, as
+when a device is a known channel followed by a model a reduction instance is
+built on; the certificates it keeps are those of the form
+Theorem~\ref{thm:licence} reads.
+
+\begin{lemma}\label{lem:precomposed-instance}
+Let $\Bsys$ and $\Bsys'$ be systems with separable Hilbert spaces, and let
+$\Phi\colon\Tcl{\Bsys}\to\Tcl{\Bsys'}$ be a channel with adjoint
+$\Phi^{\dagger}\colon\Lin{\Bsys'}\to\Lin{\Bsys}$ (Lemma~\ref{lem:sep}).
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(relations)} If $(M';O')\dsq_{\Lambda}(F;\hat O)$ with
+  $\Lambda\colon\Tcl{\Bsys'}\to\Tcl{\Qsys}$, then
+  $\Phi^{\dagger}(M')\coloneqq\{\Phi^{\dagger}(M'_v)\}_{v\in\Vset}$ is a POVM
+  on $\Bsys$ and
+  \begin{equation}\label{eq:precomposed-relation}
+    \big(\Phi^{\dagger}(M');\Phi^{\dagger}(O')\big)\;\dsq_{\Lambda\circ\Phi}\;
+    \big(F;\hat O\big),\qquad
+    (\Lambda\circ\Phi)^{\dagger}=\Phi^{\dagger}\circ\Lambda^{\dagger}.
+  \end{equation}
+  If $\Lambda^{\dagger}(\hat O_k)\bowtie c\,\idon{\Bsys'}$ for a relation
+  $\bowtie\,\in\{\preceq,=,\succeq\}$ and a real $c$, then
+  $(\Lambda\circ\Phi)^{\dagger}(\hat O_k)\bowtie c\,\idon{\Bsys}$, with the
+  same relation and the same constant.
+\item \emph{(instances)} Let $\mathcal{J}$ be a \tref{reduction instance} on
+  $\Bsys'$ with model map $M[\cdot]$, channel
+  $\Lambda[\cdot]=\PinS\circ\Lambda_0[\cdot]$ and pull-backs $O[\cdot]$.
+  The \emph{precomposed instance} $\mathcal{J}\circ\Phi$ has the system
+  $\Bsys$; the joint alphabet, data sectors, supports,
+  \tref{handed datum}, \tref{hypotheses (H)}, \tref[scalar value]{scalar values},
+  \tref{sector set}, \tref{target family}, \tref{transported set}, entry list and
+  \tref{class-marginal flag} of $\mathcal{J}$; the model map
+  $A'\mapsto\Phi^{\dagger}(M[A'])$; the channel
+  $A'\mapsto\Lambda[A']\circ\Phi=\PinS\circ(\Lambda_0[A']\circ\Phi)$; and the
+  pull-backs $A'\mapsto\Phi^{\dagger}(O[A'])$. It is a reduction instance
+  on $\Bsys$.
+\item \emph{(at a datum, and the emission)} For every admissible datum $A'$,
+  $\mathcal{J}\circ\Phi$ at $A'$ is $\mathcal{J}$ at $A'$ precomposed with
+  $\Phi$. The \tref{emission normalizer} produces the same declared datum from
+  the handed datum of either, so the emitted target, scalar values, entries
+  and constants of $\mathcal{J}\circ\Phi$ are those of $\mathcal{J}$; its
+  emitted channel is the emitted channel of $\mathcal{J}$ precomposed with
+  $\Phi$, and its declared model is $\Phi^{\dagger}$ of the declared model of
+  $\mathcal{J}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) $\Phi$ is completely positive and trace preserving, so by
+Lemma~\ref{lem:sep} (its trace-non-increasing case, with $\Bsys'$ in place of
+the target) its adjoint is completely positive, and it is unital: for every
+$\rho\in\Tcl{\Bsys}$,
+$\tr[\Phi^{\dagger}(\idon{\Bsys'})\rho]=\tr\Phi(\rho)=\tr\rho$, so
+$\Phi^{\dagger}(\idon{\Bsys'})=\idon{\Bsys}$ by Lemma~\ref{lem:sep}\,(i).
+Hence every $\Phi^{\dagger}(M'_v)$ is positive semidefinite and
+$\sum_v\Phi^{\dagger}(M'_v)=\Phi^{\dagger}(\idon{\Bsys'})=\idon{\Bsys}$. The
+composite $\Lambda\circ\Phi\colon\Tcl{\Bsys}\to\Tcl{\Qsys}$ is a channel, and
+for $X\in\Lin{\Qsys}$ and $\rho\in\Tcl{\Bsys}$ the pairings
+\eqref{eq:pairing} of $\Lambda$ and of $\Phi$, the second applied to the
+bounded operator $\Lambda^{\dagger}(X)$, give
+$\tr[X\,\Lambda(\Phi(\rho))]=\tr[\Lambda^{\dagger}(X)\,\Phi(\rho)]
+=\tr[\Phi^{\dagger}(\Lambda^{\dagger}(X))\,\rho]$; the adjoint fixed by
+\eqref{eq:pairing} is unique (Lemma~\ref{lem:sep}), so
+$(\Lambda\circ\Phi)^{\dagger}=\Phi^{\dagger}\circ\Lambda^{\dagger}$. Then
+$(\Lambda\circ\Phi)^{\dagger}(F_v)=\Phi^{\dagger}(M'_v)$ and
+$(\Lambda\circ\Phi)^{\dagger}(\hat O_k)=\Phi^{\dagger}(O'_k)$, which is
+\eqref{eq:precomposed-relation} by Definition~\ref{def:squashing}. For the
+certificate with $\succeq$: $\Lambda^{\dagger}(\hat O_k)-c\,\idon{\Bsys'}
+\succeq0$, and $\Phi^{\dagger}$ is positive and unital, so
+$(\Lambda\circ\Phi)^{\dagger}(\hat O_k)-c\,\idon{\Bsys}
+=\Phi^{\dagger}\big(\Lambda^{\dagger}(\hat O_k)-c\,\idon{\Bsys'}\big)\succeq0$;
+for $\preceq$ apply this to $-\hat O_k$ and $-c$, and for $=$ use both.
+
+(ii) We check the four parts of Definition~\ref{def:reduction-instance}.
+(I1): $\Hs{\Bsys}$ is separable; the handed datum and its formation are those
+of $\mathcal{J}$; the hypotheses (H) are those of $\mathcal{J}$ and read no
+entry of the datum; and for every admissible $A'$ the family
+$\Phi^{\dagger}(M[A'])$ is a POVM on $\Bsys$ by (i), so the stability clause
+holds wherever it holds for $\mathcal{J}$. (I2): the sector set, the scalar
+values and the target family are functions of the datum and the scalar
+values alone, which are unchanged. (I3): $\Lambda_0[A']\circ\Phi$ is a channel
+from $\Tcl{\Bsys}$, given by the constructor of $\mathcal{J}$ preceded by
+$\Phi$, so $\Lambda[A']\circ\Phi$ has the required form with the same sector
+pinching of Proposition~\ref{prop:pinching}; the transported set is unchanged
+and contains every sector projector, and \eqref{eq:instance-relation} for
+$\mathcal{J}\circ\Phi$ at every admissible $A'$ under (H) is (i) applied to
+that relation for $\mathcal{J}$. (I4): every entry is the same combination
+\eqref{eq:instance-entry} of the same target, so it is an entry of the
+required form, and its certificate is discharged at every admissible datum by
+the certificate clause of (i). Where $\mathcal{J}$ discharges the
+class-marginal identity \eqref{eq:instance-classmarginal},
+$\sum_{v\in\Vset_t}\Phi^{\dagger}(M_v[A'])=\Phi^{\dagger}(q_t\idon{\Bsys'})
+=q_t\idon{\Bsys}$, so $\mathcal{J}\circ\Phi$ discharges it too, and the flag
+is the same.
+
+(iii) The first sentence is the definition in (ii) read at $A'$. The emission
+normalizer of Definition~\ref{def:emitnorm} acts on the handed datum, class by
+class and sector by sector, with the class weights and the lattice exponent,
+and reads nothing else of the instance; the handed datum, the class weights
+and the lattice exponent of $\mathcal{J}\circ\Phi$ are those of $\mathcal{J}$,
+so it produces the same declared datum $A'$. The emitted target, scalar values
+and entries are functions of $A'$, the scalar values and the entry rule, all
+unchanged, and the emitted channel and declared model are those of
+$\mathcal{J}\circ\Phi$ at $A'$, namely $\Lambda[A']\circ\Phi$ and
+$\Phi^{\dagger}(M[A'])$.
+\end{proof}

@@ -1,0 +1,157 @@
+% ---
+% id: receiver/thm:emitted-bound
+% kind: thm
+% title: "Multiclick bounds carried by the emitted weights"
+% summary: >-
+%   Each setting's emitted weight bounds its multiclick element on every
+%   photon-number block above the cutoff, and their minimum does so at every
+%   setting, under the eigenvalue-slack assumption [[A-EIG]] only where
+%   computed block eigenvalues enter. Each weight lies in [0, 1] and is
+%   finitely computable.
+% prominence: main
+% status: implemented
+% uses: [def:setting-family, def:pmc, def:pmcex, def:enclosed-weight, thm:enclosed-weight, thm:multiclick-bound, def:exactbnd, lem:collapse, lem:windowtail, lem:exactwindow, lem:exactbasic]
+% mentions: [rem:exacteig, rem:exactpositivity, req:rigorous-weight]
+% assumes: [A-EIG]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.bound:emitted_weights
+% lean:
+% notes: "The per-setting inequality eq:pmcsetting is the first conclusion and the uniform eq:pmcstatement its consequence; a claim that cites eq:pmcstatement reads the uniform form under its own label."
+% ---
+
+This is the theorem the emitted weights rest on. Each setting's weight is
+the analytic weight of Definition~\ref{def:pmc} or, where a depth is
+declared, the exact-window weight of Definition~\ref{def:pmcex}; where the
+engine evaluates the weight rigorously (Requirement~\ref{req:rigorous-weight})
+it is the enclosed weight of Definition~\ref{def:enclosed-weight}, formed by
+the same formulas from bounds on the conservative side. The theorem says that
+each bounds the multiclick element of its own setting on every
+photon-number block above the cutoff, and that the minimum over the settings
+bounds it at every setting, under Assumption~\ref{ass:eig} only where a
+computed block eigenvalue enters, at a setting governed by
+Definition~\ref{def:pmcex}. Remark~\ref{rem:exacteig} explains why that entry
+rests on the assumption rather than on a theorem, and
+Theorem~\ref{thm:enclosed-weight} is the theorem that replaces it.
+
+\begin{theorem}\label{thm:emitted-bound}
+Let a setting family (Definition~\ref{def:setting-family}) be given. For
+every setting $t\in\Tset$ let $\pmc^{(t)}$ be as in
+Definition~\ref{def:pmc} if $t$ carries no exact-window depth and as in
+Definition~\ref{def:pmcex} if it carries one, or, at any setting, let it be
+the \tref{enclosed weight} $\check p^{(t)}_{\mc}$ of
+Definition~\ref{def:enclosed-weight} formed from \tref{enclosed bound data} of
+$t$ and, where $t$ carries a depth, from \tref{rigorous window bounds} of $t$,
+or a real $p$ with $0\le p\le\check p^{(t)}_{\mc}$;
+and let $\pmc=\min_{t\in\Tset}\pmc^{(t)}$ as in Definition~\ref{def:pmc}. Then
+\begin{equation}\label{eq:pmcsetting}
+  \blk{M}{\gtN}_{\mc|t}\ \succeq\ \pmc^{(t)}\,\id^{(>N)}
+  \qquad\text{for every }t\in\Tset ,
+\end{equation}
+where $\blk{M}{\gtN}_{\mc|t}$ is the restriction of the multiclick element
+$M_{\mc|t}$ of \eqref{eq:family-elements} at setting $t$ to the photon-number
+blocks $n>N$; and consequently, with the one weight $\pmc$ at every setting,
+\begin{equation}\label{eq:pmcstatement}
+  \blk{M}{\gtN}_{\mc|t}\ \succeq\ \pmc\,\id^{(>N)}
+  \qquad\text{for every }t\in\Tset .
+\end{equation}
+At a setting governed by Definition~\ref{def:pmc} or by
+Definition~\ref{def:enclosed-weight} both inequalities hold at
+that setting with no hypothesis beyond this contract's ledger; at a setting
+governed by Definition~\ref{def:pmcex} they hold there \emph{under
+Assumption~\ref{ass:eig}}, which is what makes the second entry of
+\eqref{eq:elldef} a lower bound. At a
+one-setting family, $\Tset=\{\off\}$, one has $\pmc=\pmc^{(\off)}$ and the
+two inequalities are one. Moreover $0\le\pmc^{(t)}\le1$ at every setting,
+hence $0\le\pmc\le1$, and each $\pmc^{(t)}$ of Definition~\ref{def:pmc}
+or~\ref{def:pmcex} is computable by finitely many
+arithmetic operations on
+$\{\lmax(B^{(t)}),\lmin(B^{(t)}_k),\gamma^{(t)},\beta^{(t)}_k\}$ and the
+declared $N$, $m_t$ and $m^{\ast}_t$ --- where $B^{(t)},B^{(t)}_k$ are the
+operators of the setting (Definition~\ref{def:setting-family}\,(b)) ---
+together with, where the setting carries a declared depth, the declared
+$\varepsilon_{\mathrm{eig}}$ and the $m^{\ast}_t-N$ extreme eigenvalues
+$\widehat\Bnd^{\ast(t)}(n)$ of the Hermitian matrices \eqref{eq:exactbnd},
+each of dimension $\binom{D+n-1}{n}$; each enclosed weight by finitely many
+on the enclosed bound data, the rigorous window bounds and the declared $N$,
+$m_t$ and $m^{\ast}_t$; and $\pmc$ by finitely many comparisons among them.
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} At a fixed setting, Theorem~\ref{thm:multiclick-bound} bounds the
+multiclick element block by block. Lemma~\ref{lem:collapse} or
+Lemma~\ref{lem:windowtail} turns the block bounds into the analytic weight,
+and Lemma~\ref{lem:exactwindow} turns them into the exact-window weight;
+Theorem~\ref{thm:enclosed-weight} does both for the enclosed weight. The
+uniform statement follows because a minimum lies below each of its terms.
+
+\emph{Step 1 (the analytic weight at a fixed setting).} Fix $t$. By
+Theorem~\ref{thm:multiclick-bound}, applicable at every setting by
+\eqref{eq:family-mc}, $\blk{M}{\eqn}_{\mc|t}\succeq\Bnd^{(t)}(n)\id$ for
+every $n$, so
+$\blk{M}{\gtN}_{\mc|t}\succeq\big(\inf_{n>N}\Bnd^{(t)}(n)\big)\id^{(>N)}$
+--- the blocks are orthogonal summands and a lower bound holding on each
+holds on the direct sum. Since $\blk{M}{\gtN}_{\mc|t}\succeq0$ as well
+($M_{\mc|t}$ is a sum of POVM elements,
+Definition~\ref{def:setting-family}\,(a)), the bound may be replaced by its
+positive part. In the first branch of \eqref{eq:pmcdef} --- where the flag
+is $\mathrm{exact}$, so that \eqref{eq:collapsehyp} holds with equality by
+construction (Definition~\ref{def:setting-family}\,(c)) ---
+Lemma~\ref{lem:collapse} identifies that positive part with
+$\max\{0,\Bnd^{(t)}(N+1)\}$; in the second,
+Lemma~\ref{lem:windowtail}\,(i) gives
+$\underline{\Bnd}^{(t)}_{N,m_t}\le\inf_{n>N}\Bnd^{(t)}(n)$, so its positive
+part is a valid lower bound as well.
+
+\emph{Step 2 (the exact-window weight at a fixed setting).} At a setting
+carrying a declared depth, \eqref{eq:exactstatement} of
+Lemma~\ref{lem:exactwindow} gives the conclusion directly for
+\eqref{eq:pmcex}; its hypothesis \eqref{eq:mcpos} holds at every setting,
+because $M_{\mc|t}=\sum_{S\in\MCK}M_{S|t}$ is a sum of elements of a POVM
+(Definition~\ref{def:setting-family}\,(a)), which is the discharge
+Remark~\ref{rem:exactpositivity} says is needed. On branch~1, apply it with
+$m^{\ast}=m^{\ast}_t$, $\ell=\ell^{(t)}$ and
+$\tau=\Bnd^{(t)}(m^{\ast}_t+1)$, the remainder being admissible by
+part~(ii) because predicate~(X) makes \eqref{eq:collapsehyp} hold. On
+branch~2, apply it with $m^{\ast}=m_t$, $\tau=T^{(t)}_{m_t}$ admissible by
+part~(i), and the window function $\ell(n)=\ell^{(t)}(n)$ for
+$N<n\le m^{\ast}_t$, $\ell(n)=\Bnd^{(t)}(n)$ for $m^{\ast}_t<n\le m_t$ ---
+the two ranges together being $N<n\le m_t$ because $m^{\ast}_t\le m_t$ is
+required there. In both cases hypothesis \eqref{eq:ellhyp} holds entry by
+entry: for $\Bnd^{(t)}(n)$ by Lemma~\ref{lem:exactbasic}, and for
+$\widehat\Bnd^{\ast(t)}(n)-\varepsilon_{\mathrm{eig}}$ by
+Assumption~\ref{ass:eig}; a maximum of the two is admissible by
+part~(iii).
+
+\emph{Step 2a (the enclosed weight at a fixed setting).} At a setting whose
+weight is the enclosed weight $\check p^{(t)}_{\mc}$ or a real $p$ with
+$0\le p\le\check p^{(t)}_{\mc}$,
+Theorem~\ref{thm:enclosed-weight}\,(iii) gives \eqref{eq:pmcsetting} at $t$
+and $0\le\pmc^{(t)}\le1$, for the enclosed weight and for every real between
+$0$ and it, with no hypothesis beyond Definition~\ref{def:setting-family},
+whether or not $t$ carries a depth.
+
+\emph{Step 3 (the uniform weight).} So \eqref{eq:pmcsetting} holds at $t$,
+under Assumption~\ref{ass:eig} exactly where $t$ is governed by
+Definition~\ref{def:pmcex}. Since
+$\pmc$ is the minimum of the $\pmc^{(s)}$ over the finite set $\Tset$,
+$\pmc\le\pmc^{(t)}$, and $\pmc^{(t)}\id^{(>N)}\succeq\pmc\,\id^{(>N)}$ turns
+\eqref{eq:pmcsetting} at $t$ into \eqref{eq:pmcstatement} at $t$, with no
+further hypothesis; at $\Tset=\{\off\}$ the minimum is over one number.
+
+\emph{Step 4 (range and computability).} The range $0\le\pmc^{(t)}\le1$
+follows at every setting from the positive part and from an entry at most $1$
+in the inner minimum. At a setting governed by Definition~\ref{def:pmc} every
+entry is a value of $\Bnd^{(t)}$ or the tail value $T^{(t)}_{m_t}$, and
+$\Bnd\le1$ (Theorem~\ref{thm:multiclick-bound}). At a setting governed by
+Definition~\ref{def:pmcex} the window entries $\ell^{(t)}(n)$ may exceed $1$,
+but the inner minimum of each branch contains an analytic remainder at most
+$1$: $\Bnd^{(t)}(m^{\ast}_t+1)\le1$ on branch~1, and
+$T^{(t)}_{m_t}=1-\sum_k\beta^{(t)}_k\big(d^{(t)}_k\big)^{m_t}\le1$ on
+branch~2 because $\beta^{(t)}_k,d^{(t)}_k\ge0$ (the \emph{Range} paragraph of
+Remark~\ref{rem:exacteig}). At a setting governed by
+Definition~\ref{def:enclosed-weight} the range is Step~2a. And $\pmc$, a
+minimum of finitely many
+numbers in $[0,1]$, lies there with them. Computability of each $\pmc^{(t)}$
+is the finiteness of its window, and of $\pmc$ the finiteness of $\Tset$.
+\end{proof}

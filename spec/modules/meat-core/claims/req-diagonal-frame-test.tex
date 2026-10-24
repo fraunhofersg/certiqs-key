@@ -1,0 +1,35 @@
+% ---
+% id: meat-core/req:diagonal-frame-test
+% kind: req
+% title: "Exact diagonality test for the diagonal frame"
+% summary: >-
+%   The engine uses the diagonal frame only when every off-diagonal entry of
+%   the declared τ_A is the datum 0, compared at no window. For a τ_A that is
+%   only nearly diagonal the diagonal frame is unavailable, and the full frame
+%   always is.
+% prominence: standard
+% status: implemented
+% uses: [def:support-frame, def:admissible-declaration]
+% mentions: [req:state-blind-test, rem:tightness-by-construction]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.joint:marginal_frame
+% lean:
+% ---
+
+The diagonal frame is tight by construction only because $\tau_A$ is
+diagonal. Read at a positive window, the test would pass a singular
+$\tau_A$ with small off-diagonal entries and return a frame that is not
+tight (Remark~\ref{rem:tightness-by-construction}).
+
+\begin{requirement}\label{req:diagonal-frame-test}
+The engine uses the \tref{diagonal frame} of
+Definition~\ref{def:support-frame}\,(b) only when every off-diagonal entry
+of the declared $\tau_A$ is the datum $0$. It decides this by comparing
+each off-diagonal entry with $0$ as a binary64 value, at no window, as
+Requirement~\ref{req:state-blind-test} compares the entries of a sector
+block, and the comparison is a clause of \iface{alice_marginal_exact}. A
+$\tau_A$ that is only \emph{nearly} diagonal is not diagonal: the diagonal
+frame is unavailable for it, and the \tref{full frame} always is.
+\end{requirement}

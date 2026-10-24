@@ -1,0 +1,117 @@
+% ---
+% id: receiver/thm:compilation-well-defined
+% kind: thm
+% title: "Well-definedness of compilation"
+% summary: >-
+%   Every linear extension of a well-formed graph compiles to the same
+%   contraction before the efficiency layer, which is unitary exactly when
+%   every element is lossless, and well-formedness is decidable by finite
+%   inspection. A well-formed route-(iii) graph therefore determines its
+%   instrument matrix.
+% prominence: standard
+% status: implemented
+% uses: [def:graph, def:compile, prop:mode-algebra]
+% mentions: [rem:e3]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.graph:compile_element_graph
+% lean:
+% ---
+
+Two elements that share a mode but are not ordered by the graph can make the
+compiled product depend on the sort (Remark~\ref{rem:e3}). Support
+comparability rules this out,
+and item (i) shows that it is enough for every sort to give the same matrix.
+
+\begin{theorem}\label{thm:compilation-well-defined}
+In items (i)--(iii), let $\Grph$ be a well-formed declared element graph
+(Definition~\ref{def:graph}); in particular $\Grph$ is acyclic
+(condition (E2) of Definition~\ref{def:graph}), so that $\preceq_\Grph$ is a partial order and
+linear extensions of $\Grph$ and of each of its induced subgraphs exist.
+Then:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{Independence of the sort.} $\Gmat^{\sigma}_{\Grph}$ is the same
+  matrix for every linear extension $\sigma$ of $\Grph$; write
+  $\Gmat_{\Grph}$ for it. In particular, if $V$ is partitioned into
+  \emph{layers} $L_1,\dots,L_r$ such that elements of one layer have pairwise
+  disjoint supports and $e\preceq_\Grph f$ implies
+  $\operatorname{layer}(e)\le\operatorname{layer}(f)$, then
+  $\Gmat_\Grph=\big(\prod_{e\in L_r}\hat\Gmat_e\big)\cdots
+  \big(\prod_{e\in L_1}\hat\Gmat_e\big)$ with each intra-layer product
+  order-independent.
+\item \emph{Admissibility by construction.}
+  $\Gmat_\Grph^\dagger\Gmat_\Grph\preceq\id$, and hence also
+  $\Gmat^\dagger\Gmat\preceq\id$ for the compiled instrument matrix of
+  Definition~\ref{def:compile}.
+\item \emph{Losslessness.} $\Gmat_\Grph$ is unitary if and only if every
+  element of $\Grph$ is lossless on its support. If in addition every
+  $\eta_k=1$ then $\Gmat$ is unitary.
+\item \emph{Decidability.} For an arbitrary declared element graph, not
+  necessarily well formed, conditions (E1)--(E3) are decidable by finite
+  inspection: (E1) by evaluating the declared domain predicate of each
+  element, (E2) by a topological sort, (E3) by testing
+  $\Sigma_e\cap\Sigma_f\neq\varnothing$ against the transitive closure of $E$
+  for each of the $\binom{|V|}{2}$ pairs.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) Induction on $L=|V|$. For $L\le1$ there is nothing to prove. Let $\sigma$
+and $\tau$ be linear extensions and let $e\coloneqq\sigma(1)$. Since $\sigma$
+is a linear extension and $e$ is first, no element other than $e$ satisfies
+$f\preceq_\Grph e$; that is, $e$ is minimal for $\preceq_\Grph$. Let $j$ be the
+position of $e$ in $\tau$. Every element $f=\tau(i)$ with $i<j$ satisfies
+$e\not\preceq_\Grph f$ (else $f$ would have to follow $e$ in $\tau$) and
+$f\not\preceq_\Grph e$ (minimality of $e$), so $f$ and $e$ are incomparable.
+By (E3), $\Sigma_f\cap\Sigma_e=\varnothing$, and by
+Proposition~\ref{prop:mode-algebra}\,(iii) the embeddings $\hat\Gmat_f$ and
+$\hat\Gmat_e$ commute. In the product
+$\Gmat^{\tau}_{\Grph}=\hat\Gmat_{\tau(L)}\cdots\hat\Gmat_{\tau(1)}$ the factor
+$\hat\Gmat_e$ sits at position $j$ from the right and may therefore be moved
+past the $j-1$ factors to its right one at a time, giving
+$\Gmat^{\tau}_{\Grph}=\big(\hat\Gmat_{\tau(L)}\cdots\widehat{\hat\Gmat_{e}}
+\cdots\hat\Gmat_{\tau(1)}\big)\hat\Gmat_e$, where the hat denotes omission and
+the remaining order is $\tau$ restricted to $V\setminus\{e\}$. The induced
+subgraph on $V\setminus\{e\}$ is itself well formed: (E1) and (E2) pass to any
+induced subgraph, and since $e$ is minimal no directed path between two other
+elements passes through $e$, so reachability among them, and with it (E3), is
+inherited. That restriction of $\tau$ is therefore a linear extension of the
+induced subgraph; so is $\sigma$ restricted to $V\setminus\{e\}$, and both
+compile to the same matrix by the induction hypothesis. Multiplying on the
+right by $\hat\Gmat_e$ gives $\Gmat^\tau_\Grph=\Gmat^\sigma_\Grph$.
+
+For the layered form, note that a layering as described yields a linear
+extension by listing $L_1$ in an order compatible with $\preceq_\Grph$ (one
+exists, the restriction of $\preceq_\Grph$ to a layer being a partial order),
+then $L_2$ likewise, and so on: an element preceding another in
+$\preceq_\Grph$ lies in an earlier layer or earlier within the same one. The
+intra-layer products are order-independent by
+Proposition~\ref{prop:mode-algebra}\,(iii), since the elements of one layer
+have pairwise disjoint supports, so the layered product equals the product
+along that linear extension, which is $\Gmat_\Grph$ by the first part.
+
+(ii) Each $\hat\Gmat_e$ is a contraction by (E1) and
+Proposition~\ref{prop:mode-algebra}\,(i), so the product is a contraction by
+repeated application of Proposition~\ref{prop:mode-algebra}\,(ii). $D_\eta$ is
+diagonal with entries in $[0,1]$, hence a contraction, and one more application
+of (ii) gives $\Gmat^\dagger\Gmat\preceq\id$.
+
+(iii) If every element is lossless then every $\hat\Gmat_e$ is unitary
+(Proposition~\ref{prop:mode-algebra}\,(i) and (iv), a square isometry being
+unitary), and so is their product. Conversely suppose $\Gmat_\Grph$ is unitary,
+and write $X_i\coloneqq\hat\Gmat_{e_i}\cdots\hat\Gmat_{e_1}$. For every vector
+$v$,
+$\lVert v\rVert=\lVert X_Lv\rVert\le\lVert X_{L-1}v\rVert\le\cdots\le
+\lVert X_1v\rVert\le\lVert v\rVert$, so every inequality is an equality for
+every $v$. From $\lVert X_1v\rVert=\lVert v\rVert$ for all $v$, $\hat\Gmat_{e_1}$
+is a square isometry, hence unitary, hence $\operatorname{ran}X_1=
+\mathbb{C}^{\Modes}$; then $\lVert X_2v\rVert=\lVert X_1v\rVert$ for all $v$
+says $\hat\Gmat_{e_2}$ is isometric on all of $\mathbb{C}^{\Modes}$, hence
+unitary, and so on. Each $\hat\Gmat_{e_i}$ unitary forces
+$\Gmat_{\Sigma_{e_i}}$ unitary, i.e.\ lossless. The statement about $D_\eta$ is
+the same argument applied to the one extra factor, $D_\eta$ being unitary
+exactly when every $\eta_k=1$.
+
+(iv) Each test is a finite computation on finite data, as described.
+\end{proof}

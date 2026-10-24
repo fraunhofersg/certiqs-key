@@ -1,0 +1,27 @@
+% ---
+% id: reductions/rem:branch-blocks
+% kind: rem
+% title: Conditionally characterized receivers under the branching rule
+% summary: >-
+%   The branching rule squashes a conditionally characterized receiver as soon
+%   as each branch squashes, stacking the branch targets as blocks. A branch
+%   that cannot be modelled gets a block of its own, where the adversary fixes
+%   the outcome only in proportion to the branch's probability.
+% prominence: standard
+% status: accepted
+% uses: [lem:master]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:branch-blocks}
+The branching rule of Lemma~\ref{lem:master} turns any conditional
+description of a receiver into a squashing relation. The device is squashable
+as soon as \emph{each branch} is, and the squashed target is the branch
+targets stacked as diagonal blocks. A branch one cannot model is not fatal: it
+gets a block of its own, on which the squashed adversary rather than Bob's
+detector fixes the outcome, but only in proportion to how likely that branch
+was.
+\end{remark}

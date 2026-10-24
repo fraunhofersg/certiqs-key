@@ -1,0 +1,477 @@
+% ---
+% id: meat-core/frank-wolfe/thm:firstorder
+% kind: thm
+% title: "The estimate and the first-order lower bound"
+% summary: >-
+%   In exact real arithmetic the best linearisation over the iterates, even
+%   ones feasible only up to windows, bounds h_low from below given positive
+%   probabilities, maximal branch support, unperturbed gradients and bounds on
+%   both linear minima. An exactly feasible point's objective bounds it from
+%   above.
+% user_statement: >-
+%   The headline key rate rests on this bound, which needs no exact optimum.
+%   The per-round bound h_low is the minimum of a convex optimisation. At each step
+%   whose positivity and full-support conditions hold, the tangent plane of
+%   the objective lies below it over the feasible set, so its lowest point
+%   bounds h_low from below; the engine reports the best such bound, h_lb.
+%   That point is bounded without trusting a solver: one part is
+%   computed exactly, the other verified in exact arithmetic from the
+%   solver's dual against the exact constraint rows, the floating-point
+%   frame W_t's error in those rows deducted. The engine evaluates the
+%   objective, its gradient and the maps and frame they are built from in
+%   floating point, with no error budget, so a computed h_lb can exceed h_low
+%   by an amount no claim bounds. Its points are feasible only within a
+%   window, so its reported estimate need not lie above h_low.
+% prominence: main
+% status: implemented
+% uses: [lem:fo-khyp, meat-core/def:branch-support, meat-core/lem:branch-support, meat-core/thm:gradient, meat-core/cor:full-gradient, def:relaxed-feasible-set, prop:relaxed-set-properties, meat-core/thm:choi, meat-core/def:feasible, lem:fo-face, meat-core/thm:convexity, meat-core/prop:value-range, meat-core/thm:branch-formula, meat-core/lem:estimate, def:first-order-setting, meat-core/def:declaration, meat-core/lem:joint-sectors, meat-core/def:admissible-declaration, meat-core/def:admissible-acceptance-set]
+% mentions: [rem:acc-side, rem:iterate-relaxed-oracle-exact, req:iterate-checks, lem:feasible-side-dual, req:verified-feasible-side]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.joint_driver:run_joint_frank_wolfe
+% lean:
+% ---
+
+The \emph{first-order bound} $\hlb$ is the largest, over the iterates the
+optimiser passed through, of the value of the linearisation of the
+objective at that iterate, minimised over the feasible set. Part~(ii)
+proves $\hlb\le\hlow$ in exact real arithmetic, at maximal support, with
+no perturbation of the iterate and given the two inequalities of
+\eqref{eq:lmo}; part~(iii) admits an iterate that lies only in
+the \tref{relaxed feasible set}, which is where a run's iterates lie
+(Remark~\ref{rem:iterate-relaxed-oracle-exact}). Part~(i) restates
+Lemma~\ref{lem:estimate}\,(ii) of the core, because it is the whole
+warrant of the number a run reports as its estimate, and the membership
+$x\in\acSet\times\Feas^{J}$ is exactly what must be checked for that
+warrant to hold (Requirement~\ref{req:iterate-checks}). That $\acSet$ is an
+\tref{admissible acceptance set} (Definition~\ref{def:admissible-acceptance-set}) is
+a hypothesis of the theorem itself and not only of the claims it consumes:
+convexity of $\acSet$ is used in Lemma~\ref{lem:fo-khyp}\,(i) and
+closedness in Step~2 of the proof. Part~(iv) lets a lower bound on either
+minimum stand in for the pairing on its side: on the acceptance side a
+certified bound (Remark~\ref{rem:acc-side}), on the feasible side the bound
+of Lemma~\ref{lem:feasible-side-dual}, formed as
+Requirement~\ref{req:verified-feasible-side} says. Where both stand in, the
+bracket reads no point an oracle returned, and the theorem asks nothing of
+an oracle. Part~(v) makes the bound independent of
+condition~(vii) of an \tref{admissible declaration}, the non-empty feasible set,
+which the engine does not decide on every declaration: on an empty feasible
+set $\hlow$ is $+\infty$, and every real number bounds it.
+
+\begin{theorem}
+\label{thm:firstorder}
+Let $\alpha\in(1,\infty)$, let $\Decl$ satisfy
+Definition~\ref{def:admissible-declaration}, in the \tref{basic format} or in the general
+format of Definition~\ref{def:declaration}, and let $\acSet$ satisfy
+Definition~\ref{def:admissible-acceptance-set}. In the general format $\Feas^{J}$ is the set of
+lists $(J_{(\mathsf t,s)})$ over the \tref[joint sector]{joint sectors} of
+Theorem~\ref{thm:choi}, with $J_s\coloneqq\bigoplus_{\mathsf t}
+J_{(\mathsf t,s)}$ for every sector $s$ of the measured system, and
+$\Feas^{J}(\varepsilon)$ is read as
+Definition~\ref{def:relaxed-feasible-set} reads it there.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(The estimate over-estimates; Lemma~\ref{lem:estimate}\,(ii)
+of the core, restated.)} For every $x\in\acSet\times\Feas^{J}$,
+\begin{equation}\label{eq:fo-estimate}
+  O^{J}_{\alpha}(x)\;\ge\;\hlow .
+\end{equation}
+\item \emph{(The first-order lower bound.)} Let $\Itset$ be a finite
+non-empty index set, and let
+$x_t=(\mathbf q_t,J_t)\in\acSet\times\Feas^{J}$, $t\in\Itset$, satisfy
+for each $t$:
+\begin{itemize}[leftmargin=2.6em]
+\item[(H-POS)] $q_t(\hat c)>0$ and $P^{J}_{\hat c}(J_t)>0$ for every
+  $\hat c\in\Chacc$, and $K^{J}_{\hat c}(J_t)>0$ for every
+  $\hat c\in\Chkey\cap\Chacc$, with $\Chacc$ the \tref{acceptance support}
+  \eqref{eq:chacc-def};
+\item[(H-SUPP)] every key-active branch operator
+  $X_{\hat c,s}\coloneqq\cG^{J}_{\hat c,s}(J_{t,s})$,
+  $\hat c\in\Chkey$, $s\in\SecSet_K(\hat c)$, attains maximal support:
+  $\operatorname{supp}X_{\hat c,s}=W_{\hat c,s}$, the
+  \tref{maximal branch support} \eqref{eq:Wcs}, equivalently
+  $\operatorname{rank}X_{\hat c,s}=\dim W_{\hat c,s}
+  =\operatorname{rank}\mathbf K_{\hat c,s}$ by \eqref{eq:Kstack-rank},
+  the inclusion $\subseteq$ holding always by \eqref{eq:Wcs-bound};
+  $J_{t,s}\succ0$ suffices for it (Lemma~\ref{lem:branch-support}\,(i));
+\item[(H-NOPERT)] the pair
+  $(\lmoq_t,\lmoJ_t)\coloneqq\nabla O^{J}_{\alpha}(x_t)$ is the
+  split-form gradient of Theorem~\ref{thm:gradient}\,(i)(a)--(b) assembled
+  by Corollary~\ref{cor:full-gradient} \emph{at $x_t$ itself}: no
+  perturbation of $x_t$, of any $J_{t,s}$, or of any branch operator
+  built from them is applied before the gradient is taken.
+\end{itemize}
+Let $(v_t,S_t)$ satisfy both inequalities of \eqref{eq:lmo} at
+$(\lmoq_t,\lmoJ_t)$ (Definition~\ref{def:first-order-setting}): the
+\tref{acceptance-side inequality} and the
+\tref{feasible-side inequality}.
+Then, \emph{in exact real arithmetic},
+\begin{equation}\label{eq:hlb}
+  \hlb\;\coloneqq\;\max_{t\in\Itset}\Big[
+  O^{J}_{\alpha}(x_t)
+  +\langle\lmoq_t,v_t-\mathbf q_t\rangle
+  +\langle\lmoJ_t,S_t-J_t\rangle\Big]
+  \;\le\;\hlow ,
+\end{equation}
+and $\max\{0,\hlb\}\le\hlow$ as well.
+\item \emph{(The iterate read at a tolerance, the minima over the exact
+set.)} Let $\varepsilon\ge0$ and let $\Feas^{J}(\varepsilon)$ be the
+relaxed feasible set of Definition~\ref{def:relaxed-feasible-set}.
+\begin{enumerate}[label=(iii\alph*),leftmargin=2.4em]
+\item \emph{The estimate.} For every
+$x\in\acSet\times\Feas^{J}(\varepsilon)$,
+$O^{J}_{\alpha}(x)\ge\hlow[\Feas^{J}(\varepsilon)]$, the Choi-form
+relaxed infimum \eqref{eq:hlow-feasJ}; and
+$\hlow[\Feas^{J}(\varepsilon)]\le\hlow\le\hqkd$ by
+\eqref{eq:feas-tol-mono-J}.
+\item \emph{The bound.} Let $x_t\in\acSet\times\Feas^{J}(\varepsilon)$,
+$t\in\Itset$, satisfy (H-POS), (H-SUPP) and (H-NOPERT) as stated in (ii),
+and let $(v_t,S_t)$ satisfy \eqref{eq:lmo} \emph{as written}, its
+acceptance-side inequality and its feasible-side inequality, with the two
+minima over $\acSet$ and over the \emph{exact} $\Feas^{J}$. Then, in exact
+real arithmetic,
+$\hlb\le\hlow$ and $\max\{0,\hlb\}\le\hlow$, with $\hlb$ of
+\eqref{eq:hlb}.
+\end{enumerate}
+\item \emph{(Lower bounds in place of the pairings.)} The conclusions of
+(ii) and of (iiib) hold as well when, at some or all $t\in\Itset$, the
+pairing $\langle\lmoq_t,v_t\rangle$ in \eqref{eq:hlb} is replaced by a real
+number $b^{\mathrm A}_t$, or the pairing $\langle\lmoJ_t,S_t\rangle$ by a
+real number $b^{\mathrm F}_t$, or both, with
+\begin{equation}\label{eq:lmo-bounds}
+  b^{\mathrm A}_t\;\le\;\min_{\mathbf q'\in\acSet}\langle\lmoq_t,\mathbf q'\rangle
+  \qquad\text{and}\qquad
+  b^{\mathrm F}_t\;\le\;\min_{J'\in\Feas^{J}}\langle\lmoJ_t,J'\rangle ,
+\end{equation}
+each inequality asked only where its number is used, the second minimum
+taken over the \emph{exact} $\Feas^{J}$, and the pairings
+$\langle\lmoq_t,\mathbf q_t\rangle$ and $\langle\lmoJ_t,J_t\rangle$ being
+kept. At such a $t$ the inequality of \eqref{eq:lmo} on a replaced side is
+not asked of $(v_t,S_t)$, and where both sides are replaced no pair
+$(v_t,S_t)$ is asked at all: the bracket of \eqref{eq:hlb} at that $t$ is
+then
+\begin{equation*}
+  O^{J}_{\alpha}(x_t)+b^{\mathrm A}_t-\langle\lmoq_t,\mathbf q_t\rangle
+  +b^{\mathrm F}_t-\langle\lmoJ_t,J_t\rangle .
+\end{equation*}
+\item \emph{(An empty feasible set.)} In place of the hypothesis on $\Decl$
+above, let $\Decl$ be a tuple of the form of
+Definition~\ref{def:declaration} that satisfies conditions (i)--(vi) and
+(viii) of Definition~\ref{def:admissible-declaration}, and form $\Feas$, the
+objective $O_{\alpha}$ and $\hlow$ from it by the formulas of
+Definition~\ref{def:feasible}. Let $\Feas=\varnothing$. Then $\hlow=+\infty$,
+so every real number is a lower bound on $\hlow$, the value of
+\eqref{eq:hlb} that a run forms at its iterates included. Consequently the
+conclusions $\hlb\le\hlow$ and $\max\{0,\hlb\}\le\hlow$ of (ii), (iiib) and
+(iv), for a real $\hlb$, hold of every tuple of the form of
+Definition~\ref{def:declaration} that satisfies conditions (i)--(vi) and
+(viii) of Definition~\ref{def:admissible-declaration}, whether or not it
+satisfies condition~(vii): under the hypotheses of those parts where it does,
+and because $\hlow=+\infty$ where it does not.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} At each iterate the objective has a gradient, supplied by
+Corollary~\ref{cor:full-gradient} with its positivity weakened to the
+acceptance support by Lemma~\ref{lem:fo-khyp}, and at maximal support that
+gradient is a genuine directional derivative in every feasible direction
+(Lemma~\ref{lem:fo-face}). Convexity of the objective turns the
+derivative into a linear minorant; its minimum over the product
+$\acSet\times\Feas^{J}$ separates into the two linear minimisations of
+\eqref{eq:lmo}; and a maximum of lower bounds is a lower bound.
+In (iiib) the point lies in the relaxed set while the comparison point
+lies in the exact one, and the chord argument runs in the relaxed set,
+which is convex.
+
+\emph{(i).} This is Lemma~\ref{lem:estimate}\,(ii) of the core.
+
+\emph{(ii).} Fix $t$ and write $x\coloneqq x_t$,
+$\nabla O\coloneqq(\lmoq_t,\lmoJ_t)$.
+
+\emph{Step 1 (the gradient exists and is a genuine directional derivative
+in every feasible direction).} By (H-POS) and (H-SUPP), and by
+Lemma~\ref{lem:fo-khyp}\,(iii), which is what lets (H-POS) be assumed
+on $\Chacc$ and its $K$-part only on $\Chkey\cap\Chacc$,
+Corollary~\ref{cor:full-gradient} applies at $x$ and supplies
+$\nabla O$ through \eqref{eq:grad-q}--\eqref{eq:grad-pieces}, with
+$\lmoq_t\in\mathbb{R}^{\Chacc}$; by
+(H-NOPERT) that is the object the bracket uses. Let
+$y=(\mathbf q',J')\in\acSet\times\Feas^{J}$ and put $h\coloneqq y-x$. Its
+$J$-component $\Delta_s\coloneqq J'_s-J_{t,s}$ is a difference of positive
+semidefinite operators and hence Hermitian, so by
+Lemma~\ref{lem:fo-face} every branch operator's direction
+$\cG^{J}_{\hat c,s}(\Delta_s)$ is supported inside
+$\operatorname{supp}X_{\hat c,s}$, and $t'\mapsto T(X_{\hat c,s}
++t'\cG^{J}_{\hat c,s}(\Delta_s))$ is differentiable at $t'=0$. The
+remaining dependence of $O^{J}_{\alpha}$ on $x$ is through the affine maps
+$\mathbf q\mapsto q(\hat c)$ and $J\mapsto P^{J}_{\hat c}(J)$ and through
+finitely many compositions of $\log_2$ with quantities that (H-POS) keeps
+strictly positive, all differentiable there, the sums running over
+$\Chacc$, respectively $\Chkey\cap\Chacc$, by
+Lemma~\ref{lem:fo-khyp}\,(ii), which deletes the remaining terms
+identically on $\acSet\times\Feas^{J}$ rather than bounding them. Hence
+$t'\mapsto O^{J}_{\alpha}(x+t'h)$ is differentiable at $t'=0$ with
+derivative $\langle\nabla O,h\rangle$, by the chain and sum rules, exactly
+as in the proof of Corollary~\ref{cor:full-gradient}, whose
+maximal-support step is Lemma~\ref{lem:fo-face} applied to that same
+$\Delta_s$. Theorem~\ref{thm:gradient}\,(ii) is what makes this a
+\emph{complete} statement rather than an assumption: the only way a
+one-sided derivative of $T$ can fail to be finite is a support-enlarging
+direction, and Lemma~\ref{lem:fo-face}\,(b) says there is none.
+
+\emph{Step 2 (convexity turns the derivative into an inequality).} By
+Theorem~\ref{thm:convexity}, $O^{J}_{\alpha}$ is convex with values in
+$(-\infty,+\infty]$ on the convex set $\acSet\times\Feas^{J}$:
+Theorem~\ref{thm:convexity} states this for $O_{\alpha}$ on
+$\Delta(\Chatset)\times\Feas$, and $O^{J}_{\alpha}=O_{\alpha}\circ
+(\idmap\times\chi_{\Qsys})$ with $\chi_{\Qsys}$ \emph{linear}, so the
+composition is convex on the convex preimage, a pullback along a linear
+map that needs no injectivity, which is Theorem~\ref{thm:choi}'s own
+convexity clause. For a convex extended-real function the difference
+quotient $t'\mapsto\big(O^{J}_{\alpha}(x+t'h)-O^{J}_{\alpha}(x)\big)/t'$
+is non-decreasing on $(0,1]$: this is the three-chord inequality, and it
+holds with the value $+\infty$ admitted. $O^{J}_{\alpha}(x)$ is finite by
+(H-POS), and $x+t'h=(1-t')x+t'y$ stays in the convex set
+$\acSet\times\Feas^{J}$ for $t'\in[0,1]$, so the quotient is defined
+there. Its limit as $t'\downarrow0$ is $\langle\nabla O,h\rangle$ by
+Step~1, and its value at $t'=1$ is
+$O^{J}_{\alpha}(y)-O^{J}_{\alpha}(x)$; monotonicity gives
+$\langle\nabla O,h\rangle\le O^{J}_{\alpha}(y)-O^{J}_{\alpha}(x)$, that
+is
+\begin{equation}\label{eq:fo-subgrad}
+  O^{J}_{\alpha}(y)\;\ge\;O^{J}_{\alpha}(x)
+  +\langle\nabla O,\,y-x\rangle
+  \qquad\text{for every }y\in\acSet\times\Feas^{J},
+\end{equation}
+including every $y$ at which $O^{J}_{\alpha}=+\infty$, where the
+inequality is trivial. Taking the infimum over $y$ and using
+Theorem~\ref{thm:choi},
+\begin{equation}\label{eq:fo-inf}
+  \hlow\;\ge\;O^{J}_{\alpha}(x)
+  +\min_{y\in\acSet\times\Feas^{J}}\langle\nabla O,\,y-x\rangle ,
+\end{equation}
+the minimum being attained because $\acSet\times\Feas^{J}$ is compact and
+the map is linear. That $\Feas^{J}$ is compact is read off
+\eqref{eq:choi-feas} directly: it is closed, being an intersection of the
+positive semidefinite cones with affine equalities and inequalities; and
+it is bounded, because $J_s\succeq0$ with
+$\sum_s\tr_{\Qsys_s}J_s=\idon{A_0}$ forces
+$\sum_s\tr J_s=\tr\idon{A_0}=d_{A_0}$ and hence
+$\|J_s\|\le\tr J_s\le d_{A_0}$ for every $s$. $\acSet$ is
+closed in the simplex by Definition~\ref{def:admissible-acceptance-set}. In untrusted-source
+mode the same reading applies to $\Feas$ with $\tr\omega=1$ in place of
+the coupling condition.
+
+\emph{Step 3 (the minimum separates over the product).} The map
+$y\mapsto\langle\nabla O,y\rangle
+=\langle\lmoq_t,\mathbf q'\rangle+\langle\lmoJ_t,J'\rangle$ is a sum of
+one term in each factor, and $\acSet\times\Feas^{J}$ is a product set, so
+\begin{equation*}
+  \min_{y\in\acSet\times\Feas^{J}}\langle\nabla O,y\rangle
+  =\min_{\mathbf q'\in\acSet}\langle\lmoq_t,\mathbf q'\rangle
+  +\min_{J'\in\Feas^{J}}\langle\lmoJ_t,J'\rangle
+  \;\ge\;\langle\lmoq_t,v_t\rangle+\langle\lmoJ_t,S_t\rangle ,
+\end{equation*}
+the last step being \eqref{eq:lmo}. The pair $(v_t,S_t)$ is \emph{not}
+required to be feasible, only to satisfy the two inequalities.
+Substituting into \eqref{eq:fo-inf},
+\begin{equation*}
+  \hlow\;\ge\;O^{J}_{\alpha}(x_t)
+  +\langle\lmoq_t,v_t-\mathbf q_t\rangle
+  +\langle\lmoJ_t,S_t-J_t\rangle .
+\end{equation*}
+
+\emph{Step 4 (a maximum of lower bounds is a lower bound).} The display
+holds for each $t\in\Itset$, which is finite and non-empty, so it holds
+for the largest of the right-hand sides, which is \eqref{eq:hlb}. Finally
+$\hlow\ge0$ by Proposition~\ref{prop:value-range}\,(i), whose proof
+consumes only Definition~\ref{def:admissible-declaration} and
+Theorem~\ref{thm:branch-formula}; so $\max\{0,\hlb\}$ is the maximum of
+two lower bounds on $\hlow$ and is therefore one.
+
+\emph{(iiia).} $\hlow[\Feas^{J}(\varepsilon)]$ is by \eqref{eq:hlow-feasJ}
+the infimum of $O^{J}_{\alpha}$ over $\acSet\times\Feas^{J}(\varepsilon)$
+and $x$ is a point of that set, which is the whole of (i)'s argument with
+the set substituted; nothing else of (i) is used, and in particular no
+property of the set is. That
+$\hlow[\Feas^{J}(\varepsilon)]\le\hlow\le\hqkd$ is
+\eqref{eq:feas-tol-mono-J}, whose one substantive step is the inclusion
+$\Feas^{J}\subseteq\Feas^{J}(\varepsilon)$ proved there.
+
+\emph{(iiib).} The proof is (ii)'s four steps with one change, made in
+Step~2: the point $x_t$ ranges over the \emph{relaxed} set while the
+comparison point $y$ ranges over the \emph{exact} one. Fix
+$t$ and write $x\coloneqq x_t$, $\nabla O\coloneqq(\lmoq_t,\lmoJ_t)$.
+
+\emph{Step 1 is unchanged, and reads only per-block positivity.} By
+(H-POS) and (H-SUPP) and Lemma~\ref{lem:fo-khyp}\,(iii),
+Corollary~\ref{cor:full-gradient} applies at $x$ and supplies $\nabla O$.
+That the corollary applies here, at a point of the relaxed set, is a
+property of its hypothesis and not of this step: it asks $\mathbf q\in\acSet$ and
+$J_s\in\Pos{A_0\Qsys_s}$ per block, names no normalisation, no coupling
+condition and no declared row, and every point of $\Feas^{J}(\varepsilon)$
+meets it, per-block positive semidefiniteness being the one condition the
+relaxed set does not relax. And Lemma~\ref{lem:fo-khyp}\,(iii), the
+statement that weakens the corollary's positivity clause to $\Chacc$, is
+itself stated on $\acSet\times\Feas^{J}(\varepsilon)$ for every
+$\varepsilon\ge0$, so the weakening reaches this point too.
+By (H-NOPERT) the object so supplied is the one the bracket uses. Let
+$y=(\mathbf q',J')\in\acSet\times\Feas^{J}$, the \emph{exact} set,
+and put $h\coloneqq y-x$. Its $J$-component
+$\Delta_s\coloneqq J'_s-J_{t,s}$ is a difference of two positive
+semidefinite operators, $J'_s$ from $\Feas^{J}$ and $J_{t,s}$ from
+$\Feas^{J}(\varepsilon)$ (per-block positive semidefiniteness being the
+one condition the relaxed set does not relax,
+Definition~\ref{def:relaxed-feasible-set}), hence Hermitian. That is all
+Lemma~\ref{lem:fo-face} asks: its hypotheses are $J_s\in\Pos{A_0\Qsys_s}$
+and $\Delta$ Hermitian, and it names no feasible set, no normalisation,
+no coupling condition and no declared row. So every branch operator's
+direction $\cG^{J}_{\hat c,s}(\Delta_s)$ is supported inside
+$\operatorname{supp}X_{\hat c,s}$ and the map
+$t'\mapsto T(X_{\hat c,s}+t'\cG^{J}_{\hat c,s}(\Delta_s))$ is
+differentiable at $t'=0$. The remaining dependence is through the affine
+$\mathbf q\mapsto q(\hat c)$ and $J\mapsto P^{J}_{\hat c}(J)$ and through
+compositions of $\log_2$ with quantities (H-POS) keeps strictly positive.
+Lemma~\ref{lem:fo-khyp}\,(ii) deletes the terms indexed outside $\Chacc$
+identically here as well: its input is $0\le K^{J}_{\hat c}\le
+P^{J}_{\hat c}$ on the set the points lie in, which
+Proposition~\ref{prop:relaxed-set-properties}\,(c) establishes on the
+whole cone (\emph{First}), from positivity alone and consuming no trace
+hypothesis, and in the Choi form on $\Feas^{J}(\varepsilon)$. Hence
+$t'\mapsto O^{J}_{\alpha}(x+t'h)$ is differentiable at $t'=0$ with
+derivative $\langle\nabla O,h\rangle$.
+
+\emph{Step 2 (the segment lies in the relaxed set, and the chord argument
+runs there).} $\acSet\times\Feas^{J}(\varepsilon)$ is convex
+(Proposition~\ref{prop:relaxed-set-properties}\,(b); $\acSet$ by
+Definition~\ref{def:admissible-acceptance-set}), and $O^{J}_{\alpha}$ is convex on it with
+values in $(-\infty,+\infty]$ by
+Proposition~\ref{prop:relaxed-set-properties}\,(c), whose Choi form pulls
+Theorem~\ref{thm:convexity} back along the \emph{linear} $\chi_{\Qsys}$,
+needing no injectivity. Both endpoints lie in that convex set:
+$x\in\acSet\times\Feas^{J}(\varepsilon)$ by hypothesis, and
+$y\in\acSet\times\Feas^{J}\subseteq\acSet\times\Feas^{J}(\varepsilon)$ by
+Proposition~\ref{prop:relaxed-set-properties}\,(a). So $x+t'h=(1-t')x+t'y$
+stays in it for $t'\in[0,1]$, $O^{J}_{\alpha}(x)$ is finite by (H-POS),
+and the three-chord inequality gives, exactly as in (ii),
+$\langle\nabla O,h\rangle\le O^{J}_{\alpha}(y)-O^{J}_{\alpha}(x)$, that
+is, \eqref{eq:fo-subgrad} \emph{for every $y\in\acSet\times\Feas^{J}$}.
+Taking the infimum over that set, and not over the relaxed one, and using
+Theorem~\ref{thm:choi}, which says the infimum of $O^{J}_{\alpha}$ over
+$\acSet\times\Feas^{J}$ is $\hlow$,
+\begin{equation}\label{eq:fo-inf-hybrid}
+  \hlow\;\ge\;O^{J}_{\alpha}(x)
+  +\min_{y\in\acSet\times\Feas^{J}}\langle\nabla O,\,y-x\rangle ,
+\end{equation}
+the minimum attained because $\acSet\times\Feas^{J}$ is compact and the
+map linear, compactness being read off \eqref{eq:choi-feas} exactly as in
+(ii), and non-emptiness following from Definition~\ref{def:admissible-declaration}\,(vii)
+with Theorem~\ref{thm:choi} mapping $\Feas^{J}$ onto $\Feas$.
+
+\emph{Steps 3 and 4 are those of (ii).} The map
+$y\mapsto\langle\nabla O,y\rangle$ separates over the product
+$\acSet\times\Feas^{J}$, and the two minima that appear are exactly the
+two of \eqref{eq:lmo} as the hypothesis of (iiib) states them; substituting
+and maximising over the finite non-empty $\Itset$ gives $\hlb\le\hlow$.
+Finally $\hlow\ge0$ by Proposition~\ref{prop:value-range}\,(i), a
+statement about the \emph{exact} set that is not claimed at
+$\varepsilon>0$ (Proposition~\ref{prop:relaxed-set-properties}\,(c),
+(c$''$)) and is not needed there, so $\max\{0,\hlb\}$ is the maximum of
+two lower bounds on $\hlow$ and is one. Part~(ii) is the case
+$\varepsilon=0$.
+
+\emph{(iv).} Steps~1, 2 and~4, of (ii) and of (iiib), do not read the pair
+$(v_t,S_t)$, and Step~3 reads of it only the two inequalities of
+\eqref{eq:lmo}, the first of its acceptance half and the second of its
+feasible half, each to bound one of the two minima into which the minimum
+over the product separates. At a $t$ where a replacement is made, put
+$a_t\coloneqq b^{\mathrm A}_t$ if the acceptance side is replaced and
+$a_t\coloneqq\langle\lmoq_t,v_t\rangle$ otherwise, and
+$f_t\coloneqq b^{\mathrm F}_t$ if the feasible side is replaced and
+$f_t\coloneqq\langle\lmoJ_t,S_t\rangle$ otherwise. The separation of
+Step~3, with \eqref{eq:lmo-bounds} on each replaced side and \eqref{eq:lmo}
+on each side not replaced, gives
+\begin{equation*}
+  \min_{y\in\acSet\times\Feas^{J}}\langle\nabla O,y\rangle
+  =\min_{\mathbf q'\in\acSet}\langle\lmoq_t,\mathbf q'\rangle
+  +\min_{J'\in\Feas^{J}}\langle\lmoJ_t,J'\rangle
+  \;\ge\;a_t+f_t ,
+\end{equation*}
+and substituting into \eqref{eq:fo-inf}, respectively
+\eqref{eq:fo-inf-hybrid}, gives
+$\hlow\ge O^{J}_{\alpha}(x_t)+a_t-\langle\lmoq_t,\mathbf q_t\rangle
++f_t-\langle\lmoJ_t,J_t\rangle$, which is the bracket of \eqref{eq:hlb}
+with the replacements made. Where both sides are replaced, neither $v_t$
+nor $S_t$ enters any step. Step~4 then runs unchanged.
+
+\emph{(v).} No claim is used for $\hlow=+\infty$. By \eqref{eq:hlow-def},
+$\hlow$ is the infimum of $O_{\alpha}$ over $\mathbf q\in\acSet$ and
+$\omega\in\Feas$; with $\Feas=\varnothing$ the inner infimum is over the empty
+set and is $+\infty$ for every $\mathbf q$, and so is the outer one, whether
+$\acSet$ is empty or not. Every real number is below $+\infty$. For the
+consequence: where the tuple satisfies condition~(vii) as well, it
+satisfies Definition~\ref{def:admissible-declaration} in full, and with it
+the two conditions Definition~\ref{def:declaration} places on its raw-key
+map, which are conditions (v) and (viii); it is then a protocol declaration
+satisfying the hypothesis of (ii), (iiib) and (iv); where it does not, $\Feas=\varnothing$, so
+$\hlow=+\infty$ and the real number $\hlb$ is below it.
+
+\emph{What (iiib) uses of the relaxed set.} Only these: that
+$\Feas^{J}\subseteq\Feas^{J}(\varepsilon)$
+(Proposition~\ref{prop:relaxed-set-properties}\,(a)); that
+$\acSet\times\Feas^{J}(\varepsilon)$ is convex (\emph{ibid.}\,(b)); that
+$O^{J}_{\alpha}$ is convex on it (\emph{ibid.}\,(c)); that every member is
+per-block positive semidefinite (Definition~\ref{def:relaxed-feasible-set}:
+the one condition not relaxed, what Lemma~\ref{lem:fo-face} consumes, and
+what the hypothesis of Corollary~\ref{cor:full-gradient} asks of $x$, the
+corollary being the statement that supplies $(\lmoq_t,\lmoJ_t)$ and
+therefore the one whose scope decides whether \eqref{eq:hlb} names an
+object at all); and that $0\le K^{J}_{\hat c}\le P^{J}_{\hat c}$ on it
+(\emph{ibid.}\,(c), \emph{First}, which is the cone clause of
+Theorem~\ref{thm:branch-formula} and what Lemma~\ref{lem:fo-khyp}\,(ii)
+consumes). The list does not say that compactness of the relaxed set is
+unused: no step of this proof reads it, the minimum being taken over the
+exact set, but the convexity of $O^{J}_{\alpha}$ that Step~2 imports is
+Proposition~\ref{prop:relaxed-set-properties}\,(c) \emph{Third}, whose own
+derivation consumes the convexity \emph{and} the compactness of (b), the
+latter through the continuity of $K_{\hat c}$; so compactness is used one
+level down and not in the minimisation. Nor does it say that lower
+semicontinuity is unavailable: the chord argument needs convexity alone,
+but the fact imported carries both. Of the \emph{exact} set the proof uses
+compactness, non-emptiness, and that its infimum is $\hlow$
+(Theorem~\ref{thm:choi}). No statement is made about
+$\hlow[\Feas(\varepsilon)]$ here, and none is used: the state-form relaxed
+set enters this part nowhere.
+
+\emph{The general format.} No step above reads a constraint row, the
+number of \tref[measured factor]{measured factors} or the number of Alice
+sectors, so the proof applies verbatim with $\Feas^{J}$ the joint-sector
+Choi set. Step~1 reads the hypothesis of
+Corollary~\ref{cor:full-gradient}, per-block positive semidefiniteness of
+the point, which names no feasible set, no normalisation and no declared
+row; Lemma~\ref{lem:fo-face}, whose hypotheses are
+$J_s\in\Pos{A_0\Qsys_s}$ and $\Delta$ Hermitian and which reads only
+\eqref{eq:Wcs-bound}, stated for the admissible Alice subspace in either
+format; Theorem~\ref{thm:gradient}\,(ii), a statement about the functional
+on the positive cone of a branch space; and
+Lemma~\ref{lem:fo-khyp}\,(ii) and~(iii), which read only the acceptance
+support, per-block positive semidefiniteness and the cone clause. Step~2
+reads convexity of $\acSet\times\Feas^{J}$, convexity of the objective on
+it, compactness of $\Feas^{J}$ and the identification of the infimum over
+it with $\hlow$, all four supplied by the general-format paragraph of
+Theorem~\ref{thm:choi}, including for the \tref{party-local} rows, which are
+affine semidefinite conditions there like every other row; that paragraph
+cites the convexity of the objective from Theorem~\ref{thm:convexity},
+whose inputs, convexity of the feasible set and concavity of $K_{\hat c}$,
+Definition~\ref{def:feasible} and Lemma~\ref{lem:joint-sectors} supply in
+the general format. Steps~3 and~4 read that the variable is a product and
+that the gradient pairs term by term over its factors, that $\Itset$ is
+finite and non-empty, and, for the clamp at zero,
+Proposition~\ref{prop:value-range}\,(i), which consumes only the
+conventions of the kernel, the objective and the cone clause. Part~(iiib)
+reads in addition (a), (b) and (c) of
+Proposition~\ref{prop:relaxed-set-properties} and per-block positive
+semidefiniteness of the relaxed set, which hold in the general format by
+that proposition's (e); and (iv) reads nothing more.
+\end{proof}

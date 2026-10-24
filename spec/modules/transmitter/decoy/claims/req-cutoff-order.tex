@@ -1,0 +1,25 @@
+% ---
+% id: transmitter/decoy/req:cutoff-order
+% kind: req
+% title: "Order of the entropy and source cutoffs"
+% summary: >-
+%   The engine refuses cutoffs unless both are integers and the entropy cutoff
+%   lies between zero and the source cutoff, the first condition of a tagged
+%   source declaration.
+% prominence: standard
+% status: implemented
+% uses: [def:tagged-source]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.decoy.emit:emit_decoy_declaration
+% lean:
+% ---
+
+\begin{requirement}\label{req:cutoff-order}
+The engine refuses, with no artefact, a declaration whose cutoffs are not
+integers with $0\le N_{\mathrm{ent}}\le N_{\mathrm{src}}$, which is (T1) of
+Definition~\ref{def:tagged-source} (\iface{cutoffs_out_of_order}, the one
+refusal for a cutoff that is not an integer and for cutoffs out of order).
+\end{requirement}

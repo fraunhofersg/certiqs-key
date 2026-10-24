@@ -1,0 +1,131 @@
+% ---
+% id: receiver/detector-imperfections/prop:dark-slack-bound
+% kind: prop
+% title: "Multiclick bound under a dark-count channel admitted with slack"
+% summary: >-
+%   For a declared dark-count matrix admitted at ε_2 and ε_4, each multiclick
+%   column keeps mass at least 1 − δ_dc, r_min can exceed one by at most
+%   (K+2)ε_4, and the dark-count improvement holds with rbar = min{r_min, 1} and
+%   δ_dc subtracted. This is the inequality a downstream module composes with.
+% prominence: standard
+% status: implemented
+% uses: [receiver/def:tolmap, receiver/thm:click-povm, receiver/def:setting-family, thm:dark-counts, def:darkadm, def:darktol]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.dark:composed_slack
+% lean:
+% ---
+
+Theorem~\ref{thm:dark-counts} needs (D1) and (D2) exactly, and the tests of
+Definition~\ref{def:darktol} admit a declared channel that satisfies them only
+up to $\varepsilon_4$ and $\varepsilon_2$. The proposition carries both slacks
+into the inequality that is composed with the multiclick bound: the lower side
+of (D1)'s column sum and the upper side of (D2)'s entry bound cost a constant
+$\delta_{\dc}$. The upper side of (D1), column sums above one and entries
+down to $-\varepsilon_4$, lets $r_{\min}$ exceed one; the coefficient is
+capped at one, at a cost bounded in (ii).
+
+\begin{proposition}\label{prop:dark-slack-bound}
+Let $\{M_S\}_{S\subseteq[K]}$ be the click-pattern POVM of
+Theorem~\ref{thm:click-povm} or, at a setting $t$ of a \tref{setting family}
+of $K$ ports, its POVM $\{M_{S|t}\}_{S\subseteq[K]}$
+(Definition~\ref{def:setting-family}\,(a)), written $\{M_S\}$, and for a matrix $R=(R_{S|S'})_{S,S'\subseteq[K]}$ let
+$\widetilde M_S$, $\widetilde M_{\MCK}$ and $r_{\min}$ be formed as in
+Theorem~\ref{thm:dark-counts} and \eqref{eq:rmin}. Put
+\begin{equation}\label{eq:darkdelta}
+  \delta_{\dc}\ \coloneqq\
+  \begin{cases}
+    0
+      & \text{generated route: }R\text{ is the product form }\eqref{eq:darkR},
+      \\[3pt]
+    \varepsilon_4+(K+1)\,\varepsilon_2
+      & \text{declared route: }R\text{ admitted under
+        Def.~\ref{def:tolmap}\,(iii),}
+  \end{cases}
+\end{equation}
+the two cases being the two routes of Definition~\ref{def:darkadm}, and
+\begin{equation}\label{eq:rbar}
+  \bar r\ \coloneqq\ \min\{\,r_{\min},\,1\,\} .
+\end{equation}
+Let $R$ be declared and admitted under item (iii) of
+Definition~\ref{def:tolmap} (Definition~\ref{def:darktol}), on either side of
+either test and whatever the sign of $r_{\min}$. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(the multiclick columns)} for every $S'\in\MCK$,
+  \begin{equation}\label{eq:d2slack}
+    R_{\MCK|S'}\ \ge\ (1-\varepsilon_4)-(K+1)\varepsilon_2\ =\ 1-\delta_{\dc} ;
+  \end{equation}
+\item \emph{(the upper side)} for every column $S'$,
+  \begin{equation}\label{eq:rminupper}
+    R_{\MCK|S'}\ \le\ (1+\varepsilon_4)+(K+1)\varepsilon_4\ =\ 1+(K+2)\varepsilon_4 ,
+  \end{equation}
+  and consequently
+  \begin{equation}\label{eq:rbarcost}
+    0\ \le\ r_{\min}-\bar r\ \le\ (K+2)\,\varepsilon_4 ;
+  \end{equation}
+\item \emph{(the composed inequality)}
+  \begin{equation}\label{eq:darkimproveslack}
+    \widetilde M_{\MCK}\ \succeq\
+    (1-\delta_{\dc})\,M_{\MCK}+\bar r\,\big(\id-M_{\MCK}\big)
+    \ \succeq\ \Big[(1-\bar r)\,M_{\MCK}+\bar r\,\id\Big]-\delta_{\dc}\,\id ,
+  \end{equation}
+  and consequently, whenever $\blk{M}{\gtN}_{\MCK}\succeq\pmc\,\id^{(>N)}$,
+  \begin{equation}\label{eq:darkpmcslack}
+    \blk{\widetilde M}{\gtN}_{\MCK}\ \succeq\
+    \big((1-\bar r)\,\pmc+\bar r-\delta_{\dc}\big)\,\id^{(>N)} .
+  \end{equation}
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\emph{Idea.} A multiclick column mass is the column sum minus the entries in
+the $K+1$ rows with at most one click; the two tests bound each of these from
+both sides, which gives (i) and (ii). The composed operator is a combination of
+the positive operators $M_{S'}$ with the column masses as coefficients, and
+lowering every coefficient to its bound gives (iii).
+
+(i) Let $S'\in\MCK$. The rows $S\notin\MCK$ are exactly those with $|S|\le1$,
+of which there are $K+1$, and none of them contains $S'$ (as
+$|S|\le1<2\le|S'|$), so every entry $R_{S|S'}$ with $S\notin\MCK$ sits in a
+(D2)-forbidden position and is at most $\varepsilon_2$. The (D1) test bounds
+the column sum below by $1-\varepsilon_4$. Hence
+\begin{equation*}
+  R_{\MCK|S'}\ =\ \sum_{S}R_{S|S'}-\sum_{S\notin\MCK}R_{S|S'}
+  \ \ge\ (1-\varepsilon_4)-(K+1)\varepsilon_2 ,
+\end{equation*}
+which is $1-\delta_{\dc}$ by the declared case of \eqref{eq:darkdelta}.
+
+(ii) The widened (D1) admits column sums up to $1+\varepsilon_4$ and entries
+down to $-\varepsilon_4$, so for every column
+\begin{equation*}
+  R_{\MCK|S'}\ =\ \sum_SR_{S|S'}-\sum_{S\notin\MCK}R_{S|S'}
+  \ \le\ (1+\varepsilon_4)+(K+1)\varepsilon_4 ,
+\end{equation*}
+which is \eqref{eq:rminupper}. The cost \eqref{eq:rbarcost} is bounded by
+\eqref{eq:rminupper}: $\bar r\le r_{\min}$ by \eqref{eq:rbar}, and
+$r_{\min}-\bar r$ is $0$ when $r_{\min}\le1$ and $r_{\min}-1$ otherwise, where
+$r_{\min}$, a minimum of column masses, is at most $1+(K+2)\varepsilon_4$.
+
+(iii) $\widetilde M_{\MCK}=\sum_{S'}R_{\MCK|S'}M_{S'}$ with every
+$M_{S'}\succeq0$, $\{M_S\}$ being a POVM (Theorem~\ref{thm:click-povm}\,(i),
+or Definition~\ref{def:setting-family}\,(a) at a setting), so replacing each coefficient by
+a smaller real gives a L\"owner-smaller operator. On the columns $S'\in\MCK$
+use $R_{\MCK|S'}\ge1-\delta_{\dc}$, which is \eqref{eq:d2slack}; on the columns
+$S'\notin\MCK$ use $R_{\MCK|S'}\ge r_{\min}\ge\bar r$, the first by the
+definition \eqref{eq:rmin} of $r_{\min}$ as their minimum and the second by
+\eqref{eq:rbar}. Summing, with $\sum_{S'\in\MCK}M_{S'}=M_{\MCK}$ and
+$\sum_{S'\notin\MCK}M_{S'}=\id-M_{\MCK}$ by completeness, gives
+the first inequality of \eqref{eq:darkimproveslack}; regrouping and applying
+$0\preceq M_{\MCK}\preceq\id$ with $\delta_{\dc}\ge0$ gives the second. Every
+operator here is block diagonal in the photon number
+(Theorem~\ref{thm:click-povm}\,(iii), or
+Definition~\ref{def:setting-family}\,(a) at a setting), so the inequality
+restricts to the blocks $n>N$. There $1-\bar r\ge0$ by construction of
+\eqref{eq:rbar}, so
+$(1-\bar r)\blk{M}{\gtN}_{\MCK}\succeq(1-\bar r)\pmc\,\id^{(>N)}$, and adding
+$(\bar r-\delta_{\dc})\,\id^{(>N)}$ gives \eqref{eq:darkpmcslack}. No step uses
+a bound on $r_{\min}$ from either side, and no step uses the sign of $r_{\min}$
+or of $\bar r$.
+\end{proof}

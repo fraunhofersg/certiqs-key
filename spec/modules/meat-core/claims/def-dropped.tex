@@ -1,0 +1,71 @@
+% ---
+% id: meat-core/def:dropped
+% kind: def
+% title: "Dropped set and dropped program"
+% summary: >-
+%   A run may give up the entropy of chosen pairs of a key-live acceptance
+%   value and a joint sector by setting their deficits to zero, keeping every
+%   variable, statistic and constraint. The result is a program of its own;
+%   once any pair is dropped, its value is never reported as the undropped
+%   one.
+% prominence: standard
+% status: implemented
+% uses: [def:joint-sectors, def:feasible, thm:branch-formula, def:declaration]
+% mentions: [cor:drop-program, prop:retention, lem:joint-sectors]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.joint:joint_objective_value
+% lean:
+% notes: "No linear surrogate constant is defined here; the one proved instance is lem:rank-one-sector."
+% ---
+
+A run may prefer a weaker bound that is cheaper to compute: a
+\tref{joint sector} whose deficits it gives up for every
+\tref{key-live acceptance value} needs no matrix function (Corollary~\ref{cor:drop-program}\,(iii)). What the run
+gives up is only the entropy those deficits carry; the sector stays in the
+program.
+
+\begin{definition}\label{def:dropped}
+Let $\Decl$ be a declaration in the general format of
+Definition~\ref{def:declaration}. A
+\term[A set of pairs of a key-live acceptance value and a joint sector whose entropy deficits a run replaces by zero.]{dropped set}
+is a set
+$\mathcal{D}\subseteq\Chkey\times(\mathbb{T}\times\SecSet)$ of pairs of a
+\tref{key-live acceptance value} and a \tref{joint sector}. For
+$\omega=\bigoplus_{(t,s)}\omega^{(t,s)}$ block diagonal along the joint
+sectors put
+\begin{equation}\label{eq:KD}
+  K^{\mathcal{D}}_{\hat c}(\omega)\coloneqq P_{\hat c}(\omega)
+  +\sum_{(t,s):\,(\hat c,(t,s))\notin\mathcal{D}}
+  f_{\hat c,(t,s)}\big(\omega^{(t,s)}\big)
+  \qquad(\hat c\in\Chkey),
+\end{equation}
+with $f_{\hat c,(t,s)}$ of \eqref{eq:joint-deficit}; let
+$O^{\mathcal{D}}_{\alpha}$ be \eqref{eq:objective} with
+$K^{\mathcal{D}}_{\hat c}$ in place of $K_{\hat c}$, with the same
+conventions at vanishing arguments; and let
+\begin{equation}\label{eq:hlowD}
+  \underline{h}^{\mathcal{D}}_{\alpha}\coloneqq
+  \inf_{\mathbf q\in\acSet}\ \inf_{\omega\in\Feas}\
+  O^{\mathcal{D}}_{\alpha}(\mathbf q,\omega).
+\end{equation}
+The minimisation in \eqref{eq:hlowD} is the
+\term[The key-rate program with the deficits of a dropped set replaced by zero, over the unchanged feasible set.]{dropped program}.
+A joint sector $(t,s)$ is
+\term[Said of a joint sector whose pairs with every key-live acceptance value all lie in the dropped set.]{fully dropped}
+when $\Chkey\times\{(t,s)\}\subseteq\mathcal{D}$. For
+$\mathcal{D}=\varnothing$ these are $K_{\hat c}$ (\eqref{eq:K-joint}),
+$O_{\alpha}$ and $\hlow$.
+
+\emph{What is not changed.} The \tref{feasible set} is $\Feas$, unchanged: a
+dropped sector's block remains a variable, enters $\Phimap$ and every
+$P_{\hat c}$ with its full weight --- the term
+$P_{\hat c,(t,s)}(\omega^{(t,s)})$ stays inside $P_{\hat c}$ in
+\eqref{eq:KD} --- and enters the marginal condition and every constraint
+row. Setting a dropped block to zero, omitting its statistics, or removing
+its weight from $P_{\hat c}$ in \eqref{eq:KD} are different operations, and
+each can overstate the value (Proposition~\ref{prop:retention} for the
+first). \emph{The dropped set is a formulation choice of a run and not
+\tref{declared data}}.
+\end{definition}

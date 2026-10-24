@@ -1,0 +1,50 @@
+% ---
+% id: foundations/req:consumer-decides-exactly
+% kind: req
+% title: "Exact decision by every consumer"
+% summary: >-
+%   Every consumer decides each admission predicate on declared data exactly,
+%   has no tolerance input, and refuses with a reason naming the failed
+%   predicate. It repairs nothing it was handed and alters nothing, except that
+%   it may round an emitted bound in a direction its producer licenses as weakening.
+% prominence: standard
+% status: accepted
+% uses: [def:declared-data]
+% mentions: [rem:computed-completeness, meat-core/prop:optol-nobound, req:declared-tolerance, statistics/binomial-box/lem:widening]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A consumer might be allowed to admit data that are only close to admissible
+data. Remark~\ref{rem:computed-completeness} shows that a computed sum close to
+the identity says nothing about the exact one, and
+\xref{meat-core/prop:optol-nobound} shows that closeness of two declared
+measurements carries no key-rate claim from one to the other. A bound rounded
+in the direction that weakens it is another matter: what its producer's claims
+establish survives the rounding, at a cost in rate. The acceptance set that
+the statistics module emits as exact rationals is read by meat-core in this
+way, each lower bound of the box rounded down and each upper bound up to a
+binary64 number, the direction that \xref{statistics/binomial-box/lem:widening} licenses.
+
+\begin{requirement}\label{req:consumer-decides-exactly}
+Every consumer (Definition~\ref{def:declared-data}) decides every admission
+predicate it states of \tref{declared data} exactly, on the declared values,
+and none
+more loosely than exactly: no consumer has an input through which a predicate
+on declared data would be decided at a nonzero defect, and none admits data on
+the ground that they lie within a tolerance of data it would admit. A consumer
+that finds such a predicate violated refuses, with a machine-readable reason
+naming the predicate that failed. It repairs nothing it was handed, and it
+neither snaps nor otherwise alters declared data of another declarer, with one
+exception: it may replace a scalar bound that a producer emits by that bound
+rounded to a binary64 number in a direction that the producer's own claims
+license as weakening it. The direction in which each bound so replaced was
+rounded is recorded where the consumer's reading of the emission is
+specified, nothing else of the emission is altered, and every predicate on
+such a bound is decided exactly on its replaced value. The
+\tref{declared tolerance} therefore widens nothing that any consumer admits;
+it bounds only how far an instance may move its own declaration
+(Requirement~\ref{req:declared-tolerance}).
+\end{requirement}

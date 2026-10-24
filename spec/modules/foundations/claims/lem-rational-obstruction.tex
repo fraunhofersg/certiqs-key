@@ -1,0 +1,112 @@
+% ---
+% id: foundations/lem:rational-obstruction
+% kind: lem
+% title: "Rationality obstruction to the domination of a lattice family"
+% summary: >-
+%   A family with Gaussian-rational entries that G dominates at a weight below
+%   one has every support inside the largest rational subspace of the matching
+%   support of G. With completeness the weight is at least the largest value of
+%   G on the complement of that subspace, over the constant.
+% prominence: standard
+% status: accepted
+% uses: [def:domination, lem:domination]
+% mentions: [rem:noise-floor]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% notes: "No requirement uses this lemma; it explains, with rem:noise-floor, why an idealised model dominates no lattice family at a small weight."
+% lean:
+% ---
+
+A lattice family has entries in the Gaussian rationals
+$\mathbb{Q}(i)=\{x+iy:x,y\in\mathbb{Q}\}$. The lemma shows that such a family
+can be dominated by a reference element, at a weight below one, only along
+directions that rational vectors span, whatever its \tref{lattice exponent}.
+Domination itself does not depend on the basis, since a unitary applied to
+both families preserves it; what depends on the basis is the lattice family,
+whose entries are Gaussian rationals in the basis in which it is declared.
+The lemma bounds the domination of such a family and nothing else. A
+reduction that first applies a channel to the reference, such as a unitary,
+changes the family that is compared with a lattice family: the lemma then
+applies to the image of the reference, whose supports may have rational
+directions that those of the reference lacked
+(Remark~\ref{rem:noise-floor}).
+
+\begin{lemma}\label{lem:rational-obstruction}
+Let $d\ge1$, and read every vector of $\mathbb{C}^{d}$ and every
+$d\times d$ matrix in the standard basis. Call a subspace $U$ of
+$\mathbb{C}^{d}$ \emph{$\mathbb{Q}(i)$-rational} when it is spanned over
+$\mathbb{C}$ by vectors of $\mathbb{Q}(i)^{d}$ (the subspace $\{0\}$ is
+spanned by the empty set), and for a subspace $V$ of $\mathbb{C}^{d}$ put
+\begin{equation}\label{eq:rational-part}
+  \mathcal{R}(V)\;\coloneqq\;\mathrm{span}_{\mathbb{C}}\big(V\cap\mathbb{Q}(i)^{d}\big),
+\end{equation}
+the \emph{largest $\mathbb{Q}(i)$-rational subspace of $V$}.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item $\mathcal{R}(V)$ is a $\mathbb{Q}(i)$-rational subspace contained in
+  $V$, and it contains every $\mathbb{Q}(i)$-rational subspace contained in
+  $V$.
+\item For every $d\times d'$ matrix $A$ with entries in $\mathbb{Q}(i)$, the
+  range of $A$ is $\mathbb{Q}(i)$-rational. In particular the support of a
+  Hermitian $d\times d$ matrix with entries in $\mathbb{Q}(i)$ is.
+\item Let $\{G_j\}_{j\in J}$ and $\{F_j\}_{j\in J}$ be Hermitian positive
+  semidefinite $d\times d$ matrices over a finite non-empty alphabet $J$,
+  every $F_j$ with entries in $\mathbb{Q}(i)$, such that
+  $G_j-(1-q)F_j\succeq0$ for every $j$, for some $q\in[0,1)$. Then
+  $\mathrm{supp}\,F_j\subseteq\mathcal{R}_j\coloneqq
+  \mathcal{R}(\mathrm{supp}\,G_j)$ for every $j$.
+\item If, in (iii), moreover $\sum_jG_j=\sum_jF_j=c\,\idon{d}$ with $c>0$,
+  then for every $j\in J$
+  \begin{equation}\label{eq:rational-bound}
+    q\;\ge\;\frac{\lmax\big(P_jG_jP_j\big)}{c},
+  \end{equation}
+  where $P_j$ is the orthogonal projector onto $\mathcal{R}_j^{\perp}$.
+\item In particular, if $\mathrm{supp}\,G_j$ contains no non-zero vector of
+  $\mathbb{Q}(i)^{d}$, then $q\ge\lmax(G_j)/c$, which equals $\tr G_j/c$
+  when $G_j$ has rank one.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) $V\cap\mathbb{Q}(i)^{d}\subseteq V$ and $V$ is a subspace, so the span
+lies in $V$; it is spanned by vectors of $\mathbb{Q}(i)^{d}$ by its
+definition. If $U\subseteq V$ is spanned by vectors
+$u_1,\dots,u_m\in\mathbb{Q}(i)^{d}$, each $u_l$ lies in
+$U\cap\mathbb{Q}(i)^{d}\subseteq V\cap\mathbb{Q}(i)^{d}$, so
+$U\subseteq\mathcal{R}(V)$.
+
+(ii) The range of $A$ is $\{Ax:x\in\mathbb{C}^{d'}\}$, and
+$Ax=\sum_lx_lAe_l$, so it is the span of the columns $Ae_1,\dots,Ae_{d'}$ of
+$A$, each a vector of $\mathbb{Q}(i)^{d}$. For a Hermitian matrix the support
+is the range (Definition~\ref{def:domination}).
+
+(iii) By Lemma~\ref{lem:domination}\,(ii), applied to the one-block families
+$\{G_j\}$ and $\{F_j\}$ at weight $q<1$,
+$\mathrm{supp}\,F_j\subseteq\mathrm{supp}\,G_j$. By (ii) $\mathrm{supp}\,F_j$
+is $\mathbb{Q}(i)$-rational, so by (i) it lies in
+$\mathcal{R}(\mathrm{supp}\,G_j)$.
+
+(iv) Fix $j$. Summing $G_l-(1-q)F_l\succeq0$ over $l\neq j$ and using both
+completeness identities,
+\begin{equation*}
+  0\;\preceq\;\big(c\,\idon{d}-G_j\big)-(1-q)\big(c\,\idon{d}-F_j\big)
+  \;=\;qc\,\idon{d}-G_j+(1-q)F_j .
+\end{equation*}
+Let $\varphi\in\mathcal{R}_j^{\perp}$ be a unit vector. By (iii),
+$\mathrm{supp}\,F_j\subseteq\mathcal{R}_j$, so $\varphi$ is orthogonal to the
+range of the Hermitian matrix $F_j$ and therefore lies in its kernel; hence
+$\langle\varphi,F_j\varphi\rangle=0$, and the display gives
+$\langle\varphi,G_j\varphi\rangle\le qc$. Now let $x\in\mathbb{C}^{d}$ be any
+unit vector. If $P_jx=0$, then $\langle x,P_jG_jP_jx\rangle=0\le qc$.
+Otherwise $\varphi\coloneqq P_jx/\|P_jx\|$ is a unit vector of
+$\mathcal{R}_j^{\perp}$ and $\|P_jx\|\le1$, so
+$\langle x,P_jG_jP_jx\rangle=\|P_jx\|^{2}\langle\varphi,G_j\varphi\rangle\le qc$.
+Since $P_jG_jP_j$ is Hermitian, its largest eigenvalue is the maximum of
+$\langle x,P_jG_jP_jx\rangle$ over unit vectors $x$, which is therefore at most
+$qc$.
+
+(v) Under the hypothesis, $\mathrm{supp}\,G_j\cap\mathbb{Q}(i)^{d}=\{0\}$, so
+$\mathcal{R}_j=\{0\}$ and $P_j=\idon{d}$, and \eqref{eq:rational-bound} reads
+$q\ge\lmax(G_j)/c$. A positive semidefinite matrix of rank one has one
+non-zero eigenvalue, which is its trace.
+\end{proof}

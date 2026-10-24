@@ -1,0 +1,154 @@
+% ---
+% id: reductions/wpfss/cor:flat-companion
+% kind: cor
+% title: "The flat instance has a reference companion"
+% summary: >-
+%   Run on any Hermitian, positive receiver blocks complete per setting, the
+%   flat instance forms, as a non-negative combination of them, an
+%   admissible datum over the reals, as the core companion asks. A requested
+%   two-sector entry keeps its certificate where the centres clear its
+%   constant by the radius.
+% prominence: standard
+% status: accepted
+% uses: [prop:flat-instance, def:weight-route, def:targets, lem:descent, cor:fssinstance, prop:chain, cor:two-sector-decided, reductions/cor:reference-companion, reductions/cor:companion-factor-enclosure, reductions/def:reduction-instance, reductions/def:substrate, reductions/thm:licence]
+% mentions: [cor:emitted-flat, rem:published]
+% assumes: [A-RECV, A-PROBE, A-TSM]
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The condition eq:companion-two-sector is what the engine decides exactly on the recentred enclosure of the companion's datum before it forms the requested entry on the companion; the artefact's own decision of the same entry is cor:two-sector-decided, the case of zero radius at the emitted datum. The sentence on the non-negative combination is what lets the companion carry factor enclosures of the receiver's blocks to its target."
+% ---
+
+The core states the reference companion of any reduction instance under one
+hypothesis, (H-REF): that the instance's rule forms an admissible datum from
+any family of blocks with the properties a reference has, and that the
+instance holds over the reals. For the flat instance both follow from the
+proof that it is an instance at all (Proposition~\ref{prop:flat-instance}),
+which reads of the receiver blocks only those properties and of an
+admissible datum only its admissibility. The companion's entries on the
+licensed route are therefore the flag-sector entries of
+Corollary~\ref{cor:fssinstance} at the datum formed from the reference, and its emission is the flat emission
+(Corollary~\ref{cor:emitted-flat}) with the datum formed from the reference
+in its data sectors and no normalizer. A caller may request besides, on the
+licensed route, the operator \eqref{eq:two-sector-entry} of
+Remark~\ref{rem:published}. Its certificate on the emitted numbers says
+nothing about the reference, so the corollary re-establishes it at the
+companion: the below-cutoff half from the centres of the companion's datum,
+which must clear the declared constant by the radius, and the above-cutoff
+half by deciding the declared constant against the certified weight of that
+block \eqref{eq:certweights}, which no block of the receiver enters.
+
+\begin{corollary}\label{cor:flat-companion}
+Let the flat instance $\mathcal{J}_{\mathrm{flat}}$ of
+Proposition~\ref{prop:flat-instance} be given, at either route and in either
+form, with $K$ the declared low-photon blocks from which its handed datum is
+formed by Definition~\ref{def:weight-route} (the conditional POVM blocks
+$\blk{M}{=m}_{y'|t}$, $m\le N$, of each setting $t$ in the bare form, the
+supplied dark-composed blocks $\blk{\widetilde M}{=m}_{y|t}$ in the
+dark-composed form). Then $\mathcal{J}_{\mathrm{flat}}$ satisfies (H-REF) of
+Corollary~\ref{cor:reference-companion}: for every family $G$ over the same
+blocks, settings, outcomes and dimensions whose blocks are Hermitian and
+positive semidefinite, with $\sum_{y'}G^{(m)}_{y'|t}=\idon{\Chan_m}$ exactly
+for every $t$ and $m\le N$, the datum the same rule forms from $G$ is
+admissible, and $\mathcal{J}_{\mathrm{flat}}$ is a reduction instance over
+the substrate $\Fld=\mathbb{R}$. Its rule of (I1) is a non-negative
+combination in the sense of Corollary~\ref{cor:companion-factor-enclosure}:
+the element $(y,t)$ of the datum it forms from a family $K'$ with the
+properties just listed for $G$ is, on the data sector $(m)$, $q_t\sum_{y'}R^{\cg}_{y|y'}K'^{(m)}_{y'|t}$ in the bare
+form and $q_tK'^{(m)}_{y|t}$ in the dark-composed form. At the datum $A^{\mathrm{ref}}$ so formed,
+its target is $\Fwp[A^{\mathrm{ref}}]$ on the encoded route and
+$\Ffss[A^{\mathrm{ref}}]$ on the licensed route, and on the licensed route its
+entries are $\big(\Ffss_o[A^{\mathrm{ref}}]-p_o\Pflag,\succeq,0\big)$ for
+every bounded letter $o$, with the routed weights $p_o$ of the handed
+instance. On the licensed route, let the request carry besides an entry
+$(\hat O,\succeq,0)$ with $\hat O=\Ffss_e-a\,\Pleq-b\,\Pflag$, at an outcome
+$e\in\Vset$ and declared real constants $a$ and $b$, written in the form
+\eqref{eq:instance-entry} with coefficient $1$ for $e$ on every sector, every
+other coefficient $0$, and $Z=-a\,\Pleq-b\,\Pflag$, so that its companion form
+(Corollary~\ref{cor:reference-companion}\,(vi)) is
+$\hat O^{\mathrm{ref}}=\Ffss_e[A^{\mathrm{ref}}]-a\,\Pleq-b\,\Pflag$. Let
+$(C,R)$ be an entrywise enclosure of $A^{\mathrm{ref}}$ whose centres are
+Hermitian, and put $\rho_m\coloneqq\max_i\sum_lR^{(m)}_{e,il}$ for $m\le N$.
+If
+\begin{equation}\label{eq:companion-two-sector}
+  C^{(m)}_e-(a+\rho_m)\,\idon{d_m}\;\succeq\;0\quad(m\le N)
+  \qquad\text{and}\qquad b\;\le\;p_e ,
+\end{equation}
+then $\Lambda^{\dagger}(\hat O^{\mathrm{ref}})\succeq0$, with $\Lambda$ the
+instance's channel, which is the same at every datum: the companion form
+carries the certificate of the entry it is formed from.
+\end{corollary}
+
+\begin{proof}
+\emph{Admissible datum.} Part (I1) of the proof of
+Proposition~\ref{prop:flat-instance} forms the datum as
+$A^{(m)}_{(y,t)}=q_t\sum_{y'}R^{\cg}_{y|y'}\blk{M}{=m}_{y'|t}$ in the bare
+form and $q_t\blk{\widetilde M}{=m}_{y|t}$ in the dark-composed form, and
+shows it Hermitian, positive semidefinite and class complete using, of the
+blocks, only that they are Hermitian, positive semidefinite and complete on
+their block at each setting; of $R^{\cg}$, that it is entrywise non-negative
+and column-stochastic (Lemma~\ref{lem:descent}); and $q_t>0$. Read with $G$
+in place of $K$, the same argument gives
+$A^{\mathrm{ref}}\in\mathcal{D}_{\mathrm{adm}}$: $R^{\cg}$, $q_t$ and the
+supports are the handed instance's and unchanged.
+
+\emph{An instance over $\mathbb{R}$.} The rest of the proof of
+Proposition~\ref{prop:flat-instance} establishes the model map, (I2), (I3)
+and (I4) for every admissible datum under (H1)--(H3), and reads of a datum
+only its Hermiticity, positivity and class completeness: the model map is a
+direct sum of the datum and the above-cutoff blocks; the scalar values
+\eqref{eq:flat-scalars} are formed from the routed weights alone; the
+channels of Proposition~\ref{prop:chain} read the above-cutoff blocks, the
+projectors and the weights and no entry of the datum; and the certificate of
+each licensed entry is the computation of
+Corollary~\ref{cor:fssinstance}, positive on the data sectors by
+admissibility and on the flag sectors by (H2). (H1)--(H3) are about the
+above-cutoff blocks and the weights, none of which is a block of $K$, so
+they hold unchanged. Every step is a field operation, a comparison in the
+Loewner order or an identity of operators, so the argument holds over the
+real substrate as over any other that
+Definition~\ref{def:substrate} admits, and the flat instance is a
+reduction instance over $\mathbb{R}$ (Definition~\ref{def:reduction-instance}).
+
+\emph{A non-negative combination.} The expressions of the first paragraph,
+read for any family $K'$ with the properties listed, are the rule of (I1).
+Their coefficients $q_tR^{\cg}_{y|y'}$ and $q_t$ are non-negative rationals:
+$q_t>0$ is a declared class weight, every entry of $R^{\cg}$ is a sum of
+entries of the declared $R$ (Lemma~\ref{lem:descent}), and every declared
+entry and scalar lies on the declared lattice of
+Definition~\ref{def:weight-route}, so is a dyadic rational; $R^{\cg}$ is
+entrywise non-negative. Neither $q_t$ nor $R^{\cg}$ is formed from a block,
+so the coefficients are the same for every family. Every block combined into
+the element on the data sector $(m)$ is a block of photon number $m$, of the
+dimension $d_m$ of that sector. That is \eqref{eq:datum-combination} of
+Corollary~\ref{cor:companion-factor-enclosure}.
+
+\emph{The target and the entries.} The target at $A^{\mathrm{ref}}$ is
+\eqref{eq:instance-target} at the flat instance's sectors, which (I2) of the
+proof of Proposition~\ref{prop:flat-instance} identifies with $\Fwp$ and
+$\Ffss$ for the model $M[A^{\mathrm{ref}}]$; the entry list of its (I4) is
+empty on the encoded route and on the licensed route consists of the
+flag-sector entries of Corollary~\ref{cor:fssinstance} at the datum, whose
+weights $p_o$ are the routed weights and are not formed from $K$.
+
+\emph{The requested entry.} The companion is the instance at the
+admissible datum $A^{\mathrm{ref}}$, and $\hat O^{\mathrm{ref}}$ is the
+operator \eqref{eq:two-sector-at} of Corollary~\ref{cor:two-sector-decided}
+at $A''=A^{\mathrm{ref}}$, with the instance's channel $\Lambda$, which is
+the same at every datum. By part (ii) of that corollary it suffices that
+$A^{\mathrm{ref},(m)}_e\succeq a\,\idon{d_m}$ for every $m\le N$ and
+$b\le p_e$; the second is the second condition of
+\eqref{eq:companion-two-sector}. Fix $m\le N$ and put $E\coloneqq A^{\mathrm{ref},(m)}_e-C^{(m)}_e$. It is
+Hermitian, $A^{\mathrm{ref}}$ being an admissible datum and the centre
+Hermitian by hypothesis, and $|E_{il}|\le R^{(m)}_{e,il}$ for every entry.
+Let $Ex=\lambda x$ with $x\ne0$ and let $i$ be an index with
+$|x_i|=\max_l|x_l|$; then
+$|\lambda||x_i|=|\sum_lE_{il}x_l|\le\sum_lR^{(m)}_{e,il}|x_l|\le\rho_m|x_i|$,
+so every eigenvalue of $E$ is at least $-\rho_m$ and
+$E\succeq-\rho_m\idon{d_m}$. With the first condition of
+\eqref{eq:companion-two-sector},
+$A^{\mathrm{ref},(m)}_e=C^{(m)}_e+E\succeq(a+\rho_m)\idon{d_m}-\rho_m\idon{d_m}
+=a\,\idon{d_m}$, and Corollary~\ref{cor:two-sector-decided}\,(ii) gives
+$\Lambda^{\dagger}(\hat O^{\mathrm{ref}})\succeq0$, which is
+\eqref{eq:certificate} with $c=0$ and $\bowtie\,=\,\succeq$.
+\end{proof}

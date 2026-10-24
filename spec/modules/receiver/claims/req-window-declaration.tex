@@ -1,0 +1,36 @@
+% ---
+% id: receiver/req:window-declaration
+% kind: req
+% title: "Declared window at every setting whose exact flag is general"
+% summary: >-
+%   A declaration must supply a window at every setting where predicate (X)
+%   fails, and one missing there is refused rather than defaulted. Which
+%   settings need one is read off the declaration; a window at or below the
+%   cutoff is refused everywhere, and one above it at an exact setting is unused.
+% prominence: standard
+% status: implemented
+% uses: [def:pmc]
+% mentions: [rem:flag-instances]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.validation:check_tail_window
+% lean:
+% ---
+
+Branch 2 of \eqref{eq:pmcdef} is evaluated on a declared window $m_t$, and
+the contract fixes no default for it. Whether a setting takes that branch is a
+property of the declaration: by Remark~\ref{rem:flag-instances} it is
+read off the declaration alone, before any arithmetic.
+
+\begin{requirement}\label{req:window-declaration}
+A declaration supplying no window $m_t$ (\iface{tail_window}) at a setting
+where \tref{predicate (X)} of Definition~\ref{def:pmc} fails is refused
+rather than defaulted; by Remark~\ref{rem:flag-instances} that condition is
+decidable at input validation from \tref{declared data} alone. The engine
+therefore requires $m_t$ exactly at the settings whose \tref{exact flag} is
+$\mathrm{general}$, and at no others. A declared window satisfies $m_t>N$ (Definition~\ref{def:pmc}); one
+that does not is refused at every setting, whatever its flag. A window
+$m_t>N$ supplied at a setting whose flag is $\mathrm{exact}$ is unused, not
+an error.
+\end{requirement}

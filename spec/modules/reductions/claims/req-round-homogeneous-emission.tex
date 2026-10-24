@@ -1,0 +1,29 @@
+% ---
+% id: reductions/req:round-homogeneous-emission
+% kind: req
+% title: "Emission of the round-homogeneous case only"
+% summary: >-
+%   The engine emits one declared model and one squashing channel for every
+%   round, built from the one physical POVM that [[A-ROUND-SQ]] holds fixed. A
+%   round-dependent squasher, for which [[rem:variants]] proves the
+%   factorization, is not emitted.
+% prominence: standard
+% status: accepted
+% uses: [rem:variants]
+% mentions: [ass:round]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The factorization holds for round-dependent squashers as well
+(Remark~\ref{rem:variants}), but no declared input describes more than one
+round.
+
+\begin{requirement}\label{req:round-homogeneous-emission}
+The engine emits one \tref{declared model} and one squashing channel for
+every round, both built from the one physical POVM that
+Assumption~\ref{ass:round} holds fixed (the interface convention
+\iface{round_homogeneity}). It emits no round-dependent squasher.
+\end{requirement}

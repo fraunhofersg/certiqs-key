@@ -1,0 +1,34 @@
+% ---
+% id: receiver/def:catalogue
+% kind: def
+% title: "Component catalogue"
+% summary: >-
+%   A component catalogue is a finite set of entry types, each fixing a
+%   support shape, a parameter domain and a rule that yields a local element.
+%   The catalogue submodule declares the entries and proves that each maps its
+%   whole domain into local elements.
+% prominence: standard
+% status: accepted
+% uses: [def:embed]
+% mentions: [receiver/component-catalogue/thm:catalogue-admissibility, receiver/component-catalogue/def:catalogue-entries]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Route (iii) declares a receiver as a graph of standard components rather than
+as a matrix. This section shows when such a graph determines the
+\tref{instrument matrix}: it does, under a condition that is stated rather
+than assumed.
+
+\begin{definition}\label{def:catalogue}
+A \term[A finite set of entry types from which a route-(iii) receiver is assembled.]{component catalogue} $\Cat$ is a finite set of entry types. An
+\term[A kind of optical component: a support shape, a parameter domain and a rule giving a local element for each parameter tuple.]{entry type} fixes a support shape (which modes of $\Modes$ it acts on), a
+parameter domain, and a rule assigning to every parameter tuple in that domain
+a \tref{local element} in the sense of Definition~\ref{def:embed}. The
+catalogue of this contract is the one of Definition~\ref{def:catalogue-entries}
+(Table~\ref{tab:catalogue}) in the component-catalogue submodule, and
+Theorem~\ref{thm:catalogue-admissibility} there states that every entry type maps its whole
+declared domain into local elements.
+\end{definition}

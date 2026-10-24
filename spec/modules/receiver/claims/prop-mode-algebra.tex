@@ -1,0 +1,65 @@
+% ---
+% id: receiver/prop:mode-algebra
+% kind: prop
+% title: "Algebra of embedded local elements"
+% summary: >-
+%   Embedding preserves contractivity, products of contractions are
+%   contractions, elements on disjoint supports commute, and embedding respects
+%   adjoints and unitarity. Graph compilation rests on these four facts.
+% prominence: standard
+% status: accepted
+% uses: [def:embed, def:modes]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{proposition}\label{prop:mode-algebra}
+Let $\hat\Gmat,\hat\Gmat'$ be \tref[global embedding]{global embeddings} of
+\tref[local element]{local elements} with supports $\Sigma,\Sigma'$.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{Embedding preserves contractivity:}
+  $\hat\Gmat^\dagger\hat\Gmat\preceq\id_{\Modes}$, with equality exactly when
+  the element is lossless.
+\item \emph{Products of contractions are contractions:} if
+  $X^\dagger X\preceq\id$ and $Y^\dagger Y\preceq\id$ then
+  $(XY)^\dagger(XY)\preceq\id$, with equality for all vectors exactly when
+  $Y$ is an isometry and $X$ is isometric on $\operatorname{ran}Y$.
+\item \emph{Disjoint supports commute:} if $\Sigma\cap\Sigma'=\varnothing$ then
+  $\hat\Gmat\hat\Gmat'=\hat\Gmat'\hat\Gmat$.
+\item \emph{Adjoints and unitaries:} $\hat\Gmat^\dagger$ is the embedding of
+  $\Gmat_\Sigma^\dagger$, and $\hat\Gmat$ is unitary exactly when
+  $\Gmat_\Sigma$ is.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) In the block decomposition $\mathbb{C}^{\Modes}=\mathbb{C}^{\Sigma}\oplus
+\mathbb{C}^{\Modes\setminus\Sigma}$ one has
+$\hat\Gmat^\dagger\hat\Gmat=(\Gmat_\Sigma^\dagger\Gmat_\Sigma)
+\oplus\id_{\Modes\setminus\Sigma}$, which is $\preceq\id$ precisely when
+$\Gmat_\Sigma^\dagger\Gmat_\Sigma\preceq\id_\Sigma$, and equals $\id$ precisely
+when $\Gmat_\Sigma^\dagger\Gmat_\Sigma=\id_\Sigma$.
+
+(ii) For any vector $v$, $\lVert XYv\rVert\le\lVert Yv\rVert\le\lVert v\rVert$,
+using $\lVert Xw\rVert\le\lVert w\rVert$ at $w=Yv$ and then
+$\lVert Yv\rVert\le\lVert v\rVert$. Hence
+$v^\dagger(XY)^\dagger(XY)v\le v^\dagger v$ for all $v$, which is
+$(XY)^\dagger(XY)\preceq\id$. Equality for all $v$ forces equality in both
+steps for all $v$: the second gives $\lVert Yv\rVert=\lVert v\rVert$ for all
+$v$, i.e.\ $Y$ isometric, and the first then gives
+$\lVert Xw\rVert=\lVert w\rVert$ for every $w\in\operatorname{ran}Y$.
+Conversely, if $Y$ is an isometry and $X$ is isometric on
+$\operatorname{ran}Y$, then $\lVert XYv\rVert=\lVert Yv\rVert=\lVert v\rVert$
+for every $v$, which is equality for all vectors.
+
+(iii) Write $\mathbb{C}^{\Modes}=\mathbb{C}^{\Sigma}\oplus\mathbb{C}^{\Sigma'}
+\oplus\mathbb{C}^{\Modes\setminus(\Sigma\cup\Sigma')}$, legitimate because
+$\Sigma\cap\Sigma'=\varnothing$. In that decomposition
+$\hat\Gmat=\Gmat_\Sigma\oplus\id\oplus\id$ and
+$\hat\Gmat'=\id\oplus\Gmat'_{\Sigma'}\oplus\id$; both products equal
+$\Gmat_\Sigma\oplus\Gmat'_{\Sigma'}\oplus\id$.
+
+(iv) Immediate from the block form.
+\end{proof}

@@ -1,0 +1,478 @@
+id: reductions
+kind: core
+version: 0.22.0
+title: "Proof reductions by squashing (reductions)"
+abstract: >-
+  This contract replaces a physical receiver, and in trusted-source mode a
+  physical source as well, by finite models a security analysis can run on,
+  and states exactly what each replacement transfers. A squashing relation
+  asks that the adjoint of a channel pull every target POVM element back to
+  the physical one, together with carried operators that move device facts
+  into the squashed model; because the physical measurement channel then
+  factors through the squashing channel, the physical and the squashed
+  protocol have the same output state. The core module has four main
+  results, in the order the contract states them. Security of the squashed
+  model over analysed inputs that contain the squashed image of every
+  physical input transfers to the physical protocol with the same ε, for
+  every criterion ([[thm:transfer]]), and the attack-set licence places every
+  squashed physical attack in the admissible set the consuming key-rate
+  engine restricts to, whenever each carried operator's pull-back is bounded
+  above or below by, or equal to, a multiple of the identity, a spectral
+  certificate ([[thm:licence]]). In trusted-source mode the source
+  replacement, which exchanges the specified signal ensemble for its virtual
+  one, and the squashing reduction compose, in either order, into one exact
+  operational reduction whose image lies in the admissible attack set
+  ([[thm:two-sided]]), and the target a reduction instance emits is exactly
+  admissible and squashes the declared model with no error term
+  ([[thm:emit]]). The two submodules, wpfss (flag-state and
+  weight-preserving squashers) and domination (the link that relates a dominated
+  family to the one dominating it, kept for a declared device weight), follow
+  the core as parts of their own and
+  add main results, listed with these four in the front matter. Every
+  construction is a reduction instance, emitted as a reduction chain of typed
+  links that each carry their channel witness, and every condition on
+  declared numbers is decided exactly, every declared and emitted operator
+  entry and declared real scalar lying on a declared lattice of binary64
+  (double-precision) values; where the emission has to move an instance's
+  datum, exact arithmetic having left that lattice, the emission theorem is
+  about the moved, declared model, which nothing proved relates to the
+  handed one; a moved class is disclosed, and a run that reads it rests on
+  the premise that what it concludes from the emission holds of the declared
+  model, as it does where the device measures that model. Where the declaring instance
+  hands a reference of its measurement beside its snap, the same
+  construction run on the reference, with no normalizer, is emitted beside
+  the artefact as its reference companion ([[cor:reference-companion]]). The supplier's device facts, the independence of
+  the measuring party's private setting and the round structure are
+  assumptions the caller carries, while the
+  soundness of the emitted constraints is a conclusion of the chain, emission
+  and licence theorems and not an assumption; the adversary's registers are
+  finite-dimensional, as the round model's are, and the consuming engine
+  carries the security statement to an adversary whose memory has any
+  dimension ([[meat-core/cor:composed-security]]).
+depends_on: [receiver, transmitter, foundations]   # foundations: the number model and the exact admissibility def:exactadm strengthens; transmitter: def:link's source stage is its source link
+notation_version: "0.4.0"   # the spec/notation.md version this module pins
+submodules: [wpfss, domination]
+reading_groups:
+- title: Squashing relations and their statistics
+  start: def:system-setting
+  abstract: >-
+    A squashing relation replaces the physical measurement on Bob's system by
+    a target measurement on a finite system, through a channel whose adjoint
+    pulls every target element back to the physical one, and a tuple of
+    carried operators travels along with prescribed pull-backs. The relation
+    is equivalent to agreement of all statistics, side system included
+    ([[lem:statistics]]), and it turns a device fact about a carried
+    operator's pull-back into an operator constraint on every state the
+    squashing channel produces, the fact being the constraint's certificate
+    ([[cor:pullback]]). The setting comes
+    first, a separable physical system with finite declared targets and side
+    registers ([[def:system-setting]]), and with it the infinite-dimensional
+    bookkeeping behind adjoints and tensor channels ([[lem:sep]]); the section
+    ends with the measurement channel,
+    through which the relation becomes a factorisation of channels
+    ([[lem:msmfact]]).
+- title: Protocols, security criteria and exact operational reductions
+  start: def:protocol
+  abstract: >-
+    The protocols of this contract pass each round's measured system through
+    one measurement channel and process only its classical outcome
+    afterwards. A security criterion is any family of functions of the
+    protocol's final output together with the adversary's system, and an
+    exact operational reduction is a map of attack strategies under which
+    every strategy and its image produce the same full output. Such a map
+    transfers every bound on every criterion with the same ε, and reductions
+    restrict, enlarge and compose ([[lem:opreduction-transfer]]). The section
+    closes with the reason both reductions of this contract are exact rather
+    than approximate.
+- title: Output-state equality and security transfer
+  start: thm:factorization
+  abstract: >-
+    Replacing each round's physical measurement by the squashing channel
+    followed by the target measurement leaves the protocol's whole output
+    state unchanged ([[thm:factorization]]), also against adaptive attack
+    sequences in either source mode ([[cor:sequential]]). The main result,
+    [[thm:transfer]], is that security of the squashed protocol over analysed
+    inputs that contain the squashed image of every physical input transfers
+    to the physical protocol with the same ε, for every criterion. A
+    constraint is sound when every reachable squashed state satisfies it;
+    sound constraints may be intersected when they are sound for one common
+    channel and one family of physical inputs, and carried operators supply
+    them ([[cor:sound]], [[cor:transported]]). The remarks give the variants
+    of the factorisation, the criteria that transfer, and the standard way a
+    transplanted operator identity makes a constraint unsound.
+- title: Operations on squashing relations
+  start: prop:preorder
+  abstract: >-
+    Squashing relations compose along a pre-order and survive common
+    classical post-processing, a privately drawn setting under one common
+    channel, mixtures and tensor products. Pinching onto the sectors of a
+    block-diagonal target is itself a squashing; where the carried operators
+    are block diagonal too, the squashed analysis may be restricted to
+    block-diagonal states for the pinched channel ([[cor:blockdiag]]). A
+    private setting with declared class weights enters as part of a joint
+    outcome, the weight inside the element, and the joint family is defined
+    once here ([[def:joint-family]]). Two necessary conditions can show a
+    declared relation impossible, and both are decided exactly on the
+    declared numbers ([[lem:obstructions]], [[rem:obstructiondecide]]).
+- title: Branching and flag targets
+  start: lem:top
+  abstract: >-
+    Every measurement with a finite alphabet squashes to the flag PVM on its
+    outcomes ([[lem:top]]), so the existence of a squasher is never the
+    difficulty; its tightness is. A generalized instrument followed by a
+    squasher in each branch gives one squashing relation whose target stacks
+    the branch targets as blocks, with each branch weight transported as an
+    operator ([[lem:master]]). Its instances cover a known mixture, a
+    measurement block diagonal for an orthogonal decomposition and a register
+    read by a POVM ([[cor:instances]], [[thm:mixture]]); common targets that
+    merge the blocks again, flag-extended targets and their rate cost, and the
+    price of a general POVM on the register follow.
+- title: Event-level device facts, attack sets and the licence
+  start: prop:obstruction
+  abstract: >-
+    A device fact about a union of outcomes cannot in general be kept by a
+    classical target ([[prop:obstruction]]), so it travels as a
+    constraint entry, which is sound only on the reachable set. The consuming
+    engine restricts the squashed attacks to the admissible set the entries
+    cut out. The main result, the attack-set licence [[thm:licence]], proves
+    that every squashed physical attack lies in that set whenever each
+    carried operator's pull-back satisfies a spectral certificate, in either
+    source mode and, for party-local entries, on a product measured system
+    with a product squashing channel and each certificate on its factor's own
+    channel. The remarks say how the relation symbols read at the channel and
+    the declaration level, what the licence does and does not license, and
+    where its format is published.
+- title: Typed links and reduction chains
+  start: def:link
+  abstract: >-
+    The artefact is a chain of typed links, each carrying enough to be
+    re-checked: its channel witness, carried operators, reachable-set
+    statement, transported constraint entries and, where there are entries, a
+    licence record. A chain is a source segment of the transmitter followed by
+    composable receiver-stage links, and its receiver composite is again a
+    squashing relation to which output-state equality, security transfer and
+    the licence apply ([[thm:chain]]). A declaration with a non-empty source
+    segment and constraint entries is admitted only with licensed entries and
+    in trusted-source mode. An already-finite receiver reduces by one
+    identity link.
+- title: The source-side reduction and the two-sided theorem
+  start: lem:precomposition
+  abstract: >-
+    Admissibility for a list of entries with real constants survives
+    precomposition with any channel, in either source mode
+    ([[lem:precomposition]]). Replacing the specified signal ensemble of a
+    trusted-source specification by its virtual ensemble is itself an exact
+    operational reduction, and the entanglement-based description a
+    source-replacement certificate presents has the same full output
+    ([[lem:source-transfer]]). The main result, [[thm:two-sided]], is that the
+    source map and the squashing reduction then compose, in either order,
+    into one exact operational reduction whose image lies in the admissible
+    attack set, so security of the virtual squashed model transfers to the
+    specified physical protocol with the same ε, against attacks that receive
+    every signal in the first round and keep finite-dimensional registers;
+    every other attack is reached by a limit in the consuming engine
+    ([[meat-core/cor:composed-security]]). In untrusted-source mode
+    there is no source segment to transfer, and the receiver-side reduction
+    stands alone.
+- title: The number model and exact decisions
+  start: def:exactadm
+  abstract: >-
+    Every number this module reads or emits, except the recorded emission
+    displacement, is a binary64 value read as the dyadic rational it is, every
+    declared or emitted operator entry and declared real scalar satisfies one
+    declared lattice condition, and every condition on declared data is
+    decided exactly; the section states the strengthening of exact
+    admissibility this module decides ([[def:exactadm]]). The decisions are
+    taken in an ordered
+    field that the contract leaves open, since no admissible choice changes a
+    decision ([[def:substrate]]). Positivity and operator-norm bounds reduce
+    to sign comparisons of characteristic-polynomial coefficients
+    ([[lem:exactpsd]]), and partial sums on the lattice are exact while the
+    alphabet is small enough ([[lem:latsum]]).
+- title: Reduction instances
+  start: def:reduction-instance
+  abstract: >-
+    A reduction instance packages what every construction emits: a handed
+    model with a finite datum and hypotheses about the rest, a target built
+    block by block from the datum and scalar values, a squashing relation
+    with a transported set, and certified entries, all holding at every
+    admissible datum ([[def:reduction-instance]]). The core proves the three
+    instances a protocol needs regardless of device: the identity instance,
+    the flag instance of an uncharacterised branch, and the branching
+    instance of a generalized instrument with its register form
+    ([[thm:instrument-instance]]). An instance precomposed with a channel on
+    its system, such as a known loss in front of the device, is again an
+    instance with the same datum, target, entries and emission
+    ([[lem:precomposed-instance]]).
+- title: Exact emission
+  start: def:emitnorm
+  abstract: >-
+    Where the exact construction of a reduction instance leaves the declared
+    lattice, the emission normalizer declares a nearby datum, keeping the
+    classes already on the lattice and snapping every other class for
+    fidelity without reviving a zero row or column, or, where no element can
+    host its residue, by a flagged last resort, and decides all six
+    emission conditions last ([[def:emitnorm]]).
+    The main result, [[thm:emit]], is that the emitted family is exactly
+    admissible and squashes the declared model exactly, and that every claim
+    of the instance holds of that model; where the normalizer moved the
+    datum, nothing proved relates the two models, their distance least of
+    all, and a run either evaluates off the snap or rests on a disclosed
+    premise. Which constraint
+    entries are emitted and at which constants ([[cor:entries]]), and how
+    several measuring parties' emissions combine
+    without a product datum ([[thm:emitted-product]]), follow; the remarks
+    say what an emitted claim is about, where exact decisions stop, and why
+    the emitted constraints are sound by theorem rather than by assumption.
+- title: The reference companion
+  start: cor:reference-companion
+  abstract: >-
+    Where the declaring instance holds a reference of the measurement it
+    snapped, the same instance run on the reference in place of the snap is
+    again a reduction instance with the emitted alphabet, sectors and scalar
+    values: its target is a POVM that the reference model squashes to
+    exactly, with its own certified entries, known through enclosures formed
+    from the reference's ([[cor:reference-companion]]). This needs only that
+    the instance's datum, formed from any family with the properties of a
+    reference, is admissible, which holds for the identity instance, passes
+    through branching, and holds for the flat instance. An entry built from
+    the reference is emitted in binary64 by rounding its operator and moving
+    its constant outward by a bound on the rounding, which keeps a
+    certificate and enlarges the set the entry cuts out
+    ([[lem:row-relaxation]]). Where the instance forms its datum as a
+    non-negative combination of the blocks, as the identity and the flat
+    instance do, factor enclosures of the reference's blocks pass to the
+    companion's datum and target, columns side by side and cores scaled
+    ([[cor:companion-factor-enclosure]]).
+- title: Assumptions
+  start: ass:meas
+  abstract: >-
+    These assumptions are the premises the reductions rest on and do not
+    prove: a measuring party's device entering only through one POVM per
+    round, the same physical measurement in every round with no memory
+    across rounds, a supplier's
+    artefact being its module's own output at an accepted version and true
+    of the device, a measuring party's private
+    setting being its own declared randomness, output-state test
+    statistics and declared constants. The dimensions of the systems are the
+    setting's, and the adversary's registers are finite-dimensional as the
+    round model's are; no assumption is made about the adversary's memory,
+    which the consuming engine reaches at any dimension by a limit
+    ([[meat-core/cor:composed-security]]). No assumption about the
+    distance of the declared numbers from a true operator family is made,
+    because their exact admissibility is decided on entry; what remains a
+    hypothesis is that the supplier's facts hold of the family declared
+    ([[ass:recv]], [[rem:recv-scope]]), which for an exact, rigorously
+    evaluated receiver artefact the run built itself holds under the
+    receiver's own ledger ([[req:recv-row-provenance]]).
+- title: "Requirements: channel witnesses, post-processing and relations"
+  start: req:channel-witness
+  abstract: >-
+    These requirements fix what the artefact carries: an explicit channel
+    witness for every emitted link, the artefact's witness being the
+    squashing channel followed by the sector pinching, and the carried tuple
+    every emitted constraint is built from. They also fix what the engine
+    refuses: a relation with an error term, a noise or coarse-graining map
+    after a squashing link, a declared relation that fails a necessary
+    condition, and a link of a reserved kind. Only the round-homogeneous model
+    is emitted, and branch blocks are emitted as the branches supply them, a
+    padded variant only where a submodule proves it and declares it in its
+    interface.
+- title: "Requirements: chains, constraint slots and the licence"
+  start: req:constraint-and-licence-slots
+  abstract: >-
+    Every artefact carries a constraint list and a licence slot, even when
+    both are empty, and its licence record names the licensing theorem, the
+    certificate of each entry, the claim that discharges it and, where that
+    claim reads a supplier's fact, the supplier artefact.
+    The engine builds no entry whose constant depends on data observed during
+    the run, refuses a chain containing a link that is not exact, and records
+    an identity link where nothing was reduced.
+- title: "Requirements: constraint entries"
+  start: req:certified-entries-only
+  abstract: >-
+    The engine emits only certified constraint entries, each with its
+    recorded certificate case, as the request decides, and carries the
+    certificates of the transported set beside them. The class-marginal
+    identity is emitted only in expectation form and only where the instance
+    discharges it; its operator form, and any requested operator whose
+    certificate no claim decides on the emitted numbers, are refused. A caller's inequality constant off the lattice
+    is rounded outward and an equality constant off it is refused; a
+    party-local entry carries its tag, and every entry of an emitted
+    constraint operator satisfies the declared lattice condition, its modulus
+    bound included.
+- title: "Requirements: exact admission and emission"
+  start: req:exact-admission-refusal
+  abstract: >-
+    The engine refuses a declaration that is not exactly representable in the
+    field of its arithmetic, and an emitted family it cannot decide exactly
+    admissible. A class the normalizer moves, the flagged last resort
+    included, is disclosed rather than refused, unless the run declares the
+    strict option and would rest on it.
+    It records every displacement, kept or moved class and rounding
+    direction of an emission, emits the
+    reference companion beside the artefact where a reference is handed,
+    with no normalizer and its entries relaxed, emits each reduction
+    instance's party partition with its sector map, and emits several
+    measuring parties' artefacts with their combination rule rather than a
+    product.
+- title: "Requirements: the assumption ledger"
+  start: req:assumption-ledger
+  abstract: >-
+    The emitted assumption ledger carries the rows of the emission's
+    assumptions under their presence rules and marks those that are never
+    verified. It refuses a supplier artefact of a version the caller has not
+    declared accepted, passes the supplier's ledger through entire, refuses
+    one with a repeated or missing key, and relies only on supplier presence
+    rules that omit no premise an imported fact rests on. It omits the row of
+    the supplier assumption only where the run attests that it built every
+    receiver artefact read and each is exact with rigorous weights
+    ([[req:recv-row-provenance]]). The
+    engine declares the output-state model of the test statistics.
+order:
+  - def:system-setting
+  - lem:sep
+  - def:squashing
+  - lem:statistics
+  - rem:dictionary
+  - rem:carried-operators
+  - cor:pullback
+  - def:certificate
+  - rem:notchannel
+  - def:msm
+  - lem:msmfact
+  - def:protocol
+  - def:criterion
+  - def:opreduction
+  - lem:opreduction-transfer
+  - rem:why-exact
+  - thm:factorization
+  - def:roundmodel
+  - cor:sequential
+  - prop:platform
+  - rem:platform-published
+  - rem:variants
+  - rem:coherent
+  - rem:criteria
+  - rem:completeness
+  - def:sound
+  - thm:transfer
+  - cor:sound
+  - cor:transported
+  - rem:unsound
+  - rem:channel-choice
+  - prop:preorder
+  - cor:monotone
+  - lem:linear
+  - def:joint-family
+  - rem:intertwining
+  - prop:pinching
+  - cor:blockdiag
+  - prop:tensor
+  - lem:obstructions
+  - rem:obstructiondecide
+  - lem:top
+  - def:generalized-instrument
+  - lem:master
+  - rem:reading-master
+  - rem:master-scope
+  - rem:branch-blocks
+  - rem:branch-probability
+  - cor:instances
+  - prop:common
+  - rem:dominating
+  - cor:flagsenough
+  - rem:flagcost
+  - thm:mixture
+  - rem:povmreg
+  - prop:obstruction
+  - rem:obstruction-scope
+  - def:attset
+  - rem:relation-symbols
+  - def:licensed
+  - lem:party-local
+  - thm:licence
+  - rem:notlicensed
+  - rem:gateweight
+  - rem:publishedlicence
+  - def:link
+  - def:chain
+  - rem:chain-admission
+  - thm:chain
+  - ex:identity
+  - lem:precomposition
+  - rem:precomposition-scope
+  - lem:source-transfer
+  - rem:source-transfer-registers
+  - rem:source-transfer-scope
+  - thm:two-sided
+  - rem:two-sided-scope
+  - rem:ordering
+  - def:exactadm
+  - def:substrate
+  - lem:exactpsd
+  - rem:psdalgorithm
+  - lem:latsum
+  - def:reduction-instance
+  - cor:identity-instance
+  - cor:flag-instance
+  - thm:instrument-instance
+  - cor:register-instance
+  - lem:precomposed-instance
+  - def:emitnorm
+  - thm:emit
+  - cor:entries
+  - rem:entry-tags
+  - thm:emitted-product
+  - cor:emitted-identity
+  - rem:emitclaim
+  - rem:claimscope
+  - rem:exactboundary
+  - rem:sound-and-atk
+  - cor:reference-companion
+  - cor:companion-factor-enclosure
+  - lem:row-relaxation
+  - ass:meas
+  - ass:round
+  - ass:recv
+  - rem:recv-scope
+  - ass:probe
+  - ass:tsm
+  - ass:constdecl
+  - req:channel-witness
+  - req:pinched-channel-witness
+  - req:carried-tuple-emitted
+  - req:no-approximate-relations
+  - req:round-homogeneous-emission
+  - req:post-processing-order
+  - req:declared-relation-check
+  - req:reserved-link-kinds
+  - req:unpadded-branch-blocks
+  - req:constraint-and-licence-slots
+  - req:licence-record
+  - req:declared-constants-only
+  - req:mixed-status-chain
+  - req:identity-link-recorded
+  - req:certified-entries-only
+  - req:class-marginal-operator-form
+  - req:constraint-list-by-request
+  - req:transported-set-certificates
+  - req:class-marginal-entry
+  - req:caller-constant-rounding
+  - req:uncertified-operator-refused
+  - req:party-local-tag
+  - req:licensed-entry-lattice
+  - req:exact-admission-refusal
+  - req:emission-refusal
+  - req:emission-record
+  - req:reference-companion
+  - req:party-label
+  - req:factorised-emission
+  - req:assumption-ledger
+  - req:never-verified-assumptions
+  - req:supplier-ledger-pass-through
+  - req:supplier-ledger-refusals
+  - req:supplier-version-accepted
+  - req:supplier-presence-rules
+  - req:recv-row-provenance
+  - req:output-state-statistics

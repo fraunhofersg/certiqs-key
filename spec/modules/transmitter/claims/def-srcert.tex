@@ -1,0 +1,186 @@
+% ---
+% id: transmitter/def:srcert
+% kind: def
+% title: "Source-replacement certificate"
+% summary: >-
+%   An operator on Alice's system and the virtual signal whose partial trace
+%   over the signal is her marginal and whose partial traces against her
+%   measurement elements are the weighted virtual members. It is declared in
+%   pure or block form or defined by an ensemble presentation; retention is
+%   attested.
+% prominence: standard
+% status: implemented
+% uses: [def:source-spec, def:source-segment]
+% mentions: [ass:src, lem:ensemble-presentation, protocol-compiler/def:declaration, meat-core/def:declaration, protocol-compiler/def:eligible]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.certificate:SourceReplacementCertificate
+% lean:
+% ---
+
+The imported source replacement is one canonical way of describing a
+preparation as the measurement of a system Alice retains. The certificate
+abstracts the property that makes declared data such a description. Its
+algebraic conditions are either decided exactly on declared numbers, in the
+sense of the number model of Definition~\ref{def:source-spec}, or, in an
+ensemble presentation, theorems of the declared data; its retention condition
+is an attestation. It comes in three forms because what is exactly declarable
+depends on the source. It is written against the
+\tref{virtual ensemble} on $\Avirt$, from which the links of the source segment, of
+length $L_{\mathrm s}$, produce the specified ensemble on $\Asig$
+(Definition~\ref{def:source-segment}); with no links the two coincide.
+
+\begin{definition}\label{def:srcert}
+Let $\{p_x,\rvirt_x\}_{x\in\Xset}$ be the \emph{virtual} signal ensemble on
+the \tref{virtual transmitted system} $\Avirt$ --- the pair the source segment
+starts from, Definition~\ref{def:source-segment}\,(S1), (S3) --- with
+\tref{weighted members} $\sigma^{\mathrm v}_x\coloneqq p_x\rvirt_x\in\Pos{\Avirt}$,
+$p_x=\tr\sigma^{\mathrm v}_x\ge0$ and $\sum_xp_x=1$. These conditions are
+decided \emph{exactly}, as every declared condition is, the weight sum in
+the declared order and rounding nowhere. A \term[An operator on Alice's retained system and the virtual transmitted system whose marginal on her side is her declared marginal and which, measured on her side by her POVM, leaves the weighted virtual members, with retention attested.]{source-replacement
+certificate} for the declared data $(A,\mathbb{T},\tau_A,\{M_x\})$ of a
+\tref{source specification} (Definition~\ref{def:source-spec}) is an operator
+$\Psi\in\Lin{A\Avirt}$ such that
+\begin{enumerate}[label=(SR\arabic*),leftmargin=3.0em]
+\item $\tr_{\Avirt}\Psi=\tau_A$;
+\item $\tr_{A}\!\big[(M_x\otimes\idon{\Avirt})\,\Psi\big]=p_x\,\rvirt_x$
+for every $x\in\Xset$; and
+\item \emph{(retention, an attestation)} $A$ is retained in Alice's
+laboratory and never transmitted; no operation of the protocol and no
+operation of the adversary acts on $A$, except Alice's declared measurement
+$\{M_x\}$.
+\end{enumerate}
+It is given in one of the three forms below. In the pure form and in the
+block form $\Psi$ is declared, together with the declared computational basis
+of $A$. In an ensemble presentation neither $\Psi$ nor a basis of $A$ is
+declared: $\Psi$ is defined from a declared ensemble by \eqref{eq:enspres}.
+
+\emph{Pure form.} In the \term[The certificate form declared as a rank-one projector, on the one-sector structure.]{pure form} the \tref{sector structure} of $A$ is the
+\tref{one-sector structure}, and $\Psi$ is a \emph{rank-one projector} --- $\Psi$
+Hermitian, $\Psi^2=\Psi$ and $\tr\Psi=1$, each decided exactly and the trace
+summed without rounding, so that $\Psi=\dyad{\psi}$ for a unit vector
+$\ket{\psi}\in\Hs{A\Avirt}$.
+
+\emph{Block form.} Let $\Hs{A}=\bigoplus_{t\in\mathbb{T}}\Hs{A_t}$ be the
+sector structure of $A$ declared in Definition~\ref{def:source-spec}, along
+which $\tau_A=\bigoplus_t\tau^{(t)}_A$ and $M_x=\bigoplus_tM^{(t)}_x$ are
+presented as block lists. In the \term[The certificate form declared as positive blocks, one per sector, on matched sector structures of Alice's system and the virtual system.]{block form} the virtual transmitted
+system carries a declared sector structure \emph{matched} to that of $A$: the
+same ordered index set $\mathbb{T}$ and a decomposition
+$\Hs{\Avirt}=\bigoplus_{t\in\mathbb{T}}\Hs{S_t}$ into subspaces each spanned
+by vectors of the declared basis of $\Avirt$, with projectors
+$\Pi^{\mathrm v}_t$. The certificate is a block list
+$(\Psi_t)_{t\in\mathbb{T}}$ with $\Psi_t\in\Lin{A_tS_t}$, each block
+Hermitian and positive semidefinite, decided exactly, and
+$\sum_{t}\tr\Psi_t=1$, the traces summed in the declared order without
+rounding. It denotes the operator $\Psi=\bigoplus_t\Psi_t$ on the
+\term[The direct sum, over the sectors, of the tensor products of matching sectors of Alice's system and the virtual system.]{matched subspace} $\bigoplus_t\Hs{A_t}\otimes\Hs{S_t}
+\subseteq\Hs{A\Avirt}$, extended by zero to its orthogonal complement. No
+purity condition is imposed, on $\Psi$ or on any block. The weighted virtual
+members are required to be \emph{block diagonal} along $(S_t)_t$:
+$\Pi^{\mathrm v}_t\sigma^{\mathrm v}_x\Pi^{\mathrm v}_{t'}=0$ for all
+$t\ne t'$ and every $x$, that is, every entry of $\sigma^{\mathrm v}_x$ whose
+row lies in one sector and whose column lies in another is zero, decided entry
+by entry on the declared entries of $\sigma^{\mathrm v}_x$ (a virtual ensemble
+declared as block lists along $(S_t)_t$ meets it by its presentation). Write
+$\sigma^{\mathrm v,(t)}_x\coloneqq\Pi^{\mathrm v}_t\sigma^{\mathrm v}_x
+\Pi^{\mathrm v}_t$, read as an operator on $S_t$, for its diagonal blocks.
+Against a block list the two identities read block by block,
+\begin{equation}\label{eq:srblock}
+  \tr_{S_t}\Psi_t=\tau^{(t)}_A ,\qquad
+  \tr_{A_t}\!\big[(M^{(t)}_x\otimes\idon{S_t})\,\Psi_t\big]
+  =\sigma^{\mathrm v,(t)}_x
+  \qquad\text{for every }t\in\mathbb{T},\ x\in\Xset ,
+\end{equation}
+and \eqref{eq:srblock} together with the block diagonality of every
+$\sigma^{\mathrm v}_x$ is equivalent to (SR1) and (SR2) of the operator
+$\Psi$. Indeed $\Psi$ vanishes off the matched subspace and $M_x$ is block
+diagonal, so the partial traces of $\Psi$ are the direct sums of those of its
+blocks: $\tr_{\Avirt}\Psi=\bigoplus_t\tr_{S_t}\Psi_t$, which is
+$\tau_A=\bigoplus_t\tau^{(t)}_A$ exactly when the first identity of
+\eqref{eq:srblock} holds; and $\tr_A[(M_x\otimes\idon{\Avirt})\Psi]=\bigoplus_t
+\tr_{A_t}[(M^{(t)}_x\otimes\idon{S_t})\Psi_t]$, which is block diagonal along
+$(S_t)_t$ and so equals $\sigma^{\mathrm v}_x$ exactly when
+$\sigma^{\mathrm v}_x$ is block diagonal and its diagonal blocks satisfy the
+second identity. Without the block diagonality, \eqref{eq:srblock} is (SR2)
+against the pinched members $\bigoplus_t\sigma^{\mathrm v,(t)}_x$ and not
+against $\sigma^{\mathrm v}_x$.
+
+\emph{Ensemble presentation.} A block-form certificate need not be declared
+at all. In an \term[The certificate form that declares only the weighted virtual ensemble in sector blocks and defines the certificate from it.]{ensemble presentation} the declared data are the matched
+sector structure $(S_t)_{t\in\mathbb{T}}$ on $\Avirt$ and the weighted
+virtual ensemble as block lists,
+$\sigma^{\mathrm v}_x=\bigoplus_t\sigma^{\mathrm v,(t)}_x$ with
+$\sigma^{\mathrm v,(t)}_x\in\Lin{S_t}$, and \emph{nothing else}: no $\Psi$,
+no $\{M_x\}$, no $\tau_A$ and no basis of $A$. The conditions are
+\begin{enumerate}[label=(E\arabic*),leftmargin=3.0em]
+\item every block $\sigma^{\mathrm v,(t)}_x$ is Hermitian and positive
+semidefinite, decided exactly;
+\item $p_x=\sum_t\tr\sigma^{\mathrm v,(t)}_x$ for every $x$ and
+$\sum_xp_x=1$, the sums formed in the declared orders and rounding nowhere;
+and
+\item for every $t$ the sum $\sum_{x\in\Xset}\sigma^{\mathrm v,(t)}_x$,
+accumulated entry by entry in the declared order of $\Xset$, rounds nowhere,
+so that its entries are binary64 numbers.
+\end{enumerate}
+The system $A$, its sector structure, the marginal $\tau_A$, the POVM
+$\{M_x\}$ and the blocks $\Psi_t$ are then \emph{defined} by
+\eqref{eq:enspres}: $A_t$ is a copy of $S_t$, $\tau^{(t)}_A$ is the
+transpose of the sum in (E3), and $\Psi_t$ and $M^{(t)}_x$ are the canonical
+purification and its square-root measurement. By
+Lemma~\ref{lem:ensemble-presentation} they are a block-form certificate
+with (SR1) and (SR2) holding as identities, with no error term, against the
+declared ensemble itself, and with every non-zero block a multiple of a
+rank-one projector.
+(E1) to (E3) are all that is decided. (SR1), (SR2), positivity of the
+blocks, the POVM condition and the purity of the blocks are \emph{theorems}
+of the presentation and are decided by nothing, there being no second
+declared datum they could be compared with; (SR3) is the attestation it is
+in every form. Of the defined objects only $\tau_A$ is ever formed as
+numbers, and by (E3) it is admissible declared data. $\Psi_t$ and
+$M^{(t)}_x$ carry square roots and quotients of the declared numbers, are
+formed by no one, and are never rounded.
+
+\emph{What a consumer reads of a presentation.} What a consumer can read of
+Alice's measurement without $\Psi_t$ and $M^{(t)}_x$ is the family
+$N^{(t)}_x=(\sigma^{\mathrm v,(t)}_x)^{\transpose}$ of
+Lemma~\ref{lem:ensemble-presentation}\,(v). \emph{A consumer whose
+declaration carries Alice's measurement as the POVM $\{M_x\}$ cannot receive
+an ensemble presentation and refuses it}; the form of declaration that
+carries $\{N_x\}$ in its place is that consumer's to define, and the
+consuming modules define it: the protocol compiler and the key-rate engine
+receive a presentation through the ensemble form of their declarations,
+which carries $\{N_x\}$ in the place of $\{M_x\}$
+(\xref{protocol-compiler/def:declaration},
+\xref{meat-core/def:declaration}), admitted beside a presentation by
+\xref{protocol-compiler/def:eligible}. The mode, the alphabet, the source
+segment and the attestations of a specification are what they are in the
+other forms.
+
+\emph{What is decided.} (SR1) and (SR2) are \emph{exact matrix identities}
+on declared data, decided entry by entry. The conditions a consumer decides
+--- in pure form the three on $\Psi$, (SR1) and (SR2); in block form
+Hermiticity and positive semidefiniteness of every block, the trace, the block
+diagonality of every $\sigma^{\mathrm v}_x$ along $(S_t)_t$, and
+\eqref{eq:srblock}, which together are (SR1) and (SR2); in an ensemble
+presentation (E1) to (E3) and no others
+--- are stated in these terms and in no others: none of them is stated on a
+vector, which is not a declared datum. (SR3) carries no number and is
+decided by nothing; it is the attestation of Assumption~\ref{ass:src}. A
+rank-one projector of unit trace is positive semidefinite of unit trace, so
+a pure-form certificate satisfies every condition of the block form at the
+one-sector structure, and one condition more.
+
+\emph{One reading at every $L_{\mathrm s}$.} The pair
+$(\Avirt,\{p_x,\rvirt_x\})$ is the only pair a certificate is ever written
+against, at every length of the source segment, because the object a
+consumer receives is the virtual protocol
+(Definition~\ref{def:source-segment}\,(S3)): the specification's $\tau_A$
+and $\{M_x\}$ describe the preparation of $\{p_x,\rvirt_x\}$, and it is the
+source identity \eqref{eq:srcmap}, not the certificate, that carries that
+description back to the specified ensemble $\{p_x,\rho_x\}$ on $\Asig$. At
+$L_{\mathrm s}=0$ the two pairs are literally equal, $\Avirt=\Asig$ and
+$\rvirt_x=\rho_x$. So (SR1)--(SR2) have exactly one reading whatever
+$L_{\mathrm s}$ is.
+\end{definition}

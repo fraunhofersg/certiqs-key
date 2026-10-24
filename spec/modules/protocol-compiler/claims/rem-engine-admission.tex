@@ -1,0 +1,38 @@
+% ---
+% id: protocol-compiler/rem:engine-admission
+% kind: rem
+% title: "Relation to the consuming engine's admission conditions"
+% summary: >-
+%   The consuming engine decides the same five exact conditions as this
+%   module, and decides them alike. The declarations admitted here are a
+%   subset of those the engine admits: D(i) and D(iii) are stronger here and
+%   check V7 is one-sided.
+% prominence: standard
+% status: accepted
+% uses: [def:exact, def:target]
+% mentions: [foundations/req:consumer-decides-exactly, meat-core/def:admissible-declaration, def:validator]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:engine-admission}
+The five conditions of Definition~\ref{def:exact} are also the consuming
+engine's admission conditions, which that engine decides exactly, allowing
+no nonzero \tref[defects]{defect}
+(\xref{foundations/req:consumer-decides-exactly}), so the two modules
+decide \emph{those five conditions} alike. \emph{The agreement is on the five
+conditions and not on the declarations they are conditions of}: this module
+additionally imposes D(i)'s clause on $\idxm|_{\SecSet}$
+(Definition~\ref{def:target}), for which that engine's definition of an
+admissible declaration (\xref{meat-core/def:admissible-declaration}) has no
+counterpart, and D(iii)'s Hermiticity clause, which that definition leaves to
+the typing of the tuple;
+and its feasibility check V7 (Definition~\ref{def:validator}) is one-sided:
+it may refuse a declaration whose feasible set is non-empty, for want of a
+verified witness. So the declarations admitted
+here are a \emph{subset} of those that engine admits, and where the two
+differ this module refuses declarations that engine would admit, never the
+reverse.
+\end{remark}

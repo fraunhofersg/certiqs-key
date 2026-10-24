@@ -1,0 +1,38 @@
+% ---
+% id: receiver/def:graph
+% kind: def
+% title: "Declared element graph"
+% summary: >-
+%   A declared element graph is well formed when every element's parameters
+%   lie in their domain, the graph is acyclic, and any two elements sharing a
+%   mode are ordered by it. Support comparability keeps an arbitrary sort from
+%   supplying a physical ordering the declaration left open.
+% prominence: standard
+% status: implemented
+% uses: [def:catalogue]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.graph:ElementGraph
+% lean:
+% ---
+
+\begin{definition}\label{def:graph}
+A \term[A finite directed graph whose vertices are catalogue elements, each with an entry type, a parameter tuple and a support.]{declared element graph} is a finite directed graph $\Grph=(V,E)$ whose
+vertices $e\in V$ are \term[A vertex of a declared element graph: a catalogue component with its parameters and support, not a POVM element.]{elements}, each carrying a catalogue entry type, a
+parameter tuple, and a support $\Sigma_e\subseteq\Modes$. Write $\preceq_\Grph$
+for the reachability relation: $e\preceq_\Grph f$ when $e=f$ or there is a
+directed path from $e$ to $f$. The graph is \term[Said of a declared element graph that satisfies (E1) to (E3): valid parameters, acyclicity and support comparability.]{well formed} when
+\begin{enumerate}[label=(E\arabic*),leftmargin=3.0em]
+\item every element's parameter tuple lies in the declared domain of its entry
+  type, so that, by Definition~\ref{def:catalogue}, $\Gmat_{\Sigma_e}$ is a
+  \tref{local element}: defined, with
+  $\Gmat_{\Sigma_e}^\dagger\Gmat_{\Sigma_e}\preceq\id$;
+\item $\Grph$ is acyclic, so that $\preceq_\Grph$ is a partial order;
+\item (\term[Condition (E3): any two elements whose supports intersect are ordered by the graph.]{support comparability}) any two elements whose supports intersect
+  are comparable: $\Sigma_e\cap\Sigma_f\neq\varnothing\implies
+  e\preceq_\Grph f$ or $f\preceq_\Grph e$.
+\end{enumerate}
+A \term[An enumeration of the elements of a graph that respects its reachability order.]{linear extension} of $\Grph$ is an enumeration
+$e_1,\dots,e_L$ of $V$ with $e_i\preceq_\Grph e_j\implies i\le j$.
+\end{definition}

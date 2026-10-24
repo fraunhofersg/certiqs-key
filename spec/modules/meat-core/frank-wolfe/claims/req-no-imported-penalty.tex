@@ -1,0 +1,33 @@
+% ---
+% id: meat-core/frank-wolfe/req:no-imported-penalty
+% kind: req
+% title: "The program's own objective, with no imported penalty"
+% summary: >-
+%   The engine imports no relative-entropy penalty onto the objective: it
+%   subtracts no penalty term taken from a von Neumann entropy key-rate
+%   formulation. The objective is no relative entropy, and no claim here
+%   relates the two at finite α.
+% prominence: standard
+% status: implemented
+% uses: [thm:firstorder]
+% mentions: [meat-core/thm:choi, meat-core/thm:gradient]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.joint:joint_objective_value
+% lean:
+% ---
+
+The objective of \eqref{eq:choi-program} is not a relative entropy: its
+$K$-terms are R\'enyi-order-$\alpha$ trace powers, and no statement of this
+module relates the two at finite $\alpha$, so a penalty term taken from a
+von-Neumann-entropy key-rate formulation, however standard there, would
+claim a theorem this objective does not have. Face handling here is the compression of
+Theorem~\ref{thm:gradient}\,(i), unbudgeted, which is why this tier is weaker
+than a certificate.
+
+\begin{requirement}\label{req:no-imported-penalty}
+The engine imports no relative-entropy penalty onto $O^{J}_{\alpha}$ from any
+source: it subtracts from it no penalty term taken from a
+von-Neumann-entropy key-rate formulation.
+\end{requirement}

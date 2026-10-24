@@ -1,0 +1,111 @@
+% ---
+% id: reductions/domination/def:domination-link
+% kind: def
+% title: "The domination link"
+% summary: >-
+%   A domination link runs from a target family G to a family F it dominates
+%   at one weight per sector, through a noise channel that keeps each sector
+%   with probability one minus its weight and otherwise measures a residual
+%   family and prepares a flag, in added sectors or in sectors F already has.
+% prominence: standard
+% status: accepted
+% uses: [reductions/def:link, reductions/def:squashing, reductions/def:sound, reductions/def:reduction-instance, foundations/def:domination]
+% mentions: [thm:noise-channel, cor:dom-chain]
+% assumes: []
+% refs:
+%   - "nahar2025imperfect, Thm. 3, Eqs. (20)-(24)"
+%   - "nahar2025imperfect, Technical aside 1"
+% provenance: newly-derived
+% lean:
+% notes: "The weight symbol is vartheta because q_t names the class weights in this contract and varpi, the expansion of the macro cg, the declared coarse-graining map of the wpfss submodule; foundations/def:domination writes q_s for the same weight. The link is placed on the target system Q after a squashing link, not on the channel system before it; see the lead-in. The fresh flags of (a) are |V| added one-dimensional indicator sectors, so that the target of the link has the sector-block form of a reduction instance's target. No requirement emits the link: it is kept for a declared device weight (A-DOM, spec/future-scope.md section 13)."
+% ---
+
+A family $G$ that dominates a family $F$ at weights below one is a noise
+channel followed by $F$, together with classical flags
+\cite[Thm.~3, Eqs.~(20)--(24)]{nahar2025imperfect}: by
+\xref{foundations/def:domination} each element splits as
+$G_v=(1-\vartheta_s)F_v+\vartheta_sR_v$ on sector $s$, with a residual family $R$
+that is again complete, and a channel can keep the sector with probability
+$1-\vartheta_s$ and otherwise measure $R$ and prepare a flag
+(Theorem~\ref{thm:noise-channel}, which also shows that the tuple defined
+here is a receiver-stage link with an exact identity). The link defined here
+records that channel. It is placed on the \emph{target} side of a chain: it runs from the
+\tref{target family} a squashing link produces at the exact datum to the target
+family at a datum it dominates, both on one finite target system with
+one \tref{sector map}. The relation could equally be placed on the channel
+system before the squasher, from the model at the exact datum to the model at
+the other datum together with flags; the composite would be the same exact
+relation, but the intermediate descriptor would then be the
+infinite-dimensional channel system with flags, whereas on the target side
+every descriptor of the chain after the first link is the finite target
+system with its sector map (Corollary~\ref{cor:dom-chain}). The flags are
+prepared either into $|\Vset|$ one-dimensional sectors added to the target
+for the purpose, or, where the target already has one one-dimensional sector
+per outcome carrying that outcome's indicator, as the \tref{flag-state
+target} does, into those sectors, and the target system does not change
+\cite[Technical aside~1]{nahar2025imperfect}.
+
+\begin{definition}\label{def:domination-link}
+Let $\SecSet$ be a finite ordered set of sectors with dimensions $d_s\ge1$,
+$\Hs{\Qsys}=\bigoplus_{s\in\SecSet}\mathbb{C}^{d_s}$ with sector projectors
+$\Pi_s$, and let $G=\{G_v\}_{v\in\Vset}$ and $F=\{F_v\}_{v\in\Vset}$ be POVMs
+on $\Qsys$ over one finite alphabet $\Vset$, both block diagonal for
+$\{\Pi_s\}$, $G_v=\bigoplus_sG^{(s)}_v$ and $F_v=\bigoplus_sF^{(s)}_v$. Let
+$\vartheta=(\vartheta_s)_{s\in\SecSet}$ with $\vartheta_s\in[0,1)$ be weights at which
+$G$ dominates $F$, every block complete at $1$
+(\xref{foundations/def:domination}):
+\begin{equation}\label{eq:dom-link}
+  G^{(s)}_v-(1-\vartheta_s)\,F^{(s)}_v\;\succeq\;0
+  \qquad\text{for every }v\in\Vset\text{ and }s\in\SecSet ;
+\end{equation}
+they are the
+\term[The weights, one per sector of a finite target system, at which the source family of a domination link dominates its target family.]{domination weights}
+of the pair. Let $R_v\coloneqq\bigoplus_sR^{(s)}_v$ with $R^{(s)}$ the
+\tref{residual family} of \xref{foundations/def:domination} on sector $s$.
+A family $F$ on $\Qsys$ has
+\term[One one-dimensional sector per outcome, on which every element of a target family is one at its own outcome and zero at every other.]{indicator sectors}
+when there are pairwise distinct sectors $(f)\in\SecSet$, one for each
+$f\in\Vset$, with $d_{(f)}=1$ and $F^{((f))}_v=\delta_{vf}$ for every $v$;
+write $\Pi_{(f)}$ for the projector onto the sector $(f)$, a rank-one
+projector.
+\begin{enumerate}[label=(\alph*),leftmargin=2.4em]
+\item \emph{(added flag sectors)} Let $\Qsys^{+}$ be the system with
+  $\Hs{\Qsys^{+}}=\Hs{\Qsys}\dsum\Hs{\Flag^{+}}$, $\Hs{\Flag^{+}}=\mathbb{C}^{|\Vset|}$
+  with orthonormal basis $\{\ket{v}\}_{v\in\Vset}$, whose \tref{sector set} is
+  $\SecSet$ followed by $|\Vset|$ one-dimensional sectors $(f)^{+}$, $f\in\Vset$,
+  in the order of $\Vset$, the sector $(f)^{+}$ spanned by $\ket{f}$. Put
+  $F^{+}_v\coloneqq F_v\dsum\dyad{v}_{\Flag^{+}}$, so that the added sectors are
+  indicator sectors of $F^{+}$, and
+  \begin{equation}\label{eq:noise-fresh}
+    \Phi^{+}_{\vartheta}(\sigma)\;\coloneqq\;
+    \sum_{s\in\SecSet}(1-\vartheta_s)\,\Pi_s\sigma\Pi_s\ \dsum\
+    \sum_{v\in\Vset}\Big(\sum_{s\in\SecSet}\vartheta_s
+      \tr\big[R_v\,\Pi_s\sigma\Pi_s\big]\Big)\dyad{v}_{\Flag^{+}}
+  \end{equation}
+  for $\sigma\in\Tcl{\Qsys}$.
+\item \emph{(shared flag sectors)} Suppose $F$ has indicator sectors $(f)$ and
+  $\vartheta_{(f)}=0$ for every $f\in\Vset$. Put
+  \begin{equation}\label{eq:noise-shared}
+    \Phi_{\vartheta}(\sigma)\;\coloneqq\;
+    \sum_{s\in\SecSet}(1-\vartheta_s)\,\Pi_s\sigma\Pi_s\ +\
+    \sum_{f\in\Vset}\Big(\sum_{s\in\SecSet}\vartheta_s
+      \tr\big[R_f\,\Pi_s\sigma\Pi_s\big]\Big)\Pi_{(f)} .
+  \end{equation}
+\end{enumerate}
+A
+\term[A receiver-stage typed link of kind family-dominating from a finite target family to a family it dominates at the domination weights, whose channel witness is the noise channel with added or shared flag sectors.]{domination link}
+is the tuple \eqref{eq:link} of a receiver-stage \tref{typed link}
+(Definition~\ref{def:link}) with $\textsf{stage}=\textsf{receiver}$, kind
+$\textsf{family-dominating}$ and \tref{source family} $(\Qsys,G)$; with
+target $(\Qsys^{+},F^{+})$ and \tref{channel witness}
+$\Phi^{+}_{\vartheta}$ in case (a), or target $(\Qsys,F)$ and channel witness
+$\Phi_{\vartheta}$ in case (b); with \tref{carried operators} the projectors
+$\Pi_s\dsum0$, $s\in\SecSet$, and the flag projector
+$\Pflag^{+}\coloneqq0\dsum\idon{\Flag^{+}}$ in case (a), and the projectors
+$\Pi_s$ of the sectors that are not indicator sectors and the flag projector
+$\Pflag\coloneqq\sum_{f}\Pi_{(f)}$ in case (b), each with its pull-back under
+the channel witness; with the \tref{reachable-set statement} of
+Definition~\ref{def:sound} for that channel; with the constraint entries and
+\tref{licence record} of the chain it ends; and with
+$\textsf{status}=\textsf{exact}$.
+\end{definition}

@@ -1,0 +1,34 @@
+% ---
+% id: protocol-compiler/req:weight-list
+% kind: req
+% title: "Decision on the declared weight list"
+% summary: >-
+%   The declared weights of the setting-independent form are decided exactly:
+%   each positive by its sign, and their sum equal to one in the declared order
+%   without rounding. A weight that is not positive is refused by type, and a
+%   list whose sum is not one or rounds is refused with one named reason.
+% prominence: standard
+% status: implemented
+% uses: [def:weighted]
+% mentions: [foundations/req:declared-order]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.weights:weighted_family
+% lean:
+% ---
+
+The weights of the \tref{setting-independent form} are declared scalars, and
+Definition~\ref{def:weighted} reads each of its conditions on them exactly.
+
+\begin{requirement}\label{req:weight-list}
+The engine decides the conditions of Definition~\ref{def:weighted} on the
+declared weights $(q_t)_{t\in\Tpub}$ of a choice-weighted presentation: each
+$q_t>0$ by its sign, and $\sum_tq_t=1$ exactly, with the sum accumulated in
+the \tref{declared order} of $\Tpub$ --- the order in which the declared
+public-choice record lists it (\xref{foundations/req:declared-order}) --- and
+required to \tref[rounds nowhere]{round nowhere}. A declared weight that is
+zero or negative is refused by type. A weight list whose exact sum is not $1$,
+or whose declared-order accumulation rounds at some addition, is refused with
+\iface{choice_weights_not_normalized}, and no declaration is emitted.
+\end{requirement}

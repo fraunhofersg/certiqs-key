@@ -1,0 +1,98 @@
+% ---
+% id: reductions/rem:ordering
+% kind: rem
+% title: "Recorded stage order, immaterial to soundness for licensed lists"
+% summary: >-
+%   Condition (C3) records the order of the source and receiver stages as
+%   data; for a list with real constants that order does not carry soundness
+%   ([[lem:precomposition]], [[thm:two-sided]]). A general entry is not
+%   preserved and is refused beside a non-empty source segment.
+% prominence: standard
+% status: accepted
+% uses: [thm:licence, lem:precomposition, thm:two-sided, def:licensed, def:attset, def:chain]
+% mentions: [rem:precomposition-scope, protocol-compiler/def:chaincond]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Rem. 9.2"
+% provenance: newly-derived
+% lean:
+% ---
+
+One of the artefact shapes the module's design fixes is that composition order
+is data (\repodoc{spec/modules/reductions/design.md#structural-design-decisions},
+the decisions on the artefact's shape and on the two-sided chain), and
+condition (C3) of Definition~\ref{def:chain} states it. This remark says what
+that condition carries and what it does not.
+
+\begin{remark}\label{rem:ordering}
+\emph{The record.} Condition (C3) is a statement about the \emph{record}: the
+order in which a reduction was performed is carried as data, so that a later
+reader re-checks the path instead of inferring it from when an artefact was
+built.
+
+\emph{The inclusion a source link after a receiver link needs.} A \emph{source}-stage
+link changes what Alice emits: it asserts that the states actually prepared
+are the image, under a declared channel $\Gamma$, of simpler virtual ones, and
+its security argument re-parameterises the first-round attack as
+$\Aev_1=\Aev'_1\circ\Gamma$ ranging over \emph{all} CPTP maps. A
+\emph{receiver}-stage link, by Theorem~\ref{thm:licence}, hands the analysis
+an attack set that is a subset of the CPTP maps, in general a \emph{proper}
+one. Applying a
+source link after one is therefore not free: what must additionally hold is
+the inclusion
+$\AttSet^{\mathrm{real}}_1\circ\Gamma\subseteq\AttSet^{\mathrm{virtual}}_1$.
+
+\emph{For a licensed list the inclusion holds, and the order is immaterial to
+soundness.}
+Lemma~\ref{lem:precomposition} establishes exactly that inclusion, for
+\emph{every} channel $\Gamma$ and for every list whose right-hand sides are
+real constants, which is every list this module emits
+(Theorem~\ref{thm:licence}\,(iv)) and every list the consuming contract calls
+licensed (Definition~\ref{def:licensed}), tagged entries included. For such a
+list the order of the two stages is immaterial to soundness, and that is
+proved: Theorem~\ref{thm:two-sided}\,(i), in trusted-source mode, the only
+mode in which a source stage exists, shows that replacing the source first
+and replacing the receiver first give one and the same map of
+\tref[attack strategy]{attack strategies}, because the two replacements act
+on different systems, the \tref{source composite} at the \emph{input} of the
+first round's attack and the \tref{squashing channel} at the \emph{output} of
+each round's attack. Condition (C3) stays as the shape of the record and the
+order in which the artefact presents its two segments; it does not carry the
+soundness.
+
+\emph{The published framework names both resolutions, and this contract takes
+the second.} \cite[Rem.~9.2]{tupkary2026decoy} records the same interaction and
+resolves it by applying its source-map lemma \emph{before} its squashing
+lemma, which is the ordering resolution; the same remark names the
+alternative, reproving the source-map statement for restricted attack sets,
+and Lemma~\ref{lem:precomposition} is that alternative carried out here. No
+step of the lemma appeals to the paper: it is proved from positivity and trace
+preservation.
+
+\emph{What is refused, and why.} The inclusion is established for a licensed
+list and for no other. An entry whose right-hand side is a Hermitian operator
+rather than a real constant, a \emph{general} entry, which
+Definition~\ref{def:attset} records as admissible input to the consuming
+contract and never licensed there, is not preserved:
+Lemma~\ref{lem:precomposition}\,(iv) exhibits a channel and an entry that hold
+before the composition and fail after it. At the state level such an entry
+has no reading beside a non-empty source segment at all, its right-hand side
+being an operator on a retained system the two descriptions do not share
+(Remark~\ref{rem:precomposition-scope}). A chain with a non-empty source
+segment carrying such an entry is therefore \emph{refused}, which is the
+admission rule of Definition~\ref{def:chain}.
+
+\emph{Where the rule is decided.} The rule is a condition on a declaration
+that carries both a non-empty source segment and a constraint list, and it is
+decided where the declaration is assembled, by the chain conditions of the
+protocol compiler (\xref{protocol-compiler/def:chaincond}); this module states
+the rule and decides no instance of it. It declares no general entry and
+emits none, every entry it emits carrying a real scalar, so no artefact of
+this module can violate the rule. The rule is not vacuous: a presented
+declaration may carry a non-empty source segment. Both of its halves are
+decided by the protocol compiler's chain conditions. The \emph{entry} half
+refuses a general entry beside a non-empty source segment; the \emph{mode} half admits a non-empty source
+segment only in trusted-source mode, and refuses a declaration that carries
+one while its marginal slot holds the no-marginal value $\nomarg$. So neither
+half rests on the provenance of the artefact that carried the segment.
+\end{remark}

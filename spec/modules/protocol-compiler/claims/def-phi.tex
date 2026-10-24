@@ -1,0 +1,42 @@
+% ---
+% id: protocol-compiler/def:phi
+% kind: def
+% title: "Declared statistics functional"
+% summary: >-
+%   The joint outcome distribution of a declaration is given by measurement
+%   traces, and the acceptance statistic groups it through the public maps.
+%   Both functionals are affine on all operators and are probability
+%   distributions on every feasible state.
+% prominence: standard
+% status: implemented
+% uses: [def:feasible]
+% mentions: [thm:measurements-and-statistics, lem:weighted]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.statistics:phi_distribution
+% lean:
+% ---
+
+The two functionals below are defined on every operator on $A\Qsys$, and not
+only on positive ones, because affinity is what
+Theorem~\ref{thm:measurements-and-statistics}\,(iv) and Lemma~\ref{lem:weighted}\,(iii) use and
+neither needs positivity. The consuming engine minimises over the same set:
+its own definition of the \tref{feasible set} uses
+Definition~\ref{def:feasible}.
+
+\begin{definition}\label{def:phi}
+For a declaration $\Decl$ and $\omega\in\Lin{A\Qsys}$ put
+\begin{equation}\label{eq:jointdist}
+  P_{\Decl}[\omega](x,v)\coloneqq\tr\!\big[(M_x\otimes F_v)\,\omega\big],
+  \qquad
+  \Phimap[\omega](\hat c)\coloneqq
+  \sum_{(x,v):\,\phi(a(x,v))=\hat c}P_{\Decl}[\omega](x,v).
+\end{equation}
+Both are defined by trace formulas and are therefore defined, and affine, on
+all of $\Lin{A\Qsys}$. The \tref{feasible set} $\Feas$ of
+Definition~\ref{def:feasible} is contained in $\Pos{A\Qsys}$, and on it the
+values are a probability distribution
+(Theorem~\ref{thm:measurements-and-statistics}\,(iv), and (iv$'$) in the
+general format).
+\end{definition}

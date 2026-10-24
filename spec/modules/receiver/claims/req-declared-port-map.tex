@@ -1,0 +1,24 @@
+% ---
+% id: receiver/req:declared-port-map
+% kind: req
+% title: "Declared port map"
+% summary: >-
+%   The port map is an input of the declaration and is never inferred from
+%   the instrument matrix. Which output modes lie in a port has no observable
+%   content beyond the port Grams it produces.
+% prominence: standard
+% status: accepted
+% uses: [rem:unmonitored]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}\label{req:declared-port-map}
+The engine takes the \tref{detector ports} as a declared input
+(\iface{port_map}) and never infers them from the \tref{instrument matrix}:
+by Remark~\ref{rem:unmonitored}, the partition of the output modes into
+``in some port'' and ``in no port'' has no observable content beyond the port
+Grams it produces.
+\end{requirement}

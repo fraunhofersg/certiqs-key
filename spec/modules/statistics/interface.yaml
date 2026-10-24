@@ -1,0 +1,1464 @@
+# spec/modules/statistics/interface.yaml -- the acceptance-statistics module's
+# interface: inputs, outputs, parameters, conventions, the error terms, the
+# assumption ledger and the artifact bindings (spec/claim-format.md section
+# 5). The claim files under claims/, binomial-box/claims/ and
+# singleton/claims/ are the contract; this file authors no mathematics and
+# repeats none. The submodule's own rows -- the rule table, the evaluation
+# parameters, the search procedure and the completeness report per rule --
+# are spec/modules/statistics/binomial-box/interface.yaml; this file adds
+# nothing to them and they change nothing here.
+#
+# Every row names, in a `locator` field, the claims it rests on. A bare label
+# is this module's core; a label prefixed `binomial-box/` or `singleton/` is
+# that submodule's; a label carrying a module prefix is that module's. Where
+# this file and a claim disagree, the claim decides. Where this file fixes
+# something no claim states -- an emitted record, a presence rule, a
+# validation order, a key name -- the row says so under `fixed_here`, and the
+# list of those places is `fixed_by_this_file` at the end. Machine keys are
+# binding for the implementation.
+
+module_id: statistics
+
+# ---------------------------------------------------------------------------
+# claims
+#   The core's claim files in the order module.yaml assembles them, with the
+#   kind, the provenance and the citations each header carries. The authority
+#   is the claim files and the command below (spec/claim-format.md section
+#   4.5); tests/oracles/test_statistics_acceptance_registry_interface.py reads
+#   this list. The submodules' claims are listed in
+#   binomial-box/interface.yaml and, for `singleton`, in `submodules_today`
+#   below.
+# ---------------------------------------------------------------------------
+claims:
+
+  the_command: "python -m harness.check_claims --module statistics --status"
+
+  no_citation_is_load_bearing: >-
+    EVERY `refs` LIST BELOW IS EMPTY, and that is a fact about the contract
+    rather than an omission here: every claim of this module is
+    `newly-derived` with its derivation inline. The published work the
+    constructions sit beside is named by registered ref-id in design.md
+    (Citations), as reading and not as a dependency.
+
+  order:
+    - {claim: def:freq, kind: def, provenance: newly-derived, refs: []}
+    - {claim: lem:freq-in-simplex, kind: lem, provenance: newly-derived, refs: []}
+    - {claim: def:matched-alphabet, kind: def, provenance: newly-derived, refs: []}
+    - {claim: def:taxonomy, kind: def, provenance: newly-derived, refs: []}
+    - {claim: thm:geometry-validation, kind: thm, provenance: newly-derived, refs: []}
+    - {claim: rem:two-tags, kind: rem, provenance: newly-derived, refs: []}
+    - {claim: thm:binomial-tails, kind: thm, provenance: newly-derived, refs: []}
+    - {claim: cor:tail-forms, kind: cor, provenance: newly-derived, refs: []}
+    - {claim: lem:exact-strict-tails, kind: lem, provenance: newly-derived, refs: []}
+    - {claim: thm:box-oracle, kind: thm, provenance: newly-derived, refs: []}
+    - {claim: rem:box-oracle-consumer, kind: rem, provenance: newly-derived, refs: []}
+    - {claim: def:envelope, kind: def, provenance: newly-derived, refs: []}
+    - {claim: lem:hon-degenerate, kind: lem, provenance: newly-derived, refs: []}
+    - {claim: def:conservative-evaluation, kind: def, provenance: newly-derived, refs: []}
+    - {claim: ass:hon, kind: ass, provenance: newly-derived, refs: [], short_id: A-HON}
+    - {claim: ass:hon-env, kind: ass, provenance: newly-derived, refs: [], short_id: A-HON-ENV}
+    - {claim: ass:alphabet, kind: ass, provenance: newly-derived, refs: [], short_id: A-ALPHABET}
+    - {claim: ass:reach, kind: ass, provenance: newly-derived, refs: [], short_id: A-REACH}
+    - {claim: req:geometry-tag, kind: req, provenance: newly-derived, refs: []}
+    - {claim: req:box-bounds-key, kind: req, provenance: newly-derived, refs: []}
+    - {claim: req:acceptance-support, kind: req, provenance: newly-derived, refs: []}
+    - {claim: req:matched-alphabet, kind: req, provenance: newly-derived, refs: []}
+
+  the_forward_direction_stated_once: >-
+    This module makes no security claim and infers no set from observed data.
+    The acceptance set is a protocol parameter fixed before the run; observed
+    counts appear in no claim of this module and at run time decide
+    accept-versus-abort and are otherwise diagnostics (spec/architecture.md
+    section 3.2). Soundness of any key length rests entirely on meat-core; the
+    honest-channel assumptions -- A-HON-ENV, and A-HON which is its degenerate
+    case (lem:hon-degenerate) -- are consumed by completeness statements and
+    by nothing else (binomial-box/rem:sound-indep). Where the honest
+    distribution or envelope comes from is a provider behind this module's
+    interface and is not proof-critical (spec/architecture.md section 3.4).
+
+# ---------------------------------------------------------------------------
+# inputs
+#   Nine rows. `honest_distribution` and `honest_envelope` are the two forms of
+#   one honest input and a request carries exactly one of them, so eight rows
+#   are present on any one request. The admissible input of
+#   binomial-box/def:endpoint-rule transcribes this table -- the form of its
+#   data is the types and presence rules below, its conditions are the
+#   domains -- and binomial-box/thm:honest-containment (iii) lists the
+#   negations of those conditions; a change to one of the three is a change to
+#   the other two.
+#
+#   The blanket reading, stated once rather than in each row. Every input is an
+#   exact rational or a finite combinatorial datum (def:conservative-evaluation): there is no
+#   binary64 datum anywhere on this module's boundary, in either direction,
+#   and an implementation that admits a floating-point honest distribution, a
+#   floating-point budget or a floating-point allocation has left this
+#   contract. The input domain is decided before anything is constructed, and
+#   a violation is surfaced under `infeasibility_report` with no
+#   `acceptance_set` emitted (binomial-box/req:input-refusal); nothing is
+#   repaired, nothing is defaulted into place and no set is passed through.
+#   The construction itself never fails on a domain-satisfying input: that is
+#   what binomial-box/thm:honest-containment (iii) asserts, and it holds for
+#   every admissible endpoint rule.
+# ---------------------------------------------------------------------------
+inputs:
+
+  - name: acceptance_alphabet
+    symbol: Chat
+    type: "finite set, fixed enumeration"
+    units: dimensionless
+    presence: always
+    domain: >-
+      1 <= |Chat| < infinity; the acceptance alphabet of the same declaration D
+      the consumer solves, i.e. the codomain of the acceptance-statistic map
+      phi (def:matched-alphabet). The enumeration chat^(1), ..., chat^(m) with m = |Chat|
+      is the declaration's own and is what indexes the rows of B
+      (conventions, `coordinate_order`). A one-letter alphabet is admissible
+      and degenerate throughout (binomial-box/thm:monotonicity-limits (vi)).
+    locator: "def:matched-alphabet; req:matched-alphabet; def:taxonomy; binomial-box/thm:monotonicity-limits (vi)"
+    the_clause_that_carries_no_code: >-
+      That Chat, its enumeration and n are the consumer declaration's is a
+      relation between artefacts and not a property of an input, so it is
+      decidable nowhere in this module and carries no reason code; it is
+      routed to bundle validation as a hard error (req:matched-alphabet;
+      binomial-box/thm:honest-containment (iii), its closing sentences;
+      spec/architecture.md section 3.6).
+
+  - name: honest_distribution
+    symbol: p^hon
+    type: "rational vector on Chat"
+    units: dimensionless
+    presence: "always, in this form or as `honest_envelope` (exactly one of the two)"
+    domain: "p^hon in Delta(Chat) intersect Q^Chat. A degenerate coordinate, p^hon(chat) in {0, 1}, is admissible and leaves its budget entirely unspent (binomial-box/def:endpoint-rule (c); binomial-box/prop:rule-exact (v))."
+    locator: "def:conservative-evaluation; ass:hon; def:envelope; binomial-box/def:endpoint-rule; binomial-box/def:construction"
+    the_point_form: >-
+      The point form of the honest input, read as the degenerate envelope
+      (p^hon, p^hon) of def:envelope. With it every claim reads as its
+      single-law case, the `honest_model` tag is `iid_honest_rounds`, and
+      A-HON-ENV is A-HON (lem:hon-degenerate). A violation is refused with
+      `honest_not_a_distribution`.
+    provider_note: >-
+      The provider that produces p^hon -- an analytic channel model, a Monte
+      Carlo, a digital twin, recorded laboratory counts -- is ordinary
+      non-proof-critical code behind this module's interface
+      (spec/architecture.md section 3.4), and uncertainty about the honest
+      model beyond what a declared envelope expresses is outside this contract
+      entirely. Under A-TSM (reductions/ass:tsm) that provider supplies total
+      channel uses and joint per-outcome counts on Chat, never a sifted QBER
+      and never a state-independent test fraction.
+
+  - name: honest_envelope
+    symbol: "(p^hon-, p^hon+)"
+    type: "record {lower, upper}, each a rational vector on Chat (outcome -> exact rational)"
+    units: dimensionless
+    presence: "instead of `honest_distribution` (exactly one of the two)"
+    domain: >-
+      The honest envelope of def:envelope: 0 <= lower(chat) <= upper(chat) <= 1
+      for every chat, sum lower <= 1 <= sum upper, every entry an exact
+      rational (def:conservative-evaluation), indexed by Chat. Its envelope set H -- the laws on
+      Delta(Chat) between the two vectors -- is non-empty
+      (binomial-box/thm:box-construction (iii)). lower = upper is admissible
+      and is the degenerate envelope, read exactly as `honest_distribution`
+      with that law. A violation is refused with
+      `honest_envelope_not_admissible`; an inexact entry with
+      `inputs_not_rational` (binomial-box/thm:honest-containment (iii);
+      binomial-box/req:input-refusal).
+    locator: "def:envelope; ass:hon-env; def:conservative-evaluation; binomial-box/def:endpoint-rule (eq:guard); binomial-box/def:construction; binomial-box/thm:honest-containment (iii); binomial-box/req:input-refusal"
+    what_it_means: >-
+      The honest channel's per-round conditional outcome law, given the past,
+      is asserted to stay inside [lower, upper] outcome by outcome
+      (A-HON-ENV): it may drift within a run, between runs and with past
+      outcomes. The box is built from the rule's lower endpoint at `lower` and
+      its upper endpoint at `upper`, guarded to contain the whole envelope
+      interval, so every law of H is accepted
+      (binomial-box/thm:box-construction (iii)) and the completeness figure
+      bounds the abort probability of every honest run the assumption admits
+      (binomial-box/thm:completeness-bound). A set of statistics enters
+      through its entrywise min and max, which is already tight
+      (binomial-box/rem:envelope).
+    what_it_costs: >-
+      The box widens by the envelope's width on every constrained coordinate
+      (binomial-box/rem:envelope), which lowers the consumer's h_low: rate,
+      never soundness. A loose envelope is valid and conservative. If the true
+      honest behaviour leaves it, the figure is void and soundness is
+      unaffected (binomial-box/rem:sound-indep).
+    fixed_here: >-
+      The request shape: the request carries one field `honest` that is either
+      a mapping outcome -> rational (the point form, `honest_distribution`) or
+      an envelope object with `lower` and `upper` mappings (this row), and the
+      reading of the point form as the degenerate envelope is applied at that
+      field. binomial-box/def:endpoint-rule (iii) makes the honest input
+      exactly one of the two forms and reads the point form as the degenerate
+      envelope; no claim names the field `honest` or the keys `lower` and
+      `upper`.
+
+  - name: rounds
+    symbol: n
+    type: int
+    units: rounds
+    presence: always
+    domain: >-
+      n >= 1; the total round count, equal to the `rounds` input of the
+      consumer. Under A-TSM an acceptance statistic is recorded in every one
+      of those n rounds, not only in test rounds. The emitted box bounds have
+      denominator n (binomial-box/thm:box-construction (i)).
+    locator: "def:matched-alphabet; ass:alphabet; def:freq; binomial-box/thm:box-construction (i)"
+    no_monotonicity_in_it: >-
+      The emitted set is not monotone in n, and
+      binomial-box/thm:monotonicity-limits (v) exhibits an n = 2 against n = 3
+      counterexample for the exact rule; the failure is stated rather than
+      repaired (binomial-box/rem:n-nonmono). A consumer that assumes "more
+      rounds, tighter set" is assuming something false. The Bernstein rule,
+      whose unrounded half-width is strictly decreasing in n, is the
+      alternative for a consumer sweeping n (binomial-box/prop:rule-bernstein
+      (iii)).
+
+  - name: completeness_budget
+    symbol: ecomp
+    type: rational
+    units: dimensionless
+    presence: always
+    domain: >-
+      ecomp in [0, 1). The value 1 is not in the domain and is not a way to
+      express "no completeness statement": a geometry for which no admissible
+      budget exists records that fact instead
+      (singleton/thm:singleton-completeness (ii);
+      singleton/req:singleton-budget-record). At ecomp = 0 the construction
+      returns the whole simplex wherever the honest mass is non-degenerate --
+      a zero budget buys no constraint at all
+      (binomial-box/thm:monotonicity-limits (iii)).
+    locator: "binomial-box/def:interval; binomial-box/thm:monotonicity-limits (iii); singleton/thm:singleton-completeness (ii); singleton/req:singleton-budget-record"
+
+  - name: constrained_outcomes
+    symbol: Chat_con
+    type: "subset of Chat"
+    units: dimensionless
+    presence: "always; DEFAULT Chat_con = Chat"
+    domain: >-
+      Chat_con subset-or-equal Chat. The empty selector is admitted and is
+      worked explicitly (binomial-box/thm:monotonicity-limits (vi)); there the
+      allocation is a pair of vectors on the empty set and epsilon-star is an
+      empty sum.
+    locator: "binomial-box/def:construction; binomial-box/rem:selector; binomial-box/req:request-defaults; binomial-box/thm:monotonicity-limits (vi)"
+    the_contract_fixes_no_choice: >-
+      No choice of Chat_con dominates: constraining fewer outcomes narrows each
+      interval and weakens the set (binomial-box/rem:selector), so the
+      contract prefers none, and constraining every outcome is only the
+      default (binomial-box/req:request-defaults). Completeness is proved for
+      whatever Chat_con is supplied, and the unconstrained coordinates receive
+      the vacuous bounds [0, 1] rather than being omitted from the emitted B,
+      so m_row = 2|Chat| does not depend on Chat_con and a consumer never has
+      to infer a missing row.
+
+  - name: budget_allocation
+    symbol: "(epsilon^-, epsilon^+)"
+    type: "pair of rational vectors on Chat_con"
+    units: dimensionless
+    presence: "always; DEFAULT the uniform rule epsilon^{+-}(chat) = ecomp / (2 |Chat_con|)"
+    domain: >-
+      epsilon^{+-}(chat) >= 0 for every chat in Chat_con, and
+      sum_{chat in Chat_con} (epsilon^-(chat) + epsilon^+(chat)) <= ecomp.
+      binomial-box/def:interval records as part of the input domain the
+      consequence 0 <= epsilon^{+-}(chat) <= ecomp < 1 for every chat, which
+      the proof of binomial-box/prop:rule-exact (vi) uses twice. The default
+      uniform rule is monotone in the sense of binomial-box/def:monotone-rule,
+      which is the hypothesis binomial-box/thm:monotonicity-limits (i) reads.
+    locator: "binomial-box/def:interval; binomial-box/def:monotone-rule; binomial-box/req:request-defaults; binomial-box/thm:monotonicity-limits (i)"
+    empty_selector_note: >-
+      An implementation choice the claims leave open, recorded rather than
+      decided: at Chat_con = the empty set the default uniform rule
+      ecomp / (2 |Chat_con|) has a zero denominator. The empty selector is
+      admitted -- binomial-box/thm:monotonicity-limits (vi) works that case --
+      and there the allocation is a pair of vectors on the empty set, so the
+      rule has no instance to evaluate and the domain constraint reads
+      0 <= ecomp, which holds. No claim is at risk either way; how the empty
+      allocation is represented is code's to decide, and the conforming
+      behaviour is that no division is performed rather than that a division
+      is guarded.
+
+  - name: endpoint_rule
+    symbol: R
+    type: enum
+    units: dimensionless
+    presence: "always; DEFAULT `exact`"
+    domain: >-
+      One of `exact` and `bernstein`, and nothing else. `exact` selects the
+      exact binomial quantile rule (binomial-box/def:interval), which
+      binomial-box/prop:rule-exact (ii) proves an admissible endpoint rule,
+      monotone in the allocation; `bernstein` selects the closed-form
+      Bernstein rule defined inside binomial-box/prop:rule-bernstein, which
+      that proposition proves admissible, monotone in the allocation provided
+      every rounding is, and of unrounded half-width strictly decreasing in n.
+      A value outside this enumeration is refused, not guessed, with the
+      reason code `endpoint_rule_unknown` and no acceptance_set
+      (binomial-box/thm:honest-containment (iii), violation (11);
+      binomial-box/req:input-refusal). The rule in force is carried in the
+      emitted `honest_model`, and the submodule's `rule_table` is where a rule
+      is added or its properties read.
+    locator: "binomial-box/def:endpoint-rule; binomial-box/def:interval; binomial-box/prop:rule-exact (ii); binomial-box/prop:rule-bernstein (i), (ii); binomial-box/req:rule-in-force; binomial-box/thm:honest-containment (iii); binomial-box/req:input-refusal"
+    adding_a_rule: >-
+      The admissible rules are those of binomial-box/def:endpoint-rule (viii),
+      named with their default in binomial-box/req:rule-in-force. Adding a rule
+      is a claim proving an instance of binomial-box/def:endpoint-rule, its
+      entry in those two, a row of the submodule's `rule_table` and a value
+      here.
+
+  - name: tail_evaluation
+    symbol: null
+    type: enum
+    units: dimensionless
+    presence: "always; DEFAULT `sweep`"
+    domain: >-
+      One of `sweep` and `enclosure`, and nothing else. It selects how a tail
+      comparison is decided and never what is decided: `sweep` evaluates the
+      exact rule by the closed forms of cor:tail-forms (lem:exact-strict-tails), the
+      route the frozen oracles pin; `enclosure` evaluates it by the local tail
+      enclosures of binomial-box/prop:bracketed-endpoints, an admissible
+      relaxation of the same rule -- every emitted box under `enclosure`
+      contains the exact rule's box, and the two coincide wherever the
+      bracket is decided (that proposition's (i) and (ii)). On
+      `endpoint_rule = bernstein` no tail is evaluated to find an endpoint, so
+      this field governs only the completeness report there
+      (binomial-box/req:rule-in-force; binomial-box/completeness_report). A
+      value outside the enumeration is refused with `endpoint_rule_unknown`
+      (binomial-box/thm:honest-containment (iii), violation (11);
+      binomial-box/req:input-refusal): the two fields together select the
+      rule in force.
+    locator: "binomial-box/prop:bracketed-endpoints (i), (ii); binomial-box/rem:local-evaluation; binomial-box/prop:rule-exact (iv); cor:tail-forms; lem:exact-strict-tails; binomial-box/req:rule-in-force"
+    what_it_costs_and_what_it_buys: >-
+      It buys time and it costs at most a bounded number of counts. The sweep
+      is linear to quadratic in n per constrained outcome; the enclosure is
+      about log2(n) evaluations per endpoint, each on rationals of the size of
+      a logarithm. What it costs is bounded by
+      binomial-box/prop:bracketed-endpoints (iii): the emitted endpoint is the
+      exact quantile up to the enclosure's slack divided by the per-count
+      decay of the tail at the quantile, and is the exact quantile itself
+      whenever the bracket is decided -- which the diagnostic `endpoint_exact`
+      reports per outcome and side.
+    the_one_property_it_does_not_carry: >-
+      Monotonicity in the allocation is not claimed for `exact` + `enclosure`
+      (binomial-box/prop:bracketed-endpoints, its notes;
+      binomial-box/rem:local-evaluation records when it holds in practice and
+      that the claims do not rest on it). binomial-box/thm:monotonicity-limits
+      (i) and (ii) are stated for a rule monotone in the allocation, so on
+      that one route a consumer may not read "the set shrinks as the budget
+      grows" or the infimum consequence off this contract. The submodule's
+      `rule_table` is where that is tabulated;
+      `error_terms.completeness_budget.monotonicity` repeats the restriction
+      because it is the one a reader is likeliest to apply without checking.
+
+# ---------------------------------------------------------------------------
+# outputs
+#   Seven rows. Six keys are named by a requirement of the contract
+#   (binomial-box/req:input-refusal for `acceptance_set` and
+#   `infeasibility_report`, req:acceptance-support,
+#   binomial-box/req:completeness-report, binomial-box/req:honest-model-record
+#   and binomial-box/req:endpoint-exact-record); the seventh,
+#   `assumption_ledger`, is this file's (`fixed_by_this_file`, the
+#   `assumption_ledger (the emission)` row). The presence rules are this
+#   file's.
+#
+#   This module emits no assurance label of its own. There is no `estimate` /
+#   `first-order` row here, no requested-assurance parameter and no runtime
+#   certificate: the tiers are meat-core's and this module contributes an input
+#   to them (spec/architecture.md section 2.8). The refusal this module does
+#   carry is the `infeasibility_report`, on which no acceptance_set is emitted
+#   at all.
+# ---------------------------------------------------------------------------
+outputs:
+
+  - name: acceptance_set
+    symbol: AcceptSet
+    type: record
+    units: dimensionless
+    presence: "on every run whose inputs lie in the input domain; absent -- not empty, not defaulted -- when `infeasibility_report` is non-null"
+    domain: >-
+      `geometry_tag` in {singleton, polytope} and nothing else (def:taxonomy;
+      there is no third tag, and a consumer presented with any other tag
+      refuses rather than guessing, req:geometry-tag). The construction map
+      always emits `polytope` in canonical box form, for every admissible
+      endpoint rule, so it also carries `box_bounds` = (q^-, q^+)
+      (req:box-bounds-key). All data are exact rationals: each q^{+-}(chat) is
+      an integer multiple of 1/n on Chat_con and one of 0, 1 off it, and the
+      entries of B lie in {0, +-1}.
+    locator: "def:taxonomy (eq:boxrows, eq:boxset); req:geometry-tag; req:box-bounds-key; thm:geometry-validation; binomial-box/def:construction (eq:boxbounds, eq:accset); binomial-box/thm:box-construction (i), (ii), (iv); rem:two-tags"
+    machine_keys_fixed_by_the_claims:
+      - "geometry_tag -- req:geometry-tag; the two tags and their data are def:taxonomy's"
+      - "box_bounds -- req:box-bounds-key: the pair (q^-, q^+) is recorded under the machine key box_bounds"
+    the_canonical_box_is_a_sub_form_and_not_a_third_tag: >-
+      It adds a recorded pair (q^-, q^+) that licenses the closed-form oracle
+      of thm:box-oracle, and a consumer that ignores `box_bounds` still reads
+      a well-formed `polytope`. For that sub-form the validation predicate has
+      the closed form of thm:geometry-validation (iii) -- sum q^- <= 1 <= sum
+      q^+ -- valid only under the hypothesis 0 <= q^- <= q^+, which is
+      therefore checked first. Locator: rem:two-tags; req:box-bounds-key;
+      thm:geometry-validation (iii).
+    what_the_rule_changes_and_what_it_does_not: >-
+      The rule changes the numbers and nothing else. For every admissible
+      endpoint rule the emitted object is the same canonical box form with the
+      same row structure, the same tag and the same exact-rational type; what
+      differs is the integers k^{+-}(chat) the rule and its evaluation
+      produce. Locator: binomial-box/def:construction;
+      binomial-box/thm:box-construction (i)-(iv).
+    representation_note: >-
+      An implementation choice the claims leave open, recorded rather than
+      decided: the claims fix exactly two machine keys inside this record --
+      `geometry_tag` and `box_bounds` -- and name the remaining data only by
+      symbol (q^* for `singleton`; m_row, B, b for `polytope`). They fix no
+      serialised key for those four and no on-disk encoding for a rational.
+      Naming them is a serialisation decision with no proof-relevant content
+      and belongs in code.
+
+  - name: acceptance_support
+    symbol: Chat_acc
+    type: "subset of Chat"
+    units: dimensionless
+    presence: always
+    domain: >-
+      Chat_acc = {chat : q^+(chat) > 0} for the box form; Chat_acc = supp q^*
+      for `singleton`. For the box form the emitted set is a superset of the
+      acceptance support Chat_acc of meat-core/frank-wolfe/def:first-order-setting
+      (eq:chacc-def, the union of the supports of the points of AcceptSet):
+      it contains supp q for every q in AcceptSet, need not equal the union,
+      and must never be substituted for it (thm:box-oracle (i), with the
+      three-outcome counterexample in its proof; req:acceptance-support). For
+      `singleton`, which declares no box, the emitted set is supp q*, which is
+      eq:chacc-def's set.
+    locator: "thm:box-oracle (i); req:acceptance-support; meat-core/frank-wolfe/def:first-order-setting (mentioned)"
+    formula_judgement: >-
+      The formula is req:acceptance-support's, and two things follow from it
+      that an implementation must not get backwards. (1) FOR THE BOX FORM THE
+      EMITTED SUPPORT NEED NOT BE MINIMAL AND MUST NOT BE TIGHTENED:
+      thm:box-oracle (i) proves that supp q lies inside the emitted set Chat^+
+      for every q in AcceptSet, so Chat^+ contains meat-core's Chat_acc
+      (eq:chacc-def, the union of the supports); it does not claim equality,
+      and in general it fails -- the construction can emit a box with
+      q^+(chat) > 0 at an outcome every feasible point gives mass zero (the
+      proof's three-outcome example). Emitting the larger set is conforming;
+      substituting the minimal one is a different quantity. (2) For
+      `singleton` the claim does assert minimality and the formula is
+      correspondingly exact (thm:box-oracle (i), last sentence). The two
+      branches are not the same kind of statement, and the difference is the
+      claim's, not this file's. Scope: the construction map never emits
+      `singleton` (singleton/rem:singleton-honest), so on the construction
+      path only branch (1) is ever evaluated.
+
+  - name: completeness_certified
+    symbol: "epsilon_star, or the upper bound on it the route reports"
+    type: rational
+    units: dimensionless
+    presence: "on every run that emits an acceptance_set"
+    domain: >-
+      epsilon_star in [0, ecomp]. It is the figure of
+      binomial-box/thm:completeness-bound -- the sum over Chat_con of the two
+      binomial tails at the guarded endpoints, the lower tail evaluated at the
+      envelope's lower value p^hon-(chat) and the upper tail at its upper
+      value p^hon+(chat) (both at p^hon(chat) for the point form) -- which
+      holds for every admissible endpoint rule and is the tightest
+      completeness figure this contract certifies for the emitted set
+      (binomial-box/rem:completeness-on-rules). Which admissible report is
+      made depends on the (endpoint_rule, tail_evaluation) pair:
+      binomial-box/req:completeness-report requires epsilon_star itself on
+      `exact` + `sweep`, rounded upward and clamped where a tail cannot be
+      evaluated exactly, and, on every other route, the one that route's row
+      of the submodule's `completeness_report` names, and every row of that
+      table is a valid upper bound on the honest failure probability and lies
+      in [0, ecomp].
+    locator: "binomial-box/thm:completeness-bound (eq:completeness); binomial-box/rem:epsstar; binomial-box/rem:completeness-on-rules; binomial-box/req:completeness-report"
+    the_rounding_direction_is_a_requirement_and_not_advice: >-
+      An implementation that cannot evaluate a tail exactly rounds it upward
+      and then clamps: it reports min{ecomp, tilde-epsilon} for any
+      upward-rounded tilde-epsilon >= epsilon_star, which is again a valid
+      bound and stays in the declared domain. A downward-rounded evaluation is
+      not admissible: it would claim a completeness the set does not have.
+      Exact evaluation needs no clamp, epsilon_star <= ecomp being part of
+      binomial-box/thm:completeness-bound. Locator:
+      binomial-box/req:completeness-report; binomial-box/rem:epsstar;
+      def:conservative-evaluation.
+    it_is_generally_strictly_smaller_than_the_budget: >-
+      The integrality of the endpoints and the honest-containment guard both
+      leave budget unspent, and the degenerate-mass convention of
+      binomial-box/def:endpoint-rule (c) leaves it entirely unspent at a
+      degenerate honest coordinate. Locator: binomial-box/rem:epsstar.
+
+  - name: honest_model
+    symbol: null
+    type: record
+    units: dimensionless
+    presence: "on every run that emits an acceptance_set"
+    domain: >-
+      The tag -- `iid_honest_rounds` (A-HON) for the point form or a
+      degenerate envelope, `envelope_honest_rounds` (A-HON-ENV) for a
+      non-degenerate envelope -- the honest model the figure was computed
+      under -- the distribution p^hon for the point form, the envelope
+      (lower, upper) otherwise -- n, Chat_con, the allocation, and the
+      `endpoint_rule` and `tail_evaluation` in force together with the
+      evaluation parameters the submodule's `evaluation_parameters` declares
+      for that pair -- on `tail_evaluation = enclosure` the union of the
+      rule's own parameters and the enclosure parameters in force, whichever
+      rule ran, because on the Bernstein rule the enclosure parameters decide
+      the completeness figure (the submodule's fourth `completeness_report`
+      row). Completeness is meaningful only relative to this record.
+    locator: "binomial-box/req:honest-model-record; ass:hon and ass:hon-env; lem:hon-degenerate; binomial-box/rem:completeness-on-rules; binomial-box/rem:local-evaluation"
+    the_tag_and_the_envelope: >-
+      The tag is `envelope_honest_rounds` for a non-degenerate envelope
+      (A-HON-ENV) and `iid_honest_rounds` for a single law or a degenerate
+      envelope, for which the two assumptions are equivalent
+      (lem:hon-degenerate), so a one-law record carries the single-law tag.
+      For a non-degenerate envelope the record carries both vectors, because
+      the figure is computed from them: its lower tails at `lower`, its upper
+      tails at `upper`. The tag is not a ledger key: the ledger rows of
+      A-HON and A-HON-ENV carry identifier keys of their own and bind the
+      tag as the value `honest_model` (the `assumption_ledger` block).
+    why_the_parameters_belong_here: >-
+      Because they change the number. Two runs with the same inputs, the same
+      rule and the same evaluation but different window, root exponent or
+      precision may emit different endpoints and therefore different figures
+      -- all of them admissible, none of them the same -- so a record naming
+      the rule and the evaluation and not the parameters would not identify
+      what was computed. binomial-box/rem:local-evaluation makes the search
+      procedure and its parameters part of what makes the evaluation a rule
+      at all, and binomial-box/req:honest-model-record requires the
+      parameters in force in the record.
+    sub_key_note: >-
+      An implementation choice the claims leave open: the contents are fixed
+      and the value of the tag is fixed; no machine key is fixed for the items
+      beside the tag. Naming them is a serialisation decision with no
+      proof-relevant content.
+
+  - name: infeasibility_report
+    symbol: null
+    type: "record or null"
+    units: dimensionless
+    presence: always
+    domain: >-
+      `null` on success. Otherwise it names one of eleven input-domain
+      violations, and no acceptance_set is emitted. The eleven are the
+      negation, clause by clause, of the domain constraints in the inputs
+      table above; binomial-box/thm:honest-containment (iii) enumerates them
+      and binomial-box/req:input-refusal gives each its code.
+    locator: "binomial-box/thm:honest-containment (iii); binomial-box/req:input-refusal; thm:geometry-validation (iii); binomial-box/thm:box-construction (iii)"
+    reason_code_list:
+      - "alphabet_empty                 -- |Chat| = 0"
+      - "alphabet_not_finite            -- |Chat| not finite"
+      - "rounds_out_of_range            -- n < 1"
+      - "honest_not_a_distribution      -- p^hon not in Delta(Chat), including a coordinate outside Chat (the point form)"
+      - "honest_envelope_not_admissible -- an envelope-form honest input violating def:envelope: an entry outside [0, 1], lower(chat) > upper(chat) for some chat, sum lower > 1, sum upper < 1, or a coordinate outside Chat"
+      - "budget_out_of_range            -- ecomp not in [0, 1)"
+      - "allocation_negative            -- some epsilon^{+-}(chat) < 0"
+      - "allocation_exceeds_budget      -- the allocation sums to more than ecomp over Chat_con"
+      - "selector_not_a_subset          -- Chat_con not a subset of Chat"
+      - "inputs_not_rational            -- some coordinate of p^hon or of the envelope's lower or upper vector, or ecomp, or some epsilon^{+-}(chat) is not an exact rational, violating def:conservative-evaluation"
+      - "endpoint_rule_unknown          -- the value of endpoint_rule, or of tail_evaluation, is none of the rules the inputs table declares"
+    the_two_honest_codes: >-
+      `honest_envelope_not_admissible` fires on an envelope-form honest input
+      that violates def:envelope's conditions, and `honest_not_a_distribution`
+      on a point-form input outside the simplex; neither fires on the other
+      form's input (binomial-box/thm:honest-containment (iii), violations (4)
+      and (5)).
+    the_rule_selector_code: >-
+      `endpoint_rule_unknown` fires on a request whose endpoint rule or
+      evaluation is none of those binomial-box/def:endpoint-rule (viii) admits
+      (binomial-box/thm:honest-containment (iii), violation (11)): the pair
+      (endpoint_rule, tail_evaluation) is one selector of the rule in force
+      (binomial-box/req:rule-in-force).
+    never_from_the_construction: >-
+      binomial-box/thm:honest-containment (iii), first sentence: the
+      validation predicate is decidable in closed form and, on the input
+      domain, is satisfied by the output of the construction unconditionally,
+      for every admissible endpoint rule. Hence every infeasibility_report
+      originates in a violation of the input domain and never in the
+      construction, and an implementation that can reach this output from a
+      validated input has a defect and not a geometry problem. The enclosure
+      route adds no failure mode: the certified predicate holds at n by
+      binomial-box/prop:bracketed-endpoints, so the search always returns a
+      bracketed endpoint, at worst a conservative one.
+    validation_order:
+      - "1. alphabet_empty, alphabet_not_finite -- everything else is indexed by Chat"
+      - "2. rounds_out_of_range"
+      - "3. selector_not_a_subset"
+      - "4. inputs_not_rational -- the type decision, before any comparison of values"
+      - "5. honest_not_a_distribution (point form) or honest_envelope_not_admissible (envelope form)"
+      - "6. budget_out_of_range"
+      - "7. allocation_negative"
+      - "8. allocation_exceeds_budget"
+      - "9. endpoint_rule_unknown"
+    validation_order_note: >-
+      The order is this file's, and the report names the first violation in
+      it (binomial-box/req:input-refusal: the first violation in the order the
+      interface fixes); an implementation may carry the others as additional
+      detail in the same record but never instead of the first. What the
+      claims fix, and what the order respects, is that every one of them is
+      decided before anything is constructed (binomial-box/req:input-refusal)
+      and that rationality is decided before a comparison of values, an
+      inexact datum making every later comparison undecidable in the sense
+      def:conservative-evaluation requires.
+
+  - name: endpoint_exact
+    symbol: null
+    type: "table, or absent"
+    units: dimensionless
+    presence: >-
+      present exactly under `endpoint_rule = exact` with
+      `tail_evaluation = enclosure` (binomial-box/req:endpoint-exact-record).
+      Absent under `sweep`, where no bracket is formed: the emitted endpoint
+      is the exact quantile wherever the tails are evaluated exactly, and
+      otherwise the endpoint of binomial-box/prop:rule-exact (vii); absent
+      under
+      `endpoint_rule = bernstein`, where no bracket is formed.
+    domain: >-
+      Per constrained outcome and per side: whether the bracket was decided,
+      that is, whether the emitted endpoint is proved equal to the exact
+      binomial quantile (binomial-box/prop:bracketed-endpoints (ii)). An
+      implementation holding a certified-inadmissible index below the bracket
+      may additionally report the conservatism bound in counts of that
+      proposition's (iii), with the substitution
+      binomial-box/rem:local-evaluation names.
+    locator: "binomial-box/req:endpoint-exact-record; binomial-box/prop:bracketed-endpoints (ii), (iii); binomial-box/rem:local-evaluation"
+    it_is_a_diagnostic: >-
+      No result of this contract is stated in terms of it and no consumer
+      reads it: the emitted set does not depend on it. It exists because the
+      enclosure route's one cost is a bounded conservatism that is invisible
+      in the emitted numbers -- the box is a box either way -- and a reader
+      comparing an enclosure run against a sweep run needs to know, per
+      outcome and side, whether the two are provably the same number.
+    fixed_here: >-
+      The presence rule: that the diagnostic is absent on the two routes that
+      form no bracket. What it records, per constrained outcome and side, and
+      on which route, is binomial-box/req:endpoint-exact-record's.
+
+  - name: assumption_ledger
+    symbol: "A-..."
+    type: "list of rows: short id, machine key, never-verified flag, owner, owning claim, and the declared values each row binds"
+    units: null
+    presence: "on every result that carries an acceptance_set; absent with it when `infeasibility_report` is non-null"
+    domain: >-
+      The rows of the `assumption_ledger` block below that its
+      `emission_rule` gives the route that produced the acceptance set, in
+      the order of `own_rows`: every result of the construction map is the
+      canonical box it emits, and carries A-HON-ENV, A-ALPHABET and A-REACH.
+      Each row carries the
+      short id and the machine key that block gives, its owner and its
+      owning claim, `never_verified`, true exactly for the rows the
+      `never_verified` block lists under `own` (every row: the rows whose
+      assumption carries `verification: never`, spec/claim-format.md
+      section 3.2), and `constrains`, the declared values the assumption's
+      clauses are about, each named by an input of the inputs table, or
+      `honest_model`, the tag of the output record of that name:
+      `honest_model`, the declared honest input (`honest_distribution`, or
+      `honest_envelope` with `lower` and `upper`; a degenerate envelope as
+      its law) and `rounds` for A-HON and A-HON-ENV; `acceptance_alphabet`
+      and `rounds` for A-ALPHABET; the declared honest input for A-REACH.
+      The values are immutable `(name, value)` pairs, exact rationals
+      written `p/q`; the run tier writes them as JSON objects. A run
+      manifest reads the rows from
+      here, beside the other modules' ledgers (spec/architecture.md
+      section 4.4).
+    locator: "ass:hon; ass:hon-env; ass:alphabet; ass:reach; the `assumption_ledger` and `never_verified` blocks"
+    fixed_here: >-
+      The whole row: no claim says the machine keys are emitted, nor which
+      declared values a row binds (`fixed_by_this_file`, the
+      `assumption_ledger (the emission)` row).
+
+# ---------------------------------------------------------------------------
+# not_outputs
+#   What a reader could take for an obligation of this module and is not.
+# ---------------------------------------------------------------------------
+not_outputs:
+
+  - item: "the acceptance-side minimum, its minimizer, the dual witness, and beta_acc"
+    detail: >-
+      thm:box-oracle splits into an interface obligation and proven facts, and
+      only the first is a row above. (1) The obligation is (i) only:
+      req:acceptance-support and the `acceptance_support` row name it, so this
+      module must emit Chat_acc with the formula that requirement fixes. (2)
+      (ii) and (iii) are proven facts, not outputs: neither g, nor the
+      minimum, nor (u, v), nor beta_acc appears in the inputs or the outputs
+      table; there is no row for any of them and this contract obliges this
+      module to compute nothing of the kind. rem:box-oracle-consumer says why:
+      the shape it displays is a quantity of the consumer's bracket
+      (meat-core/frank-wolfe/rem:acc-side), and the closed form is what this
+      module's geometry makes of it for the consumer. Consequences, stated
+      exactly: an implementation may expose the closed-form minimizer and the
+      witness as a utility over its own emitted geometry, and if it does, the
+      values are fixed by thm:box-oracle (ii) and (iii) and a disagreement
+      with them is a defect; it may equally expose neither. What it may not
+      do is emit a number as beta_acc: that is a quantity of the consuming
+      contract, admitted there only through that contract's own
+      dual-feasibility check, and nothing in thm:box-oracle licenses feeding a
+      self-computed minimum past it.
+    locator: "thm:box-oracle (i)-(iii); rem:box-oracle-consumer; req:acceptance-support; meat-core/frank-wolfe/rem:acc-side (b) (mentioned)"
+
+  - item: "a security budget, an assurance label, or a tier"
+    detail: >-
+      None. This module makes no security claim; the two epsilons it handles
+      bound a completeness (usability) failure only, and they compose with no
+      security budget of the consumer (binomial-box/rem:sound-indep). It
+      reports no tier: the tiers are spec/architecture.md section 2.8's and
+      meat-core's.
+    locator: "binomial-box/rem:sound-indep; spec/architecture.md 2.8"
+
+  - item: "a set inferred from observed counts"
+    detail: >-
+      Excluded by construction and not deferred. Observed counts appear in no
+      claim of this module. A pipeline that fitted the acceptance set to the
+      data it then accepts would be assuming what it is meant to test
+      (spec/architecture.md section 3.2).
+    locator: "spec/architecture.md 3.2; claims.the_forward_direction_stated_once"
+
+  - item: "uncertainty about the honest model beyond the declared envelope"
+    detail: >-
+      Outside this contract. The honest model is consumed as given -- one
+      law, or a per-outcome envelope that may express a known range or drift
+      of the honest channel (binomial-box/rem:envelope) -- and the provider is
+      an adapter behind this interface (spec/architecture.md section 3.4).
+      Estimating the envelope is the provider's. What a wrong declaration
+      costs -- a law that is not the channel's, or an honest behaviour that
+      leaves the envelope -- is a void completeness figure and nothing else
+      (ass:hon and ass:hon-env, what follows if each fails;
+      binomial-box/rem:sound-indep).
+    locator: "ass:hon; ass:hon-env; binomial-box/rem:envelope; binomial-box/rem:sound-indep; spec/architecture.md 3.4"
+
+# ---------------------------------------------------------------------------
+# parameters
+#   One row, and it exists to say that alpha is not a parameter of this
+#   module: it states the domain on which the set this module emits may be
+#   used.
+# ---------------------------------------------------------------------------
+parameters:
+
+  free_numerical_parameters: >-
+    NONE AT THE CORE. The evaluation parameters of the two closed-form routes
+    are the submodule's and are declared there
+    (binomial-box/interface.yaml, `evaluation_parameters`); they are not
+    tolerances and they decide no predicate on declared data.
+
+  rows:
+
+    - name: alpha
+      symbol: alpha
+      domain: "NOT A PARAMETER OF THIS MODULE"
+      is_a_parameter_of_this_module: false
+      rationale: >-
+        No claim of this module depends on alpha: the construction, the
+        completeness bound, the taxonomy and the box oracle are all
+        alpha-independent. The working intersection for any statement that
+        consumes the output is alpha in (1, 2); see
+        `conventions.alpha_domain`.
+      consumer_domain: "(1, 2)"
+      locator: "conventions.alpha_domain; meat-core/rem:alpha-domain"
+
+  tolerances: >-
+    None: no module has a tolerance input (spec/architecture.md section 2.8;
+    foundations/req:consumer-decides-exactly). This module has nothing to
+    decide at a window: every input is an exact rational and every comparison
+    it makes is exact or is decided against a bound that rounds the tail
+    upward (def:conservative-evaluation), which is a direction and not a width.
+
+# ---------------------------------------------------------------------------
+# declared_thresholds
+#   Empty, deliberately, and the emptiness is the statement. This module
+#   compares nothing against a fixed number: its comparisons are between exact
+#   rationals, or between a tail and an allocated budget decided in one
+#   admitted direction. The submodule's evaluation parameters (window length,
+#   root exponent, precision, Wallis length) are not thresholds in the sense
+#   of spec/architecture.md section 2.8 -- no one of them can admit anything,
+#   because a coarser enclosure can only make an endpoint more conservative,
+#   never less (binomial-box/prop:bracketed-endpoints (i)) -- and they are
+#   declared as evaluation parameters in the submodule's own file.
+# ---------------------------------------------------------------------------
+declared_thresholds: {}
+
+# ---------------------------------------------------------------------------
+# conventions
+#   Declared once, used everywhere; each is a reading the claim files take and
+#   none adds a rule. `test_statistics_model` is inherited from
+#   reductions/ass:tsm and is not a row of this module's own ledger.
+# ---------------------------------------------------------------------------
+conventions:
+
+  log_base: 2
+  entropy_units: bits
+  log_base_note: >-
+    Declared so that the convention is fixed across the module boundary and
+    matches the consumer's, not because this module uses it: the construction
+    computes no entropy, and the only logarithms anywhere in it are inside the
+    enclosure lemmas of the submodule, where they are natural logarithms
+    written ln and are never converted to any other base
+    (binomial-box/lem:log-enclosure; binomial-box/lem:pmf-enclosure). Mixed
+    bases are a defect wherever they appear.
+    Locator: spec/notation.md; binomial-box/lem:log-enclosure.
+
+  entropy_variant: null
+  arrow: null
+  entropy_variant_and_arrow_note: >-
+    Not used. No Renyi conditional entropy and no up/down arrow appears in any
+    claim of this module, so it performs no arrow exchange and no conversion
+    between the sandwiched and Petz families. The consumer's variant and arrow
+    are meat-core's (sandwiched, up) and nothing here alters or relies on
+    them. `null` is the value for a convention with no instance, and it is a
+    transcription of "not used" rather than a choice among families.
+
+  alpha_domain: "(1, 2)"
+  alpha_domain_note: >-
+    The intersection over the consumer's imports, stated for the consuming
+    statement rather than for a step of this module: meat-core takes alpha in
+    (1, 2) in every key-length statement and alpha in (1, infinity) in the
+    structural and program claims (meat-core/rem:alpha-domain), and the
+    accumulation import extends to alpha = infinity, which that contract
+    neither defines nor uses. The intersection is (1, 2), and that is the
+    domain on which the set constructed here may be used inside a key-length
+    claim. Because every claim of this module is alpha-independent, no claim
+    is affected by narrowing that domain further.
+    Locator: meat-core/rem:alpha-domain; meat-core/interface.yaml, the alpha row.
+
+  test_statistics_model: output_state
+  test_statistics_model_inherited: true
+  test_statistics_model_note: >-
+    Inherited, not this module's. The assumption is reductions/ass:tsm
+    (A-TSM), named here and never restated. The consequences that bind this
+    module: the acceptance statistic is recorded in every one of the n
+    rounds, not only in test rounds; every per-round public choice of known
+    bias made at a measuring station -- basis, round type, probe setting --
+    is a component of the declared joint outcome, and a letter-side choice
+    is a component of the letter (protocol-compiler/def:spec (a)), drawn as
+    declared (protocol-compiler/ass:coin, A-COIN, where Alice's measurement
+    presents it as a public choice; as the outcome of her declared
+    measurement, protocol-compiler/ass:alice-meas (A-ALICE-MEAS), where that
+    measurement is presented directly; with weight p_x under the source
+    premise, transmitter/ass:ens (i) or its refinement, where the letter is
+    declared by an ensemble); both reach Chat through
+    phi, so the honest
+    provider supplies total channel uses and joint per-outcome counts on
+    Chat, never a sifted QBER and never a state-independent test fraction. If
+    A-TSM fails, p^hon is not the law of the recorded statistic, so the
+    completeness bound concerns a different random variable: a usability
+    failure here, the security consequence belonging to the consuming
+    contract and governed there. A practical consequence worth naming: on a
+    fine-grained joint alphabet, outcomes whose expected count over the whole
+    run is at or below one are routine, and the honest-containment guard is
+    active on them at ordinary budgets under the default uniform allocation
+    (binomial-box/rem:guard-activation).
+    Locator: reductions/ass:tsm; binomial-box/rem:guard-activation;
+    binomial-box/rem:sound-indep.
+
+  round_homogeneity: "honest side only"
+  round_homogeneity_note: >-
+    The only round-homogeneity statement in this module is A-HON, which
+    asserts that the honest channel acts identically and independently in
+    every round, and it is used solely for completeness
+    (singleton/thm:singleton-completeness). The box's completeness
+    statements (binomial-box/thm:completeness-bound,
+    binomial-box/thm:monotonicity-limits) read A-HON-ENV instead, which
+    asserts no homogeneity at all: the honest conditional law may drift from
+    round to round inside the declared envelope, A-HON being its degenerate
+    case (lem:hon-degenerate). No claim here assumes homogeneity,
+    independence or a product structure against an adversary, and no
+    collapse of an attack sequence occurs anywhere. Locator: ass:hon;
+    ass:hon-env; binomial-box/rem:sound-indep.
+
+  coordinate_order: >-
+    The one convention a consumer can silently violate, so it is written out.
+    Frequency vectors, the box bounds q^- and q^+, the matrix B and the vector
+    b are all indexed by Chat in the declaration's own fixed enumeration
+    chat^(1), ..., chat^(m), m = |Chat|. The rows of the canonical box form
+    appear in the order eq:boxrows fixes: the m upper-bound rows first, row i
+    belonging to chat^(i), then the m lower-bound rows in the same order, row
+    m+i belonging to the same chat^(i). Row indices are always integers in
+    {1, ..., 2m} and never alphabet elements. A consumer that re-indexes must
+    re-index all of them together. Locator: def:taxonomy (eq:boxrows).
+  coordinate_order_second_enumeration_note: >-
+    thm:box-oracle uses a second, different enumeration c_1, ..., c_m of the
+    same finite set, induced by sorting g ascending. The rows of B are always
+    indexed by the first (declaration) enumeration; the sorted order is used
+    only to define j^*, lambda and q^opt, every pairing with B or b being a
+    sum over Chat and so independent of which enumeration is used.
+    Locator: thm:box-oracle (ii), (iii); spec/notation.md.
+
+  exact_arithmetic: >-
+    Every number this module emits is an exact rational (def:conservative-evaluation). The box
+    bounds have denominator n; the entries of B lie in {0, +-1}. Where a tail
+    probability is not decided exactly, the admissible direction is upward --
+    k^- may be replaced by any smaller admissible integer and k^+ by any
+    larger one, never the reverse -- which can only enlarge the emitted set,
+    and an enlargement lowers the consumer's h_low and costs rate, never
+    soundness. The dual direction for the reported figure is the opposite one
+    and is equally binding: round epsilon_star upward and clamp at ecomp.
+    The enclosure route is exactly this licence spent: an endpoint is emitted
+    on an upper bound of the tail, and the lower bound of the same enclosure
+    enters only the diagnostic that says the bracket was decided, never an
+    emitted endpoint.
+    Locator: def:conservative-evaluation; binomial-box/lem:widening;
+    binomial-box/prop:rule-exact (iii); binomial-box/lem:guard (ii);
+    binomial-box/rem:epsstar;
+    binomial-box/prop:bracketed-endpoints (i), (ii).
+
+  no_binary64_anywhere: >-
+    This module has no floating-point path, in either direction. It is
+    wholly inside the exact island (foundations/def:exact-island (ii);
+    spec/architecture.md section 2.8), and the conversion into the
+    consumer's machine-number record happens in the consumer's docking
+    adapter, not here (`artifact_bindings`). An implementation that rounds an
+    emitted bound into binary64 inside this module has moved the one
+    admitted conversion out of the one place that names its direction.
+    Locator: def:conservative-evaluation; artifact_bindings.docking.
+
+  no_quantum_systems: >-
+    This module mentions no Hilbert space, no subsystem order, no dimension
+    bound and no purifying register; MEAT is not invoked anywhere in it. Its
+    objects are a finite alphabet, integer counts and rational vectors, all
+    dimensionless except n, which counts rounds. The symbols B, b, g, u, v are
+    the linear-programming data of meat-core/frank-wolfe/rem:acc-side (b) and
+    are never system labels; v is that remark's dual scalar and never a value
+    of the declared outcome alphabet.
+    Locator: spec/notation.md; thm:box-oracle.
+  subsystem_order: null
+  subsystem_order_note: >-
+    No instance, and the claims say so: see `no_quantum_systems`. Declaring
+    that it has none is a transcription and not an omission.
+
+  fail_closed: >-
+    No default value is ever substituted for a missing or malformed datum. An
+    input outside the domain is refused with one of the eleven reason codes
+    and no acceptance_set is emitted; an unknown geometry tag is refused by
+    the consumer rather than guessed (req:geometry-tag); a singleton geometry
+    for which no admissible budget exists records that fact rather than a
+    budget of 1 (singleton/req:singleton-budget-record); and a completeness
+    figure is never rounded downward. The one thing this module never does is
+    repair: it emits no binary64 datum, it snaps nothing, and it has no
+    producer half of the platform's snapping table.
+    Locator: binomial-box/req:input-refusal; req:geometry-tag;
+    singleton/thm:singleton-completeness (ii);
+    singleton/req:singleton-budget-record; binomial-box/rem:epsstar;
+    spec/architecture.md 2.8.
+
+  artifact_bindings_mathematical_spec_version: >-
+    `statistics@<version>` of the accepted contract; no artefact may claim a
+    draft version. See `artifact_bindings` for where a run records the
+    version it consumed.
+
+not_assumed_deliberately: >-
+  Stated because an omission here would read as an oversight; no claim states
+  it. No independence across outcomes within a round -- the counts are
+  dependent, negatively related through their sum being n, and
+  binomial-box/thm:completeness-bound uses only their per-outcome tails; no
+  independence across honest rounds either, A-HON-ENV bounding each round's
+  conditional law given the past and binomial-box/lem:envelope-dominance
+  doing the rest; no round homogeneity against an adversary; no Gaussian or
+  asymptotic approximation to the binomial law, the tails being exact
+  (thm:binomial-tails); no bound on |Chat| beyond finiteness; no property of
+  the declaration other than that it fixes Chat, phi and n; no monotonicity
+  in the allocation of an endpoint rule that does not carry it --
+  binomial-box/thm:monotonicity-limits (i), (ii) are stated for rules that do
+  and the submodule's `rule_table` says which; and no property of the
+  implementation's arithmetic beyond the direction def:conservative-evaluation names: no error
+  budget, no floating-point model and no assumption that an enclosure is
+  tight.
+
+# ---------------------------------------------------------------------------
+# error_terms
+#   The epsilon-like budgets this module consumes and produces. There are no
+#   security budgets here at all: this module makes no security claim, and the
+#   three quantities below bound a completeness (usability) failure only.
+# ---------------------------------------------------------------------------
+error_terms:
+
+  - name: completeness_budget
+    symbol: ecomp
+    kind: completeness_budget
+    bounds: >-
+      An upper bound on the probability that an honest run's frequency vector
+      falls outside the emitted set, under A-HON-ENV (A-HON for the point
+      form, its degenerate case):
+      Pr[freq not in AcceptSet] <= epsilon_star <= ecomp
+      (binomial-box/thm:completeness-bound, for every admissible endpoint
+      rule).
+    composition: >-
+      It is split, not added: the allocation constraint of the inputs table
+      requires the per-outcome shares to sum to at most ecomp, and the split
+      is what the subadditivity step of binomial-box/thm:completeness-bound
+      re-assembles. It composes with no security budget of the consumer --
+      meat-core's eps_pa and eps_ev are soundness budgets and this one is not
+      (binomial-box/rem:sound-indep).
+    monotonicity: >-
+      The direction is stated rather than left to the reader, and it is
+      conditional. For a rule monotone in the allocation, under a monotone
+      allocation rule, the emitted set is non-increasing in ecomp -- it
+      shrinks as the budget grows (binomial-box/thm:monotonicity-limits (i))
+      -- and consequently any infimum over it, the consumer's h_low included,
+      is non-decreasing in ecomp (its (ii)). That is a trade-off and not an
+      improvement: the same change makes the honest run abort no less often.
+      The condition is not decoration: `exact` + `enclosure` does not carry
+      monotonicity in the allocation and neither clause may be read on that
+      route (binomial-box/interface.yaml, `rule_table`).
+    limits: >-
+      At ecomp = 0 every allocation entry is 0 and the emitted set is the
+      whole simplex unless some constrained outcome has upper envelope value
+      0 or lower envelope value 1 (for the point form: wherever every
+      constrained honest coordinate is non-degenerate), with epsilon_star = 0
+      -- a zero completeness budget buys no constraint at all
+      (binomial-box/thm:monotonicity-limits (iii), which holds for every rule
+      through the zero-budget convention). As n grows at a fixed allocation
+      the exact rule's half-width beyond the envelope is O(n^{-1/2}) on each
+      side, the set closing in on the envelope's box, and for the point form
+      the set converges to the honest point in Hausdorff distance (its (iv))
+      -- proved for the exact rule, which the sweep evaluation emits wherever
+      it decides the tails exactly; under `tail_evaluation = enclosure`
+      the rule in force is binomial-box/prop:bracketed-endpoints' R_encl,
+      and its (iii)
+      gives the same bound verbatim wherever the bracket is decided and the
+      bound plus the conservatism term over n otherwise; the Bernstein rule
+      has the same order, and its unrounded half-width is in addition
+      strictly decreasing in n (binomial-box/prop:rule-bernstein (iii)).
+      There is no monotonicity in n for the exact rule (its (v), with an
+      explicit counterexample), and binomial-box/rem:n-nonmono records that
+      the failure is stated rather than repaired.
+
+  - name: budget_allocation
+    symbol: "epsilon^-(chat), epsilon^+(chat)"
+    kind: budget_share
+    bounds: >-
+      The lower- and upper-tail budget allocated to outcome chat. The emitted
+      endpoints meet them, for every admissible endpoint rule and after the
+      honest-containment guard: binomial-box/lem:guard (ii), eq:budget-met.
+    composition: >-
+      Sums to at most ecomp over Chat_con (the inputs table). The default is
+      the uniform rule (binomial-box/req:request-defaults), which
+      binomial-box/def:monotone-rule records as monotone.
+    monotonicity: >-
+      The interval may always be enlarged and may never be shrunk: every pair
+      inside the rule's own interval on the lower side and outside it on the
+      upper side meets the same budgets (binomial-box/lem:guard (ii)), and for
+      the exact rule the quantile interval is the smallest admissible one
+      (binomial-box/prop:rule-exact (iii)). That is the only admissible
+      direction and it is the same direction def:conservative-evaluation names for rounding; it
+      is also what makes the enclosure route an admissible relaxation
+      (binomial-box/prop:bracketed-endpoints (i)) and what makes the Bernstein
+      rule never narrower than the exact quantile interval
+      (binomial-box/prop:rule-bernstein (iii)).
+
+  - name: completeness_certified
+    symbol: epsilon_star
+    kind: attained_completeness
+    bounds: >-
+      The attained value of the same failure probability, the sum over
+      Chat_con of the two binomial tails at the guarded endpoints, the lower
+      at the envelope's lower value and the upper at its upper value, exactly
+      computable at a rational envelope (at rational p^hon for the point
+      form). Generally strictly smaller than ecomp: the integrality of the
+      endpoints and the guard both leave budget unspent, and the
+      degenerate-mass convention leaves a side's budget entirely unspent where
+      that side's envelope value is 0 or 1.
+      Locator: binomial-box/thm:completeness-bound; binomial-box/rem:epsstar;
+      binomial-box/def:endpoint-rule (c).
+    composition: >-
+      A sum of 2|Chat_con| binomial tails assembled by finite subadditivity
+      with no independence hypothesis. It is an upper bound on the true
+      failure probability and can be strictly loose -- the union bound
+      double-counts whenever two of the events coincide.
+      Locator: binomial-box/thm:completeness-bound.
+    reporting: >-
+      Reported under the output key `completeness_certified`. Round upward if
+      not exact, then clamp: report min{ecomp, tilde-epsilon}; a
+      downward-rounded report is inadmissible. Which of the two admissible
+      reports is made depends on the route and is tabulated in the
+      submodule's `completeness_report`; the difference between them is the
+      advertised abort probability of the honest run and nothing else --
+      neither affects the emitted set and neither affects soundness.
+      Locator: binomial-box/req:completeness-report; binomial-box/rem:epsstar;
+      binomial-box/rem:completeness-on-rules; binomial-box/rem:sound-indep.
+
+# ---------------------------------------------------------------------------
+# assumption_ledger
+#   The own rows. Each names its assumption claim file, which holds the
+#   statement; its `affects` field, its reading and the generated "Assumed
+#   by" list say what a failure puts at stake. `emission_rule` says which rows
+#   a result of each route carries. The claims declaring each short id are
+#   what the commands below compute; this file keeps no copy of them.
+#
+#   The direction of every row is the same and it is worth stating once:
+#   nothing in this ledger can break security. Each assumption's failure
+#   costs a void completeness figure, a rate loss or a refusal; the security
+#   statement rests on meat-core and on the fact that the acceptance set
+#   enters it as a fixed set an infimum is taken over
+#   (binomial-box/rem:sound-indep).
+# ---------------------------------------------------------------------------
+assumption_ledger:
+
+  emitted_as: "the `assumption_ledger` output key: the machine key of each row below, as `emission_rule` says"
+  the_command: "python -m harness.check_claims --dependents statistics/<assumption label>"
+  the_closure_command: "python -m harness.check_claims --assumptions statistics/<label>"
+  closures_a_reader_should_re_derive: >-
+    The three that decide what a result carries:
+    `--assumptions statistics/binomial-box/thm:completeness-bound` (the
+    completeness bound, which is what the emitted figure means),
+    `--assumptions statistics/binomial-box/thm:honest-containment` (honest
+    containment and the refusal statement) and
+    `--assumptions statistics/thm:box-oracle` (the acceptance support and the
+    box oracle the consumer reads), and for a declared singleton
+    `--assumptions statistics/singleton/thm:singleton-completeness`. Run
+    them; this file names no closure it does not compute.
+
+  own_rows:
+
+    - {id: A-HON, machine_key: honest_rounds_iid, claim: ass:hon}
+    - {id: A-HON-ENV, machine_key: honest_rounds_within_envelope, claim: ass:hon-env}
+    - {id: A-ALPHABET, machine_key: acceptance_recorded_every_round, claim: ass:alphabet}
+    - {id: A-REACH, machine_key: honest_reachable, claim: ass:reach}
+
+  emission_rule:
+    A-HON: "on a declared singleton only, whose completeness figure (singleton/thm:singleton-completeness) rests on it; the construction map never emits one, and the singleton's honest input is a single law"
+    A-HON-ENV: "on every result of the construction map, the canonical box it emits: its completeness figure (binomial-box/thm:completeness-bound) rests on it, a single law being the degenerate envelope (lem:hon-degenerate)"
+    A-ALPHABET: "on every result, the constructed box and a declared singleton alike"
+    A-REACH: "on every result of the construction map, the canonical box it emits: the box's honest containment (binomial-box/thm:honest-containment) rests on it"
+  emission_rule_note: >-
+    The rule is keyed on the route that produced the acceptance set, not on
+    its geometry tag: a polytope a profile declared would rest on none of
+    the box's results. Each route's rows are the assumption closure of the
+    results it reports (for the box also statistics/thm:box-oracle, whose
+    (i) is the emitted acceptance support), as the closure commands above
+    compute it, so that a run lists exactly what its results rest on. No row is inherited: A-TSM
+    (reductions/ass:tsm) is declared by two remarks of the submodule,
+    binomial-box/rem:sound-indep and binomial-box/rem:guard-activation, and
+    by no result whose figure this module reports, so a run carries it
+    where the reductions artefact emits it, not from here.
+
+  submodule_rows: []
+  submodule_rows_note: >-
+    Neither submodule declares an assumption of its own. `binomial-box` and
+    `singleton` assume this module's own and add none:
+    the endpoint rules, the enclosures and the Bernstein bound are all proved
+    from the binomial law and elementary analysis, and what they need of the
+    arithmetic is the direction def:conservative-evaluation already names. That is why the
+    submodules have no ledger section of their own.
+
+never_verified:
+  own: [A-HON, A-HON-ENV, A-ALPHABET, A-REACH]
+  note: >-
+    The list holds, of the rows above, those whose assumption carries
+    `verification: never` (spec/claim-format.md section 3.2). The code
+    reads the field from the claim-closure table, and
+    tests/unit/test_never_verified_agree.py holds these lists to it. A-HON
+    and A-HON-ENV are honest-model premises that the completeness argument
+    consumes and no function of the declared data decides. A-REACH is an
+    obligation of whoever declares the honest model, together with the
+    declaration (ass:reach). A-ALPHABET is the
+    clause that the run records an acceptance value in every round
+    (ass:alphabet), which no code path decides; that the alphabet, its
+    enumeration and n are the consumer declaration's is def:matched-alphabet,
+    decided at bundle validation as a hard error (req:matched-alphabet;
+    binomial-box/thm:honest-containment (iii)), and Chat finite and
+    non-empty and n >= 1 carry reason codes of their own. No code path of this module may decide any of the
+    unverified ones, beyond the clauses named here, and for A-REACH in
+    particular the conforming behaviour is to state the conditional and emit
+    the set, never to test reachability (binomial-box/rem:hlow-consequence).
+    Exact data and conservative evaluation are no assumption: they are
+    def:conservative-evaluation, whose input half is decided with the reason
+    code `inputs_not_rational` (binomial-box/req:input-refusal) and whose
+    evaluation half is a discipline on the implementation
+    (binomial-box/req:rule-in-force; binomial-box/req:enclosure-substrate)
+    that the frozen oracles check.
+    Locator: ass:hon; ass:hon-env; ass:reach; ass:alphabet;
+    def:matched-alphabet; req:matched-alphabet;
+    def:conservative-evaluation.
+
+# ---------------------------------------------------------------------------
+# submodules_today
+#   The one block of this file that names a submodule, so that the others do
+#   not have to. Everything above states the mechanism -- the box construction
+#   is one statistics method, stated over an admissible endpoint rule, and
+#   another method is a sibling submodule -- and this block is the module as
+#   it stands.
+# ---------------------------------------------------------------------------
+submodules_today:
+
+  binomial-box:
+    interface: "spec/modules/statistics/binomial-box/interface.yaml"
+    what_it_supplies: >-
+      The construction: the per-outcome interval over an admissible endpoint
+      rule, the honest-containment guard, the box, the completeness bound,
+      honest containment and the refusals, the parameter behaviour, and the
+      two rules this repository carries with their evaluations. Its claims
+      use the core's definitions and tail forms; their `uses` fields are the
+      authority, and the contract's graphs show the edges.
+    output_keys: [acceptance_set, completeness_certified, honest_model, infeasibility_report, endpoint_exact]
+    ledger_rows: []
+    removable: false
+    removability_note: >-
+      Not removable as the module stands, because it is the only method the
+      module has: deleting it would leave a taxonomy and a tail identity with
+      nothing that emits a set. What is removable is a rule, with the rows
+      that name it. Deleting the Bernstein group
+      (binomial-box/lem:bernstein-tail, binomial-box/prop:rule-bernstein and
+      the rule's half of binomial-box/rem:completeness-on-rules)
+      removes one value of `endpoint_rule` and the submodule's rows for that
+      rule; deleting the enclosure group removes one value of
+      `tail_evaluation`, the `endpoint_exact` output row and the submodule's
+      rows for that evaluation. Either deletion also edits every remaining
+      claim that uses or mentions a deleted one, the clauses that enumerate
+      the rules (binomial-box/def:endpoint-rule (viii),
+      binomial-box/req:rule-in-force) among them.
+
+  singleton:
+    interface: null
+    interface_note: >-
+      No interface file of its own, deliberately: it adds no input, no output
+      key, no ledger row and no convention, and one refusal, recorded in
+      `honest_input` below. It states the exact accept probability of a
+      singleton geometry, the least admissible completeness budget and the
+      degenerate case in which no admissible budget exists, and its
+      obligation falls on a profile that declares a singleton acceptance set
+      rather than on this module, the construction map never emitting one. If
+      it acquires a row of its own, this entry becomes a file.
+    claims_snapshot:
+      the_command: "python -m harness.check_claims --module statistics/singleton --status"
+      order:
+        - {claim: thm:singleton-completeness, kind: thm, provenance: newly-derived, refs: []}
+        - {claim: rem:singleton-honest, kind: rem, provenance: newly-derived, refs: []}
+        - {claim: req:singleton-budget-record, kind: req, provenance: newly-derived, refs: []}
+        - {claim: req:singleton-point-form, kind: req, provenance: newly-derived, refs: []}
+    honest_input: >-
+      The point form only (singleton/req:singleton-point-form;
+      singleton/rem:singleton-honest). singleton/thm:singleton-completeness
+      keeps A-HON: its accept probability is the exact multinomial
+      probability under one law. A degenerate envelope is read as its law; a
+      non-degenerate envelope is refused, not reduced to one of its laws,
+      with the reason `honest_envelope_not_degenerate`. That code is the
+      singleton's and is not one of the construction's eleven
+      (binomial-box/thm:honest-containment (iii)): the construction map never
+      emits a singleton, and the refusal belongs to the path that evaluates
+      one.
+    what_it_obliges: >-
+      singleton/req:singleton-budget-record: a profile declaring a singleton
+      geometry records the budget singleton/thm:singleton-completeness (ii)
+      computes, or, in the degenerate case where the accept probability is
+      exactly zero, that no admissible budget exists, and claims no
+      completeness it does not have. That degenerate case is not exotic: it
+      is reached whenever the round count times the declared point has a
+      non-integer coordinate (singleton/rem:singleton-honest).
+    why_the_tag_is_kept: >-
+      Because the consumer's acceptance oracle reads exactly that geometry and
+      meat-core/frank-wolfe/rem:acc-side (a) certifies its acceptance-side
+      minimum; it is not what the construction produces, its completeness
+      figure being close to 1 for any realistic alphabet and round count.
+      Locator: singleton/rem:singleton-honest; rem:two-tags.
+
+# ---------------------------------------------------------------------------
+# artifact_bindings
+# ---------------------------------------------------------------------------
+artifact_bindings:
+
+  mathematical_spec_version: "statistics@0.10.0"
+  version_note: >-
+    Not emitted and not read by the module's code, which emits no version
+    string. The version a run consumed is carried by the run record's
+    assumption manifest (spec/architecture.md section 4.4) as `statistics@`
+    followed by the version of module.yaml, read from the generated
+    claim-closure table (src/certiqs_key/domain/claim_closure.json, written
+    by harness/generate_claim_closure.py). The frozen registry
+    tests/oracles/registry_statistics_acceptance.py names in its header the
+    contract version, 0.1.2, from which its cases were derived by hand; its
+    values pin the default route and are never regenerated from the code.
+  no_content_hash: >-
+    This file carries no content hash and no change log: git plus human
+    review is the ledger, and there is no second one (PRINCIPLES.md section
+    2.5). An accepted version is pinned by its commit and a run manifest pins
+    what it used; that is all the pinning there is.
+
+  package: "src/certiqs_key/statistics/"
+  package_note: >-
+    The package this module's code lives in. It imports `domain/` and nothing
+    else of this repository: the claim-graph edge to `reductions` is the
+    two remarks' declaration of A-TSM and is not an import. The machine keys
+    above are binding
+    for that implementation: the code is written onto these names, not the
+    reverse.
+
+  docking:
+    adapter: "src/certiqs_key/meat_core/docking_statistics.py"
+    owner: meat-core
+    direction: "THE CONSUMER READS THE SUPPLIER"
+    what_it_does: >-
+      It converts the emitted exact geometry into the consumer's own record
+      type, which types its numbers as machine numbers, and it rounds in one
+      named direction: q^- down and q^+ up. That is the one direction
+      def:conservative-evaluation admits and
+      foundations/req:consumer-decides-exactly lets a consumer take, and
+      binomial-box/lem:widening is why it is admissible at all: enlarging
+      the box can only lower the failure probability and the consumer's
+      infimum (binomial-box/prop:rule-exact (iii) and
+      binomial-box/lem:guard (ii) say the same of a rule's own interval).
+    what_survives_the_conversion: >-
+      The docked box contains the emitted one, and every claim that survives a
+      superset survives with it: p^hon is still inside
+      (binomial-box/thm:box-construction (iii)), the closed-form validation
+      predicate still holds (thm:geometry-validation (iii)), the data are
+      still a canonical box with 0 <= q^- <= q^+ <= 1
+      (binomial-box/thm:box-construction (ii)), meat-core/def:admissible-acceptance-set still holds
+      (its (iv)), and the reported figure is still a bound on the honest
+      failure probability, the failure event for a larger set being a subset
+      of the one bounded. What it costs is rate and never soundness.
+    the_one_clause_that_does_not_survive: >-
+      The second half of binomial-box/thm:box-construction (i): a rounded bound
+      is an exact rational -- a dyadic one -- but it is not a multiple
+      of 1/n when n is not a power of two. So the docked record is not the
+      emitted artefact and is not offered as one: this module's own output is
+      the exact geometry, and the conversion is into a consumer's declared
+      type, made once, in one place, with the direction named.
+    why_the_adapter_is_the_consumers: >-
+      Because the type it converts into is the consumer's. An adapter in the
+      producing module would import the consumer's declaration type and make
+      the supplier depend on its consumer; with the adapter on the consumer's
+      side, `certiqs_key.statistics` imports `domain/` only. No claim of
+      either module states which package imports which; that is a repository
+      convention, recorded here because the conversion's direction of
+      rounding is a claim matter even though its location is not.
+
+  produces: >-
+    The output rows above are this module's record payload; the run tier
+    assembles them with the records of the other modules and with the
+    assumption manifest (spec/architecture.md sections 3.3, 4.4). No further
+    schema extension is authorised.
+  consumes: []
+  consumes_note: >-
+    Empty deliberately. This module's inputs are protocol parameters, an
+    honest-model payload and a request; the provider that supplies the
+    honest distribution or envelope is ordinary non-proof-critical code
+    behind this interface (spec/architecture.md section 3.4) and is not an
+    artefact edge. The match of def:matched-alphabet is a relation
+    between artefacts, decided at bundle validation as a hard error
+    (req:matched-alphabet).
+
+max_attainable_tier: first-order
+max_attainable_tier_note: >-
+  The headline tier of spec/architecture.md section 2.8, and it is a ceiling
+  and not an assurance. This module declares no per-result assurance label of
+  its own: there is no tier row in the outputs table, no requested-assurance
+  parameter and no runtime certificate, and no value is reserved for any
+  further tier. The refusal this module does carry is the
+  `infeasibility_report`, on which no acceptance_set is emitted at all.
+
+# ---------------------------------------------------------------------------
+# depends_on_modules
+# ---------------------------------------------------------------------------
+depends_on_modules: [reductions]
+depends_on_modules_note: >-
+  As module.yaml declares, and it is one declared assumption and nothing
+  else. The edge exists so that the remarks that name the `output_state`
+  model (binomial-box/rem:sound-indep, binomial-box/rem:guard-activation)
+  may declare A-TSM by short id and the checker resolve it to its owner's file
+  (reductions/ass:tsm); no claim of this module uses a claim of that one, no
+  proof here appeals to a file of it, and the code imports `domain/` only.
+  The traffic runs the other way for the consumer: meat-core reads the
+  acceptance set with its geometry tag as an input of its own and refuses an
+  unknown tag rather than guessing (req:geometry-tag;
+  meat-core/interface.yaml, its `acceptance_set` row; spec/architecture.md
+  section 3.2), and the docking adapter that converts the geometry lives
+  there.
+
+# ---------------------------------------------------------------------------
+# fixed_by_this_file
+#   Every place this file says something no claim of this module states. The
+#   list separates what the claims decide from what the interface fixes, so
+#   that an amendment knows which rows it may move without touching a proof.
+# ---------------------------------------------------------------------------
+fixed_by_this_file:
+
+  - row: "inputs.honest_envelope (the request shape: one field `honest`, a mapping or an envelope object {lower, upper})"
+    what: >-
+      that the honest model arrives in one request field in either of two
+      shapes, that the envelope's keys are `lower` and `upper`, and that the
+      point form is read as the degenerate envelope at that field.
+    why: >-
+      binomial-box/def:endpoint-rule (iii) makes the honest input exactly one
+      of a law and an envelope and reads a law as the degenerate envelope;
+      no claim names a request field or its keys. Keeping the point form as a
+      row of its own keeps every point-form request and record as a
+      single-law construction makes it.
+
+  - row: "outputs.infeasibility_report.validation_order"
+    what: "the order in which a conforming implementation decides the eleven codes."
+    why: >-
+      binomial-box/thm:honest-containment (iii) enumerates the violations and
+      binomial-box/req:input-refusal gives their codes and requires the first
+      violation in the order the interface fixes to be named; no claim fixes
+      the order. What the claims do fix, and what the order respects, is that
+      every one of them is decided before anything is constructed and that an
+      inexact datum makes every later comparison undecidable in the sense
+      def:conservative-evaluation requires.
+
+  - row: "outputs.endpoint_exact.presence"
+    what: "that the diagnostic is absent under `sweep` and under `bernstein`."
+    why: >-
+      binomial-box/req:endpoint-exact-record requires the diagnostic on the
+      enclosure evaluation of the exact rule and says what it records; it
+      says nothing of the routes that form no bracket.
+
+  - row: "outputs (the presence rules)"
+    what: "each output row's presence rule."
+    why: >-
+      Every output key is named by a requirement (the `outputs` header), and
+      binomial-box/req:input-refusal says no acceptance_set is emitted on a
+      violation; the presence rule of each row as written is this file's.
+
+  - row: "assumption_ledger (the emission)"
+    what: "that a ledger of machine keys is emitted with the result, which rows each route carries, and which declared values each row binds."
+    why: >-
+      Each assumption row states its machine key; no claim says the keys are
+      emitted. The transmitter, reductions, compiler and meat-core artefacts
+      all emit one and a run manifest is assembled from them
+      (spec/architecture.md section 4.4), so this module emits one too. The
+      rows of each route are read off the graph (the closures of the
+      results that route reports), and the bound values off
+      each assumption's clauses; neither is stated by a claim.
+
+  - row: "artifact_bindings.docking (the adapter's owner and path)"
+    what: "that the conversion into the consumer's machine-number record lives in the consumer's package."
+    why: >-
+      No claim of either module states where the adapter lives, that is,
+      which of the two packages imports the other; that location is a
+      repository convention. The rounding direction of the conversion is a
+      claim matter (def:conservative-evaluation; binomial-box/lem:widening), and
+      `artifact_bindings.docking` is where it is recorded:
+      foundations/req:consumer-decides-exactly lets a consumer round an
+      emitted bound only in the direction its producer's claims license as
+      weakening, and requires that direction to be recorded where the
+      consumer's reading of the emission is specified, which for this
+      emission is that binding.
+
+  - row: "artifact_bindings.mathematical_spec_version and version_note"
+    what: "the version string recorded here, and where a run records the version it consumed."
+    why: "No claim states a version (PRINCIPLES.md section 6)."
+
+  - row: "conventions.no_binary64_anywhere"
+    what: "that this module has no floating-point path in either direction, and that the one admitted conversion happens in the consumer's adapter."
+    why: >-
+      def:conservative-evaluation says the inputs are exact rationals and fixes the rounding
+      direction of a tail; binomial-box/thm:box-construction (i) says the
+      emitted data are exact rationals; foundations/def:exact-island (ii)
+      places the construction of an acceptance set on the exact island. None
+      says the module has no binary64 path at all, which is the stronger
+      statement a reader needs before reading the docking row, and it is
+      this file's.
+
+  - row: "declared_thresholds (the empty map and its note)"
+    what: "that this module declares no threshold, and that the submodule's evaluation parameters are not thresholds."
+    why: >-
+      No claim states either. The reason is on the row and is checkable: a
+      coarser enclosure can only make an endpoint more conservative
+      (binomial-box/prop:bracketed-endpoints (i)), so no evaluation parameter
+      can admit anything, which is what a threshold does.
+
+  - row: "not_outputs (the whole block)"
+    what: "that the acceptance-side minimum, its minimizer, the dual witness and beta_acc are not outputs of this module."
+    why: >-
+      thm:box-oracle (ii) and (iii) prove them and rem:box-oracle-consumer
+      says the shape is a quantity of the consumer's bracket; what makes them
+      not-outputs is that no row of this table carries them, which is a fact
+      about this file.
+
+  - row: "not_assumed_deliberately (the whole paragraph)"
+    what: "what the claims do not assume, listed so that an omission is not read as an oversight."
+    why: >-
+      No claim states it. Its two last items are the reading of
+      binomial-box/thm:monotonicity-limits (i), (ii) against
+      binomial-box/prop:bracketed-endpoints, and what def:conservative-evaluation leaves open.

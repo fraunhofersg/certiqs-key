@@ -1,0 +1,37 @@
+% ---
+% id: statistics/binomial-box/req:honest-model-record
+% kind: req
+% title: "The honest-model record beside every completeness figure"
+% summary: >-
+%   With every completeness figure it reports, the engine records what the
+%   figure was computed from: the honest model, n, the constrained outcomes,
+%   the allocation, the endpoint rule, the tail evaluation and the parameters
+%   in force. A completeness figure is meaningful only relative to that record.
+% prominence: standard
+% status: implemented
+% uses: [rem:completeness-on-rules, thm:completeness-bound]
+% mentions: [prop:rule-bernstein, prop:bracketed-endpoints]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.construction:HonestModel
+% lean:
+% ---
+
+The bound of Theorem~\ref{thm:completeness-bound} holds for every
+\tref{admissible endpoint rule},
+but the figure reported for it depends on the input, on the rule and on how
+its tails were evaluated (Remark~\ref{rem:completeness-on-rules}).
+
+\begin{requirement}\label{req:honest-model-record}
+With every completeness figure it reports, the engine records, in the record
+\iface{honest_model}, the input and the evaluation under which the figure was
+computed: the honest model (the law in the \tref{point form}, or the
+\tref{honest envelope}), the round count $n$, the constrained outcomes
+$\Chatcon$ and the allocation; the endpoint rule and the tail evaluation; and
+the parameters in force, for the Bernstein rule its $j$ and $s$
+(Proposition~\ref{prop:rule-bernstein}) and, wherever the tails are
+evaluated by enclosures, the parameters of those enclosures
+(Proposition~\ref{prop:bracketed-endpoints}). A completeness figure is
+meaningful only relative to that record.
+\end{requirement}

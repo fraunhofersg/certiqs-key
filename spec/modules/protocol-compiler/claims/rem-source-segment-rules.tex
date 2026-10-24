@@ -1,0 +1,77 @@
+% ---
+% id: protocol-compiler/rem:source-segment-rules
+% kind: rem
+% title: "Grounds of the source-segment rules"
+% summary: >-
+%   The licensed-only rule and the source-mode rule are the two halves of the
+%   reductions module's admission rule for a non-empty source segment. Both
+%   refuse where the chain is consumed; only the first refuses a case an
+%   artefact of this repository can present.
+% prominence: standard
+% status: accepted
+% uses: [def:chaincond]
+% mentions: [def:gate-outcome-table, req:gate-outcomes, req:chain-refusals, transmitter/def:source-segment, reductions/def:chain, reductions/lem:precomposition, reductions/rem:ordering, reductions/thm:two-sided, reductions/lem:source-transfer, transmitter/ass:src, transmitter/decoy/cor:emitted-decoy]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Definition~\ref{def:chaincond} states two rules for a non-empty source
+segment, the licensed-only rule and the rule on the declared source mode, and
+Requirement~\ref{req:chain-refusals} names their refusals. This remark gives
+their grounds and compares what each of them refuses.
+
+\begin{remark}\label{rem:source-segment-rules}
+\emph{Where the two rules come from.} The licensed-only rule is the consuming
+side of the admission rule of \xref{reductions/def:chain}, whose reason is
+\xref{reductions/lem:precomposition} and its counterexample
+(\xref{reductions/rem:ordering}); this module states neither and decides the
+type of the entry. The rule on the declared source mode is the other half of
+that admission rule, which admits a non-empty source segment beside a
+constraint list only where every entry is licensed \emph{and only in
+\tref{trusted-source mode}}: the entry half is the licensed-only rule and the
+mode half is this one, and both are decided in
+Definition~\ref{def:chaincond} on the presented data, the entry half by
+reading the declared tag of each entry and the mode half by reading one
+declared slot.
+
+\emph{The licensed-only rule refuses a case the \tref{basic format} admits.}
+A non-empty \tref{source segment} is declarable there --- the source-segment
+paragraph of Definition~\ref{def:chaincond} admits $L_{\mathrm s}\ge1$ ---
+and, \emph{were this rule absent}, an entry declared general beside one
+would, where no other condition or gate refused it, reach the gates and be
+emitted by row 5 of the gate outcome table of
+Definition~\ref{def:gate-outcome-table} as a
+declaration that is not \tref{key-length-eligible}
+(Requirement~\ref{req:gate-outcomes}). Under the rule the case is refused where the
+chain is consumed, before any declaration exists, so row 5 is never reached
+for it. The two outcomes are not the same, and the second is strictly the more
+conservative. \emph{The case is reachable}, and the rule is then simply a
+refusal, which is the direction a consumer may always take.
+
+\emph{Why the source-mode rule refuses rather than weakening the outcome}:
+nothing licenses a source map in \tref{untrusted-source mode}. The statements
+that make a non-empty segment sound --- \xref{reductions/thm:two-sided} and
+\xref{reductions/lem:source-transfer} --- are stated in trusted-source mode
+alone, because a source map replaces \emph{Alice's preparation} and only a
+trusted specification has one: an untrusted specification carries no
+certificate and no marginal, its Alice-side system is an output of the attack,
+and A-SRC is asserted in trusted-source mode alone
+(\xref{transmitter/ass:src}). So a declaration of that shape would carry a
+replaced ensemble with no statement transferring anything to it, which is the
+one thing a consumer may not emit. \emph{No artefact of this repository can
+present the pairing, and the rule is stated so that it is decided rather than
+left to provenance}: a non-empty segment is accepted only inside an artefact
+of the module that admits its links, by (A3) of
+\xref{transmitter/def:source-segment} as Definition~\ref{def:chaincond}
+decides it, and the one submodule that admits a kind
+declares its data in trusted-source mode
+(\xref{transmitter/decoy/cor:emitted-decoy}\,(i)). Unlike the licensed-only
+rule, which refuses a case the basic format declares and which, were the
+licensed-only rule absent and nothing else refused it, row 5 would emit as not
+key-length-eligible, the source-mode rule
+refuses nothing that an artefact of this repository can present; what it
+removes is the possibility that a later kind emitted in another mode would
+pass every condition stated in Definition~\ref{def:chaincond}.
+\end{remark}

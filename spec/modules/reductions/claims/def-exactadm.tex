@@ -1,0 +1,133 @@
+% ---
+% id: reductions/def:exactadm
+% kind: def
+% title: "The number model, the declared lattice and exact admissibility"
+% summary: >-
+%   Every number this module reads or emits, except the recorded emission
+%   displacement, is a binary64 value read as its dyadic rational; every
+%   declared or emitted operator entry and declared real scalar meets one
+%   lattice condition. Exact admissibility here is the foundations core plus
+%   that condition.
+% prominence: standard
+% status: accepted
+% uses: [foundations/def:binary64, foundations/lem:binary64-lattice, foundations/def:exact-admissibility]
+% mentions: [def:substrate, lem:exactpsd, def:emitnorm, lem:latsum, def:reduction-instance, rem:exactboundary, cor:entries, foundations/req:boundary-admission, foundations/req:consumer-decides-exactly, foundations/def:exact-island, foundations/req:declared-lattice, foundations/req:exact-emission, foundations/rem:computed-completeness]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Conditions (a)-(e) are foundations/def:exact-admissibility with the constant the invoking rule names; the lattice condition eq:latinv, its extension to declared real scalars, and the scope clause (d) are this module's strengthenings and stay here. The one irrational emitted number, the displacement Delta_s, is a record and decides nothing; do not read (a) as saying every emitted number is dyadic."
+% ---
+
+Every operator datum this module consumes arrives as a finite list of
+\tref{binary64 numbers}, and under the number model those numbers are the
+model: a \tref{declared value} \emph{is} its binary64 datum
+(\xref{foundations/def:binary64}), declared operator data are
+\tref{exactly admissible} at every \tref{module boundary}
+(\xref{foundations/req:boundary-admission}), and every consumer decides that
+exactly and refuses otherwise
+(\xref{foundations/req:consumer-decides-exactly}). This definition states the
+module's side of that policy, for what it reads and for what it emits: the
+common core of exact admissibility, restated in this module's terms so that
+both ends of one boundary name one condition, and strengthened by one
+declared lattice. On operator entries the lattice condition
+\eqref{eq:latinv} of (b) is condition (D-LAT) of
+\xref{foundations/req:declared-lattice} at $k=\kappa$; this module states it
+of the declared real scalars of (b) as well, as a condition of what it
+admits. Together with \eqref{eq:latinv}, conditions (a)--(e) of (c) are, for
+the family this module emits, the six conditions of
+\xref{foundations/req:exact-emission}. Condition (e) is stated on the
+additions because \xref{foundations/rem:computed-completeness} is a family
+on which a vanishing completeness defect and completeness of the numbers
+differ, and Remark~\ref{rem:exactboundary} discusses the objects that scope
+clause (d) leaves to the hypotheses of an instance.
+
+\begin{definition}\label{def:exactadm}
+\emph{(a) The model.} Every numerical datum this module reads or emits,
+the displacement record below aside, is a binary64 value on the wire and
+\emph{is} that value: no exact object is posited behind it and none is
+approximated by it. A binary64 value is a dyadic
+rational, and \emph{this contract reads it as that rational}
+(\xref{foundations/def:binary64}\,(iii)). Every predicate this contract
+decides is decided, and every emitted number but one is formed, by finitely
+many operations in the substrate of Definition~\ref{def:substrate} and
+Lemma~\ref{lem:exactpsd}. \emph{The exception is the \tref{emission displacement}
+$\Delta_s$ of \eqref{eq:displacement}}: an entrywise maximum \emph{modulus},
+hence the square root of an exact rational and in general irrational, emitted
+as a binary64 rendering of a record of what the normalizer of
+Definition~\ref{def:emitnorm} did, in a direction nothing records; it decides
+nothing, and no statement of this contract reads it. That is the reading the
+\tref{exact island} (\xref{foundations/def:exact-island}) gives, which
+contains both the admission decisions on declared blocks and a producer's
+construction of what it emits. The only non-numerical data are combinatorial
+(alphabets, orders, block identifiers, a coarse-graining map, a branch index
+set, a cutoff) and carry no arithmetic.
+
+\emph{(b) The declared lattice.} The request declares one integer exponent
+$\kappa$, and every declared and every emitted operator entry, together with
+every \emph{real scalar} the request declares of the following kinds --- the
+\tref{class weights} $q_t$, any certified weight, the entries of a declared
+stochastic matrix, and any declared device constant --- satisfies
+\begin{equation}\label{eq:latinv}
+  2^{\kappa}x\in\mathbb{Z},
+  \qquad |x|\le1,
+  \qquad 1\le\kappa\le53 .
+\end{equation}
+Such an $x$ is exactly a binary64 number
+(\xref{foundations/lem:binary64-lattice}\,(i)), its significand carrying at
+most $\kappa\le53$ bits. The list is exhaustive: the constant a caller declares for a
+requested constraint entry is not among them, and where it is off the
+lattice it is rounded onto it or refused (Corollary~\ref{cor:entries}\,(iii)). It is a condition on a \emph{set} of values: it says which numbers
+may be declared and nothing about how near one number is to another. A
+complex entry satisfies \eqref{eq:latinv} when its real and imaginary parts
+do.
+
+\emph{(c) Exact admissibility on the declared lattice.} Let
+$\{A_v\}_{v\in I}$ be a finite family of matrices presented by its blocks
+over declared bases, indexed by the finite set $I$ the invoking rule names
+(the \tref{outcome alphabet} at a fixed setting for a declared block family, a class
+$\Vset_t$ of the datum of a \tref{reduction instance}
+(Definition~\ref{def:reduction-instance}), $\Vset$ for the family this module
+emits), and let $c$ be the constant the rule names for its completeness
+identity: $1$ for a POVM, the class weight $q_t$ for a
+class of a datum. The family is
+\term[A family that is exactly admissible, in the sense of foundations, with the constant the invoking rule names, and whose every entry satisfies the lattice condition of this definition.]{exactly admissible on the declared lattice}
+when
+\begin{enumerate}[label=(\alph*),leftmargin=2.4em]
+\item \emph{(the \tref{sector map})} the block kind, the block identifiers and their
+  order are the ones the consumer holds, a comparison of declared labels,
+  decided and never measured;
+\item \emph{(Hermiticity)} $A_v=A_v^{\dagger}$, entry for entry;
+\item \emph{(positivity)} $A_v\succeq0$, decided by \eqref{eq:psdtest};
+\item \emph{(completeness)} $\sum_{v\in I}A_v=c\,\idon{}$ on each block, as an
+  identity of the entries;
+\item \emph{(the sum \tref{rounds nowhere})} every entrywise binary64
+  addition of that accumulation, taken in the \tref{declared order} of $I$,
+  is exact, so that the \emph{computed} sum \emph{is} the sum of (d);
+\end{enumerate}
+and every entry satisfies \eqref{eq:latinv}. Conditions (a)--(e) say that
+the family is exactly admissible with constant $c$ for the sector map the
+consumer holds (\xref{foundations/def:exact-admissibility}), each block being
+presented at the dimension the consumer's map declares for it. Condition (e)
+is a condition in its own right and is stated on the \emph{additions}: a
+vanishing completeness \emph{defect} says that the computed sum is the
+identity, not that $\sum_vA_v=c\,\idon{}$ holds of the numbers.
+Lemma~\ref{lem:latsum} shows that (e) is satisfiable on this
+contract's own emission, rather than a condition that would refuse every
+family.
+
+\emph{(d) Scope, stated once and binding wherever this definition is
+invoked.} This definition and the rules that invoke it are about data this
+contract requires to be presented as a finite list of matrices of declared
+dimension: the \tref[data sector]{data sectors} of a reduction instance
+(Definition~\ref{def:reduction-instance}\,(I1)) and the declared blocks they
+are formed from; the declared classical scalars and matrices a submodule's
+route reads (a stochastic matrix and its descended form, the class weights,
+each certified weight, any declared device constant); and the family this
+module emits. They are \emph{not} available for the objects an instance's
+\tref{hypotheses (H)} are about: operators on a part of $\Hs{\Bsys}$ that no
+finite list of matrices presents, an above-cutoff family, a register POVM, an
+uncharacterised branch. There is nothing on those to decide, and their
+conditions remain hypotheses of the instance
+(Definition~\ref{def:reduction-instance}\,(I1)).
+\end{definition}

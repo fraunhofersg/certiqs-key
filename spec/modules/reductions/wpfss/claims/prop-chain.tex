@@ -1,0 +1,171 @@
+% ---
+% id: reductions/wpfss/prop:chain
+% kind: prop
+% title: "Flag-state squashers: existence, chain and encoded weights"
+% summary: >-
+%   With total certified weight below one, the physical POVM squashes to both
+%   targets, and the squashers compose exactly through a flag-noise channel. A
+%   weight the weight-preserving target encodes holds on every squashed state;
+%   under the flag-state target it holds only on reachable ones.
+% prominence: main
+% status: accepted
+% uses: [reductions/lem:obstructions, def:targets, reductions/lem:master, reductions/cor:instances, reductions/lem:top, reductions/lem:sep, reductions/cor:pullback]
+% mentions: [rem:tworoutes]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Both targets are reached by measuring the part above the cutoff and preparing
+a flag, the weight-preserving one after the certified weights have been taken
+out of the measured POVM. In the weight-preserving target the weights are
+then an operator inequality on the target itself (part (iii)), which is the
+difference between the two routes (Remark~\ref{rem:tworoutes}).
+
+\begin{proposition}
+\label{prop:chain}
+Let $(p_v)$ be \tref{certified weights} with $p<1$ and define the channels
+\begin{align}
+  \Lwp(\rho)
+   &\coloneqq\Pleq\rho\,\Pleq\ \dsum\
+      \sum_{v}\tr\!\big[\Mwp_v\,\Pgt\rho\,\Pgt\big]\,\dyad{v}_{\Flag},
+   \qquad
+   \Mwp_v\coloneqq\frac{\blk{M}{\gtN}_v-p_v\,\idon{\Bsys_{\gtN}}}{1-p},
+   \label{eq:Lwp}\\
+  \Lfss(\rho)
+   &\coloneqq\Pleq\rho\,\Pleq\ \dsum\
+      \sum_{v}\tr\!\big[\blk{M}{\gtN}_v\,\Pgt\rho\,\Pgt\big]\,\dyad{v}_{\Flag},
+   \label{eq:Lfss}\\
+  \Lnoise(\sigma)
+   &\coloneqq(1-p)\,\sigma+p\,\Pleq\sigma\,\Pleq
+      +\tr\!\big[\Pflag\sigma\big]\,\mu,
+   \qquad \mu\coloneqq\sum_vp_v\dyad{v}_{\Flag}.
+   \label{eq:Lnoise}
+\end{align}
+Then:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(existence, with the cutoff projectors transported)}
+  \begin{equation}\label{eq:transportproj}
+    \big(M;\Pleq,\Pgt\big)\dsq_{\Lwp}\big(\Fwp;\Pleq,\Pflag\big),
+    \qquad
+    \big(M;\Pleq,\Pgt\big)\dsq_{\Lfss}\big(\Ffss;\Pleq,\Pflag\big);
+  \end{equation}
+\item \emph{(the chain)} $\Fwp\dsq_{\Lnoise}\Ffss$, and the channels compose
+  exactly, $\Lfss=\Lnoise\circ\Lwp$ on all of $\Tcl{\Bsys}$, so that
+  \begin{equation}\label{eq:ladder}
+    M\ \dsq_{\Lwp}\ \Fwp\ \dsq_{\Lnoise}\ \Ffss\ \dsq_{\Lmp}\ \Ppvm ;
+  \end{equation}
+\item \emph{(the encoded constraint)} $\Fwp_v\succeq p_v\,\Pflag$ as operators
+  on $\Qsys$, so $\tr[\Fwp_v\sigma]\ge p_v\tr[\Pflag\sigma]$ holds on
+  \emph{every} squashed state, reachable or not. Under $\Ffss$ the same
+  inequality is only a pull-back constraint: it holds on every reachable state,
+  since
+  $\Lfss^{\dagger}\big(\Ffss_v-p_v\Pflag\big)
+  =\blk{M}{\leqN}_v\dsum\big(\blk{M}{\gtN}_v-p_v\idon{\Bsys_{\gtN}}\big)
+  \succeq0$, and it \emph{fails} at $\sigma=\dyad{v'}_{\Flag}$ for any $v'\ne v$
+  with $p_v>0$;
+\item \emph{(no reverse relation in general)} $\Ffss\dsq\Fwp$ can fail: at
+  $\Hs{\Bsys_{\leqN}}=\Hs{\Bsys_{\gtN}}=\mathbb{C}$, $\Vset=\{1,2\}$,
+  $M_1=\tfrac12\dsum1$, $M_2=\tfrac12\dsum0$, $p_1=\tfrac12$, $p_2=0$, one has
+  $\|\Ffss_2\|=1>\tfrac12=\|\Fwp_2\|$, which
+  Lemma~\ref{lem:obstructions}\,(i) forbids.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) \emph{$\{\Mwp_v\}$ is a POVM on $\Bsys_{\gtN}$}: $\Mwp_v\succeq0$ by
+\eqref{eq:certweights}, and
+$\sum_v\Mwp_v=\big(\idon{\Bsys_{\gtN}}-p\,\idon{\Bsys_{\gtN}}\big)/(1-p)
+=\idon{\Bsys_{\gtN}}$ by block completeness.
+
+\emph{$\Lwp$ is a channel.} It is the map \eqref{eq:master} of
+Lemma~\ref{lem:master} for the pinching instrument
+$\Ins_1(\rho)=\Pleq\rho\Pleq$, $\Ins_2(\rho)=\Pgt\rho\Pgt$
+(Corollary~\ref{cor:instances}\,(ii)), the identity channel on branch~1, and
+the measure-and-prepare channel $\Lmp$ of the POVM $\Mwp$
+(Lemma~\ref{lem:top}) on branch~2; part~(ii) of that lemma gives complete
+positivity and trace preservation. The POVM that $\Lwp$ squashes is
+computed directly below rather than read off
+Lemma~\ref{lem:master}\,(iii): for these branch data that part names the
+coarse-grained target $\blk{M}{\leqN}_v\dsum\dyad{v}$, which is the flag-state
+target of the \emph{modified} POVM $\Mwp$, whereas $\Fwp$ is a different target
+on the same space, and the weights $p_v$ are what the difference records.
+
+\emph{The relation.} The output of $\Lwp$ is block
+diagonal, so only the diagonal blocks of an observable contribute to
+\eqref{eq:pairing}, and for $X=X_{\leqN}\dsum X_{\Flag}$,
+\begin{equation}\label{eq:WPadjoint}
+  \Lwp^{\dagger}\big(X_{\leqN}\dsum X_{\Flag}\big)
+  = X_{\leqN}\ \dsum\ \sum_v\bra{v}X_{\Flag}\ket{v}\;\Mwp_v .
+\end{equation}
+Applying \eqref{eq:WPadjoint} to $\Fwp_v$, whose flag block is
+$p_v\idon{\Flag}+(1-p)\dyad{v}$ with diagonal entries
+$\bra{v'}\cdot\ket{v'}=p_v+(1-p)\delta_{vv'}$,
+\begin{align*}
+  \Lwp^{\dagger}\big(\Fwp_v\big)
+  &= \blk{M}{\leqN}_v\ \dsum\
+    \Big(p_v\sum_{v'}\Mwp_{v'}+(1-p)\,\Mwp_v\Big)\\
+  &= \blk{M}{\leqN}_v\ \dsum\
+    \big(p_v\,\idon{\Bsys_{\gtN}}+\blk{M}{\gtN}_v-p_v\,\idon{\Bsys_{\gtN}}\big)
+  \;=\; M_v .
+\end{align*}
+For the transported projectors, $X=\Pleq$ means $X_{\leqN}=\idon{}$,
+$X_{\Flag}=0$, and \eqref{eq:WPadjoint} returns $\Pleq$; $X=\Pflag$ means
+$X_{\leqN}=0$, $X_{\Flag}=\idon{\Flag}$, and it returns
+$0\dsum\sum_v\Mwp_v=\Pgt$. The statement for $\Lfss$ is the case
+$p_v\equiv0$ of the same computation, with $\Mwp_v=\blk{M}{\gtN}_v$; note that
+$\Ffss$ is a POVM because $\sum_v\Ffss_v=\idon{\Qsys}$, and so is $\Fwp$
+because $\sum_v\Fwp_v=\idon{\Bsys_{\leqN}}\dsum
+\big(p\,\idon{\Flag}+(1-p)\idon{\Flag}\big)=\idon{\Qsys}$.
+
+(ii) $\Lnoise$ is a channel: it is the convex combination, with weights $1-p$
+and $p$, of the identity and of the channel that pinches onto the two blocks
+and replaces the flag block by the fixed state $\mu/p$ (for $p=0$,
+$\Lnoise=\idmap$); trace preservation is
+$\tr\Lnoise(\sigma)=(1-p)\tr\sigma+p\,\tr[\Pleq\sigma]
++\tr[\Pflag\sigma]\,\tr\mu
+=(1-p)\tr\sigma+p\big(\tr[\Pleq\sigma]+\tr[\Pflag\sigma]\big)=\tr\sigma$,
+using $\tr\mu=p$ and $\Pleq+\Pflag=\idon{\Qsys}$. Its adjoint is
+$\Lnoise^{\dagger}(X)=(1-p)X+p\,\Pleq X\Pleq+\tr[\mu X]\,\Pflag$, so on block
+observables
+\begin{equation}\label{eq:L2adjoint}
+  \Lnoise^{\dagger}\big(X_{\leqN}\dsum X_{\Flag}\big)
+  = X_{\leqN}\ \dsum\
+    \big((1-p)\,X_{\Flag}+\tr[\mu X_{\Flag}]\,\idon{\Flag}\big),
+\end{equation}
+whence $\Lnoise^{\dagger}(\Ffss_v)
+=\blk{M}{\leqN}_v\dsum\big((1-p)\dyad{v}+p_v\,\idon{\Flag}\big)=\Fwp_v$, which
+is the relation. For the composition, $\Lwp(\rho)$ is block diagonal, so
+\begin{align*}
+  \Lnoise\big(\Lwp(\rho)\big)
+  &=\Pleq\rho\Pleq\ \dsum\
+    \sum_v\Big[(1-p)\tr\big[\Mwp_v\Pgt\rho\Pgt\big]
+      +p_v\,\tr\big[\Pgt\rho\Pgt\big]\Big]\dyad{v}\\
+  &=\Pleq\rho\Pleq\ \dsum\
+    \sum_v\tr\!\Big[\big((1-p)\Mwp_v+p_v\,\idon{\Bsys_{\gtN}}\big)\,
+      \Pgt\rho\Pgt\Big]\dyad{v}
+   \;=\;\Lfss(\rho),
+\end{align*}
+since $(1-p)\Mwp_v+p_v\idon{}=\blk{M}{\gtN}_v$; this holds for every $\rho$,
+including states with coherences across the cutoff, which both sides discard.
+The last relation in \eqref{eq:ladder} is Lemma~\ref{lem:top}.
+
+(iii) $\Fwp_v-p_v\Pflag
+=\blk{M}{\leqN}_v\dsum(1-p)\dyad{v}\succeq0$. The pull-back identity is
+\eqref{eq:WPadjoint} at $p_v\equiv0$ applied to $\Ffss_v-p_v\Pflag$, whose
+flag block has diagonal entries $\delta_{vv'}-p_v$, giving
+$\blk{M}{\leqN}_v\dsum\big(\blk{M}{\gtN}_v-p_v\idon{}\big)$, which is
+$\succeq0$ by \eqref{eq:certweights}; so
+Corollary~\ref{cor:pullback}\,(ii) applies on every reachable state. For the
+failure, $\tr\big[(\Ffss_v-p_v\Pflag)\dyad{v'}\big]=0-p_v<0$ when $v'\ne v$ and
+$p_v>0$.
+
+(iv) With the stated data, \eqref{eq:certweights} holds ($1\succeq\tfrac12$ and
+$0\succeq0$) and $p=\tfrac12<1$. Then
+$\Ffss_2=\tfrac12\dsum\dyad{2}$ has norm $1$, while
+$\Fwp_2=\tfrac12\dsum\big(0\cdot\idon{\Flag}+\tfrac12\dyad{2}\big)$ has norm
+$\tfrac12$. If $\Ffss\dsq\Fwp$ held, Lemma~\ref{lem:obstructions}\,(i) applied
+with $\Ffss$ in the physical role would give $\|\Ffss_2\|\le\|\Fwp_2\|$, i.e.
+$1\le\tfrac12$.
+\end{proof}

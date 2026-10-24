@@ -1,0 +1,89 @@
+% ---
+% id: protocol-compiler/prop:conservative
+% kind: prop
+% title: "Dropping a trusted marginal enlarges the feasible set"
+% summary: >-
+%   Dropping a trusted marginal and reading homogeneous constraints as scalars
+%   enlarges the feasible set, for every admissible marginal, so it can only
+%   lower a minimised objective. It compares the two source modes and is no
+%   rule of emission.
+% prominence: standard
+% status: accepted
+% uses: [lem:hermitian-constraint-values, def:homog, def:feasible, def:exact]
+% mentions: [rem:notfallback, transmitter/rem:da1]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A trusted marginal is one more condition on the states the adversary may
+hold. Dropping it, and reading each homogeneous entry as its scalar, can only
+admit more states; the proposition states this as an inclusion of
+\tref[feasible set]{feasible sets}, and Remark~\ref{rem:notfallback} says what it licenses and what it does
+not.
+
+\begin{proposition}\label{prop:conservative}
+Let a specification request trusted-source mode with marginal $\tau_A$
+satisfying D(ii), and a licensed list
+$\{(\hat O_k,\bowtie_k,c_k)\}_{k=1}^{m}$, $m\ge0$, satisfying D(iii) --- every
+$\hat O_k$ a \tref{block list} against $\Smap$ and Hermitian block by block,
+which the proof spends through Lemma~\ref{lem:hermitian-constraint-values} ---
+with every entry declared \tref{homogeneous}, so that the trusted-mode
+right-hand side it denotes is the constructed $c_k\tau_A$
+(Definition~\ref{def:homog}). Let $\Feas^{\mathrm{tr}}$ be the
+\tref{feasible set} of the trusted-mode declaration and $\Feas^{\mathrm{un}}$
+that of the untrusted-mode declaration obtained by replacing the marginal
+slot with $\nomarg$ and reading each entry's right-hand side as the scalar
+$c_k$, all other slots unchanged. Then
+\begin{equation}\label{eq:inclusion}
+  \Feas^{\mathrm{tr}}\subseteq\Feas^{\mathrm{un}} ,
+\end{equation}
+and consequently, for \emph{any} functional $J$ on $\Lin{A\Qsys}$,
+$\inf_{\Feas^{\mathrm{un}}}J\le\inf_{\Feas^{\mathrm{tr}}}J$. The inclusion is
+\emph{uniform in $\tau_A$}: it holds for every $\tau_A$ satisfying D(ii), and
+the untrusted set does not depend on which one the request carried.
+\end{proposition}
+
+\begin{proof}
+Let $\omega\in\Feas^{\mathrm{tr}}$. The block presentation and $\tr\omega=1$
+are shared by the two definitions, as are the per-block positivity conditions;
+the untrusted marginal condition is empty, and a set defined by a conjunction
+is contained in the set defined by any sub-conjunction, which settles $m=0$
+outright and for every $\tau_A$.
+
+For $m\ge1$, fix $k$ and consider first
+$\bowtie_k$ equal to $\succeq$, so that
+$\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\omega]\succeq c_k\tau_A$. Both sides are
+Hermitian --- the left by Lemma~\ref{lem:hermitian-constraint-values}, using
+$\hat O_k$ Hermitian from D(iii) and $\omega$ Hermitian from \eqref{eq:feas},
+and the right because $c_k$ is real and $\tau_A$ is Hermitian by D(ii) --- so
+the L\"owner comparison is well posed and the traces below are real. Taking
+traces of both sides and using that $Y\succeq Y'$ implies $\tr Y\ge\tr Y'$
+(the trace of a positive semidefinite operator is non-negative, applied to
+$Y-Y'$),
+\begin{equation*}
+  \tr\!\big[(\idon{A}\otimes\hat O_k)\,\omega\big]
+  =\tr\Big(\tr_{\Qsys}\big[(\idon{A}\otimes\hat O_k)\,\omega\big]\Big)
+  \;\ge\;\tr(c_k\tau_A)=c_k\,\tr\tau_A=c_k ,
+\end{equation*}
+using $\tr\tau_A=1$ from D(ii) --- \emph{an identity of the declared numbers,
+which is what Definition~\ref{def:exact} delivers and what condition~(S) on the
+trace is there to make true} --- and the fact that a partial trace followed by
+a trace is the full trace. This is the untrusted entry with $\ge$. The case
+$\bowtie_k$ equal to $\preceq$ is identical with the inequality reversed, and
+the case $=$ follows by applying both. Hence $\omega\in\Feas^{\mathrm{un}}$,
+which is \eqref{eq:inclusion}. The infimum
+statement is immediate: an infimum over a superset is not larger than an
+infimum over a subset. \emph{Uniformity in $\tau_A$}: the only property of
+$\tau_A$ used is $\tr\tau_A=1$, which D(ii) gives for every admissible
+marginal, and no $\tau_A$ appears in $\Feas^{\mathrm{un}}$ at all.
+
+\emph{At $d_A=1$ the inclusion is an equality.} There $\tau_A=[1]$ is the only
+marginal and $\omega_A=\tau_A$ is the condition $\tr\omega=1$, which
+$\Feas^{\mathrm{un}}$ already imposes; and every licensed entry's constructed
+right-hand side $c_k[1]$ is the scalar $c_k$ itself, so the two constraint
+conditions coincide entry by entry. Hence the two feasible sets are equal and
+the two emissions are the same declaration (\xref{transmitter/rem:da1} states
+the device-side half of this).
+\end{proof}

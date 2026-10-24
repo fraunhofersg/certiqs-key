@@ -1,0 +1,68 @@
+% ---
+% id: reductions/req:emission-refusal
+% kind: req
+% title: "Refusal of an emitted family that is not exactly admissible"
+% summary: >-
+%   The engine emits a family only after deciding the six emission conditions
+%   on the numbers about to be emitted, and otherwise refuses, repairing
+%   nothing it was handed. A moved class, the flagged last resort included, is
+%   refused only under the strict option, where it would rest on the snap.
+% prominence: standard
+% status: implemented
+% uses: [def:emitnorm, thm:emit]
+% mentions: [def:exactadm, req:reference-companion, foundations/req:snap-reference, foundations/req:support-safe-snap, req:emission-record, receiver/detector-imperfections/prop:noise-floor]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.validation:rule_emitted_family
+% lean:
+% ---
+
+The decision on the six conditions is taken on what comes out of the
+normalizer (Definition~\ref{def:emitnorm}\,(4), Theorem~\ref{thm:emit}\,(ii)).
+A class the normalizer moves is not refused by default: it is snapped without
+reviving a zero row or column and disclosed
+(Requirement~\ref{req:emission-record}), as
+\xref{foundations/req:snap-reference}\,(iii) asks of any snap of a
+measurement family. A class whose residue no single element can take
+without reviving a zero row or column has no support-safe snap in the
+normalizer; it is snapped by the last resort, which always yields a positive
+semidefinite family and is flagged in the record
+(\xref{foundations/req:support-safe-snap}\,(iv)), so it is not refused by
+default either. The usual cause of a last resort is a class whose elements
+are rank-deficient on the sector, which a model with the device's loss and
+dark counts can remove where the conditions the receiver module states for it
+hold (\xref{receiver/detector-imperfections/prop:noise-floor}). One refusal
+remains for a moved class: a run that declares the strict option refuses
+wherever the class would rest on the snapped-measurement premise, which is
+certain at emission where no reference companion that bypasses the
+normalizer is formed (Requirement~\ref{req:reference-companion}).
+
+\begin{requirement}\label{req:emission-refusal}
+The engine emits a family only if the six conditions of
+Theorem~\ref{thm:emit}\,(ii) --- (a)--(e) of
+Definition~\ref{def:exactadm} together with \eqref{eq:latinv} of every entry
+--- hold of the numbers about to be emitted, decided exactly after the
+\tref{emission normalizer} where that acted; otherwise it refuses with the
+reason \iface{emitted_family_not_admissible}, naming the predicate that
+failed, and repairs nothing it was handed. Under the same reason, where the
+run declares the strict option \iface{strict_snaps}
+(\xref{foundations/req:snap-reference}\,(iv)) and no reference companion of
+Requirement~\ref{req:reference-companion} is formed beside the artefact, it
+refuses every moved class of Definition~\ref{def:emitnorm}, one snapped by
+the last resort (3) included, naming the \tref{data sector}, the class, the
+cause and the fix; where a companion is formed, whether the class rests is
+decided by the run after its search, and the run refuses there under the
+same option. Where the run does not declare the option, no class is refused
+for being moved. The cause of a moved class that would rest is that no
+reference companion bypasses the normalizer, which, by
+Requirement~\ref{req:reference-companion}, is where no claim of this module
+establishes (H-REF) for the instance; for a class snapped by (3) it also
+names that a component of its residue has no host. The fix named is
+declared numbers on which the exact construction stays on the lattice, so
+that the class is kept; for a class
+snapped by (3) also a model that includes the device's loss and dark counts,
+so that the elements of the class are positive definite on the sector. A
+moved class is mixed only with the family of its diagonal parts in (2), or
+with a multiple of the identity in the last resort (3).
+\end{requirement}

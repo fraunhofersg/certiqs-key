@@ -1,0 +1,60 @@
+% ---
+% id: protocol-compiler/rem:notfallback
+% kind: rem
+% title: "Dropping a marginal, never replacing it"
+% summary: >-
+%   [[prop:conservative]] licenses dropping a trusted marginal, which can only
+%   lower a minimised quantity, and never adding or weakening one; no reachable
+%   gate row uses it. At d_A ≥ 2 the maximally mixed marginal is strictly
+%   stronger than no marginal, and at d_A = 1 it is [1], which excludes nothing.
+% prominence: standard
+% status: accepted
+% uses: [prop:conservative, thm:gates]
+% mentions: [ass:link, def:gate-outcome-table, req:gate-outcomes, req:pass-through, transmitter/ass:src, transmitter/rem:source-mode, transmitter/rem:da1, transmitter/req:marginal-fill]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:notfallback}
+\emph{The direction of the licence.} Proposition~\ref{prop:conservative}
+licenses \emph{dropping} a marginal, never adding or weakening one. Emitting
+the untrusted-mode declaration when the source-replacement attestation is
+absent is therefore a change in the safe direction for any downstream quantity
+obtained by minimizing over the \tref{feasible set}: dropping the marginal
+\emph{lowers} any minimized quantity, so it can only cost rate; it can never
+turn an unsupported declaration into a supported-looking one. A consumer that
+drops a declared marginal --- the transmitter's \tref{untrusted-source mode},
+which is always available --- is doing exactly what the proposition settles,
+in the direction it says.
+
+\emph{Where the compiler uses it.} The compiler exercises that licence on no
+row of the gate outcome table (Definition~\ref{def:gate-outcome-table}) that
+fixes the outcomes of Theorem~\ref{thm:gates}\,(ii): the
+certificate-absent rows are unreachable through the transmitter artefact, no
+protocol specification meeting their premise (Theorem~\ref{thm:gates}\,(ii)),
+the transmitter refusing a trusted-mode request at $d_A\ge2$ without a
+certificate before this module sees it (Requirement~\ref{req:gate-outcomes}),
+and the proposition stands as a statement about
+the feasible sets, not as a rule of emission. On the certificate-absent row
+with $m\ge1$ the inclusion is \emph{not} what is missing, since it holds at
+every $m$: what is missing is a referent for the attestation, the module that
+produces the chain having certified its entries against $c_k\tau_A$, and with
+no declared $\tau_A$ that attestation (Assumption~\ref{ass:link}, named and
+not used here) has none.
+
+\emph{No neutral marginal.} In particular, at $d_A\ge2$,
+$\tau_A=\idon{A}/d_A$ is not a neutral way to say ``nothing is known about
+the source'': it fixes the marginal to maximally mixed and excludes every
+$\omega$ whose $A$-marginal differs from it at all, which is strictly
+stronger than $\nomarg$, which imposes no marginal condition. The compiler
+never substitutes it, filling no slot (Requirement~\ref{req:pass-through}),
+and at $d_A\ge2$ neither does the transmitter (\xref{transmitter/ass:src},
+\xref{transmitter/rem:source-mode}). At $d_A=1$ the maximally mixed
+marginal is $[1]$, the only state on $A$, and it excludes no normalized
+$\omega$, so it imposes the same condition as $\nomarg$
+(\xref{transmitter/rem:da1}); it is the one value the transmitter fills into
+an empty marginal slot (\xref{transmitter/req:marginal-fill}), and the
+compiler passes it through unchanged.
+\end{remark}

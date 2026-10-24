@@ -1,0 +1,93 @@
+% ---
+% id: meat-core/def:postprocessing-model
+% kind: def
+% title: "Fixed-length post-processing model"
+% summary: >-
+%   After the n rounds the key holder's raw string passes an acceptance test,
+%   one-way error correction with a padded fixed-length transcript, error
+%   verification with an announced flag and privacy amplification, each
+%   message public and delivered unaltered. Secrecy and correctness are
+%   stated in it.
+% prominence: standard
+% status: accepted
+% uses: [def:declaration, def:roundmodel]
+% mentions: [thm:protocol-channel]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Sec. 4.1, Protocol 1, steps 2-5"
+%   - "tupkary2026decoy, Sec. 3.2"
+%   - "tupkary2026decoy, Def. 3.5"
+% provenance: newly-derived
+% lean:
+% ---
+
+The model is the fixed-length specialisation of the generic post-processing
+of \cite[Sec.~4.1, Protocol~1, steps~2--5]{tupkary2026decoy}: the key length
+is either $\ell$ or zero, error correction is one-way with a transcript of
+fixed length, and the verification outcome is announced. Every message is
+public, and the model is stated in the setting in which authentication
+behaves honestly \cite[Sec.~3.2]{tupkary2026decoy}; how a run over a real
+authentication scheme reduces to it is a separate step.
+
+\begin{definition}
+\label{def:postprocessing-model}
+Fix a declaration $\Decl$ with key holder $\hold$
+(Definition~\ref{def:declaration}), a round count $n$, an acceptance set
+$\acSet$, an output length $\ell$, a transcript length $\lEC$ and error
+budgets $\epa,\eev\in(0,1]$. A hash family is a set of functions with a
+probability law on it \cite[Def.~3.5]{tupkary2026decoy}. The
+\term[The classical processing after the rounds: acceptance test, one-way error correction with a padded fixed-length transcript, error verification with an announced flag, and privacy amplification, all messages public.]{fixed-length post-processing model}
+is the following classical processing, applied after the $n$
+\tref[round channel]{round channels} of Definition~\ref{def:roundmodel}.
+The raw string $Z_1^n$ is the content of the classical registers
+$Z_1,\dots,Z_n$ of the round channels, which the single-round protocol channel
+$\Mprot$ retains (Theorem~\ref{thm:protocol-channel}); the key holder computes
+it from its own outcome record and the announcements $I_1^n$ through the
+function $r_{\hold}$ of \eqref{eq:partycomp}, and we call the other party the
+partner. The acceptance values $\Chat_1^n$ are announced. The processing
+appends, in order:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item the \emph{acceptance test}: the event
+  $\OmAT\coloneqq\{\operatorname{freq}_{\hat c_1^n}\in\acSet\}$, a function
+  of $\Chat_1^n$;
+\item \emph{error correction}, one-way from the holder: a public seed
+  $S_{\mathrm{pub}}$, drawn with the law the error-correction scheme
+  prescribes, and the public transcript
+  $L_{\mathrm{EC}}=g_{\mathrm{EC}}(Z_1^n,S_{\mathrm{pub}})$, which occupies
+  a fixed-length register of $\lEC$ bits: a shorter transcript is padded to
+  length $\lEC$, so that $\dim(L_{\mathrm{EC}})=2^{\lEC}$ exactly; from
+  $L_{\mathrm{EC}}$ and its own data the partner forms a guess $\hat Z_1^n$
+  of $Z_1^n$;
+\item \emph{error verification}: a public seed $S_{\mathrm{EV}}$ selects a
+  function $h_{\mathrm{EV}}$, with the law of the error-verification family,
+  from a hash family of functions with
+  $\lceil\log_2\frac1{\eev}\rceil$-bit values; the holder announces
+  $T_{\mathrm{EV}}\coloneqq h_{\mathrm{EV}}(Z_1^n)$, the partner compares it
+  with $h_{\mathrm{EV}}(\hat Z_1^n)$ and announces the one-bit outcome
+  $F_{\mathrm{acc}}\in\{\mathrm{acc},\mathrm{rej}\}$, which is
+  $\mathrm{acc}$ exactly when the two values agree;
+\item \emph{privacy amplification}: a function $G$ is drawn, with the law of
+  the privacy-amplification family, from a hash family of functions with
+  $\ell$-bit values, and announced; the holder outputs
+  $K\coloneqq G(Z_1^n)$ and the partner $\hat K\coloneqq G(\hat Z_1^n)$.
+\end{enumerate}
+We write $K_A$ and $K_B$ for Alice's and Bob's outputs, which are $K$ and
+$\hat K$ in the order the key holder fixes, and
+\begin{equation}\label{eq:pp-registers}
+  S\coloneqq(S_{\mathrm{pub}},S_{\mathrm{EV}}),\qquad
+  L\coloneqq(L_{\mathrm{EC}},T_{\mathrm{EV}},F_{\mathrm{acc}}),\qquad
+  E_{\mathrm{tot}}\coloneqq\Chat_1^nI_1^n\Ehat\,S\,L\,G,
+\end{equation}
+where $L$ has at most
+$\lambda\coloneqq\lEC+\lceil\log_2\frac1{\eev}\rceil+1$ bits and $\Ehat$ is
+the adversary's retained quantum memory of Definition~\ref{def:roundmodel}.
+The protocol \emph{accepts} on
+$\Omega_{\mathrm{acc}}\coloneqq\OmAT\wedge\{F_{\mathrm{acc}}=\mathrm{acc}\}$;
+on its complement both parties abort and output the symbol $\perp$ in place
+of a key. The model is stated in the
+\term[The setting in which every classical message reaches its recipient exactly as sent, in the order sent and after it was sent, the adversary receiving a copy, and no message fails authentication.]{honest-authentication setting}:
+every classical message of the protocol, the round announcements included,
+reaches its recipient exactly as it was sent, in the order sent and at some
+time after it was sent, the adversary receives a copy of it, and no message
+fails authentication.
+\end{definition}

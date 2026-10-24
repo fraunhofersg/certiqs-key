@@ -1,0 +1,27 @@
+% ---
+% id: meat-core/req:choi-convention
+% kind: req
+% title: "Factor order and transpose basis of the Choi blocks"
+% summary: >-
+%   The engine forms and reads every Choi block with the input factor A₀
+%   first and takes the transpose of the channel reading in the declared basis
+%   of A₀.
+% prominence: technical
+% status: accepted
+% uses: [rem:ordering, thm:choi]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The channel a Choi block represents depends on the factor order and on the
+basis the transpose is taken in (Remark~\ref{rem:ordering}).
+
+\begin{requirement}\label{req:choi-convention}
+The engine forms and reads every Choi block $J_s$ of Theorem~\ref{thm:choi}
+with the input factor $A_0$ first, and takes the transpose of the channel
+reading of Remark~\ref{rem:ordering} in the
+\tref{declared basis of $A_0$}, as that remark declares them.
+\end{requirement}

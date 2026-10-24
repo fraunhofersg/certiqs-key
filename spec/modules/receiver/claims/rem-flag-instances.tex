@@ -1,0 +1,34 @@
+% ---
+% id: receiver/rem:flag-instances
+% kind: rem
+% title: "Where the exact flag is set, and what a general flag selects"
+% summary: >-
+%   The construction of each setting sets its exact flag; at the one setting
+%   of a probe-free receiver it is exact. Every setting whose flag is general
+%   takes the general branch of whichever weight definition governs it, read
+%   off the declaration alone.
+% prominence: standard
+% status: accepted
+% uses: [def:setting-family, def:pmc, def:pmcex, cor:unconditioned-family]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "A submodule that constructs a setting family states at which of its settings the flag is exact, in its own claims."
+% ---
+
+\begin{remark}
+\label{rem:flag-instances}
+Predicate~(X) of Definition~\ref{def:pmc} is the setting's exact flag
+(Definition~\ref{def:setting-family}\,(c)), and the flag is set by the
+construction that produced the setting. At the instance the core
+constructs, the one setting of a probe-free receiver, it is set
+(Corollary~\ref{cor:unconditioned-family}); a submodule that constructs a
+setting family states at which of its settings it is set. At every setting
+whose flag is $\mathrm{general}$ the general branch of whichever definition
+governs the setting is taken: branch~2 of \eqref{eq:pmcdef} where the declaration
+carries no exact-window depth, and the second branch of
+\eqref{eq:pmcex} where it carries one (Definition~\ref{def:pmcex}). Which of
+the two flag values applies is read off the declaration alone, before any
+arithmetic.
+\end{remark}

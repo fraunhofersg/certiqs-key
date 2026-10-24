@@ -1,0 +1,160 @@
+% ---
+% id: protocol-compiler/lem:weighted
+% kind: lem
+% title: "Properties of the choice-weighted families"
+% summary: >-
+%   Weighting keeps a measurement a measurement and acts block by block. The
+%   independent form has the declared state-independent choice marginal; the
+%   setting-dependent form returns the delivered family when the choice is
+%   forgotten, and its choice marginal may depend on the state through the
+%   setting.
+% prominence: standard
+% status: implemented
+% uses: [def:weighted]
+% mentions: [def:chaincond, reductions/ass:tsm, thm:choice-encoding, req:no-fixed-fraction, rem:exactness]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.weights:choice_mass
+% lean:
+% notes: "The lemma is about the mathematical products and does not use thm:measurements-and-statistics, which decides the emitted family's predicates at check V3: a uses edge would carry A-SPEC and A-ENS into a purely mathematical lemma. What V3 decides of the emitted family is Remark rem:exactness."
+% ---
+
+Both constructions multiply declared measurement elements by positive numbers
+(a zero entry of $P$ indexes no element), so what survives is what a positive
+scalar preserves; the choice marginal is where the two forms part. Part~(i) is
+about the mathematical products; what is decided of the emitted binary64
+family, and where, is Remark~\ref{rem:exactness}. No identity of the form
+\eqref{eq:choicemass} is wanted for the setting-dependent form: that the
+marginal of a public choice may depend on the state through the setting is
+the output-state test-statistics model (\xref{reductions/ass:tsm}), which
+this lemma neither uses nor contradicts (Theorem~\ref{thm:choice-encoding}).
+That the emitted declaration carries that model is
+Requirement~\ref{req:no-fixed-fraction}.
+
+\begin{lemma}\label{lem:weighted}
+With the notation of Definition~\ref{def:weighted}, and reading its conditions
+exactly:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $\{N_{u,t}\}_{(u,t)\in\Vset}$ is a POVM on $S$; and so is
+$\{N_{v,f}\}_{(v,f)\in\Vset_P}$ of the setting-dependent form, over the
+support of $P$;
+\item if $S=\Qsys$ carries the sector decomposition and every $N_{u|t}$ is
+sector-block-diagonal, then so is every $N_{u,t}$, and conversely (for
+$q_t>0$); equivalently, on block lists the weighting acts blockwise,
+$N_{u,t}^{(s)}=q_t\,N_{u|t}^{(s)}$, so a weighted family is a block list
+against the same \tref{sector map} as the conditional families it was built from.
+The same holds of the setting-dependent form: every $N_{v,f}$ is a scalar
+multiple of the $F_v$ it was built from, $N_{v,f}^{(s)}=P(f\,|\,t(v))\,F_v^{(s)}$
+block by block, and $N_{v,f}$ is sector-block-diagonal iff $F_v$ is, the
+weight being strictly positive on the support;
+\item \emph{(the choice marginal, for the setting-independent form)} for every
+$\omega\in\Lin{S}$ with $\tr\omega=1$ and every $t\in\Tpub$,
+\begin{equation}\label{eq:choicemass}
+  \sum_{u\in\Uset_t}\tr[N_{u,t}\,\omega]=q_t ,
+\end{equation}
+independently of $\omega$; and for any complementary system $R$ and any
+$\omega\in\Lin{RS}$ of unit trace likewise
+$\sum_{u}\tr[(\idon{R}\otimes N_{u,t})\,\omega]=q_t$, the operator being
+written with its factors in the declared order of the tensor factors. For a
+choice declared on Bob's side, $S=\Qsys$ and $R=A$, this reads
+$\sum_u\tr[(\idon{A}\otimes N_{u,t})\omega]=q_t$; for a choice declared on
+Alice's side, $S=A$ and $R=\Qsys$, it reads
+$\sum_u\tr[(N_{u,t}\otimes\idon{\Qsys})\omega]=q_t$. \emph{This part is
+asserted of the setting-independent form and of it alone};
+\item \emph{(what is asserted of the setting-dependent form instead)}
+forgetting the choice value returns the family the chain delivered,
+\begin{equation}\label{eq:forgetf}
+  \sum_{f:\,(v,f)\in\Vset_P}N_{v,f}=F_v\qquad\text{for every }v\in\Vset ,
+\end{equation}
+an exact operator identity on $S$; and the marginal of the choice value is
+the declared matrix applied to the \emph{setting marginal} of the outcome
+statistics,
+\begin{equation}\label{eq:fmarginal}
+  \sum_{v:\,(v,f)\in\Vset_P}\tr[N_{v,f}\,\omega]
+  =\sum_{t\in\mathcal{T}}P(f\,|\,t)\sum_{v:\,t(v)=t}\tr[F_v\,\omega]
+  \qquad\text{for every }\omega\in\Lin{S},
+\end{equation}
+which depends on $\omega$ only through the \emph{setting marginal}
+$m_t(\omega)\coloneqq\tr[\Pi_t\omega]$, $\Pi_t\coloneqq\sum_{v:\,t(v)=t}F_v$,
+with $\Pi_t\succeq0$ and $\sum_t\Pi_t=\idon{S}$. If $P(f\,|\,t)=q_f$ for
+every $t$ it equals $q_f$ for every unit-trace $\omega$ --- the
+setting-independent case, and \eqref{eq:choicemass} in the form the first
+construction gives it. If every class sum $\Pi_t$ is a multiple
+$\lambda_t\idon{S}$ of the identity --- as for the identity link, where the
+emitted family is the physical \tref{joint family} --- it is state-independent as
+well, with value $\sum_tP(f\,|\,t)\lambda_t$. Otherwise it is, in general, a
+function of the state, and \emph{no identity of the form
+\eqref{eq:choicemass} is asserted for this form}.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) Each $N_{u,t}=q_tN_{u|t}\succeq0$ since $q_t>0$ and $N_{u|t}\succeq0$, and
+$\sum_{(u,t)\in\Vset}N_{u,t}=\sum_{t}q_t\sum_{u\in\Uset_t}N_{u|t}
+=\sum_tq_t\,\idon{S}=\idon{S}$, using completeness of each conditional POVM ---
+an identity of the declared numbers by condition~(S) on each conditional family
+--- and $\sum_tq_t=1$, likewise an identity by (S) on the weights. Hermiticity
+passes through the real positive multiple. For the setting-dependent form,
+each $N_{v,f}=P(f\,|\,t(v))F_v$ is Hermitian and positive semidefinite as a
+positive multiple of $F_v$, and
+$\sum_{(v,f)\in\Vset_P}N_{v,f}
+=\sum_{v\in\Vset}\Big(\sum_{f:\,P(f|t(v))>0}P(f\,|\,t(v))\Big)F_v
+=\sum_{v\in\Vset}F_v=\idon{S}$, because the omitted terms of each inner sum
+are exactly the zero entries of the row $P(\,\cdot\,|\,t(v))$, so the inner
+sum is the row sum, which is $1$ --- an identity of the declared numbers by
+the exact row-sum decision of Definition~\ref{def:weighted} --- and
+$\sum_vF_v=\idon{S}$ is a hypothesis on the family the lemma is given (it is
+the completeness that condition (C3) of the
+\tref{interface conditions on a chain} (Definition~\ref{def:chaincond})
+decides).
+
+(ii) $\Pi_sN_{u,t}\Pi_{s'}=q_t\Pi_sN_{u|t}\Pi_{s'}$, which
+vanishes iff $\Pi_sN_{u|t}\Pi_{s'}$ does, because $q_t\ne0$ --- and $q_t\ne0$
+is needed for the converse direction only. Likewise
+$\Pi_sN_{v,f}\Pi_{s'}=P(f\,|\,t(v))\Pi_sF_v\Pi_{s'}$ with
+$P(f\,|\,t(v))>0$ on the support, and on block lists the scalar multiplies
+each block.
+
+(iii) $\sum_{u}\tr[q_tN_{u|t}\omega]=q_t\tr[(\sum_uN_{u|t})\omega]
+=q_t\tr[\idon{S}\omega]=q_t\tr\omega=q_t$; the bipartite statement is the same
+computation with the identity on $R$ adjoined and $\tr\omega=1$, and is
+insensitive to which tensor slot $S$ occupies, since the trace is.
+
+(iv) \eqref{eq:forgetf} is the inner sum of (i): for fixed $v$,
+$\sum_{f:\,(v,f)\in\Vset_P}P(f\,|\,t(v))F_v=\big(\sum_fP(f\,|\,t(v))\big)F_v
+=F_v$, the omitted terms being zero. For \eqref{eq:fmarginal}, group the
+outcomes by their setting: $\sum_{v:\,(v,f)\in\Vset_P}\tr[N_{v,f}\omega]
+=\sum_{t}\sum_{v:\,t(v)=t,\ P(f|t)>0}P(f\,|\,t)\tr[F_v\omega]
+=\sum_tP(f\,|\,t)\sum_{v:\,t(v)=t}\tr[F_v\omega]$, the restriction
+$P(f\,|\,t)>0$ being immaterial since the excluded terms vanish; the inner
+sum is $\tr[\Pi_t\omega]=m_t(\omega)$ by linearity of the trace, $\Pi_t$ is a
+sum of positive semidefinite operators, and $\sum_t\Pi_t=\sum_vF_v=\idon{S}$
+since the classes partition $\Vset$. If
+$P(f\,|\,t)=q_f$ for every $t$, the right-hand side
+is $q_f\sum_tm_t(\omega)=q_f\tr\omega=q_f$ for every unit-trace $\omega$. If
+$\Pi_t=\lambda_t\idon{S}$ for every $t$, then $m_t(\omega)=\lambda_t\tr\omega
+=\lambda_t$ for every \emph{unit-trace} $\omega$ and the right-hand side is
+$\sum_tP(f\,|\,t)\lambda_t$, whatever that state is. Outside these two cases
+the right-hand side varies with the state for some families and does not for
+others, and ``in general'' is asserted in that weak sense and in no stronger
+one. At $|\mathcal{T}|=2$ it is exactly decided: writing
+$m_{t_2}=\tr\omega-m_{t_1}$, the right-hand side is
+$P(f\,|\,t_2)+\big(P(f\,|\,t_1)-P(f\,|\,t_2)\big)m_{t_1}(\omega)$ on
+unit-trace states, which varies with $\omega$ precisely when $\Pi_{t_1}$ is
+not a multiple of the identity --- so that $m_{t_1}$ takes at least two
+values --- \emph{and} $P(f\,|\,t_1)\ne P(f\,|\,t_2)$; this witnesses that the
+case occurs. Beyond two settings those two hypotheses are no longer
+enough: on $S=\mathbb{C}^2$ take $\Vset=\{v_1,v_2,v_3\}$ with
+$F_{v_1}=\tfrac12\dyad{0}$, $F_{v_2}=\tfrac12\dyad{1}$,
+$F_{v_3}=\tfrac12\idon{S}$, a POVM since the three sum to $\idon{S}$, and
+$t(v_i)=t_i$, so that $\Pi_{t_i}=F_{v_i}$ and $\Pi_{t_1}$ is not a multiple of
+the identity; with $P(f\,|\,t_1)=P(f\,|\,t_2)=x\ne y=P(f\,|\,t_3)$ the
+right-hand side is $x\,\tr[(\Pi_{t_1}+\Pi_{t_2})\omega]+y\,m_{t_3}(\omega)
+=\tfrac12(x+y)$ for every unit-trace $\omega$, because
+$\Pi_{t_1}+\Pi_{t_2}=\tfrac12\idon{S}=\Pi_{t_3}$. What makes the marginal
+state-independent is a condition on the \emph{sums} $\Pi_t$ weighted by the
+column $P(f\,|\,\cdot\,)$ --- that $\sum_tP(f\,|\,t)\Pi_t$ be a multiple of
+the identity --- and this lemma asserts no such condition, because nothing
+downstream needs one.
+\end{proof}

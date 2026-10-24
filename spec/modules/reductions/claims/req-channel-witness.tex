@@ -1,0 +1,29 @@
+% ---
+% id: reductions/req:channel-witness
+% kind: req
+% title: "A channel witness for every emitted link"
+% summary: >-
+%   Every link the engine emits carries an explicit channel witness, and a
+%   request naming a reduction that comes with none is refused. Without a
+%   squashing channel the transfer of [[thm:transfer]] is not available
+%   ([[rem:notchannel]]).
+% prominence: standard
+% status: accepted
+% uses: [rem:notchannel]
+% mentions: [thm:transfer]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A reduction that exhibits no \tref{squashing channel} cannot be fed into
+Theorem~\ref{thm:transfer} (Remark~\ref{rem:notchannel}). Where the witness
+sits in the artefact and which rule refuses a reduction without one are the
+outputs table and the refusal rules of the interface
+(\repodoc{spec/modules/reductions/interface.yaml}).
+
+\begin{requirement}\label{req:channel-witness}
+The engine emits every link with an explicit \tref{channel witness} and
+refuses a request that names a reduction coming with none.
+\end{requirement}

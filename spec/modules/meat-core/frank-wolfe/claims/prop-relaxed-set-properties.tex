@@ -1,0 +1,330 @@
+% ---
+% id: meat-core/frank-wolfe/prop:relaxed-set-properties
+% kind: prop
+% title: "Properties of the relaxed feasible set"
+% summary: >-
+%   The relaxed feasible sets grow with the window, are convex and compact,
+%   and keep every hypothesis of this module that names the feasible set,
+%   positivity carrying them; the objective falls below zero there by at most
+%   an explicit floor. Reading the set at a window can only lower the value.
+% prominence: standard
+% status: implemented
+% uses: [meat-core/thm:branch-formula, meat-core/lem:branch-maps, foundations/lem:pinchmono, def:relaxed-feasible-set, meat-core/lem:cone-concavity, meat-core/thm:convexity, meat-core/thm:reduction, meat-core/cor:reduction-constrained, meat-core/thm:choi, meat-core/prop:value-range, meat-core/def:support-frame, meat-core/lem:choi-factor, meat-core/def:feasible, meat-core/lem:joint-sectors, meat-core/def:admissible-declaration]
+% mentions: [meat-core/def:untrusted-choi, meat-core/cor:concavity, meat-core/def:maps, meat-core/def:declaration, thm:firstorder, foundations/req:norm-conversion, foundations/req:tolerance-scope, req:iterate-checks, req:iterate-repair]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.joint_driver:_check_point
+% lean:
+% ---
+
+The relaxed feasible sets keep every hypothesis of this module that names
+the feasible set, and positivity of the variable is what carries them:
+(a) and (b) are the monotonicity, convexity and compactness of the
+sets, (c) the facts the objective needs on them, (c$'$) the implication
+behind each normalisation clause, (c$''$) what relaxing the normalisation
+costs, (d), (d$'$) that reading the set at a tolerance is conservative,
+and (e) that all of this holds in the general format.
+The window at which a run checks the positivity of a point it consumes is
+a number this module declares and records
+(\xref{foundations/req:tolerance-scope}\,(ii)); item (c) \emph{Fourth}
+gives the reason it reads $0$ (Requirements~\ref{req:iterate-checks}
+and~\ref{req:iterate-repair}).
+
+\begin{proposition}\label{prop:relaxed-set-properties}
+Let $\Decl$ satisfy Definition~\ref{def:admissible-declaration}, let $\varepsilon\ge0$, and
+let $\Feas(\varepsilon)$ and $\Feas^{J}(\varepsilon)$ be as in
+Definition~\ref{def:relaxed-feasible-set}.
+\begin{enumerate}[label=(\alph*),leftmargin=2.4em]
+\item \emph{(Monotone.)} For $0\le\varepsilon\le\varepsilon'$,
+  $\Feas(\varepsilon)\subseteq\Feas(\varepsilon')$ and
+  $\Feas^{J}(\varepsilon)\subseteq\Feas^{J}(\varepsilon')$; in particular
+  $\Feas\subseteq\Feas(\varepsilon)$ and $\Feas^{J}\subseteq\Feas^{J}(\varepsilon)$
+  for every $\varepsilon\ge0$.
+\item \emph{(Convex and compact.)} $\Feas(\varepsilon)$ and
+  $\Feas^{J}(\varepsilon)$ are convex and compact. Every
+  $\omega\in\Feas(\varepsilon)$ has $\tr\omega\le1+d_A\varepsilon$ in
+  trusted-source mode and $\tr\omega\le1+\varepsilon$ in untrusted-source
+  mode, and every $J\in\Feas^{J}(\varepsilon)$ has
+  $\sum_s\tr J_s\le d_{A_0}(1+\varepsilon)$, a bound that reads the coupling
+  clause and never the normalisation clause.
+\item \emph{(What positivity carries.)} $\Feas(\varepsilon)\subseteq\Pos{A\Qsys}$
+  and $\chi_{\Qsys}\big(\Feas^{J}(\varepsilon)\big)\subseteq\Pos{A\Qsys}$.
+  \emph{First}, the bounds $0\le K_{\hat c}(\omega)\le P_{\hat c}(\omega)$
+  hold on the whole cone. \emph{Second}, $K_{\hat c}$ is concave on the
+  sector-block-diagonal part of $\Pos{A\Qsys}$. \emph{Third},
+  Theorem~\ref{thm:convexity} holds verbatim with $\Feas(\varepsilon)$ in
+  place of $\Feas$, and $O^{J}_{\alpha}$ is convex and lower semicontinuous
+  on $\acSet\times\Feas^{J}(\varepsilon)$. \emph{Fourth}, none of this
+  survives a relaxation of positivity: the objective factors through
+  $X\mapsto X^{p}$, which is undefined off the cone. One fact of the exact
+  set does not survive: for $\varepsilon>0$ and $\omega\in\Feas(\varepsilon)$,
+  $\sum_{\hat c}P_{\hat c}(\omega)=\tr\omega$ for an exactly admissible
+  $\{F_v\}$, which the relaxed
+  normalisation does not pin to $1$, so $\Phimap[\omega]$ need not be a
+  probability vector and the range fact $\hlow\ge0$ of
+  Proposition~\ref{prop:value-range}\,(i) is not available on
+  $\Feas(\varepsilon)$ or on $\Feas^{J}(\varepsilon)$; it holds on the exact
+  sets $\Feas$ and $\Feas^{J}$.
+\item[(c$'$)] \emph{(Each normalisation clause is implied by the clause
+  before it.)} Let $J=(J_s)_s$ be per-block positive semidefinite with
+  $\|R\|_{\max}\le\varepsilon$, where
+  $R\coloneqq\sum_s\tr_{\Qsys_s}J_s-\idon{A_0}$, and put
+  $G\coloneqq\iota^{\dagger}\tau_A\iota=W_{\tau}^{\dagger}W_{\tau}$. Then
+  $G$ is a state,
+  \begin{equation}\label{eq:choi-trace-residual}
+    \tr[\chi_{\Qsys}(J)]
+    =\tr\Big[W_{\tau}^{\dagger}W_{\tau}\,
+      \textstyle\sum_s\tr_{\Qsys_s}J_s\Big]
+    =\tr\big[G(\idon{A_0}+R)\big]
+    =1+\tr[GR],
+  \end{equation}
+  and $\big|\tr[\chi_{\Qsys}(J)]-1\big|\le d_{A_0}\varepsilon$; in
+  particular $\tr[\chi_{\Qsys}(J)]=1$ holds at a point of nonzero residual
+  $R$ exactly where $\tr[GR]=0$. In the state form in trusted-source mode,
+  $\|\omega_A-\tau_A\|_{\max}\le\varepsilon$ implies
+  $|\tr\omega-1|\le d_A\varepsilon$. In untrusted-source mode the
+  normalisation clause is the relaxed coupling condition itself.
+\item[(c$''$)] \emph{(What relaxing the normalisation costs.)} At a point
+  of $\Feas^{J}(\varepsilon)$ put
+  $\varsigma\coloneqq\tr[\chi_{\Qsys}(J)]-1$, so that
+  $|\varsigma|\le d_{A_0}\varepsilon$ and
+  $\sum_{\hat c}P^{J}_{\hat c}(J)=1+\varsigma$, and, where $1+\varsigma>0$,
+  $\bar{\mathbf P}\coloneqq\mathbf P/(1+\varsigma)$, a probability vector.
+  Then for every probability vector $\mathbf q$
+  \begin{equation}\label{eq:penaltyshift-fw}
+    \sum_{\hat c}q(\hat c)\log_2\frac{q(\hat c)}{P^{J}_{\hat c}}
+    =\sum_{\hat c}q(\hat c)\log_2\frac{q(\hat c)}{(1+\varsigma)\bar P_{\hat c}}
+    =\sfD(\mathbf q\|\bar{\mathbf P})-\log_2(1+\varsigma),
+  \end{equation}
+  and, provided $d_{A_0}\varepsilon<1$,
+  \begin{equation}\label{eq:relaxed-objective-floor}
+    O^{J}_{\alpha}(\mathbf q,J)\;\ge\;
+    -\frac{\alpha}{\alpha-1}\,\log_2\!\big(1+d_{A_0}\varepsilon\big)
+    \qquad\text{on }\acSet\times\Feas^{J}(\varepsilon),
+  \end{equation}
+  whose right-hand side is $0$ at $\varepsilon=0$ and negative otherwise.
+  The state form carries the same statement with $d_A\varepsilon$ in
+  trusted-source mode and $\varepsilon$ in untrusted-source mode in place of
+  $d_{A_0}\varepsilon$. At $d_{A_0}\varepsilon\ge1$ the identity
+  \eqref{eq:penaltyshift-fw} still holds wherever $1+\varsigma>0$ but
+  carries no bound.
+\item[(d)] \emph{(Reading the set at a tolerance is conservative.)} With
+  $\hlow[\Feas(\varepsilon)]\coloneqq\inf_{\mathbf q\in\acSet}
+  \inf_{\omega\in\Feas(\varepsilon)}O_{\alpha}(\mathbf q,\omega)$,
+  \begin{equation}\label{eq:feas-tol-mono}
+    \varepsilon\le\varepsilon'\ \Longrightarrow\
+    \hlow\big[\Feas(\varepsilon')\big]\;\le\;\hlow\big[\Feas(\varepsilon)\big]
+    \;\le\;\hlow\big[\Feas(0)\big]=\hlow\;\le\;\hqkd .
+  \end{equation}
+\item[(d$'$)] \emph{(The Choi-form quantity.)} With
+  \begin{equation}\label{eq:hlow-feasJ}
+    \hlow\big[\Feas^{J}(\varepsilon)\big]\coloneqq
+    \inf_{\mathbf q\in\acSet}\ \inf_{J\in\Feas^{J}(\varepsilon)}
+    O^{J}_{\alpha}(\mathbf q,J),
+  \end{equation}
+  the two relaxed quantities agree at $\varepsilon=0$, and
+  \begin{equation}\label{eq:feas-tol-mono-J}
+    \varepsilon\le\varepsilon'\ \Longrightarrow\
+    \hlow\big[\Feas^{J}(\varepsilon')\big]\;\le\;
+    \hlow\big[\Feas^{J}(\varepsilon)\big]\;\le\;
+    \hlow\big[\Feas^{J}(0)\big]\;=\;\hlow\;\le\;\hqkd .
+  \end{equation}
+  At $\varepsilon>0$ no relation between $\hlow[\Feas^{J}(\varepsilon)]$
+  and $\hlow[\Feas(\varepsilon)]$ is asserted.
+\item[(e)] \emph{(The general format.)} For a declaration in the general
+  format, with both sets read as Definition~\ref{def:relaxed-feasible-set}
+  reads them there and $\chi_{\Qsys}$ the assignment
+  $(J_{(\mathsf t,s)})\mapsto(\omega^{(\mathsf t,s)})$ of
+  Theorem~\ref{thm:choi}, (a) to (d$'$) hold as stated. In (c$'$) the
+  residual is $R=\bigoplus_{\mathsf t}R_{\mathsf t}$, $G=\bigoplus_{\mathsf
+  t}G_{\mathsf t}$ with $G_{\mathsf t}\coloneqq W_{\mathsf t}^{\dagger}
+  W_{\mathsf t}$, and
+  $\tr[\chi_{\Qsys}(J)]=1+\sum_{\mathsf t}\tr[G_{\mathsf t}R_{\mathsf t}]$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\emph{Idea.} Every relaxed condition weakens as the window grows, which
+gives (a), and is an affine preimage of a closed convex set, which with
+the trace bounds gives (b). The facts of (c) read only positivity
+of the variable, which the relaxation keeps, and transfer to the Choi form
+along the linear map $\chi_{\Qsys}$. Item (c$'$) is a trace estimate on the
+coupling residual, (c$''$) a rescaling of the statistics vector, and (d),
+(d$'$) compare infima over nested sets.
+
+\emph{(a).} For $0\le\varepsilon\le\varepsilon'$ each condition of
+\eqref{eq:feas-eps} at $\varepsilon$ implies the same condition at
+$\varepsilon'$, and so does each condition of the untrusted-source and the
+Choi forms, so $\Feas(\varepsilon)\subseteq\Feas(\varepsilon')$ and
+$\Feas^{J}(\varepsilon)\subseteq\Feas^{J}(\varepsilon')$. At
+$\varepsilon=0$ the sets are $\Feas$ and $\Feas^{J}$
+(Definition~\ref{def:relaxed-feasible-set}), which gives the inclusions
+for every $\varepsilon\ge0$.
+
+\emph{(b).} Each relaxed condition is convex:
+$\lmin(B-A(\omega))\ge-\varepsilon$ reads
+$B-A(\omega)+\varepsilon\idon{}\succeq0$, an affine preimage of the
+positive semidefinite cone; $\|\cdot\|_{\max}\le\varepsilon$ is an affine
+preimage of a norm ball; each normalisation clause is the preimage of a
+closed interval under the affine map $\omega\mapsto\tr\omega$,
+respectively $J\mapsto\tr\chi_{\Qsys}(J)$, $\chi_{\Qsys}$ being linear;
+and $\omega\succeq0$ and the block structure are as for $\Feas$. Each is
+closed, so $\Feas(\varepsilon)$ is closed, and it is bounded because
+$\omega\succeq0$ with $\tr\omega\le1+d_A\varepsilon$ in trusted-source
+mode and $\tr\omega\le1+\varepsilon$ in untrusted-source mode: the relaxed
+normalisation enters here as a bound on the trace in place of its exact
+value $1$. $\Feas^{J}(\varepsilon)$ is closed for the same reasons and
+bounded because $J_s\succeq0$ with
+$\sum_s\tr J_s=\tr\big[\sum_s\tr_{\Qsys_s}J_s\big]
+\le d_{A_0}\,(1+\varepsilon)$: the Choi input register $A_0$ has dimension
+$d_{A_0}$ (Definition~\ref{def:support-frame}), and
+$|\tr X|\le d\,\|X\|_{\max}$ for a $d\times d$ matrix, applied to
+$X=\sum_s\tr_{\Qsys_s}J_s-\idon{A_0}$, gives
+$|\tr[\sum_s\tr_{\Qsys_s}J_s]-d_{A_0}|\le d_{A_0}\,\varepsilon$. That
+bound reads the coupling clause and never the normalisation clause.
+
+\emph{(c), state form.} $\Feas(\varepsilon)\subseteq\Pos{A\Qsys}$ by
+definition, and that inclusion is all that \emph{First} to \emph{Third}
+need. \emph{First}: this is the cone clause of
+Theorem~\ref{thm:branch-formula}, and its derivation is short: by
+\eqref{eq:fK} and \eqref{eq:traces},
+$K_{\hat c}=T_{\hat c}+\tr\Theta_{\hat c}$, both summands non-negative for
+$\omega\succeq0$; and $K_{\hat c}\le P_{\hat c}$ is
+\xref{foundations/lem:pinchmono} applied to $\tau=\cG_{\hat c}(\omega)$,
+that lemma being stated on all of $\Pos{}$ and consuming no trace
+hypothesis. \emph{Second}: Lemma~\ref{lem:cone-concavity}\,(b),\,(c),
+whose hypothesis on $\{F_v\}$, sector-block-diagonal positive semidefinite
+operators, is implied by Definition~\ref{def:admissible-declaration}. That lemma, and not
+Corollary~\ref{cor:concavity}, is the source of the concavity here: the
+corollary's domain is $\Sleq{}$, which a point of $\Feas(\varepsilon)$
+need not meet once the normalisation is relaxed, and
+Lemma~\ref{lem:cone-concavity} is stated for exactly this situation, its
+part (c) being that substitution. \emph{Third}: with those two facts the
+proof of Theorem~\ref{thm:convexity} runs verbatim with
+$\Feas(\varepsilon)$ in place of $\Feas$, since it consumes affinity of
+$P_{\hat c}$, non-negativity, concavity and continuity of $K_{\hat c}$, and
+convexity and compactness of the feasible set, which are (b), and nothing
+else. \emph{Fourth}: the objective factors through $X\mapsto X^{p}$, by
+way of the functional $T$ of \eqref{eq:Tcone}, and $X\mapsto X^{p}$ is
+undefined off the cone, so none of \emph{First} to \emph{Third} survives a
+relaxation of positivity.
+
+\emph{(c), Choi form.} Every $J\in\Feas^{J}(\varepsilon)$ has
+$J_s\succeq0$ per block, the one condition of the set that is not relaxed,
+and $\chi_{\Qsys}(J)=\bigoplus_s
+(W_{\tau}\otimes\idon{})J_s(W_{\tau}^{\dagger}\otimes\idon{})$ is
+sector-block-diagonal and positive semidefinite; hence
+$\chi_{\Qsys}\big(\Feas^{J}(\varepsilon)\big)\subseteq\Pos{A\Qsys}$, the
+one property of $\Feas(\varepsilon)$ the state-form argument uses. So the
+bounds $0\le K_{\hat c}\le P_{\hat c}$, the cone concavity of
+Lemma~\ref{lem:cone-concavity} and Theorem~\ref{thm:convexity} all apply
+to $O_{\alpha}$ on $\acSet\times\chi_{\Qsys}(\Feas^{J}(\varepsilon))$; and
+$O^{J}_{\alpha}=O_{\alpha}\circ(\idmap\times\chi_{\Qsys})$ with
+$\chi_{\Qsys}$ \emph{linear}, so convexity and lower semicontinuity pull
+back to the convex preimage $\acSet\times\Feas^{J}(\varepsilon)$, a
+pullback along a linear map that needs no injectivity, as in Step~2 of the
+proof of Theorem~\ref{thm:firstorder}. Convexity and compactness of
+$\Feas^{J}(\varepsilon)$ itself are (b). The transfer uses no bijection.
+
+\emph{(c), the range fact.} On $\Feas(\varepsilon)$ with $\varepsilon>0$,
+$\sum_{\hat c}P_{\hat c}(\omega)=\tr\omega$ for an exactly admissible
+$\{F_v\}$ (Definition~\ref{def:declaration}): both POVMs being complete,
+the sum over $\hat c$ of \eqref{eq:Phimap} is
+$\tr[(\sum_xM_x\otimes\sum_vF_v)\,\omega]=\tr\omega$, and the relaxed
+normalisation no longer pins that to $1$. The proof of
+Proposition~\ref{prop:value-range}\,(i) reads a KL divergence between two
+probability vectors, so it is not available on the relaxed set; read at
+$\varepsilon=0$, on $\Feas$ itself, it gives $\hlow\ge0$ there. In the
+Choi form the range fact does not transfer either: it is read on the exact
+set $\Feas^{J}(0)$, where $\Phimap$ is a probability vector.
+
+\emph{(c$'$).} \emph{Choi form.} $R$ is Hermitian because each $J_s$ is
+positive semidefinite, and $G=\iota^{\dagger}\tau_A\iota
+=W_{\tau}^{\dagger}W_{\tau}$ by \eqref{eq:Wtau}. Then $G\succeq0$ and
+$\tr G=\tr[\tau_A\,\iota\iota^{\dagger}]=\tr[\Pi_{\iota}\tau_A]
+=\tr\tau_A=1$ by \eqref{eq:iota}, so $G$ is a state. In
+\eqref{eq:choi-trace-residual} the first equality is the computation in
+the proof of Theorem~\ref{thm:choi}. Hence
+$\big|\tr[\chi_{\Qsys}(J)]-1\big|=|\tr[GR]|\le\|R\|\,\tr G=\|R\|
+\le d_{A_0}\|R\|_{\max}\le d_{A_0}\varepsilon$, using
+$|\tr[Y\varrho]|\le\|Y\|\tr\varrho$ for $\varrho\succeq0$ and the
+inequality $\|X\|\le\|X\|_F\le d\,\|X\|_{\max}$ for a $d\times d$
+matrix $X$, here on the $d_{A_0}\times d_{A_0}$ matrix $R$. This is the
+explicit operator-norm conversion that
+\xref{foundations/req:norm-conversion} asks for, with its dimension factor
+written into the clause, and it is not
+a conversion between the spectral and the entrywise relaxation shapes of
+Definition~\ref{def:relaxed-feasible-set}: $R$ is measured in
+$\|\cdot\|_{\max}$ on both sides of the derivation and no spectral floor
+enters it. By \eqref{eq:choi-trace-residual}, $\tr[\chi_{\Qsys}(J)]=1$
+exactly when $\tr[GR]=0$. \emph{State form, trusted-source mode.}
+$|\tr\omega-1|=|\tr(\omega_A-\tau_A)|\le d_A\|\omega_A-\tau_A\|_{\max}
+\le d_A\varepsilon$, by $\tr\tau_A=1$ and $|\tr X|\le d\|X\|_{\max}$ on
+the $d_A\times d_A$ matrix $\omega_A-\tau_A$. \emph{Untrusted-source
+mode.} There is no clause before it:
+$|\sum_s\tr\omega_s-1|\le\varepsilon$ \emph{is} the relaxed coupling
+condition (Definition~\ref{def:untrusted-choi}\,(b)).
+
+\emph{(c$''$).} $|\varsigma|\le d_{A_0}\varepsilon$ is (c$'$), and
+$\sum_{\hat c}P^{J}_{\hat c}(J)=1+\varsigma$ is the sum computed in the
+proof of the range fact above, read at $\chi_{\Qsys}(J)$. The identity
+\eqref{eq:penaltyshift-fw} reads only that
+$\sum_{\hat c}P_{\hat c}=1+\varsigma$ with every $P_{\hat c}\ge0$, never
+where the displacement came from; so the full-alphabet penalty sum is
+$\sfD(\mathbf q\|\bar{\mathbf P})-\log_2(1+\varsigma)$ with
+$\bar{\mathbf P}$ a probability vector. Writing the objective as in the
+proof of Proposition~\ref{prop:value-range}\,(i),
+$O^{J}_{\alpha}=\frac{\alpha}{\alpha-1}
+\big[\sfD(\mathbf q\|\bar{\mathbf P})-\log_2(1+\varsigma)\big]
++\sum_{\hat c\in\Chkey}q(\hat c)e_{\hat c}$ with every $e_{\hat c}\ge0$ by
+\emph{First} of (c); where some $P^{J}_{\hat c}=0$ with $q(\hat c)>0$ the
+objective is $+\infty$ and the bound is trivial. So, provided
+$d_{A_0}\varepsilon<1$, \eqref{eq:relaxed-objective-floor} holds. The
+state form is the same computation with the factor of (c$'$) for its mode.
+
+\emph{(d).} An infimum over a larger set is no larger, so by (a) the first
+two inequalities of \eqref{eq:feas-tol-mono} hold;
+$\hlow[\Feas(0)]=\hlow$ because $\Feas(0)=\Feas$; and the last step is
+Theorem~\ref{thm:reduction} (Corollary~\ref{cor:reduction-constrained} for
+a nonempty $\CList$).
+
+\emph{(d$'$).} At $\varepsilon=0$ the two quantities agree by
+Theorem~\ref{thm:choi}. The inclusion
+$\Feas^{J}=\Feas^{J}(0)\subseteq\Feas^{J}(\varepsilon)$ of (a) is seen
+directly as well: a point of $\Feas^{J}$ has
+$\sum_s\tr_{\Qsys_s}J_s=\idon{A_0}$, hence coupling residual
+$0\le\varepsilon$; has $\tr\chi_{\Qsys}(J)=1$ by
+Theorem~\ref{thm:choi}; is per-block positive semidefinite; and satisfies
+every $\bowtie_k$ row exactly, hence in its relaxed form. An infimum over a
+larger set is no larger, which gives \eqref{eq:feas-tol-mono-J}, the
+equality being Theorem~\ref{thm:choi} and the last step
+\eqref{eq:feas-tol-mono}.
+
+\emph{(e).} In the general format the frame is
+$\iota=\bigoplus_{\mathsf t}\iota_{\mathsf t}$, which satisfies
+\eqref{eq:iota}, and $W_{\tau}=\bigoplus_{\mathsf t}W_{\mathsf t}$
+(Lemma~\ref{lem:choi-factor}\,(ii)); so
+$G=W_{\tau}^{\dagger}W_{\tau}=\bigoplus_{\mathsf t}G_{\mathsf t}
+=\iota^{\dagger}\tau_A\iota$ is a state, the coupling residual of
+$J_s\coloneqq\bigoplus_{\mathsf t}J_{(\mathsf t,s)}$ is
+$R=\bigoplus_{\mathsf t}R_{\mathsf t}$ on
+$A_0=\bigoplus_{\mathsf t}A_{0,\mathsf t}$, and
+$\|R\|_{\max}=\max_{\mathsf t}\|R_{\mathsf t}\|_{\max}$. With these
+identifications each proof above applies as written. (a) and (b) read each
+relaxed line as an affine preimage of a closed convex set, the
+\tref{party-local} rows among them, and bound the trace from the coupling
+clause, $\sum_{\mathsf t,s}\tr J_{(\mathsf t,s)}\le d_{A_0}(1+\varepsilon)$
+with $d_{A_0}=\sum_{\mathsf t}d_{A_{0,\mathsf t}}$. (c) reads per-block
+positive semidefiniteness, the linearity of $\chi_{\Qsys}$ and
+Theorem~\ref{thm:convexity}, whose inputs in the general format are the
+convexity of the feasible set and the concavity of $K_{\hat c}$ on the
+joint-sector lists (Definition~\ref{def:feasible},
+Lemma~\ref{lem:joint-sectors}). (c$'$) reads $G$, $R$ and \eqref{eq:iota}:
+$\tr[\chi_{\Qsys}(J)]=\tr[G(\idon{A_0}+R)]=1+\tr[GR]
+=1+\sum_{\mathsf t}\tr[G_{\mathsf t}R_{\mathsf t}]$ and
+$|\tr[GR]|\le\|R\|\le d_{A_0}\|R\|_{\max}\le d_{A_0}\varepsilon$. (c$''$)
+reads (c$'$) and the statistics, and (d), (d$'$) read (a),
+Theorem~\ref{thm:reduction} (Corollary~\ref{cor:reduction-constrained})
+and Theorem~\ref{thm:choi}, all stated for the general format.
+\end{proof}

@@ -1,0 +1,48 @@
+% ---
+% id: receiver/detector-imperfections/rem:rmintrap
+% kind: rem
+% title: "The no-click column in the minimum defining $r_{\\min}$"
+% summary: >-
+%   Taking r_min over the single-click columns only gives an invalid bound
+%   whenever the no-click column has less multiclick mass, the generic case: at
+%   K = 4 and p = 0.00001 the two differ by four orders of magnitude. A lossy
+%   receiver keeps no-click weight in every high-photon block.
+% prominence: standard
+% status: accepted
+% uses: [thm:dark-counts, receiver/lem:fock-block-spectrum, prop:dark-slack-bound, receiver/def:tolmap]
+% mentions: [def:darktol]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:rmintrap}
+The minimum in \eqref{eq:rmin} must run over \emph{all} non-multiclick columns,
+the no-click column $S'=\varnothing$ included. Minimising only over the
+single-click columns gives an \emph{invalid} bound whenever
+$R_{\MCK|\varnothing}<R_{\MCK|\{k\}}$, and that is the generic case rather than
+a corner one. With equal per-port probabilities $p_{\dc|k}=p$ and $K=4$,
+\begin{equation}\label{eq:rmintrapnum}
+  R_{\MCK|\varnothing}=1-(1-p)^4-4p(1-p)^3=6p^2+O(p^3),
+  \qquad
+  R_{\MCK|\{k\}}=1-(1-p)^3=3p+O(p^2),
+\end{equation}
+so at a realistic $p=10^{-5}$ the two differ by more than four orders of
+magnitude: $6\cdot10^{-10}$ against $3\cdot10^{-5}$. Using the larger number
+would claim a multiclick weight the device does not have.
+
+The no-click column cannot be excluded because the no-click element does not
+vanish in the high-photon sectors of a lossy receiver: by
+Lemma~\ref{lem:fock-block-spectrum},
+$\lmin\big(\blk{M}{\eqn}_{\varnothing}\big)
+=\big(1-\lmax(A_\Sigma)\big)^{n}>0$ whenever $\lmax(A_\Sigma)<1$. So
+in exactly the regime where the high-photon bound matters, the column that the
+shortcut discards carries weight. The correct statement is
+Theorem~\ref{thm:dark-counts}\,(iv) as written, and \eqref{eq:darkpmcslack} of
+Proposition~\ref{prop:dark-slack-bound} for a declared $R$ admitted under
+item (iii) of Definition~\ref{def:tolmap} (Definition~\ref{def:darktol}).
+Which columns the minimum runs over is a question about the index set and is
+untouched by either widened test; the numbers above are those of the
+\tref{generated dark-count route}, where both conditions are theorems.
+\end{remark}

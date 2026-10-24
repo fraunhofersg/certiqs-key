@@ -1,0 +1,42 @@
+% ---
+% id: reductions/wpfss/cor:oneabsorbing
+% kind: cor
+% title: "Dark-count sharpening at a single bounded letter only"
+% summary: >-
+%   With two or more absorbing bounded letters every r_min,i vanishes, so
+%   each routed weight is the un-improved lat(q_t p_i^(t)). The dark counts
+%   sharpen a weight only when the slot has a single entry.
+% prominence: standard
+% status: accepted
+% uses: [prop:route, reductions/lem:exactpsd, def:weight-route]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{corollary}
+\label{cor:oneabsorbing}
+Under \eqref{eq:absorbing}: if $r\ge2$ then $r_{\min,i}=0$ for \emph{every}
+$i$, so \eqref{eq:routebound} reads
+$\blk{M}{\gtN}_{(y_i,t)}\succeq q_tp^{(t)}_i\,\idon{}$ throughout and the
+emitted weight is $\lat{q_tp^{(t)}_i}$. Consequently a positive
+$r_{\min,i}$, the only case in which the dark counts sharpen a weight, can
+occur for at most one bounded letter, and only when $r=1$.
+\end{corollary}
+
+\begin{proof}
+Let $r\ge2$ and fix any $i$; choose $j\ne i$, which is possible. Column $y_j$
+of $R^{\cg}$ is a probability vector and $R^{\cg}_{y_j|y_j}=1$ by
+\eqref{eq:absorbing}, so every other entry of that column vanishes; in
+particular $R^{\cg}_{y_i|y_j}=0$. Since $y_j\ne y_i$, the minimum defining
+$r_{\min,i}$ ranges over a set containing $y_j$, so
+$0\le r_{\min,i}\le R^{\cg}_{y_i|y_j}=0$. As $i$ was arbitrary, every
+$r_{\min,i}$ vanishes; substituting into \eqref{eq:routebound} gives the
+displayed form, which is the un-improved bound and is sound, and
+\eqref{eq:weightroute} then reads $\hat p_{(y_i,t)}=q_tp^{(t)}_i$. The last
+sentence follows: a positive $r_{\min,i}$ is incompatible with the existence
+of a second absorbing bounded letter. Every step is an identity or a
+comparison between declared values and is decided as such in the substrate of
+Lemma~\ref{lem:exactpsd}, so the conclusion holds exactly.
+\end{proof}

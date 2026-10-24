@@ -1,0 +1,175 @@
+% ---
+% id: statistics/binomial-box/prop:rule-bernstein
+% kind: prop
+% title: "The Bernstein endpoint rule"
+% summary: >-
+%   Bernstein's inequality with upward-rounded rational bounds on the
+%   logarithm and the root gives closed-form endpoints, an admissible rule,
+%   monotone in the allocation when every rounding is. Its unrounded
+%   half-width falls strictly in n as n^(−1/2), and it is never narrower than
+%   the exact rule.
+% prominence: standard
+% status: implemented
+% uses: [def:endpoint-rule, def:interval, lem:bernstein-tail, lem:log-enclosure, lem:guard, statistics/def:conservative-evaluation]
+% mentions: [prop:rule-exact, thm:monotonicity-limits, req:rule-in-force, req:honest-model-record]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.rules:BernsteinRule
+% lean:
+% notes: "The rule is defined inside the proposition, as the exact rule is inside def:interval: one definition of what a rule is (def:endpoint-rule) and one claim per rule. The conservative-evaluation hypothesis is for the rounding direction of the evaluation."
+% ---
+
+The emitted interval of the
+\tref[exact binomial quantile rule]{exact rule} is not monotone in $n$
+(Theorem~\ref{thm:monotonicity-limits}\,(v)). The Bernstein rule is the alternative whose
+unrounded half-width decreases strictly with $n$; that its integer-rounded
+boxes are nested in $n$ is not claimed. Its endpoints come in closed form
+from Bernstein's inequality, with no tail evaluated, and every
+logarithm and root is bounded by rationals rounded in the direction that can
+only widen the interval, the direction a \tref{conservative evaluation}
+(Definition~\ref{def:conservative-evaluation}) admits.
+A request selects it (Requirement~\ref{req:rule-in-force}), and $j$ and $s$
+are recorded with the rule (Requirement~\ref{req:honest-model-record}).
+
+\begin{proposition}\label{prop:rule-bernstein}
+Assume a \tref{conservative evaluation}
+(Definition~\ref{def:conservative-evaluation}). Fix an integer $j\ge1$ and a
+precision $s\ge0$ (parameters of the evaluation). The \emph{Bernstein rule}
+$R_{\mathrm{B}}$ assigns to
+$(n,p,\varepsilon^{-},\varepsilon^{+})$, with $v\coloneqq np(1-p)$:
+\begin{itemize}[leftmargin=1.9em]
+\item if $p=0$: $R^{-}_{\mathrm{B}}=R^{+}_{\mathrm{B}}=0$; if $p=1$:
+$R^{-}_{\mathrm{B}}=R^{+}_{\mathrm{B}}=n$;
+\item otherwise, for each sign separately: if $\varepsilon^{-}=0$ then
+$R^{-}_{\mathrm{B}}=0$, and if $\varepsilon^{+}=0$ then
+$R^{+}_{\mathrm{B}}=n$; if $\varepsilon^{\mp}>0$, let $L^{\mp}$ be the
+rational upper bound $m(u-1)$ of \eqref{eq:log-rational-bounds} on
+$\ln(1/\varepsilon^{\mp})$ with $m=2^{j}$ and $u$ the upper root enclosure
+of \eqref{eq:isqrt-bounds} at precision $s$, let
+\begin{equation}\label{eq:bernstein-endpoint-t}
+  t^{\mp}\ \coloneqq\ \text{a rational }\ \ge\
+  \frac{L^{\mp}}{3}+\sqrt{\Big(\frac{L^{\mp}}{3}\Big)^{2}+2vL^{\mp}}
+\end{equation}
+obtained by rounding the square root upward with \eqref{eq:isqrt-bounds},
+and put
+\begin{equation}\label{eq:bernstein-endpoints}
+  R^{-}_{\mathrm{B}}\ \coloneqq\ \max\big\{0,\ \lfloor np-t^{-}\rfloor\big\},
+  \qquad
+  R^{+}_{\mathrm{B}}\ \coloneqq\ \min\big\{n,\ \lceil np+t^{+}\rceil\big\}.
+\end{equation}
+\end{itemize}
+Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $R_{\mathrm{B}}$ is an \tref{admissible endpoint rule} in the sense of
+Definition~\ref{def:endpoint-rule}\,(a)--(c), computed from $n$, $p$ and the
+allocation by finitely many operations on integers and rationals (integer
+square roots included) and no others; Lemma~\ref{lem:guard} therefore
+applies to it;
+\item $R_{\mathrm{B}}$ is \tref{monotone in the allocation}, provided every
+rounding in $L^{\mp}$ and $t^{\mp}$ is a non-decreasing function of its
+real argument. The integer-square-root rounding of \eqref{eq:isqrt-bounds}
+is \emph{not} such a function of a rational argument as written (its excess over the
+root depends on the denominator), but it becomes one when the argument is
+first rounded up to the fixed dyadic grid $2^{-s}\mathbb{Z}$, i.e.\ replaced
+by $\lceil y\,2^{s}\rceil/2^{s}$ before the root is taken; the evaluation
+takes $u$ from \eqref{eq:isqrt-bounds} applied to that grid point (with
+$d=2^{s}$ fixed) at every step of Lemma~\ref{lem:log-enclosure}'s
+iteration, rounds the square root in \eqref{eq:bernstein-endpoint-t} the
+same way, and takes $L^{\mp}$ and $t^{\mp}$ themselves as the least
+multiples of $2^{-s}$ at or above the values so obtained. Every such step
+is a composition of non-decreasing maps, and every rounding is upward, so
+(i) is unaffected;
+\item \emph{(half-width)} for $0<p<1$ and $\varepsilon^{\mp}>0$, the
+\tref{guarded endpoints} of $R_{\mathrm{B}}$ satisfy
+\begin{equation}\label{eq:bernstein-width}
+  0\ \le\ q^{+}(\hat c)-p\ \le\ \frac{t^{+}}{n}+\frac1n,
+  \qquad
+  0\ \le\ p-q^{-}(\hat c)\ \le\ \frac{t^{-}}{n}+\frac1n,
+\end{equation}
+where, for the unrounded value of \eqref{eq:bernstein-endpoint-t},
+\begin{equation}\label{eq:bernstein-halfwidth}
+  \frac{t^{\mp}}{n}
+  \ =\ \frac{L^{\mp}}{3n}+\sqrt{\Big(\frac{L^{\mp}}{3n}\Big)^{2}
+        +\frac{2p(1-p)L^{\mp}}{n}}
+\end{equation}
+is strictly decreasing in $n$ and is $O(n^{-1/2})$ at fixed $p$ and
+$\varepsilon^{\mp}$. The rule never emits an interval narrower than the raw
+quantile interval of the exact rule of Definition~\ref{def:interval}
+(Proposition~\ref{prop:rule-exact}\,(iii)).
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\emph{(i).} Definition~\ref{def:endpoint-rule}\,(c) and (b) hold by the
+first two clauses of the rule. For (a) at $p\in\{0,1\}$: the count is $0$
+respectively $n$ almost surely, so with $R^{\mp}_{\mathrm{B}}=0$
+respectively $n$ both tails of \eqref{eq:rule-admissible} vanish and the
+values lie in $\{0,\dots,n\}$. For (a) at $0<p<1$: the values
+\eqref{eq:bernstein-endpoints} lie in $\{0,\dots,n\}$ by the clipping. If
+$\varepsilon^{+}=0$ then $R^{+}_{\mathrm{B}}=n$ and
+$\Pr[\Ncount{}>n]=0\le\varepsilon^{+}$. If $\varepsilon^{+}>0$: by
+Lemma~\ref{lem:log-enclosure}, $L^{+}\ge\ln(1/\varepsilon^{+})$, so
+$e^{-L^{+}}\le\varepsilon^{+}$; by Lemma~\ref{lem:bernstein-tail} with
+$L=L^{+}$, every $t\ge t(L^{+})$ has $\Pr[\Ncount{}-np\ge t]\le e^{-L^{+}}$,
+and $t^{+}\ge t(L^{+})$ by \eqref{eq:bernstein-endpoint-t}. If
+$R^{+}_{\mathrm{B}}=n$ the tail is $0$. Otherwise
+$R^{+}_{\mathrm{B}}=\lceil np+t^{+}\rceil\ge np+t^{+}$, so the event
+$\{\Ncount{}>R^{+}_{\mathrm{B}}\}$ is contained in
+$\{\Ncount{}-np>t^{+}\}\subseteq\{\Ncount{}-np\ge t^{+}\}$ and
+$\Pr[\Ncount{}>R^{+}_{\mathrm{B}}]\le e^{-L^{+}}\le\varepsilon^{+}$. The
+lower side is the mirror image: if $R^{-}_{\mathrm{B}}=0$ the tail
+$\Pr[\Ncount{}<0]$ is $0$; otherwise
+$R^{-}_{\mathrm{B}}=\lfloor np-t^{-}\rfloor\le np-t^{-}$, so
+$\{\Ncount{}<R^{-}_{\mathrm{B}}\}\subseteq\{\Ncount{}-np<-t^{-}\}
+\subseteq\{\Ncount{}-np\le-t^{-}\}$, whose probability is at most
+$e^{-L^{-}}\le\varepsilon^{-}$ by the second inequality of
+\eqref{eq:bernstein}. The computation uses the rational arithmetic of the
+inputs, the integer square roots of \eqref{eq:isqrt-bounds} for $u$ and for
+the root in \eqref{eq:bernstein-endpoint-t} (applied to the rational
+$(L^{\mp}/3)^{2}+2vL^{\mp}$), and floor, ceiling, maximum and minimum.
+
+\emph{(ii).} Fix all arguments but $\varepsilon^{+}$ and let
+$\varepsilon^{+}_1\le\varepsilon^{+}_2$, both positive. Then
+$1/\varepsilon^{+}_1\ge1/\varepsilon^{+}_2$. With the argument first
+rounded up to the grid, $y\mapsto\lceil y\,2^{s}\rceil$ is non-decreasing,
+and for a \emph{fixed} denominator $d=2^{s}$ the bound
+$u=(\operatorname{isqrt}(c\,d\,4^{s})+1)/(d\,2^{s})$ of
+\eqref{eq:isqrt-bounds} is non-decreasing in the integer numerator $c$
+because $\operatorname{isqrt}$ is non-decreasing on the integers; so each
+step of the root iteration is non-decreasing in its input, and $u$ is
+non-decreasing in $1/\varepsilon^{+}$. The final upward rounding to the
+grid is non-decreasing too, so $L^{+}_1\ge L^{+}_2$; the map
+$L\mapsto L/3+\sqrt{(L/3)^{2}+2vL}$ is increasing in $L\ge0$ and the upward
+rounding of the root is monotone, so $t^{+}_1\ge t^{+}_2$; hence
+$R^{+}_{\mathrm{B},1}\le R^{+}_{\mathrm{B},2}$ by
+\eqref{eq:bernstein-endpoints}, which is the required non-increase of
+$\varepsilon^{+}\mapsto R^{+}_{\mathrm{B}}$. At $\varepsilon^{+}_1=0$ the
+value $n$ is the largest possible, so the monotonicity extends to the zero
+budget. The lower side is the mirror image ($R^{-}_{\mathrm{B}}$
+non-decreasing in $\varepsilon^{-}$, with the value $0$ at
+$\varepsilon^{-}=0$ the smallest possible).
+
+\emph{(iii).} The left inequalities of \eqref{eq:bernstein-width} are
+\eqref{eq:ordering}. For the right ones: by \eqref{eq:guard} and
+\eqref{eq:bernstein-endpoints}, $k^{+}(\hat c)=\max\{R^{+}_{\mathrm{B}},
+\lceil np\rceil\}\le\lceil np+t^{+}\rceil\le np+t^{+}+1$ (using
+$\lceil np\rceil\le\lceil np+t^{+}\rceil$ and $n\le\lceil np+t^{+}\rceil$
+when the clip at $n$ is active), so $q^{+}(\hat c)-p\le(t^{+}+1)/n$;
+symmetrically $k^{-}(\hat c)=\min\{R^{-}_{\mathrm{B}},\lfloor np\rfloor\}
+\ge\lfloor np-t^{-}\rfloor\ge np-t^{-}-1$ when the clip at $0$ is inactive,
+and $k^{-}(\hat c)\ge0>np-t^{-}-1$ when it is active (then
+$\lfloor np-t^{-}\rfloor\le0$, so $np-t^{-}<1$); hence
+$p-q^{-}(\hat c)\le(t^{-}+1)/n$. Dividing \eqref{eq:bernstein-endpoint-t} by
+$n$ gives \eqref{eq:bernstein-halfwidth}; each of its two terms is strictly
+decreasing in $n$ (the first as $1/n$, the second as the square root of a sum
+of a term in $1/n^{2}$ and a term in $1/n$, both decreasing, at fixed
+$p\in(0,1)$ and $L^{\mp}>0$), and it is $O(n^{-1/2})$ because the first term
+is $O(n^{-1})$ and the radicand is $O(n^{-1})$. The comparison with the exact
+rule: the exact rule's $\kappa^{+}$ is the minimum of the set in
+\eqref{eq:kappaplus} (Definition~\ref{def:interval}), and
+$R^{+}_{\mathrm{B}}\in\{0,\dots,n\}$ lies in that set by (i), so
+$R^{+}_{\mathrm{B}}\ge\kappa^{+}$; likewise $\kappa^{-}$ is the maximum of the
+set in \eqref{eq:kappaminus}, in which $R^{-}_{\mathrm{B}}$ lies by (i), so
+$R^{-}_{\mathrm{B}}\le\kappa^{-}$; the guard preserves both inequalities.
+\end{proof}

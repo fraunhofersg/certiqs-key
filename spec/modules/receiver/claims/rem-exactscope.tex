@@ -1,0 +1,42 @@
+% ---
+% id: receiver/rem:exactscope
+% kind: rem
+% title: "Scope of the exact-window lemma"
+% summary: >-
+%   The exact-window lemma makes finitely many blocks yield a bound uniform
+%   above the cutoff, from remainders already proved, and uses positivity at
+%   one step only. It is stated on the exact block bound and makes no computed
+%   eigenvalue available by itself.
+% prominence: standard
+% status: accepted
+% uses: [lem:windowtail, lem:collapse, lem:exactbasic, lem:exactwindow]
+% mentions: [rem:notsharp, def:pmcex, rem:exacteig]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A squashing request fails when a bound does not hold at every photon number
+above the cutoff (\repodoc{spec/architecture.md}~\S5.4), so a bound on
+finitely many blocks is of no use there by itself.
+
+\begin{remark}\label{rem:exactscope}
+\emph{What the lemma buys.} Lemma~\ref{lem:exactwindow} converts information
+about \emph{finitely many} blocks into a bound uniform over the infinitely
+many above the cutoff, which is what a squashing request requires and
+what Remark~\ref{rem:notsharp} names as the obstacle to using block eigenvalues at all. The conversion needs no new
+analysis: both admissible remainders are results already proved, (i) being
+the tail step inside Lemma~\ref{lem:windowtail}\,(i) and (ii) being
+Lemma~\ref{lem:collapse} read at a larger cutoff. Some hypotheses are
+\emph{not} used: (i) is free of \eqref{eq:collapsehyp}, neither part needs
+\tref[predicate (X)]{predicate~(X)}, which enters only in choosing between
+them, and \eqref{eq:mcpos} is used at exactly one step, the $P=0$ branch that
+the outer $\max\{0,\cdot\}$ of \eqref{eq:exactcomposite} creates.
+
+\emph{What it does not do.} The lemma does not make an exact eigenvalue
+available. It is stated on $\Bnd^{\ast}$, an exact quantity, and
+\eqref{eq:ellhyp} is a hypothesis on whatever numbers are supplied for it.
+Definition~\ref{def:pmcex} is where those numbers come from, and
+Remark~\ref{rem:exacteig} is where the price of computing them is stated.
+\end{remark}

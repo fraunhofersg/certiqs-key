@@ -1,0 +1,37 @@
+% ---
+% id: statistics/binomial-box/req:endpoint-exact-record
+% kind: req
+% title: "The bracket verdict per outcome and side"
+% summary: >-
+%   On the enclosure evaluation the engine records, per constrained outcome
+%   and side, whether the bracket was decided, that is whether the emitted
+%   endpoint is proved equal to the exact quantile. It may add the bound on
+%   the conservatism in counts.
+% prominence: standard
+% status: implemented
+% uses: [prop:bracketed-endpoints]
+% mentions: [rem:local-evaluation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.construction:EndpointExact
+% lean:
+% ---
+
+The enclosure evaluation may emit an endpoint more conservative than the
+exact quantile, and nothing in the emitted box shows it; the bracket verdict
+of Proposition~\ref{prop:bracketed-endpoints}\,(ii) does.
+
+\begin{requirement}\label{req:endpoint-exact-record}
+On the enclosure evaluation of the exact rule the engine records in the
+diagnostic \iface{endpoint_exact}, per constrained outcome and per side,
+whether the bracket was decided, that is whether the emitted endpoint is
+proved equal to the exact quantile by
+Proposition~\ref{prop:bracketed-endpoints}\,(ii). When it holds a
+certified-inadmissible index $k_{\mathsf{D}}$ below the bracket with
+$0<r_{k_{\mathsf{D}}+2}<1$, it may also report the bound
+\eqref{eq:bracket-conservatism} in counts with $-\ln r_{k_{\mathsf{D}}+2}$ in
+place of $-\ln r_{\kappa^{+}+1}$ and the computable upper bound
+$U(\tilde k^{+}-1)-\Lambda(\tilde k^{+}-1)+(\lambda^{+}-\lambda^{-})$ on $w$
+in place of $w$ (Remark~\ref{rem:local-evaluation}).
+\end{requirement}

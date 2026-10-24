@@ -1,0 +1,143 @@
+% ---
+% id: transmitter/decoy/prop:decoy-cert
+% kind: prop
+% title: "Ensemble presentation of the tagged source"
+% summary: >-
+%   Read sector by sector, the tagged virtual ensemble meets (E1) and (E2) of an
+%   ensemble presentation, giving an exact certificate with pure blocks whose
+%   sector marginals are transposed sums of signal dyads. Whether the formed
+%   numbers are binary64, as (E3) requires, is not decided here.
+% prominence: technical
+% status: implemented
+% uses: [def:wcp-model, def:tagged-source, transmitter/def:srcert, transmitter/lem:ensemble-presentation]
+% mentions: [cor:emitted-decoy]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.decoy.emit:DecoySourceDeclaration
+% lean:
+% notes: "(SR3) is an attestation and enters no statement here. Sectors on which no letter puts weight are not part of the structure, as in def:tagged-source (T3)."
+% ---
+
+The certificate of a tagged source is never declared: by the
+\tref{ensemble presentation} of Definition~\ref{def:srcert} it suffices to
+declare the weighted \tref{virtual ensemble} sector by sector. A presentation
+has three conditions: (E1) every block is Hermitian and positive semidefinite;
+(E2) the traces of a letter's blocks sum to $p_x$, and the $p_x$ to one; (E3)
+for every sector the sum of the blocks over the letters, accumulated entry by
+entry in the \tref{declared order} of $\Xset$, \tref{rounds nowhere}, so that
+its entries are \tref{binary64 numbers}. The
+certificate it defines satisfies (SR1), its partial trace over the virtual
+system is Alice's marginal $\tau_A$, and (SR2), Alice's outcome $x$ leaves
+$p_x\rvirt_x$ on the virtual system; (SR3), that Alice retains her system, is
+an attestation. The sectors are those of
+Definition~\ref{def:tagged-source}\,(T3), the ones that some letter weights: a
+quantum sector $t=\mathsf{n}$, with
+$S_{\mathsf{n}}=\operatorname{span}\{\ket{\mathsf{n},a}:a\in\mathrm{Pol}\}$, for
+each $\mathsf{n}\le N_{\mathrm{ent}}$ (the \tref{entropy cutoff}); a
+\tref{polarisation flag} $t=(\mathsf{n},a)$ for
+$N_{\mathrm{ent}}<\mathsf{n}\le N_{\mathrm{src}}$ (the \tref{source cutoff}); and
+a \tref{tail flag} $t=(a,\mu)$ for each pair a letter carries with
+$\tilde w_\mu>0$. The proposition checks (E1) and (E2), which every tagged
+declaration meets, computes the sector marginals and their ranks (a rank below
+$\dim S_t$ is where the completion term $\idon{A_t}-P_t$ of \eqref{eq:enspres}
+is non-zero), and records which numbers the presentation forms. Whether those
+products and sums are binary64 numbers, as the number model and (E3) require,
+is a property of a particular declaration, decided on it and not asserted here
+(Corollary~\ref{cor:emitted-decoy}\,(iv)).
+
+\begin{proposition}
+\label{prop:decoy-cert}
+Let a tagged source be declared on a weak-coherent-pulse \tref{source model}
+(Definitions~\ref{def:wcp-model} and~\ref{def:tagged-source}), with labels
+$x=(a_x,\mu_x,z_x)$, $z_x$ the \tref{round type}, of weights $p_x>0$,
+\tref{sector index set} $\mathbb{T}$ and
+virtual sectors $S_t\subseteq\Hs{\Avirt}$. For $t\in\mathbb{T}$ and a label $x$
+write $w_{x,t}\ge0$ and $\ket{\varphi_{x,t}}\in\Hs{S_t}$ for the weight and the
+unit vector that $\rvirt_x$ carries in sector $t$:
+$w_{x,t}=\tilde p(\mathsf{n}\,|\,\mu_x)$ and
+$\ket{\varphi_{x,t}}=\ket{\mathsf{n},a_x}$ on a quantum sector $t=\mathsf{n}$;
+$w_{x,t}=\tilde p(\mathsf{n}\,|\,\mu_x)$ if $a_x=a$ and $0$ otherwise, with
+$\ket{\varphi_{x,t}}=\ket{f_{\mathsf{n},a}}$, on a polarisation flag
+$t=(\mathsf{n},a)$; and $w_{x,t}=\tilde w_{\mu}$ if $(a_x,\mu_x)=(a,\mu)$ and
+$0$ otherwise, with $\ket{\varphi_{x,t}}=\ket{f_{a,\mu}}$, on a tail flag
+$t=(a,\mu)$. So $\rvirt_x=\sum_tw_{x,t}\dyad{\varphi_{x,t}}$ and
+$\sum_tw_{x,t}=1$. Put $\Xset_t\coloneqq\{x:w_{x,t}>0\}$, let the
+\tref{sector structure} carry exactly the sectors with $\Xset_t\ne\varnothing$, and let
+\begin{equation}\label{eq:decoy-blocks}
+  \sigma^{\mathrm v,(t)}_x\;\coloneqq\;p_x\,w_{x,t}\,\dyad{\varphi_{x,t}}
+  \;\in\;\Pos{S_t},\qquad x\in\Xset,\ t\in\mathbb{T} ,
+\end{equation}
+the block of the \tref[weighted members]{weighted member} $p_x\rvirt_x$ in
+sector $t$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(an ensemble presentation)} the block lists
+\eqref{eq:decoy-blocks} satisfy conditions (E1) and (E2) of
+Definition~\ref{def:srcert} as identities of real numbers, with the weights
+$p_x$ of Definition~\ref{def:wcp-model}. Hence, by
+Lemma~\ref{lem:ensemble-presentation}, the objects \eqref{eq:enspres} formed
+from them --- a retained system $A=\bigoplus_tA_t$ with $A_t$ a copy of $S_t$,
+the marginal $\tau_A$, a POVM $\{M_x\}$ and blocks $(\Psi_t)_t$ --- are a
+block-form \tref{source-replacement certificate}, (SR1) and (SR2) holding exactly
+against the tagged virtual ensemble $\{p_x,\rvirt_x\}$ of
+Definition~\ref{def:tagged-source}\,(T4) itself, and every non-zero $\Psi_t$ is
+a multiple of a rank-one projector.
+\item \emph{(the marginal)} in the declared basis of $S_t$, copied to $A_t$,
+\begin{equation}\label{eq:decoy-marginal}
+  \tau^{(t)}_A
+  =\Big(\sum_{x\in\Xset_t}p_xw_{x,t}\,\dyad{\varphi_{x,t}}\Big)^{\transpose} ,
+  \qquad
+  g_t\coloneqq\tr\tau^{(t)}_A=\sum_{x\in\Xset_t}p_xw_{x,t} ,
+\end{equation}
+$g_t$ being the probability of sector $t$ and $\sum_tg_t=1$. On the vacuum
+sector and on every flag sector $A_t$ is one dimensional and $\tau^{(t)}_A$ is
+the number $g_t$.
+\item \emph{(ranks)} $r_t\coloneqq\operatorname{rank}\tau^{(t)}_A
+=\dim\operatorname{span}\{\ket{\varphi_{x,t}}:x\in\Xset_t\}$. Hence $r_t=1$ on
+every polarisation flag, on every tail flag and on the vacuum sector
+$\mathsf{n}=0$, and on a quantum sector $\mathsf{n}\ge1$
+\begin{equation}\label{eq:rankbound}
+  r_{\mathsf{n}}=\dim\operatorname{span}\{\ket{\mathsf{n},a_x}:x\in\Xset_{\mathsf{n}}\}
+  \le\min\big(\dim\Hs{S_{\mathsf{n}}},\ |\{a_x:x\in\Xset_{\mathsf{n}}\}|\big) ,
+\end{equation}
+while $\dim\Hs{A_{\mathsf{n}}}=\dim\Hs{S_{\mathsf{n}}}$ whatever the rank.
+\item \emph{(the formed numbers)} every entry of \eqref{eq:decoy-blocks} is a
+product of the declared numbers $p_x$ and $w_{x,t}$ with an entry of
+$\dyad{\varphi_{x,t}}$ in the declared basis, and every entry of
+$\tau^{(t)}_A$ is a sum of such products: no square root and no quotient of a
+declared number occurs in anything a declaration of this presentation carries.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) (E1): $\sigma^{\mathrm v,(t)}_x$ is a non-negative multiple of a dyad, hence
+Hermitian and positive semidefinite. (E2):
+$\sum_t\tr\sigma^{\mathrm v,(t)}_x=p_x\sum_tw_{x,t}=p_x$, the
+$\ket{\varphi_{x,t}}$ being unit vectors, and $\sum_xp_x=1$ by
+Definition~\ref{def:wcp-model}; a sector with $\Xset_t=\varnothing$ carries the
+zero block for every letter, so leaving it out of the structure changes neither
+sum. That the blocks are those of $p_x\rvirt_x$ is the decomposition
+$\rvirt_x=\sum_tw_{x,t}\dyad{\varphi_{x,t}}$, which is \eqref{eq:rvirt} read
+sector by sector, the sectors being mutually orthogonal. The hypotheses of
+Lemma~\ref{lem:ensemble-presentation} are (E1) and the total trace
+$\sum_x\sum_t\tr\sigma^{\mathrm v,(t)}_x=\sum_xp_x=1$, so its parts (i) and
+(ii) give the statement; the virtual ensemble of its part (i) has the weighted
+members $\bigoplus_t\sigma^{\mathrm v,(t)}_x=p_x\rvirt_x$.
+
+(ii) is \eqref{eq:enspres} with the blocks \eqref{eq:decoy-blocks}, the terms
+with $w_{x,t}=0$ vanishing; the trace of a transpose is the trace, and
+$\sum_tg_t=\sum_xp_x\sum_tw_{x,t}=1$. The vacuum sector is spanned by the one
+vector $\ket{0,a}$, which does not depend on $a$, and a flag sector by its flag
+vector, so there $\dim\Hs{S_t}=1$.
+
+(iii) Transposition preserves the rank, and the range of
+$\sum_{x\in\Xset_t}p_xw_{x,t}\dyad{\varphi_{x,t}}$, a sum of positive multiples
+of dyads, is the span of the vectors $\ket{\varphi_{x,t}}$, $x\in\Xset_t$. On a
+flag sector and on the vacuum that span is one dimensional. On a quantum sector
+it is spanned by the vectors $\ket{\mathsf{n},a}$ with $a$ ranging over the
+polarisations of $\Xset_{\mathsf{n}}$ and lies in $\Hs{S_{\mathsf{n}}}$, which
+gives both bounds. $A_{\mathsf{n}}$ is a copy of $S_{\mathsf{n}}$ by
+construction.
+
+(iv) is read off \eqref{eq:decoy-blocks} and \eqref{eq:decoy-marginal}.
+\end{proof}

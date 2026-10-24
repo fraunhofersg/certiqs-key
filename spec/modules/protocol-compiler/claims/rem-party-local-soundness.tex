@@ -1,0 +1,34 @@
+% ---
+% id: protocol-compiler/rem:party-local-soundness
+% kind: rem
+% title: "Soundness of a party-local entry"
+% summary: >-
+%   A party-local entry shrinks the feasible set more than its untagged
+%   reading and is sound only if every attack reaches its factor through a
+%   channel on that factor alone with a spectral certificate. The reduction
+%   chain's producer owes it and the attack-set licence attests it; nothing
+%   here decides it.
+% prominence: standard
+% status: accepted
+% uses: [def:homog]
+% mentions: [reductions/thm:licence, reductions/lem:party-local, reductions/def:attset]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:party-local-soundness}
+A party-local entry of Definition~\ref{def:homog} shrinks the feasible set
+further than its untagged reading does, and it is sound only where it meets
+the soundness condition of a party-local entry stated in that definition, the
+spectral certificate on a channel acting on $\Qsys_f$ alone through which
+every attack reaches that factor. That is a certificate of the module that produces the chain,
+stated by the reductions module (\xref{reductions/thm:licence}\,(v), with
+\xref{reductions/lem:party-local} and the \tref{attack set} of
+\xref{reductions/def:attset}); it is what the attack-set licence of a list
+carrying the tag attests, and nothing in this module decides it. A general
+entry whose right-hand side is $\Theta_k=c_k\idon{A}$ stays unlicensed in
+every case: the right-hand side of \eqref{eq:partylocal-entry} is $c_k$
+times a marginal of $\omega$, never $c_k$ times an identity.
+\end{remark}

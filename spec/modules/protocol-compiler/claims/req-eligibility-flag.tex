@@ -1,0 +1,28 @@
+% ---
+% id: protocol-compiler/req:eligibility-flag
+% kind: req
+% title: "The key-length eligibility flag"
+% summary: >-
+%   The emitted flag reads true only for a declaration that passes all three
+%   gates of [[def:eligible]]. A declaration marked false may be explored
+%   numerically but backs no key-length claim.
+% prominence: standard
+% status: implemented
+% uses: [def:eligible]
+% mentions: [thm:gates]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.gates:resolve_gates
+% lean:
+% ---
+
+Theorem~\ref{thm:gates} fixes, for each gate failure, whether the outcome is a
+refusal or an emission that is not key-length-eligible; the flag an emitted
+declaration carries never reads true for one that fails a gate.
+
+\begin{requirement}\label{req:eligibility-flag}
+The engine emits the flag \iface{key_length_eligible} true for a declaration
+only if that declaration is \tref{key-length-eligible}
+(Definition~\ref{def:eligible}).
+\end{requirement}

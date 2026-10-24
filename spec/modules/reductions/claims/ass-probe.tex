@@ -1,0 +1,44 @@
+% ---
+% id: reductions/ass:probe
+% kind: ass
+% title: "The station's private setting drawn from its own declared randomness"
+% summary: >-
+%   A station's private per-round setting is drawn from its party's own
+%   randomness with the declared class weights, independently of the adversary
+%   and the round's quantum input, never inferred from an outcome. It lets the
+%   setting enter a joint outcome under one common squashing channel.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-PROBE
+% verification: never
+% category: local-randomness
+% presupposes: [setting]
+% affects: [secrecy]
+% user_statement: >-
+%   The station's private setting in each round (for the optical instance, how
+%   its probe is switched) is chosen by a random number generator of the
+%   station's own party with exactly the declared probabilities. It is
+%   independent of anything the attacker does and of the light arriving in
+%   that round, and it is never derived from a detection result. An attacker
+%   who can predict or influence the setting violates this.
+% lean:
+% ---
+
+The setting of the optical instance is the probe setting. Drawn this way,
+the setting enters as part of a joint outcome, the weight inside the
+element, and one squashing channel serves every value of it; a setting the
+adversary could read or steer would instead have to be handed to her.
+
+\begin{assumption}\label{ass:probe}
+The private per-round setting $t\in\Tset$ of a measuring party's device
+satisfies, in every round:
+(i) it is drawn from that party's own randomness with the
+declared \tref{class weights} $q_t$;
+(ii) it is drawn independently of the adversary's actions and of the round's
+quantum input;
+(iii) it is not inferred from any outcome.
+\end{assumption}

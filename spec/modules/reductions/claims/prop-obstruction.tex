@@ -1,0 +1,87 @@
+% ---
+% id: reductions/prop:obstruction
+% kind: prop
+% title: "Obstruction to encoding event bounds in classical targets"
+% summary: >-
+%   Some three-outcome qubit POVM with a lower bound on the sum of two of its
+%   elements has no squashing to a classical target that keeps that bound as an
+%   operator inequality. A device fact about a union of outcomes therefore
+%   travels as a constraint entry rather than inside a flag target.
+% prominence: standard
+% status: accepted
+% uses: [def:squashing]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The \tref[weight-preserving target]{weight-preserving flag-state target} of the flag-state submodule encodes
+one certified weight \emph{per outcome}. For an \emph{event}
+$\mathcal{O}_{*}\subseteq\Vset$, a union of outcomes that must not be merged
+(for instance because they carry key information), a device may certify only
+the sum, $\sum_{v\in\mathcal{O}_{*}}M_v\succeq p_{*}\idon{\Bsys}$. The
+following proposition shows that no classical target can absorb such a
+bound, whatever the construction.
+
+\begin{proposition}
+\label{prop:obstruction}
+Call a \tref{target POVM} $F$ on $\Qsys$ \emph{classical} if every $F_v$ is diagonal
+in one fixed orthonormal basis $\{\ket{f}\}_f$ of $\Hs{\Qsys}$. There exist a
+POVM $M$ on $\Hs{\Bsys}=\mathbb{C}^{2}$, an event
+$\mathcal{O}_{*}\subseteq\Vset$ and a constant $p_{*}>0$ with
+$\sum_{v\in\mathcal{O}_{*}}M_v\succeq p_{*}\idon{\Bsys}$ such that \emph{no}
+pair $(F,\Lambda)$ exists with $F$ classical, $M\dsq_{\Lambda}F$ and
+$\sum_{v\in\mathcal{O}_{*}}F_v\succeq p_{*}\idon{\Qsys}$. Concretely,
+\begin{equation}\label{eq:obstruction}
+  M_1=\tfrac12\dyad{0},\quad
+  M_2=\tfrac12\dyad{+},\quad
+  M_3=\idon{\Bsys}-M_1-M_2,\quad
+  \mathcal{O}_{*}=\{1,2\},\quad
+  p_{*}=\tfrac12\Big(1-\tfrac{1}{\sqrt2}\Big),
+\end{equation}
+with $\ket{+}=(\ket{0}+\ket{1})/\sqrt2$.
+\end{proposition}
+
+\begin{proof}
+\emph{The data are admissible.} For two rank-one projections with overlap
+$|\innerp{0}{+}|=1/\sqrt2$, the operator $\dyad{0}+\dyad{+}$ has trace $2$ and
+eigenvalues $1\pm1/\sqrt2$; hence
+$\lmin(M_1+M_2)=\tfrac12(1-1/\sqrt2)=p_{*}>0$ and
+$\lmax(M_1+M_2)=\tfrac12(1+1/\sqrt2)<1$, so $M_3\succeq0$ and $\{M_1,M_2,M_3\}$
+is a POVM with $M_1+M_2\succeq p_{*}\idon{\Bsys}$.
+
+\emph{No classical target encodes the bound.} Suppose $(F,\Lambda)$ existed.
+Put $T_f\coloneqq\Lambda^{\dagger}(\dyad{f})$. Then $\{T_f\}_f$ is a POVM on
+$\Bsys$: each $T_f\succeq0$ because $\Lambda^{\dagger}$ is positive, and
+$\sum_fT_f=\Lambda^{\dagger}(\idon{\Qsys})=\idon{\Bsys}$ by unitality. Writing
+$F_v=\sum_fF_v(f)\dyad{f}$ with $F_v(f)\ge0$ and $\sum_vF_v(f)=1$ (POVM
+completeness read on the diagonal), linearity gives
+\begin{equation*}
+  M_v=\Lambda^{\dagger}(F_v)=\sum_fF_v(f)\,T_f .
+\end{equation*}
+The encoded event bound $\sum_{v\in\mathcal{O}_{*}}F_v\succeq p_{*}\idon{\Qsys}$
+reads, on the diagonal, $F_1(f)+F_2(f)\ge p_{*}>0$ for every $f$, so every $f$
+has $F_1(f)>0$ or $F_2(f)>0$.
+
+Suppose $F_1(f)>0$. Every summand of $M_1=\sum_{f'}F_1(f')T_{f'}$ is positive
+semidefinite, so $0\preceq F_1(f)T_f\preceq M_1=\tfrac12\dyad{0}$. A positive
+operator dominated by a rank-one positive operator is a non-negative multiple
+of it: if $X\preceq c\dyad{0}$ with $X\succeq0$, then for every
+$\ket{\psi}\perp\ket{0}$ we get $\bra{\psi}X\ket{\psi}\le0$, hence
+$\bra{\psi}X\ket{\psi}=0$ and $X\ket{\psi}=0$, so $\operatorname{supp}X
+\subseteq\operatorname{span}\ket{0}$. Thus $T_f\propto\dyad{0}$. Symmetrically
+$F_2(f)>0$ forces $T_f\propto\dyad{+}$. A non-zero operator cannot be
+proportional to both, since $\dyad{0}$ and $\dyad{+}$ are distinct rank-one
+projections; so $F_1(f)F_2(f)>0$ forces $T_f=0$, and in every case each $T_f$
+is $0$, or a non-negative multiple of $\dyad{0}$, or a non-negative multiple of
+$\dyad{+}$.
+
+Summing, $\idon{\Bsys}=\sum_fT_f=\alpha\dyad{0}+\beta\dyad{+}$ for some
+$\alpha,\beta\ge0$ (two non-negative scalars local to this proof, unrelated
+to the R\'enyi order $\alpha$). Testing against $\ket{1}$ gives
+$1=\bra{1}\big(\alpha\dyad{0}+\beta\dyad{+}\big)\ket{1}=\beta/2$, so
+$\beta=2$; testing the off-diagonal entry gives
+$0=\bra{0}\big(\alpha\dyad{0}+\beta\dyad{+}\big)\ket{1}=\beta/2$, so
+$\beta=0$ --- a contradiction.
+\end{proof}

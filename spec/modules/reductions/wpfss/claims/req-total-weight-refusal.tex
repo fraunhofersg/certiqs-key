@@ -1,0 +1,33 @@
+% ---
+% id: reductions/wpfss/req:total-weight-refusal
+% kind: req
+% title: "Refusal of a total weight of one or more"
+% summary: >-
+%   Certified weights whose total is one or more are refused, whether or not the
+%   space above the cutoff is trivial, and no squasher is constructed at total
+%   weight one. The construction of [[prop:chain]] divides by one minus the
+%   total.
+% prominence: standard
+% status: accepted
+% uses: [lem:ple1, prop:chain]
+% mentions: [rem:peqone]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+On a non-trivial space above the cutoff a \tref{total weight} above one is
+impossible (Lemma~\ref{lem:ple1}), but on a trivial one the certified-weight
+condition is vacuous, so the test is the only thing that bounds the total
+there. At total weight one the relation still holds
+(Remark~\ref{rem:peqone}); the refusal is the conservative choice.
+
+\begin{requirement}
+\label{req:total-weight-refusal}
+The engine refuses \tref{certified weights} whose \tref{total weight}
+$p=\sum_vp_v$ is not below one, with \iface{total_weight_not_below_one}. It
+decides this for every declaration, whether or not $\Hs{\Bsys_{\gtN}}$ is
+trivial, and it constructs no squasher at $p=1$, where the construction of
+Proposition~\ref{prop:chain} would divide by $1-p=0$.
+\end{requirement}

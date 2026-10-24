@@ -1,0 +1,38 @@
+% ---
+% id: receiver/rem:rankone
+% kind: rem
+% title: "Ports of rank greater than one"
+% summary: >-
+%   No result of this contract assumes one optical mode per detector port: a
+%   port collecting several modes can have a Gram of rank above one. The
+%   one-mode-per-port description holds exactly under the rank criterion of
+%   [[thm:representation-independence]] (iv).
+% prominence: standard
+% status: accepted
+% uses: [thm:representation-independence]
+% mentions: [thm:click-povm, thm:coarse-graining, thm:multiclick-bound, thm:emitted-bound, thm:exact-and-evaluated, lem:deficiency, receiver/detector-imperfections/thm:efficiency, receiver/detector-imperfections/thm:dark-counts, receiver/component-catalogue/ex:bb84, receiver/detector-imperfections/rem:effrank, req:one-mode-per-port]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:rankone}
+Example~\ref{ex:bb84} ends with four rank-one Grams, which is why the textbook
+$4\times2$ BB84 instrument is legitimate \emph{there}. Nothing in this
+contract assumes one mode per port anywhere else: the click-pattern POVM,
+the theorems built on it and the decomposition of the \tref{loss deficiency},
+among them Theorems~\ref{thm:click-povm}, \ref{thm:coarse-graining},
+\ref{thm:multiclick-bound}, \ref{thm:emitted-bound} and
+\ref{thm:exact-and-evaluated} and Lemma~\ref{lem:deficiency} of the core
+and Theorems~\ref{thm:efficiency} and~\ref{thm:dark-counts} of its
+submodules, are proved for arbitrary $\{A_k\}$, and a port that collects
+several modes, such as a multimode fiber onto one active area or two spatial
+modes onto one detector, can have $\rk A_k>1$, and every result above holds
+when it does. The criterion for a
+one-mode-per-port description is Theorem~\ref{thm:representation-independence}\,(iv); it is decidable
+from the emitted Grams, and Remark~\ref{rem:effrank} exhibits the one
+operation in this contract, apart from declaring a zero efficiency, that can
+change its answer.
+Requirement~\ref{req:one-mode-per-port} states the rule the engine follows.
+\end{remark}

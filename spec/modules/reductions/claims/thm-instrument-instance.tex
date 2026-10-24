@@ -1,0 +1,274 @@
+% ---
+% id: reductions/thm:instrument-instance
+% kind: thm
+% title: "The branching instance: an instrument followed by branch instances"
+% summary: >-
+%   A generalized instrument followed by a reduction instance in each branch
+%   is a reduction instance, keeping or forgetting the branch label. A branch
+%   entry with constant c becomes a zero-constant entry with c times the
+%   branch projector moved into the operator, and the normalizer acts branch
+%   by branch.
+% prominence: standard
+% status: accepted
+% uses: [def:reduction-instance, def:joint-family, def:exactadm, def:emitnorm, def:generalized-instrument, lem:master, lem:linear, lem:sep, cor:blockdiag, cor:pullback, thm:licence]
+% mentions: [cor:register-instance, cor:flag-instance, rem:master-scope]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The joint-outcome form accumulates over |V| x |J|, so eq:latsumcond must hold at that length wherever the form is emitted (the interface's lattice_exponent row). Step 6 of the proof identifies the normalizer's steps (1)-(4) of def:emitnorm branch by branch, the last resort (3) reading the number of elements and the class weight."
+% ---
+
+A receiver described branch by branch, each branch a reduction instance (the
+flag instance of Corollary~\ref{cor:flag-instance} for an uncharacterised
+branch, for example), is a reduction instance as a whole. The theorem builds
+it on Lemma~\ref{lem:master} in two forms: the joint-outcome form keeps the
+branch label in the outcome, and the coarse-grained form forgets it. Both
+file the branch label as a block index of the target, so they model branches
+the adversary may know (Remark~\ref{rem:master-scope}).
+Corollary~\ref{cor:register-instance} is the case of a register read by a
+POVM.
+
+\begin{theorem}\label{thm:instrument-instance}
+Let $J$ be a finite ordered set, let $\{\Ins_j\}_{j\in J}$,
+$\Ins_j\colon\Tcl{\Bsys}\to\Tcl{\Bsys'_j}$, be a
+\tref{generalized instrument} (Definition~\ref{def:generalized-instrument}),
+$\sum_j\tr\circ\Ins_j=\tr$, given independently of any datum, and for each
+$j$ let $\mathcal{J}_j$ be a reduction instance on $\Bsys'_j$ over one common
+joint alphabet with classes and weights $\big(\Vset,\{\Vset_t\},\{q_t\}\big)$,
+with handed datum $A_j$, data sectors $\SecSet_{j,\mathrm{dat}}$ with supports
+$\Vset^{(j,s)}$, scalar sectors $\SecSet_{j,\mathrm{sc}}$ with values
+$\phi_{j,s}$, hypotheses (H$_j$), channel $\Lambda_j[\cdot]$, transported set
+$\hat O^{(j)}[\cdot]$ and entry list $\CList_j[\cdot]$. Write
+$\SecSet\coloneqq\bigsqcup_{j\in J}\{j\}\times\SecSet_j$, ordered by $j$ and
+then as $\SecSet_j$ is, $\Pi_{(j,s)}$ for its sector projectors,
+$\Pi_j\coloneqq\sum_{s\in\SecSet_j}\Pi_{(j,s)}$ for the \emph{branch
+projectors}, $\hat X|_j$ for the operator equal to $\hat X$ in block $j$ and
+zero elsewhere, and $A\coloneqq(A_j)_{j\in J}$ for the joint datum. Then each
+of the two constructions (i) and (ii) is a reduction instance, with
+\begin{itemize}[leftmargin=2.2em]
+\item the channel
+  \begin{equation}\label{eq:instrument-channel}
+    \Lambda[A']\;\coloneqq\;\PinS\circ\bigoplus_{j\in J}\Lambda_j[A'_j]\circ\Ins_j ,
+  \end{equation}
+\item the sector set $\SecSet$, the hypotheses (H)~$=\bigcup_j$(H$_j$)
+  together with the hypothesis that $\{\Ins_j\}$ is a generalized
+  instrument and, for every $j$ in a declared set $J_{\mathrm{w}}\subseteq J$
+  of branches with declared lattice constants $q_j$, the
+  \emph{branch-weight hypothesis}
+  $\Ins_j^{\dagger}(\idon{\Bsys'_j})=q_j\idon{\Bsys}$,
+\item the transported set consisting of the sector projectors and, for every
+  $j$ and every $\hat X\in\hat O^{(j)}$, the operator $\hat X|_j$, with
+  pull-back $\Ins_j^{\dagger}\big(\Lambda_j^{\dagger}(\hat X)\big)$, in
+  particular
+  \begin{equation}\label{eq:instrument-transport}
+    \Lambda^{\dagger}\big(\Pi_{(j,s)}\big)
+    =\Ins_j^{\dagger}\big(\Lambda_j^{\dagger}(\Pi_s)\big),
+    \qquad
+    \Lambda^{\dagger}\big(\Pi_j\big)=\Ins_j^{\dagger}\big(\idon{\Bsys'_j}\big) ,
+  \end{equation}
+\item the entry list consisting of, for every branch $j$ and every entry
+  $(\hat O_k,\bowtie_k,c_k)\in\CList_j$, the entry
+  \begin{equation}\label{eq:instrument-entry}
+    \big(\hat O_k|_j-c_k\,\Pi_j,\ \bowtie_k,\ 0\big),
+  \end{equation}
+  together with the \emph{branch-weight entry} $(\Pi_j,=,q_j)$ for every
+  $j\in J_{\mathrm{w}}$, where that set is not empty:
+\end{itemize}
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(the joint-outcome form)} over the joint alphabet
+  $\Vset\times J$ of Definition~\ref{def:joint-family}\,(a) whose
+  \tref{outcome alphabet} is $\Yset\times J$, ordered with the branch label
+  major and the outcome minor, and whose settings are $\Tset$: writing its
+  element $(y,j,t)$ as $(v,j)$ with $v=(y,t)\in\Vset$, its
+  \tref{declared order} has
+  $(v,j)<(v',j')$ iff $t<t'$, or $t=t'$ and $j<j'$, or $t=t'$, $j=j'$ and
+  $y<y'$, so that every class $\Vset_t\times J$ is a contiguous run and the
+  restriction of the order to $\Vset\times\{j\}$ \emph{is} the order of
+  $\Vset$; its classes are $\Vset_t\times J$ and its weights $q_t$. On it, the model map
+  $M_{(v,j)}[A']\coloneqq\Ins_j^{\dagger}\big(M^{(j)}_v[A'_j]\big)$; data
+  sectors $(j,s)$, $s\in\SecSet_{j,\mathrm{dat}}$, of dimension $d_{j,s}$ and
+  support $\Vset^{(j,s)}\times\{j\}$, with
+  $A'^{(j,s)}_{(v,j')}\coloneqq\delta_{jj'}A'^{(s)}_{j,v}$; scalar sectors
+  $(j,s)$, $s\in\SecSet_{j,\mathrm{sc}}$, with
+  $\phi_{(j,s)}(v,j')\coloneqq\delta_{jj'}\phi_{j,s}(v)$; and the target
+  $F_{(v,j)}[A']=F^{(j)}_v[A'_j]\big|_j$, the branch target in block $j$ and
+  zero elsewhere;
+\item \emph{(the coarse-grained form)} over $\big(\Vset,\{\Vset_t\},\{q_t\}\big)$
+  itself: the model map
+  $M_v[A']\coloneqq\sum_{j}\Ins_j^{\dagger}\big(M^{(j)}_v[A'_j]\big)$; the same
+  data and scalar sectors with supports $\Vset^{(j,s)}$,
+  $A'^{(j,s)}_v\coloneqq A'^{(s)}_{j,v}$ and $\phi_{(j,s)}(v)\coloneqq
+  \phi_{j,s}(v)$; and the target $F_v[A']=\bigoplus_jF^{(j)}_v[A'_j]$.
+\end{enumerate}
+In both forms the class-marginal identity is discharged when every branch
+discharges its own, and the flag is set in exactly that case; and the
+normalizer of Definition~\ref{def:emitnorm} acts on the composite datum
+\emph{branch by branch}: its output at the data sectors of branch $j$ is the
+output of the normalizer of $\mathcal{J}_j$ at $A_j$, so that the declared
+datum is $A'=(A'_j)_j$ with $A'_j$ the branches' declared data and the
+declared model is $M[A']$ at those.
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} Lemma~\ref{lem:master} combines the branch relations into one;
+each part of a reduction instance is then read off branch by branch, and a
+branch entry survives the instrument once its constant is moved into the
+operator. Throughout, $A'=(A'_j)_j$ denotes a datum of the composite.
+
+\emph{Step 1 (the data).} In the joint form, sector $(j,s)$ has support
+$\Vset^{(j,s)}\times\{j\}$, which meets every class $\Vset_t\times J$ because
+$\Vset^{(j,s)}$ meets $\Vset_t$; its elements off the support are zero by the
+definition of $A'^{(j,s)}$, and its elements on the support are those of
+$A'_j$ at sector $s$. Hermiticity and positivity of the elements are those of
+$A'_j$; class completeness over $\Vset_t\times J$ reads
+$\sum_{(v,j')\in\Vset_t\times J}\delta_{jj'}A'^{(s)}_{j,v}
+=\sum_{v\in\Vset_t}A'^{(s)}_{j,v}=q_t\idon{d_{j,s}}$, which is class
+completeness of $A'_j$; and the lattice condition is read entry by entry.
+In the coarse form the support is $\Vset^{(j,s)}$ and every condition is
+literally the branch's. So in both forms a composite datum is an admissible
+datum (resp.\ an exactly admissible datum) if and only if every $A'_j$ is:
+$\mathcal{D}_{\mathrm{adm}}=\prod_j\mathcal{D}^{(j)}_{\mathrm{adm}}$. The
+handed datum $A=(A_j)_j$ is admissible because each $A_j$ is, and its entries
+are formed exactly because each branch's are.
+
+\emph{Step 2 ((I1), the model map and stability).} The joint-outcome
+alphabet of (i) is a joint alphabet with classes and weights in the sense of
+Definition~\ref{def:joint-family}\,(a): its outcome alphabet $\Yset\times J$
+is finite, non-empty and ordered, its settings and weights are those of
+$\Vset$, and its declared order is that definition's, the outcome varying
+fastest and the setting slowest. For every admissible $A'$,
+each $M^{(j)}[A'_j]$ is a POVM on $\Bsys'_j$ by (I1) of $\mathcal{J}_j$ under
+(H$_j$), which holds by the branch's stability clause. Lemma~\ref{lem:master}\,(i)
+with these branch POVMs gives that
+$\{\Ins_j^{\dagger}(M^{(j)}_v[A'_j])\}_{(v,j)\in\Vset\times J}$ is a POVM on
+$\Bsys$, the joint-form model; coarse-graining $j$ away is
+Lemma~\ref{lem:linear}\,(i) for the stochastic matrix that forgets $j$, so
+the coarse-form model is a POVM as well. $\Hs{\Bsys}$ is separable by
+hypothesis. Stability: (H$_j$) reads no entry of $A'_j$ by the branch's
+clause, and the instrument hypothesis and the branch-weight hypotheses read
+no datum because the $\Ins_j$ are given independently of any; so (H) reads
+no entry of the composite datum,
+and the remaining parts, established in Steps 3 to 5 for every admissible $A'$ under
+(H), are established as (I1) demands.
+
+\emph{Step 3 ((I2), the target).} The scalar values $\phi_{(j,s)}$ are the
+branches' values, \tref[lattice value]{lattice values} in $[0,1]$ formed as (I2) of the branch
+requires, with $\sum_{(v,j')}\delta_{jj'}\phi_{j,s}(v)=\sum_v\phi_{j,s}(v)=1$
+in the joint form and $\sum_v\phi_{j,s}(v)=1$ in the coarse form. Read
+\eqref{eq:instance-target} at the sectors $(j',s)$: in the joint form the
+block $(j',s)$ of $F_{(v,j)}[A']$ is $\delta_{jj'}A'^{(s)}_{j,v}$ on a data
+sector and $\delta_{jj'}\phi_{j,s}(v)\idon{}$ on a scalar one, so
+$F_{(v,j)}[A']$ is the branch target $F^{(j)}_v[A'_j]$ of
+\eqref{eq:instance-target} for $\mathcal{J}_j$ in block $j$ and zero
+elsewhere, the $F_{v,j}$ of Lemma~\ref{lem:master}\,(ii); in the coarse
+form the block $(j,s)$ of $F_v[A']$ is the block $s$ of $F^{(j)}_v[A'_j]$, so
+$F_v[A']=\bigoplus_jF^{(j)}_v[A'_j]$, the target of
+Lemma~\ref{lem:master}\,(iii). Block diagonality for $\SecSet$ holds by
+construction in both forms, and $\dim\Hs{\Qsys}=\sum_j\dim\Hs{\Qsys_j}$ is
+finite.
+
+\emph{Step 4 ((I3), the relation).} By (I3) of each branch,
+$\big(M^{(j)}[A'_j];O^{(j)}\big)\dsq_{\Lambda_j[A'_j]}
+\big(F^{(j)}[A'_j];\hat O^{(j)}\big)$ with $F^{(j)}$ on the
+finite-dimensional $\Qsys_j$. Lemma~\ref{lem:master}\,(ii) with these branch
+relations gives $\{M_{(v,j)}[A']\}\dsq_{\Lambda_0}\{F_{(v,j)}[A']\}$ for
+$\Lambda_0\coloneqq\bigoplus_j\Lambda_j[A'_j]\circ\Ins_j$; its part (v)
+transports $\hat X|_j$ to $\Ins_j^{\dagger}(\Lambda_j^{\dagger}(\hat X))$ for
+every $\hat X\in\hat O^{(j)}$; its part (iv) gives
+$\Lambda_0^{\dagger}(\Pi_j)=\Ins_j^{\dagger}(\idon{\Bsys'_j})$; and
+$\Pi_{(j,s)}=\Pi_s|_j$ with $\Pi_s\in\hat O^{(j)}$ by (I3) of the branch, so
+$\Lambda_0^{\dagger}(\Pi_{(j,s)})=\Ins_j^{\dagger}(\Lambda_j^{\dagger}(\Pi_s))$,
+which is \eqref{eq:instrument-transport}. Its part (iii) gives the
+coarse-grained relation with the same channel. Every operator involved is
+block diagonal for $\SecSet$ (Step 3; $\hat X|_j$ is block diagonal for
+$\SecSet_j$ inside block $j$ by (I3) of the branch), so
+Corollary~\ref{cor:blockdiag}\,(i) gives the same relations, transported set
+and pull-backs for $\PinS\circ\Lambda_0=\Lambda[A']$, which has the form (I3)
+requires; the transported set contains every $\Pi_{(j,s)}$. All of this for
+every admissible $A'$ under (H).
+
+\emph{Step 5 ((I4), the entries).} Let $(\hat O_k,\bowtie_k,c_k)\in\CList_j[A'_j]$.
+By (I4) of the branch, $\hat O_k$ is a real combination of transported
+operators of $\mathcal{J}_j$ of the form \eqref{eq:instance-entry} over
+$\SecSet_j$, with coefficients $\alpha_{k,v,s}$ and a projector combination
+$Z_k$. Then $\hat O_k|_j$ is the same combination of the operators
+$\hat X|_j$, hence transported, and it has the form \eqref{eq:instance-entry}
+over $\SecSet$: in the joint form
+$\Pi_{(j,s)}F_{(v,j')}[A']\Pi_{(j,s)}=\delta_{jj'}\big(\Pi_sF^{(j)}_v[A'_j]\Pi_s\big)\big|_j$,
+so $\hat O_k|_j=\sum_{(v,j')}\sum_{s}\alpha_{k,(v,j'),(j,s)}
+\Pi_{(j,s)}F_{(v,j')}\Pi_{(j,s)}+Z_k|_j$ with
+$\alpha_{k,(v,j'),(j,s)}\coloneqq\delta_{jj'}\alpha_{k,v,s}$; in the coarse
+form $\hat O_k|_j=\sum_v\sum_s\alpha_{k,v,s}\Pi_{(j,s)}F_v\Pi_{(j,s)}+Z_k|_j$
+directly. $Z_k|_j$ and $c_k\Pi_j$ are real combinations of sector
+projectors of $\SecSet$ with coefficients on the lattice: a coefficient of
+$Z_k|_j-c_k\Pi_j$ is $\beta_s-c_k$, a difference of two integer multiples of
+$2^{-\kappa}$ and hence one itself, which is all that is asked of it, since
+Definition~\ref{def:reduction-instance}\,(I4) puts the band of
+\eqref{eq:latinv} on an \emph{entry} and not on a coefficient and this step
+uses nothing about the coefficient beyond its being on the lattice. So
+$\hat O_k|_j-c_k\Pi_j$ has the form \eqref{eq:instance-entry} with
+$Z=Z_k|_j-c_k\Pi_j$, and it is a real combination of transported operators.
+Its pull-back, by \eqref{eq:instrument-transport} and linearity, is
+\begin{equation*}
+  \Lambda^{\dagger}\big(\hat O_k|_j-c_k\Pi_j\big)
+  =\Ins_j^{\dagger}\big(\Lambda_j^{\dagger}(\hat O_k)\big)
+   -c_k\,\Ins_j^{\dagger}\big(\idon{\Bsys'_j}\big)
+  =\Ins_j^{\dagger}\Big(\Lambda_j^{\dagger}(\hat O_k)-c_k\,\idon{\Bsys'_j}\Big).
+\end{equation*}
+The branch certificate says
+$\Lambda_j^{\dagger}(\hat O_k)-c_k\idon{\Bsys'_j}\bowtie_k0$, and
+$\Ins_j^{\dagger}$ is a positive map, being the adjoint of a completely
+positive one (Lemma~\ref{lem:sep}\,(i) identifies it; positivity is
+\eqref{eq:pairing} tested on positive operators): the image of an operator
+$\succeq0$ is $\succeq0$, of one $\preceq0$ is $\preceq0$, and of $0$ is $0$.
+So the pull-back $\bowtie_k0$, which is \eqref{eq:certificate} for
+\eqref{eq:instrument-entry} at the constant $0$, for every admissible $A'$
+under (H). The constant moves into the operator because positivity of
+$\Ins_j^{\dagger}$ bounds $\Ins_j^{\dagger}(\Lambda_j^{\dagger}(\hat O_k))$
+against $c_k\Ins_j^{\dagger}(\idon{})$, the branch weight, and not against
+$c_k\idon{\Bsys}$; the entry \eqref{eq:instrument-entry} is the form in
+which the branch certificate survives without a hypothesis on that weight.
+For $j\in J_{\mathrm{w}}$ the branch-weight hypothesis of (H) makes the
+weight a constant, $\Ins_j^{\dagger}(\idon{\Bsys'_j})=q_j\idon{\Bsys}$, and
+the branch-weight entry is listed only there; Lemma~\ref{lem:master}\,(iv)
+gives
+$\Lambda^{\dagger}(\Pi_j)=q_j\idon{\Bsys}$, an equality certificate at
+$c=q_j$ for $\Pi_j$, which has the form \eqref{eq:instance-entry} with every
+$\alpha=0$; and then also $\Lambda^{\dagger}(\hat O_k|_j)\bowtie_kc_kq_j\idon{\Bsys}$,
+the branch entry at the scaled constant, which is
+\eqref{eq:instrument-entry} plus $c_k$ times the branch-weight entry.
+The class-marginal identity: in the joint form,
+$\sum_{(v,j')\in\Vset_t\times J}M_{(v,j')}[A']
+=\sum_{j'}\Ins_{j'}^{\dagger}\big(\sum_{v\in\Vset_t}M^{(j')}_v[A'_{j'}]\big)$,
+and in the coarse form $\sum_{v\in\Vset_t}M_v[A']$ is the same sum; where
+every branch discharges \eqref{eq:instance-classmarginal} this is
+$q_t\sum_{j'}\Ins_{j'}^{\dagger}(\idon{\Bsys'_{j'}})=q_t\idon{\Bsys}$ by the
+instrument identity $\sum_j\Ins_j^{\dagger}(\idon{\Bsys'_j})=\idon{\Bsys}$
+established in the proof of Lemma~\ref{lem:master}, for every admissible
+$A'$ under (H). Where some branch does not discharge it, nothing in this
+construction establishes the identity, and the flag is not set.
+
+\emph{Step 6 (the normalizer acts per branch).} Definition~\ref{def:emitnorm}
+acts per data sector and per class on the elements of the class within the
+sector's support. At sector $(j,s)$ of the joint form the support is
+$\Vset^{(j,s)}\times\{j\}$ and the class is $\Vset_t\times J$, so the elements
+acted on are $\{A^{(s)}_{j,v}:v\in\Vset_t\cap\Vset^{(j,s)}\}$, exactly the
+elements the normalizer of $\mathcal{J}_j$ acts on at sector $s$ and class
+$t$, with the same residue $q_t\idon{}-\sum_{v\in\Vset_t}A^{(s)}_{j,v}$,
+the same exact traces, the same \tref{declared order} (the order of
+$\Vset\times J$ declared in (i) restricts on $\Vset\times\{j\}$ to the order
+of $\Vset$, the setting varying slowest in both), hence the same
+designation order, the same roundings to nearest and mixing weights of the fidelity snap
+(Definition~\ref{def:emitnorm}\,(2)), the same components and hosts, and the
+same last resort (Definition~\ref{def:emitnorm}\,(3)), which read the
+elements of the class, their number, the class weight, the designation order
+and the \tref[structural support]{structural supports} alone, all the same
+in the two runs under one run configuration and its strict option; every
+step of the two runs therefore coincides, and so do their outputs, their
+displacements and their moved classes. The
+elements \tref{outside the sector support} are touched by neither run. In
+the coarse form the support is $\Vset^{(j,s)}$ and the class is $\Vset_t$,
+and the identification is immediate. Hence $A'=(A'_j)_j$, and the declared
+model is $M[A']$ at the branches' declared data by \eqref{eq:declmodel}.
+\end{proof}

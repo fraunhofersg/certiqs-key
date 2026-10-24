@@ -1,0 +1,41 @@
+% ---
+% id: foundations/req:declared-lattice
+% kind: req
+% title: "The declared lattice condition"
+% summary: >-
+%   Every entry of operator data declared at a lattice exponent k is a lattice
+%   value at k, and so a binary64 number. The condition binds data an instance
+%   snaps or declares to a consumer that admits only at its lattice, and the
+%   emission of a producer that declares one, and no other data.
+% prominence: standard
+% status: implemented
+% uses: [def:binary64, lem:binary64-lattice, def:declared-data, def:snap]
+% mentions: [req:boundary-admission]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.snap:is_on_lattice
+% lean:
+% ---
+
+\begin{requirement}\label{req:declared-lattice}
+(D-LAT) Let $k$ be the one \tref{lattice exponent}
+(Definition~\ref{def:binary64}\,(iv)) at which a declarer declares operator
+data. Every entry of every operator of those data is a \tref{lattice value} at
+$k$: the real and the imaginary part of the entry are integer multiples of
+$2^{-k}$ and have modulus at most $1$. Each entry is then exactly a binary64
+number, by Lemma~\ref{lem:binary64-lattice}\,(i).
+
+Operator data are declared at a lattice exponent $k$, and (D-LAT) binds them,
+in these cases and no other: the data an instance snaps at $k$
+(Definition~\ref{def:snap}); the data an instance declares to a consumer that
+admits \tref{declared data} only at a declared lattice exponent $k$; and every
+operator that a producer which declares a lattice exponent $k$ emits
+(Definition~\ref{def:declared-data}). Where data of the second case are
+numbers of a supplier's output that the instance passes on unchanged
+(Definition~\ref{def:declared-data}\,(ii)), the instance does not establish
+(D-LAT) of them: the consumer's exact decision on entry establishes it, and
+the consumer refuses data that fail it
+(Requirement~\ref{req:boundary-admission}). A producer that declares no
+lattice exponent has no obligation under (D-LAT).
+\end{requirement}

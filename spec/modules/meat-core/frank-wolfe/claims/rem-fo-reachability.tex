@@ -1,0 +1,42 @@
+% ---
+% id: meat-core/frank-wolfe/rem:fo-reachability
+% kind: rem
+% title: "Reachability of positivity and maximal support"
+% summary: >-
+%   An iterate with positive weight on a point of positive definite Choi blocks
+%   and an acceptance vector positive on the acceptance support meets (H-SUPP)
+%   and (H-POS)'s first clause; such a point exists if the declared rows admit
+%   one. No optimiser is fixed: a run without such a component may lack h_lb.
+% prominence: standard
+% status: accepted
+% uses: [thm:firstorder, meat-core/lem:branch-support, lem:fo-khyp]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:fo-reachability}
+What makes (H-SUPP) and (H-POS) reachable at all is a separate question from
+what discharges them. $J_{t,s}\succ0$ suffices for (H-SUPP) by
+\eqref{eq:Wcs-bound}, and $q_t$ strictly positive on $\Chacc$ gives the
+first clause of (H-POS); neither is automatic, and an oracle return is
+typically an extreme point of its feasible set and so neither strictly
+positive nor of full support on $\Chacc$. What supplies both is the
+\emph{formation} of the iterate: a point that carries a strictly positive
+weight on some $x_{0}\in\acSet\times\Feas^{J}$ with $J_{0,s}\succ0$ for
+every $s$ and $q_{0}(\hat c)>0$ for every $\hat c\in\Chacc$ inherits both
+properties, a sum of a positive definite operator and positive semidefinite
+ones being positive definite. Such an $x_0$ exists whenever the declared
+rows admit one --- with $\CList=\varnothing$,
+$J_{0,s}=|\SecSet|^{-1}\,\idon{A_0}\otimes d_s^{-1}\idon{\Qsys_s}$ is
+feasible and strictly positive, and Lemma~\ref{lem:fo-khyp}\,(i) supplies a
+$\mathbf q_{0}\in\acSet$ supported on all of $\Chacc$. This module
+prescribes no optimiser and does not require one: the statement is what the
+first-order tier costs, not an algorithm. A run whose iterates carry no such
+component may legitimately fail (H-POS) or (H-SUPP) at every iterate, in
+which case $\Itset$ is empty, $\hlb$ is absent, and the run reports its
+estimate, correctly: the tier is conditional on how the iterates are formed,
+not unreachable.
+\end{remark}

@@ -1,0 +1,41 @@
+% ---
+% id: receiver/component-catalogue/rem:layers
+% kind: rem
+% title: Detector and source layers outside the catalogue
+% summary: >-
+%   Detector efficiency with dark counts, and the probe source, are declared
+%   layers rather than catalogue entries. Efficiency enters as the terminal
+%   factor, dark counts act on the outcome label, and source modes, unlike
+%   vacuum inputs, are never eliminated.
+% prominence: standard
+% status: accepted
+% uses: [receiver/def:compile, receiver/def:probe]
+% mentions: [def:catalogue-entries, receiver/detector-imperfections/thm:efficiency, receiver/detector-imperfections/req:efficiency-schema, receiver/detector-imperfections/thm:dark-counts, receiver/thm:port-grams, receiver/rem:lossvsprobe]
+% assumes: [A-VAC]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:layers}
+Two further declared objects are \emph{layers}, not chain elements, and are
+therefore not rows of Table~\ref{tab:catalogue} of
+Definition~\ref{def:catalogue-entries}.
+
+\emph{L1 --- Detector layer.} A port map $\{\Port{k}\}_{k=1}^{K}$ with
+per-port efficiency $\eta_k\in[0,1]$ and dark-count probability
+$p_{\dc|k}\in[0,1]$. The efficiency enters as the
+\tref[terminal detector-efficiency layer]{terminal factor} $D_\eta$ of
+Definition~\ref{def:compile}; the dark counts never enter $\Gmat$ at all and
+act on the outcome label (Theorem~\ref{thm:dark-counts}). \emph{Detector} efficiency
+is \emph{not} C7: it is the terminal layer, and the schema keeps the two apart
+(Theorem~\ref{thm:efficiency}\,(iii) and Requirement~\ref{req:efficiency-schema}).
+
+\emph{L2 --- Source (probe) layer.} The input split
+$\Inp=\InpC\sqcup\InpS$ and the \tref{probe declaration} of
+Definition~\ref{def:probe}. Undeclared input modes carry vacuum and may be
+eliminated (Theorem~\ref{thm:port-grams}\,(iv)); \tref{declared source modes} carry a
+declared state and \emph{may not}. That difference is the entire structural
+distinction between ``loss'' and ``probe'', and it is a definition rather than
+a convention (Remark~\ref{rem:lossvsprobe}).
+\end{remark}

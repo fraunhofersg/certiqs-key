@@ -1,0 +1,97 @@
+% ---
+% id: reductions/thm:mixture
+% kind: thm
+% title: "Register-conditioned squashing"
+% summary: >-
+%   A receiver conditioned by a POVM measurement of an incoming register
+%   squashes to the direct sum of its branch targets, with branch operators
+%   and branch weights transported as operators. A branch weight constrains
+%   the squashed states only where it is a declared multiple of the side
+%   system's state.
+% prominence: standard
+% status: accepted
+% uses: [cor:instances, cor:blockdiag, lem:sep, lem:master, cor:pullback, def:generalized-instrument]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+When the branch is selected by a measurement on a register that arrives with
+the light, the per-branch squashers combine into one map. The theorem is
+Corollary~\ref{cor:instances}\,(iii) with the transported operators and the
+branch weights carried along, and it is stated for a general POVM on the
+register rather than a projective measurement.
+
+\begin{theorem}\label{thm:mixture}
+Let $\Bsys=\Bsys_0D$, let $\{N_j\}_{j\in J}$ be a POVM on $D$ with $J$ finite,
+and let
+\begin{equation}\label{eq:regmodel}
+  M_v=\sum_{j\in J}M_{v|j}\otimes N_j ,
+  \qquad v\in\Vset ,
+\end{equation}
+where $\{M_{v|j}\}_{v}$ is a POVM on $\Bsys_0$ for each $j$. Suppose
+$(M_{|j};O^{(j)})\dsq_{\Lambda_j}(F_{|j};\hat O^{(j)})$ for each $j$, with
+$F_{|j}$ a POVM on a finite-dimensional $\Qsys_j$. Put
+$\Hs{\Qsys}=\bigoplus_{j\in J}\Hs{\Qsys_j}$ with block projections $\Pi_j$ and
+\begin{equation}\label{eq:regchannel}
+  \Lambda(\rho)\coloneqq\bigoplus_{j\in J}\Lambda_j\Big(
+    \tr_{D}\big[(\idon{\Bsys_0}\otimes N_j^{1/2})\,\rho\,
+    (\idon{\Bsys_0}\otimes N_j^{1/2})\big]\Big).
+\end{equation}
+Then $\Lambda$ is a channel and:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $\{M_v\}_v\dsq_{\Lambda}\big\{\bigoplus_jF_{v|j}\big\}_v$; in particular
+  $\{M_v\}$ is a POVM on $\Bsys$;
+\item the composite transports the operator $\hat O^{(j)}_k$ placed in block
+  $j$ to $O^{(j)}_k\otimes N_j$;
+\item $\Lambda^{\dagger}(\Pi_j)=\idon{\Bsys_0}\otimes N_j$, so on every
+  reachable $\sigma$ and every finite-dimensional side system $R$,
+  \begin{equation}\label{eq:branchweight}
+    \tr_{\Qsys}\big[(\Pi_j\otimes\idon{R})\,\sigma\big]
+    =\tr_{\Bsys}\big[\big((\idon{\Bsys_0}\otimes N_j)\otimes\idon{R}\big)\,\rho\big];
+  \end{equation}
+  this is an identity, not a constraint, unless the right-hand side is a
+  declared multiple of $\rho_R$;
+\item if every $F_{|j}$ and every $\hat O^{(j)}_k$ is block diagonal for a
+  finite orthogonal decomposition of $\Hs{\Qsys_j}$, then every
+  $\bigoplus_jF_{v|j}$ and every carried operator is block diagonal for the
+  union decomposition of $\Hs{\Qsys}$, and $\PinS\circ\Lambda$ realizes the
+  same relation with block-diagonal reachable states
+  (Corollary~\ref{cor:blockdiag}).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Put $\Ins_j(\rho)\coloneqq\tr_{D}[(\idon{\Bsys_0}\otimes N_j^{1/2})\rho
+(\idon{\Bsys_0}\otimes N_j^{1/2})]$. Each $\Ins_j$ is CP, being a
+single-Kraus-operator map followed by a partial trace, and
+$\sum_j\tr\Ins_j(\rho)=\sum_j\tr[(\idon{}\otimes N_j)\rho]=\tr\rho$, so
+$\{\Ins_j\}$ is a generalized instrument
+(Definition~\ref{def:generalized-instrument}). Its adjoint is
+\begin{equation*}
+  \Ins_j^{\dagger}(X)
+  =(\idon{}\otimes N_j^{1/2})(X\otimes\idon{D})(\idon{}\otimes N_j^{1/2})
+  =X\otimes N_j
+  \qquad(X\in\Lin{\Bsys_0}),
+\end{equation*}
+the two factors commuting because they act on different tensor factors; the
+first equality is \eqref{eq:pairing} for $\Ins_j$, since
+$\tr[X\,\tr_D(K\rho K)]=\tr[(X\otimes\idon{D})\,K\rho K]
+=\tr[K(X\otimes\idon{D})K\,\rho]$ for the Hermitian
+$K=\idon{\Bsys_0}\otimes N_j^{1/2}$, by cyclicity.
+
+Now apply Lemma~\ref{lem:master} with these $\Ins_j$, branch POVMs
+$M^{(j)}_v\coloneqq M_{v|j}$ and branch channels $\Lambda_j$. Part (i) of that
+lemma gives that $\{M_{v,j}=M_{v|j}\otimes N_j\}$ is a POVM on $\Bsys$ over
+$\Vset\times J$, and part (iii), which coarse-grains the branch label away,
+gives $\sum_jM_{v,j}=M_v$ and the relation (i) here, with the channel
+\eqref{eq:regchannel}, which is \eqref{eq:master}. Part (ii) here is
+Lemma~\ref{lem:master}\,(v) with $\Ins_j^{\dagger}(O^{(j)}_k)=O^{(j)}_k\otimes
+N_j$. Part (iii) here is Lemma~\ref{lem:master}\,(iv) with
+$\Ins_j^{\dagger}(\idon{\Bsys_0})=\idon{\Bsys_0}\otimes N_j$, followed by
+Corollary~\ref{cor:pullback} read on the carried operator $\Pi_j$, whose
+pull-back is that operator. Part (iv) is immediate: a direct sum of
+block-diagonal operators is block diagonal for the union of the
+decompositions, and Corollary~\ref{cor:blockdiag} applies.
+\end{proof}

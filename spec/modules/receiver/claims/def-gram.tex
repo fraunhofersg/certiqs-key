@@ -1,0 +1,45 @@
+% ---
+% id: receiver/def:gram
+% kind: def
+% title: "Port Grams and the loss deficiency"
+% summary: >-
+%   The port Gram matrix of port k is the positive operator on the declared
+%   inputs whose quadratic form is the squared norm of the amplitude reaching
+%   that port, and the loss deficiency is the identity minus their sum. These
+%   Grams are the compact data the click measurement is derived from.
+% prominence: standard
+% status: implemented
+% uses: [def:instrument]
+% mentions: [def:tolmap, thm:exact-and-evaluated, def:evaluation-model]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.grams:GramFamily
+% lean:
+% ---
+
+The admissibility defined at the end is an exact condition, while a declared
+family is admitted by a floating-point test, in the \tref{evaluation model} of
+Definition~\ref{def:evaluation-model}.
+Theorem~\ref{thm:exact-and-evaluated} states what this contract asserts about
+the exact family and what about its floating-point evaluation.
+
+\begin{definition}\label{def:gram}
+The \term[The positive operators on the declared input modes, one per detector port, whose quadratic form is the squared norm of the amplitude a receiver instrument sends to that port.]{port Gram matrices} of $\Recv$ are the operators on
+$\mathbb{C}^{\Inp}$
+\begin{equation}\label{eq:gramdef}
+  A_k\coloneqq\Gmat_{\Inp}^\dagger\,\Emd{\{k\}}\,\Gmat_{\Inp},
+  \qquad k=1,\dots,K ,
+\end{equation}
+and for $J\subseteq[K]$ we write $A_J\coloneqq\sum_{k\in J}A_k$ and
+$A_\Sigma\coloneqq A_{[K]}$. The \term[The identity on the declared input modes minus the sum of all port Grams.]{loss deficiency} is
+\begin{equation}\label{eq:deficiency}
+  \defic\coloneqq\id_{\Inp}-A_\Sigma .
+\end{equation}
+A family $\{A_k\}_{k=1}^{K}$ of operators on a finite-dimensional space is an
+\term[A finite family of positive semidefinite operators whose sum is at most the identity; an exact condition, distinct from exact admissibility of declared data.]{admissible Gram family} when $A_k\succeq0$ for every $k$ and
+$\sum_kA_k\preceq\id$. This is an exact condition; on a \emph{declared} family
+it is \emph{decided} in floating point at the
+\tref[receiver tolerances]{receiver tolerance}
+$\varepsilon_2$, by Definition~\ref{def:tolmap}\,(i).
+\end{definition}

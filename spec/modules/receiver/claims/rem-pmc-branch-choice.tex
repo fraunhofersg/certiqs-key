@@ -1,0 +1,50 @@
+% ---
+% id: receiver/rem:pmc-branch-choice
+% kind: rem
+% title: "Choice of the collapse predicate"
+% summary: >-
+%   The collapse branch is taken only where predicate (X) holds, because it
+%   can overstate the bound where the collapse hypothesis fails, while the
+%   window branch is valid always. A computed margin test would never fire,
+%   since the collapse slack is never positive.
+% prominence: standard
+% status: accepted
+% uses: [def:pmc, lem:windowtail, lem:collapse, rem:noslack]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:pmc-branch-choice}
+\emph{Why the predicate is exactly (X).} Branch 2 of \eqref{eq:pmcdef} is
+valid for \emph{every} admissible bound data with no hypothesis
+(Lemma~\ref{lem:windowtail}\,(i)), whereas branch 1 needs
+\eqref{eq:collapsehyp} and can, where that fails, return a value strictly
+above $\inf_{n>N}\Bnd^{(t)}(n)$: an over-large lower bound, which is the
+unsafe direction. An instance on admissible bound data is $K=4$,
+$\gamma^{(t)}=\beta^{(t)}_k=\tfrac{1}{100}$ and $d^{(t)}_k=1$ for every $k$,
+and $0<c^{(t)}<1$, for which
+$\Bnd^{(t)}(n)=\tfrac{96}{100}+\tfrac{3}{100}\,(c^{(t)})^{n}$ is positive and
+strictly decreasing in $n$, so that branch~1 returns
+$\Bnd^{(t)}(N+1)>\tfrac{96}{100}=\inf_{n>N}\Bnd^{(t)}(n)$.
+Predicate~(X) is decided on the declaration, before any
+arithmetic, and admits the equality case, which is the generic one:
+\eqref{eq:collapsehyp} is satisfied with slack exactly zero by every
+probe-free receiver and at every probe-off setting, which is precisely the
+configuration Lemma~\ref{lem:collapse} was proved for. (X) is
+\emph{sufficient, not necessary}: a receiver whose slack happens to be zero
+for some other reason, such as a probe that is on but decoupled from every
+port, where $\Gamma^{1/2}A_{\Prb\Prb}\Gamma^{1/2}=0$ makes
+$\gamma^{(t)}=\beta^{(t)}_k=1$ as well, fails (X) and is served by branch 2.
+That is conservative, and Lemma~\ref{lem:windowtail}\,(i) makes it sound.
+
+\emph{Why there is no computed companion to (X).} A test of the form ``take
+branch 1 when the evaluated slack $\sum_k\beta^{(t)}_k-1-(K-1)\gamma^{(t)}$
+clears a declared margin'' would never fire, and Remark~\ref{rem:noslack}
+proves it: that slack equals $-\Bnd^{(t)}(0)$, which is $\le0$ for every
+receiver, at every setting, at every parameter value. A margin test on it
+could therefore be met only by floating-point noise, which is the one case a
+margin exists to exclude. There is no such predicate here, and there is no
+declared margin among the inputs.
+\end{remark}

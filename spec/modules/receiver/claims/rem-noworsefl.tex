@@ -1,0 +1,39 @@
+% ---
+% id: receiver/rem:noworsefl
+% kind: rem
+% title: "The exact-window comparison under floating-point evaluation"
+% summary: >-
+%   Two steps of [[prop:exactnoworse]] compare evaluated numbers and survive an
+%   evaluation; branch 1's use of the collapse lemma does not. There the
+%   exact-window weight can sit below the analytic one by evaluation errors of
+%   the bound function between the first block above the cutoff and one past
+%   the depth.
+% prominence: standard
+% status: accepted
+% uses: [prop:exactnoworse, def:pmc, lem:collapse]
+% mentions: [thm:exact-and-evaluated, thm:emitted-bound]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:noworsefl}
+Proposition~\ref{prop:exactnoworse} compares two \emph{expressions} in exact
+arithmetic. Two of its three steps survive an evaluation term for term,
+because they compare evaluated numbers with each other: $\ell(n)\ge\Bnd(n)$
+is an evaluated maximum, and branch~2 minimises over exactly the evaluated
+$\Bnd(n)$ that \eqref{eq:pmcdef} minimises over. The step that does not is
+branch~1's use of Lemma~\ref{lem:collapse},
+$\Bnd(n)\ge\Bnd(N+1)$ for $N+1<n\le m^{\ast}_t+1$: a statement about exact
+values, and those further $\Bnd(n)$ are quantities \eqref{eq:pmcdef} never
+evaluates, whose evaluated values can fall below the evaluated $\Bnd(N+1)$.
+So on branch~1 the emitted value can sit below the one \eqref{eq:pmcdef}
+would produce by the evaluation errors of those further values together with
+that of $\Bnd(N+1)$, and this contract claims no bound on either
+(Theorem~\ref{thm:exact-and-evaluated}\,(ii)). Unaffected either way are the
+result that underwrites the emitted number (Theorem~\ref{thm:emitted-bound}) and
+the fact that a declaration carrying no depth performs none of this
+arithmetic.
+\end{remark}

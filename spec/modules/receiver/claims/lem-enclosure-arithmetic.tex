@@ -1,0 +1,107 @@
+% ---
+% id: receiver/lem:enclosure-arithmetic
+% kind: lem
+% title: "Arithmetic on complex enclosures"
+% summary: >-
+%   Sums, products, conjugates and reciprocals of enclosed numbers are enclosed
+%   by explicit rational rules, so any finite expression in enclosed numbers is
+%   enclosed and stays exact where its inputs are. Averaging a Hermitian
+%   matrix's enclosure with its adjoint makes the centre Hermitian.
+% prominence: technical
+% status: implemented
+% uses: [def:complex-enclosure, foundations/def:exact-reference]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.enclosure:Ball
+% lean:
+% ---
+
+This is interval arithmetic on complex discs with Gaussian-rational centres,
+written so that every rule is computed in exact rational arithmetic. A rule
+never shrinks a radius, and an enclosure obtained by it can be far wider than
+the true uncertainty when the same quantity enters an expression twice;
+soundness is all the lemma asserts.
+
+\begin{lemma}\label{lem:enclosure-arithmetic}
+Let $(x_c,r_x)$ and $(y_c,r_y)$ be \tref[complex enclosure]{complex
+enclosures} of complex numbers $x$ and $y$
+(Definition~\ref{def:complex-enclosure}).
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{Sums and conjugates.} $(x_c+y_c,\,r_x+r_y)$,
+  $(-x_c,\,r_x)$ and $(\overline{x_c},\,r_x)$ are complex enclosures of
+  $x+y$, $-x$ and $\overline{x}$.
+\item \emph{Products.}
+  $\big(x_cy_c,\ \lvert x_c\rvert_{1}\,r_y+r_x\,\lvert y_c\rvert_{1}+r_xr_y\big)$
+  is a complex enclosure of $xy$.
+\item \emph{Reciprocals.} If $\ell$ is a rational with $\ell>0$,
+  $\ell^{2}\le\lvert x_c\rvert^{2}$ and $r_x<\ell$, then $x\neq0$, $x_c\neq0$,
+  $1/x_c=\overline{x_c}/\lvert x_c\rvert^{2}$ lies in $\mathbb{Q}(i)$, and
+  $\big(1/x_c,\ r_x/(\ell(\ell-r_x))\big)$ is a complex enclosure of $1/x$.
+\item \emph{Expressions.} Let $E$ be a finite expression whose leaves are
+  complex numbers and whose nodes are sums, differences, products,
+  conjugates and reciprocals, and let a complex enclosure of every leaf be
+  given. Assign to every node, in an order in which its operands come first,
+  the enclosure that (i)--(iii) give from the enclosures of its operands, a
+  reciprocal node receiving one only where some rational $\ell$ meets the
+  condition of (iii). If every reciprocal node receives one, the enclosure of
+  every node is a complex enclosure of its value, and a node whose operands
+  have exact enclosures has an exact one. This applies entry by entry to sums
+  and products of matrices, to permanents and determinants, which are sums of
+  products of entries, and to the inverse of an invertible matrix, whose
+  entries are signed minors divided by its determinant.
+\item \emph{Hermitian centres.} If $X$ is a Hermitian $d\times d$ matrix and
+  $(X_c,r)$ a complex enclosure of $X$, then
+  $\big(\tfrac12(X_c+X_c^{\dagger}),\,\tfrac12(r+r^{\transpose})\big)$ is a
+  complex enclosure of $X$ whose centre is Hermitian with entries in
+  $\mathbb{Q}(i)$ and whose radii are symmetric; it is therefore an
+  \tref{entrywise enclosure} of $X$
+  (\xref{foundations/def:exact-reference}), and its entry $(i,l)$ is exact
+  where $r_{il}=r_{li}=0$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) $\lvert(x+y)-(x_c+y_c)\rvert\le\lvert x-x_c\rvert+\lvert y-y_c\rvert
+\le r_x+r_y$; negation and conjugation preserve moduli, and
+$\mathbb{Q}(i)$ is closed under both.
+
+(ii) $xy-x_cy_c=x_c(y-y_c)+(x-x_c)y_c+(x-x_c)(y-y_c)$, so
+$\lvert xy-x_cy_c\rvert\le\lvert x_c\rvert r_y+r_x\lvert y_c\rvert+r_xr_y$,
+and $\lvert z\rvert\le\lvert z\rvert_{1}$ for $z\in\mathbb{Q}(i)$. The centre
+lies in $\mathbb{Q}(i)$ and the radius is a non-negative rational.
+
+(iii) $\lvert x_c\rvert\ge\ell>0$, so $x_c\neq0$ and
+$1/x_c=\overline{x_c}/\lvert x_c\rvert^{2}$, with $\lvert x_c\rvert^{2}$ a
+positive rational. Further $\lvert x\rvert\ge\lvert x_c\rvert-r_x\ge\ell-r_x>0$,
+so $x\neq0$ and
+\begin{equation*}
+  \Big\lvert\frac1x-\frac1{x_c}\Big\rvert
+  =\frac{\lvert x_c-x\rvert}{\lvert x\rvert\,\lvert x_c\rvert}
+  \le\frac{r_x}{(\ell-r_x)\,\ell} ,
+\end{equation*}
+a non-negative rational.
+
+(iv) By induction along the order of assignment: a leaf has a complex
+enclosure by hypothesis, and a node whose operands have complex enclosures
+receives one by (i)--(iii). If every operand radius is zero, the radii of (i)
+and (ii) are zero, and so is that of (iii), its numerator being $r_x=0$. A
+sum or product of matrices has entries that are sums of products of entries; a
+permanent or determinant is a sum of products of entries, with signs for the
+determinant; and Cramer's rule writes every entry of an inverse as a signed
+minor, a determinant, times the reciprocal of the determinant of the matrix.
+
+(v) The centre
+$Z\coloneqq\tfrac12(X_c+X_c^{\dagger})$ is Hermitian with entries in
+$\mathbb{Q}(i)$. Since $X_{il}=\overline{X_{li}}$,
+\begin{equation*}
+  \lvert X_{il}-Z_{il}\rvert
+  =\tfrac12\big\lvert(X_{il}-(X_c)_{il})
+     +\overline{(X_{li}-(X_c)_{li})}\big\rvert
+  \le\tfrac12\,(r_{il}+r_{li}) ,
+\end{equation*}
+and $\tfrac12(r+r^{\transpose})$ is a symmetric matrix of non-negative
+rationals. These are
+the data of an entrywise enclosure of the Hermitian matrix $X$, and the radius
+of entry $(i,l)$ is zero where $r_{il}=r_{li}=0$.
+\end{proof}

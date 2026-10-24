@@ -1,0 +1,16 @@
+digraph claims {
+  rankdir=LR;
+  graph [label="2 Source links and the source segment\nArrow: claim -> prerequisite. Solid: uses; dashed: assumes.\nDeclared dependencies, not a proof check. Mentions excluded.", labelloc=t, fontsize=13, fontname="Arial", bgcolor="white", pad=0.25, nodesep=0.3];
+  node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11, margin="0.13,0.09"];
+  edge [color="#526777", arrowsize=0.65];
+  subgraph "cluster_transmitter" {
+    label="transmitter"; color="#cbd5df";
+    "transmitter/def:source-link" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/def:source-link<BR/>Source link<BR/>implemented</TD></TR><TR><TD HREF="../claims/def-source-link.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/def:source-link" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled", URL="../claims/def-source-link.tex", target="_top"];
+    "transmitter/def:source-segment" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/def:source-segment<BR/>Source segment and its interface<BR/>conditions<BR/>implemented</TD></TR><TR><TD HREF="../claims/def-source-segment.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/def:source-segment" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled", URL="../claims/def-source-segment.tex", target="_top"];
+    "transmitter/def:source-spec" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/def:source-spec<BR/>Source specification<BR/>implemented<BR/>BOUNDARY: further prerequisites omitted</TD></TR><TR><TD HREF="../claims/def-source-spec.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/def:source-spec" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled,dashed", URL="../claims/def-source-spec.tex", target="_top"];
+    "transmitter/rem:segment-scope" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/rem:segment-scope<BR/>Scope of the source-segment conditions<BR/>accepted</TD></TR><TR><TD HREF="../claims/rem-segment-scope.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/rem:segment-scope" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../claims/rem-segment-scope.tex", target="_top"];
+  }
+  "transmitter/def:source-segment" -> "transmitter/def:source-link";
+  "transmitter/def:source-segment" -> "transmitter/def:source-spec";
+  "transmitter/rem:segment-scope" -> "transmitter/def:source-segment";
+}

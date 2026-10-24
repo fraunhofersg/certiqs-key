@@ -1,0 +1,65 @@
+% ---
+% id: protocol-compiler/ass:spec
+% kind: ass
+% title: "Specification faithful to the apparatus"
+% summary: >-
+%   Declared dimensions, alphabets, tables and measurements describe the
+%   apparatus: the receiver's in every round whatever the others did and,
+%   where no source certificate is demanded, Alice's of two or more letters;
+%   every input yields a key. The compiler checks only the last, in part.
+% prominence: standard
+% status: accepted
+% uses: [def:spec]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-SPEC
+% verification: never
+% category: protocol-structure
+% affects: [secrecy]
+% user_statement: >-
+%   Your declared numbers describe your apparatus: each system has its
+%   declared dimension, every alphabet and table (announcements, sifting, the
+%   raw key bit) is what your devices and software do, and the key rule
+%   yields a key value, never "no key", on every input. Each measuring
+%   station, of either party, performs exactly its declared measurement in
+%   every round, on that round's input alone; afterpulsing or a dead time
+%   violates this. A declared receiver instrument's measurement is the model
+%   the engine emits from it; the emission step is recorded, not bounded.
+%   Where no source-replacement certificate is demanded (an untrusted source,
+%   or a one-dimensional A), Alice's declared measurement of her letter is
+%   the one she performs; [[A-ALICE-MEAS]] adds every round, alone. The
+%   engine checks that the declaration is well formed, not that it matches
+%   your hardware.
+% lean:
+% ---
+
+The compiler decides, on the declared numbers, every condition of a
+\tref{well-formed specification}. What no function of the
+\tref{declared data} decides is whether those data are the apparatus: a
+mis-declared dimension, or a measurement that is complete as written but is
+not the one performed, passes every check. Where a
+\tref{source-replacement certificate} is demanded, in
+\tref{trusted-source mode} at $d_A\ge2$, Alice's measurement is tied to the
+source through that certificate, and clause~(i) says nothing of it. On the
+receiver side clause~(i) includes that the measurement keeps no memory from
+round to round, on every route, a directly declared family and a chain from
+elsewhere included: no \tref{declared datum} describes more than one round. The
+key rule's codomain is decided only in part: check V5 refuses a key rule that
+withholds a key on part of a passing class, and not one that withholds it on
+the whole of such a class.
+
+\begin{assumption}\label{ass:spec}
+For a \tref{protocol specification} $\Spec$ (Definition~\ref{def:spec}):
+(i) the declared dimensions, alphabets and tables of $\Spec$ describe the
+apparatus, and so do its declared measurements, namely: the physical
+receiver family $\{\Fph_w\}_{w\in\Vph}$ (Definition~\ref{def:spec}\,(b); in
+the general format, each \tref{measured factor}'s family of (b$'$)) is the
+measurement performed, in every round, on that round's physical receiver
+system alone, whatever happens in the other rounds, their outcomes and public
+messages included; and
+where no source-replacement certificate is demanded of $\Spec$ (in
+\tref{untrusted-source mode}, or at $d_A=1$), $\{M_x\}$
+(Definition~\ref{def:spec}\,(a)) is the measurement Alice performs on $A$;
+(ii) the key rule $r^{0}_{\hold}$ is valued in $\Zval$.
+\end{assumption}

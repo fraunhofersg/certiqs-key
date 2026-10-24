@@ -1,0 +1,123 @@
+% ---
+% id: reductions/wpfss/prop:precomposed-blocks
+% kind: prop
+% title: "Preserved blocks supplied with the dark counts already composed"
+% summary: >-
+%   Supplying the preserved blocks already composed with the dark counts forms
+%   the same flat instance, and so the same emission, as composing them here,
+%   wherever no snap moves a block. A snap made before or after the composition
+%   changes only the data sectors, and the composed reference is a reference.
+% prominence: standard
+% status: implemented
+% uses: [def:weight-route, prop:flat-instance, prop:chain, lem:descent, def:targets, reductions/def:reduction-instance, reductions/def:emitnorm, foundations/def:exact-reference, foundations/def:snap]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.wpfss.weights:post_processed_preserved_blocks
+% lean:
+% notes: "Part (ii) compares the two forms in exact arithmetic; whether the composed blocks are declarable at all (on the lattice) is a separate question, which part (iii) answers for the case where the declaring party snaps them. Part (iii) is stated for a reference read through entrywise enclosures (foundations/def:exact-reference), the exact reference being the case of radius zero."
+% ---
+
+The dark counts are a trusted classical channel, and composing them before or
+after the supplier's blocks are handed over is the same operation; what the
+order changes is only where a snap, if one is needed, is made. A declaring
+party snaps the composed model when it wants the noise floor of the dark
+counts in place before its snap. This proposition says that the flat instance
+does not notice the order (part (ii)) and what changes when a snap
+intervenes (part (iii)), the composed reference being what the receiver
+hands beside its snap of the composed blocks.
+In the \tref{dark-composed form} the dark-count channel is not applied to the
+preserved blocks again, but it is still read: it defines the family above the
+cutoff, and the routed weights read its minima and its absorbing letters, as
+in the \tref{bare form}.
+
+\begin{proposition}\label{prop:precomposed-blocks}
+Let the data of Definition~\ref{def:weight-route} be given in the
+\tref{bare form}, with supplied preserved blocks $B^{(m)}_{y|t}$, $m\le N$,
+and put
+\begin{equation}\label{eq:precomposed}
+  \widetilde B^{(m)}_{y|t}\;\coloneqq\;\sum_{y'\in\Yset}R^{\cg}_{y|y'}\,B^{(m)}_{y'|t}.
+\end{equation}
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item For every $t$ and $m$, $\{\widetilde B^{(m)}_{y|t}\}_{y\in\Yset}$ is a
+  family of Hermitian positive semidefinite matrices complete on its block.
+\item The flat instance of Proposition~\ref{prop:flat-instance} formed from
+  the blocks $\widetilde B$ in the \tref{dark-composed form}, and the one
+  formed from the blocks $B$ in the bare form, have the same
+  \tref{handed datum}, $A^{(m)}_{(y,t)}=q_t\widetilde B^{(m)}_{y|t}$, the same
+  \tref{hypotheses (H)}, \tref{model map}, \tref{routed weights},
+  \tref[scalar value]{scalar values}, channel, \tref{transported set} and
+  entries; so they are one \tref{reduction instance}, and the
+  \tref{emission normalizer} gives them the same \tref{declared datum},
+  \tref{declared model} and record.
+\item Let $\{G^{(m)}_{y|t}\}_{y\in\Yset}$ be a \tref{reference} of the bare
+  blocks of setting $t$ with constant $1$, read through the
+  \tref[entrywise enclosure]{entrywise enclosures}
+  $\big(C^{(m)}_{y|t},r^{(m)}_{y|t}\big)$
+  (\xref{foundations/def:exact-reference}), and put
+  $\widetilde G^{(m)}_{y|t}\coloneqq\sum_{y'}R^{\cg}_{y|y'}G^{(m)}_{y'|t}$.
+  Then $\widetilde G$ is a reference with constant $1$, read through the
+  enclosures
+  $\big(\sum_{y'}R^{\cg}_{y|y'}C^{(m)}_{y'|t},\,\sum_{y'}R^{\cg}_{y|y'}r^{(m)}_{y'|t}\big)$,
+  and it is an \tref{exact reference} where $G$ is. If $B$ is the
+  snapped family of a \tref{snap} of $G$ and $B'$ that of a snap of
+  $\widetilde G$ (\xref{foundations/def:snap}), then the handed data
+  $A^{\mathrm{b}}_{(y,t)}=q_t\sum_{y'}R^{\cg}_{y|y'}B_{y'|t}$ of the bare
+  form and $A^{\mathrm{d}}_{(y,t)}=q_tB'_{y|t}$ of the dark-composed form
+  differ in general. The two flat instances agree in everything but their
+  data, so their emissions differ only in their
+  \tref[data sector]{data sectors}.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) Each $\widetilde B^{(m)}_{y|t}$ is a combination of Hermitian positive
+semidefinite matrices with the non-negative coefficients $R^{\cg}_{y|y'}$,
+and $\sum_y\widetilde B^{(m)}_{y|t}=\sum_{y'}\big(\sum_yR^{\cg}_{y|y'}\big)
+B^{(m)}_{y'|t}=\sum_{y'}B^{(m)}_{y'|t}=\idon{}$ by the column-stochasticity
+of $R^{\cg}$ (Lemma~\ref{lem:descent}) and the completeness of the supplied
+family on its block.
+
+(ii) In the bare form the handed datum is formed by steps~1--2 of
+Definition~\ref{def:weight-route},
+$A^{(m)}_{(y,t)}=q_t\sum_{y'}R^{\cg}_{y|y'}B^{(m)}_{y'|t}$
+(Proposition~\ref{prop:flat-instance}\,(I1)), which is
+$q_t\widetilde B^{(m)}_{y|t}$ by \eqref{eq:precomposed}; in the dark-composed
+form it is formed by step~2 alone from the supplied $\widetilde B$, which
+gives the same matrices, entry for entry, in exact arithmetic. Every other
+part of the flat instance reads no supplied block below the cutoff: the
+family above the cutoff is
+$q_t\sum_{y'}R^{\cg}_{y|y'}\blk{M}{\gtN}_{y'|t}$ in either form
+(Definition~\ref{def:weight-route}); the hypotheses (H1)--(H3) are about that
+family and the routed weights; the routed weights read $R^{\cg}$, the class
+weights and the declared slot; the scalar values
+\eqref{eq:flat-scalars} read the routed weights; the channels \eqref{eq:Lwp}
+and \eqref{eq:Lfss} read the cutoff projectors, the family above the cutoff
+and the weights; and the transported set and the entries are built from
+these and from the sector projectors (Proposition~\ref{prop:flat-instance}\,(I3)
+and (I4)). So the two instances coincide. The normalizer of
+Definition~\ref{def:emitnorm} is a function of the handed datum, the
+declared order, the lattice exponent and the run option, so it produces the
+same declared datum and records, and the declared model, the model map at
+that datum, is the same.
+
+(iii) $\widetilde G$ is the image of $G$ under the same non-negative
+combination as in (i), so its blocks are Hermitian, positive semidefinite and
+complete at $1$. Its centres $\sum_{y'}R^{\cg}_{y|y'}C^{(m)}_{y'|t}$ are
+Hermitian with Gaussian-rational entries and its radii are non-negative
+rationals, the entries of $R^{\cg}$ being non-negative dyadic rationals; and
+for every entry $(i,l)$,
+\begin{equation*}
+  \Big|\big(\widetilde G^{(m)}_{y|t}\big)_{il}
+    -\Big(\sum_{y'}R^{\cg}_{y|y'}C^{(m)}_{y'|t}\Big)_{il}\Big|
+  \;\le\;\sum_{y'}R^{\cg}_{y|y'}\Big|\big(G^{(m)}_{y'|t}-C^{(m)}_{y'|t}\big)_{il}\Big|
+  \;\le\;\sum_{y'}R^{\cg}_{y|y'}\big(r^{(m)}_{y'|t}\big)_{il},
+\end{equation*}
+by the triangle inequality and $R^{\cg}\ge0$. That is
+\xref{foundations/def:exact-reference}, and every radius is zero where every
+radius of $G$ is. That the two handed data differ in general
+is that rounding and composing do not commute: a snap of $G$ followed by
+$R^{\cg}$ and a snap of $R^{\cg}G$ are different lattice families. The last
+sentence is (ii)'s list of what the instance reads besides its handed datum.
+\end{proof}

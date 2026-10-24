@@ -1,0 +1,74 @@
+% ---
+% id: meat-core/frank-wolfe/rem:fo-one-ruler
+% kind: rem
+% title: "Maximal support as a rank equality read with one ruler"
+% summary: >-
+%   (H-SUPP) is equivalent to rank X = dim W, never to positivity of X on its
+%   ambient space, whose spectrum always contains 0. Both sides are counted
+%   relative to a spectral radius at one cutoff, the reference rank at its
+%   square root, since a direction of singular value σ enters X with weight σ².
+% prominence: standard
+% status: accepted
+% uses: [thm:firstorder, meat-core/def:branch-support, meat-core/lem:branch-support]
+% mentions: [req:support-rank-check]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:fo-one-ruler}
+(H-SUPP) is decided by a rank comparison at one declared cutoff, not by a
+proof. (H-SUPP) says $\operatorname{supp}X_{\hat c,s}=W_{\hat c,s}$, and
+since $\operatorname{supp}X_{\hat c,s}\subseteq W_{\hat c,s}$ always
+(\eqref{eq:Wcs-bound}), it is equivalent to the \emph{rank equality}
+\begin{equation}\label{eq:hsupp-check}
+  \operatorname{rank}X_{\hat c,s}=\dim W_{\hat c,s},
+\end{equation}
+equivalently to strict positivity of the compression of $X_{\hat c,s}$ to
+$W_{\hat c,s}$. \emph{It is not, and must not be read as, strict positivity
+of $X_{\hat c,s}$ on its ambient space}: $X_{\hat c,s}$ lives on
+$\Hs{R\,XY\,C_AC_B\,A\Qsys_s}$ while $\dim W_{\hat c,s}\le
+|\Kann_{\mathrm{pass}}(\hat c)|\cdot\dim\Sadm\cdot d_s$ by
+\eqref{eq:Kstack-rank}, so the ambient spectrum always contains $0$ and an
+ambient positivity test is never satisfied.
+Requirement~\ref{req:support-rank-check} computes both sides of
+\eqref{eq:hsupp-check} and reads both with one declared cutoff: the left side
+as the count of eigenvalues of $X_{\hat c,s}$ above the cutoff,
+\emph{relative to that block's own spectral radius}; the right side as
+$\operatorname{rank}\mathbf K_{\hat c,s}$ of \eqref{eq:Kstack}, read at the
+square root of the cutoff relative to that matrix's largest singular value,
+equivalently the count of eigenvalues of
+$\mathbf K_{\hat c,s}\mathbf K_{\hat c,s}^{\dagger}$ above the cutoff
+relative to its spectral radius, which is the left side's own count taken at
+the identity input ($J_s=\idon{A_0\Qsys_s}$, respectively
+$\omega_s=\idon{A\Qsys_s}$ in \tref{untrusted-source mode}). The relative
+reading is right rather than convenient, because \eqref{eq:Wcs-bound}'s
+condition is a rank condition, invariant under scaling the block, and
+$\nabla T$ is positively homogeneous of degree zero, so a uniformly small
+block is not a degenerate one.
+
+\emph{Why one ruler.} The branch operator is
+$X_{\hat c,s}=\mathbf K_{\hat c,s}(\id\otimes J_s)
+\mathbf K_{\hat c,s}^{\dagger}$, the identity acting on the index of the
+\tref[pass class]{pass classes} (with $\omega_s$ for $J_s$ in
+untrusted-source mode), so
+$\lambda_{\min}(J_s)\,\mathbf K_{\hat c,s}\mathbf K_{\hat c,s}^{\dagger}
+\preceq X_{\hat c,s}\preceq
+\lambda_{\max}(J_s)\,\mathbf K_{\hat c,s}\mathbf K_{\hat c,s}^{\dagger}$:
+a direction along a singular value $\sigma$ of $\mathbf K_{\hat c,s}$
+carries weight of order $\sigma^2$ in $X_{\hat c,s}$, never of order
+$\sigma$, and $\operatorname{supp}X_{\hat c,s}\subseteq
+\operatorname{supp}\mathbf K_{\hat c,s}\mathbf K_{\hat c,s}^{\dagger}
+=W_{\hat c,s}$, which is \eqref{eq:Wcs-bound}. A window at the cutoff's
+own value on $\sigma$ would count in $\dim W_{\hat c,s}$ directions whose
+relative weight in $X_{\hat c,s}$ is below that value at every iterate with
+$J_s$ not far from a multiple of the identity --- for a direction at
+relative singular value $\sigma_{\mathrm{rel}}$, every iterate at which
+$\lambda_{\max}(J_s)/\lambda_{\min}(J_s)$ is at most the cutoff divided by
+$\sigma_{\mathrm{rel}}^2$ --- and the comparison would then fail at every
+such iterate however exactly (H-SUPP) holds; read at the square root, both
+sides count eigenvalues of operators of the one form
+$\mathbf K_{\hat c,s}(\id\otimes J)\mathbf K_{\hat c,s}^{\dagger}$ at one
+relative window.
+\end{remark}

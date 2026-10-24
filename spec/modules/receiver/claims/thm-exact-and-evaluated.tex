@@ -1,0 +1,277 @@
+% ---
+% id: receiver/thm:exact-and-evaluated
+% kind: thm
+% title: "Exact statements, floating-point and rigorous evaluation"
+% summary: >-
+%   The receiver's identities and inequalities are exact unless a claim names
+%   a receiver tolerance or [[A-EIG]]; its floating-point numbers carry no error
+%   bound except through [[A-EIG]], while rational enclosures contain the
+%   model's blocks and rigorously evaluated weights are bounds outright.
+% prominence: standard
+% status: accepted
+% uses: [def:evaluation-model, thm:multiclick-bound, lem:collapse, lem:windowtail, lem:exactbasic, lem:exactwindow, def:bounddata, def:tolmap, def:pmcex, thm:emitted-bound, def:residuals, def:pmc, def:complex-enclosure, lem:enclosure-arithmetic, thm:enclosed-blocks, thm:exact-blocks, foundations/lem:enclosure-psd, def:setting-family, def:enclosed-weight, thm:enclosed-weight, def:exact-route, cor:unconditioned-family, foundations/lem:least-eigenvalue-bound, foundations/cor:least-eigenvalue-over-enclosure, foundations/def:exact-reference, foundations/def:binary64]
+% mentions: [receiver/component-catalogue/ex:bb84exact, req:evaluation-label, req:residual-emission, req:exact-window-declaration, req:rigorous-weight, rem:exacteig, rem:exactness-scope, receiver/detector-imperfections/cor:exact-dark-composed]
+% assumes: [A-EIG]
+% refs: []
+% provenance: newly-derived
+% notes: "Items (vi) and (vii) are stated for the core's own family, the unconditioned receiver of cor:unconditioned-family, and (vii) for any complex enclosures of a setting's data; the submodule counterparts are their own claims (receiver/detector-imperfections/cor:exact-dark-composed among them), named in the lead-in as pointers only, since the core never uses a submodule claim. Proof (v) argues that r_6 is blind to the direction A-EIG constrains from eq:res6 and lem:exactbasic; def:setting-family is in uses for the hypotheses of thm:multiclick-bound at a setting."
+% lean:
+% ---
+
+Remark~\ref{rem:exactness-scope} says what item~(i) does not assert, and
+Remark~\ref{rem:exacteig} says why the window residual $r_6$ of item~(v) is
+blind to the direction Assumption~\ref{ass:eig} constrains.
+Requirement~\ref{req:rigorous-weight} is where the engine forms the rigorous
+evaluation of item~(vii), and Requirement~\ref{req:evaluation-label} what its
+label means for the tier of a run. Items~(vi) and~(vii) speak of the core's
+own family; the submodules state the counterparts for theirs, such as the
+enclosures of the dark-composed blocks
+(Corollary~\ref{cor:exact-dark-composed}), and a submodule that constructs a
+setting family states the enclosures of its blocks and the rigorously
+evaluated weight at its settings.
+
+\begin{theorem}\label{thm:exact-and-evaluated}
+For the evaluation model of Definition~\ref{def:evaluation-model}:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{The asserted mathematics is exact, except where a claim says so in
+  its own statement.} \emph{Every asserted identity and inequality} of this
+  module and its submodules is between exactly specified quantities and
+  contains no error term, no tolerance and no numerical hypothesis
+  (Theorem~\ref{thm:multiclick-bound}, Lemma~\ref{lem:collapse},
+  Lemma~\ref{lem:windowtail}, Lemma~\ref{lem:exactbasic} and
+  Lemma~\ref{lem:exactwindow} included, the last two being stated on the exact
+  $\Bnd^{\ast}$ and carrying no tolerance), \emph{except where a claim's own
+  statement names a \tref[receiver tolerances]{receiver tolerance} or
+  Assumption~\ref{ass:eig}}.
+\item \emph{The floating-point evaluation is not.} The emitted $\{A_k\}$,
+  block matrices and those bound values that the floating-point evaluation
+  produces are floating-point evaluations of those quantities; the enclosures
+  of item (vi) and the rigorous evaluation of item (vii) are not. This
+  contract asserts no bound on the difference, and the residuals of
+  Definition~\ref{def:residuals} are \emph{diagnostics}: passing them is
+  necessary for the artifact to be self-consistent and is not sufficient for
+  any enclosure statement.
+\item \emph{The evaluation label.} An artifact carries the rigorous evaluation
+  label exactly where every \tref{per-setting weight} it emits is formed by the
+  rigorous evaluation of Definition~\ref{def:evaluation-model}, as the
+  \tref{enclosed weight} of Definition~\ref{def:enclosed-weight} or a
+  non-negative real below it; every other artifact, on every input route, the
+  route-(iii) compiler included, carries the floating-point evaluation label.
+  The rigorous label concerns the weights alone: the blocks are evaluated in
+  floating point under (ii) whatever the label. No path in this module
+  produces a label stronger than these two.
+\item \emph{Where route (i) stands.} If the Grams are \emph{declared}, as
+  binary64 values, which are dyadic rationals
+  (\xref{foundations/def:binary64}\,(iii)), the compilation error of (ii) does
+  not exist: there is no compilation. The eigenvalue quantities of
+  Theorem~\ref{thm:multiclick-bound} are still evaluated in floating point by
+  the floating-point evaluation, so (ii) and (iii) apply to a weight it forms;
+  what changes is that the rigorous evaluation of (vii) then encloses no
+  matrix product, the enclosures it starts from being the declared Grams
+  themselves. This is also why $r_1$ and $r_3$ do not exist on this route: they
+  are written on a $\Gmat$ that is not supplied
+  (Definition~\ref{def:residuals}). Nothing further is claimed.
+\item \emph{The one place a floating-point number is asserted to bound an
+  exact one, and it is opt-in.} Where a setting $t$ carries an exact-window
+  depth and its emitted weight $\pmc^{(t)}$ is that of
+  Definition~\ref{def:pmcex}, the weight depends on the
+  computed $\widehat\Bnd^{\ast}$ through \eqref{eq:elldef}, and through the
+  minimum so may the uniform $\pmc$; the inequality
+  $\widehat\Bnd^{\ast(t)}(n)-\varepsilon_{\mathrm{eig}}\le\Bnd^{\ast(t)}(n)$
+  that makes each such emitted value a lower bound is Assumption~\ref{ass:eig},
+  not a theorem of this contract: (ii) governs $\widehat\Bnd^{\ast}$ exactly as
+  it governs every other computed quantity, and $r_6$ is a diagnostic in
+  exactly the sense (ii) fixes and is blind to the direction the assumption
+  constrains. Where a setting's emitted weight is an enclosed weight, no
+  computed $\widehat\Bnd^{\ast}$ and no $\varepsilon_{\mathrm{eig}}$ enters
+  it and Assumption~\ref{ass:eig} is not invoked there, whatever depth is
+  declared. Where no depth is declared, no
+  $\Bnd^{\ast}$ is computed, Assumption~\ref{ass:eig} is not invoked, and the
+  emitted weights are the values \eqref{eq:pmcdef} defines, expression for
+  expression, evaluated in floating point or on \tref{enclosed bound data}. Item
+  (iii) covers all of these: an artifact with a weight resting on
+  Assumption~\ref{ass:eig} carries the floating-point label, so no artifact
+  resting on Assumption~\ref{ass:eig} can claim more.
+\item \emph{The model's blocks are enclosed, and the evaluation approximates
+  them.} For a declaration whose model is an admissible receiver exactly, the
+  photon-number blocks of the click-pattern and
+  \tref[emitted POVM]{emitted POVMs} of that model are quantities the
+  identities and inequalities of (i) are about. Their
+  \tref[complex enclosure]{complex enclosures}
+  (Definition~\ref{def:complex-enclosure}) of
+  Theorem~\ref{thm:enclosed-blocks}, where they are formed, are computed in
+  exact rational arithmetic and contain them: every entry of a
+  block lies within its radius of its centre, an entry whose radius is zero
+  is its centre, and on the \tref{exact route} the entries that
+  Theorem~\ref{thm:exact-blocks} names have radius zero when the port Grams
+  are enclosed exactly. A positive semidefiniteness or a positive
+  definiteness established through
+  \xref{foundations/lem:enclosure-psd}\,(i) on such an enclosure with a
+  Hermitian centre holds of the block itself. The floating-point block
+  matrices are evaluations of the same blocks and fall under (ii): this
+  contract asserts no bound on their difference from the blocks, so no
+  decision about the blocks is taken on them.
+\item \emph{The rigorously evaluated weights are bounds.} Let $t$ be a
+  setting of a \tref{setting family} (Definition~\ref{def:setting-family}) at
+  which the rigorous evaluation is formed from complex enclosures of
+  $B^{(t)}$, of every $B^{(t)}_k$, of $\gamma^{(t)}$, of every
+  $\beta^{(t)}_k$ and, at a setting carrying a depth, of the window blocks
+  $\blk{M}{\eqn}_{\mc|t}$; for a receiver without a probe, whose setting
+  family is that of Corollary~\ref{cor:unconditioned-family}, the enclosures
+  it forms from the enclosures of the port Grams are such. Then the four
+  clipped reals it forms
+  are \tref{enclosed bound data} of the setting and, at a setting carrying a
+  depth, the window values it forms are \tref{rigorous window bounds}; the
+  weight it forms from them is their enclosed weight, a rational computed
+  exactly; and it and every real between $0$
+  and it bound the \tref{multiclick element} of the setting from below on every
+  photon-number block above the cutoff and lie in $[0,1]$. Its validity rests
+  on no number computed in floating point: such a number enters it, if at
+  all, only as the exact rational it is, of which nothing is assumed, as the
+  approximate eigenbasis of \xref{foundations/lem:least-eigenvalue-bound}
+  does. So (ii) does not govern it, and it rests on no assumption about
+  arithmetic.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) By inspection of the statements: each is a Löwner-order or scalar
+inequality between quantities defined from $\{A_k\}$, $\Gmat$, $\Tset$,
+$\{\rho^{(t)}\}$, $N$, $\{m_t\}$ and $\{m^{\ast}_t\}$, with no epsilon
+anywhere. A claim falling under the exception is recognised from its own
+statement: \eqref{eq:elldef} introduces $\varepsilon_{\mathrm{eig}}$ into an
+emitted value; Theorem~\ref{thm:emitted-bound} and the two corollaries that
+instantiate it name Assumption~\ref{ass:eig}; and the submodules' tolerance
+claims carry their declared slacks in the inequalities they assert. The
+receiver tolerances occurring elsewhere in the claims this item quantifies over
+occur in cross-references to Definition~\ref{def:tolmap}, in remarks
+quantifying the effect of a rule stated here, and in
+Example~\ref{ex:bb84exact}'s evaluation of \eqref{eq:elldef}, none of them an
+asserted identity or inequality of the kind this item quantifies over.
+Theorem~\ref{thm:enclosed-weight} and Definition~\ref{def:enclosed-weight}
+state inequalities between reals and the exact quantities of the setting and
+name neither.
+
+(ii) is the content of Definition~\ref{def:evaluation-model}. That the residuals are not
+sufficient is immediate: $r_1=\dots=r_6=0$ is a statement about the
+\emph{computed} matrices, which are consistent with each other but are not
+shown to be close to the exact ones; a compilation that lost precision
+uniformly would satisfy every residual.
+
+(iii) is a stipulation of the emitted behaviour, together with the refusal
+convention of the module's interface
+(\repodoc{spec/modules/receiver/interface.yaml}); it proves nothing, and
+Requirement~\ref{req:evaluation-label} is its engine form. It is consistent
+because the rigorous label is given only where every emitted weight is a bound
+by (vii) at every setting whose enclosures meet its hypothesis, which (vii)
+shows for the unconditioned family and each submodule shows for its own, and
+that is the only thing the label says; the floating-point label claims
+nothing; and it is sound because a label withheld is never unsafe.
+
+(iv) The compiled matrix is absent by hypothesis, so no product is formed; the
+remaining floating-point steps of the floating-point evaluation are the
+eigenvalue extremes in \eqref{eq:cd} and the arithmetic of \eqref{eq:beta}. On
+this route the enclosures of the port Grams that the rigorous evaluation reads
+are the declared Grams, exactly (Definition~\ref{def:exact-route}).
+
+(v) The first sentence is Definition~\ref{def:pmcex} together with
+Assumption~\ref{ass:eig}, which is the hypothesis
+Theorem~\ref{thm:emitted-bound}'s proof discharges \eqref{eq:ellhyp} with on that
+route. The last conjunct of the first sentence, that $r_6$ is blind to the direction
+the assumption constrains, is read off \eqref{eq:res6}.
+Assumption~\ref{ass:eig} bounds each computed $\widehat\Bnd^{\ast(t)}(n)$
+from above at the settings carrying a depth whose emitted weight is that of
+Definition~\ref{def:pmcex} in floating point, which are among those over
+which the maximum in \eqref{eq:res6} runs, and at the indices
+$N<n\le m^{\ast}_t$; at the other settings of that maximum it constrains
+nothing, and the argument below is term by term. The
+direction it constrains is a computed value above
+$\Bnd^{\ast(t)}(n)+\varepsilon_{\mathrm{eig}}$. At such a setting the
+hypotheses of Theorem~\ref{thm:multiclick-bound} hold
+(Definition~\ref{def:setting-family}\,(b)), so \eqref{eq:exactbasic} of
+Lemma~\ref{lem:exactbasic} gives $\Bnd^{(t)}(n)\le\Bnd^{\ast(t)}(n)$, and
+$\varepsilon_{\mathrm{eig}}\ge0$ (Definition~\ref{def:tolmap}). A term
+$\big(\Bnd^{(t)}(n)-\widehat\Bnd^{\ast(t)}(n)\big)_{+}$ is therefore positive
+only where $\widehat\Bnd^{\ast(t)}(n)<\Bnd^{(t)}(n)\le\Bnd^{\ast(t)}(n)$, an
+undershoot. A computed value with
+$\widehat\Bnd^{\ast(t)}(n)>\Bnd^{\ast(t)}(n)+\varepsilon_{\mathrm{eig}}
+\ge\Bnd^{(t)}(n)$ makes its term $0$, which is also the term the exact value
+$\Bnd^{\ast(t)}(n)$ gives in its place. Each term depends on its own computed
+value alone, so $r_6$ takes the same value whether the computed values that
+violate Assumption~\ref{ass:eig} stand or are replaced by the exact ones: no
+value of $r_6$, and so no comparison with $\varepsilon_6$, tells the two
+apart. This is a property of $r_6$ as \eqref{eq:res6} defines it on the
+computed values; the number reported is its floating-point evaluation, which
+(ii) governs as it governs every residual.
+The second sentence is Definition~\ref{def:enclosed-weight}\,(iii): the window
+entry \eqref{eq:enclosed-ell} is formed from $\check\Bnd(n)$ and the rigorous
+window bound $w(n)$, and neither is a computed eigenvalue or contains
+$\varepsilon_{\mathrm{eig}}$; Theorem~\ref{thm:enclosed-weight}\,(iii), which
+assumes nothing, is then what makes the weight a bound.
+The third sentence is a property of the definitions rather than an argument:
+$\Bnd^{\ast}$ occurs in \eqref{eq:pmcdef} nowhere, $r_6$ exists only where a
+depth is declared, and $\varepsilon_6$ and $\varepsilon_{\mathrm{eig}}$ are
+required only there (Definition~\ref{def:residuals},
+Requirements~\ref{req:residual-emission}
+and~\ref{req:exact-window-declaration}; the inputs table of
+\repodoc{spec/modules/receiver/interface.yaml}); and an enclosed weight at a
+setting without a depth is \eqref{eq:pmcdef} read on enclosed bound data
+(Definition~\ref{def:enclosed-weight}\,(iii)). The fourth is (iii), since a
+weight of Definition~\ref{def:pmcex} is not formed by the rigorous evaluation.
+
+(vi) Theorem~\ref{thm:enclosed-blocks}\,(ii) and~(iii) state that the
+enclosures it forms are complex enclosures of the blocks of the click-pattern
+and emitted POVMs; Definition~\ref{def:evaluation-model} computes them in exact
+rational arithmetic, every rule of Lemma~\ref{lem:enclosure-arithmetic} being
+a finite computation on Gaussian rationals and rationals. By
+Definition~\ref{def:complex-enclosure}, an entry $x$ with centre $x_c$ and
+radius $r$ satisfies $\lvert x-x_c\rvert\le r$, so $x=x_c$ when $r=0$; the
+entries named in Theorem~\ref{thm:exact-blocks} have radius zero under its
+hypothesis by its item (ii). A block is Hermitian, and an enclosure with a
+Hermitian centre supplies the hypotheses of
+\xref{foundations/lem:enclosure-psd}\,(i) with $X$ the block, so the
+conclusion of that lemma is a property of the block itself. The last two
+sentences are (ii) applied to the floating-point block matrices.
+
+(vii) \emph{The enclosures.} For a receiver without a probe the setting family
+is that of Corollary~\ref{cor:unconditioned-family}: $B=A_\Sigma$ and
+$B_k=A_{[K]\setminus\{k\}}$ are sums of port Grams, enclosed from the
+enclosures of the port Grams by Lemma~\ref{lem:enclosure-arithmetic}\,(i);
+$\gamma=\beta_k=1$ exactly; and each window block
+$\blk{M}{\eqn}_{\mc}=\id+(K-1)\Pvac{[K]}^{(n)}-\sum_k\Pvac{[K]\setminus\{k\}}^{(n)}$
+(\eqref{eq:family-mc}) is enclosed by Theorem~\ref{thm:enclosed-blocks}\,(ii),
+taken with the depth as its cutoff, and the same rules. Each is a complex
+enclosure of the quantity it names, which is the hypothesis of (vii) for such
+a receiver. At every setting the hypothesis covers, an enclosure of a
+Hermitian matrix made Hermitian-centred by
+Lemma~\ref{lem:enclosure-arithmetic}\,(v) is an \tref{entrywise enclosure}.
+
+\emph{The four bounds.} For an entrywise enclosure $(C,r)$ of a Hermitian $X$
+and a rational $\rho\ge0$ with $\rho^{2}\ge\sum_{i,l}r_{il}^{2}$,
+\xref{foundations/cor:least-eigenvalue-over-enclosure}\,(i) and~(ii) give
+$\lmin(X)\ge\lmin(C)-\rho$ and $\lmax(X)\le\lmax(C)+\rho$, and
+\xref{foundations/lem:least-eigenvalue-bound}\,(ii) and~(iv) bound
+$\lmin(C)$ from below and $\lmax(C)$ from above at every real $V$ that
+admits a rational $\theta$ with $0\le\theta<1$ and
+$\lVert V^{\transpose}V-\id\rVert_{F}\le\theta$, the hypothesis of that lemma,
+the identity with $\theta=0$ among them, however $V$ was obtained, and as
+rationals by its item (iii). For a complex
+enclosure $(x_c,r)$ of a real $x$,
+$\lvert x-\mathrm{Re}\,x_c\rvert=\lvert\mathrm{Re}(x-x_c)\rvert\le\lvert
+x-x_c\rvert\le r$, so $\mathrm{Re}\,x_c-r\le x\le\mathrm{Re}\,x_c+r$. Hence the
+reals of Definition~\ref{def:evaluation-model} satisfy $u\ge\lmax(B)$,
+$\ell_k\le\lmin(B_k)$, $g\le\gamma$, $b_k\ge\beta_k$ and
+$\lambda_n\le\lmin(\blk{M}{\eqn}_{\mc|t})$.
+
+\emph{The weight.} Theorem~\ref{thm:enclosed-weight}\,(i) makes the clipped
+reals enclosed bound data and the window values rigorous window bounds, so the
+weight formed from them by Definition~\ref{def:enclosed-weight}\,(iii) is their
+enclosed weight; it is a finite expression in rationals built from sums,
+products, minima and maxima by \eqref{eq:pmcdef} and \eqref{eq:pmcex}, so a
+rational computed exactly. Theorem~\ref{thm:enclosed-weight}\,(iii) gives the
+bound and the range, for the enclosed weight and for every real between $0$
+and it, under the hypotheses of Definition~\ref{def:setting-family} alone.
+A floating-point number enters, if at all, only as the basis $V$ read as the
+rational matrix it is, which decides tightness and never validity, so the
+difference (ii) speaks of does not arise.
+\end{proof}

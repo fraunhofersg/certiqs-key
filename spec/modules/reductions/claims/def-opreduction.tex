@@ -1,0 +1,107 @@
+% ---
+% id: reductions/def:opreduction
+% kind: def
+% title: "Exact operational reduction"
+% summary: >-
+%   A protocol presentation is a set of attack strategies with the full output
+%   each produces; an exact operational reduction maps strategies between two
+%   presentations over the same registers so that every strategy and its image
+%   give the same output. Bounds carry back with no property of the criterion.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [def:criterion, def:attset, lem:opreduction-transfer, cor:sequential, thm:transfer, lem:source-transfer, thm:two-sided]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The two reductions this contract performs, replacing a physical receiver by a
+finite model and replacing a physical source by a virtual one, are the same
+kind of object, and everything either of them transfers is transferred by that
+kind of object alone. This definition states the object once and
+Lemma~\ref{lem:opreduction-transfer} states what it buys;
+Corollary~\ref{cor:sequential} and Theorem~\ref{thm:transfer} are the
+receiver-side instance, Lemma~\ref{lem:source-transfer} the source-side one,
+and Theorem~\ref{thm:two-sided} their composition. Nothing in the definition
+is about squashing, about measurement, or about any particular protocol: it
+speaks of a set of strategies, of the state each of them produces, and of
+nothing else.
+
+\begin{definition}\label{def:opreduction}
+A
+\term[A set of attack strategies, a tuple of output registers, and the full output each strategy produces.]{protocol presentation}
+is a triple $\mathsf{P}=(\mathbb{A},W,\mathsf{out})$: a set $\mathbb{A}$, each
+element of which is called an
+\term[An element of the strategy set of a protocol presentation; a state, a channel or any other object.]{attack strategy},
+a tuple $W$ of
+\term[The tuple of registers on which the full outputs of a protocol presentation live.]{output registers},
+and a map $\mathsf{out}\colon\mathbb{A}\to\Sleq{W}$ assigning to each
+strategy the
+\term[The state on every output register that a protocol produces under one attack strategy, and no marginal of it.]{full output}
+the protocol produces under it. The full output is the state on \emph{every}
+register a security criterion may read (Definition~\ref{def:criterion}): both
+parties' key registers, the public transcript with the acceptance and abort
+data, and the adversary's final register, and no marginal of them.
+
+Let $\mathsf{P}=(\mathbb{A},W,\mathsf{out})$ and
+$\mathsf{P}'=(\mathbb{A}',W,\mathsf{out}')$ be presentations \emph{over the
+same output registers} $W$. An
+\term[A map of attack strategies between two presentations over the same output registers under which every strategy and its image produce the same full output.]{exact operational reduction}
+from $\mathsf{P}$ to $\mathsf{P}'$ is a map $r\colon\mathbb{A}\to\mathbb{A}'$
+with
+\begin{equation}\label{eq:opreduction}
+  \mathsf{out}(a)\;=\;\mathsf{out}'\big(r(a)\big)
+  \qquad\text{for every }a\in\mathbb{A} .
+\end{equation}
+We call $\mathbb{A}$ the
+\term[The strategy set of the presentation an exact operational reduction starts from.]{physical strategy set}
+and $\mathbb{A}'$ the
+\term[The strategy set of the presentation an exact operational reduction lands in, which the analysis runs over; also called admissible.]{analysed strategy set},
+equivalently the \emph{admissible} strategy set, and
+$r(\mathbb{A})\subseteq\mathbb{A}'$ the reduction's
+\term[The set of analysed strategies that an exact operational reduction reaches from the physical strategy set.]{image}.
+
+\emph{The conditions, in full.}
+\begin{enumerate}[label=(R\arabic*),leftmargin=3.0em]
+\item \emph{(one output tuple)} the two presentations carry literally the same
+  output registers, and which register of $\mathsf{P}'$ is which register of
+  $\mathsf{P}$ is part of the data rather than inferred. Where a model
+  protocol's adversary register is a \emph{different} system, an
+  identification of it with the physical one has to be declared and the
+  criterion has to be invariant under that identification; this contract
+  declares none and needs none, the adversary's registers being literally the
+  same system in both of its instances;
+\item \emph{(exact equality)} \eqref{eq:opreduction} is equality of the two
+  states on the nose: not of a marginal, not up to a distance, and not up to
+  any map on $W$;
+\item \emph{(totality and typing)} $r$ is defined at every strategy of
+  $\mathbb{A}$ and takes its values in $\mathbb{A}'$. That its values lie in
+  $\mathbb{A}'$ is a condition on $r$ and on $\mathbb{A}'$ together, and it is
+  the only place where a restriction of the analysed set has to be earned.
+\end{enumerate}
+
+\emph{What is not required, each item being used by an instance in this
+contract.} $r$ need not be injective, need not be surjective onto
+$\mathbb{A}'$, and need not preserve any structure of $\mathbb{A}$; the
+analysed set $\mathbb{A}'$ may be, and in this contract typically is, strictly
+larger than the image, because what a numerical analysis can optimize over is
+a set cut out by finitely many conditions and not an image
+(Definition~\ref{def:attset}); no metric, topology, order, linear or convex
+structure on $\mathbb{A}$, on $\mathbb{A}'$ or on the output states is used;
+$\mathsf{out}$ and $\mathsf{out}'$ need not be linear, affine, continuous or
+given by channels, and a strategy need not be a channel or a tuple of
+channels (in Theorem~\ref{thm:transfer} a strategy is a state); and nothing
+is asserted in the other direction, a bound over $\mathbb{A}$ transferring to
+$\mathbb{A}'$ under no hypothesis of this definition.
+
+\emph{Two presentations, one per adversary system.} A security criterion in
+the sense of Definition~\ref{def:criterion} is a \emph{family} $(f_E)_E$, one
+function per admissible adversary system. Fixing $E$ fixes $W$ and turns each
+$f_E$ into one function on $\Sleq{W}$, so the quantification over $E$ in that
+definition is a quantification over presentations: a statement of this
+contract that holds ``for every admissible $E$'' exhibits one presentation
+pair and one reduction per $E$, and the transfer of
+Lemma~\ref{lem:opreduction-transfer} is applied to each.
+\end{definition}

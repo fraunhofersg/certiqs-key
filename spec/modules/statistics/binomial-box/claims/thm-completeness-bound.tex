@@ -1,0 +1,132 @@
+% ---
+% id: statistics/binomial-box/thm:completeness-bound
+% kind: thm
+% title: "The completeness bound"
+% summary: >-
+%   If each honest round's conditional outcome law stays inside the envelope,
+%   an honest run fails the acceptance test with probability at most ε*, the
+%   sum of the binomial tails at the envelope's ends beyond the box's count
+%   bounds, and ε* is at most the completeness budget. No independence is
+%   needed.
+% prominence: main
+% status: implemented
+% uses: [def:construction, def:endpoint-rule, lem:guard, lem:envelope-dominance, statistics/def:freq, statistics/lem:freq-in-simplex, statistics/def:envelope, statistics/def:conservative-evaluation]
+% mentions: [statistics/lem:hon-degenerate, meat-core/def:postprocessing-model, lem:widening]
+% assumes: [A-HON-ENV, A-ALPHABET]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.construction:report_completeness
+% lean:
+% ---
+
+The theorem covers a single honest law as a special case: Assumption A-HON,
+the acceptance statistics being independent and identically distributed with
+law $\honest$, is Assumption~\ref{ass:hon-env} for the
+\tref{degenerate envelope} $(\honest,\honest)$
+(Lemma~\ref{lem:hon-degenerate}). On an evaluation that is not conservative,
+an upward-rounded $k^{-}$ or a downward-rounded $k^{+}$ can break the bound by
+the reported completeness figure $\varepsilon^{\star}$: a figure is reported
+that the set does not meet (Lemma~\ref{lem:widening}\,(v)).
+
+\begin{theorem}\label{thm:completeness-bound}
+Assume a \tref{conservative evaluation}
+(Definition~\ref{def:conservative-evaluation}), and assume A-HON-ENV
+(Assumption~\ref{ass:hon-env}) for the
+\tref{honest envelope} $({\honest}^{-},{\honest}^{+})$ of the input: on an
+honest run there is a filtration
+$\mathcal{F}_0\subseteq\dots\subseteq\mathcal{F}_n$ with $\Chat_j$
+$\mathcal{F}_j$-measurable and
+${\honest}^{-}(\hat c)\le\Pr[\Chat_j=\hat c\,|\,\mathcal{F}_{j-1}]\le
+{\honest}^{+}(\hat c)$ almost surely, for every $j$ and $\hat c$. Let
+$\acSet$ be the output of $\mathsf{Acc}_R$
+(Definition~\ref{def:construction}) for an \tref{admissible endpoint rule}
+$R$ (Definition~\ref{def:endpoint-rule}). Then
+\begin{equation}\label{eq:completeness}
+  \Pr\big[\operatorname{freq}_{\Chat_1^n}\notin\acSet\big]
+  \ \le\ \varepsilon^{\star}
+  \ \coloneqq\ \sum_{\hat c\in\Chatcon}
+  \Big(\Pr\big[\Ncount{\hat c}^{-}<k^{-}(\hat c)\big]
+      +\Pr\big[\Ncount{\hat c}^{+}>k^{+}(\hat c)\big]\Big)
+  \ \le\ \ecomp ,
+\end{equation}
+where $\Ncount{\hat c}^{-}$ and $\Ncount{\hat c}^{+}$ are binomial with
+parameters $(n,{\honest}^{-}(\hat c))$ and $(n,{\honest}^{+}(\hat c))$
+respectively (Definition~\ref{def:endpoint-rule}). Equivalently, the honest
+run passes the acceptance test, the event $\OmAT$ of
+\xref{meat-core/def:postprocessing-model}, with probability
+$\Pr[\OmAT]=\Pr[\operatorname{freq}_{\Chat_1^n}\in\acSet]
+\ge1-\varepsilon^{\star}\ge1-\ecomp$. For the degenerate envelope both
+$\Ncount{\hat c}^{\mp}$ are binomial $(n,\honest(\hat c))$.
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} Each constrained outcome's count has tails no heavier than the
+binomial laws at the envelope's two values (Lemma~\ref{lem:envelope-dominance}),
+the test fails exactly when some count leaves its \tref{guarded endpoints}, and the
+union bound adds the probabilities of those events with no independence;
+the guard keeps each tail within its allocation.
+
+\emph{Per-outcome tails.} Fix $\hat c\in\Chatcon$ and let $\chi_j$ be the
+random variable that equals $1$ if $\Chat_j=\hat c$ and $0$ otherwise. Each
+$\chi_j$ is $\mathcal{F}_j$-measurable, because $\Chat_j$ is, and
+$\Pr[\chi_j=1\,|\,\mathcal{F}_{j-1}]=\Pr[\Chat_j=\hat c\,|\,\mathcal{F}_{j-1}]$
+lies in $[{\honest}^{-}(\hat c),{\honest}^{+}(\hat c)]$ almost surely by
+A-HON-ENV. By Definition~\ref{def:freq},
+$\Ncount{\hat c}(\Chat_1^n)=\sum_{j=1}^{n}\chi_j$. Lemma~\ref{lem:envelope-dominance}
+with $a={\honest}^{-}(\hat c)$ and $b={\honest}^{+}(\hat c)$, in its strict
+form \eqref{eq:dominance-strict}, gives for every integer $k$
+\begin{equation*}
+  \Pr\big[\Ncount{\hat c}(\Chat_1^n)<k\big]\le\Pr\big[\Ncount{\hat c}^{-}<k\big],
+  \qquad
+  \Pr\big[\Ncount{\hat c}(\Chat_1^n)>k\big]\le\Pr\big[\Ncount{\hat c}^{+}>k\big].
+\end{equation*}
+No independence \emph{across} different $\hat c$ is claimed, and none is
+used: the counts are in fact negatively related through
+$\sum_{\hat c}\Ncount{\hat c}=n$. Nor is independence \emph{across rounds}
+used: the per-round conditional laws may change with $j$ and with the past.
+
+\emph{Event inclusion.} By Lemma~\ref{lem:freq-in-simplex}\,(i),
+$\operatorname{freq}_{\Chat_1^n}\in\simplex{\Chatset}$ always, so by
+\eqref{eq:accset} the event $\{\operatorname{freq}_{\Chat_1^n}\notin\acSet\}$
+occurs exactly when some coordinate leaves its box bounds. For
+$\hat c\notin\Chatcon$ the bounds are $[0,1]$ by \eqref{eq:boxbounds} and can
+never be violated. For $\hat c\in\Chatcon$, and using $n>0$,
+$\operatorname{freq}_{\Chat_1^n}(\hat c)<q^{-}(\hat c)$ is equivalent to
+$\Ncount{\hat c}(\Chat_1^n)<k^{-}(\hat c)$, and
+$\operatorname{freq}_{\Chat_1^n}(\hat c)>q^{+}(\hat c)$ to
+$\Ncount{\hat c}(\Chat_1^n)>k^{+}(\hat c)$. Therefore
+\begin{equation*}
+  \big\{\operatorname{freq}_{\Chat_1^n}\notin\acSet\big\}
+  \ =\ \bigcup_{\hat c\in\Chatcon}
+  \Big(\big\{\Ncount{\hat c}(\Chat_1^n)<k^{-}(\hat c)\big\}
+  \cup\big\{\Ncount{\hat c}(\Chat_1^n)>k^{+}(\hat c)\big\}\Big).
+\end{equation*}
+
+\emph{Aggregation.} A probability measure is finitely subadditive: for events
+$A_1,\dots,A_M$, $\Pr[\bigcup_{i}A_i]\le\sum_{i}\Pr[A_i]$, with no
+independence hypothesis. (Equivalently, in complement form,
+$\Pr[\bigcap_i A_i^{c}]\ge1-\sum_i\Pr[A_i]$.) Applying it to the $2|\Chatcon|$
+events above, and bounding each by the per-outcome tails at
+$k=k^{-}(\hat c)$ and $k=k^{+}(\hat c)$, gives the first inequality of
+\eqref{eq:completeness}.
+
+\emph{Budget.} By Lemma~\ref{lem:guard}\,(ii) each term of
+$\varepsilon^{\star}$ is at most the corresponding $\varepsilon^{\mp}(\hat c)$,
+and the allocation constraint of an \tref{admissible input}
+(Definition~\ref{def:endpoint-rule}) sums these to at most $\ecomp$. The
+reformulation in terms of $\Pr[\OmAT]$ is the complement, using
+$\OmAT=\{\operatorname{freq}_{\hat c_1^n}\in\acSet\}$, the acceptance event
+of \xref{meat-core/def:postprocessing-model} on the \tref{frequency vector} of
+Definition~\ref{def:freq}. For the degenerate envelope,
+$\Ncount{\hat c}^{-}$ and $\Ncount{\hat c}^{+}$ have the one law binomial
+$(n,\honest(\hat c))$, and it is the law of $\Ncount{\hat c}(\Chat_1^n)$
+itself: with $\mathrm{B}$ binomial $(n,\honest(\hat c))$, the per-outcome
+tails, which are Lemma~\ref{lem:envelope-dominance} at
+$a=b=\honest(\hat c)$, give for every integer $k$
+$\Pr[\Ncount{\hat c}(\Chat_1^n)<k]\le\Pr[\mathrm{B}<k]$, that is
+$\Pr[\Ncount{\hat c}(\Chat_1^n)\ge k]\ge\Pr[\mathrm{B}\ge k]$, and
+$\Pr[\Ncount{\hat c}(\Chat_1^n)>k-1]\le\Pr[\mathrm{B}>k-1]$, that is
+$\Pr[\Ncount{\hat c}(\Chat_1^n)\ge k]\le\Pr[\mathrm{B}\ge k]$; the two
+upper tails agree at every $k$. So the terms of $\varepsilon^{\star}$ are
+the tails of $\Ncount{\hat c}(\Chat_1^n)$ itself.
+\end{proof}

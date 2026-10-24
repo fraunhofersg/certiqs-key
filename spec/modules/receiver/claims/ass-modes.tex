@@ -1,0 +1,42 @@
+% ---
+% id: receiver/ass:modes
+% kind: ass
+% title: "Completeness of the declared modes"
+% summary: >-
+%   Every optical path from outside the receiver to a detector is a declared
+%   mode. A bright-illumination or wavelength-shifted attack targets exactly
+%   this premise.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-MODES
+% verification: never
+% category: receiver
+% affects: [secrecy]
+% refines: A-TRUST
+% user_statement: >-
+%   Every way light from outside can reach one of your detectors (every
+%   spatial, spectral, temporal and polarisation mode it can arrive in) is
+%   represented by one of the declared modes. Light the model does not carry,
+%   for example at another wavelength or along a path straight to the
+%   detectors as in bright-illumination attacks, violates this. Declare the
+%   mode, or declare a model of the attack. This premise is about the
+%   completeness of the receiver's optical description; that nothing reaches
+%   the station except through its declared inputs, and that nothing leaks
+%   out of it, is the laboratory premise of this station's party, [[A-LAB]].
+% lean:
+% ---
+
+A photon arriving in a spatial, spectral, temporal or polarization mode that
+the model does not carry does not exist for this module. The assumption is
+therefore not free: it is exactly the one a bright-illumination or
+wavelength-shifted attack violates, and violating it makes the \tref{emitted POVM} a
+description of a device the adversary is not attacking.
+
+\begin{assumption}\label{ass:modes}
+(i) Every optical path from outside the receiver to a detector is represented
+by a declared mode of $\Modes$.
+\end{assumption}

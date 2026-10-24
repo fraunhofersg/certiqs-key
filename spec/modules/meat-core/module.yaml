@@ -1,0 +1,489 @@
+id: meat-core
+kind: core
+version: 1.32.0
+title: "MEAT key-rate engine (meat-core)"
+abstract: >-
+  The MEAT core of the key-rate engine (the module meat-core) turns a finite
+  protocol declaration, which the protocol compiler emits, and an acceptance
+  set into a convex entropy program and a fixed-length key length; four of
+  its main results form one chain from the single-round protocol channel the
+  declaration generates to that key length, and the fifth is the security
+  of the protocol that outputs it ([[cor:composed-security]]). Marginal-constrained entropy
+  accumulation bounds the entropy of the accepted raw key from below by n
+  times a single-round rate, less a penalty in the acceptance probability,
+  against every adaptive attack with a finite-dimensional quantum memory
+  ([[thm:accumulated-entropy]]). A licensed constraint list, one whose entries
+  have a type the declared source mode admits, raises that rate only under
+  the attack-set licence, the producer's certificate that every physical
+  attack reduces to one that respects the list. The single-round rate is
+  bounded below by the value h_low (written as an underlined h_α) of a finite
+  convex program over sector-block states ([[thm:reduction]]), which a Choi
+  parametrisation writes in solver-friendly variables without deciding the
+  rank of Alice's marginal. The objective at any feasible point is an upper
+  estimate of h_low, never a lower bound on it ([[lem:estimate]]), while any
+  lower bound on h_low, however obtained, yields a key length
+  ([[cor:keylength-bound]]) through the fixed-length post-processing model:
+  the key is secret ([[thm:keylength]]) and correct, and over an
+  authentication scheme the protocol is secure with the authentication error
+  added and its key consumption subtracted ([[cor:composed-security]]),
+  against an adversary whose memory has any dimension. In
+  trusted-source mode Alice's marginal is fixed, which
+  needs the source licence of the transmitter module, the attestation that her
+  system never reaches the adversary; untrusted-source mode leaves it free and
+  never gives a larger value. The Frank-Wolfe
+  submodule supplies the first-order lower bound on h_low, with both linear
+  minima bounded exactly, evaluates it, where the chain carries one, on the
+  reference companion, the declaration of the reference model compiled
+  beside the snapped one, and certifies it where every step from the
+  declaration's data can be enclosed rigorously. The module admits declared
+  data only when they are exactly admissible, the companion aside, which it
+  admits beside its declaration and searches only in a short polish from
+  the declaration's points; it characterises no device and constructs no
+  honest statistics, and only the submodule's certified evaluation bounds the
+  rounding of a computed number; where the honest statistics are supplied
+  rather than computed from the declared devices, or the caller declares a
+  constraint entry, it bounds the mismatch between the acceptance set and
+  the feasible statistics from below, records the cap this proves on the
+  probability that devices as declared pass the acceptance test, and refuses
+  the run where that cap is at most a threshold, one half by default.
+depends_on: [protocol-compiler, transmitter, reductions, foundations]   # the compiler's declaration types, the transmitter's source licence, reductions' round model (an instance of foundations' round model) and A-TSM; foundations: the round model and the quantum-information preliminaries (pinching, the divergences, the pinching and concavity facts), which frank-wolfe inherits
+notation_version: "0.5.0"   # the spec/notation.md version this module pins
+submodules: [frank-wolfe]
+reading_groups:
+- title: The declaration and the protocol channel
+  start: def:declaration
+  abstract: >-
+    This section fixes the data every later result is computed from and the
+    channel those data generate. The protocol declaration is the compiler's,
+    read here with the conditions and names this module's claims rest on
+    ([[def:declaration]]); an ensemble-form declaration denotes an ordinary
+    one ([[lem:ensemble-form]]). From the declared measurements,
+    announcements and key map the module generates a single-round protocol
+    channel whose acceptance marginal is the statistics map
+    ([[thm:protocol-channel]]), and branch maps that split the announcement
+    classes of each acceptance value into pass and fail classes
+    ([[def:branch]], [[lem:branch-maps]]). The branch maps carry the
+    orthogonality the entropy calculation uses, and a component of a register
+    other than the raw-key register that is constant across a branch map's
+    Kraus terms can be removed from it without changing any quantity of this
+    module ([[rem:inert]]).
+- title: Accumulation
+  start: fact:meat
+  abstract: >-
+    The imported sequential accumulation theorem bounds the entropy of an
+    accepted multi-round state from below by the round count times a
+    single-round rate, less a penalty in the acceptance probability
+    ([[fact:meat]]). Instantiated
+    on the generated round channels, with every announcement handed to the
+    adversary and her quantum memory carried between rounds, it gives the
+    section's main result, [[thm:accumulated-entropy]]: on acceptance, the
+    entropy of the raw key given the adversary's information is at least n
+    times the single-round rate less (α/(α−1))·log₂(1/Pr[accept]), with the
+    product marginal of Alice's systems in trusted-source mode derived from
+    the source's premises, A-SEED (v) and A-LAB at the party holding A
+    ([[lem:product-marginal]]), and with no source assumption in
+    untrusted-source mode. Licensed constraint lists, licensed
+    attack sets and the constrained single-round rate are defined here; a
+    constraint list may raise the rate only through a licensed restriction of
+    the attack model ([[rem:no-constraints]]).
+- title: Constrained accumulation
+  start: thm:constrained-accumulation
+  abstract: >-
+    When the reduction chain behind the declaration restricts every attack to
+    a licensed attack set, the accumulated entropy bound holds with the
+    constrained single-round rate of the declared list, with the same penalty
+    ([[thm:constrained-accumulation]]). The licensed class is the one the
+    licence transports and not an arbitrary choice: multiples of τ_A in
+    trusted-source mode and scalars in untrusted-source mode ([[rem:homog]]),
+    a trusted-mode entry declaring the scalar so that no numerical test is
+    needed ([[rem:scalar-declaration]]). For a party-local entry of the
+    general format the theorem stays true, though that reading is not shown
+    canonical ([[rem:tagged-entries-and-accumulation]]). The published
+    flag-state squasher is an instance ([[ex:fss]]), and [[rem:not-licensed]]
+    records what the licence does not cover.
+- title: Branch entropy and sectors
+  start: thm:branch-formula
+  abstract: >-
+    A pure input's conditional entropy on one acceptance value is a function
+    of the protocol marginal alone, through the ratio of a pinched trace-power
+    quantity to the outcome probability, and that quantity splits into sector
+    deficits on block-diagonal inputs ([[thm:branch-formula]]). The pinched
+    trace power is concave on the whole positive cone
+    ([[lem:cone-concavity]]), and every sector deficit is non-positive
+    ([[cor:f-nonpos]]) and vanishes on a key-inert pair, whose variables still
+    enter the statistics ([[prop:exact-cancellation]]). With Alice sectors the
+    same holds per joint sector ([[lem:joint-sectors]]).
+- title: The program and its reduction
+  start: def:feasible
+  abstract: >-
+    The feasible set, the objective and its infimum h_low over the acceptance
+    set form the finite convex program of this module; at d_A = 1 the two
+    source modes give the same program ([[prop:trivial-alice-system]]), and
+    untrusted-source mode never gives a larger value. The section's main
+    result, [[thm:reduction]], shows that h_low bounds the single-round rate
+    from below for an unconstrained declaration in either source mode, every
+    step being an equality or conservative, and
+    [[cor:reduction-constrained]] extends it to arbitrary constraint lists.
+    Restricting the variable along Alice's sectors changes no value
+    ([[prop:a-neutral]]). The value lies in [0, +∞], each entropy term being
+    at most log₂(d_Z + 1) while the divergence penalty is unbounded
+    ([[prop:value-range]]), and an infinite value means that no attack the
+    declared list admits is accepted ([[rem:hlow-range]]).
+    The objective is jointly convex and lower semicontinuous, so a finite
+    infimum is attained ([[thm:convexity]]).
+- title: Sector classes and sector removal
+  start: def:classes
+  abstract: >-
+    Sectors are classified by exact predicates on the declared data as
+    key-active, constraint-active, state-blind and removable, removability
+    being certified, for a list without party-local entries, by an exhibited
+    witness that meets a six-condition checklist ([[def:classes]]). A state-blind sector may be deleted when a
+    mixture of states on distinct other key-inert sectors reproduces its
+    responses and constraint values ([[thm:removal]]), and a set of such
+    sectors when every witness targets only sectors that stay
+    ([[prop:removal-compose]]). Dropping a constraint-active sector
+    ([[prop:retention]]) or averaging sectors ([[prop:no-averaging]]) can
+    overstate the key. The remarks show why the index conditions of the
+    checklist are needed, why the witness must be exact, and that a tolerance
+    may only refuse a removal.
+- title: The Choi program
+  start: lem:admissible-alice-subspace
+  abstract: >-
+    Every feasible state lives on the admissible Alice subspace, the support
+    of the declared marginal (all of Alice's system in untrusted-source
+    mode), tensored with the measured system
+    ([[lem:admissible-alice-subspace]]). In trusted-source mode every state
+    with Alice's marginal is the image of a positive Choi operator on a
+    support frame that need only contain the marginal's support, so no rank of
+    the marginal is decided ([[lem:choi-marginal]]). [[thm:choi]] rewrites
+    the program exactly in sector Choi blocks, with one coupling constraint
+    per Alice sector, and on a tight frame a homogeneous constraint row may
+    drop its conjugation ([[prop:frame-free-rows]]); in untrusted-source mode
+    the parametrisation is the identity ([[def:untrusted-choi]]). The
+    section's main result, [[lem:estimate]], states that the objective at any
+    exactly feasible point is at least h_low: an upper estimate of the value,
+    never a bound on it.
+- title: Gradients and the limit of order one
+  start: def:branch-support
+  abstract: >-
+    The maximal branch support is the span of the pass-class Kraus images of
+    the admissible Alice subspace tensored with the sector; every branch
+    operator the program forms lies in it, with equality at a positive
+    definite Choi block
+    ([[lem:branch-support]]). On the face of a singular operator the pinched
+    trace power has a gradient in split form, with divided differences over
+    the positive spectrum and pinched operators on the ambient space
+    ([[thm:gradient]]). The full objective is differentiable along every
+    feasible direction at a point of maximal support with positive
+    probabilities ([[cor:full-gradient]]); its branch values and pulled-back
+    gradient depend on the Kraus factors only through their Gram matrices, so
+    exact factors may replace the square roots ([[lem:kraus-freedom]]). As the
+    Rényi order tends to one
+    the value converges to a blockwise relative-entropy program when every
+    acceptable distribution gives each key-live value probability at least
+    some p₀ > 0 and some feasible state reproduces an acceptable distribution
+    ([[thm:oracle]]), a validation reference and never a bound.
+- title: The dropped program
+  start: lem:rank-one-sector
+  abstract: >-
+    A run may give up the entropy of chosen pairs of a key-live acceptance
+    value and a joint sector, setting their deficits to zero while keeping
+    their variables, statistics and constraints ([[def:dropped]]). The
+    resulting value bounds h_low and the single-round rate from below
+    ([[prop:drop-bound]]); it is attained when finite, and a fully dropped
+    joint sector enters only through its statistics, with no matrix function
+    ([[cor:drop-program]]). With every pair dropped the value is α/(α−1)
+    times the minimal divergence between the accepted distributions and the
+    statistics of the feasible set, a floor under h_low that lies within the
+    entropy ceiling of it, and a positive lower bound on it proves that no
+    feasible state has an accepted distribution as its statistics
+    ([[prop:minimal-divergence]]). On an Alice sector whose marginal has rank one,
+    with default readouts and Alice holding the key, the deficit is linear
+    with constants from declared numbers ([[lem:rank-one-sector]]). The
+    objective and the dropped objective, read on the whole cone, are
+    positively homogeneous of degree one ([[lem:objective-homogeneous]]).
+- title: Key length
+  start: def:postprocessing-model
+  abstract: >-
+    The accumulated entropy feeds a fixed-length post-processing model with a
+    fixed-length error-correction transcript, error verification and privacy
+    amplification by ideal two-universal hashing, every message public
+    ([[def:postprocessing-model]]). The section's main results are
+    [[thm:keylength]], an ε_PA-secret key of the stated length on the
+    accepted state for a Rényi order in (1, 2), and [[cor:keylength-bound]],
+    which lets any lower bound h ≤ h_low take the place of h_low through
+    max{0, h} and is where every solver obtains its key length. Error
+    verification makes the key ε_EV-correct ([[lem:ev-correctness]]), the two
+    compose to (ε_PA + ε_EV)-security with honest authentication, and over a
+    real authentication scheme the protocol is (ε_PA + ε_EV + 2ε_auth)-secure
+    with net key gain ℓ − k_auth ([[cor:composed-security]]), all of it
+    against an adversary whose memory has any dimension, by a limit over
+    finite-dimensional ones ([[lem:memory-lift]]) and every adversary of the
+    honest-authentication setting read as such an attack
+    ([[lem:honest-attacks]]); the parameter
+    bounds one execution, separate executions that share no key add their
+    parameters ([[cor:separate-executions]]), and a reused authentication
+    key enters through ε_auth, which the earlier execution's parameter does
+    not bound by itself ([[rem:repeated-executions]]). A run whose rounds
+    follow statistics of feasible states passes the acceptance test with
+    probability at most 2^(−n D_min), D_min the minimal divergence
+    ([[prop:model-pass-bound]]). The reported maximal key length is that bound floored and clamped
+    at 0, and more leakage or a tighter error budget never lengthens it
+    ([[prop:monotone]]). The constrained value enters under the attack-set
+    licence ([[cor:constrained-key-length]]), behind a two-part gate whose
+    licensed-class half is vacuous in untrusted-source mode and trivially
+    avoidable at d_A = 1
+    ([[rem:cgate]]).
+- title: Perturbations of the declared measurement
+  start: prop:optol-nobound
+  abstract: Declared data are binary64 numbers, and a declaration is exactly admissible
+    when the conditions of [[def:declaration]] hold of those numbers themselves, among
+    them operators exactly Hermitian, measurements and marginal exactly positive
+    semidefinite, and completeness sums, formed in the declared order with no addition
+    rounding, exactly the identity.
+    One might hope that two such declarations whose measurements on Q differ by at
+    most ϵ have nearby rates; [[prop:optol-nobound]] shows that they need not. On data
+    of fixed small dimensions their rate bounds can lie α/(α−1)·N bits per round apart,
+    for every positive integer N ≤ 53 + log₂ϵ, which is up to 52 ([[rem:representability-ceiling]]).
+    The gap sits in the acceptance-test penalty, can point either way and at the larger
+    N is far above anything a key-length claim could absorb ([[rem:optol-direction]]).
+    The engine therefore admits declared data only when they are exactly admissible
+    ([[req:exact-admission]]), and the declared measurement model is itself a premise
+    of every reported rate; where a reference of it is held, the first-order bound is
+    taken on the reference and the snap onto the lattice only steers the search,
+    unless a number certified on the snapped declaration carries the key length, and
+    no claim bounds the gap between the model and the device ([[rem:declared-measurement]]).
+- title: The reference companion
+  start: prop:reference-companion
+  abstract: >-
+    Where the receiver segment of one or more measured factors carries the
+    reference companion, the same reduction run on the receiver's reference
+    in place of its snap, the compiler forms beside the declaration a second
+    tuple from the same specification, with every such factor replaced. It
+    keeps every component of the declaration but the measured families and
+    the entries of those segments, and so its joint sectors and the points of
+    its program; it is admissible save possibly for a non-empty feasible
+    set, and its entries, rounded with their constants relaxed, only enlarge
+    that set ([[prop:reference-companion]]). Where the
+    reference carries factor enclosures and the reduction combines blocks
+    with non-negative weights, the companion's blocks are members of the
+    factor enclosures the reduction and the compiler carry to them
+    ([[cor:reference-companion-factors]]). The Frank-Wolfe submodule
+    evaluates the first-order bound on it, at points of the snapped search
+    and of a short search continued on it, and certifies it.
+- title: Assumptions
+  start: ass:keyreg
+  abstract: >-
+    The assumptions fix what the post-processing must satisfy for the
+    results of this contract to hold, and what a run must attest about its
+    laboratories, its seeds, its fixed parameters and its authentication,
+    and, for several executions whose parameters are to add, their
+    separation. What the declaration and the acceptance set
+    must satisfy is decided by the engine and is stated as definitions
+    ([[def:admissible-declaration]], [[def:admissible-acceptance-set]]); the
+    product marginal of Alice's systems in trusted-source mode is a lemma
+    under the transmitter's premises and this module's A-SEED (v) and A-LAB
+    at the party holding A ([[lem:product-marginal]]). No assumption restricts
+    the adversary's memory: [[A-EVE-DIM]], which would make it
+    finite-dimensional, is assumed by no claim ([[cor:composed-security]]). The
+    attack-set licence and round homogeneity are the compiler's assumptions,
+    cited where they are used. Each assumption states its conditions only,
+    with a plain reading for the user.
+- title: "Requirements: admission and the declared structure"
+  start: req:exact-admission
+  abstract: >-
+    The engine admits declared data only when they are exactly admissible,
+    decides every condition of an admissible declaration but the non-empty
+    feasible set itself, admits a reference companion only beside its
+    declaration, deciding exactly what the two share and
+    nothing of its family, and admits an acceptance set only when it decides
+    that the set is admissible,
+    and an implemented branch map drops only components, of registers other
+    than the raw-key register, that are constant across its Kraus terms. It decides the sector classes by exact
+    tests, flags a sector removable only when an exhibited witness meets the
+    whole removal checklist, and reports every class and every deletion. It
+    changes the declared sectors in no other way than the removal theorem and
+    the composition rule allow, and deletes at most one sector where it does
+    not check the composition hypothesis.
+- title: "Requirements: the Choi program and gradients"
+  start: req:frame-constructed
+  abstract: >-
+    The engine constructs every support frame it uses rather than accepting
+    one, checks it exactly, uses the diagonal frame only for an exactly
+    diagonal marginal and records the frame; it forms every Choi block in one
+    fixed convention. It drops the conjugation of a constraint row only where
+    the frame's construction exhibits tightness, and records the form used.
+    It evaluates gradients in split form and only at maximal support, never
+    reports the order-one limit as a bound, and records a dropped set with
+    the value computed from it.
+- title: "Requirements: values and key lengths"
+  start: req:infinite-value
+  abstract: >-
+    The engine carries an infinite value through as the infeasibility of the
+    acceptance set and emits no key length for it, and on a run whose honest
+    statistics are supplied or whose declaration carries a constraint the
+    caller declared it bounds the value with every pair dropped once, at an
+    order fixed before any order is evaluated, records the cap it implies
+    on the probability that devices the declaration admits pass the
+    acceptance test, and refuses the run where that cap is at most a
+    threshold, one half by default. It reports
+    the maximal key length with its floor and its clamp at 0. It evaluates the objective
+    only at a Rényi order in (1, ∞) and reports a key length only at one in
+    (1, 2), and only on a declaration the compiler emitted. It refuses a run whose
+    security budgets, the authentication error included, sum to at least 1,
+    where the security statement is empty.
+    An instance that adopts the
+    weaker secrecy convention declares it. A key length under declared
+    constraints, or with a declared marginal, is emitted only behind the gates
+    that license it, and a degenerate licensed-class check is reported as no
+    evidence.
+order:
+  - def:declaration
+  - def:admissible-declaration
+  - lem:ensemble-form
+  - def:maps
+  - thm:protocol-channel
+  - def:branch
+  - lem:branch-maps
+  - rem:inert
+  - fact:meat
+  - def:homog
+  - def:roundmodel
+  - def:hqkd-list
+  - def:admissible-acceptance-set
+  - lem:cond-more
+  - lem:purifier-indep
+  - lem:range
+  - lem:product-marginal
+  - thm:accumulated-entropy
+  - rem:accumulation-scope
+  - rem:no-constraints
+  - thm:constrained-accumulation
+  - rem:tagged-entries-and-accumulation
+  - ex:fss
+  - rem:homog
+  - rem:scalar-declaration
+  - rem:not-licensed
+  - thm:branch-formula
+  - cor:concavity
+  - lem:cone-concavity
+  - cor:f-nonpos
+  - def:keyinert
+  - prop:exact-cancellation
+  - def:keyactive
+  - def:joint-sectors
+  - lem:joint-sectors
+  - def:feasible
+  - prop:trivial-alice-system
+  - rem:modes-da1
+  - thm:reduction
+  - prop:a-neutral
+  - cor:reduction-constrained
+  - rem:losses
+  - prop:value-range
+  - rem:hlow-range
+  - thm:convexity
+  - def:classes
+  - thm:removal
+  - prop:retention
+  - prop:no-averaging
+  - prop:removal-compose
+  - rem:target-conditions
+  - rem:witness-exactness
+  - rem:removal-general-format
+  - rem:removal-sets
+  - rem:classes
+  - lem:admissible-alice-subspace
+  - def:support-frame
+  - lem:choi-marginal
+  - lem:choi-factor
+  - thm:choi
+  - prop:frame-free-rows
+  - rem:tightness-by-construction
+  - rem:ordering
+  - rem:basis-invariance
+  - def:untrusted-choi
+  - lem:estimate
+  - def:branch-support
+  - lem:branch-support
+  - lem:dk
+  - thm:gradient
+  - cor:full-gradient
+  - lem:kraus-freedom
+  - rem:directional-differentiability
+  - lem:b-derivative
+  - thm:oracle
+  - rem:oracle
+  - lem:rank-one-sector
+  - def:dropped
+  - prop:drop-bound
+  - cor:drop-program
+  - prop:minimal-divergence
+  - lem:objective-homogeneous
+  - def:postprocessing-model
+  - def:authenticated-channel
+  - def:execution-end
+  - lem:ev-correctness
+  - lem:memory-lift
+  - lem:honest-attacks
+  - thm:keylength
+  - cor:composed-security
+  - cor:separate-executions
+  - rem:repeated-executions
+  - rem:completeness-scope
+  - prop:model-pass-bound
+  - def:max-key-length
+  - rem:plus2
+  - rem:hash-penalty
+  - rem:alpha-domain
+  - prop:monotone
+  - cor:keylength-bound
+  - cor:constrained-key-length
+  - rem:cgate
+  - prop:optol-nobound
+  - rem:representability-ceiling
+  - rem:optol-direction
+  - rem:declared-measurement
+  - prop:reference-companion
+  - cor:reference-companion-factors
+  - ass:keyreg
+  - ass:hash
+  - ass:seed
+  - ass:fixed
+  - ass:conform
+  - ass:auth
+  - ass:separate-executions
+  - ass:lab
+  - ass:eve-dim
+  - req:exact-admission
+  - req:declaration-admission
+  - req:companion-admission
+  - req:acceptance-set-admission
+  - req:branch-register-components
+  - req:sector-report
+  - req:state-blind-test
+  - req:removal-checklist
+  - req:structure-operations
+  - req:single-sector-deletion
+  - req:frame-constructed
+  - req:diagonal-frame-test
+  - req:frame-recorded
+  - req:choi-convention
+  - req:row-form-by-construction
+  - req:row-form-record
+  - req:split-form-gradient
+  - req:gradient-at-maximal-support
+  - req:limit-not-a-bound
+  - req:dropped-set-record
+  - req:infinite-value
+  - req:unreachable-acceptance-set
+  - req:objective-alpha-domain
+  - req:reported-key-length
+  - req:hash-penalty
+  - req:key-length-alpha-domain
+  - req:compiled-declaration-only
+  - req:security-statement-not-vacuous
+  - req:secrecy-convention
+  - req:constrained-key-gate
+  - req:degenerate-gate-report
+  - req:marginal-licence-gate

@@ -1,0 +1,47 @@
+% ---
+% id: receiver/req:evaluation-label
+% kind: req
+% title: "The evaluation label on every artifact"
+% summary: >-
+%   Every receiver artifact says whether its weights were all evaluated
+%   rigorously or not, and no path produces another label. A run whose
+%   declaration reads a per-setting weight evaluated in floating point,
+%   directly or through a uniform weight, reports at most a first-order tier.
+% prominence: standard
+% status: accepted
+% uses: [thm:exact-and-evaluated, req:rigorous-weight]
+% mentions: [def:evaluation-model, ass:eig, thm:enclosed-weight, foundations/req:tiers, meat-core/frank-wolfe/req:certified-evaluation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+This contract claims no enclosure of any quantity it computes in floating
+point (Definition~\ref{def:evaluation-model}), while the weights it evaluates
+rigorously are bounds by theorem (Theorem~\ref{thm:enclosed-weight}). The label
+says which of the two an artifact's weights are
+(Theorem~\ref{thm:exact-and-evaluated}\,(iii)), and the requirement's last
+sentence states the consequence for the tier of a run.
+
+\begin{requirement}\label{req:evaluation-label}
+The engine writes \iface{bound_evaluation} on every artifact of this module,
+on every input route: \iface{rigorous} where the weight of every setting was
+formed by the rigorous evaluation of Requirement~\ref{req:rigorous-weight},
+and \iface{floating_point} otherwise, an artifact with a weight resting on
+Assumption~\ref{ass:eig} among them; which evaluation formed each setting's
+weight is recorded as Requirement~\ref{req:rigorous-weight}\,(vi) says. No
+path in this module produces another label
+(Theorem~\ref{thm:exact-and-evaluated}\,(iii)): the label \iface{certified},
+which would name a tier and not an evaluation, and the retired fallback reason
+\iface{receiver_grams_not_enclosed} are never produced. A run whose
+declaration carries a weight into which a \tref{per-setting weight} enters
+that the record of Requirement~\ref{req:rigorous-weight}\,(vi) names as
+evaluated in floating point, the
+\tref[uniform weight of an entry]{uniform weight} of a slot entry counting
+the weight of every setting as entering it, is not reported at the certified
+tier
+(\xref{meat-core/frank-wolfe/req:certified-evaluation}\,(vii)); in every other
+respect the tier a run reports from these artifacts follows
+\xref{foundations/req:tiers}.
+\end{requirement}

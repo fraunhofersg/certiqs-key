@@ -1,0 +1,36 @@
+% ---
+% id: statistics/def:matched-alphabet
+% kind: def
+% title: "Alphabet and round count matched to the consuming declaration"
+% summary: >-
+%   An alphabet and a round count are matched when the alphabet, with a fixed
+%   enumeration, is the acceptance alphabet of the declaration the consumer
+%   solves and the round count is the same. The acceptance set then lives on
+%   the consumer's coordinates and is normalised by its round count.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [protocol-compiler/def:declaration, req:matched-alphabet]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The definition relates this module's inputs to the declaration the consumer
+solves, so no input of this module decides it; the agreement of
+\tref[outcome alphabet]{outcome alphabets} across artefacts is checked where
+the consumer validates its inputs
+(\repodoc{spec/architecture.md#36-bundle-validation-is-input-validation-not-a-module};
+Requirement~\ref{req:matched-alphabet}), and the round count is one run
+parameter that this module and the consumer both read.
+
+\begin{definition}\label{def:matched-alphabet}
+An acceptance alphabet $\Chatset$ and a round count $n$ are a
+\term[An acceptance alphabet, with a fixed enumeration, and a round count
+that are those of the declaration the consumer solves.]{matched alphabet and
+round count} when $\Chatset$ is the finite, non-empty acceptance alphabet of
+the same declaration $\Decl$ (\xref{protocol-compiler/def:declaration}) the
+\tref{consumer} solves, the codomain of $\phi$, with a fixed enumeration, and
+$n$ is the same total round count.
+\end{definition}

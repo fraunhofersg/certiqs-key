@@ -1,0 +1,34 @@
+% ---
+% id: meat-core/req:sector-report
+% kind: req
+% title: "The sector report"
+% summary: >-
+%   The engine reports the four classes of every sector, and justifies every
+%   sector it deletes by the checked witness, the order in which the witness
+%   was evaluated and the retention of the witness's targets.
+% prominence: standard
+% status: implemented
+% uses: [def:classes, prop:removal-compose]
+% mentions: [rem:witness-exactness]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.declaration.general_sectors:general_sector_report
+% lean:
+% ---
+
+A deletion of a set is licensed by the hypothesis of
+Proposition~\ref{prop:removal-compose}, which is read on the recorded
+witnesses, and the evaluation order of a witness is not part of the
+declaration (Remark~\ref{rem:witness-exactness}); so the record has to carry
+both for a deletion to be checked.
+
+\begin{requirement}\label{req:sector-report}
+The engine emits, for every sector, the four predicates of
+Definition~\ref{def:classes} in \iface{sector_report}, and justifies there
+every sector it deletes by the six conditions (W1)--(W6) checked on the
+exhibited witness, by that witness with its evaluation order of (W6),
+declared with the witness and recorded with it as
+\iface{witness_evaluation_order}, and by the retention of the witness's
+targets.
+\end{requirement}

@@ -1,0 +1,30 @@
+% ---
+% id: meat-core/req:degenerate-gate-report
+% kind: req
+% title: "A degenerate licensed-class check reported as no evidence"
+% summary: >-
+%   Where the licensed-class half of the constraint gate is degenerate, at
+%   d_A = 1 and in untrusted-source mode, the engine never reports its pass as
+%   evidence of anything, nor as evidence about a party-local entry. The key
+%   length there rests on the attack-set licence alone.
+% prominence: standard
+% status: implemented
+% uses: [rem:cgate, req:constrained-key-gate]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.keylength:constraint_gate_report
+% lean:
+% ---
+
+In the degenerate cases of Remark~\ref{rem:cgate} the constrained key length
+rests entirely on the attestation, so a passing part~(i) there carries no
+information.
+
+\begin{requirement}\label{req:degenerate-gate-report}
+Where part~(i) of the two-part gate of
+Requirement~\ref{req:constrained-key-gate} is degenerate, at $d_A=1$ and in
+\tref{untrusted-source mode} (Remark~\ref{rem:cgate}), the engine never
+reports a passing part~(i) as evidence of anything, and it never reports a
+passing part~(i) as evidence of anything about a party-local entry either.
+\end{requirement}

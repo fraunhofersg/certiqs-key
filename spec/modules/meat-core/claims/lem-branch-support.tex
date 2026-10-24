@@ -1,0 +1,153 @@
+% ---
+% id: meat-core/lem:branch-support
+% kind: lem
+% title: "Properties of the maximal branch support"
+% summary: >-
+%   Every branch operator the program forms is supported in the maximal branch
+%   support, with equality at a positive definite Choi block; the support is
+%   the range of the stacked Kraus matrix. It is always smaller than the
+%   ambient space and in general not invariant under the key pinching.
+% prominence: standard
+% status: implemented
+% uses: [def:branch-support, def:branch, lem:admissible-alice-subspace, def:untrusted-choi, lem:choi-marginal, def:admissible-declaration]
+% mentions: [thm:gradient, meat-core/frank-wolfe/thm:firstorder, meat-core/frank-wolfe/req:support-rank-check]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.gradient:is_support_maximal
+% lean:
+% ---
+
+Four facts about the \tref{maximal branch support} are used by the gradient
+of Theorem~\ref{thm:gradient} and by the first-order argument of the
+Frank--Wolfe submodule: it bounds the support of every branch operator the
+program forms, it is the range of the stacked Kraus matrix, it is always
+strictly smaller than the ambient space, and it is in general not invariant
+under the \tref{key pinching}. The bound in~(ii) is not a number a run computes:
+$\operatorname{rank}\tau_A$ enters it only as a mathematical quantity.
+Hypothesis (H-SUPP) of Theorem~\ref{thm:firstorder} compares a rank with
+$\dim W_{\hat c,s}$, and how that comparison is decided is
+Requirement~\ref{req:support-rank-check}.
+
+\begin{lemma}\label{lem:branch-support}
+Let $\hat c\in\Chkey$ and $s\in\SecSet$, and let $W_{\hat c,s}$ and
+$\mathbf K_{\hat c,s}$ be as in Definition~\ref{def:branch-support}.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item In trusted-source mode every $\omega_s=\chi_{\Qsys_s}(\Delta)$ with
+  $\Delta\in\Pos{A_0\Qsys_s}$, in particular every feasible $\omega_s$
+  and the image of the positive and the negative part of every Hermitian
+  direction, satisfies
+  $\operatorname{supp}\omega_s
+  =(W_{\tau}\otimes\idon{})(\operatorname{supp}\Delta)
+  \subseteq\operatorname{supp}\tau_A\otimes\Hs{\Qsys_s}
+  =\Sadm\otimes\Hs{\Qsys_s}$; in untrusted-source mode
+  $\Sadm=\Hs{A}$ and the inclusion holds for every
+  $\omega_s\in\Pos{A\Qsys_s}$. In either mode, therefore,
+  \begin{equation}\label{eq:Wcs-bound}
+    \operatorname{supp}\cG_{\hat c,s}(\omega_s)\subseteq W_{\hat c,s},
+  \end{equation}
+  with equality whenever $\omega_s$ attains that maximal support,
+  $\operatorname{supp}\omega_s=\Sadm\otimes\Hs{\Qsys_s}$. In
+  trusted-source mode $J_s\succ0$ for the Choi block suffices for it, and
+  on a tight support frame is equivalent to it; in untrusted-source mode it
+  is $\omega_s\succ0$ on $\Hs{A\Qsys_s}$, which is $J_s\succ0$, as
+  $J_s=\omega_s$ there (Definition~\ref{def:untrusted-choi}\,(a)).
+\item $W_{\hat c,s}$ is the range of one matrix, and its dimension is
+  bounded:
+  \begin{equation}\label{eq:Kstack-rank}
+    W_{\hat c,s}=\operatorname{ran}\mathbf K_{\hat c,s},
+    \qquad
+    \dim W_{\hat c,s}=\operatorname{rank}\mathbf K_{\hat c,s}
+    \;\le\;\big|\Kann_{\mathrm{pass}}(\hat c)\big|\cdot
+    \dim\Sadm\cdot d_s ,
+  \end{equation}
+  where $\dim\Sadm=\operatorname{rank}\tau_A$ in trusted-source mode and
+  $d_A$ in untrusted-source mode.
+\item $\dim W_{\hat c,s}$ is \emph{strictly} smaller than
+  $\dim\Hs{R\,XY\,C_AC_B\,A\Qsys_s}$, so $0$ always lies in the ambient
+  spectrum of a branch operator $X_{\hat c,s}=\cG_{\hat c,s}(\omega_s)$ of~(i)
+  and ``maximal support'' is never the statement that $X_{\hat c,s}\succ0$
+  on the ambient space.
+\item $W_{\hat c,s}$ is \emph{not} in general $\cZ$-invariant.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Support of a sum.} For $\varrho\succeq0$ the support of
+$\sum_{\kappa}K_{\kappa}\varrho K_{\kappa}^{\dagger}$ is
+$\sum_{\kappa}K_{\kappa}(\operatorname{supp}\varrho)$: a vector $\ket w$
+in the kernel of the sum has
+$\bra wK_{\kappa}\varrho K_{\kappa}^{\dagger}\ket w=0$, hence
+$\varrho^{1/2}K^{\dagger}_{\kappa}\ket w=0$, for every $\kappa$, and
+conversely each summand has range in $K_{\kappa}(\operatorname{supp}
+\varrho)$.
+
+(i) In trusted-source mode,
+$\operatorname{supp}\omega_s=(W_{\tau}\otimes\idon{})(\operatorname{supp}\Delta)$
+by the support of a sum with the single operator $W_{\tau}\otimes\idon{}$;
+it lies in $\operatorname{ran}W_{\tau}\otimes\Hs{\Qsys_s}$, and
+$\operatorname{ran}W_{\tau}=\operatorname{supp}\tau_A$
+(Lemma~\ref{lem:choi-marginal}\,(iii)), which is $\Sadm$ by \eqref{eq:SA}. In
+untrusted-source mode $\Sadm=\Hs{A}$ and the inclusion is trivial. The
+support of a sum then gives
+$\operatorname{supp}\cG_{\hat c,s}(\omega_s)
+=\sum_{\kappa}K^{(s)}_{\kappa}(\operatorname{supp}\omega_s)
+\subseteq\sum_{\kappa}K^{(s)}_{\kappa}(\Sadm\otimes\Hs{\Qsys_s})
+=W_{\hat c,s}$, with equality where
+$\operatorname{supp}\omega_s=\Sadm\otimes\Hs{\Qsys_s}$. That is the case
+when $J_s\succ0$, since then
+$\operatorname{supp}\omega_s=\operatorname{ran}W_{\tau}\otimes\Hs{\Qsys_s}$,
+and when $\omega_s\succ0$ on $\Hs{A\Qsys_s}$ in untrusted-source mode. On a
+tight frame the converse holds as well: $W_{\tau}$ is then injective
+(Lemma~\ref{lem:choi-marginal}\,(iii)), so $W_{\tau}\otimes\idon{}$ maps
+$\operatorname{supp}J_s$ injectively onto $\operatorname{supp}\omega_s$,
+and $\operatorname{supp}\omega_s=\operatorname{ran}W_{\tau}\otimes
+\Hs{\Qsys_s}$, of dimension $d_{A_0}d_s$, forces
+$\operatorname{supp}J_s=\Hs{A_0\Qsys_s}$, that is $J_s\succ0$.
+
+(ii) The range of a side-by-side listing is the sum of the ranges of its
+blocks, and
+$\operatorname{ran}(W_{\tau}\otimes\idon{\Qsys_s})
+=\operatorname{ran}W_{\tau}\otimes\Hs{\Qsys_s}
+=\Sadm\otimes\Hs{\Qsys_s}$ by
+$\operatorname{ran}W_{\tau}=\operatorname{supp}\tau_A$
+(Lemma~\ref{lem:choi-marginal}\,(iii)), so
+$\operatorname{ran}\mathbf K_{\hat c,s}
+=\sum_{\kappa}K^{(s)}_{\kappa}(\Sadm\otimes\Hs{\Qsys_s})$, which is
+\eqref{eq:Wcs}. The rank of a side-by-side listing is at most the sum of
+the ranks of its blocks, and each block has rank at most
+$\operatorname{rank}(W_{\tau}\otimes\idon{\Qsys_s})=\dim\Sadm\cdot d_s$,
+which gives the inequality. In untrusted-source mode the same two steps
+apply with $\idon{A\Qsys_s}$ in place of $W_{\tau}\otimes\idon{\Qsys_s}$.
+
+(iii) For a \tref{pass class} $\kappa$ of $\hat c$ every
+$(x,v)\in a^{-1}(\kappa)$ has $r(x,v)\in\Zval$, by announcement-determined
+sifting and Definition~\ref{def:admissible-declaration}\,(iv), (v); so every Kraus operator
+$K^{(s)}_{\kappa}$ of \eqref{eq:Wcs} carries an $R$-ket $\ket{j}_R$ with
+$j\in\Zval$, and $W_{\hat c,s}\subseteq\operatorname{span}\{\ket{j}_R:
+j\in\Zval\}\otimes\Hs{XY\,C_AC_B\,A\Qsys_s}$. The nonzero vectors
+$\ket{\perp}_R\otimes\xi$ are orthogonal to that subspace, so
+$\dim W_{\hat c,s}$ is smaller than the ambient dimension. By~(i),
+$\operatorname{supp}X_{\hat c,s}\subseteq W_{\hat c,s}$, so those vectors
+lie in the ambient kernel of $X_{\hat c,s}$, and $0$ is an eigenvalue of
+$X_{\hat c,s}$ on the ambient space.
+
+(iv) The declaration is free to let the raw-key value $r(x,v)$ vary with
+$x$ inside one announcement class, since
+Definition~\ref{def:admissible-declaration}\,(viii) constrains only that the key holder can
+compute it, and then a single Kraus operator \eqref{eq:kraus} has range
+vectors spread over several $R$-eigenvalues. $Z_j$ applied to such a
+vector $K^{(s)}_{\kappa}\ket\psi$ retains only the terms with
+$r(x,v)=j$, which is in general not $K^{(s)}_{\kappa}\ket{\psi'}$ for any
+$\ket{\psi'}$, nor in the range of any other Kraus operator (the classes
+$\kappa$ occupy orthogonal $C_AC_B$ sectors). An instance: $d_A=1$, one
+Alice outcome $x$, $\Qsys=\mathbb{C}$ with one sector $s$, two outcomes
+$v_0,v_1$ with $F_{v_0}=F_{v_1}=\frac12$, both outcome pairs in one
+announcement class $\kappa$, which passes sifting, and the key held by
+Bob with $r(x,v_0)=0$ and $r(x,v_1)=1$, a function of his readout; let
+$\hat c\coloneqq\phi(\kappa)$ have no other pass class. Then
+$W_{\hat c,s}$ is the line spanned by
+$\big(\ket{0}_R\ket{x,v_0}+\ket{1}_R\ket{x,v_1}\big)\ket{\kappa}$, and
+$Z_0$ maps that vector to $\ket{0}_R\ket{x,v_0}\ket{\kappa}$, which is not
+on the line.
+\end{proof}

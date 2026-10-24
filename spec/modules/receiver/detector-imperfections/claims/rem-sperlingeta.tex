@@ -1,0 +1,30 @@
+% ---
+% id: receiver/detector-imperfections/rem:sperlingeta
+% kind: rem
+% title: "The single-mode efficiency substitution in the photo-counting formula"
+% summary: >-
+%   For one mode the efficiency substitution gives an on/off detector of
+%   efficiency η the normally ordered no-click element exp(−ηn), the
+%   zero-count, noise-free case of a published photo-counting formula. The
+%   agreement corroborates and backs no step.
+% prominence: standard
+% status: accepted
+% uses: [thm:efficiency, receiver/prop:normord]
+% assumes: []
+% refs:
+%   - "sperling2012, Eq. (3)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:sperlingeta}
+For a single mode, \eqref{eq:etagram} together with
+Proposition~\ref{prop:normord} says that an on/off detector of efficiency
+$\eta$ has no-click element $\normord{e^{-\eta\hat n}}$ rather than
+$\normord{e^{-\hat n}}$. The same substitution appears in
+\cite[Eq.~(3)]{sperling2012}, whose photo-counting formula with finite quantum
+efficiency $\eta$ and noise $\nu$ reads
+$p_k=\langle\normord{(\eta\hat n+\nu)^ke^{-(\eta\hat n+\nu)}}\rangle/k!$ and
+whose $k=0$, $\nu=0$ case is $\langle\normord{e^{-\eta\hat n}}\rangle$.
+This is a corroboration only; no proof relies on it.
+\end{remark}

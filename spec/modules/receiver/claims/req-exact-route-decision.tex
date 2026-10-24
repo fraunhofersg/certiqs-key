@@ -1,0 +1,117 @@
+% ---
+% id: receiver/req:exact-route-decision
+% kind: req
+% title: "Deciding the exact route and enclosing the port Grams"
+% summary: >-
+%   The engine decides exactly whether a declaration has a model admissible
+%   exactly and, where its arithmetic represents the parameters, whether it is
+%   on the exact route. For every such model it encloses the port Grams in
+%   rational arithmetic, exactly on that route, and records which.
+% prominence: standard
+% status: implemented
+% uses: [def:exact-route, def:complex-enclosure, lem:enclosure-arithmetic, thm:enclosed-blocks, thm:exact-blocks, def:compile, def:gram, def:evaluation-model, def:tolmap, thm:compilation-well-defined, thm:port-grams, foundations/def:binary64]
+% mentions: [receiver/component-catalogue/def:catalogue-entries, receiver/component-catalogue/thm:catalogue-admissibility, receiver/detector-imperfections/req:dark-composed-reference]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.reference:enclose_port_grams
+% lean:
+% notes: "Item (ii) reads angles through angle_presentation of interface.yaml parameters.units and a decibel loss at the converted value presentation_rule makes the declared datum; the receiver code reads angles in radians only, so implementing item (ii) includes adding that presentation to the request. A declaration the arithmetic does not represent is treated as off the exact route, since Def. def:exact-route decides membership on the port Grams, which can be Gaussian-rational at a radian angle; item (iii) encloses exactly on the route as (i) or (ii) decides it."
+% ---
+
+The engine encloses the port Grams of every declaration that defines an
+admissible receiver exactly, so the receiver's blocks have a reference
+whatever the parameters are (Theorem~\ref{thm:enclosed-blocks}); the
+reference the receiver offers is formed from these enclosures
+(Requirement~\ref{req:dark-composed-reference}). The \tref{exact route}
+is decided in addition, because only exact entries let a snap keep a
+block at weight zero (Theorem~\ref{thm:exact-blocks}). The entries of the
+catalogue (Definition~\ref{def:catalogue-entries}) carry the square roots of
+their transmittances, reflectivities, efficiencies and pass and leak
+parameters, and of the complements $1-x$, $1-t_H$, $1-t_V$ and $1-y$ of the
+splitting ratios and the losses; at axis angles that are multiples of
+$\pi/8$ they involve otherwise only $\cos$ and $\sin$ of multiples of
+$\pi/4$ and phases that are multiples of $\pi/4$, which lie in
+$\mathbb{Q}(i,\sqrt2)$. That is why the floor of item (ii) names those square
+roots and those angles. A compiled graph whose \tref[generic block]{generic
+blocks} are contractions exactly is admissible exactly at every other
+parameter in its domain (Theorem~\ref{thm:catalogue-admissibility}), so on
+that route the model needs no decision beyond those blocks and the domain
+comparisons.
+
+\begin{requirement}\label{req:exact-route-decision}
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{Declared Grams or matrix.} On a route that
+  declares the port Grams or the \tref{instrument matrix}, the engine computes
+  the port Grams in exact rational arithmetic from the
+  \tref[declared value]{declared values}, by \eqref{eq:gramdef} where the
+  instrument matrix is declared, and decides in exact rational arithmetic
+  whether every $A_k$ is Hermitian and whether the family satisfies
+  \eqref{eq:exact-admissible}, that is, whether it is an
+  \tref{admissible Gram family} exactly. The declaration has a model
+  admissible exactly, and is then on the \tref{exact route}
+  (Definition~\ref{def:exact-route}), exactly when both hold.
+\item \emph{Component graph.} On the route that declares a component graph,
+  the engine decides in exact rational arithmetic whether the matrix of every
+  generic block, whose entries are declared values, is a contraction,
+  $\Gmat_\Sigma^{\dagger}\Gmat_\Sigma\preceq\id$. Where every one is, the
+  declaration has a model admissible exactly: the \tref{compiled instrument matrix}
+  is a contraction (Theorem~\ref{thm:compilation-well-defined}\,(ii)) and its
+  port Grams are an admissible Gram family (Theorem~\ref{thm:port-grams}\,(i)),
+  at the exact values of the declared parameters. For a declaration that
+  has one and whose parameters its exact arithmetic represents, the engine
+  moreover compiles the instrument matrix of Definition~\ref{def:compile} and
+  the port Grams exactly and decides whether every port Gram has entries in
+  $\mathbb{Q}(i)$, which places the declaration on the exact route. Every
+  transmittance, loss, reflectivity, extinction and efficiency is the
+  rational number the artifact carries for it: the declared value, or, for a
+  loss declared in decibels, the converted efficiency that
+  \iface{presentation_rule} makes the declared datum, a binary64 number and
+  so a dyadic rational (\xref{foundations/def:binary64}\,(iii)). An angle
+  parameter given in the presentation \iface{angle_presentation}, as a
+  rational coefficient $c$ of $\pi$, is $c\pi$ exactly; an angle given in
+  radians is a \tref{declared value}, the dyadic rational it denotes. The
+  arithmetic represents at least the field generated over $\mathbb{Q}(i)$ by
+  $\sqrt2$ and by $\sqrt p$ and $\sqrt{1-p}$ for every declared rational
+  parameter $p$ in $[0,1]$, which contains every entry of every catalogue
+  entry whose angles are given as coefficients of $\pi$, whose axis angles
+  are multiples of $\pi/8$, whose retardances are multiples of $\pi/2$ and
+  whose rotations and phases are multiples of $\pi/4$. A declaration whose
+  parameters the arithmetic does not represent, a non-zero angle given in
+  radians among them, is treated as off the exact route, with its cause
+  recorded by (iv), even where its port Grams happen to have entries in
+  $\mathbb{Q}(i)$ (two half-wave plates in sequence at one such angle, for
+  instance, compose to $-\id$).
+\item \emph{Enclosure of the port Grams.} For every declaration with a
+  model admissible exactly, the engine computes, in exact rational
+  arithmetic, \tref[complex enclosure]{complex enclosures}
+  (Definition~\ref{def:complex-enclosure}) of its port Grams at the exact
+  values of the declared parameters. On the exact route as decided by (i)
+  or (ii) each port Gram is enclosed exactly, by itself. Otherwise, on the
+  route of (ii), the
+  enclosures are those of Theorem~\ref{thm:enclosed-blocks}\,(i), with the
+  matrix of every element enclosed by the rules of
+  Lemma~\ref{lem:enclosure-arithmetic} applied to the formula of its
+  catalogue entry from \tref[square-root enclosure]{square-root enclosures}
+  and \tref[angle enclosure]{angle enclosures} of its parameters, and
+  $\sqrt{\eta_k}$ by a square-root enclosure; where the exact arithmetic of
+  (ii) has computed a port Gram, its entries, which are expressions in square
+  roots of rationals, may be enclosed from those expressions instead. A
+  phase $e^{i\varphi}$ is $\cos\varphi+i\sin\varphi$, and the angle $\delta/2$
+  of a retarder is again a rational or a rational multiple of $\pi$. No
+  floating-point value enters an enclosure.
+\item \emph{Record.} The \iface{photon_blocks} entry of the artifact records
+  whether (i) or (ii) places the declaration on the exact route and, where
+  neither does, why:
+  a parameter or an angle that the exact arithmetic of (ii) does not
+  represent (a non-zero angle given in radians among them), port Grams that
+  are not Gaussian-rational, or no model admissible exactly, which is
+  declared port Grams that are not Hermitian, a declared family that is not
+  an admissible Gram family exactly (a declaration admitted only at the
+  \tref{receiver tolerances}), or a generic block that is not a contraction
+  exactly. Being off the exact route is not a refusal of the receiver and
+  takes nothing away from the floating-point blocks (Definition~\ref{def:evaluation-model});
+  where the declaration has a model admissible exactly, its port Grams are
+  enclosed by (iii).
+\end{enumerate}
+\end{requirement}

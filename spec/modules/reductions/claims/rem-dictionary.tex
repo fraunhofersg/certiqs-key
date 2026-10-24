@@ -1,0 +1,49 @@
+% ---
+% id: reductions/rem:dictionary
+% kind: rem
+% title: "Direction of the squashing symbol in the literature"
+% summary: >-
+%   The physical POVM stands on the left of the squashing symbol, as in the
+%   squashing-model literature, while the measurement-theory literature writes
+%   the same relation the other way round. The direction is to be checked
+%   before a statement is imported from there.
+% prominence: standard
+% status: accepted
+% uses: [def:squashing]
+% mentions: [lem:statistics]
+% assumes: []
+% refs:
+%   - "beaudry2008squashing, Eqs. (1)-(2)"
+%   - "tupkary2026decoy, Eq. (146)"
+%   - "buscemi2005clean, Def. 6.1"
+% provenance: newly-derived
+% lean:
+% ---
+
+The side system $R$ in Lemma~\ref{lem:statistics}\,(iii) is not a
+technicality: in a security proof it holds Alice's retained register and Eve's
+side information, both of which are present whenever a squashed constraint is
+evaluated.
+
+\begin{remark}\label{rem:dictionary}
+In Definition~\ref{def:squashing} the \emph{physical} POVM stands on the left
+and the target on the right, in the direction of
+$\Lambda\colon\Tcl{\Bsys}\to\Tcl{\Qsys}$ and of the QKD usage in which
+$\Lambda$ maps physical states to squashed states. The identity
+\eqref{eq:squashing} is the one the squashing-model literature writes: it is
+\cite[Eqs.~(1)--(2)]{beaudry2008squashing}, which states the statistical
+equivalence $\tr[\rho_{\mathrm{in}}F_M(i)]
+=\tr[\Lambda(\rho_{\mathrm{in}})F_Q(i)]$ and observes that it holds for all
+inputs \emph{if and only if} $F_M(i)=\Lambda^{\dagger}(F_Q(i))$, with
+$\Lambda^{\dagger}$ completely positive and unital but not necessarily trace
+preserving;
+and it is \cite[Eq.~(146)]{tupkary2026decoy} in measurement-channel form.
+The measurement-theory literature writes the same relation the \emph{other way
+round}: \cite[Def.~6.1]{buscemi2005clean} defines $P\succ Q$, ``$P$ is cleaner
+than $Q$'', to mean $Q=\mathcal{E}(P)$ for a channel $\mathcal{E}$. The
+paper's channels acting on effects are its identity-preserving completely
+positive maps, so $\mathcal{E}$ is what this contract writes
+$\Lambda^{\dagger}$ for a trace-preserving $\Lambda$, and the left-hand
+argument $P$ is our \emph{target}. The direction is worth checking
+before importing a statement from there; this contract imports none.
+\end{remark}

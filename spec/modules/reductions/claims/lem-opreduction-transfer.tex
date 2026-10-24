@@ -1,0 +1,147 @@
+% ---
+% id: reductions/lem:opreduction-transfer
+% kind: lem
+% title: "Transfer and composition of exact operational reductions"
+% summary: >-
+%   An exact operational reduction carries every bound on every function of the
+%   full output from the analysed to the physical strategy set with the same ε,
+%   and reductions restrict, enlarge and compose. A bound over an intersection
+%   of analysed sets needs one map into all of them.
+% prominence: standard
+% status: accepted
+% uses: [def:opreduction, def:criterion]
+% mentions: [def:sound, rem:channel-choice, cor:sound]
+% assumes: [A-MEAS]
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The lemma uses def:criterion only to name the class of functions the quantifier of (i) is applied to in this contract; the statement is for every function of the full output and reads no property of one."
+% ---
+
+The lemma is elementary set arithmetic. Its part (iv) matters in this
+contract because two channels realising one and the same
+\tref{squashing relation}
+give two different strategy maps, whose reachable sets are in general
+incomparable; that is why Corollary~\ref{cor:sound}\,(ii)--(iii) are stated for
+one common channel and one common family of \tref{physical inputs}
+(Remark~\ref{rem:channel-choice}). Part (vi) says that an analysed set larger
+than the image costs tightness and never soundness, the same trade the
+reachable sets of Definition~\ref{def:sound} make.
+
+\begin{lemma}\label{lem:opreduction-transfer}
+Let $r$ be an exact operational reduction from
+$\mathsf{P}=(\mathbb{A},W,\mathsf{out})$ to
+$\mathsf{P}'=(\mathbb{A}',W,\mathsf{out}')$ in the sense of
+Definition~\ref{def:opreduction}. Write $\mathcal{F}(W)$ for the set of all
+functions $\Sleq{W}\to[-\infty,+\infty]$; a security criterion in the sense of
+Definition~\ref{def:criterion}, at a fixed adversary system, is one such
+function.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(transfer, with the same $\varepsilon$ and for every criterion at
+  once)} for every $f\in\mathcal{F}(W)$ and every $a\in\mathbb{A}$,
+  $f(\mathsf{out}(a))=f(\mathsf{out}'(r(a)))$, and consequently
+  \begin{equation}\label{eq:opsup}
+    \sup_{a\in\mathbb{A}}f\big(\mathsf{out}(a)\big)
+    \;=\;\sup_{b\in r(\mathbb{A})}f\big(\mathsf{out}'(b)\big)
+    \;\le\;\sup_{b\in\mathbb{A}'}f\big(\mathsf{out}'(b)\big) .
+  \end{equation}
+  In particular, if $f(\mathsf{out}'(b))\le\varepsilon$ for every
+  $b\in\mathbb{A}'$, then $f(\mathsf{out}(a))\le\varepsilon$ for every
+  $a\in\mathbb{A}$, with the \emph{same} $\varepsilon$, and simultaneously
+  for every $f\in\mathcal{F}(W)$, no property of $f$ being used;
+\item \emph{(enlargement of the analysed set)} if
+  $\mathbb{A}'\subseteq\mathbb{A}''$ and
+  $\mathsf{out}''|_{\mathbb{A}'}=\mathsf{out}'$, then the same $r$ is an
+  exact operational reduction from $\mathsf{P}$ to
+  $\mathsf{P}''=(\mathbb{A}'',W,\mathsf{out}'')$. So it is enough that the
+  image $r(\mathbb{A})$ lie in the analysed set, and the last inequality of
+  \eqref{eq:opsup} is where that slack is spent;
+\item \emph{(restriction of the physical set)} if
+  $\mathbb{A}_0\subseteq\mathbb{A}$, then $r|_{\mathbb{A}_0}$ is an exact
+  operational reduction from $(\mathbb{A}_0,W,\mathsf{out}|_{\mathbb{A}_0})$ to
+  $\mathsf{P}'$;
+\item \emph{(one map, many analysed sets)} let $(\mathbb{A}'_k)_{k\in K}$ be a
+  family of subsets of $\mathbb{A}'$ such that \emph{one and the same} $r$
+  satisfies $r(\mathbb{A})\subseteq\mathbb{A}'_k$ for every $k\in K$. Then $r$
+  is an exact operational reduction from $\mathsf{P}$ to
+  $\big(\bigcap_{k\in K}\mathbb{A}'_k,W,\mathsf{out}'\big)$, and by (i) a bound
+  over that intersection transfers. The hypothesis cannot be weakened to the
+  existence, for each $k$, of \emph{some} exact operational reduction into
+  $\mathbb{A}'_k$: let $W$ be one classical bit, $\mathbb{A}=\{a\}$,
+  $\mathbb{A}'=\{b_1,b_2\}$ with $b_1\ne b_2$ and
+  $\mathsf{out}(a)=\mathsf{out}'(b_1)=\mathsf{out}'(b_2)=\dyad{0}$, and
+  $\mathbb{A}'_k=\{b_k\}$. Each $r_k\colon a\mapsto b_k$ is an exact
+  operational reduction into $\mathbb{A}'_k$, the intersection is empty, so
+  ``$f(\mathsf{out}'(b))\le0$ for every $b$ in the intersection'' holds
+  vacuously; yet $f(\mathsf{out}(a))=1$ for
+  $f(\rho)\coloneqq\tr[\dyad{0}\rho]$, so the conclusion of (i) is false for
+  the intersection;
+\item \emph{(composition, and how the analysed sets compose)} let
+  $\mathbb{A}'_0\subseteq\mathbb{A}'$ contain $r(\mathbb{A})$ and let $r'$ be an
+  exact operational reduction from
+  $\big(\mathbb{A}'_0,W,\mathsf{out}'|_{\mathbb{A}'_0}\big)$ to
+  $\mathsf{P}''=(\mathbb{A}'',W,\mathsf{out}'')$. Then $r'\circ r$ is an exact
+  operational reduction from $\mathsf{P}$ to $\mathsf{P}''$, with image
+  $r'(r(\mathbb{A}))$. The analysed set the composite needs is the second
+  reduction's, or any subset of $\mathbb{A}''$ containing
+  $r'(r(\mathbb{A}))$; the first reduction's analysed set enters only as a
+  domain the second must cover, which is what
+  $r(\mathbb{A})\subseteq\mathbb{A}'_0$ says. Composition is associative and
+  the identity map on $\mathbb{A}$ is an exact operational reduction from
+  $\mathsf{P}$ to itself;
+\item \emph{(the direction, and what the slack costs)} nothing above bounds
+  $\sup_{\mathbb{A}'}f\circ\mathsf{out}'$ by
+  $\sup_{\mathbb{A}}f\circ\mathsf{out}$, and the first can be strictly larger:
+  take $\mathbb{A}=\{a\}$, $\mathbb{A}'=\{r(a),b\}$ with
+  $\mathsf{out}'(b)\ne\mathsf{out}(a)$ and an $f$ separating the two states.
+  An analysed set larger than the image therefore costs \emph{tightness} and
+  never soundness.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) The pointwise identity is $f$ applied to both sides of
+\eqref{eq:opreduction}. Hence
+$\{\mathsf{out}(a):a\in\mathbb{A}\}
+=\{\mathsf{out}'(r(a)):a\in\mathbb{A}\}
+=\{\mathsf{out}'(b):b\in r(\mathbb{A})\}$
+as subsets of $\Sleq{W}$, so the two suprema of $f$ over them agree, which is
+the equality in \eqref{eq:opsup}; the inequality is
+$r(\mathbb{A})\subseteq\mathbb{A}'$ and monotonicity of the supremum under
+enlarging the index set. The last sentence is \eqref{eq:opsup} read with the
+right-hand supremum bounded by $\varepsilon$, and $f$ was arbitrary.
+
+(ii) The map is unchanged and \eqref{eq:opreduction} is unchanged, because
+$\mathsf{out}''(r(a))=\mathsf{out}'(r(a))$ for every $a$ by
+$r(\mathbb{A})\subseteq\mathbb{A}'$ and the hypothesis on $\mathsf{out}''$;
+the typing condition (R3) of Definition~\ref{def:opreduction} holds because
+$\mathbb{A}'\subseteq\mathbb{A}''$, and (R1), (R2) are conditions on $W$ and on
+the values, which did not move.
+
+(iii) \eqref{eq:opreduction} is a condition at each strategy separately, so it
+survives restricting the set of strategies it is required at.
+
+(iv) $r(\mathbb{A})\subseteq\bigcap_k\mathbb{A}'_k$ is exactly the hypothesis,
+and \eqref{eq:opreduction} does not read the analysed set, so $r$ is an exact
+operational reduction into the intersection; the transfer is (i). For the
+counterexample: each $r_k$ satisfies \eqref{eq:opreduction} by construction and
+$r_k(\mathbb{A})=\{b_k\}=\mathbb{A}'_k$, so each is an exact operational
+reduction into $\mathbb{A}'_k$; $\mathbb{A}'_1\cap\mathbb{A}'_2=\varnothing$
+because $b_1\ne b_2$; a supremum over the empty set is $-\infty$, so every
+bound holds over it; and $f(\mathsf{out}(a))=\tr[\dyad{0}\dyad{0}]=1$. What
+fails is not (i) but its hypothesis: no map has its image in the intersection.
+
+(v) For every $a\in\mathbb{A}$, $r(a)\in\mathbb{A}'_0$ by hypothesis, so
+$r'(r(a))$ is defined and lies in $\mathbb{A}''$, and
+$\mathsf{out}(a)=\mathsf{out}'(r(a))=\mathsf{out}''(r'(r(a)))$ by
+\eqref{eq:opreduction} for $r$ and then for $r'$. The image statement is the
+definition of a composite's image. Associativity and the identity are those of
+maps of sets; the identity satisfies \eqref{eq:opreduction} trivially.
+
+(vi) The two suprema are unrelated by anything proved above, and the displayed
+instance has $\sup_{\mathbb{A}'}f\circ\mathsf{out}'
+=\max\{f(\mathsf{out}(a)),f(\mathsf{out}'(b))\}
+>f(\mathsf{out}(a))=\sup_{\mathbb{A}}f\circ\mathsf{out}$ for an $f$ with
+$f(\mathsf{out}'(b))>f(\mathsf{out}(a))$, which exists because the two states
+differ.
+\end{proof}

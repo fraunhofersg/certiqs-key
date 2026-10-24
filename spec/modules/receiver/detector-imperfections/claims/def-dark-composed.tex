@@ -1,0 +1,52 @@
+% ---
+% id: receiver/detector-imperfections/def:dark-composed
+% kind: def
+% title: "The dark-composed family"
+% summary: >-
+%   The dark-composed family applies a dark-count channel to the click
+%   patterns of each setting's POVM and then the declared coarse-graining. It
+%   is the measurement the device performs, and the family a snap is taken
+%   from.
+% prominence: standard
+% status: implemented
+% uses: [def:darkadm, receiver/def:coarse, receiver/def:fock]
+% mentions: [thm:dark-counts, receiver/cor:unconditioned-family]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.generic:dark_composed_blocks
+% lean:
+% ---
+
+Theorem~\ref{thm:dark-counts} composes a \tref{dark-count channel} with the
+click-pattern POVM of one receiver. The definition names the composed object
+for every setting at once, and after the coarse-graining, because that is the
+measurement a declaration describes when its device has dark counts. The
+families it is applied to are the unconditioned receiver
+(Corollary~\ref{cor:unconditioned-family}) and every \tref{setting family} a
+submodule constructs.
+
+\begin{definition}\label{def:dark-composed}
+Let $\Tset$ be a finite non-empty set of settings and, for every $t\in\Tset$,
+let $\{M_{S|t}\}_{S\subseteq[K]}$ be a POVM on a \tref{Fock space}
+$\mathcal{F}(\mathbb{C}^{I})$ (Definition~\ref{def:fock}) every element of
+which commutes with the photon number. Let $R$ be a
+\tref{dark-count channel} (Definition~\ref{def:darkadm}) and $\cg$ a
+\tref{declared coarse-graining} onto $\Vset$ (Definition~\ref{def:coarse}).
+The
+\term[the click patterns of each setting composed with a dark-count channel,
+and their sums over the fibres of the declared coarse-graining]{dark-composed
+family} is
+\begin{equation}\label{eq:dark-composed}
+  \widetilde M_{S|t}\coloneqq\sum_{S'\subseteq[K]}R_{S|S'}\,M_{S'|t},
+  \qquad
+  \widetilde F_{v|t}\coloneqq\sum_{S\in\cg^{-1}(v)}\widetilde M_{S|t}
+  =\sum_{S'\subseteq[K]}R_{\cg^{-1}(v)|S'}\,M_{S'|t},
+\end{equation}
+for $S\subseteq[K]$, $v\in\Vset$ and $t\in\Tset$. Each
+$\{\widetilde M_{S|t}\}_S$ and each $\{\widetilde F_{v|t}\}_v$ is a POVM
+every element of which commutes with the photon number, with
+$\blk{\widetilde F}{\eqn}_{v|t}=\sum_{S'}R_{\cg^{-1}(v)|S'}\blk{M}{\eqn}_{S'|t}$:
+the coefficients are non-negative scalars, they sum to one over $S$ in every
+column by (D1), and the fibres of $\cg$ partition $2^{[K]}$.
+\end{definition}

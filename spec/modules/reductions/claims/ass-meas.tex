@@ -1,0 +1,66 @@
+% ---
+% id: reductions/ass:meas
+% kind: ass
+% title: "Each measuring party's device as one POVM per round"
+% summary: >-
+%   In every round each measuring party's device acts as one POVM: it emits a
+%   classical outcome, retains no quantum system, and everything after it acts
+%   on classical data. It is the hypothesis about the devices behind the
+%   output-state equality of the physical and the squashed protocol.
+% prominence: standard
+% status: accepted
+% uses: [def:protocol]
+% mentions: [protocol-compiler/def:spec]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-MEAS
+% verification: never
+% category: receiver
+% affects: [secrecy]
+% user_statement: >-
+%   Each measuring device, at every measuring station of either party, turns
+%   the incoming quantum signal into a classical result in every round and keeps
+%   nothing quantum afterwards: no post-measurement system is stored, re-used
+%   or passed on. Everything after detection (announcements, sifting,
+%   acceptance, the key map, error correction, privacy amplification) uses
+%   classical data only. Where several measuring stations are declared, of
+%   different parties or of one, or where several parties measure inside one
+%   declared station, each device measures independently of the others, so
+%   that the round's measurement is the product of theirs: no shared
+%   randomness or shared ancilla couples them. A receiver with a quantum
+%   memory that keeps the measured light, or passes it
+%   on, violates this.
+% lean:
+% ---
+
+The assumption is what lets a round's processing factor through the
+\tref{measuring parties}' \tref{measurement channel}: once each device is one
+POVM whose outcome is all that leaves it, the rest of the round acts on
+classical data. Where several parties measure, it is asserted of each of
+their devices, and where the declaration declares several measured factors
+of the \tref{measured system}, of the device at each measured factor, two
+factors of one party included; where one party
+measures (Bob, in a prepare-and-measure declaration), it is asserted of that
+party's device. The round's order is
+not part of it; classical detector memory across rounds is excluded by the
+round-homogeneity assumption.
+
+\begin{assumption}\label{ass:meas}
+In every round, each measuring party's interaction with the quantum system it
+receives satisfies:
+(i) it is described by a single POVM on that system;
+(ii) it emits the classical outcome and nothing else, and no
+post-measurement quantum system is retained or reused;
+(iii) all downstream processing (announcements, sifting, acceptance, key map,
+error correction, privacy amplification) acts on classical data;
+(iv) the round's \tref{measurement channel} is the product of one
+measurement channel per factor, each acting on its own factor alone, for each
+of the following factorizations of the \tref{measured system} $\Bsys_j$:
+where the declaration declares several measured factors
+(\xref{protocol-compiler/def:spec}), the factorization
+$\Bsys_j=\bigotimes_f\Bsys_{f,j}$ with one factor per measured factor,
+whichever parties carry their labels and two factors of one party included;
+and where several parties measure, the factorization into the parties'
+parts of Definition~\ref{def:protocol}.
+\end{assumption}

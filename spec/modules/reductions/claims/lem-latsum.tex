@@ -1,0 +1,53 @@
+% ---
+% id: reductions/lem:latsum
+% kind: lem
+% title: "Partial sums on the declared lattice are exact"
+% summary: >-
+%   If κ + ⌈log₂ L⌉ ≤ 53, every partial sum of L entries on the declared
+%   lattice is a binary64 number and every addition forming it is exact. A
+%   family on the lattice over such an alphabet therefore meets the
+%   rounds-nowhere condition by construction.
+% prominence: technical
+% status: accepted
+% uses: [def:exactadm]
+% mentions: [foundations/lem:exact-accumulation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A sum \tref{rounds nowhere} exactly when every partial sum is a binary64
+number (\xref{foundations/lem:exact-accumulation}). On the declared lattice
+that holds as long as the alphabet is small enough for the partial sums to
+fit in the significand.
+
+\begin{lemma}\label{lem:latsum}
+Let $x_1,\dots,x_L$ satisfy \eqref{eq:latinv} and let
+$\Sigma_j\coloneqq\sum_{i\le j}x_i$, $1\le j\le L$, be the partial sums of the
+accumulation in that order. If
+\begin{equation}\label{eq:latsumcond}
+  \kappa+\big\lceil\log_2L\big\rceil\ \le\ 53 ,
+\end{equation}
+then every $\Sigma_j$ is exactly a binary64 number and every one of the $L-1$
+additions forming it is exact in binary64. Consequently a family whose entries
+satisfy \eqref{eq:latinv}, over an alphabet satisfying
+\eqref{eq:latsumcond}, meets condition~(e) of Definition~\ref{def:exactadm} by
+construction.
+\end{lemma}
+
+\begin{proof}
+Work one real component of one entry position at a time; the accumulation is
+entrywise and the real and imaginary parts are accumulated independently. Each
+$x_i$ is an integer multiple of $2^{-\kappa}$, so each $\Sigma_j$ is one too,
+and $|\Sigma_j|\le\sum_{i\le j}|x_i|\le L$. Hence $2^{\kappa}\Sigma_j$ is an
+integer with $\big|2^{\kappa}\Sigma_j\big|\le L\,2^{\kappa}\le2^{53}$ by
+\eqref{eq:latsumcond}. Every integer of modulus at most $2^{53}$ is exactly
+representable in binary64, and multiplication by the power of two
+$2^{-\kappa}$ is exact and changes no significand, so $\Sigma_j$ is a binary64
+number; and $2^{-\kappa}\ge2^{-53}$ with $|\Sigma_j|\le L$ keeps it far
+inside the normal range, so no subnormal or overflow case arises. An IEEE-754
+addition returns the correctly rounded value of the exact sum of its operands;
+here that exact sum is $\Sigma_j$, which is representable, so the rounding is
+the identity and the addition is exact.
+\end{proof}

@@ -1,0 +1,188 @@
+id: binomial-box
+kind: submodule
+version: 0.11.0
+title: "Binomial box construction"
+abstract: >-
+  This submodule turns an honest envelope, a completeness budget and its
+  allocation over selected outcomes into a box of accepted frequencies. An
+  admissible endpoint rule returns, per outcome, a lower count at the
+  envelope's lower value and an upper count at its upper value whose tails
+  meet their budgets, and a guard widens them to contain the whole envelope
+  interval. Its main results are that for every such rule the construction
+  map emits a canonical box of exact rationals that contains every law of the
+  envelope set and meets the consuming engine's acceptance assumption
+  ([[thm:box-construction]]), and that an honest run whose per-round
+  conditional outcome law stays inside the envelope fails the test with
+  probability at most the sum of the binomial tails at the envelope's ends
+  beyond the guarded endpoints, which the allocation keeps within the budget
+  ([[thm:completeness-bound]]); neither independent rounds nor independent
+  outcome counts are assumed. The construction never fails on an admissible
+  input, so every refusal comes from the input. Under a monotone allocation
+  rule and an endpoint rule monotone in the allocation, which the enclosure
+  evaluation of the exact rule is not claimed to be, a larger budget gives a
+  smaller or equal box; for the exact rule the box is not always nested as
+  the round count grows. The exact binomial quantile rule is the default; the
+  Bernstein rule gives closed-form endpoints whose unrounded half-width
+  decreases strictly with the round count, and a local evaluation of the
+  exact rule decides its tail comparisons on enclosures in log space.
+  Completeness is a usability guarantee, and soundness never rests on the
+  honest-round assumptions.
+depends_on: []               # it inherits statistics' list; no sibling and no foreign module of its own
+notation_version: "0.5.0"
+reading_groups:
+- title: Admissible inputs, endpoint rules and the guard
+  start: def:endpoint-rule
+  abstract: >-
+    An admissible input fixes the alphabet, the round count, the honest
+    envelope, the completeness budget, its allocation over the constrained
+    outcomes, and the choice of rule and evaluation, the numbers exact. An
+    endpoint rule returns, for one
+    binomial count, a lower and an upper endpoint whose tails meet their
+    budgets, the lower taken at the envelope's lower value and the upper at
+    its upper value, and the honest-containment guard widens them to contain
+    the whole envelope interval. [[lem:guard]] proves for every rule that the
+    guarded endpoints are ordered around that interval, still meet their
+    budgets, widen the rule's interval by an exactly known amount, and lie
+    within 1/n of the envelope value wherever the guard acts.
+- title: The exact rule
+  start: def:interval
+  abstract: >-
+    The default rule takes the extremal binomial quantiles: the largest lower
+    count and the smallest upper count whose tails meet their budgets.
+    [[prop:rule-exact]] proves that this is an admissible endpoint rule,
+    monotone in the allocation, and that the guard may widen its raw interval
+    by far more than one count while the emitted endpoint stays within 1/n of
+    the honest value. Two remarks weigh what the guard buys and costs, and
+    show that it acts at ordinary budgets.
+- title: The construction map
+  start: def:construction
+  abstract: >-
+    The guarded counts divided by the round count bound the constrained
+    outcomes, the unconstrained ones keep the bounds 0 and 1, and the box is
+    intersected with the simplex. The main result, [[thm:box-construction]],
+    is that for every admissible endpoint rule the output is a canonical box
+    of exact rationals containing every law of the envelope set, a non-empty,
+    compact and convex subset of the simplex by construction.
+- title: Completeness
+  start: lem:envelope-dominance
+  abstract: >-
+    A union bound combines the allocated tails into a bound on honest
+    rejection, with no independence between outcome counts. A count whose
+    per-round conditional success probability stays between two bounds has
+    tails no heavier than the binomial laws at those bounds
+    ([[lem:envelope-dominance]]), so independent rounds are not needed
+    either. The main result, [[thm:completeness-bound]], bounds the honest
+    run's probability of failing the test by ε*, the sum of those tails, and
+    ε* by the budget; the remarks say how ε* is evaluated and reported, why
+    soundness does not depend on it, and what an envelope buys and costs.
+- title: Honest containment and infeasibility
+  start: thm:honest-containment
+  abstract: >-
+    The box contains every law of the envelope set for every budget and
+    allocation, so a law of the envelope that the consuming declaration
+    reaches gives a compatible pair and the consuming engine's infeasibility
+    condition cannot arise ([[thm:honest-containment]]). The same pair makes
+    the consuming engine's minimal divergence zero, so a positive lower bound
+    on it shows that no law of the envelope is reached
+    ([[rem:hlow-consequence]]). The construction
+    never fails on an admissible input, so every refusal comes from the
+    input: a violated condition of an admissible input, or data not of the
+    input's form.
+- title: Monotonicity and limiting cases
+  start: def:monotone-rule
+  abstract: >-
+    Lowering the box's lower bounds and raising its upper ones gives a
+    superset that is failed no more often and has no larger infimum, while
+    the reverse move can break the completeness figure ([[lem:widening]]).
+    Under a monotone allocation rule and an endpoint rule monotone in the
+    allocation, a larger budget gives a smaller or equal set and hence a
+    larger or equal infimum for any consumer ([[thm:monotonicity-limits]]). A
+    zero budget gives the whole simplex away from degenerate coordinates, a
+    one-letter alphabet a constant set, and for the exact rule at a fixed
+    positive allocation the box closes in on the envelope's box at rate
+    n^(−1/2) without being nested in the round count.
+- title: Elementary enclosures
+  start: lem:log-enclosure
+  abstract: >-
+    Rational bounds on logarithms from integer square roots, and two-sided
+    Stirling bounds on factorials with the constant enclosed by Wallis's
+    product, are the only transcendental ingredients of the closed-form rule
+    and of the local evaluation. Every bound has an explicit direction and an
+    explicit width.
+- title: The Bernstein rule
+  start: lem:bernstein-tail
+  abstract: >-
+    Bernstein's tail inequality gives count endpoints in closed form, with no
+    tail evaluated. With upward-rounded rational bounds the rule is
+    admissible, monotone in the allocation when every rounding is, and its
+    unrounded half-width decreases strictly with the round count, though
+    nesting of its integer-rounded boxes in the round count is not claimed
+    ([[prop:rule-bernstein]]). A remark says
+    which completeness figure a rule that evaluates no tail can report.
+- title: The exact rule's local evaluation
+  start: lem:pmf-enclosure
+  abstract: >-
+    A binomial tail is enclosed in log space from a window of mass points and
+    a geometric majorant of the rest, each mass point enclosed through
+    Stirling's bounds. Endpoints bracketed by these enclosures form an
+    admissible endpoint rule that relaxes the exact quantiles: equal to them
+    where the bracket is decided, and otherwise, where the tail decays at the
+    quantile, conservative by a number of counts bounded through the
+    enclosure's slack and that decay ([[prop:bracketed-endpoints]]).
+- title: "Requirements: the request, its refusal and the reports"
+  start: req:rule-in-force
+  abstract: >-
+    The engine builds the box with the endpoint rule and tail evaluation the
+    request selects, and takes its defaults where the request is silent.
+    Before constructing anything it refuses an input that violates a clause
+    its own inputs decide, reports the completeness figure its route names and
+    never a downward-rounded one, and
+    records beside it the input, the rule and the evaluation it was computed
+    under.
+- title: "Requirements: the enclosure evaluation"
+  start: req:search-procedure
+  abstract: >-
+    On the enclosure evaluation of the exact rule the engine finds every
+    bracketed endpoint by one fixed, total and deterministic search, and
+    computes in log space with directed rounding, never forming a number of
+    the size of a mass point. It records, per constrained outcome and side,
+    whether the bracket was decided.
+order:
+  - def:endpoint-rule
+  - lem:guard
+  - def:interval
+  - prop:rule-exact
+  - rem:guard
+  - rem:guard-activation
+  - def:construction
+  - thm:box-construction
+  - rem:selector
+  - lem:envelope-dominance
+  - thm:completeness-bound
+  - rem:epsstar
+  - rem:sound-indep
+  - rem:envelope
+  - thm:honest-containment
+  - rem:hlow-consequence
+  - def:monotone-rule
+  - lem:widening
+  - lem:cheb
+  - thm:monotonicity-limits
+  - rem:n-nonmono
+  - lem:log-enclosure
+  - lem:stirling-enclosure
+  - lem:bernstein-tail
+  - prop:rule-bernstein
+  - rem:completeness-on-rules
+  - lem:pmf-enclosure
+  - lem:tail-majorant
+  - prop:bracketed-endpoints
+  - rem:local-evaluation
+  - req:rule-in-force
+  - req:request-defaults
+  - req:input-refusal
+  - req:completeness-report
+  - req:honest-model-record
+  - req:search-procedure
+  - req:enclosure-substrate
+  - req:endpoint-exact-record

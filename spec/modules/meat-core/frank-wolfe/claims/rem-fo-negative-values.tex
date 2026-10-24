@@ -1,0 +1,66 @@
+% ---
+% id: meat-core/frank-wolfe/rem:fo-negative-values
+% kind: rem
+% title: "Opposite treatment of a negative bound and a negative estimate"
+% summary: >-
+%   A negative computed h_lb gives way to max{0, h_lb}, itself a valid lower
+%   bound on h_low. The objective is non-negative on the exact feasible set but
+%   not on the relaxed one, so a negative estimate is evidence that a
+%   hypothesis fails, and it is refused rather than replaced by zero.
+% prominence: standard
+% status: accepted
+% uses: [thm:firstorder, cor:fo-keylength, rem:fo-arithmetic, meat-core/prop:value-range, meat-core/thm:branch-formula, prop:relaxed-set-properties]
+% mentions: [req:first-order-clamp, req:iterate-checks, req:negative-estimate-refused, meat-core/def:declaration, rem:fo-iterate-checks]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:fo-negative-values}
+A negative number can arise on each path, both cases in floating point, and
+the two are handled oppositely.
+
+\emph{On the first-order path.} A computed $\hlb$ may be negative --- the
+linearisation is weak far from the optimum, or the arithmetic crosses
+zero --- and what reaches Corollary~\ref{cor:fo-keylength} is
+$\max\{0,\hlb\}$ (Requirement~\ref{req:first-order-clamp}), which is a
+valid lower bound on $\hlow$ by Theorem~\ref{thm:firstorder}\,(ii),
+respectively~(iiib) --- the second being the part a run is in, since (ii)
+needs exact membership and Remark~\ref{rem:fo-iterate-checks} says no run
+establishes it; the two conclude the same inequality against the same exact
+$\hlow$, (ii) being the case $\varepsilon=0$ of (iiib). This is not a repair
+of anybody's data; it is the substitution of one valid lower bound for
+another, and Remark~\ref{rem:fo-arithmetic}\,(a) says what it does not fix.
+
+\emph{On the estimate path.} A computed objective at a point of the
+\emph{exact} feasible set $\Feas^{J}$ cannot be negative: writing
+$O^{J}_{\alpha}$ as in the proof of
+Proposition~\ref{prop:value-range}\,(i), it is a non-negative multiple of a
+KL divergence between two probability vectors plus a non-negative
+combination of the branch terms
+$e_{\hat c}=\frac{1}{1-\alpha}\log_2\frac{K_{\hat c}}{P_{\hat c}}$, each
+non-negative because $K_{\hat c}\le P_{\hat c}$
+(Theorem~\ref{thm:branch-formula}, \emph{cone clause}) and
+$\frac{1}{1-\alpha}<0$; that argument is pointwise and needs no infimum.
+\emph{At a point of the relaxed set $\Feas^{J}(\varepsilon)$ it can be
+negative}, and the statement is written on the exact set for that reason:
+there the \emph{second} argument of the divergence term is not a
+probability vector, and by
+Proposition~\ref{prop:relaxed-set-properties}\,(c$''$) the objective is
+bounded below by $-\frac{\alpha}{\alpha-1}\log_2(1+d_{A_0}\varepsilon)$ and
+by nothing larger. A run reads its feasible set at the two declared windows
+of Requirement~\ref{req:iterate-checks}, so it has a floor below zero, and
+the refusal of Requirement~\ref{req:negative-estimate-refused} can fire
+against a point that is otherwise in order. That is intended: the refusal is
+on the safe side, no key length is emitted on a refused run, and what is
+refused is an estimate and not a bound. So a negative computed estimate is
+\emph{evidence that a hypothesis of this module does not hold} of the point
+it was computed at --- most likely that the point is not in the exact set
+(Remark~\ref{rem:fo-iterate-checks}), that its distance from it exceeds the
+scale just named, or that the declaration was not exactly admissible, which
+its admission excludes (Definition~\ref{def:declaration}). Unlike $\hlb$ the
+estimate is not a lower bound, and zero cannot stand in for it: replacing it
+by zero would report a plausible number in place of a detected
+inconsistency.
+\end{remark}

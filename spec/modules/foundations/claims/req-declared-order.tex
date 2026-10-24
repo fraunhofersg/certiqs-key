@@ -1,0 +1,38 @@
+% ---
+% id: foundations/req:declared-order
+% kind: req
+% title: "Summation order declared with the data"
+% summary: >-
+%   Where a predicate on declared data is a sum, its order of accumulation is
+%   declared with the alphabet that indexes it and travels with the data. Every
+%   consumer, and every declarer, that decides the predicate decides it in that
+%   order.
+% prominence: standard
+% status: accepted
+% uses: [def:declared-order, def:declared-data]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}\label{req:declared-order}
+Where a predicate on declared data is a sum, the order in which the sum is
+accumulated is part of the declared data: it is declared with the alphabet
+that indexes the sum, as that alphabet's declared order
+(Definition~\ref{def:declared-order}), or with an alphabet containing it,
+whose declared order it then carries by restriction; and it travels with the
+artefact that carries the data. Where a declared order arrives both with the
+alphabet and with an alphabet containing it, the two are one order: the first
+is the restriction of the second. A consumer that receives two such orders
+that differ takes the order of the containing alphabet, decides the predicate
+in its restriction, and refuses nothing for the difference. Every consumer that decides the predicate,
+and every declarer that decides it of data it is about to declare
+(Definition~\ref{def:declared-data}), decides it in that order, and no
+consumer substitutes an order of its own; a supplier deciding its own
+conditions at slacks declared to it is not bound by this. Only where no
+declared order arrives with the alphabet or with an alphabet containing it is
+the declaration's own listing of the alphabet taken as its declared order.
+Where such a predicate reads the trace of a declared matrix, the trace is
+accumulated in increasing row index.
+\end{requirement}

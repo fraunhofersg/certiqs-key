@@ -1,0 +1,91 @@
+% ---
+% id: foundations/lem:pinchmono
+% kind: lem
+% title: "Pinching lowers the trace power"
+% summary: >-
+%   For α > 1, pinching the α-th root of a positive semidefinite operator and
+%   raising the result to the power α never increases the trace, and leaves it
+%   unchanged exactly when the operator is block diagonal for the pinching.
+%   This bounds the trace-power terms of the MEAT objective.
+% prominence: main
+% status: implemented
+% uses: [def:pinching]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.branch:trace_power_pinched
+% lean:
+% notes: "The proof uses no result beyond the operator conventions and the pinching of def:pinching, the equality case included."
+% ---
+
+\begin{lemma}\label{lem:pinchmono}
+Let $\tau\in\Pos{Q}$, let $\cZ$ be a pinching with projectors
+$\{Z_j\}_{j=1}^{m}$, and let $\alpha\in(1,\infty)$. Then
+\begin{equation}\label{eq:pinchmono}
+  \tr\!\left[\left(\cZ\big(\tau^{1/\alpha}\big)\right)^{\alpha}\right]
+  \;\le\;\tr[\tau],
+\end{equation}
+with equality if and only if $\cZ(\tau^{1/\alpha})=\tau^{1/\alpha}$,
+equivalently iff $\tau$ is block-diagonal for $\{Z_j\}$, equivalently iff
+$\cZ(\tau)=\tau$.
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1 (pinching as a unitary mixture).} With
+$\zeta\coloneqq e^{2\pi i/m}$ and the unitaries
+$U_k\coloneqq\sum_{j=1}^{m}\zeta^{jk}Z_j$, $k\in\{0,\dots,m-1\}$,
+\eqref{eq:pinch-unitary-mixture} of Definition~\ref{def:pinching} gives
+$\cZ(X)=\frac1m\sum_{k=0}^{m-1}U_kXU_k^{\dagger}$ for every $X$.
+
+\emph{Step 2 (strict convexity of $A\mapsto\tr[A^{\alpha}]$ on
+$\Pos{Q}$).} Two standard facts, proved inline for self-containment. (a)
+\emph{Peierls inequality with equality condition:} for convex
+$f:[0,\infty)\to\mathbb{R}$, any ONB $\{\ket{i}\}$ and $A\in\Pos{Q}$ with
+spectral decomposition $A=\sum_j\lambda_j\dyad{a_j}$,
+\begin{equation*}
+  \bra{i}f(A)\ket{i}
+  =\sum_j|\braket{i}{a_j}|^2f(\lambda_j)
+  \;\ge\;f\Big(\sum_j|\braket{i}{a_j}|^2\lambda_j\Big)
+  =f\big(\bra{i}A\ket{i}\big)
+\end{equation*}
+by Jensen; summing over $i$ gives
+$\tr f(A)\ge\sum_if(\bra{i}A\ket{i})$. If $f$ is strictly convex, equality
+for index $i$ forces the distribution $|\braket{i}{a_j}|^2$ to be supported
+on a single eigenvalue of $A$, i.e.\ $\ket{i}$ lies in one eigenspace of
+$A$; equality for all $i$ forces $\{\ket{i}\}$ to be an eigenbasis of $A$.
+(b) \emph{Strict convexity of the trace functional:} let
+$f(t)=t^{\alpha}$, strictly convex on $[0,\infty)$ for $\alpha>1$. For
+$A,B\in\Pos{Q}$ let $C=\tfrac12(A+B)$ with eigenbasis $\{\ket{i}\}$. Then
+\begin{equation*}
+  \tr f(C)=\sum_if\big(\bra{i}C\ket{i}\big)
+  =\sum_if\Big(\tfrac{\bra iA\ket i+\bra iB\ket i}{2}\Big)
+  \le\sum_i\tfrac{f(\bra iA\ket i)+f(\bra iB\ket i)}{2}
+  \le\tfrac{\tr f(A)+\tr f(B)}{2},
+\end{equation*}
+using scalar convexity and then Peierls for $A$ and $B$. By continuity,
+midpoint convexity gives convexity. If equality holds throughout, then (by
+strict scalar convexity) $\bra iA\ket i=\bra iB\ket i$ for all $i$, and (by
+the Peierls equality condition) $\{\ket i\}$ is an eigenbasis of both $A$
+and $B$; hence $A$ and $B$ are diagonal in a common basis with equal
+diagonals, so $A=B$. Thus $A\mapsto\tr[A^{\alpha}]$ is strictly convex.
+
+\emph{Step 3 (conclusion).} Set $X\coloneqq\tau^{1/\alpha}$. By Steps 1--2
+and unitary invariance of the trace functional,
+\begin{equation*}
+  \tr\big[\cZ(X)^{\alpha}\big]
+  =\tr\Big[\Big(\tfrac1m\sum_kU_kXU_k^{\dagger}\Big)^{\alpha}\Big]
+  \le\frac1m\sum_k\tr\big[(U_kXU_k^{\dagger})^{\alpha}\big]
+  =\tr[X^{\alpha}]=\tr[\tau].
+\end{equation*}
+For the equality case: a strictly convex functional satisfies the
+$m$-point Jensen inequality with equality only if all arguments coincide
+(if two differed, replacing them by their midpoint would strictly decrease
+the right side while fixing the left, a contradiction). Hence equality in
+\eqref{eq:pinchmono} forces $U_kXU_k^{\dagger}=U_0XU_0^{\dagger}=X$ for all
+$k$, so $X=\frac1m\sum_kU_kXU_k^{\dagger}=\cZ(X)$, i.e.\
+$\tau^{1/\alpha}$ is block-diagonal. Since $\tau=(\tau^{1/\alpha})^{\alpha}$
+and functional calculus preserves block-diagonality in both directions,
+this is equivalent to $\cZ(\tau)=\tau$. Conversely, if
+$\cZ(\tau^{1/\alpha})=\tau^{1/\alpha}$ then
+\eqref{eq:pinchmono} holds with equality by direct substitution.
+\end{proof}

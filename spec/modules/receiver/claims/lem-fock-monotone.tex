@@ -1,0 +1,40 @@
+% ---
+% id: receiver/lem:fock-monotone
+% kind: lem
+% title: "Order monotonicity of the Fock lift"
+% summary: >-
+%   The Fock lift preserves the Loewner order on positive semidefinite
+%   operators. A larger detection operator A therefore gives a smaller lifted
+%   no-click operator, the lift of 1 − A.
+% prominence: standard
+% status: accepted
+% uses: [lem:fock-functor]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{lemma}\label{lem:fock-monotone}
+If $X\succeq Y\succeq0$ on $\mathcal{K}_0$ then $\Fock(X)\succeq\Fock(Y)$.
+Consequently, if $0\preceq A\preceq A'\preceq\id$ then
+$\Fock(\id-A)\succeq\Fock(\id-A')$.
+\end{lemma}
+
+\begin{proof}
+Telescoping,
+\begin{equation}\label{eq:telescope}
+  X^{\otimes n}-Y^{\otimes n}
+  =\sum_{j=0}^{n-1}X^{\otimes j}\otimes(X-Y)\otimes Y^{\otimes(n-1-j)} .
+\end{equation}
+Each summand is a tensor product of positive semidefinite operators and is
+therefore positive semidefinite, so $X^{\otimes n}\succeq Y^{\otimes n}$ on
+$\mathcal{K}_0^{\otimes n}$. Both $X^{\otimes n}$ and $Y^{\otimes n}$ preserve
+$\Symn{n}$ by Lemma~\ref{lem:fock-functor}\,(i), so for
+$\ket{\psi}\in\Symn{n}$ the difference of the restrictions is
+$\bra{\psi}(X^{\otimes n}-Y^{\otimes n})\ket{\psi}\ge0$: the restriction of a
+positive semidefinite operator to an invariant subspace is positive
+semidefinite. Summing over $n$ gives $\Fock(X)\succeq\Fock(Y)$. The second
+statement is the first with $X=\id-A$, $Y=\id-A'$, both positive semidefinite
+because $A,A'\preceq\id$.
+\end{proof}

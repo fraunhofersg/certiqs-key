@@ -1,0 +1,51 @@
+% ---
+% id: meat-core/req:removal-checklist
+% kind: req
+% title: "Setting the removable flag"
+% summary: >-
+%   The engine flags a sector removable only when a witness it exhibits meets
+%   all six conditions of the removal checklist, each decided exactly. Every
+%   other outcome retains the sector, and no tolerance licenses a removal.
+% prominence: standard
+% status: implemented
+% uses: [def:classes, thm:removal]
+% mentions: [req:state-blind-test, rem:classes, rem:removal-general-format]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.declaration.general_sectors:general_sector_report
+% lean:
+% ---
+
+The flag rests on the verification of the checklist and on nothing about
+where the witness came from, so the witness may come from any search. A
+deletion on an approximate match would overstate the value
+(Remark~\ref{rem:classes}), so every doubt retains the sector; and with a
+\tref{party-local} entry or several
+\tref[measured factor]{measured factors} the checklist has nothing to
+certify or nothing to read (Remark~\ref{rem:removal-general-format}).
+
+\begin{requirement}\label{req:removal-checklist}
+The engine sets the flag \iface{removable} for a sector $s^{*}$ of a
+declaration with one \tref{measured factor} when, and only when, a candidate
+witness exhibited by the implementation is a witness for $s^{*}$ in the
+sense of Definition~\ref{def:classes}\,(d): the list $\CList$ carries no
+entry declared \tref{party-local} and the candidate meets all six of
+(W1)--(W6); it sets the flag on no other ground. The
+witness may come from any search, and it is never read as declared input: a
+declaration supplies no witness. Each condition is decided exactly, at no
+window: (W1) by the bit-level identity of
+Requirement~\ref{req:state-blind-test}, (W2) as a comparison of sector
+indices, (W5) as the finite combinatorial predicate of key-inertness, (W3)
+and (W4) on the exhibited data as those conditions state, and (W6) on the
+residual formed in the exhibited evaluation order; a witness whose
+evaluation rounds anywhere, or whose residual is not the datum $0$, sets no
+flag. Every other outcome --- a nonzero residual, a rounding operation, an
+absent witness, a witness that names $s^{*}$, a target that is not
+key-inert, a block that is not exactly scalar --- retains the sector. The
+flag is set for no sector of a declaration whose list carries an entry
+declared party-local, nor of a declaration with more than one measured
+factor. No tolerance licenses a removal:
+\iface{sector_criterion} is decided at exactly zero and not at the
+\tref{declared tolerance} $\tnum$.
+\end{requirement}

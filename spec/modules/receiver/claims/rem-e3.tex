@@ -1,0 +1,35 @@
+% ---
+% id: receiver/rem:e3
+% kind: rem
+% title: "Order dependence without support comparability"
+% summary: >-
+%   An acyclic graph of a rotation and a polarizer on the same two modes, with
+%   no edge between them, compiles at generic angles to two different
+%   contractions under its two sorts. Acyclicity alone therefore does not make a declared graph determine
+%   an instrument.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:e3}
+Take $\Modes=\{m\}$ and two elements $e,f$ on $\Sigma_e=\Sigma_f=\{m\}$ with no
+edge between them, $\Gmat_{\Sigma_e}=(\tfrac12)$ and
+$\Gmat_{\Sigma_f}=(\tfrac12)$: here the two orders agree, and the example
+looks harmless. Now take $\Modes=\{m_1,m_2\}$ with
+$\Sigma_e=\Sigma_f=\Modes$, $\Gmat_{\Sigma_e}=\Rot(\theta)$ a rotation and
+$\Gmat_{\Sigma_f}=\operatorname{diag}(1,0)$ a polarizer. The graph
+$\Grph=(\{e,f\},\varnothing)$ is acyclic and every element is admissible, yet
+$\Gmat_{\Sigma_f}\Gmat_{\Sigma_e}\neq\Gmat_{\Sigma_e}\Gmat_{\Sigma_f}$ for
+$\theta\notin\frac{\pi}{2}\mathbb{Z}$: rotating and then projecting is not
+projecting and then rotating. Two topological sorts of the \emph{same} declared
+receiver would compile to two different instruments, and, because both are
+contractions with the same declared port map, both would pass every other
+validation in this contract. Without (E3), ``the declared receiver'' does not
+denote.
+\end{remark}

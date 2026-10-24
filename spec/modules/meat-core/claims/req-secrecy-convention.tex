@@ -1,0 +1,30 @@
+% ---
+% id: meat-core/req:secrecy-convention
+% kind: req
+% title: "Declared choice of the source's secrecy convention"
+% summary: >-
+%   An instance that adds back the one bit the key-length bound spends adopts
+%   the secrecy definition conditioned on the acceptance test alone, and
+%   declares explicitly that it does so. Its key length carries no claim of
+%   this module.
+% prominence: standard
+% status: accepted
+% uses: [rem:plus2]
+% mentions: [thm:keylength]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The constant of \eqref{eq:keylength} spends one bit to reach the accepted
+state; the secrecy convention of the derivation it generalises does not
+(Remark~\ref{rem:plus2}).
+
+\begin{requirement}\label{req:secrecy-convention}
+An \tref{instance} that adds the one bit of \eqref{eq:keylength} back adopts
+the secrecy definition of the $\wedge\OmAT$ state, the convention of the
+derivation Remark~\ref{rem:plus2} compares, and declares explicitly that it
+does so. A key length so obtained is not one of
+Theorem~\ref{thm:keylength} and carries no claim of this module.
+\end{requirement}

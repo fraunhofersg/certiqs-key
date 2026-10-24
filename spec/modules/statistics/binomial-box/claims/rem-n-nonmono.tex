@@ -1,0 +1,31 @@
+% ---
+% id: statistics/binomial-box/rem:n-nonmono
+% kind: rem
+% title: "Non-monotonicity of the exact rule in the round count"
+% summary: >-
+%   The exact rule's endpoints are integer quantiles on a lattice that refines
+%   with n, so its interval can widen when n grows by one, as [[thm:monotonicity-limits]] (v)
+%   shows, while the n^(−1/2) width of (iv) stands. A consumer may rely on
+%   monotonicity in the budget, not in the round count.
+% prominence: standard
+% status: accepted
+% uses: [thm:monotonicity-limits]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:n-nonmono}
+The endpoints $\kappa^{\pm}$ are integer quantiles of a distribution whose
+support lattice refines with $n$, so the attainable tail levels move in jumps
+and the interval $[k^{-}/n,k^{+}/n]$ can widen when $n$ increases by one, as
+Theorem~\ref{thm:monotonicity-limits}\,(v) exhibits. The asymptotic statement
+\eqref{eq:width} is unaffected, the width still falling as $n^{-1/2}$, and
+no claim of this module needs monotonicity in $n$. A consumer that assumed
+``more rounds, tighter set'' would be assuming something false. The
+monotonicity that \emph{is} available, and that a consumer may rely on, is
+monotonicity in $\ecomp$, Theorem~\ref{thm:monotonicity-limits}\,(i), with the direction
+stated there.
+\end{remark}

@@ -1,0 +1,151 @@
+% ---
+% id: protocol-compiler/def:homog
+% kind: def
+% title: "Licensed constraint list"
+% summary: >-
+%   A constraint list is licensed when every entry is declared in the form its
+%   source mode admits, homogeneous scalar data in trusted mode and scalars in
+%   untrusted mode, or carries the party-local tag. Licensing reads the
+%   declared tag and compares no numbers.
+% prominence: standard
+% status: implemented
+% uses: [def:declaration, def:feasible]
+% mentions: [thm:gates, reductions/def:licensed, reductions/cor:entries, reductions/req:party-local-tag, foundations/req:consumer-decides-exactly, req:no-window]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.gates:licensed_for_the_emitted_mode
+% lean:
+% notes: "reductions/def:licensed and reductions/cor:entries are mentions and not uses: this definition states the licensed class in its own words, and a uses edge would carry the soundness ledger of the chain's producer into every compiler theorem."
+% ---
+
+Reading the tag of an entry off the type of its datum is a decision on the
+data handed over, and infers nothing from a property of an object the entry
+was built from (\xref{foundations/req:consumer-decides-exactly}). The
+reductions module, which defines the \tref{reduction chain} this module consumes,
+declares every entry's right-hand side as a real constant
+(\xref{reductions/def:licensed}, \xref{reductions/cor:entries}). On a
+one-factor emission of that module the form beside it is the tag value
+homogeneous in trusted-source mode, so every entry is homogeneous, the
+licensed form in trusted-source mode, and an arriving tag field agrees with
+the type read off the datum; where the \tref{measured system} is a declared product
+of party-scoped factors, an entry may instead arrive tagged party-local, with
+a scope (\xref{reductions/req:party-local-tag}). That licensing is
+decided exactly and at no window is part of Requirement~\ref{req:no-window}.
+
+\begin{definition}\label{def:homog}
+Each entry of $\CList$ carries its right-hand side in a declared form, and
+the form is part of the datum rather than a property measured of it
+(Definition~\ref{def:declaration}). There are two \emph{untagged} forms,
+called so because their tag is the type of their datum and needs no field of
+its own: a
+\term[Said of a constraint entry, not declared party-local, whose right-hand side is a real scalar; in trusted-source mode it denotes that scalar times the marginal.]{homogeneous}
+entry declares a real scalar $c_k$, a
+\term[Said of a constraint entry declaring a Hermitian matrix on Alice's system as its right-hand side.]{general}
+entry declares a Hermitian $\Theta_k$ on $A$; in untrusted-source mode only
+the scalar form exists. For these two forms
+the tag \emph{is} the type of the right-hand side an entry carries, and it is
+read off that type: an entry whose right-hand-side slot holds a real scalar
+is homogeneous, and one whose slot holds a Hermitian matrix on $A$ is
+general. \emph{That
+reading is a type decision}: it inspects which of two objects a slot holds,
+compares no numbers, reads no matrix entry and measures nothing. The third
+form, party-local, is declared by its tag and is not read off the type of the
+datum. $\CList$ is
+\term[Said of a constraint list every entry of which is in the form the declared source mode admits, or is party-local.]{licensed for the declared source mode}
+when every entry is in the form that mode admits:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{trusted-source mode:} every entry is declared
+  homogeneous, carrying $c_k\in\mathbb{R}$; the right-hand side it denotes is
+  then \emph{constructed} as $\Theta_k\coloneqq c_k\tau_A$ from the declared
+  $c_k$ and the declared $\tau_A$, and the entry of \eqref{eq:feas-modes}
+  reads $\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\,\omega]\bowtie_kc_k\tau_A$;
+\item \emph{untrusted-source mode:} every right-hand side is a real number
+  $\Theta_k=c_k$ and the entry reads
+  $\tr[(\idon{A}\otimes\hat O_k)\,\omega]\bowtie_kc_k$.
+\end{enumerate}
+Licensing is therefore a \emph{type} check on the tag, and it compares no
+numbers: what is inspected is which of the two forms an entry declares; no
+operator identity is tested against any number, and nothing here is decided
+at a window. \emph{Only in cases (a) and
+(b) are the entries written $(\hat O_k,\bowtie_k,c_k)$}; a
+general entry is written $(\hat O_k,\bowtie_k,\Theta_k)$ and is the form the
+notation table records under $\Theta_k$. A general entry is admissible
+input, every structural claim of this contract being proved for it, but it is
+not licensed, so a list containing one carries no key-length claim
+(Theorem~\ref{thm:gates}).
+
+\emph{The \tref{party-local form}, a third licensed form.} In the general format of
+Definition~\ref{def:declaration}\,(DX6) an entry may be declared
+\term[Said of a scoped constraint entry, tagged so, whose condition holds against the marginal of the state on the systems other than its factor.]{party-local}:
+it carries its scope $f$, a block list $\hat O_k$ against the
+\tref{sector map} of the \tref{measured factor} $f$ and a real $c_k$, it is
+written
+$(\hat O_k,\bowtie_k,c_k;f)$, and its state-level reading, in either source
+mode, is
+\begin{equation}\label{eq:partylocal-entry}
+  \tr_{\Qsys_f}\!\Big[\big(\idon{}\otimes
+  (\hat O_k-c_k\,\idon{\Qsys_f})\big)\,\omega\Big]\;\bowtie_k\;0
+  \qquad\text{as an operator on the systems of }\omega
+  \text{ other than }\Qsys_f ,
+\end{equation}
+those systems being $A$ and the measured factors $\Qsys_{f'}$, $f'\ne f$;
+equivalently $\tr_{\Qsys_f}[(\idon{}\otimes\hat O_k)\,\omega]\bowtie_k
+c_k\tr_{\Qsys_f}\omega$, the entry being homogeneous with respect to the
+marginal that is actually there. Block by block it is the last line of
+\eqref{eq:feas-general}. The list is then \emph{licensed} when every entry
+is either in the form the source mode admits, (a) or (b), read for its
+\tref{lifted operator}, or is declared party-local. This is still a type
+check and compares no numbers: what is inspected is the declared tag. A
+party-local entry's right-hand-side slot holds a real scalar, as a
+homogeneous entry's does, so the type of the datum does not separate the
+two: an entry is party-local exactly when it carries that tag.
+
+\emph{The soundness condition of a party-local entry.} A party-local entry
+$(\hat O_k,\bowtie_k,c_k;f)$ meets the
+\term[The condition a party-local entry is sound under: every attack reaches its scoped factor through a channel on that factor alone whose adjoint, applied to the entry's operator, stands in the entry's relation to its scalar times the identity.]{soundness condition of a party-local entry}
+when every attack reaches $\Qsys_f$ through a channel $\Lambda_f$ acting on
+that factor alone which carries the spectral certificate
+$\Lambda_f^{\dagger}(\hat O_k)\bowtie_kc_k\idon{}$, that is, the adjoint of
+the channel applied to the entry's operator stands in the entry's relation to
+$c_k$ times the identity.
+
+\emph{What the tag changes, case by case.} With one measured factor and
+trusted-source mode, \eqref{eq:partylocal-entry} reads
+$\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\,\omega]\bowtie_kc_k\,\omega_A$, which
+under the marginal condition $\omega_A=\tau_A$ is the form (a) of the same
+$(\hat O_k,\bowtie_k,c_k)$. With one measured factor and $d_A=1$, in either
+mode, it is the comparison of real numbers
+$\tr[\hat O_k\omega]\bowtie_kc_k\tr\omega=c_k$, the form (b). \emph{With one
+measured factor, untrusted-source mode and $d_A>1$ it is neither}: it is an
+operator inequality on $A$ against the marginal $\omega_A$ that is actually
+there, and the scalar entry (b) of the same $(\hat O_k,\bowtie_k,c_k)$ is its
+trace, implied by it and not equivalent to it. With more than one measured
+factor it implies, in either mode, the untagged reading of the same entry,
+which is obtained from it by the partial trace over the other measured
+factors (and over $A$ in untrusted-source mode), and it is in general not
+implied by it. So the tag never weakens an entry, and of the four one-factor
+cases, by source mode and by whether $d_A=1$, it changes something only in
+untrusted-source mode at $d_A>1$.
+
+\emph{Which relation symbols a tagged entry carries, in either mode.} An entry
+declared party-local carries $\bowtie_k\in\{\preceq,=,\succeq\}$ \emph{in
+either source mode}, because \eqref{eq:partylocal-entry} is a relation
+between \emph{operators} in either mode: its left-hand side is an operator on
+the systems of $\omega$ other than $\Qsys_{f_k}$, which are $A$ and the other
+measured factors. The scalar case is the degenerate one: where
+$d_{A_t}\prod_{f\ne f_k}d_{f,s_f}=1$ for every row --- every Alice block, and
+every sector block of every measured factor other than $f_k$, of dimension
+one, which with one measured factor means every Alice block of dimension one,
+whether $d_A=1$ or $d_A=|\mathbb{T}|>1$ --- each row is a comparison of
+$1\times1$ matrices, that is of real numbers, and the three operator symbols
+are then the three scalar symbols $\le$, $=$, $\ge$. With one measured factor
+and $d_A=1$ there is one row, and the reading is the form (b) of the same
+$(\hat O_k,\bowtie_k,c_k)$, as the case-by-case paragraph states; otherwise
+there is one such comparison per row, and the reading relates to the untagged
+forms as that paragraph states for its case. \emph{Nothing about the
+untagged forms changes}: an untagged entry carries the symbols its mode
+admits, and the operator symbols beside a tag are a property of the third
+form and of no other. No entry of a declaration in the \tref{basic format} is
+tagged.
+\end{definition}

@@ -1,0 +1,64 @@
+% ---
+% id: transmitter/decoy/rem:decoy-consumers
+% kind: rem
+% title: "Consumers of the emitted decoy declaration"
+% summary: >-
+%   The ensemble form of the consuming declarations reads the decoy declaration,
+%   and exactly trusted-source mode, the rule against general constraint
+%   entries, which refuses nothing it emits, and the emission's own refusals
+%   stand in between. It licenses no restriction of a consumer's feasible set.
+% prominence: standard
+% status: accepted
+% uses: [cor:emitted-decoy, req:decoy-emission]
+% mentions: [transmitter/def:srcert, transmitter/def:source-spec, transmitter/rem:boundary, protocol-compiler/def:declaration, meat-core/def:declaration, protocol-compiler/def:eligible, reductions/def:chain, reductions/thm:two-sided, protocol-compiler/def:chaincond, req:entropy-cutoff, req:exact-decoy-blocks]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:decoy-consumers}
+By Corollary~\ref{cor:emitted-decoy}\,(i) and (ii) the decoy declaration is a
+source specification in trusted-source mode given by an ensemble presentation,
+and its source segment meets the admission conditions of the transmitter inside
+the artefact the emission outputs (Requirement~\ref{req:decoy-emission}). Item
+(a) says which consumer reads it; what stands between the decoy declaration and
+a consumer of that form is exactly (b) to (d), each a named refusal.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{The consumer's form.} The protocol compiler's declaration
+(\xref{protocol-compiler/def:declaration}) and the MEAT core's
+(\xref{meat-core/def:declaration}) each have an ensemble form, which carries
+$\{N_x\}$ in the place of Alice's POVM, and
+\xref{protocol-compiler/def:eligible} admits an ensemble presentation beside a
+declaration of that form, so the decoy declaration has a consumer. A consumer
+whose declaration carries $\{M_x\}$ refuses it (Definition~\ref{def:srcert}),
+which is a refusal of that consumer's form and not a condition on the decoy
+declaration.
+\item \emph{Trusted-source mode only.} A non-empty source segment is admitted in
+trusted-source mode alone, by the admission rule of \xref{reductions/def:chain},
+and the two-sided reduction theorem (\xref{reductions/thm:two-sided}) is stated
+for that mode alone; an ensemble form is refused in
+\tref{untrusted-source mode}, the
+mode without a marginal or a certificate (Definition~\ref{def:source-spec}), by
+the consuming module.
+\item \emph{Scalar constraint entries only.} Beside a non-empty source segment
+the protocol compiler requires every entry of a consumer's constraint list
+$\CList$ to have a real scalar as its right-hand side, and refuses an entry
+declared general (the licensed-only rule of
+\xref{protocol-compiler/def:chaincond}). The decoy declaration carries no
+constraint entry (Corollary~\ref{cor:emitted-decoy}\,(ii)), so the rule refuses
+nothing it emits.
+\item \emph{The emission's own refusals.} The requirements of this submodule
+refuse a declaration before any consumer reads it; the bound
+$N_{\mathrm{ent}}\le2$ on the entropy cutoff
+(Requirement~\ref{req:entropy-cutoff}) and the exactness of the formed entries
+(Requirement~\ref{req:exact-decoy-blocks}) are the two of them a declarer of a
+physically interesting source meets first.
+\end{enumerate}
+One further point is not a refusal but the absence of a licence: the emission
+licenses no restriction of any consumer's feasible set. The states reached from
+its certificate are block diagonal, but a positive operator constrained only to
+have the marginal $\tau_A$ need not be (Corollary~\ref{cor:emitted-decoy}\,(iii)),
+and a consumer that restricts its own optimisation does so under a theorem of
+its own module (Remark~\ref{rem:boundary}).
+\end{remark}

@@ -1,0 +1,14 @@
+digraph claims {
+  rankdir=LR;
+  graph [label="19 Singleton acceptance set: Requirements\nArrow: claim -> prerequisite. Solid: uses; dashed: assumes.\nDeclared dependencies, not a proof check. Mentions excluded.", labelloc=t, fontsize=13, fontname="Arial", bgcolor="white", pad=0.25, nodesep=0.3];
+  node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11, margin="0.13,0.09"];
+  edge [color="#526777", arrowsize=0.65];
+  subgraph "cluster_statistics/singleton" {
+    label="statistics/singleton"; color="#cbd5df";
+    "statistics/singleton/req:singleton-budget-record" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">statistics/singleton/req:singleton-budget-record<BR/>The completeness budget of a declared<BR/>singleton<BR/>accepted</TD></TR><TR><TD HREF="../singleton/claims/req-singleton-budget-record.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-statistics/singleton/req:singleton-budget-record" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../singleton/claims/req-singleton-budget-record.tex", target="_top"];
+    "statistics/singleton/req:singleton-point-form" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">statistics/singleton/req:singleton-point-form<BR/>Point-form honest input for the<BR/>singleton<BR/>accepted</TD></TR><TR><TD HREF="../singleton/claims/req-singleton-point-form.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-statistics/singleton/req:singleton-point-form" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../singleton/claims/req-singleton-point-form.tex", target="_top"];
+    "statistics/singleton/thm:singleton-completeness" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">statistics/singleton/thm:singleton-completeness<BR/>Completeness of a singleton acceptance<BR/>set<BR/>implemented<BR/>BOUNDARY: further prerequisites omitted</TD></TR><TR><TD HREF="../singleton/claims/thm-singleton-completeness.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-statistics/singleton/thm:singleton-completeness" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled,dashed", URL="../singleton/claims/thm-singleton-completeness.tex", target="_top"];
+  }
+  "statistics/singleton/req:singleton-budget-record" -> "statistics/singleton/thm:singleton-completeness";
+  "statistics/singleton/req:singleton-point-form" -> "statistics/singleton/thm:singleton-completeness";
+}

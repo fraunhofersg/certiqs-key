@@ -1,0 +1,31 @@
+% ---
+% id: receiver/def:embed
+% kind: def
+% title: "Local element and its embedding"
+% summary: >-
+%   A local element is a contraction on a subset of the modes, its support, and
+%   its global embedding acts as the identity on every other mode. Embedding is
+%   what lets component descriptions compose as matrices on the whole mode
+%   space.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{definition}\label{def:embed}
+A \term[A contraction acting on a chosen subset of the declared modes.]{local element} on a mode subset $\Sigma\subseteq\Modes$ is a matrix
+$\Gmat_\Sigma\in\mathbb{C}^{\Sigma\times\Sigma}$ with
+$\Gmat_\Sigma^\dagger\Gmat_\Sigma\preceq\id_\Sigma$; $\Sigma$ is its
+\term[The set of modes a local element acts on.]{support}. Its \term[The matrix on the whole mode space that acts as a local element on its support and as the identity elsewhere.]{global embedding} is
+\begin{equation}\label{eq:embed}
+  \hat\Gmat\coloneqq\Gmat_\Sigma\oplus\id_{\Modes\setminus\Sigma}
+  \ \in\ \mathbb{C}^{\Modes\times\Modes},
+\end{equation}
+that is, $\hat\Gmat\,\Emd{\Sigma}=\Gmat_\Sigma\Emd{\Sigma}$ and
+$\hat\Gmat\,(\id-\Emd{\Sigma})=\id-\Emd{\Sigma}$. A local element with
+$\Gmat_\Sigma^\dagger\Gmat_\Sigma=\id_\Sigma$ is a \term[A local element that is an isometry on its support.]{lossless element}.
+\end{definition}

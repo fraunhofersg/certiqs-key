@@ -1,0 +1,43 @@
+% ---
+% id: foundations/req:exact-island
+% kind: req
+% title: "Exact arithmetic on the island, unbudgeted rounding elsewhere"
+% summary: >-
+%   Every decision, certification and construction of the exact island is
+%   computed exactly, a binary64 candidate entering only through one of them.
+%   Outside it no result rests on a floating-point error budget, save a
+%   supplier's slack under a named assumption; rigorously enclosed steps
+%   assume none.
+% prominence: standard
+% status: accepted
+% uses: [def:exact-island, def:binary64, def:declared-data, def:tiers]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}\label{req:exact-island}
+Every decision, certification and construction of the \tref{exact island}
+(Definition~\ref{def:exact-island}) is computed in exact rational arithmetic on
+the values it is given, so that what it decides, certifies or constructs holds
+of those values exactly. A candidate proposed by binary64 arithmetic, such as
+a point or a multiplier, enters the exact island only as a value given to such
+a decision or certification, and nothing is established of it by the
+arithmetic that proposed it. Outside the exact island the engine may compute
+in binary64, and it neither bounds nor budgets the rounding of those
+computations: no module other than a supplier tracks a floating-point error
+budget, and no result of the engine rests on one except as follows. A
+supplier (Definition~\ref{def:declared-data}\,(ii)) may allow for the error of
+one of its own floating-point evaluations by a slack that an instance declares
+to it, under an assumption of its own claims, which it does not verify, that
+the slack bounds that error on the side that would make its output unsound.
+A result that rests on such an evaluation rests on that assumption, and the
+supplier carries the assumption, with its slack, in its output. A computation
+outside the exact island that is \tref{rigorously enclosed}
+(Definition~\ref{def:tiers}) is neither: each of its operations bounds its
+own rounding, so what it establishes holds of the exact quantity and no
+allowance is assumed to bound its error. The engine forms every number it
+reports at the \tref{certified} tier from such computations and from the
+exact island alone.
+\end{requirement}

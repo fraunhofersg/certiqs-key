@@ -1,0 +1,199 @@
+% ---
+% id: foundations/req:snap-reference
+% kind: req
+% title: "Snaps of a measurement family: kept, or moved and disclosed"
+% summary: >-
+%   A measurement snap keeps the blocks known exactly on the lattice and moves
+%   the others by one fidelity-first, support-safe procedure. A moved block not
+%   evaluated off its snap rests on the snap premise, recorded with cause,
+%   group and fix; the strict option refuses it.
+% prominence: standard
+% status: implemented
+% uses: [def:exact-reference, def:factor-enclosure, def:snap, def:declared-data, def:exact-admissibility, def:exact-island, def:evaluated-off-snap, def:binary64, def:tiers]
+% mentions: [req:support-safe-snap, meat-core/prop:optol-nobound, meat-core/frank-wolfe/req:bracket-on-reference, meat-core/frank-wolfe/req:certified-evaluation]
+% assumes: [A-SNAP]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.snap:snap_measurement_family
+% notes: "The run option strict_snaps is (iv): it refuses wherever a block would rest on A-SNAP, and no other option conditions it. Item (i) binds producers as well as instances; reductions/def:emitnorm is the producer of the reductions and its procedure, fidelity-first and support-safe with the flagged last resort, and reductions/req:reference-companion is where that producer carries its exact construction past its snap, forming the companion wherever a claim establishes (H-REF) for its instance, whether or not the declaring instance hands a reference. The groups of (iii) are what a report shows a user, and the cause and its fix stay in the record as the detail of the group. A block handed in part, for only some outcomes, is not a handed block (def:evaluated-off-snap (i)), so it falls in the group no usable reference. The second cause of the group reference bracket withdrawn, factor_enclosure_inconsistent, is the run's too, and is an engine defect rather than a property of the declaration; strict_snaps refuses on it as on the first. The third, companion_not_certified, is the run's, like the first; strict_snaps does not refuse it but prevents it, the certified evaluation forming no number on the snapped declaration in a strict run."
+% lean:
+% ---
+
+Closeness of two declared measurements does not bound the distance of their
+key-rate bounds (\xref{meat-core/prop:optol-nobound}), and a small move can
+change which outcomes a measurement treats as impossible. No claim relates a
+snapped family to the model it replaced, so the soundness of a run never
+rests on the snap where the run can avoid reading it. A run that holds a
+\tref{reference} of the family hands it beside the snap and evaluates the
+numbers its key length rests on with the reference in place of the snap
+(\xref{meat-core/frank-wolfe/req:bracket-on-reference}): the snap then only
+steers the search, and every block so evaluated is \tref{evaluated off its
+snap} (Definition~\ref{def:evaluated-off-snap}) and rests on no premise about
+the snap. A producer that snaps its own emission holds its exact construction,
+a reference of the emission, and where its claims allow it forms beside the
+emission a companion built by that construction with no step of the snap,
+so that the classes it moved are evaluated off their snap in the same way. The snap is therefore made for the search and for the blocks where
+the run does read it, and on those it aims at fidelity: it keeps a block known
+exactly on the lattice, and otherwise stays as close to the model as the rule
+allows that nothing the data state to be zero becomes non-zero
+(Requirement~\ref{req:support-safe-snap}), so that the premise departs from
+the model as little as possible where a run has to rest on it.
+
+A block the run does not evaluate off its snap rests on the premise that the
+device measures the snapped family, Assumption~\ref{ass:snapped-measurement},
+and the record and a report on the run disclose it. That happens where no
+reference reaches the evaluation, and where the evaluation on the reference
+does not count. A user acts on the group of such a block, of which there are
+four, each with its fix; the cause recorded with it names which change within
+the group's fix the block needs. A reference that reaches the evaluation can
+still be set aside after it: where the bound on the reference counts but no
+point of it can be certified, a number certified on the snapped declaration
+may carry the key length in its place, and the blocks the reference carried
+then rest on the premise after all. A run that must rest on no such premise
+declares the strict option of (iv), which refuses instead.
+
+That a reference with non-zero radii encloses the model, and is positive
+semidefinite and complete, cannot be read off its centres and radii, so (i)
+asks that the module constructing it establish these properties by its claims
+and compute the enclosures exactly; a binary64 evaluation carries roundings of
+unknown size. The steps of the procedure are specified with the shared
+numerical code (\repodoc{spec/architecture.md}) for an instance, and by its
+own claims for a producer.
+
+\begin{requirement}\label{req:snap-reference}
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{The reference.} Before it snaps an operator family read as a
+  measurement, an instance of what it declares or a producer of its own
+  emission (Definition~\ref{def:declared-data}), the declarer decides
+  exactly, of every \tref{reference} of the family it uses or hands beside
+  the snap (Definition~\ref{def:exact-reference}), that every centre is
+  Hermitian with entries in $\mathbb{Q}(i)$ and that the radii are
+  non-negative rationals with $r_{il}=r_{li}$, of every \tref{factor
+  enclosure} it carries (Definition~\ref{def:factor-enclosure}) that the
+  centre of its \tref{matrix box} has entries in $\mathbb{Q}(i)$, that its
+  radii are non-negative rationals and that its core is diagonal with
+  positive rational entries, and, for an \tref{exact reference}, that it is
+  positive semidefinite and complete at its constant. For a reference with a
+  radius that is not zero, three properties are not decided by the declarer:
+  that its enclosures enclose it, \eqref{eq:entrywise-enclosure}, and that it
+  is positive semidefinite and complete at its constant. They are
+  established by the claims of the module that constructs the reference,
+  which the record names, and its centres and radii are computed in exact
+  rational arithmetic on the \tref{exact island}
+  (Definition~\ref{def:exact-island}\,(i)); a binary64 evaluation
+  establishes none of them. A reference of which any of them is not so
+  established is neither used nor handed. Nor is it decided by the
+  declarer, of any reference, that a block on which it carries a factor
+  enclosure is a member of it, \eqref{eq:factor-enclosure}: that too is
+  established by the claims of the module that constructs the reference,
+  which the record names, and the centres and radii of the factor enclosure are computed in exact
+  rational arithmetic or by a \tref{rigorously enclosed} computation
+  (Definition~\ref{def:tiers}). A factor enclosure of which either is not so
+  established is not carried, and the reference is read without it. A producer's exact
+  construction, where it is exactly Hermitian, positive semidefinite and
+  complete, is an exact reference of its emission. An instance that holds a
+  reference so established hands it beside its snap
+  (Definition~\ref{def:evaluated-off-snap}\,(i)) on every block, save that,
+  in a run whose configuration declares that enclosed references are not
+  used, by the option \iface{reference_enclosure}, it hands only the blocks
+  every radius of which is zero.
+\item \emph{The snap.} Every such snap is made block by block. A block is
+  \tref{kept}, $F^{(s)}=G^{(s)}$, where the declarer establishes an exact
+  reference $G$ of that block, against the \tref{sector map} of the block
+  alone, decided as (i) states, every element of which is a
+  \tref{lattice value} at the lattice exponent $k$
+  (Definition~\ref{def:binary64}\,(iv)), and where exact admissibility at the
+  constant $c$ (Definition~\ref{def:exact-admissibility}) and the lattice
+  condition at $k$, decided last on the block, hold. For a producer the
+  block kept is the one its own claims keep. Every other block is made by a
+  procedure that meets Requirement~\ref{req:support-safe-snap} and aims at
+  fidelity to the data it starts from rather than at any other property: an
+  instance's is one procedure for every such block, the support-safe steps
+  specified with the shared numerical code, run on the centres of an exact
+  reference of the block where the declarer establishes one, and otherwise
+  on the data as they stand, admitted within the declared tolerance; a
+  producer's is the procedure its own claims state. Where that procedure
+  yields on a block no data that satisfy the conditions of
+  Definition~\ref{def:snap}, the block is snapped by the last resort of
+  Requirement~\ref{req:support-safe-snap}\,(iv), which the record flags;
+  where the last resort too yields no such data, the declarer refuses the
+  data, naming the block and the condition that failed. Every block made by
+  this procedure or the last resort is \tref{moved}
+  (Definition~\ref{def:snap}) unless the snap is decided exactly to equal on
+  it the data it is made from.
+\item \emph{Resting.} A moved block \emph{rests on
+  Assumption~\ref{ass:snapped-measurement}} when it is not \tref{evaluated
+  off its snap} (Definition~\ref{def:evaluated-off-snap}); a kept block and
+  a block evaluated off its snap do not. The record of the run names every
+  block that rests on the assumption with its cause, its group and a fix.
+  The group is \emph{last resort} for a block snapped by the last resort,
+  whose fix is a model that includes the noise the device has, so that
+  every element of the block is positive definite, together with the fix of
+  its cause; otherwise it is the group of its cause:
+  \begin{enumerate}[label=(\alph*),leftmargin=2.0em]
+  \item \emph{no usable reference}: no reference is handed on the block,
+    because the declarer holds no reference of the family, because a
+    reference fails the decisions of (i) or a property that (i) leaves to
+    the constructing module is not established, or because the run declares
+    that enclosed references are not used and a radius of the block is not
+    zero; for a class of a producer's snap of its own emission, because the
+    producer forms no companion that carries its exact construction past
+    the snap, a \emph{bypassing companion}. The fix is a model of the family
+    with a reference that the run uses, and for the last of the instance's
+    causes an exact reference, or a run that uses enclosed references; for a
+    producer's class, declared numbers on which its exact construction stays
+    on the lattice, so that the class is kept;
+  \item \emph{reference bracket withdrawn}: a reference is handed on the
+    block, or, for a producer's class, a bypassing companion is formed, and
+    a companion carrying the reference on the block, or bypassing the class,
+    is evaluated, but the key length the run reports is formed from a number
+    on the snapped declaration, for one of three causes. Either no evaluated
+    point contributes a bound on the companion, so the run's first-order
+    number is formed on the snapped declaration
+    (\xref{meat-core/frank-wolfe/req:bracket-on-reference}); or the certified
+    evaluation finds the two enclosures of a block the companion carries
+    inconsistent, the bracket on the companion being withdrawn and the run's
+    first-order number formed on the snapped declaration, the cause
+    \iface{factor_enclosure_inconsistent}
+    (\xref{meat-core/frank-wolfe/req:certified-evaluation}\,(iv)); or a point
+    contributes, but the certified evaluation on the companion certifies no
+    point and the key length is formed from a number certified on the snapped
+    declaration in its place, the cause \iface{companion_not_certified}
+    (\xref{meat-core/frank-wolfe/req:certified-evaluation}\,(i)). The fix is
+    the one the reasons recorded at the evaluated points of the companion
+    name: the withdrawal reasons for the first cause and the reasons of the
+    certified evaluation for the third; for the second, no change of the
+    declaration, an inconsistency being a defect of the engine in the
+    modules that carry the enclosures, so the fix says that and that the
+    defect be reported;
+  \item \emph{reference bracket not evaluated}: a reference is handed on the
+    block, or, for a producer's class, a bypassing companion is formed, but
+    no companion carrying the reference on the block, or bypassing the class,
+    is evaluated, because none is formed, compiled or admitted. The fix is
+    the one the reason recorded for the companion names.
+  \end{enumerate}
+\item \emph{The strict option.} A run whose configuration declares the
+  \emph{strict option} \iface{strict_snaps} refuses wherever a moved
+  block would rest on Assumption~\ref{ass:snapped-measurement}, naming the
+  block, its cause, its group and the fix, and reports no key length that
+  rests on the assumption. It refuses as soon as the resting is decided: a
+  declarer when it snaps a moved block on which it hands no reference, a
+  producer when it snaps a moved class that no bypassing companion it forms
+  carries past the snap, and the run, after its search and before any key
+  length is reported, where a moved block or class is not evaluated off its
+  snap. A strict run forms no certified number on the snapped declaration in
+  place of a companion's
+  (\xref{meat-core/frank-wolfe/req:certified-evaluation}\,(i)), so the
+  cause \iface{companion_not_certified} of (iii)(b) does not arise in it,
+  and it refuses on the other two. A strict run none of whose
+  moved blocks rests on the assumption proceeds as one that does not declare
+  the option. In a run that does not declare it, the run proceeds; its record
+  carries, for every snap, the status of each block, kept or moved, the flag
+  of every block snapped by the last resort, the blocks that rest on the
+  assumption with their causes, groups and fixes, and
+  Assumption~\ref{ass:snapped-measurement} among the assumptions the run
+  rests on, naming those blocks, so that a report on the key rate can flag
+  that the rate rests on a snap. A run none of whose blocks rests on the
+  assumption does not rest on it.
+\end{enumerate}
+\end{requirement}

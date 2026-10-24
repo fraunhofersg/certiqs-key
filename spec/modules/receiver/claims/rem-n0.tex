@@ -1,0 +1,30 @@
+% ---
+% id: receiver/rem:n0
+% kind: rem
+% title: "The monotonicity step at zero photons"
+% summary: >-
+%   The monotonicity step of [[lem:collapse]] fails at n = 0, with an explicit
+%   two-port receiver as witness. Nothing is lost, because the infimum runs
+%   over photon numbers above the cutoff, all at least one.
+% prominence: standard
+% status: accepted
+% uses: [lem:collapse]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:n0}
+Lemma~\ref{lem:collapse} is stated from $n\ge1$ and cannot be extended to
+$n=0$. Take $K\ge2$, $\gamma=\beta_k=1$ and $d_k=1$ for every $k$, and $c<1$: then
+$\Bnd(0)=1+(K-1)-K=0\ge0$, while
+$\Bnd(1)=1+(K-1)c-K=(K-1)(c-1)<0$, so \eqref{eq:collapsestep} fails at $n=0$.
+The data are realised, for instance, by $K=2$ on two input modes with
+$A_1=a\dyad{0}$, $A_2=a\dyad{1}$, $a\in(0,1)$: there $c=1-a$ and
+$d_1=d_2=1$. The substitution $u_k=\beta_kd_k^{\,n}$ degenerates at $n=0$,
+which is precisely where the proof breaks. Nothing is lost: the infimum in
+\eqref{eq:collapseinf} runs over $n>N\ge0$, so the induction never starts below
+$n=1$.
+\end{remark}

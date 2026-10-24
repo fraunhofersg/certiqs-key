@@ -1,0 +1,34 @@
+% ---
+% id: protocol-compiler/rem:summation-condition
+% kind: rem
+% title: "The summation condition beside completeness"
+% summary: >-
+%   Completeness alone says that the computed floating-point sum is the
+%   identity; the summation condition is what makes it an identity of the
+%   declared numbers. A family of exactly representable entries may therefore
+%   still be refused, since the condition is on the additions.
+% prominence: standard
+% status: accepted
+% uses: [def:exact]
+% mentions: [foundations/rem:computed-completeness, foundations/lem:exact-accumulation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:summation-condition}
+The total $\Sigma^{(s)}$ of Definition~\ref{def:exact} is by
+\eqref{eq:declorder} a \emph{floating-point} sum. So condition (C) alone says
+that the \emph{computed} sum is the identity, and \emph{not} that
+$\sum_ja_j=\idon{\Qsys}$ holds of the declared numbers, which is what every
+derivation of this contract that consumes completeness reads it as, and what
+a consumer of the emitted declaration reads it as. Condition (S) is exactly
+what makes the two the same statement
+(\xref{foundations/lem:exact-accumulation}), and it is the reason a family
+whose entries are all exactly representable may still be refused: the
+condition is on the \emph{additions}, not on the operands.
+\xref{foundations/rem:computed-completeness} exhibits a family satisfying
+(H), (P) and completeness of the computed sum whose true sum is not the
+identity.
+\end{remark}

@@ -1,0 +1,76 @@
+% ---
+% id: foundations/def:exact-reference
+% kind: def
+% title: "Reference of a measurement family, exact or enclosed"
+% summary: >-
+%   A reference is the model a measurement family is declared from: Hermitian,
+%   positive and complete blocks, each read through an entrywise enclosure, a
+%   Gaussian-rational centre with rational entrywise radii. It is exact when
+%   every radius is zero, and every decision about it is then on rationals.
+% prominence: standard
+% status: implemented
+% uses: [def:sector-map, def:binary64]
+% mentions: [lem:enclosure-psd]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.reference:Reference
+% notes: "The scaled form is not a kind of reference of its own: Lemma enclosure-psd (ii) turns it into an enclosure. The radii of an enclosure are symmetric, r_il = r_li, so that for a reference a row is structurally zero exactly when its column is. An irrational cosine is not the criterion for irrational entries (at pi/4 the cosine is irrational and every one-photon entry is 1/2); the one-photon entries are rational exactly when tan(alpha) is rational or cos(alpha) = 0, as the lead-in states."
+% lean:
+% ---
+
+A family declared on a lattice is a family of dyadic rationals; the model it
+is declared from need not be one. Photon-number blocks written in the
+orthonormal occupation basis carry factors $1/\sqrt{n}$ even when every
+parameter of the model is rational. A polarisation analyser whose analysed
+state is $\cos\alpha\ket{H}+\sin\alpha\ket{V}$ has on the one-photon block
+the entries $\cos^2\alpha$, $\cos\alpha\sin\alpha$ and $\sin^2\alpha$ in the
+$H$, $V$ basis, which are all rational exactly when $\cos\alpha=0$ or
+$\tan\alpha$ is rational; at $\alpha=\pi/4$ the cosine is irrational and
+every entry is $1/2$, while at $\alpha=\pi/8$ the entries are irrational. A decision
+about such a model is still a decision on rationals when each of its entries
+is known to lie in a rational box around a Gaussian-rational centre, and the
+definition reads the model through such boxes. A block of the form
+$D^{-1}SD^{-1}$, with $S$ Gaussian-rational and $D$ the diagonal matrix of
+square roots of positive rationals, receives one from rational bounds on
+those square roots (Lemma~\ref{lem:enclosure-psd}\,(ii)), and an entry known
+exactly is enclosed with radius zero. A model whose entries are all Gaussian
+rationals is the case in which every radius is zero.
+
+\begin{definition}\label{def:exact-reference}
+Let $\mathfrak{m}$ be a \tref{sector map} with blocks $s\in\mathsf{S}$ of
+dimensions $d_s$ (Definition~\ref{def:sector-map}), let $J$ be a finite
+non-empty alphabet with a \tref{declared order}, and let $c>0$ be a
+\tref{declared value} (Definition~\ref{def:binary64}\,(iii)). A
+\term[a Gaussian-rational Hermitian centre together with symmetric
+non-negative rational radii that bound, entry by entry, the modulus of the difference between a
+matrix and that centre]{entrywise enclosure} of a complex $d\times d$ matrix
+$X$ is a pair $(X_c,r)$ of a Hermitian $d\times d$ matrix $X_c$ with entries
+in $\mathbb{Q}(i)=\{x+iy:x,y\in\mathbb{Q}\}$, its \emph{centre}, and
+rationals $r_{il}=r_{li}\ge0$, its \emph{radii}, with
+\begin{equation}\label{eq:entrywise-enclosure}
+  \big|X_{il}-(X_c)_{il}\big|\;\le\;r_{il}\qquad\text{for all }i,l .
+\end{equation}
+A \term[a family of Hermitian positive semidefinite block lists complete at
+the constant on every block, read together with an entrywise enclosure of
+every block of every element]{reference} against $\mathfrak{m}$ over $J$
+with constant $c$ is a family $G=\{G_j\}_{j\in J}$ of block lists against
+$\mathfrak{m}$ whose blocks are Hermitian and positive semidefinite, with
+\begin{equation}\label{eq:reference-complete}
+  \sum_{j\in J}G^{(s)}_j\;=\;c\,\idon{d_s}\qquad\text{for every }s\in\mathsf{S},
+\end{equation}
+read together with an entrywise enclosure $\big(C^{(s)}_j,r^{(s)}_j\big)$ of
+every block $G^{(s)}_j$. It is an
+\term[a reference all of whose radii are zero, so that each block is its
+Gaussian-rational centre]{exact reference} when every radius is $0$; then
+$G^{(s)}_j=C^{(s)}_j$ has entries in $\mathbb{Q}(i)$, and its Hermiticity,
+positive semidefiniteness and completeness are properties of finitely many
+Gaussian rationals.
+
+For a Hermitian $d_s\times d_s$ matrix $Y$ with entries in $\mathbb{Q}(i)$,
+the pair $\big(C^{(s)}_j-Y,\,r^{(s)}_j\big)$ is an entrywise enclosure of
+$G^{(s)}_j-Y$, since the two differences in \eqref{eq:entrywise-enclosure}
+are equal. A reference is an object of its own beside a family declared from
+it: the entries of the declared family are declared values, and each denotes
+exactly the dyadic rational it is (Definition~\ref{def:binary64}\,(iii)).
+\end{definition}

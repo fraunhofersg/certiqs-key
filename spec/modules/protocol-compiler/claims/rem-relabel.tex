@@ -1,0 +1,101 @@
+% ---
+% id: protocol-compiler/rem:relabel
+% kind: rem
+% title: "The setting-dependent relabelling after the chain"
+% summary: >-
+%   A choice whose bias depends on a station's setting is applied after the
+%   chain, to both sides of the last link's relation, by one stochastic matrix;
+%   by linearity the relation keeps the same channel. It is not a link, and it
+%   is read through the setting alone.
+% prominence: standard
+% status: accepted
+% uses: [def:weighted, def:compile, thm:choice-encoding, def:chaincond]
+% mentions: [lem:weighted, rem:alphabet, reductions/lem:linear, reductions/rem:intertwining, reductions/def:joint-family, reductions/def:link, reductions/def:chain, reductions/ass:tsm, req:no-fixed-fraction, req:setting-only-weighting, req:choice-weighting-record]
+% assumes: [A-COIN]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:relabel}
+A public choice whose bias depends on the private setting of the apparatus
+that measures a system, whichever party draws it --- a test or
+generation round drawn against a probe setting, a probe light that fires
+only in test rounds --- is the case the setting-dependent form of
+Definition~\ref{def:weighted} exists for, and this remark records how the
+compiler handles it. In the general format everything below holds per
+measured factor, with that factor's receiver segment, family and setting map
+in place of $\Chrec$, $\{F_v\}$ and $t$ (Definition~\ref{def:compile}).
+
+\emph{What is applied, and where.} The compiler applies the stochastic matrix
+$P(f\,|\,t)$, read through the setting map $t:\Vset\to\mathcal{T}$, to the
+family $\{F_v\}$ the last link of $\Chrec$ delivered, \emph{after} the
+reduction chain has been consumed and its
+\tref[interface conditions on a chain]{interface conditions} decided
+(Definition~\ref{def:chaincond}) and \emph{before} the validator and the
+gates read the emitted declaration: the emitted family is
+$N_{v,f}=P(f\,|\,t(v))F_v$ over the support $\Vset_P$, the emitted alphabet is
+$\Vset_P$ in its product order, and the public part is declared on it
+(Definition~\ref{def:compile}). The same weighting is, in the same stroke,
+applied to the physical side of the last link's relation: the family the
+emitted one is a reduction of is
+$\{P(f\,|\,t(\gamma(w)))\Fph_w\}_{(w,f)}$ under the correspondence
+$(w,f)\mapsto(\gamma(w),f)$ (Theorem~\ref{thm:choice-encoding}\,(vi)). Both sides are
+relabelled by one stochastic matrix, which is what makes the next statement
+true.
+
+\emph{Why it is sound.} The soundness is
+Theorem~\ref{thm:choice-encoding}\,(vi): by linearity of the adjoint, the
+relation the last link asserts survives the stochastic matrix
+$\delta_{vv'}P(f\,|\,t(v'))$ from $\Vset$ to $\Vset\times\mathcal{F}$, whose
+columns sum to one, with the \emph{same} channel:
+$\Qsys$, its sector map and its dimension are unchanged, every element
+$P(f\,|\,t(v))F_v$ is a scalar multiple of an existing one so that block
+diagonality holds by construction (Lemma~\ref{lem:weighted}\,(ii)), every
+transported constraint operator has the same pull-back, and every entry's
+certificate is untouched. That theorem is this module's instance, with the
+one-line linearity argument written out, of the post-processing part~(i) of
+\xref{reductions/lem:linear} and of the relabelling that
+\xref{reductions/rem:intertwining} states and leaves to the consumer. What
+that theorem does \emph{not}
+assert is the choice marginal: the probability of $f$ is state-dependent
+through the setting marginal of the outcome statistics
+(Lemma~\ref{lem:weighted}\,(iv)), which is the output-state test-statistics
+model (\xref{reductions/ass:tsm}, Requirement~\ref{req:no-fixed-fraction}),
+and no fraction is factored out.
+
+\emph{Why it is not a link.} A link in the sense of
+\xref{reductions/def:link} composes a \emph{new} channel with the chain and
+carries a \tref{reachable-set statement} for it; a relabelling composes no channel
+--- it changes the alphabet at both ends of an existing relation and leaves
+the channel where it was. It therefore has no kind, no register and no
+position in a chain (\xref{reductions/def:chain}), and that module declares
+none: the chain record this module consumes and re-emits is unchanged by the
+weighting, the setting map it is read through is the class map of the joint
+alphabet of \xref{reductions/def:joint-family}, and the weighting is recorded
+beside the chain as this module's own construction
+(Requirement~\ref{req:choice-weighting-record}). Putting $f$ into the alphabet
+\emph{before} the chain instead is sound as well but strictly weaker where
+the squasher is flag-shaped: every value of $f$ then opens flag sectors of its
+own, and the squashed model gains adversarial freedom no physical state
+produces; applied after the chain, no sector is indexed by $f$ and
+$N_{v,f}=0$ as an operator wherever $P(f\,|\,t(v))=0$, so a zero-probability
+pair is unreachable for every state rather than merely of zero weight. That
+comparison is not a claim of this module; the claim is the soundness of the
+relabelling, Theorem~\ref{thm:choice-encoding}\,(vi).
+
+\emph{Why the weighting is read through the setting only.} $P$ is declared on
+$\mathcal{T}\times\mathcal{F}$ and reaches an outcome through $t(v)$ alone.
+A weighting that reached it through the device outcome would make $f$ an
+inference from that outcome, not a choice, and the relabelling would then be
+applied to a variable the adversary can influence through the state; that is
+what Assumption~\ref{ass:coin} excludes and what
+Requirement~\ref{req:setting-only-weighting} enforces by type. The setting
+$t$ itself is a variable the squasher's channel depends on --- the conditional
+families differ with it --- which is why it is in the alphabet before the
+first link and $f$ is not.
+
+\emph{With no setting-dependent choice declared}, the emitted family is the
+chain's $\{F_v\}$ unchanged. What the emitted alphabet may be is the upstream
+modules' question, not this module's (Remark~\ref{rem:alphabet}).
+\end{remark}

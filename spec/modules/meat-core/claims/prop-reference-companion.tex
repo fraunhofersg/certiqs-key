@@ -1,0 +1,161 @@
+% ---
+% id: meat-core/prop:reference-companion
+% kind: prop
+% title: "The compiled reference companion is an admissible declaration"
+% summary: >-
+%   Compiled with reference companions in place of the snapped targets of one
+%   or more measured factors, the declaration keeps every other component and
+%   is admissible save possibly for a non-empty feasible set. Its relaxed
+%   entries only enlarge that set.
+% prominence: standard
+% status: accepted
+% uses: [def:admissible-declaration, def:declaration, def:joint-sectors, def:feasible, def:homog, protocol-compiler/def:compile, protocol-compiler/def:weighted, protocol-compiler/lem:weighted, reductions/cor:reference-companion, reductions/lem:row-relaxation]
+% mentions: [protocol-compiler/req:reference-companion-compiled, req:companion-admission]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Stated for a set of replaced measured factors, since the compiler replaces the family of every measured factor whose receiver segment carries a companion; the one-factor case is the set of one. Applying a one-factor statement factor by factor does not give it: its hypothesis asks an admissible declaration, and its conclusion leaves condition (vii) open."
+% ---
+
+A run searches on the declaration $\Decl$ compiled from the snapped
+measurement. Where the \tref{receiver segment} of a \tref{measured factor} also
+carries the reference companion, the compiler forms beside $\Decl$ a second
+tuple from the same specification with the companion in place of the snapped
+target, for every measured factor whose receiver segment carries one, both
+stations of an entanglement-based declaration among them
+(\xref{protocol-compiler/req:reference-companion-compiled}). The proposition
+says that this tuple is a declaration of the kind this contract's results are
+stated for, so that a lower bound on its value is a lower bound of the
+ordinary kind, and that it shares with $\Decl$ everything a point of the
+program is made of. It is stated for all the replaced factors at once: the
+tuple with one factor replaced is not shown to have a non-empty
+\tref{feasible set}, so the case of one factor cannot be applied again to it.
+Its entries are the companions', each of which carries its own certificate at
+the reference; an entry requested of $\Decl$ whose certificate is not
+established at the reference is left out, which only enlarges the feasible
+set, so that a bound on it stays a bound on the reference model, if a lower
+one. Which of its conditions the engine decides, and which it imports, is
+Requirement~\ref{req:companion-admission}.
+
+\begin{proposition}\label{prop:reference-companion}
+Let $\Decl$ be an \tref{admissible declaration}
+(Definition~\ref{def:admissible-declaration}) that the \tref{compilation map}
+(\xref{protocol-compiler/def:compile}) emits from a specification, and let
+$\mathbb{F}^{\mathrm{ref}}$ be a non-empty set of its
+\tref[measured factor]{measured factors} (the one \tref{measured system} in
+the \tref{basic format}) such that, for each $f\in\mathbb{F}^{\mathrm{ref}}$,
+the last link of the receiver segment of $f$ is the emission of a
+\tref{reduction instance} $\mathcal{J}_f$ satisfying (H-REF) of
+\xref{reductions/cor:reference-companion}. Let $\Decl^{\mathrm{ref}}$ be the
+tuple the compilation map gives from the same specification with, for every
+$f\in\mathbb{F}^{\mathrm{ref}}$, that link's \tref{target family} replaced by
+the target $\{F_v[A^{\mathrm{ref}}_f]\}$ of the reference companion of
+$\mathcal{J}_f$ of that corollary, $A^{\mathrm{ref}}_f$ its datum, and that
+link's entries replaced by the relaxed entries
+(\xref{reductions/lem:row-relaxation}) of the companion's entries, each
+rounded operator Hermitian and with the sector blocks of the entry it rounds.
+The companion's entries of such a link are the instance's own entries at the
+companion's datum and the companion forms
+(\xref{reductions/cor:reference-companion}\,(vi)) of those entries requested
+of the link whose companion forms carry their certificates at that datum; a
+requested entry whose companion form is not established to carry one has no
+entry in $\Decl^{\mathrm{ref}}$. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{(what is shared)} $\Decl^{\mathrm{ref}}$ has the systems,
+  sectors and dimensions, the alphabets, Alice's \tref{marginal slot} and
+  measurement, the \tref{party partition}, the announcement and sifting maps, the
+  raw-key map and the \tref{index map} of $\Decl$, and in the general format its
+  factor list and Alice's \tref[block list]{block lists}; it differs from
+  $\Decl$ at most in the measured families of the factors of
+  $\mathbb{F}^{\mathrm{ref}}$ and in the entries of their last links. In
+  particular the two have the same \tref[joint sector]{joint sectors}
+  (Definition~\ref{def:joint-sectors}) with the same block dimensions and the
+  same coupling condition;
+\item \emph{(admissible)} $\Decl^{\mathrm{ref}}$ satisfies conditions
+  (i)--(vi) and (viii) of Definition~\ref{def:admissible-declaration};
+\item \emph{(the relaxed entries enlarge the \tref{feasible set})} let
+  $\Decl^{\mathrm{ref}}_{\mathrm{ex}}$ be formed as $\Decl^{\mathrm{ref}}$
+  but with the companions' entries themselves in place of their relaxed
+  entries; then the feasible set of $\Decl^{\mathrm{ref}}_{\mathrm{ex}}$
+  (Definition~\ref{def:feasible}) is contained in that of
+  $\Decl^{\mathrm{ref}}$, and for every acceptance set
+  $\hlow[\Decl^{\mathrm{ref}}]\le\hlow[\Decl^{\mathrm{ref}}_{\mathrm{ex}}]$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) The compilation map passes through the \tref{declared data} it reads and
+constructs only the raw-key map, the index map and the weighted families
+(\xref{protocol-compiler/def:compile}), each measured factor's family from
+the last link of that factor's receiver segment, weighted, where it is, by
+that factor's own weighting and applied to nothing else. The raw-key map is
+formed from the public maps and the alphabets; the index map from the
+alphabets, the \tref{sector set} and the \tref[declared order]{declared
+orders} that arrive with them; the weighted families from the delivered
+families and the declared weights $P$. By
+\xref{reductions/cor:reference-companion}\,(i), for each
+$f\in\mathbb{F}^{\mathrm{ref}}$ the target of the reference companion of
+$\mathcal{J}_f$ has the alphabet, with its order, and the \tref{sector map}
+of the target of $f$'s last link, so every constructed object other than the
+weighted families of the factors of $\mathbb{F}^{\mathrm{ref}}$ is formed
+from the same data as for $\Decl$ and is the same, and so is the family of
+every other measured factor. The constraint list is the concatenation of the
+specification's entries, the \tref{source segment}'s and the receiver
+segments', each with its datum and tag; only the entries of the replaced
+links differ. The joint sectors are the pairs of an Alice sector and a sector
+of the measured system, with the dimensions of both, and the coupling
+condition reads Alice's slot and these dimensions; all of them are shared.
+
+(ii) Conditions (i), (ii), (iv), (v) and (viii) read only components that
+(i) shows to be those of $\Decl$, or, for (i), the shape of the measured
+families, finite families of finite matrices over the shared sectors;
+$\Decl$ satisfies them. Condition (iii): $\{M_x\}$ is $\Decl$'s. The family
+of each $f\in\mathbb{F}^{\mathrm{ref}}$ is the target of the reference
+companion of $\mathcal{J}_f$, a POVM block diagonal for the sector map by
+\xref{reductions/cor:reference-companion}\,(i), or, where that factor's
+family is weighted after its chain by that factor's weighting $P_f$
+(\xref{protocol-compiler/def:compile}), the family
+$P_f(\varphi\,|\,t(v))\,F_v$ over $(v,\varphi)\in\Vset_{P_f}$, a POVM
+by \xref{protocol-compiler/lem:weighted}\,(i), each element a non-negative
+multiple of a block-diagonal operator and so block diagonal. In the basic
+format that family is Bob's. In the general format every factor's family
+outside $\mathbb{F}^{\mathrm{ref}}$ is $\Decl$'s, and the product family
+\eqref{eq:productfamily} is then a POVM on $\Qsys$, a tensor product of
+positive semidefinite operators being positive semidefinite and
+$\sum_{v}\bigotimes_{f'}F^{f'}_{v_{f'}}=\bigotimes_{f'}\sum_{v_{f'}}F^{f'}_{v_{f'}}
+=\idon{\Qsys}$. Every entry operator is Hermitian and block diagonal for its
+scope: the shared entries as in $\Decl$, and every relaxed entry by
+hypothesis. Condition (vi): a relaxed entry has a relation in
+$\{\preceq,\succeq\}$, or is the entry itself where its bound is zero, and a
+real constant, and it carries the scope of the entry it relaxes and, where
+that entry is party-local, its party-local tag. The compilation map tags it
+as it tags every entry (\xref{protocol-compiler/def:compile}): an entry
+without the party-local tag by the type of its datum, a real constant,
+which is the homogeneous form of Definition~\ref{def:homog}, and a
+party-local entry by the tag field it arrives with beside that constant.
+
+(iii) The two tuples differ only in the entries of the replaced links, each
+exact entry $(\hat O_k,\bowtie_k,c_k)$ of $\Decl^{\mathrm{ref}}_{\mathrm{ex}}$
+standing against its relaxed entries in $\Decl^{\mathrm{ref}}$. Let
+$\omega$ be feasible for $\Decl^{\mathrm{ref}}_{\mathrm{ex}}$, with $E_k$ and
+$\delta_k$ as in \xref{reductions/lem:row-relaxation}, whose part (i) gives
+$-\delta_k\idon{}\preceq E_k\preceq\delta_k\idon{}$ and hence the same for
+$\idon{}\otimes E_k$ on any larger system. In
+\tref{trusted-source mode} the entry reads
+$\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\omega]\bowtie_kc_k\tau_A$ with
+$\tr_{\Qsys}\omega=\tau_A$, and part (iv) of that lemma with $X=A$ gives
+the relaxed entries at their constants. In \tref{untrusted-source mode} it
+reads $\tr[(\idon{A}\otimes\hat O_k)\omega]\bowtie_kc_k$ with
+$\tr\omega=1$, and
+$\tr[(\idon{A}\otimes E_k)\omega]\in[-\delta_k,\delta_k]$ gives them. A
+party-local entry reads \eqref{eq:partylocal-entry}, the case of part (iv)
+with $X$ the other systems, and an untagged entry of a factor is read for
+its \tref{lifted operator} $\idon{}\otimes\hat O_k$, whose rounding error is
+$\idon{}\otimes E_k$. An equality entry gives both relaxed entries. So
+$\omega$ satisfies every relaxed entry, of whichever replaced link, and is
+feasible for $\Decl^{\mathrm{ref}}$, the other conditions of
+Definition~\ref{def:feasible} being the same for both. The objective and the
+acceptance set are the same for both tuples, so the infimum
+\eqref{eq:hlow-def} over the larger set is at most that over the smaller.
+\end{proof}

@@ -1,0 +1,135 @@
+id: wpfss
+kind: submodule
+version: 0.18.0
+title: "Flag-state and weight-preserving squashers"
+abstract: >-
+  This submodule consumes a receiver artefact and turns it into a finite
+  reduction instance. It keeps the photon-number blocks below a cutoff and
+  replaces everything above by flags: the flag-state target, which puts each
+  outcome on its own flag, or the weight-preserving target, which puts each
+  outcome's certified high-photon weight on every flag and one minus the
+  total weight on its own. Its first main result is that, whenever the
+  certified weights total less than one, the physical measurement squashes to
+  both targets, the two squashers compose exactly, and a weight the
+  weight-preserving target encodes holds on every squashed state
+  ([[prop:chain]]). The weight route first applies the dark-count channel on
+  the emitted alphabet, which requires it to descend through the
+  coarse-graining, then forms the joint family of the measuring party's private setting and
+  routes the receiver's per-setting multiclick weights into certified weights
+  rounded down onto the lattice. The resulting flat instance, on the encoded
+  or the licensed route, is a reduction instance, and the second main result
+  is its emission: the emitted family is exactly admissible and pulls back
+  exactly to the declared model on the channel system, with its weights
+  rounded down and still certified ([[cor:emitted-flat]]). Where the emission
+  moves a block below the cutoff, that statement is about the declared model,
+  which nothing proved relates to the unrounded family; a run evaluates off
+  the snap on the reference companion of the flat instance, or the moved
+  class is disclosed. Where the receiver is compiled at its normalized
+  station, the instance is formed on that station and precomposed with the
+  factored loss, which changes the channel witness and nothing else emitted
+  ([[cor:normalized-flat]]). The receiver's facts enter by named claims under
+  A-RECV, and the receiver assumptions those claims rest on enter the
+  assumption closures with them.
+depends_on: [receiver/detector-imperfections]   # the weight route consumes the dark-count admission
+reading_groups:
+- title: Flag-state targets and their chain
+  start: def:targets
+  abstract: >-
+    Above a cutoff the receiver is replaced by flags: the flag-state target
+    keeps the blocks below the cutoff and puts each outcome on its own flag,
+    and the weight-preserving target puts each outcome's certified
+    high-photon weight on every flag and one minus the total weight on its
+    own. The main result, [[prop:chain]], is that the physical measurement
+    squashes to both targets whenever the certified weights total less than
+    one, that the chain from the physical measurement through the
+    weight-preserving target to the flag-state target composes exactly, and
+    that a weight the weight-preserving target encodes holds on every
+    squashed state, whereas under the flag-state target it holds only on
+    reachable states. An artefact therefore takes one of two routes, and a
+    lowered certified weight stays certified and, while the total weight is
+    below one, gives a cleaner target ([[prop:weight-monotone]]).
+- title: The weight route
+  start: lem:descent
+  abstract: >-
+    The receiver supplies coarse-grained blocks, a dark-count channel on raw
+    click patterns and per-setting weights for raw outcome sets. The
+    dark-count channel can act on the coarse blocks only if it descends
+    through the coarse-graining ([[lem:descent]]); the joint family of the
+    private setting is then formed, and each certified weight is routed to
+    its bounded letter, which must be absorbing, sharpened by the dark counts
+    and rounded down onto the lattice ([[prop:route]]). Blocks supplied with
+    the dark counts already composed form the same instance wherever no snap
+    intervenes ([[prop:precomposed-blocks]]). The remarks show why the
+    constancy, absorbing and fibre conditions cannot be dropped and which
+    receiver claims are imported.
+- title: The flat instance and its emission
+  start: cor:fssinstance
+  abstract: >-
+    On the licensed route a certified weight becomes a zero-constant entry
+    for the flag-state target ([[cor:fssinstance]]). The post-processed joint
+    family with its routed weights and either target is a reduction instance
+    ([[prop:flat-instance]]). The main result, [[cor:emitted-flat]], is the
+    core's emission theorem applied to it: on each route the emitted family
+    is exactly admissible and pulls back exactly to the declared model on the
+    channel system, with its weights rounded down and still certified. A
+    requested two-sector entry is emitted where its certificate is decided on
+    the emitted numbers ([[cor:two-sector-decided]]). Run
+    on a reference of the receiver blocks in place of their snap, the flat
+    instance has a reference companion, whose datum combines those blocks
+    with non-negative weights, so that their factor enclosures reach it
+    ([[cor:flat-companion]]). Formed on a normalized station and precomposed
+    with the pure-loss channel of the factored loss, the flat instance is a
+    reduction instance for the receiver itself, with the same emission
+    ([[cor:normalized-flat]]).
+- title: Requirements
+  start: req:one-route-per-artifact
+  abstract: >-
+    The engine emits one route per artefact, refuses certified weights that
+    total one or more, and uses and records the largest certified weight. It
+    decides descent, absorbing letters, fibres and column-stochasticity
+    exactly on the declared data and refuses a declaration that fails one of
+    them. It reads per-setting weights only from a receiver version that
+    states them, and carries the supplier's eigenvalue-slack assumption
+    beside the settings at which it was invoked. For a receiver compiled at a
+    factored loss below one it records the loss in front of the link's
+    channel witness, and refuses such a receiver as a branch of a register
+    instance.
+order:
+  - def:targets
+  - lem:ple1
+  - rem:peqone
+  - prop:chain
+  - def:routes
+  - rem:tworoutes
+  - prop:weight-monotone
+  - rem:weightfree
+  - rem:published
+  - lem:descent
+  - rem:descentneedsconstant
+  - def:weight-route
+  - prop:route
+  - prop:precomposed-blocks
+  - cor:oneabsorbing
+  - rem:absorbneeded
+  - rem:fibre
+  - rem:colstoch
+  - rem:minweight
+  - rem:darkcompose
+  - rem:receiver-imports
+  - cor:fssinstance
+  - prop:flat-instance
+  - cor:emitted-flat
+  - cor:two-sector-decided
+  - cor:flat-companion
+  - cor:normalized-flat
+  - req:one-route-per-artifact
+  - req:total-weight-refusal
+  - req:largest-certified-weight
+  - req:descent-decided-exactly
+  - req:absorbing-bounded-letters
+  - req:fibre-equality
+  - req:column-stochastic-refusal
+  - req:supplier-version
+  - req:supplier-eig-record
+  - req:normalized-link-record
+  - req:normalized-branch-refusal

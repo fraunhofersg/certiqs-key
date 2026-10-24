@@ -1,0 +1,257 @@
+% ---
+% id: protocol-compiler/thm:measurements-and-statistics
+% kind: thm
+% title: "Exact measurement families and the statistics functional"
+% summary: >-
+%   Declared measurement families are exact POVMs block by block, per factor
+%   and, in POVM form, per Alice sector in the general format; the product and
+%   denoted ensemble families are POVMs by theorem. So D(iii) holds, and the
+%   statistics are a distribution on every normalised positive block-list state.
+% prominence: standard
+% status: accepted
+% uses: [def:compile, def:well-formed-spec, def:exact, def:phi, thm:typing, lem:hermitian-constraint-values, def:feasible, def:weighted, def:validator, def:declaration, def:target, thm:sifting-and-key]
+% mentions: [thm:chain-consumption, lem:weighted, thm:validator-soundness, foundations/req:exact-emission, req:derived-objects]
+% assumes: [A-SPEC]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.validation:check_v3
+% lean:
+% notes: "The \\eqref{eq:predcount} of the proof of (iii) is to an equation of thm:validator-soundness, a mention: the sentence counts decisions and proves nothing. A-SPEC is declared because the proof applies thm:typing and thm:sifting-and-key, whose hypothesis it is; A-ALICE-MEAS is not, no step reading the measurement Alice performs."
+% ---
+
+\begin{theorem}\label{thm:measurements-and-statistics}
+Let $\Spec$ be a \tref{well-formed specification}
+(Definition~\ref{def:well-formed-spec}) satisfying
+Assumption~\ref{ass:spec}, and
+let $\Decl$ be emitted by Definition~\ref{def:compile} in the
+\tref{basic format}. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $\{M_x\}_{x\in\Xset}$ is a POVM on $A$ and, for each $s\in\SecSet$, the
+block family $\{F_v^{(s)}\}_{v\in\Vset}$ is a POVM on $\Qsys_s$ --- each
+predicate holding \emph{of the declared numbers}, decided exactly --- and each
+of the completeness sums $\sum_xM_x$ and $\sum_vF_v^{(s)}$, formed in the
+declared order, rounds nowhere, so that each computed sum \emph{is} the sum it
+is written as (Definition~\ref{def:exact});
+\item every $F_v$ and every $\hat O_k$ is sector-block-diagonal
+\emph{by construction}: it is emitted as the list
+$\big(F_v^{(s)}\big)_{s}$, respectively $\big(\hat O_k^{(s)}\big)_{s}$, and
+the operator it denotes is $\bigoplus_sF_v^{(s)}$. The two formulations of
+block-diagonality remain equivalent --- for an operator $F$ on $\Qsys$,
+$\Pi_sF\Pi_{s'}=0$ for all $s\ne s'$ if and only if
+$F=\bigoplus_s\Pi_sF\Pi_s$ --- and that equivalence is what licenses the
+\emph{type}: a list of blocks denotes exactly the operators the vanishing
+condition picks out, and no other. It is not checked, because the condition
+has no data to be checked on;
+\item hence D(iii) holds: its typing half by (ii) and check V1; its first
+four predicates --- those on $\{M_x\}$ and on each block family
+$\{F_v^{(s)}\}_v$ --- by (i); and its fifth, Hermiticity of
+$\hat O_k^{(s)}$ for each $(k,s)$, by the last clause of check V3
+(Definition~\ref{def:validator}), which decides it exactly on the emitted
+constraint entries and which (i) does not state; and
+\item $P_{\Decl}[\omega]$ of \eqref{eq:jointdist} and $\Phimap[\omega]$ are
+affine in $\omega$, $\Phimap[\omega]$ depends on $\omega$ only through
+$P_{\Decl}[\omega]$, and the fibres of $\phi\circ a$ partition
+$\Xset\times\Vset$, so $\Phimap[\omega]$ is the pushforward of
+$P_{\Decl}[\omega]$ and inherits its total mass. For every block list $\omega$
+with $\omega^{(s)}\succeq0$ for each $s$ and $\tr\omega=1$ --- in particular
+for every $\omega\in\Feas$ --- $P_{\Decl}[\omega]$ is a probability
+distribution on $\Xset\times\Vset$ and $\Phimap[\omega]$ one on $\Chatset$.
+\end{enumerate}
+
+\emph{The general format.} Let $\Decl$ instead be emitted by the
+general-format clauses of Definition~\ref{def:compile}, in the general format
+of Definition~\ref{def:declaration}\,(DX1)--(DX6). Then (i)--(iv) hold with
+the following readings, of which the four above are the case of the basic
+format.
+\begin{enumerate}[label=(\roman*$'$),leftmargin=2.6em]
+\item for every \tref{measured factor} $f$ and every $s_f\in\SecSet^{f}$ the
+block family $\{F^{f,(s_f)}_{v_f}\}_{v_f\in\Vset^{f}}$ is a POVM on
+$\Qsys_{f,s_f}$; and for every Alice sector $t$, in \tref{POVM form}
+$\{M^{(t)}_x\}_{x\in\Xset}$ is a POVM on $A_t$, and in \tref{ensemble form}
+every $N^{(t)}_x$ is Hermitian and positive semidefinite, with
+$\sum_xN^{(t)}_x=\tau^{(t)}_A$ and $\tau^{(t)}_A\ne0$ --- each predicate
+holding of the declared numbers, decided exactly, and each of these sums,
+formed in its declared order, rounding nowhere. The product family
+\eqref{eq:productfamily} is a POVM on $\Qsys$ and, in ensemble form, the
+family \eqref{eq:ensemblepovm} is a POVM on $A$, both as identities of real
+numbers, and neither is formed, decided or summed;
+\item every $F^{f}_{v_f}$ is a block list against factor $f$'s sector map and
+every $\hat O_k$ one against the sector map of its scope, and $\tau_A$, every
+operator of Alice's measurement slot and every general $\Theta_k$ is a block
+list along $\mathbb{T}$, each block diagonal by construction as in (ii); and
+the product family is block diagonal for the product sector map,
+$\Pi_sF_v\Pi_{s'}=0$ for $s\ne s'$, with the $s$-block of
+\eqref{eq:productfamily};
+\item hence D(iii) holds in its general-format reading
+(Definition~\ref{def:target}); and
+\item (iv) holds for every list $\omega$ over the
+\tref[joint sector]{joint sectors} with every block positive semidefinite and
+$\tr\omega=1$ --- in particular for every $\omega\in\Feas$ --- with $F_v$ the
+product \eqref{eq:productfamily} and, in ensemble form, $M_x$ the operator
+\eqref{eq:ensemblepovm} of the declaration $\Decl$ denotes: $P_{\Decl}[\omega]$
+is a probability distribution on $\Xset\times\Vset$ and $\Phimap[\omega]$ one
+on $\Chatset$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) The predicates are decided on the emitted objects, not inferred
+(\xref{foundations/req:exact-emission}): check V3 of
+Definition~\ref{def:validator} decides, exactly, $M_x=M_x^{\dagger}$ and
+$M_x\succeq0$ for each $x$, $\sum_xM_x=\idon{A}$ with the sum rounding
+nowhere, and, per block, $F_v^{(s)}=F_v^{(s)\dagger}$, $F_v^{(s)}\succeq0$ and
+$\sum_vF_v^{(s)}=\idon{\Qsys_s}$ with that sum rounding nowhere; a declaration
+that is emitted at all is one for which V3 did not refuse. Two constructions in
+this contract would have licensed an inference instead, and neither is used as
+one. Where the specification presents a family as choice-weighted,
+Lemma~\ref{lem:weighted}\,(i) shows the weighted family is a POVM whenever the
+conditional families are; the emitted family's predicates are nonetheless
+decided, because the emitted matrices are the products $q_tN_{u|t}$ as
+represented, which the compiler forms exactly and then decides to be binary64
+data before emitting them at all (Definition~\ref{def:weighted}), and because
+the lemma says nothing about condition~(S) on the emitted family's own sum.
+Where $\{F_v\}$ arrives as the target POVM of the last link of $\pcChain$,
+completeness is likewise decided by V3 on the emitted blocks and never inferred
+from the physical family; Theorem~\ref{thm:chain-consumption} records what the chain is and
+is not asked to guarantee. No floating-point budget is therefore needed
+anywhere below: nothing here depends on how much rounding a construction
+introduced, because the result is decided.
+
+(ii) By Definition~\ref{def:compile} the emitted $\{F_v\}$ and $\{\hat O_k\}$
+are block lists against $\Smap$, so the first sentence is the emission rule.
+For the equivalence: any $F\in\Lin{\Qsys}$ satisfies
+$F=\sum_{s,s'}\Pi_sF\Pi_{s'}$, since $\sum_s\Pi_s=\idon{\Qsys}$ and the $\Pi_s$
+are mutually orthogonal projectors; hence $\Pi_sF\Pi_{s'}=0$ for all $s\ne s'$
+holds if and only if $F=\sum_s\Pi_sF\Pi_s=\bigoplus_s\Pi_sF\Pi_s$, i.e.\ if and
+only if $F$ is the direct sum of its diagonal blocks. So the block lists denote
+exactly the block-diagonal operators, which is what makes the type faithful:
+nothing expressible as a list violates the condition, and nothing satisfying
+the condition fails to be expressible as a list. This is a statement about the
+representation, not a check on data. Where the specification presents
+$\{F_v\}$ as a choice-weighted family, the weighting is applied blockwise,
+$N_{u,t}^{(s)}=q_tN_{u|t}^{(s)}$, so the emitted object is a block list
+whatever the presentation (Lemma~\ref{lem:weighted}\,(ii)).
+
+(iii) is (i) and (ii) together with D(iii)'s statement. Its typing half is
+(ii), and the sector-map agreement that half rests on is check V1
+(Theorem~\ref{thm:typing}, D(i)). Of D(iii)'s five predicates, the four on
+$\{M_x\}$ and on the block families $\{F_v^{(s)}\}_v$ are (i). The fifth is
+not among them and is cited from where it is decided: D(iii) requires in
+addition that $\hat O_k^{(s)}$ be Hermitian for each $(k,s)$, which (i) does
+not state, and which the last clause of check V3
+(Definition~\ref{def:validator}) decides exactly on the emitted constraint
+entries --- a declaration that is emitted at all being one for which V3 did
+not refuse, which is the route (i)'s own four take
+(Theorem~\ref{thm:typing}). It is among the decisions \eqref{eq:predcount}
+counts, as that equation's $m\,|\SecSet|$ term, and it is the hypothesis of
+Lemma~\ref{lem:hermitian-constraint-values}, which makes
+\eqref{eq:feas-modes} well posed.
+
+(iv) Affinity of both maps is immediate from linearity of the trace in
+$\omega$; that $\Phimap[\omega]$ depends on $\omega$ only through
+$P_{\Decl}[\omega]$ is the definition \eqref{eq:jointdist}. Since $\phi\circ a$
+is a total map $\Xset\times\Vset\to\Chatset$ (Theorem~\ref{thm:typing}, D(i)), the
+fibres $\{(x,v):\phi(a(x,v))=\hat c\}$ partition $\Xset\times\Vset$, so
+$\Phimap[\omega]$ is the pushforward of $P_{\Decl}[\omega]$ and has the same
+total mass.
+
+For the distribution statement, let $\omega$ be a block list with
+$\omega^{(s)}\succeq0$ for each $s$ and $\tr\omega=1$. By (i) each $M_x$ and
+each $F_v^{(s)}$ is Hermitian with non-negative spectrum, hence
+$M_x\succeq0$ and $F_v=\bigoplus_sF_v^{(s)}\succeq0$, positivity of a
+block-diagonal operator being positivity of each of its blocks; and
+$\omega=\bigoplus_s\omega^{(s)}\succeq0$ for the same reason. Then
+non-negativity and realness together, since $M_x\otimes F_v\succeq0$ and
+$\omega\succeq0$ give $\tr[(M_x\otimes F_v)\omega]\ge0$ --- the trace of a
+product of two positive semidefinite operators is a non-negative \emph{real}
+number. And normalization:
+\begin{equation*}
+  \sum_{x,v}P_{\Decl}[\omega](x,v)
+  =\tr\!\Big[\Big(\sum_xM_x\otimes\sum_vF_v\Big)\omega\Big]
+  =\tr[(\idon{A}\otimes\idon{\Qsys})\,\omega]=\tr\omega=1 ,
+\end{equation*}
+by bilinearity of the tensor product and the two completeness identities of
+(i). This step is where condition~(S) is used: what (i) delivers is
+$\sum_xM_x=\idon{A}$ and $\sum_vF_v^{(s)}=\idon{\Qsys_s}$ as identities of the
+declared numbers, and it delivers them only because the sums forming them round
+nowhere --- a computed sum equal to the identity would not license this
+display. Hence $P_{\Decl}[\omega]$ is a probability distribution, and so is its
+pushforward $\Phimap[\omega]$.
+
+\emph{The general format.} (i$'$) Check V3 in its general-format reading
+(Definition~\ref{def:validator}) decides, exactly: per measured factor,
+$F^{f,(s_f)}_{v_f}$ Hermitian and positive semidefinite for every
+$(v_f,s_f)$ and, for each $s_f$,
+$\sum_{v_f}F^{f,(s_f)}_{v_f}=\idon{\Qsys_{f,s_f}}$ with its declared-order sum
+rounding nowhere; on Alice's data, block by block along $\mathbb{T}$, in POVM
+form $M^{(t)}_x$ Hermitian and positive semidefinite for every $(x,t)$ and
+$\sum_xM^{(t)}_x=\idon{A_t}$ for every $t$ with that sum rounding nowhere,
+and in ensemble form $N^{(t)}_x$ Hermitian and positive semidefinite for
+every $(x,t)$ and $\sum_xN^{(t)}_x=\tau^{(t)}_A$ entry by entry with that sum
+rounding nowhere; and check V2 in its general-format reading decides
+$\tau^{(t)}_A\ne0$ for every $t$ where the slot is in ensemble form. A
+declaration that is emitted at all is one for which neither check refused, so
+each of these holds of the declared numbers. The product family: every
+$F^{f}_{v_f}=\bigoplus_{s_f}F^{f,(s_f)}_{v_f}$ is then Hermitian and positive
+semidefinite and $\sum_{v_f}F^{f}_{v_f}=\idon{\Qsys_f}$, an identity of the
+declared numbers because each of its blocks' sums rounds nowhere; a tensor
+product of Hermitian positive semidefinite operators is Hermitian and
+positive semidefinite, and
+$\sum_{v}F_v=\sum_{v}\bigotimes_fF^{f}_{v_f}=\bigotimes_f\sum_{v_f}F^{f}_{v_f}
+=\bigotimes_f\idon{\Qsys_f}=\idon{\Qsys}$ by multilinearity, the sum running
+over $\Vset=\prod_f\Vset^{f}$ (Definition~\ref{def:declaration}\,(DX3)). The
+denoted family: Theorem~\ref{thm:sifting-and-key}\,(v), whose hypothesis is the
+conditions Definition~\ref{def:exact} states for the ensemble form, which are
+those just decided. Neither family is a datum
+(Requirement~\ref{req:derived-objects}): nothing of either is formed, decided
+or summed, so no summation condition arises for either, and both statements
+are identities of the real numbers the declared data denote.
+
+(ii$'$) By the general-format clauses of Definition~\ref{def:compile} each
+$F^{f}_{v_f}$ is emitted as a block list against factor $f$'s map and each
+$\hat O_k$ against the map of its scope, and by
+Definition~\ref{def:declaration}\,(DX2) Alice's data are block lists along
+$\mathbb{T}$; for each such list the argument of (ii), with the projectors
+$\Pi^{f}_{s_f}$, respectively $\Pi^{A}_t$, in place of $\Pi_s$, gives the
+equivalence. For the product family, $\Pi_s=\bigotimes_f\Pi^{f}_{s_f}$ by
+\eqref{eq:productmap}, so
+$\Pi_sF_v\Pi_{s'}=\bigotimes_f\Pi^{f}_{s_f}F^{f}_{v_f}\Pi^{f}_{s'_f}$; for
+$s\ne s'$ some factor has $s_f\ne s'_f$, and its tensor factor vanishes because
+$F^{f}_{v_f}$ is block diagonal for factor $f$'s map; and
+$\Pi_sF_v\Pi_s=\bigotimes_fF^{f,(s_f)}_{v_f}$ is the block of
+\eqref{eq:productfamily}.
+
+(iii$'$) D(iii) in its general-format reading (Definition~\ref{def:target})
+asks for the typing and for the predicates of Definition~\ref{def:exact} in
+their general-format reading, per measured factor and per Alice sector, with
+the ensemble-form conditions in place of those on $\{M_x\}$ where that form is
+declared, and it refuses ensemble form in untrusted-source mode. The typing
+is (ii$'$), the agreement of each list's map with the map of its factor being
+decided by check V1 in its general-format reading (Theorem~\ref{thm:typing},
+D(i)); the predicates and summation conditions on the per-factor families and
+on Alice's data are (i$'$); Hermiticity of $\hat O^{(s_{f_k})}_k$ for every
+entry and every block of its scope is the last clause of check V3 in its
+general-format reading; and an ensemble-form slot beside a marginal slot
+holding $\nomarg$ is refused by that check's clause on which slot is filled.
+A declaration that is emitted at all is one for which V1 and V3 did not
+refuse.
+
+(iv$'$) Affinity and the pushforward are as in (iv), with $a$ the function
+\eqref{eq:transcript} derives, total into $\Kann$
+(Theorem~\ref{thm:sifting-and-key}\,(iv)), and $\phi$ total on $\Kann$
+(Theorem~\ref{thm:typing}, D(i)). For the distribution statement let $\omega$
+be such a list. $M_x\succeq0$: in POVM form $M_x=\bigoplus_tM^{(t)}_x$ with
+every block positive semidefinite by (i$'$), and in ensemble form by
+Theorem~\ref{thm:sifting-and-key}\,(v); $F_v\succeq0$ by (i$'$); and
+$\omega=\bigoplus_{(t,s)}\omega^{(t,s)}\succeq0$, positivity of a
+block-diagonal operator being positivity of each block. So
+$\tr[(M_x\otimes F_v)\omega]$ is a non-negative real number. And
+$\sum_xM_x=\bigoplus_t\sum_xM^{(t)}_x=\bigoplus_t\idon{A_t}=\idon{A}$, in POVM
+form an identity of the declared numbers by (i$'$) and in ensemble form an
+identity of real numbers by Theorem~\ref{thm:sifting-and-key}\,(v), while
+$\sum_vF_v=\idon{\Qsys}$ by (i$'$); so the normalization display of (iv) holds
+with these operators and gives $\sum_{x,v}P_{\Decl}[\omega](x,v)=\tr\omega=1$.
+Condition~(S) is used there per measured factor and, in POVM form, per Alice
+sector, which is what (i$'$) delivers; no sum over the product alphabet and no
+sum of the denoted family is computed, so none needs a summation condition.
+\end{proof}

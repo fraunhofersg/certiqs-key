@@ -1,0 +1,46 @@
+% ---
+% id: receiver/ass:round
+% kind: ass
+% title: "Round homogeneity of the instrument, probe and dark counts"
+% summary: >-
+%   The same instrument, probe declaration and dark-count channel describe
+%   every round, and the receiver has no memory across rounds. One receiver
+%   artifact then describes the whole run.
+% prominence: standard
+% status: accepted
+% uses: [foundations/def:round-homogeneity]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-ROUND
+% verification: never
+% category: receiver
+% affects: [secrecy]
+% refines: A-RHOM
+% user_statement: >-
+%   Your receiver behaves the same way in every round: the same optics, the
+%   same probe settings and the same dark-count behaviour. Nothing it does in
+%   one round depends on the inputs or outputs of other rounds: no detector
+%   memory, and no drift that the declaration averages over. A receiver whose
+%   efficiency drifts during the run violates this. Only parts of a run fixed
+%   before it starts, each processed as its own execution and composed under
+%   [[A-SEPARATE]], can be analysed separately; a split chosen after seeing
+%   the data is not covered. A receiver whose detectors remember earlier
+%   clicks, through afterpulsing, a dead time or any other dependence on
+%   earlier rounds, violates it too, and nothing in this engine repairs that:
+%   no input describes more than one round.
+% lean:
+% ---
+
+Each round is described by the same three objects, independently of every
+other round. Rounds are not averaged, and per-round variation is not modelled.
+
+\begin{assumption}\label{ass:round}
+The family of the instrument, the probe declaration and the dark-count channel
+is \tref{round-homogeneous} (\xref{foundations/def:round-homogeneity}) in both
+clauses of that definition:
+(i) the same instrument, the same probe declaration and the same dark-count
+channel describe every round of the protocol;
+(ii) the receiver acts in every round as they describe, whatever the inputs
+and outputs of the other rounds, with no memory across rounds.
+\end{assumption}

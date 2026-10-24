@@ -1,0 +1,32 @@
+% ---
+% id: reductions/rem:two-sided-scope
+% kind: rem
+% title: "Scope of the two-sided reduction"
+% summary: >-
+%   The two-sided reduction relates no marginals of the specified and virtual
+%   descriptions and licenses no entry whose right-hand side is not a real
+%   constant. Its order-independence concerns soundness; the order a chain
+%   records stays data.
+% prominence: standard
+% status: accepted
+% uses: [thm:two-sided]
+% mentions: [rem:source-transfer-scope, lem:precomposition, def:chain, rem:ordering]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:two-sided-scope}
+Theorem~\ref{thm:two-sided} uses and implies no relation between a marginal
+of the specified description and one of the virtual description, and none
+would follow (Remark~\ref{rem:source-transfer-scope}). It licenses no entry
+whose right-hand side is not a real constant:
+Lemma~\ref{lem:precomposition}\,(iv) is a counterexample for such an entry,
+and the admission rule of Definition~\ref{def:chain} refuses one beside a
+non-empty source segment. And part (i) does not say that a chain may be
+\emph{recorded} in either order: the record's order is data, stated as
+condition (C3) of Definition~\ref{def:chain}, and what (i) says is that for a
+licensed list the order is not what carries the soundness
+(Remark~\ref{rem:ordering}).
+\end{remark}

@@ -1,0 +1,70 @@
+% ---
+% id: reductions/rem:exactboundary
+% kind: rem
+% title: "The boundary of the exact decisions"
+% summary: >-
+%   Data without a finite presentation, the objects of an instance's hypotheses,
+%   and combinatorial data offer no numerical predicate: the first stay
+%   hypotheses, the second are settled by inspection. The normalizer never
+%   touches the first, so the hypotheses hold of the declared model.
+% prominence: standard
+% status: accepted
+% uses: [lem:exactpsd, def:emitnorm, cor:entries, def:reduction-instance, def:system-setting]
+% mentions: [cor:flag-instance, thm:instrument-instance, cor:register-instance, foundations/def:exact-island]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:exactboundary}
+Every operator predicate this module checks is decided exactly. \emph{Two kinds
+of declared datum carry no such predicate.}
+
+\emph{First: data with no declared finite presentation.} The hypotheses (H) of
+a reduction instance (Definition~\ref{def:reduction-instance}\,(I1)) are about
+exactly these: an operator family on a part of $\Hs{\Bsys}$ that no finite
+list of matrices describes --- $\Hs{\Bsys}$ being separable and possibly
+infinite-dimensional (Definition~\ref{def:system-setting}) --- such as the blocks of a
+family above a photon-number cutoff; a POVM on a register whose dimension is
+nowhere declared or bounded; the POVM of an uncharacterised branch, which the
+instance that files it deliberately declines to constrain
+(Corollary~\ref{cor:flag-instance}). \emph{None of these has a finite matrix
+presentation anywhere in this contract, so none offers anything to decide}:
+there is no list of entries for Lemma~\ref{lem:exactpsd} to run on. Their
+conditions --- that a family is a POVM, that an above-cutoff block satisfies
+a certified inequality, that a register family is complete --- are therefore
+\emph{hypotheses of the instance}, carried in the ledger and decided by this
+module's refusal rules only to the extent that the declaration presents
+something to decide. Which objects these are for a given instance is that
+instance's to say; of the core's leaf instances only the flag instance has
+one, its branch POVM, and the branching and register instances add the
+hypothesis that their instrument is a \tref{generalized instrument}, and for
+the register form that the register family is a POVM
+(Theorem~\ref{thm:instrument-instance},
+Corollary~\ref{cor:register-instance}).
+
+\emph{Second: data that is combinatorial rather than numerical.} A
+coarse-graining map with its totality, surjectivity and fibre conditions; the
+alphabets $\Yset$, $\Tset$, $\Vset$ and their declared orders; the sector
+identifiers, their dimensions, their supports and their order; a branch index
+set; a cutoff; and the \tref{lattice exponent} $\kappa$ itself. \emph{None of these is a
+number a condition could be decided about}, and a predicate on them is settled
+by finite inspection --- which is the same reason the \tref{exact island}
+(\xref{foundations/def:exact-island}) is drawn where it is.
+
+\emph{Two consequences.} First, the objects of the first kind are also the
+ones the emission normalizer never touches: it acts on the data sectors and on
+nothing else (Definition~\ref{def:emitnorm}, second property), so none of them
+enters any $\Delta_s$ and none is repaired --- which is what makes every
+hypothesis (H) hold of the declared model by the stability clause, and with it
+Corollary~\ref{cor:entries}\,(ii)'s identity available where the instance
+discharges it. Second, \emph{extending an exact decision to such an object
+would first require declaring a finite representation for it}, and for an
+uncharacterised branch that means constraining the very model the instance
+leaves free; that is a widening of the instance's model rather than a change
+of number model. The declared classical data an instance's route reads --- a
+stochastic matrix and its descended form, the \tref{class weights}, the
+\tref{certified weights} --- \emph{is} finitely presented, so it is decided here,
+exactly.
+\end{remark}

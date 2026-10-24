@@ -1,0 +1,37 @@
+% ---
+% id: protocol-compiler/req:declaration-keys
+% kind: req
+% title: "Machine keys of the emitted declaration"
+% summary: >-
+%   The sector map is emitted as three keys, its identifiers, their
+%   dimensions and its block kind; the index map goes beside the declaration
+%   and each constraint entry's tag with the entry. The sifting predicate and
+%   the key-live set are derived from the specification and are not emitted.
+% prominence: standard
+% status: accepted
+% uses: [def:declaration, def:compile, def:homog]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.declaration:CandidateDeclaration
+% lean:
+% ---
+
+Definition~\ref{def:declaration} makes the \tref{sector map} one object and
+derives the sifting predicate and the key-live set from the specification;
+this requirement says which of these the emitted declaration carries.
+
+\begin{requirement}\label{req:declaration-keys}
+The engine emits the \tref{sector map} $\Smap$ of a
+\tref{protocol declaration} as three machine keys,
+\iface{sector_index_set} for its ordered block identifiers,
+\iface{sector_dims} for their dimensions and \iface{sector_block_kind} for
+its block kind, so that a consumer comparing sector maps can compare all
+three and not two of them. It emits the label-to-index map $\idxm$ of
+Definition~\ref{def:compile} alongside the declaration, under
+\iface{label_index_map}, and with each constraint entry the tag of its
+right-hand side, under \iface{constraint_rhs_tag}, so that the consuming
+engine's type check has a datum (Definition~\ref{def:homog}). The sifting
+predicate $\varsigma$ and the set $\Chkey$ of \tref{key-live} values are not
+emitted.
+\end{requirement}

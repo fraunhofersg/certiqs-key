@@ -1,0 +1,58 @@
+% ---
+% id: meat-core/def:branch-support
+% kind: def
+% title: "Maximal branch support"
+% summary: >-
+%   The maximal branch support of a key-live acceptance value and a sector is
+%   the span of the pass-class Kraus images of the admissible Alice subspace
+%   tensored with the sector. The side-by-side matrix of those Kraus operators
+%   depends on the declaration and the support frame alone.
+% prominence: standard
+% status: implemented
+% uses: [def:branch, lem:admissible-alice-subspace, def:support-frame]
+% mentions: [lem:branch-support, thm:gradient]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.branch:branch_support_of
+% lean:
+% ---
+
+A branch operator of a \tref{key-live acceptance value} and a sector cannot
+reach beyond a subspace that the declaration fixes. That subspace is the face
+on which Theorem~\ref{thm:gradient} differentiates the pinched trace power,
+and Lemma~\ref{lem:branch-support} records how the branch operators the
+program forms sit inside it.
+
+\begin{definition}\label{def:branch-support}
+For $\hat c\in\Chkey$ and $s\in\SecSet$ the
+\term[The span of the images, under the pass-class Kraus operators of an acceptance value and a sector, of the admissible Alice subspace tensored with that sector.]{maximal branch support}
+is the subspace
+\begin{equation}\label{eq:Wcs}
+  W_{\hat c,s}\coloneqq
+  \sum_{\kappa\in\Kann_{\mathrm{pass}}(\hat c)}
+  K^{(s)}_{\kappa}\big(\Sadm\otimes\Hs{\Qsys_s}\big)
+  \ \subseteq\ \Hs{R\,XY\,C_AC_B\,A\Qsys_s},
+\end{equation}
+the span of the images, under the Kraus operators of $\cG_{\hat c,s}$
+(Definition~\ref{def:branch}), of the admissible Alice subspace
+$\Sadm$ of \eqref{eq:SA} tensored with the sector, that is, of the
+subspace the declaration admits: $\operatorname{supp}\tau_A$ in
+\tref{trusted-source mode}, all of $\Hs{A}$ in
+\tref{untrusted-source mode}.
+
+Listing the operators of \eqref{eq:Wcs} side by side, with $W_{\tau}$ of
+\eqref{eq:Wtau} on the \tref{support frame} of
+Definition~\ref{def:support-frame}, put
+\begin{equation}\label{eq:Kstack}
+  \mathbf K_{\hat c,s}\coloneqq
+  \Big[\ K^{(s)}_{\kappa}\,(W_{\tau}\otimes\idon{\Qsys_s})\ \Big]
+  _{\kappa\in\Kann_{\mathrm{pass}}(\hat c)}
+  \;:\;\bigoplus_{\kappa\in\Kann_{\mathrm{pass}}(\hat c)}\Hs{A_0\Qsys_s}
+  \;\longrightarrow\;\Hs{R\,XY\,C_AC_B\,A\Qsys_s},
+\end{equation}
+with $W_{\tau}\otimes\idon{\Qsys_s}$ replaced by $\idon{A\Qsys_s}$, and
+the domain by $\bigoplus_{\kappa}\Hs{A\Qsys_s}$, in untrusted-source mode.
+The matrix $\mathbf K_{\hat c,s}$ depends on the declaration and on
+$W_{\tau}$ alone and on no iterate.
+\end{definition}

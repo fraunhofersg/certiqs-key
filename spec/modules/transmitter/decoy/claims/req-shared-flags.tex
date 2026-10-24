@@ -1,0 +1,37 @@
+% ---
+% id: transmitter/decoy/req:shared-flags
+% kind: req
+% title: "Shared polarisation and tail flags"
+% summary: >-
+%   The engine refuses a flag family finer than the one the tagged declaration
+%   declares, in particular polarisation flags split by intensity. For that
+%   split the refusal keeps the loss of the decoy content from being silent.
+% prominence: standard
+% status: implemented
+% uses: [def:tagged-source]
+% mentions: [rem:no-intensity-split]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.decoy.emit:emit_decoy_declaration
+% lean:
+% ---
+
+\begin{requirement}\label{req:shared-flags}
+The engine refuses, with no artefact, a declaration carrying a flag family finer
+than the one Definition~\ref{def:tagged-source}\,(T3) declares
+(\iface{flag_family_split_by_intensity}). That family is one
+\tref{polarisation flag} $f_{\mathsf{n},a}$ for each sector $(\mathsf{n},a)$ of
+the index set of (T3), $N_{\mathrm{ent}}<\mathsf{n}\le N_{\mathrm{src}}$, shared
+by every intensity and both \tref[round type]{round types}, and one
+\tref{tail flag} $f_{a,\mu}$ for each sector $(a,\mu)$ of
+that index set, shared by both round types; a finer family is one with separate
+flags where (T3) declares one. In particular the engine refuses a family whose
+polarisation flags are split by intensity at a photon number
+$N_{\mathrm{ent}}<\mathsf{n}\le N_{\mathrm{src}}$. A family split by intensity
+still satisfies the source identity but gives up the relation across
+intensities that is the decoy content of the declaration, one photon number's
+weight at every intensity sitting on one flag
+(Remark~\ref{rem:no-intensity-split}), and without the refusal that loss would
+be silent.
+\end{requirement}

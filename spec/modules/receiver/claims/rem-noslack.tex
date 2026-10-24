@@ -1,0 +1,57 @@
+% ---
+% id: receiver/rem:noslack
+% kind: rem
+% title: "Sign of the collapse slack"
+% summary: >-
+%   At every setting of a setting family the collapse slack is −β(0), where
+%   β(0) equals the vacuum block of the multiclick element, so it is never
+%   positive and the collapse hypothesis holds only with equality. A computed
+%   margin test for branch 1 could therefore never fire.
+% prominence: standard
+% status: accepted
+% uses: [lem:collapse, def:bounddata, def:setting-family, def:pmc, lem:windowtail]
+% mentions: [def:pmcex]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:noslack}
+\emph{The slack is the negative vacuum block.} Fix a setting $t$ and write
+$\sigma\coloneqq\sum_k\beta^{(t)}_k-1-(K-1)\gamma^{(t)}$ for the slack in
+\eqref{eq:collapsehyp}. Evaluating \eqref{eq:beta} at $n=0$ under the
+convention $0^0=1$ gives
+$\Bnd^{(t)}(0)=1+(K-1)\gamma^{(t)}-\sum_k\beta^{(t)}_k=-\sigma$, so the two are
+negatives of each other. For a setting of a setting family
+(Definition~\ref{def:setting-family}) the vacuum block of the multiclick
+element is $\blk{M}{(=0)}_{\mc|t}=\Bnd^{(t)}(0)$ exactly: that block is one
+dimensional and every $\Fock(\cdot)^{(0)}=1$, so \eqref{eq:family-prefactor}
+reads $\blk{\Pvac{[K]}}{(=0)}=\gamma^{(t)}$ and
+$\blk{\Pvac{[K]\setminus\{k\}}}{(=0)}=\beta^{(t)}_k$, and the $n=0$ block of
+\eqref{eq:family-mc} is
+$1+(K-1)\gamma^{(t)}-\sum_k\beta^{(t)}_k=\Bnd^{(t)}(0)$. That
+block is a diagonal block of a positive operator
+(Definition~\ref{def:setting-family}\,(a)), hence a non-negative real. So
+$\Bnd^{(t)}(0)\ge0$ and $\sigma\le0$ always, and \eqref{eq:collapsehyp} holds
+\emph{if and only if} $\Bnd^{(t)}(0)=0$, that is $\sigma=0$ exactly.
+
+\emph{No computed margin test can select branch 1.} A test demanding
+$\sigma\ge\varepsilon>0$ is therefore unsatisfiable, and a test demanding
+$\sigma\ge0$ is satisfied only in the exact-equality case, which is what (X)
+already guarantees from the declaration without computing anything. So
+branch 1 of \eqref{eq:pmcdef} is taken only through (X), and it is by design
+that no arithmetic decides it. The declared $\varepsilon_{\mathrm{eig}}$ of
+Definition~\ref{def:pmcex} is not a margin of this kind and decides no
+predicate: it is a slack subtracted from a computed eigenvalue, and the exact
+window is selected by the presence of a declared depth, which is again a
+property of the declaration.
+
+\emph{Nothing is lost.} Branch 2 is unconditionally valid
+(Lemma~\ref{lem:windowtail}\,(i)). At a setting where \eqref{eq:collapsehyp}
+holds but (X) does not, it recovers branch 1's value in the limit of a
+widening window whenever $c^{(t)}<1$: by Lemma~\ref{lem:windowtail}\,(ii) its
+value $\max\{0,\underline{\Bnd}^{(t)}_{N,m}\}$ tends to
+$\max\{0,\inf_{n>N}\Bnd^{(t)}(n)\}$, which is $\max\{0,\Bnd^{(t)}(N+1)\}$ by
+\eqref{eq:collapseinf}.
+\end{remark}

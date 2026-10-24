@@ -1,0 +1,2020 @@
+% GENERATED FILE -- DO NOT EDIT.
+%
+% Produced by harness/assemble_contract.py from module.yaml and claims/*.tex.
+% Edit the claim files and regenerate; `--check` fails if this file is stale.
+\documentclass[11pt,a4paper]{article}
+\pdftrailerid{888abf6d16980b033c67c25a98bb8569}
+%% --- 1. Mathematics (order matters: physics after braket wins \ket, \tr) ---
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{dsfont}
+\usepackage{braket}
+\usepackage{physics}
+%% --- 2. Page furniture ------------------------------------------------------
+\usepackage{xcolor}
+\usepackage{array}    % >{...} column prefixes in the wide tables of some claims
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xltabular}              % front- and back-matter tables across pages
+\usepackage{needspace}
+\usepackage{xurl}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+%% --- 3. Links and navigation (hyperref late; bookmark, refcount after it) ---
+\usepackage{xr-hyper}   % before hyperref: the contract's labels
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{refcount}
+%% --- 4. Colours: every distinction also has a shape (rule, caps, size, weight)
+\definecolor{nnGrey}{gray}{0.40}      % non-normative text
+\definecolor{metaGrey}{gray}{0.30}    % the generated meta line
+\definecolor{techGrey}{gray}{0.45}    % heading of a technical claim
+\definecolor{mainRule}{RGB}{0,110,140}
+\definecolor{reqAccent}{RGB}{165,70,0}
+\definecolor{linkBlue}{RGB}{0,62,150}
+\definecolor{extLink}{RGB}{120,40,140}  % links into another PDF
+\hypersetup{colorlinks=true, linkcolor=linkBlue, citecolor=linkBlue,
+  urlcolor=linkBlue, filecolor=extLink, bookmarksnumbered=true,
+  bookmarksopen=true, bookmarksopenlevel=1, pdfdisplaydoctitle=true}
+% A link into another PDF (\href to a .pdf, \hyperref{file}..., xr-hyper) is a
+% relative URI, <file>#nameddest=<destination>, in the file-link colour:
+% browser viewers (Edge, Chrome) ignore hyperref's default GoToR action.
+\makeatletter
+\renewcommand*{\hyper@linkfile}[3]{% anchor text, file name, destination
+  \begingroup
+    \ifx\\#3\\\def\CQ@target{#2}\else\def\CQ@target{#2\hyper@hash nameddest=#3}\fi
+    \let\@urlcolor\@filecolor
+    \hyper@linkurl{#1}{\CQ@target}%
+  \endgroup}
+\makeatother
+%% --- 5. The mapped Unicode set (harness/contract_navigation.py, UNICODE_TEX)
+\DeclareUnicodeCharacter{03B1}{\ensuremath{\alpha}}
+\DeclareUnicodeCharacter{03B2}{\ensuremath{\beta}}
+\DeclareUnicodeCharacter{03B3}{\ensuremath{\gamma}}
+\DeclareUnicodeCharacter{03B4}{\ensuremath{\delta}}
+\DeclareUnicodeCharacter{03B5}{\ensuremath{\varepsilon}}
+\DeclareUnicodeCharacter{03F5}{\ensuremath{\epsilon}}
+\DeclareUnicodeCharacter{03B6}{\ensuremath{\zeta}}
+\DeclareUnicodeCharacter{03B7}{\ensuremath{\eta}}
+\DeclareUnicodeCharacter{03B8}{\ensuremath{\theta}}
+\DeclareUnicodeCharacter{03D1}{\ensuremath{\vartheta}}
+\DeclareUnicodeCharacter{03B9}{\ensuremath{\iota}}
+\DeclareUnicodeCharacter{03BA}{\ensuremath{\kappa}}
+\DeclareUnicodeCharacter{03BB}{\ensuremath{\lambda}}
+\DeclareUnicodeCharacter{03BC}{\ensuremath{\mu}}
+\DeclareUnicodeCharacter{03BD}{\ensuremath{\nu}}
+\DeclareUnicodeCharacter{03BE}{\ensuremath{\xi}}
+\DeclareUnicodeCharacter{03C0}{\ensuremath{\pi}}
+\DeclareUnicodeCharacter{03C1}{\ensuremath{\rho}}
+\DeclareUnicodeCharacter{03F1}{\ensuremath{\varrho}}
+\DeclareUnicodeCharacter{03C3}{\ensuremath{\sigma}}
+\DeclareUnicodeCharacter{03C2}{\ensuremath{\varsigma}}
+\DeclareUnicodeCharacter{03C4}{\ensuremath{\tau}}
+\DeclareUnicodeCharacter{03C5}{\ensuremath{\upsilon}}
+\DeclareUnicodeCharacter{03C6}{\ensuremath{\varphi}}
+\DeclareUnicodeCharacter{03D5}{\ensuremath{\phi}}
+\DeclareUnicodeCharacter{03C7}{\ensuremath{\chi}}
+\DeclareUnicodeCharacter{03C8}{\ensuremath{\psi}}
+\DeclareUnicodeCharacter{03C9}{\ensuremath{\omega}}
+\DeclareUnicodeCharacter{0393}{\ensuremath{\Gamma}}
+\DeclareUnicodeCharacter{0394}{\ensuremath{\Delta}}
+\DeclareUnicodeCharacter{0398}{\ensuremath{\Theta}}
+\DeclareUnicodeCharacter{039B}{\ensuremath{\Lambda}}
+\DeclareUnicodeCharacter{039E}{\ensuremath{\Xi}}
+\DeclareUnicodeCharacter{03A0}{\ensuremath{\Pi}}
+\DeclareUnicodeCharacter{03A3}{\ensuremath{\Sigma}}
+\DeclareUnicodeCharacter{03A5}{\ensuremath{\Upsilon}}
+\DeclareUnicodeCharacter{03A6}{\ensuremath{\Phi}}
+\DeclareUnicodeCharacter{03A8}{\ensuremath{\Psi}}
+\DeclareUnicodeCharacter{03A9}{\ensuremath{\Omega}}
+\DeclareUnicodeCharacter{00E1}{\'a}
+\DeclareUnicodeCharacter{00E0}{\`a}
+\DeclareUnicodeCharacter{00E2}{\^a}
+\DeclareUnicodeCharacter{00E4}{\"a}
+\DeclareUnicodeCharacter{00E5}{\aa{}}
+\DeclareUnicodeCharacter{00E9}{\'e}
+\DeclareUnicodeCharacter{00E8}{\`e}
+\DeclareUnicodeCharacter{00EA}{\^e}
+\DeclareUnicodeCharacter{00EB}{\"e}
+\DeclareUnicodeCharacter{00ED}{\'{\i}}
+\DeclareUnicodeCharacter{00EF}{\"{\i}}
+\DeclareUnicodeCharacter{00F3}{\'o}
+\DeclareUnicodeCharacter{00F2}{\`o}
+\DeclareUnicodeCharacter{00F4}{\^o}
+\DeclareUnicodeCharacter{00F6}{\"o}
+\DeclareUnicodeCharacter{00F8}{\o{}}
+\DeclareUnicodeCharacter{00FA}{\'u}
+\DeclareUnicodeCharacter{00F9}{\`u}
+\DeclareUnicodeCharacter{00FB}{\^u}
+\DeclareUnicodeCharacter{00FC}{\"u}
+\DeclareUnicodeCharacter{00F1}{\~n}
+\DeclareUnicodeCharacter{00E7}{\c{c}}
+\DeclareUnicodeCharacter{00DF}{\ss{}}
+\DeclareUnicodeCharacter{00C4}{\"A}
+\DeclareUnicodeCharacter{00C5}{\AA{}}
+\DeclareUnicodeCharacter{00C9}{\'E}
+\DeclareUnicodeCharacter{00D6}{\"O}
+\DeclareUnicodeCharacter{00DC}{\"U}
+\DeclareUnicodeCharacter{2013}{\textendash{}}
+\DeclareUnicodeCharacter{2014}{\textemdash{}}
+\DeclareUnicodeCharacter{2018}{`}
+\DeclareUnicodeCharacter{2019}{'}
+\DeclareUnicodeCharacter{201C}{``}
+\DeclareUnicodeCharacter{201D}{''}
+\DeclareUnicodeCharacter{2026}{\ldots{}}
+\DeclareUnicodeCharacter{00A0}{~}
+\DeclareUnicodeCharacter{00A7}{\S{}}
+\DeclareUnicodeCharacter{2264}{\ensuremath{\le}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\ge}}
+\DeclareUnicodeCharacter{2260}{\ensuremath{\neq}}
+\DeclareUnicodeCharacter{2248}{\ensuremath{\approx}}
+\DeclareUnicodeCharacter{2261}{\ensuremath{\equiv}}
+\DeclareUnicodeCharacter{223C}{\ensuremath{\sim}}
+\DeclareUnicodeCharacter{2243}{\ensuremath{\simeq}}
+\DeclareUnicodeCharacter{2245}{\ensuremath{\cong}}
+\DeclareUnicodeCharacter{221D}{\ensuremath{\propto}}
+\DeclareUnicodeCharacter{226A}{\ensuremath{\ll}}
+\DeclareUnicodeCharacter{226B}{\ensuremath{\gg}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\to}}
+\DeclareUnicodeCharacter{2190}{\ensuremath{\leftarrow}}
+\DeclareUnicodeCharacter{2194}{\ensuremath{\leftrightarrow}}
+\DeclareUnicodeCharacter{21D2}{\ensuremath{\Rightarrow}}
+\DeclareUnicodeCharacter{21D0}{\ensuremath{\Leftarrow}}
+\DeclareUnicodeCharacter{21D4}{\ensuremath{\Leftrightarrow}}
+\DeclareUnicodeCharacter{21A6}{\ensuremath{\mapsto}}
+\DeclareUnicodeCharacter{2208}{\ensuremath{\in}}
+\DeclareUnicodeCharacter{2209}{\ensuremath{\notin}}
+\DeclareUnicodeCharacter{2286}{\ensuremath{\subseteq}}
+\DeclareUnicodeCharacter{2282}{\ensuremath{\subset}}
+\DeclareUnicodeCharacter{2287}{\ensuremath{\supseteq}}
+\DeclareUnicodeCharacter{2283}{\ensuremath{\supset}}
+\DeclareUnicodeCharacter{2229}{\ensuremath{\cap}}
+\DeclareUnicodeCharacter{222A}{\ensuremath{\cup}}
+\DeclareUnicodeCharacter{2216}{\ensuremath{\setminus}}
+\DeclareUnicodeCharacter{2205}{\ensuremath{\emptyset}}
+\DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
+\DeclareUnicodeCharacter{2203}{\ensuremath{\exists}}
+\DeclareUnicodeCharacter{2115}{\ensuremath{\mathbb{N}}}
+\DeclareUnicodeCharacter{2124}{\ensuremath{\mathbb{Z}}}
+\DeclareUnicodeCharacter{211A}{\ensuremath{\mathbb{Q}}}
+\DeclareUnicodeCharacter{211D}{\ensuremath{\mathbb{R}}}
+\DeclareUnicodeCharacter{2102}{\ensuremath{\mathbb{C}}}
+\DeclareUnicodeCharacter{00B7}{\ensuremath{\cdot}}
+\DeclareUnicodeCharacter{00D7}{\ensuremath{\times}}
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}
+\DeclareUnicodeCharacter{00B1}{\ensuremath{\pm}}
+\DeclareUnicodeCharacter{2213}{\ensuremath{\mp}}
+\DeclareUnicodeCharacter{221A}{\ensuremath{\surd}}
+\DeclareUnicodeCharacter{2211}{\ensuremath{\sum}}
+\DeclareUnicodeCharacter{220F}{\ensuremath{\prod}}
+\DeclareUnicodeCharacter{222B}{\ensuremath{\int}}
+\DeclareUnicodeCharacter{221E}{\ensuremath{\infty}}
+\DeclareUnicodeCharacter{2202}{\ensuremath{\partial}}
+\DeclareUnicodeCharacter{2207}{\ensuremath{\nabla}}
+\DeclareUnicodeCharacter{2297}{\ensuremath{\otimes}}
+\DeclareUnicodeCharacter{2295}{\ensuremath{\oplus}}
+\DeclareUnicodeCharacter{2218}{\ensuremath{\circ}}
+\DeclareUnicodeCharacter{2308}{\ensuremath{\lceil}}
+\DeclareUnicodeCharacter{2309}{\ensuremath{\rceil}}
+\DeclareUnicodeCharacter{230A}{\ensuremath{\lfloor}}
+\DeclareUnicodeCharacter{230B}{\ensuremath{\rfloor}}
+\DeclareUnicodeCharacter{27E8}{\ensuremath{\langle}}
+\DeclareUnicodeCharacter{27E9}{\ensuremath{\rangle}}
+\DeclareUnicodeCharacter{2016}{\ensuremath{\|}}
+\DeclareUnicodeCharacter{2113}{\ensuremath{\ell}}
+\DeclareUnicodeCharacter{00B0}{\ensuremath{^{\circ}}}
+\DeclareUnicodeCharacter{00B2}{\ensuremath{^{2}}}
+\DeclareUnicodeCharacter{00B3}{\ensuremath{^{3}}}
+\DeclareUnicodeCharacter{00B9}{\ensuremath{^{1}}}
+\DeclareUnicodeCharacter{2080}{\ensuremath{_{0}}}
+\DeclareUnicodeCharacter{2081}{\ensuremath{_{1}}}
+\DeclareUnicodeCharacter{2082}{\ensuremath{_{2}}}
+\DeclareUnicodeCharacter{207F}{\ensuremath{^{n}}}
+\DeclareUnicodeCharacter{2096}{\ensuremath{_{k}}}
+%% --- 6. Numbering: one counter per section -----------------------
+\numberwithin{equation}{section}
+\setcounter{tocdepth}{1}
+%% --- 7. The project macro set, then the claim environments -----------------
+% spec/macros.tex, read relative to this module's directory (latexmk -cd).
+\input{../../macros}
+\makeatletter
+\newcommand*{\ClaimHeadFont}{\bfseries}   % switched by prominence
+\newcommand*{\ClaimNoteFont}{\mdseries}
+\newcommand*{\ClaimShortId}{}
+\newcommand*{\SetShortId}[1]{\renewcommand*{\ClaimShortId}{#1}}
+\newcommand*{\RestatedName}{}
+% Upright bodies throughout: italic is reserved for non-normative text.
+% \@endparpenalty\@M keeps the meta line on the statement's page.
+\newtheoremstyle{claim}{\topsep}{\topsep}{\normalfont\@endparpenalty\@M}{}%
+  {\ClaimHeadFont}{.}{.5em}{\thmname{#1}\thmnumber{ #2}\thmnote{ {\ClaimNoteFont(#3)}}}
+\newtheoremstyle{claimass}{\topsep}{\topsep}{\normalfont\@endparpenalty\@M}{}%
+  {\ClaimHeadFont}{.}{.5em}{\thmname{#1}\thmnumber{ #2}%
+  \ifx\ClaimShortId\@empty\else\ [\textsf{\ClaimShortId}]\fi%
+  \thmnote{ {\ClaimNoteFont(#3)}}}
+\newtheoremstyle{claimremark}{.5\topsep}{.5\topsep}{\small\@endparpenalty\@M}{}%
+  {\itshape}{.}{.5em}{\thmname{#1}\thmnumber{ #2}\thmnote{ {\upshape(#3)}}}
+\newtheoremstyle{claimreq}{\topsep}{\topsep}{\normalfont\@endparpenalty\@M}{}%
+  {\color{reqAccent}\scshape}{.}{.5em}%
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ {\upshape(#3)}}}
+\makeatother
+\theoremstyle{claim}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{restatedclaim}{\RestatedName}
+\theoremstyle{claimass}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{restatedassumption}{\RestatedName}
+\theoremstyle{claimremark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{claimreq}
+\newtheorem{requirement}[theorem]{Requirement}
+\newtheorem*{restatedrequirement}{\RestatedName}
+%% --- 8. Prominence: main results a margin rule and a bold heading ----------
+\newtcolorbox{mainclaim}{enhanced jigsaw, breakable, blanker,
+  borderline west={1.5pt}{-8pt}{mainRule}, left=0pt, right=0pt, top=0pt, bottom=0pt,
+  boxsep=0pt, before skip=\topsep, after skip=\topsep, parbox=false,
+  before upper={\renewcommand*{\ClaimNoteFont}{\bfseries}}}
+\newenvironment{technicalclaim}{\renewcommand*{\ClaimHeadFont}{\mdseries\color{techGrey}}%
+  \renewcommand*{\ClaimNoteFont}{}}{}
+%% --- 9. Non-normative text, the meta line, navigation ------------------------
+\makeatletter
+% Tie what follows to this paragraph: no page break, no list penalty before
+% the next theorem head (the \@nobreak route a section heading uses).
+\newcommand{\keepwithnext}{\par\nobreak\vspace{3pt}\@nobreaktrue
+  \everypar{\if@nobreak\@nobreakfalse\clubpenalty\@M\else\clubpenalty\@clubpenalty\everypar{}\fi}}
+\newcommand{\claimsummary}[2]{% #1 claim id (named destination), #2 summary
+  \par\addvspace{\bigskipamount}\Needspace{6\baselineskip}%
+  {\small\itshape\color{nnGrey}\noindent\hypertarget{claim-#1}{}#2\par}\keepwithnext}
+\newcommand{\claimanchor}[1]{% a claim without a summary: the destination alone
+  \par\addvspace{\bigskipamount}\Needspace{6\baselineskip}%
+  \phantomsection\hypertarget{claim-#1}{}\keepwithnext}
+\newcommand{\claimleadin}[1]{{\color{nnGrey}\noindent#1\par}\keepwithnext}
+\newcommand{\claimmeta}[1]{\par\nobreak\vspace{2pt}%
+  {\footnotesize\color{metaGrey}\raggedright\interlinepenalty\@M\noindent#1\par}%
+  \addvspace{\medskipamount}}
+% After an assumption: the sentence generated from its verification field; after
+% any claim with one: its plain-text reading (user_statement). Both
+% non-normative, both grey.
+\newcommand{\claimverification}[1]{\par\nobreak\vspace{2pt}%
+  {\footnotesize\color{metaGrey}\noindent#1\par}\nobreak}
+\newcommand{\claimreading}[1]{\par\nobreak\vspace{2pt}%
+  {\footnotesize\color{nnGrey}\noindent\emph{Reading:}\enspace#1\par}\nobreak}
+\makeatother
+\newcommand{\claimbookmark}[4]{% #1 id, #2 kind word, #3 label, #4 plain title
+  \bookmark[dest=claim-#1,level=2]{#2 \getrefnumber{#3} #4}}
+\newcommand{\metasep}{\unskip\enspace\textperiodcentered\enspace\ignorespaces}
+\newcommand{\metalabel}[1]{\emph{#1}\enspace}
+\newcommand{\sectionintro}[1]{{\color{nnGrey}\noindent#1\par}\smallskip}
+\newcommand{\sectionimports}[1]{{\footnotesize\color{metaGrey}\raggedright\noindent\metalabel{Imports}#1\par}\smallskip}
+\newenvironment{overview}{\par\color{nnGrey}\itshape\noindent\ignorespaces}{\par}
+% References: the whole "Def. 2.1" is the link; ids are the fallback text of
+% every link into another PDF (a relative URI to a named destination).
+\newcommand{\mref}[2]{\hyperref[#2]{#1~\ref*{#2}}}
+\newcommand{\aref}[2]{\hyperref[#2]{\textsf{#1}}}
+\DeclareUrlCommand{\claimid}{\urlstyle{sf}\def\UrlBreaks{\do\/\do\:\do\-\do\.\do\_}%
+  \def\UrlBigBreaks{}\def\UrlNoBreaks{}}
+\newcommand{\extref}[2]{\hyperref{#1}{}{claim-#2}{\claimid{#2}}}
+\newcommand{\extaref}[3]{\hyperref{#1}{}{claim-#2}{\textsf{#3}}}
+\newcommand{\coderef}[2]{\href{#1}{\claimid{#2}}}
+% Claim-body commands (spec/claim-format.md section 4): \xref{<full id>} prints
+% the kind, title and id of a claim of another contract, linked to its stable
+% destination in that contract's PDF (one \DeclareXref per cited claim below);
+% \term[gloss]{phrase} marks a defined phrase for the index (the gloss feeds
+% the Terms table); \tref[phrase]{text} is a use of a defined term. The
+% assembler rewrites both in the body into \termdef (the definition's named
+% destination term-<slug>) and \termref / \exttermref (a link to it, in this
+% or another contract's PDF); the fallbacks below serve text it copies
+% elsewhere, such as the digest. \iface is an interface key.
+\makeatletter
+\newcommand{\DeclareXref}[4]{% id, kind word, title, contract PDF
+  \@namedef{xref@#1}{\hyperref{#4}{}{claim-#1}{#2 ``#3'' ({\small\claimid{#1}})}}}
+\newcommand{\xref}[1]{\@ifundefined{xref@#1}%
+  {\textbf{[unresolved \nolinkurl{#1}]}\@latex@warning{Unresolved xref #1}}%
+  {\@nameuse{xref@#1}}}
+\makeatother
+\DeclareUrlCommand{\iface}{\urlstyle{tt}}
+\newcommand{\term}[2][]{\emph{#2}\index{#2}}
+\newcommand{\tref}[2][]{#2}
+\newcommand{\termdef}[2]{\hypertarget{#1}{}\emph{#2}\index{#2}}
+\newcommand{\termref}[2]{\hyperlink{#1}{#2}}
+\newcommand{\exttermref}[3]{\hyperref{#1}{}{#2}{#3}}
+\hypersetup{pdftitle={Transmitter source model (transmitter) -- statements digest 0.13.0}}
+
+% The digest: the contract's labels under the prefix C-, its numbers checked.
+\externaldocument[C-]{contract}
+\theoremstyle{claim}\newtheorem*{digestclaim}{\RestatedName}
+\theoremstyle{claimass}\newtheorem*{digestassumption}{\RestatedName}
+\theoremstyle{claimreq}\newtheorem*{digestrequirement}{\RestatedName}
+\makeatletter
+% #1 label, #2 the number the assembler computed: a local label carrying it, so
+% that a reference between two digest items stays in the digest; the build
+% stops when the contract's own number differs.
+\newcommand{\digestlabel}[2]{\phantomsection
+  \edef\digest@theirs{\getrefnumber{C-#1}}\def\digest@ours{#2}%
+  \ifx\digest@theirs\digest@ours\else
+    \PackageError{digest}{#1 is #2 here but \digest@theirs\space in the contract}{}\fi
+  \def\@currentlabel{#2}\label{#1}}
+\makeatother
+% A display's local label (amsmath records the \tag, i.e. the contract's number).
+\newcommand{\digesteqlabel}[1]{\label{#1}}
+
+% Claims of other contracts cited here (\xref, [[...]]).
+\DeclareXref{meat-core/def:declaration}{Definition}{The protocol declaration as the MEAT core reads it}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/def:roundmodel}{Definition}{Round model and licensed attack sets}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/lem:product-marginal}{Lemma}{Product marginal of Alice's retained systems}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/rem:modes-da1}{Remark}{The two source modes on the program}{../meat-core/contract.pdf}
+\DeclareXref{protocol-compiler/ass:link}{Assumption}{Soundness of every reduction link}{../protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/def:chaincond}{Definition}{Interface conditions on a chain}{../protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/def:declaration}{Definition}{Protocol declaration}{../protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/def:eligible}{Definition}{Key-length eligibility}{../protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/prop:conservative}{Proposition}{Dropping a trusted marginal enlarges the feasible set}{../protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/thm:chain-consumption}{Theorem}{Decided identities and named obligations of a consumed chain}{../protocol-compiler/contract.pdf}
+\DeclareXref{reductions/def:chain}{Definition}{Reduction chain}{../reductions/contract.pdf}
+\DeclareXref{reductions/def:link}{Definition}{Typed link}{../reductions/contract.pdf}
+\DeclareXref{reductions/lem:precomposition}{Lemma}{Licensed admissibility survives precomposition with a source channel}{../reductions/contract.pdf}
+\DeclareXref{reductions/lem:source-transfer}{Lemma}{Exactness of the source map in trusted-source mode}{../reductions/contract.pdf}
+\DeclareXref{reductions/thm:two-sided}{Theorem}{The two-sided reduction in trusted-source mode}{../reductions/contract.pdf}
+
+\begin{document}
+\begin{center}
+{\LARGE\bfseries Transmitter source model (transmitter)}\\[4pt]
+{\large Statements digest, version 0.13.0}
+\end{center}
+\noindent{\small Every definition, fact, assumption, result and requirement of the \href{contract.pdf}{contract}, with the contract's numbers; remarks, examples, technical steps and all proofs are left out. Each heading opens its statement in the contract.}
+
+\part*{Mathematics}\pdfbookmark[0]{Mathematics}{digest-part-1}
+
+\section*{1\quad Source specifications and source modes}\pdfbookmark[1]{1 Source specifications and source modes}{digest-group-transmitter/def:source-spec}
+
+% claim transmitter/def:source-spec
+\digestlabel{def:source-spec}{1.1}\pdfbookmark[2]{Definition 1.1 Source specification}{digest-transmitter/def:source-spec}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/def:source-spec}{Definition~1.1}}%
+\begin{digestclaim}[Source specification]
+A \emph{source specification} $\Spec_{\mathrm{src}}$ consists of the
+following data. A finite non-empty alphabet $\Xset$ with a declared order. A
+finite-dimensional system $A$ with a declared computational basis,
+$d_A\coloneqq\dim\Hs{A}$, and a declared \emph{sector structure} on it: an
+ordered finite index set $\mathbb{T}$ and a decomposition
+$\Hs{A}=\bigoplus_{t\in\mathbb{T}}\Hs{A_t}$ into subspaces each spanned by
+vectors of the declared basis, $d_{A_t}\coloneqq\dim\Hs{A_t}\ge1$, with
+projectors $\Pi^{A}_t$; the \emph{one-sector structure}, $\mathbb{T}$ a
+single index and $A_t=A$, is the default. A POVM $\{M_x\}_{x\in\Xset}$ on
+$A$ presented as a block list against that structure,
+$M_x=\bigoplus_{t}M^{(t)}_x$ with $M^{(t)}_x\in\Lin{A_t}$, each block
+Hermitian and positive semidefinite, and
+$\sum_{x\in\Xset}M^{(t)}_x=\idon{A_t}$ for every $t$ with the sum taken in
+the declared order. The \emph{specified signal ensemble}
+$\{p_x,\rho_x\}_{x\in\Xset}$ on the \emph{transmitted system} $\Asig$, with
+$p_x\ge0$, $\sum_xp_x=1$ and $\rho_x$ a state on $\Asig$. With one sector
+the block list $M_x$ is the matrix $M_x$, and every condition on its blocks
+is the same condition on that matrix.
+
+\emph{How the specified ensemble is declared.} In one of two ways.
+(a) \emph{As matrices}, for a finite-dimensional $\Asig$: by its
+\emph{weighted members} $\sigma_x\in\Pos{\Asig}$, with
+$p_x\coloneqq\tr\sigma_x$, $\sum_xp_x=1$ in the declared order, and
+$\rho_x\coloneqq\sigma_x/p_x$ where $p_x>0$. A declaration by the pair
+$(p_x,\rho_x)$, $\rho_x\in\Seq{\Asig}$, is the declaration of the weighted
+member $\sigma_x=p_x\rho_x$ with the product formed exactly, and it requires
+$\rho_x\in\Seq{\Asig}$ of \emph{every} letter, a letter with $p_x=0$
+included. Every condition of this module that reads an admitted ensemble
+reads it through its weighted members only.
+(b) \emph{By a} \emph{source model}, for a transmitted system $\Asig$ whose
+Hilbert space is separable, possibly infinite dimensional: by a named
+definition of a submodule of this module that fixes the weights $p_x$ and the
+states $\rho_x$ as mathematical objects and not as matrices, together with
+the physical-source assumption which that submodule declares in the place of
+Assumption~\ref{ass:ens}. A specification declared by a source model is
+presented with a non-empty source segment
+(Definition~\ref{def:source-segment}): what a consumer receives is never the
+model but the virtual ensemble, which is finite dimensional.
+
+\emph{The two modes.} The specification is declared in one of two modes. In
+\emph{trusted-source mode} it additionally carries a marginal
+$\tau_A\in\Seq{A}$, presented as a block list
+$\tau_A=\bigoplus_t\tau^{(t)}_A$ with $\tau^{(t)}_A\in\Pos{A_t}$ and
+$\sum_t\tr\tau^{(t)}_A=1$, and, at $d_A\ge2$, a source-replacement
+certificate in the sense of Definition~\ref{def:srcert}, written against the
+\emph{virtual} ensemble $\{p_x,\rvirt_x\}$ on the virtual transmitted system
+$\Avirt$: the finite-dimensional ensemble the source segment starts from, whose
+channels produce the specified ensemble from it
+(Definition~\ref{def:source-segment}\,(S1), (S3)); when the source segment is
+empty, $\Avirt=\Asig$ and $\rvirt_x=\rho_x$. The certificate takes one of the
+three forms of Definition~\ref{def:srcert}: a rank-one projector (the pure
+form), positive sector blocks (the block form), or an ensemble presentation,
+which declares only the weighted virtual ensemble, in blocks along a matched
+sector structure of $\Avirt$, and defines the certificate from it. A sector structure with more than one sector is declared only in
+trusted-source mode and only together with a certificate in block form or an
+ensemble presentation. \emph{With an ensemble presentation} the specification
+declares neither $A$, its basis and its sector structure, nor $\{M_x\}$, nor
+$\tau_A$: they are constituents of the specification that \eqref{eq:enspres}
+defines from the declared virtual ensemble, the conditions this definition
+places on them hold by Lemma~\ref{lem:ensemble-presentation}\,(i), and of
+them only $\tau_A$ is formed as numbers, that is, computed entry by entry from
+the declared blocks (Lemma~\ref{lem:ensemble-presentation}\,(iii));
+$\{M_x\}$ and the certificate are defined and never computed. At $d_A=1$ no
+certificate is demanded and $\tau_A=[1]$ is the only marginal, so that there
+the two modes impose the same condition. In
+\emph{untrusted-source mode} the specification carries no certificate and no
+marginal, written
+$\tau_A=\nomarg$; the specification with
+$d_A=1$ and a one-letter $\Xset$ is its degenerate case, in which Alice
+prepares nothing that this module describes.
+
+\emph{What the sector structure is not.} It is a declaration about
+$\{M_x\}$ and $\tau_A$, which are block diagonal by their presentation. It
+is no statement about any operator on $A$ together with a further system,
+and no consumer may read it as one: that a joint state is block diagonal
+along $\mathbb{T}$ is either proved of the states a certificate reaches
+(Lemma~\ref{lem:matched-pinching}) or licensed by a theorem of the consuming
+module that restricts its own feasible set, under that module's own
+preconditions, and is never inferred from the presentation of $\tau_A$ or
+$\{M_x\}$.
+
+\emph{The number model.} Every declared entry is a binary64 number, hence a
+dyadic rational, and is admissible exactly as declared. A source model
+(case (b)) declares no entries: its weights and states are mathematical
+objects, and what is decided of such a specification is decided on the
+entries it does declare, those of its virtual ensemble among them. Every
+condition above is decided \emph{exactly} on the declared entries: a
+quantity that a condition compares --- a sum in the declared order, a
+product, a partial
+trace --- is \emph{formed} in exact arithmetic on the declared entries as
+well as compared exactly, so that the identity decided is the identity
+written and rounding enters nowhere. That the operands are binary64 is not
+what makes a decision exact; a product of two binary64 numbers need not be
+one. Positive semidefiniteness is decided by an exact decision on the
+declared entries and never by a floating-point eigenvalue.
+\end{digestclaim}
+
+\section*{2\quad Source links and the source segment}\pdfbookmark[1]{2 Source links and the source segment}{digest-group-transmitter/def:source-link}
+
+% claim transmitter/def:source-link
+\digestlabel{def:source-link}{2.1}\pdfbookmark[2]{Definition 2.1 Source link}{digest-transmitter/def:source-link}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/def:source-link}{Definition~2.1}}%
+\begin{digestclaim}[Source link]
+A \emph{source link} $\Xi$ is a typed link of a reduction chain
+(\xref{reductions/def:chain}) at the stage
+\textsf{source}: a tuple
+\begin{equation*}\tag{\getrefnumber{C-eq:source-link}}\digesteqlabel{eq:source-link}
+  \Xi=\Big(\textsf{kind},\
+  \big(A^{\mathrm{in}},\{\sigma^{\mathrm{in}}_x\}_{x\in\Xset}\big),\
+  \big(A^{\mathrm{out}},\{\sigma^{\mathrm{out}}_x\}_{x\in\Xset}\big),\
+  \Gamma_{\Xi},\ \mathcal{D}_{\Xi},\ \Smap_{\Xi},\
+  \CList_{\Xi},\ \textsf{licence},\ \textsf{status}\Big)
+\end{equation*}
+whose slots are the following.
+
+\emph{(a) The kind.} \textsf{kind} is a source-stage link kind. The
+vocabulary is the kinds this module declares, of which there is exactly one,
+\textsf{source-map}, together with the kinds a submodule of this module
+declares in its own interface. A submodule that declares a kind supplies its
+soundness claim, and a kind for which no claim of this repository proves the
+link's identity is declared and refused
+(Definition~\ref{def:source-segment}, ``Which kinds are admitted''), as
+\textsf{source-map} is. An admitted kind has an entry in the soundness
+registry of that definition, and a kind without one is not admitted whatever
+a link declares.
+
+\emph{(b) The two descriptors.} The \emph{source descriptor}
+$(A^{\mathrm{in}},\{\sigma^{\mathrm{in}}_x\})$ is the transmitted system and
+signal ensemble the link starts from and the \emph{target descriptor}
+$(A^{\mathrm{out}},\{\sigma^{\mathrm{out}}_x\})$ the one it produces, both
+indexed by the same alphabet $\Xset$ in the same declared order, and both
+read through their weighted members $\sigma_x=p_x\rho_x$, as every ensemble
+of this module is (Definition~\ref{def:source-spec}): $\sigma^{\mathrm{in}}_x$ and
+$\sigma^{\mathrm{out}}_x$ are positive semidefinite with
+$\tr\sigma^{\mathrm{in}}_x=\tr\sigma^{\mathrm{out}}_x=p_x$, which is what
+carrying the weights untouched means.
+
+\emph{(c) The channel witness, in one of two ways.} $\Gamma_{\Xi}$ is a
+channel from $A^{\mathrm{in}}$ to $A^{\mathrm{out}}$, supplied either
+\emph{as data} or \emph{as a theorem constructor}.
+\begin{enumerate}[label=(c\arabic*),leftmargin=2.6em]
+\item \emph{As data}: both systems are finite dimensional and the channel is
+declared, so that the identity
+$\Gamma_{\Xi}(\sigma^{\mathrm{in}}_x)=\sigma^{\mathrm{out}}_x$ for every
+$x\in\Xset$ is an exact matrix identity on declared numbers and is decided as
+such (Definition~\ref{def:source-segment}\,(S3)).
+\item \emph{As a} \emph{theorem constructor}: the witness is supplied by a
+named claim of a submodule of this module, which constructs one channel for
+each member of a declared family of descriptors and proves the identity of
+(c1) for it. The identity is then \emph{not} decided on numbers: the link
+carries an \emph{obligation record} of four components, the triple
+\begin{equation*}\tag{\getrefnumber{C-eq:obligation}}\digesteqlabel{eq:obligation}
+  \big(\textsf{kind},\ \text{the id of the soundness claim},\
+  \mathcal{A}(\textsf{kind})\big)
+\end{equation*}
+and, as the fourth, the member of the declared family the link's descriptors
+are. The third component is the assumptions the obligation carries, which
+Definition~\ref{def:source-segment}\,(A1) defines as the soundness claim's
+assumption closure together with the physical-source assumption the
+submodule declares for the source model the claim is stated over, an
+assumption the soundness claim itself does \emph{not} assume. The obligation
+record travels with the link and, where the link carries a licence record, in
+it. \emph{Its first three components are decided}, against the soundness
+registry of the artefact that carries the link
+(Definition~\ref{def:source-segment}\,(A1), (A2)), by a comparison of
+declared strings. The fourth is not: which member of the family the
+descriptors are is asserted by the module that emits the link and re-proved
+by no consumer, and no verdict on a number is carried, there being none to
+decide.
+\end{enumerate}
+A channel supplied as a theorem constructor is how a link whose source or
+target is not a matrix is expressed at all, and it is the only way an
+obligation enters this module: no claim here discharges one.
+
+\emph{(d) The declared descriptor family.} $\mathcal{D}_{\Xi}$, the
+\emph{declared descriptor family}, is the family of source descriptors the
+witness's identity is asserted for. It contains the declared source
+descriptor; for a link whose channel is supplied as data it is that
+descriptor alone; for a constructor link it is the family the named claim
+proves the identity for. The link is \emph{sound} when
+$\Gamma_{\Xi}(\sigma^{\mathrm{in}}_x)=\sigma^{\mathrm{out}}_x$ holds for
+every $x\in\Xset$ at every member of $\mathcal{D}_{\Xi}$; for a data link
+this is what (S3) decides, and for a constructor link it is what the named
+claim concludes and the obligation record names. A link whose family does not
+contain its own declared descriptor asserts nothing about the descriptor it
+carries, and is refused. For a constructor link that membership is not a
+decidable condition: the family is the extension of a hypothesis of a claim,
+the emitting module asserts that its descriptors satisfy it, and what a
+consumer decides instead is the triple \eqref{eq:obligation} against the
+registry and the provenance of the artefact
+(Definition~\ref{def:source-segment}\,(A1) to (A3)). The refusal of a family
+that excludes its own descriptor therefore applies where membership is
+decidable, to a data link, whose family is by definition its own descriptor,
+so that it refuses a data link whose family slot excludes that descriptor;
+elsewhere
+membership is an obligation of the emitting module, and what the registry
+bounds is which claims a link may name for it.
+
+\emph{(e) The retained-register sector map.} $\Smap_{\Xi}$, the
+\emph{retained-register sector map}, is optional: a link may emit a matched
+pair of sector structures over one ordered index set, one on Alice's
+retained system $A$ and one on the Alice-side descriptor \emph{the
+certificate is written against}, which is the \emph{source} descriptor of the
+segment's first link, the virtual pair
+(Definition~\ref{def:source-segment}\,(S1)), in the sense the block form of
+Definition~\ref{def:srcert} is written against. It is
+not the descriptor the link produces: a link's target may be a system that
+carries no sector structure at all, and for a constructor link whose target
+is infinite dimensional it never carries one. The sector map is a
+presentation datum: it says how the certificate, the marginal and Alice's
+measurement are presented, and it is no statement about any joint state
+(Definition~\ref{def:source-spec}, ``What the sector structure is not'').
+Where the slot is empty the one-sector structure is meant.
+
+\emph{(f) The transported constraint entries and the licence.}
+$\CList_{\Xi}$ is the list of \emph{transported constraint entries}, entries
+of a consumer's constraint list carried across the link, each
+carrying, \emph{per entry}, the certificate case that discharges it --- the
+statement, for that entry, that what the entry asserts of the link's target
+is implied by what holds of its source --- and \textsf{licence} is the
+link's licence record, the slot every link of a chain has for its transported
+entries (\xref{reductions/def:link}), present exactly when
+$\CList_{\Xi}\ne\varnothing$. \emph{A non-empty list is refused}: a
+consumer's constraint operators live on the measured system, and no claim of
+this repository transports an Alice-side entry. An admitted link therefore
+carries an empty list and no licence record of its own.
+
+\emph{(g) The status.}
+$\textsf{status}\in\{\textsf{exact},\textsf{certified\_outer},
+\textsf{exploratory\_numeric}\}$, the link statuses of
+\xref{reductions/def:link}, with \textsf{exact} meaning that the
+identity of (c1) holds with no error term --- for a constructor link, that
+the named claim concludes it with none.
+
+\emph{Alice-side descriptor discipline.} Both descriptors of a source link
+are Alice-side: each names a transmitted system and an ensemble on it, and
+no condition on a source link mentions the receiver's systems, its outcome
+alphabets or its measurements. A source link changes what Alice emits and
+nothing else.
+
+\emph{The degenerate link.} A link that supplies its channel as data, whose
+declared descriptor family is that one descriptor, whose sector-map slot is
+empty and whose entry list is empty gains nothing from its slots (d) and
+(e): they carry exactly what the identity of (c1) asserts and the one-sector
+structure.
+\end{digestclaim}
+
+% claim transmitter/def:source-segment
+\digestlabel{def:source-segment}{2.2}\pdfbookmark[2]{Definition 2.2 Source segment and its interface conditions}{digest-transmitter/def:source-segment}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/def:source-segment}{Definition~2.2}}%
+\begin{digestclaim}[Source segment and its interface conditions]
+The \emph{source segment} of a reduction chain is an ordered list
+$\Chsrc=(\Xi_1,\dots,\Xi_{L_{\mathrm s}})$ of source links
+(Definition~\ref{def:source-link}), $L_{\mathrm s}\ge0$, whose links act on
+the transmitted system and replace Alice's signal ensemble; it is presented
+together with a source specification $\Spec_{\mathrm{src}}$
+(Definition~\ref{def:source-spec}). The segment satisfies the
+\emph{interface conditions} when the following hold.
+\begin{enumerate}[label=(S\arabic*),leftmargin=3.0em]
+\item \emph{(descriptor match)} the target descriptor of $\Xi_i$ equals the
+source descriptor of $\Xi_{i+1}$ for $1\le i<L_{\mathrm s}$; the target
+descriptor of $\Xi_{L_{\mathrm s}}$ is the specified pair, the transmitted
+system $\Asig$ named by $\Spec_{\mathrm{src}}$ with the specified ensemble
+$\{p_x,\rho_x\}$ on it; and the source descriptor of $\Xi_1$ is the virtual
+pair, the \emph{virtual transmitted system} $\Avirt$ with the
+\emph{virtual ensemble} $\{p_x,\rvirt_x\}_{x\in\Xset}$ on it, on which the
+source-replacement certificate is written (Definition~\ref{def:srcert}).
+Every descriptor of
+this segment is an Alice-side descriptor: no condition of the segment
+mentions the receiver's systems, its outcome alphabets or its measurements;
+\item \emph{(index preservation)} each link carries the signal index $x$
+through unchanged: it maps a family indexed by $\Xset$ to a family indexed
+by $\Xset$, with the weights $p_x$ untouched;
+\item \emph{(source identity, where checkable)} writing
+$\Xi\coloneqq\Xi_{L_{\mathrm s}}\circ\dots\circ\Xi_1$ for the composite
+when every link supplies its channel as data,
+\begin{equation*}\tag{\getrefnumber{C-eq:srcmap}}\digesteqlabel{eq:srcmap}
+  \Xi(\rvirt_x)=\rho_x\qquad\text{for every }x\in\Xset ,
+\end{equation*}
+an \emph{exact} matrix identity, decided entry by entry. The composite
+$\Xi$ is \emph{formed} in exact arithmetic as well, so that the identity
+decided is the identity written; that the operands are binary64 is not what
+makes the decision exact (the number model of
+Definition~\ref{def:source-spec}). The channel runs from the \emph{virtual}
+states to the \emph{specified} ones, and the object a consumer receives is
+the virtual protocol, the protocol with the virtual ensemble in the place of
+the specified one. \emph{Where a link supplies its channel as a theorem
+constructor} (Definition~\ref{def:source-link}\,(c2)) the identity of
+\emph{that} link is not decided on numbers: it is the conclusion of the claim
+the link's obligation record names, at the member of that claim's declared
+descriptor family which the link's descriptors are, and the identity of the
+composite is the composition of the per-link identities --- each one either
+decided, where its link supplies data, or concluded by its named claim, where
+its link supplies a constructor. In a segment that mixes the two kinds of
+witness, each data link's identity is therefore decided link by link. So
+\eqref{eq:srcmap} is what the composite satisfies in every case, and what
+changes with the kind of witness is
+\emph{by what} it is established and therefore what a consumer may re-decide:
+nothing of a constructor link's identity, which is why the obligation
+travels;
+\item \emph{(slots)} each link carries its constraint entries and its
+licence slot, both possibly empty, and its status tag; a link whose channel
+is a theorem constructor carries in addition its obligation record, the claim
+and the assumptions it names, which are the strings (A2) below decides.
+\end{enumerate}
+
+\emph{Which kinds are admitted, and what a consumer decides.} \emph{No
+source link kind is admitted unless the submodule that declares it supplies
+its soundness claim}: a link of kind $k$ may appear in a segment only where a
+submodule of this module declares $k$ and supplies, as a claim of this
+repository, the statement that the link's witness satisfies the identity of
+Definition~\ref{def:source-link}\,(c1) at every member of its declared
+descriptor family --- decided there, for a data link, or proved there, for a
+constructor link. A link of a kind for which no such claim exists is
+\emph{refused}, and so is a link with a non-empty list of transported
+constraint entries, whatever its kind: no claim of this repository transports
+an Alice-side entry.
+
+That much is a condition on the \emph{kind}, and a consumer cannot decide it
+of a claim it does not read. What a consumer decides is the following, and it
+is decided on data.
+\begin{enumerate}[label=(A\arabic*),leftmargin=3.0em]
+\item \emph{(the soundness registry)} this module emits, with every artefact,
+a finite list --- the \emph{soundness registry} --- with one entry per
+admitted source-link kind, \emph{closed} in that a kind without an entry is
+not admitted (Definition~\ref{def:source-link}\,(a)), each entry the triple
+\begin{equation*}\tag{\getrefnumber{C-eq:registry}}\digesteqlabel{eq:registry}
+  \big(\textsf{kind},\ \text{the id of its soundness claim},\
+  \mathcal{A}(\textsf{kind})\big) ,
+\end{equation*}
+written out in the module's interface and emitted verbatim. \emph{The third
+component $\mathcal{A}(\textsf{kind})$ is the assumptions the obligation
+carries}, and it has two sources, both of which a registry entry lists:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item the \emph{assumption closure of the soundness claim}: the assumptions
+in the transitive closure of that claim under its \emph{uses} and
+\emph{assumes} edges, the claims and assumptions each claim lists as its
+dependencies; it may be empty, and is empty if and only if no claim of that
+closure, the soundness claim included, lists an assumption among its
+dependencies;
+\item the \emph{physical-source assumption the submodule declares for the
+source model the claim is stated over}, where the claim is stated over one.
+That assumption is not a premise of the soundness claim and must not be made
+one: what it attests is that the model the claim is about describes the
+physical device, which is what an obligation on a physical source owes and a
+mathematical identity does not.
+\end{enumerate}
+The registry of an artefact is the registry of the version of this module that
+emitted it, not a datum a request supplies.
+\item \emph{(the triple is decided)} a presented chain's link is
+\emph{refused} unless the triple (its \textsf{kind}, the claim id of its
+obligation record, the assumption short ids of that record) appears in the
+registry of the artefact that carries it --- a comparison of finitely many
+declared strings, taken entry by entry --- and unless every assumption of that
+entry is in the artefact's assumption ledger, the list of assumptions the
+artefact rests on. \emph{Both components of
+$\mathcal{A}(\textsf{kind})$ are compared}, so a link that names the soundness
+claim's closure and omits the model's attestation is refused exactly as one
+that names neither. A link supplying its channel as data carries no obligation
+record and is decided by (S3) instead.
+\item \emph{(provenance)} a non-empty source segment is accepted only inside
+an artefact emitted by the module that admits its links. A segment assembled
+from links a consumer received in any other way is refused, whatever its
+triples: the registry says which kinds this repository has proved, not that a
+particular link was built by the module that proved them.
+\end{enumerate}
+The admission rule on the kind is applied where a link is admitted, which is
+this module and the submodule whose kind it is; it is not among the conditions
+(S1) to (S4), which are the conditions a consumer decides on a presented
+chain, and (A1) to (A3) are conditions on the artefact and its registry rather
+than on the segment's descriptors.
+
+\emph{The empty segment.} When $L_{\mathrm s}=0$ the segment is empty, $\Xi$
+is the identity, $\Avirt=\Asig$ and $\rvirt_x=\rho_x$, so \eqref{eq:srcmap}
+holds by inspection. That is the case of every specification whose ensemble
+is declared as matrices and that carries no link. A specification whose
+ensemble is declared by a source model is presented with a non-empty segment
+(Definition~\ref{def:source-spec}, case (b)), which is the other case and the
+one the conditions above are written for.
+\end{digestclaim}
+
+\section*{3\quad The source-replacement certificate}\pdfbookmark[1]{3 The source-replacement certificate}{digest-group-transmitter/fact:sr}
+
+% claim transmitter/fact:sr
+\digestlabel{fact:sr}{3.1}\pdfbookmark[2]{Fact 3.1 Source replacement for prepare-and-measure protocols}{digest-transmitter/fact:sr}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/fact:sr}{Fact~3.1}}%
+\begin{digestclaim}[Source replacement for prepare-and-measure protocols]
+\emph{(\cite[Lemma~8.3, Eqs.~(83)--(84)]{tupkary2026decoy}, with the
+protocol framing of its Def.~8.1 and Def.~8.2.)}
+Consider a protocol in which Alice first prepares the global state
+$\rho_{X_1^n(A')_1^n}=\bigotimes_{j=1}^{n}\rho^{(j)}_{X_jA_j'}$ with
+$\rho^{(j)}_{X_jA_j'}=\sum_{k=1}^{d_A}p^{(j)}_k\dyad{k}_{X_j}\otimes
+(\rho^{(j)}_k)_{A_j'}$, where $\{\ket{k}\}_{X_j}$ is the classical basis of
+$X_j$; she keeps $X_1^n$ and sends the $(A')_1^n$ systems to the adversary.
+Then the state $\rho_{X_1^n(A')_1^n}$ can equivalently be obtained by
+\emph{(1)} preparing the global state
+$\rho_{\Abar_1^n\Ahat_1^n(A')_1^n}=\bigotimes_j\rho^{(j)}_{\Abar_j\Ahat_jA_j'}$
+with
+$\rho^{(j)}_{\Abar_j\Ahat_jA_j'}=\sum_{k,i=1}^{d_A}
+\sqrt{p^{(j)}_ip^{(j)}_k}\,\ketbra{i}{k}_{\Abar}\otimes
+\ketbra{\psi^{(j)}_i}{\psi^{(j)}_k}_{\Ahat_jA_j'}$, where
+$\ket{\psi^{(j)}_k}_{\Ahat_jA_j'}$ is a purification of
+$(\rho^{(j)}_k)_{A_j'}$, $\{\ket{k}\}$ is an orthonormal basis of $\Abar$
+and $\Ahat_j$ is the \emph{shield system}; \emph{(2)} sending $(A')_1^n$ to
+the adversary; and \emph{(3)} for each $j$, measuring $\Abar_j\Ahat_j$ with
+the POVM $\{\dyad{k}_{\Abar_j}\otimes\idon{\Ahat_j}\}_{k\in\{1,\dots,d_A\}}$
+and storing the result in $X_j$.
+
+\emph{Symbol map and hypothesis check.} The source's $X_j$ is this module's
+outcome register with alphabet $\Xset$ and $k\leftrightarrow x$; its $A_j'$
+is the transmitted system carrying the ensemble the lemma is applied to,
+and its $\{p^{(j)}_k,\rho^{(j)}_k\}$ is that ensemble. That ensemble is the
+virtual pair $(\Avirt,\{p_x,\rvirt_x\})$ on which the source-replacement
+certificate is stated, which is the specified pair $(\Asig,\{p_x,\rho_x\})$
+of Definition~\ref{def:source-spec} exactly when the source segment is empty.
+This module describes one round; that every round is described by the
+same data is the consumer's round-homogeneity assumption and is not
+asserted here, and it is under that assumption that the superscript $j$ is
+dropped in what follows. The source's $\Abar_j\Ahat_j$ is this module's
+retained system $A$, and its measurement POVM is $\{M_x\}$ with
+$M_x=\dyad{x}_{\Abar}\otimes\idon{\Ahat}$. The $d_A$ of the cited lemma and
+the $d_A$ of this module are \emph{not} the same number, and the
+identification does not claim they
+are: the published index runs $k\in\{1,\dots,d_A\}$ over an orthonormal
+basis of $\Abar$, so there $d_A=\dim\Hs{\Abar}=|\Xset|$, whereas throughout
+this module $d_A=\dim\Hs{A}=\dim\Hs{\Abar}\cdot\dim\Hs{\Ahat}$; the two
+agree exactly when the shield system is trivial. The lemma's one hypothesis
+is that Alice prepares the classical-quantum source state of its
+Eq.~(83) --- this is Assumption~\ref{ass:ens} for the physical device, and
+the declared source data for the specified object. Its only timing element is
+that the global state is prepared first; it places no condition on the
+sequential structure of later operations, being an identity between the state
+of its Eq.~(83) and the measured state of its Eq.~(84). The cited work
+applies it within the protocol framing of its Def.~8.1 and Def.~8.2, and this
+module applies it to protocols with the sequential structure of
+Assumption~\ref{ass:seq}, which supplies that structure: the assumption is the
+hypothesis under which this module applies the fact, and not a hypothesis of
+the cited lemma. The
+published statement quantifies over an
+arbitrary purification $\ket{\psi_k}$, so the shield system is trivial
+exactly when every state of that ensemble is pure --- the case, for a pure
+\emph{specified} ensemble, of \cite[Eqs.~(37)--(39)]{winick2018reliable},
+which writes the source-replaced vector as
+$\ket{\psi}_{\Abar\Asig}=\sum_i\sqrt{p_i}\ket{i}_{\Abar}\ket{\varphi_i}_{\Asig}$
+and records that the resulting marginal
+$\rho_{\Abar}=\tr_{\Asig}(\dyad{\psi})$ is fixed independently of the
+adversary's attack.
+\end{digestclaim}
+
+% claim transmitter/def:srcert
+\digestlabel{def:srcert}{3.3}\pdfbookmark[2]{Definition 3.3 Source-replacement certificate}{digest-transmitter/def:srcert}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/def:srcert}{Definition~3.3}}%
+\begin{digestclaim}[Source-replacement certificate]
+Let $\{p_x,\rvirt_x\}_{x\in\Xset}$ be the \emph{virtual} signal ensemble on
+the virtual transmitted system $\Avirt$ --- the pair the source segment
+starts from, Definition~\ref{def:source-segment}\,(S1), (S3) --- with
+weighted members $\sigma^{\mathrm v}_x\coloneqq p_x\rvirt_x\in\Pos{\Avirt}$,
+$p_x=\tr\sigma^{\mathrm v}_x\ge0$ and $\sum_xp_x=1$. These conditions are
+decided \emph{exactly}, as every declared condition is, the weight sum in
+the declared order and rounding nowhere. A \emph{source-replacement
+certificate} for the declared data $(A,\mathbb{T},\tau_A,\{M_x\})$ of a
+source specification (Definition~\ref{def:source-spec}) is an operator
+$\Psi\in\Lin{A\Avirt}$ such that
+\begin{enumerate}[label=(SR\arabic*),leftmargin=3.0em]
+\item $\tr_{\Avirt}\Psi=\tau_A$;
+\item $\tr_{A}\!\big[(M_x\otimes\idon{\Avirt})\,\Psi\big]=p_x\,\rvirt_x$
+for every $x\in\Xset$; and
+\item \emph{(retention, an attestation)} $A$ is retained in Alice's
+laboratory and never transmitted; no operation of the protocol and no
+operation of the adversary acts on $A$, except Alice's declared measurement
+$\{M_x\}$.
+\end{enumerate}
+It is given in one of the three forms below. In the pure form and in the
+block form $\Psi$ is declared, together with the declared computational basis
+of $A$. In an ensemble presentation neither $\Psi$ nor a basis of $A$ is
+declared: $\Psi$ is defined from a declared ensemble by \eqref{eq:enspres}.
+
+\emph{Pure form.} In the \emph{pure form} the sector structure of $A$ is the
+one-sector structure, and $\Psi$ is a \emph{rank-one projector} --- $\Psi$
+Hermitian, $\Psi^2=\Psi$ and $\tr\Psi=1$, each decided exactly and the trace
+summed without rounding, so that $\Psi=\dyad{\psi}$ for a unit vector
+$\ket{\psi}\in\Hs{A\Avirt}$.
+
+\emph{Block form.} Let $\Hs{A}=\bigoplus_{t\in\mathbb{T}}\Hs{A_t}$ be the
+sector structure of $A$ declared in Definition~\ref{def:source-spec}, along
+which $\tau_A=\bigoplus_t\tau^{(t)}_A$ and $M_x=\bigoplus_tM^{(t)}_x$ are
+presented as block lists. In the \emph{block form} the virtual transmitted
+system carries a declared sector structure \emph{matched} to that of $A$: the
+same ordered index set $\mathbb{T}$ and a decomposition
+$\Hs{\Avirt}=\bigoplus_{t\in\mathbb{T}}\Hs{S_t}$ into subspaces each spanned
+by vectors of the declared basis of $\Avirt$, with projectors
+$\Pi^{\mathrm v}_t$. The certificate is a block list
+$(\Psi_t)_{t\in\mathbb{T}}$ with $\Psi_t\in\Lin{A_tS_t}$, each block
+Hermitian and positive semidefinite, decided exactly, and
+$\sum_{t}\tr\Psi_t=1$, the traces summed in the declared order without
+rounding. It denotes the operator $\Psi=\bigoplus_t\Psi_t$ on the
+\emph{matched subspace} $\bigoplus_t\Hs{A_t}\otimes\Hs{S_t}
+\subseteq\Hs{A\Avirt}$, extended by zero to its orthogonal complement. No
+purity condition is imposed, on $\Psi$ or on any block. The weighted virtual
+members are required to be \emph{block diagonal} along $(S_t)_t$:
+$\Pi^{\mathrm v}_t\sigma^{\mathrm v}_x\Pi^{\mathrm v}_{t'}=0$ for all
+$t\ne t'$ and every $x$, that is, every entry of $\sigma^{\mathrm v}_x$ whose
+row lies in one sector and whose column lies in another is zero, decided entry
+by entry on the declared entries of $\sigma^{\mathrm v}_x$ (a virtual ensemble
+declared as block lists along $(S_t)_t$ meets it by its presentation). Write
+$\sigma^{\mathrm v,(t)}_x\coloneqq\Pi^{\mathrm v}_t\sigma^{\mathrm v}_x
+\Pi^{\mathrm v}_t$, read as an operator on $S_t$, for its diagonal blocks.
+Against a block list the two identities read block by block,
+\begin{equation*}\tag{\getrefnumber{C-eq:srblock}}\digesteqlabel{eq:srblock}
+  \tr_{S_t}\Psi_t=\tau^{(t)}_A ,\qquad
+  \tr_{A_t}\!\big[(M^{(t)}_x\otimes\idon{S_t})\,\Psi_t\big]
+  =\sigma^{\mathrm v,(t)}_x
+  \qquad\text{for every }t\in\mathbb{T},\ x\in\Xset ,
+\end{equation*}
+and \eqref{eq:srblock} together with the block diagonality of every
+$\sigma^{\mathrm v}_x$ is equivalent to (SR1) and (SR2) of the operator
+$\Psi$. Indeed $\Psi$ vanishes off the matched subspace and $M_x$ is block
+diagonal, so the partial traces of $\Psi$ are the direct sums of those of its
+blocks: $\tr_{\Avirt}\Psi=\bigoplus_t\tr_{S_t}\Psi_t$, which is
+$\tau_A=\bigoplus_t\tau^{(t)}_A$ exactly when the first identity of
+\eqref{eq:srblock} holds; and $\tr_A[(M_x\otimes\idon{\Avirt})\Psi]=\bigoplus_t
+\tr_{A_t}[(M^{(t)}_x\otimes\idon{S_t})\Psi_t]$, which is block diagonal along
+$(S_t)_t$ and so equals $\sigma^{\mathrm v}_x$ exactly when
+$\sigma^{\mathrm v}_x$ is block diagonal and its diagonal blocks satisfy the
+second identity. Without the block diagonality, \eqref{eq:srblock} is (SR2)
+against the pinched members $\bigoplus_t\sigma^{\mathrm v,(t)}_x$ and not
+against $\sigma^{\mathrm v}_x$.
+
+\emph{Ensemble presentation.} A block-form certificate need not be declared
+at all. In an \emph{ensemble presentation} the declared data are the matched
+sector structure $(S_t)_{t\in\mathbb{T}}$ on $\Avirt$ and the weighted
+virtual ensemble as block lists,
+$\sigma^{\mathrm v}_x=\bigoplus_t\sigma^{\mathrm v,(t)}_x$ with
+$\sigma^{\mathrm v,(t)}_x\in\Lin{S_t}$, and \emph{nothing else}: no $\Psi$,
+no $\{M_x\}$, no $\tau_A$ and no basis of $A$. The conditions are
+\begin{enumerate}[label=(E\arabic*),leftmargin=3.0em]
+\item every block $\sigma^{\mathrm v,(t)}_x$ is Hermitian and positive
+semidefinite, decided exactly;
+\item $p_x=\sum_t\tr\sigma^{\mathrm v,(t)}_x$ for every $x$ and
+$\sum_xp_x=1$, the sums formed in the declared orders and rounding nowhere;
+and
+\item for every $t$ the sum $\sum_{x\in\Xset}\sigma^{\mathrm v,(t)}_x$,
+accumulated entry by entry in the declared order of $\Xset$, rounds nowhere,
+so that its entries are binary64 numbers.
+\end{enumerate}
+The system $A$, its sector structure, the marginal $\tau_A$, the POVM
+$\{M_x\}$ and the blocks $\Psi_t$ are then \emph{defined} by
+\eqref{eq:enspres}: $A_t$ is a copy of $S_t$, $\tau^{(t)}_A$ is the
+transpose of the sum in (E3), and $\Psi_t$ and $M^{(t)}_x$ are the canonical
+purification and its square-root measurement. By
+Lemma~\ref{lem:ensemble-presentation} they are a block-form certificate
+with (SR1) and (SR2) holding as identities, with no error term, against the
+declared ensemble itself, and with every non-zero block a multiple of a
+rank-one projector.
+(E1) to (E3) are all that is decided. (SR1), (SR2), positivity of the
+blocks, the POVM condition and the purity of the blocks are \emph{theorems}
+of the presentation and are decided by nothing, there being no second
+declared datum they could be compared with; (SR3) is the attestation it is
+in every form. Of the defined objects only $\tau_A$ is ever formed as
+numbers, and by (E3) it is admissible declared data. $\Psi_t$ and
+$M^{(t)}_x$ carry square roots and quotients of the declared numbers, are
+formed by no one, and are never rounded.
+
+\emph{What a consumer reads of a presentation.} What a consumer can read of
+Alice's measurement without $\Psi_t$ and $M^{(t)}_x$ is the family
+$N^{(t)}_x=(\sigma^{\mathrm v,(t)}_x)^{\transpose}$ of
+Lemma~\ref{lem:ensemble-presentation}\,(v). \emph{A consumer whose
+declaration carries Alice's measurement as the POVM $\{M_x\}$ cannot receive
+an ensemble presentation and refuses it}; the form of declaration that
+carries $\{N_x\}$ in its place is that consumer's to define, and the
+consuming modules define it: the protocol compiler and the key-rate engine
+receive a presentation through the ensemble form of their declarations,
+which carries $\{N_x\}$ in the place of $\{M_x\}$
+(\xref{protocol-compiler/def:declaration},
+\xref{meat-core/def:declaration}), admitted beside a presentation by
+\xref{protocol-compiler/def:eligible}. The mode, the alphabet, the source
+segment and the attestations of a specification are what they are in the
+other forms.
+
+\emph{What is decided.} (SR1) and (SR2) are \emph{exact matrix identities}
+on declared data, decided entry by entry. The conditions a consumer decides
+--- in pure form the three on $\Psi$, (SR1) and (SR2); in block form
+Hermiticity and positive semidefiniteness of every block, the trace, the block
+diagonality of every $\sigma^{\mathrm v}_x$ along $(S_t)_t$, and
+\eqref{eq:srblock}, which together are (SR1) and (SR2); in an ensemble
+presentation (E1) to (E3) and no others
+--- are stated in these terms and in no others: none of them is stated on a
+vector, which is not a declared datum. (SR3) carries no number and is
+decided by nothing; it is the attestation of Assumption~\ref{ass:src}. A
+rank-one projector of unit trace is positive semidefinite of unit trace, so
+a pure-form certificate satisfies every condition of the block form at the
+one-sector structure, and one condition more.
+
+\emph{One reading at every $L_{\mathrm s}$.} The pair
+$(\Avirt,\{p_x,\rvirt_x\})$ is the only pair a certificate is ever written
+against, at every length of the source segment, because the object a
+consumer receives is the virtual protocol
+(Definition~\ref{def:source-segment}\,(S3)): the specification's $\tau_A$
+and $\{M_x\}$ describe the preparation of $\{p_x,\rvirt_x\}$, and it is the
+source identity \eqref{eq:srcmap}, not the certificate, that carries that
+description back to the specified ensemble $\{p_x,\rho_x\}$ on $\Asig$. At
+$L_{\mathrm s}=0$ the two pairs are literally equal, $\Avirt=\Asig$ and
+$\rvirt_x=\rho_x$. So (SR1)--(SR2) have exactly one reading whatever
+$L_{\mathrm s}$ is.
+\end{digestclaim}
+
+% claim transmitter/lem:ensemble-presentation
+\digestlabel{lem:ensemble-presentation}{3.4}\pdfbookmark[2]{Lemma 3.4 Certificate defined by an ensemble presentation}{digest-transmitter/lem:ensemble-presentation}
+\begin{mainclaim}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/lem:ensemble-presentation}{Lemma~3.4}}%
+\begin{digestclaim}[Certificate defined by an ensemble presentation]
+Let the virtual transmitted system carry a sector structure
+$\Hs{\Avirt}\supseteq\bigoplus_{t\in\mathbb{T}}\Hs{S_t}$, each $S_t$ spanned
+by vectors $(\ket{i}_{S_t})_i$ of the declared basis, and let
+$(\sigma^{\mathrm v,(t)}_x)_{t\in\mathbb{T}}$, $x\in\Xset$, be block lists
+with $\sigma^{\mathrm v,(t)}_x\in\Pos{S_t}$ and
+$\sum_{x}\sum_t\tr\sigma^{\mathrm v,(t)}_x=1$. For every $t$ let $A_t$ be a
+copy of $S_t$ with basis $(\ket{i}_{A_t})_i$ in the same order, let
+transposition $X\mapsto X^{\transpose}$ be taken in these bases, and put
+\begin{equation*}\tag{\getrefnumber{C-eq:enspres}}\digesteqlabel{eq:enspres}
+\begin{gathered}
+  \tau^{(t)}_{S}\coloneqq\sum_{x\in\Xset}\sigma^{\mathrm v,(t)}_x ,\qquad
+  \tau^{(t)}_A\coloneqq\big(\tau^{(t)}_{S}\big)^{\transpose} ,\\
+  \ket{\psi_t}\coloneqq\sum_i\ket{i}_{A_t}\otimes
+     \big(\tau^{(t)}_{S}\big)^{1/2}\ket{i}_{S_t} ,\qquad
+  \Psi_t\coloneqq\dyad{\psi_t} ,\\
+  M^{(t)}_x\coloneqq\big(\tau^{(t)}_A\big)^{-1/2}
+     \big(\sigma^{\mathrm v,(t)}_x\big)^{\transpose}
+     \big(\tau^{(t)}_A\big)^{-1/2}
+     +\delta_{x,x_0}\big(\idon{A_t}-P_t\big) ,
+\end{gathered}
+\end{equation*}
+where $P_t$ is the projector onto the support of $\tau^{(t)}_A$, the inverse
+square root is taken on that support and is zero off it, and $x_0$ is the
+first letter of $\Xset$ in its declared order. Then, with
+$A\coloneqq\bigoplus_tA_t$:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(a certificate in block form)} every $\Psi_t$ is positive
+semidefinite, $\sum_t\tr\Psi_t=1$, $\{M_x\}_x$ with
+$M_x=\bigoplus_tM^{(t)}_x$ is a POVM presented as a block list,
+$\tau_A=\bigoplus_t\tau^{(t)}_A$ is a state presented as a block list, and
+both identities of \eqref{eq:srblock} hold: $(\Psi_t)_t$ satisfies every
+condition Definition~\ref{def:srcert} places on a block-form certificate
+for $(A,\mathbb{T},\tau_A,\{M_x\})$ against the virtual ensemble with
+weighted members $\sigma^{\mathrm v}_x=\bigoplus_t\sigma^{\mathrm v,(t)}_x$,
+(SR3) apart, which is an attestation;
+\item \emph{(pure blocks)} every non-zero $\Psi_t$ is
+$g_t\coloneqq\tr\tau^{(t)}_S$ times a rank-one projector, so the converse of
+Theorem~\ref{thm:certificate-sufficiency}\,(ii) holds of this certificate;
+\item \emph{(what is formed as numbers)} the entry $(i,j)$ of
+$\tau^{(t)}_A$ is the entry $(j,i)$ of the sum $\tau^{(t)}_S$ of the
+declared blocks. No
+other object of \eqref{eq:enspres} enters (i) or (ii) through its entries:
+$\Psi_t$ and $M^{(t)}_x$ contain square roots and quotients of the declared
+numbers and are, in general, not declarable;
+\item \emph{(the completion is immaterial)} the letter $x_0$ enters the
+POVM condition and nothing else: (SR1), (SR2), (ii) and (v) hold with the
+term $\idon{A_t}-P_t$ assigned to any letter, or split among the letters by
+any positive semidefinite operators on the kernel of $\tau^{(t)}_A$ that
+sum to $\idon{A_t}-P_t$;
+\item \emph{(Alice's side without a square root)}
+$\big(\tau^{(t)}_A\big)^{1/2}M^{(t)}_x\big(\tau^{(t)}_A\big)^{1/2}
+=\big(\sigma^{\mathrm v,(t)}_x\big)^{\transpose}$ for every $x$ and $t$: the
+operators $N^{(t)}_x\coloneqq(\sigma^{\mathrm v,(t)}_x)^{\transpose}$ are
+entrywise the declared numbers, and
+$\sum_xN^{(t)}_x=\tau^{(t)}_A$.
+\end{enumerate}
+\end{digestclaim}
+\end{mainclaim}
+
+\section*{4\quad Sufficiency of the certificate and its scope}\pdfbookmark[1]{4 Sufficiency of the certificate and its scope}{digest-group-transmitter/thm:certificate-sufficiency}
+
+% claim transmitter/thm:certificate-sufficiency
+\digestlabel{thm:certificate-sufficiency}{4.1}\pdfbookmark[2]{Theorem 4.1 Checkability and sufficiency of the source-replacement certificate}{digest-transmitter/thm:certificate-sufficiency}
+\begin{mainclaim}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/thm:certificate-sufficiency}{Theorem~4.1}}%
+\begin{digestclaim}[Checkability and sufficiency of the source-replacement certificate]
+Let a source specification (Definition~\ref{def:source-spec}) carry a
+source-replacement certificate $\Psi$ for $(A,\mathbb{T},\tau_A,\{M_x\})$
+against the virtual ensemble $\{p_x,\rvirt_x\}$, in any form of
+Definition~\ref{def:srcert}. In (ii) and (iii) and their proofs an ensemble
+presentation is read as the block-form certificate it defines
+(Lemma~\ref{lem:ensemble-presentation}\,(i)), so that ``either form'' below
+covers it.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(checkability)} the conditions on $\Psi$ of its declared form
+--- in pure form Hermiticity, $\Psi^2=\Psi$ and $\tr\Psi=1$; in block form
+Hermiticity and positive semidefiniteness of every block and
+$\sum_t\tr\Psi_t=1$ --- together with (SR1) and (SR2), are finitely many
+exact identities and exact decisions on the declared data, decided by
+finitely many arithmetic operations. In block form (SR1) and (SR2) are decided
+as the block identities \eqref{eq:srblock} together with the block diagonality
+of every weighted virtual member $\sigma^{\mathrm v}_x$ along $(S_t)_t$,
+decided entry by entry, which by Definition~\ref{def:srcert} is their
+conjunction; \eqref{eq:srblock} alone decides (SR2) only against the pinched
+members $\bigoplus_t\Pi^{\mathrm v}_t\sigma^{\mathrm v}_x\Pi^{\mathrm v}_t$.
+For a certificate given by an ensemble
+presentation the decided conditions are (E1) to (E3) of
+Definition~\ref{def:srcert}, equally finite and exact, and the conditions
+of the block form hold of the defined certificate by
+Lemma~\ref{lem:ensemble-presentation}\,(i) without being decided. (SR3) is
+an attestation and is decided by no function of the declared data. (SR1)
+moreover implies $\tau_A\in\Seq{A}$, $\tr_{\Avirt}\Psi$ being positive
+semidefinite with trace $\tr\Psi=1$. In an ensemble presentation $\tau_A$ is
+not declared: it is formed as the transposed sum of (E3), and that it is a
+state is Lemma~\ref{lem:ensemble-presentation}\,(i).
+\item \emph{(consistency)} more generally than in a source specification,
+let $\{M_x\}$ be any family of Hermitian operators on $A$, presented as block
+lists against the sector structure, of which $\sum_xM_x=\idon{A}$ is not
+assumed; let $\Psi$ meet the conditions on $\Psi$ of its form listed in (i)
+and (SR1); and let $p_x\rvirt_x$ stand for
+$\tr_A[(M_x\otimes\idon{\Avirt})\Psi]$, so that (SR2) holds. Writing
+$U=\operatorname{supp}\tau_A$ with projector $\Pi_U$, the certificate's
+signal-side marginal and the virtual average signal state agree,
+\begin{equation*}\tag{\getrefnumber{C-eq:srconsist}}\digesteqlabel{eq:srconsist}
+  \sum_xp_x\rvirt_x=\tr_A\Psi ,
+\end{equation*}
+\emph{if} $\Pi_U\big(\sum_xM_x\big)\Pi_U=\Pi_U$, in either form; in
+particular they agree for the certificate of a source specification, whose
+$\{M_x\}$ is a POVM by Definition~\ref{def:source-spec}. The converse,
+\emph{only if}, holds in pure form, and in block form whenever every non-zero
+block $\Psi_t$ is a positive multiple of a rank-one projector; it fails for a
+general positive block.
+\item \emph{(sufficiency at the module boundary)} Assume (SR1), (SR2), the
+attestation (SR3) of Assumption~\ref{ass:src}, and
+Assumption~\ref{ass:seq}; in block form (SR2) is the identity of operators on
+$\Avirt$ against the weighted virtual members $p_x\rvirt_x$ themselves, and
+not against their diagonal blocks alone: for a declared block form (i) decides
+it with their block diagonality, and for an ensemble presentation it is
+proved by Lemma~\ref{lem:ensemble-presentation}\,(i). Let $\pcNmsm$ be Alice's measurement map, from
+her retained system $A$ to the classical outcome register $X$,
+\begin{equation*}\tag{\getrefnumber{C-eq:Nmsm}}\digesteqlabel{eq:Nmsm}
+  \pcNmsm(\xi)\coloneqq\sum_{x\in\Xset}\tr[M_x\,\xi]\;\dyad{x}_{X},
+  \qquad \xi\in\Lin{A} ,
+\end{equation*}
+and let $\mathcal{E}$ be \emph{any} channel from $\Avirt E$ to $E'$, where
+$E$ is the adversary's initial register and $E'$ collects her output
+registers including whatever is delivered to the receiver. Thus
+$\mathcal{E}$ models the adversary's attack and the remainder of the round
+\emph{on the transmitted system and the adversary's registers}, and it
+acts on neither $A$ nor $X$: it is not permitted to depend on Alice's
+outcome. Write
+$\rho_{X\Avirt}\coloneqq\sum_{x\in\Xset}p_x\,\dyad{x}_X\otimes\rvirt_x$ for
+the virtual prepare-and-measure source state. Then:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{(the interchange)}
+\begin{equation*}\tag{\getrefnumber{C-eq:srmain}}\digesteqlabel{eq:srmain}
+  (\idmap_{X}\otimes\mathcal{E})\circ(\pcNmsm\otimes\idmap_{\Avirt E})
+  \;=\;\pcNmsm\otimes\mathcal{E}\;=\;
+  (\pcNmsm\otimes\idmap_{E'})\circ(\idmap_{A}\otimes\mathcal{E})
+\end{equation*}
+as linear maps on $\Lin{A\Avirt E}$, hence in particular on
+$\Psi\otimes\sigma$ for every state $\sigma$ on $E$: Alice's measurement may
+be performed before the attack or after it, indifferently. This uses no
+property of the certificate, only that the two maps act on complementary
+registers;
+\item \emph{(the source identification)} for every state $\sigma$ on $E$,
+\begin{equation*}\tag{\getrefnumber{C-eq:srident}}\digesteqlabel{eq:srident}
+  (\pcNmsm\otimes\mathcal{E})\big(\Psi\otimes\sigma\big)
+  \;=\;(\idmap_{X}\otimes\mathcal{E})\big(\rho_{X\Avirt}\otimes\sigma\big) ,
+\end{equation*}
+and both sides are states on $XE'$. Together with (a): on every register
+other than $A$, the declared entanglement-based description and the
+virtual prepare-and-measure description produce the same state, against
+every attack of this form. The states $\rvirt_x$ in $\rho_{X\Avirt}$ are the
+declared virtual states, in block form as in every form, and not their
+pinching along $(S_t)_t$.
+\end{enumerate}
+\end{enumerate}
+\end{digestclaim}
+\end{mainclaim}
+
+% claim transmitter/cor:noncanonical
+\digestlabel{cor:noncanonical}{4.3}\pdfbookmark[2]{Corollary 4.3 Certificates beyond the canonical form}{digest-transmitter/cor:noncanonical}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/cor:noncanonical}{Corollary~4.3}}%
+\begin{digestclaim}[Certificates beyond the canonical form]
+Throughout, the certificate is in the \emph{pure} form of
+Definition~\ref{def:srcert}, against the one-sector structure on $A$ that
+Definition~\ref{def:source-spec} makes the default.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item Fact~\ref{fact:sr}'s canonical data --- $A=\Abar\Ahat$ with
+$\dim\Hs{\Abar}=|\Xset|$, $M_x=\dyad{x}_{\Abar}\otimes\idon{\Ahat}$, and
+$\Psi=\dyad{\psi}$ with
+$\ket{\psi}=\sum_x\sqrt{p_x}\ket{x}_{\Abar}\ket{\psi_x}_{\Ahat\Avirt}$ and
+$\ket{\psi_x}$ a purification of $\rvirt_x$ --- satisfy (SR1) and (SR2).
+\item They are not the only such data: Theorem~\ref{thm:certificate-sufficiency}\,(iii)
+applies to every triple $(\Psi,\tau_A,\{M_x\})$ satisfying (SR1)--(SR3), and
+there are source
+specifications with $d_A<|\Xset|$ carrying a certificate. In particular the
+four-state BB84 ensemble on a qubit, $\Xset=\{(b,k):b,k\in\{0,1\}\}$ with
+$p_{(b,k)}=\tfrac14$ and $\rvirt_{(b,k)}=\dyad{k_b}$ for the computational
+basis ($b=0$) and the Hadamard basis ($b=1$), admits the certificate
+$A=\Avirt=\mathbb{C}^2$, $M_{(b,k)}=\tfrac12\dyad{k_b}$,
+$\tau_A=\tfrac12\idon{A}$, $\Psi=\dyad{\Phip}$ with
+$\ket{\Phip}=\tfrac1{\sqrt2}(\ket{00}+\ket{11})$: $d_A=2$ where the
+canonical form has $d_A=4$.
+\end{enumerate}
+\end{digestclaim}
+
+% claim transmitter/lem:matched-pinching
+\digestlabel{lem:matched-pinching}{4.5}\pdfbookmark[2]{Lemma 4.5 Matched pinching of a block certificate}{digest-transmitter/lem:matched-pinching}
+\begin{mainclaim}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/lem:matched-pinching}{Lemma~4.5}}%
+\begin{digestclaim}[Matched pinching of a block certificate]
+Let a source specification carry a certificate in block form
+(Definition~\ref{def:srcert}), with sector projectors $\Pi^{A}_t$ on $A$ and
+$\Pi^{\mathrm v}_t$ on $\Avirt$, $t\in\mathbb{T}$, which sum to the identity
+on $A$ and on $\Avirt$ respectively (Definitions~\ref{def:source-spec}
+and~\ref{def:srcert}), and write
+\begin{equation*}
+  \mathrm{Pin}_{A}(\xi)\coloneqq\sum_{t\in\mathbb{T}}\Pi^{A}_t\,\xi\,\Pi^{A}_t ,
+  \qquad
+  \mathrm{Pin}_{\mathrm v}(\zeta)\coloneqq
+  \sum_{t\in\mathbb{T}}\Pi^{\mathrm v}_t\,\zeta\,\Pi^{\mathrm v}_t
+\end{equation*}
+for the two pinching channels.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(matched structure)} for every $t\in\mathbb{T}$,
+\begin{equation*}\tag{\getrefnumber{C-eq:matched}}\digesteqlabel{eq:matched}
+  (\Pi^{A}_t\otimes\idon{\Avirt})\,\Psi
+  =\Psi\,(\Pi^{A}_t\otimes\idon{\Avirt})
+  =(\idon{A}\otimes\Pi^{\mathrm v}_t)\,\Psi
+  =\Psi\,(\idon{A}\otimes\Pi^{\mathrm v}_t)
+  =\Psi_t ,
+\end{equation*}
+the block $\Psi_t$ read as an operator on $\Hs{A\Avirt}$ extended by zero.
+Hence
+$(\mathrm{Pin}_{A}\otimes\idmap_{\Avirt})(\Psi)=\Psi
+=(\idmap_{A}\otimes\mathrm{Pin}_{\mathrm v})(\Psi)$.
+\item \emph{(reached states)} assume (SR3), and let $\mathcal{E}$ be any
+channel from $\Avirt E$ to $E'$ and $\sigma$ any state on $E$, as in
+Theorem~\ref{thm:certificate-sufficiency}\,(iii). The state
+$\omega\coloneqq(\idmap_{A}\otimes\mathcal{E})(\Psi\otimes\sigma)$ on $AE'$
+satisfies
+\begin{equation*}\tag{\getrefnumber{C-eq:reached}}\digesteqlabel{eq:reached}
+  \tr_{E'}\omega=\tau_A ,\qquad
+  (\mathrm{Pin}_{A}\otimes\idmap_{E'})(\omega)=\omega ,\qquad
+  \omega=(\idmap_{A}\otimes\mathcal{E}')(\Psi\otimes\sigma)
+  \ \text{ with }\
+  \mathcal{E}'\coloneqq\mathcal{E}\circ(\mathrm{Pin}_{\mathrm v}\otimes\idmap_{E}) .
+\end{equation*}
+So $\omega=\bigoplus_t\omega_t$ with $\omega_t\in\Pos{A_tE'}$ and
+$\tr_{E'}\omega_t=\tau^{(t)}_A$; and the attack $\mathcal{E}$ and the attack
+$\mathcal{E}'$ that first measures the sector of the virtual signal reach
+the same state.
+\item \emph{(operators that are not reached)} the block diagonality of (ii)
+does not extend to operators merely constrained to have the marginal: in
+general a positive operator on $AE'$ with marginal
+$\tau_A=\bigoplus_t\tau^{(t)}_A$ need not be block diagonal along
+$\mathbb{T}$, and this happens already for two one-dimensional sectors,
+$\tau_A=\tfrac12\idon{A}$ and $E'$ a qubit.
+\end{enumerate}
+\end{digestclaim}
+\end{mainclaim}
+
+\section*{5\quad Assumptions}\pdfbookmark[1]{5 Assumptions}{digest-group-transmitter/ass:ens}
+
+% claim transmitter/ass:ens
+\digestlabel{ass:ens}{5.1}\pdfbookmark[2]{Assumption 5.1 Emission of the specified ensemble}{digest-transmitter/ass:ens}
+\SetShortId{A-ENS}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/ass:ens}{Assumption~5.1}}%
+\begin{digestassumption}[Emission of the specified ensemble]
+For the declared signal ensemble $\{p_x,\rho_x\}$ of
+Definition~\ref{def:source-spec} on the transmitted system, the
+letters the physical source draws and the systems it emits satisfy the
+following; a letter that Alice obtains in untrusted-source mode by measuring a
+received system is not drawn by the source, and nothing below concerns it:
+(i) the letters $x_1,\dots,x_n$ it draws in the $n$ rounds are drawn
+independently, each with the weights $p_x$;
+(ii) given those letters, the systems it emits in the $n$ rounds are in the
+state $\rho_{x_1}\otimes\dots\otimes\rho_{x_n}$;
+(iii) neither the letter it draws in a round nor the state it emits in it
+depends on what happens in the other rounds, their outcomes and public
+messages included.
+\end{digestassumption}
+
+% claim transmitter/ass:seq
+\digestlabel{ass:seq}{5.2}\pdfbookmark[2]{Assumption 5.2 Sequential round structure}{digest-transmitter/ass:seq}
+\SetShortId{A-SEQ}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/ass:seq}{Assumption~5.2}}%
+\begin{digestassumption}[Sequential round structure]
+The physical protocol has the sequential structure the declared protocol
+describes:
+(i) each round runs, in this order, state preparation and transmission; the
+measurements of the round, by every party that measures in it; the public
+messages of the round, in their declared order, \emph{each of them sent after
+every measurement of the round is complete}, whichever party sends it and
+whichever party measured; and announcement-determined sifting;
+(ii) the classical post-processing is applied after the $n$ rounds;
+(iii) every message is public;
+(iv) no operation on a quantum system of round $j$ depends on a public
+message of round $j$;
+(v) every party that measures makes its measurements in round order: its
+measurement of round $j$ is complete before its measurement of round $j+1$
+is.
+\end{digestassumption}
+
+% claim transmitter/ass:src
+\digestlabel{ass:src}{5.3}\pdfbookmark[2]{Assumption 5.3 Retention of the system A in trusted-source mode}{digest-transmitter/ass:src}
+\SetShortId{A-SRC}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/ass:src}{Assumption~5.3}}%
+\begin{digestassumption}[Retention of the system A in trusted-source mode]
+For a source specification (Definition~\ref{def:source-spec}) in
+trusted-source mode, which fills the marginal slot with
+$\tau_A\in\Seq{A}$, condition~(SR3) of Definition~\ref{def:srcert} holds of
+the apparatus:
+(i) the system $A$ is retained in the laboratory of the party whose label
+the party partition of the consuming declaration
+(\xref{protocol-compiler/def:declaration}) gives $A$, and is never
+transmitted;
+(ii) no operation of the protocol or of the adversary acts on $A$ except the
+declared measurement $\{M_x\}$ of that party.
+\end{digestassumption}
+
+\part*{Engine requirements}\pdfbookmark[0]{Engine requirements}{digest-part-2}
+
+\section*{6\quad Certificate and licence requirements}\pdfbookmark[1]{6 Certificate and licence requirements}{digest-group-transmitter/req:licence-scope}
+
+% claim transmitter/req:licence-scope
+\digestlabel{req:licence-scope}{6.1}\pdfbookmark[2]{Requirement 6.1 Certificate and attestation demanded only at d\_A≥2}{digest-transmitter/req:licence-scope}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/req:licence-scope}{Requirement~6.1}}%
+\begin{digestrequirement}[Certificate and attestation demanded only at $d_A\ge2$]
+The engine demands the source-replacement certificate of
+Definition~\ref{def:srcert} of a request in trusted-source mode only at
+$d_A\ge2$, and there refuses such a request that carries none
+(\iface{trusted_mode_without_certificate}). At $d_A=1$, where the licensed
+condition $\omega_A=\tau_A$ excludes no state (Remark~\ref{C-rem:da1}),
+neither the engine nor a consumer of its artefact demands the certificate or
+the attestation of Assumption~\ref{ass:src}.
+\end{digestrequirement}
+
+% claim transmitter/req:marginal-fill
+\digestlabel{req:marginal-fill}{6.2}\pdfbookmark[2]{Requirement 6.2 The unique marginal served at d\_A=1}{digest-transmitter/req:marginal-fill}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/req:marginal-fill}{Requirement~6.2}}%
+\begin{digestrequirement}[The unique marginal served at $d_A=1$]
+At $d_A=1$ a request in trusted-source mode may leave the marginal slot
+empty. The engine then fills the slot with $\tau_A=[1]$, the unique element
+of $\Seq{A}$ (Remark~\ref{C-rem:da1}); the emitted specification is in
+trusted-source mode, trusted-source and untrusted-source mode imposing the
+same condition there; and the emitted artefact records that the slot was
+filled. This is the only slot the engine ever fills.
+\end{digestrequirement}
+
+% claim transmitter/req:failing-certificate
+\digestlabel{req:failing-certificate}{6.3}\pdfbookmark[2]{Requirement 6.3 Refusal of a certificate that fails a decided condition}{digest-transmitter/req:failing-certificate}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/req:failing-certificate}{Requirement~6.3}}%
+\begin{digestrequirement}[Refusal of a certificate that fails a decided condition]
+The engine refuses a request whose certificate is present and fails one of
+the conditions Definition~\ref{def:srcert} decides of its form --- in pure
+form the three on $\Psi$, (SR1) and (SR2); in block form Hermiticity and
+positive semidefiniteness of every block, the trace, the block diagonality of
+every weighted virtual member along the matched sectors, and
+\eqref{eq:srblock}; in an ensemble presentation (E1) to (E3) --- at every
+$d_A$, including $d_A=1$, where no certificate is demanded
+(Requirement~\ref{req:licence-scope}): a certificate that does not verify is
+a defect in the supplied data, not a weaker claim.
+\end{digestrequirement}
+
+% claim transmitter/req:marginal-decided
+\digestlabel{req:marginal-decided}{6.4}\pdfbookmark[2]{Requirement 6.4 Direct decision of the declared marginal}{digest-transmitter/req:marginal-decided}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/req:marginal-decided}{Requirement~6.4}}%
+\begin{digestrequirement}[Direct decision of the declared marginal]
+Where $\tau_A$ is declared, the engine decides $\tau_A\in\Seq{A}$ on the
+declared matrix directly, also where a certificate is present and satisfies
+(SR1), and never infers it from the implication
+(SR1)\,$\Rightarrow\tau_A\in\Seq{A}$ of Theorem~\ref{thm:certificate-sufficiency}\,(i); it
+refuses a request whose declared $\tau_A$ is not a state
+(\iface{alice_marginal_not_admissible}). Consumers of the declared data
+decide it in the same way under their own rules; this requirement binds the
+engine.
+\end{digestrequirement}
+
+% claim transmitter/req:attestation-record
+\digestlabel{req:attestation-record}{6.5}\pdfbookmark[2]{Requirement 6.5 Pass-through of the retention attestation}{digest-transmitter/req:attestation-record}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/req:attestation-record}{Requirement~6.5}}%
+\begin{digestrequirement}[Pass-through of the retention attestation]
+Where the engine emits the licence record \iface{source_replacement_license},
+which it does only in trusted-source mode at $d_A\ge2$, the scope in
+which the certificate is demanded (Requirement~\ref{req:licence-scope}), it
+records the (SR3) attestation it receives (Definition~\ref{def:srcert}) in that
+record, and passes it through: it never
+verifies it and never asserts it of any physical apparatus
+(Assumption~\ref{ass:src}; Remark~\ref{C-rem:boundary}). No consumer can
+verify it either, since no function of the declared data decides it
+(Theorem~\ref{thm:certificate-sufficiency}\,(i)).
+\end{digestrequirement}
+
+\part*{Decoy-state sources and the tagging channel}\pdfbookmark[0]{Decoy-state sources and the tagging channel}{digest-part-3}
+
+\section*{7\quad The source model and the tagged declaration}\pdfbookmark[1]{7 The source model and the tagged declaration}{digest-group-transmitter/decoy/def:wcp-model}
+
+% claim transmitter/decoy/def:wcp-model
+\digestlabel{def:wcp-model}{7.1}\pdfbookmark[2]{Definition 7.1 Phase-randomised weak-coherent-pulse source model}{digest-transmitter/decoy/def:wcp-model}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/decoy/def:wcp-model}{Definition~7.1}}%
+\begin{digestclaim}[Phase-randomised weak-coherent-pulse source model]
+A \emph{weak-coherent-pulse model}
+is a source model, the case (b) of
+Definition~\ref{def:source-spec} in which the specified ensemble
+$\{p_x,\rho_x\}$ is fixed as mathematical objects rather than as matrices, on
+a transmitted system whose Hilbert space is separable. It consists of the
+following declared data.
+\begin{enumerate}[label=(W\arabic*),leftmargin=3.0em]
+\item \emph{(modes and polarisations)} two declared optical modes with a fixed
+orthonormal basis of the one-photon space $\mathbb{C}^2$, and a finite
+non-empty set $\mathrm{Pol}$ of
+\emph{polarisations},
+declared labels each standing for a unit vector $\ket{a}\in\mathbb{C}^2$,
+$a\in\mathrm{Pol}$, with creation operator $c^{\dagger}_a$. The vector
+$\ket{a}$ is a mathematical object of the model, as the states of (W4) are,
+and not an array of declared numbers: a declaration names the vector a label
+stands for and carries none of its coordinates, which need not be binary64
+numbers ($(\ket{H}+\ket{V})/\sqrt2$ has the coordinates $1/\sqrt2$). The
+transmitted system $\Asig$ is the Fock space over the two modes, with vacuum
+$\ket{\vac}$; its Hilbert space is separable and infinite dimensional.
+\item \emph{(intensities and labels)} a finite non-empty set
+$\mathrm{Int}\subset[0,\infty)$ of
+\emph{intensities};
+the signal alphabet
+$\Xset\subseteq\mathrm{Pol}\times\mathrm{Int}\times\{\tst,\gen\}$ with its
+declared order, an element of
+$\mathrm{Pol}\times\mathrm{Int}\times\{\tst,\gen\}$ being a label and a label in
+$\Xset$ a letter, written $x=(a_x,\mu_x,z_x)$, whose third component is the
+\emph{round type};
+and weights $p_x>0$ for every $x\in\Xset$ with $\sum_{x\in\Xset}p_x=1$ in the
+declared order, rounding nowhere. A label
+of weight zero is not a letter of $\Xset$.
+\item \emph{(number states)} for $a\in\mathrm{Pol}$ and an integer
+$\mathsf{n}\ge0$, the unit vector
+\begin{equation*}\tag{\getrefnumber{C-eq:numberstate}}\digesteqlabel{eq:numberstate}
+  \ket{\mathsf{n},a}\;\coloneqq\;
+  \frac{(c^{\dagger}_a)^{\mathsf{n}}}{\sqrt{\mathsf{n}!}}\,\ket{\vac} ,
+\end{equation*}
+and the subspace
+$S_{\mathsf{n}}\coloneqq\operatorname{span}\{\ket{\mathsf{n},a}:a\in\mathrm{Pol}\}$
+of the $\mathsf{n}$-photon subspace. Since the $\mathsf{n}$-photon subspace of
+a two-mode Fock space has dimension $\mathsf{n}+1$ and $S_{\mathsf{n}}$ is
+spanned by $|\mathrm{Pol}|$ vectors,
+$\dim S_{\mathsf{n}}\le\min(\mathsf{n}+1,|\mathrm{Pol}|)$; and
+$S_{\mathsf{n}}\perp S_{\mathsf{n}'}$ for $\mathsf{n}\ne\mathsf{n}'$, the two
+subspaces lying in different photon-number eigenspaces.
+$S_0=\mathbb{C}\ket{\vac}$ is one dimensional, every polarisation sharing the
+vacuum.
+\item \emph{(the specified states)} with the
+\emph{Poisson weight}
+$P_{\mu}(\mathsf{n})\coloneqq e^{-\mu}\mu^{\mathsf{n}}/\mathsf{n}!$, the state
+prepared at the letter $x=(a,\mu,z)$ is
+\begin{equation*}\tag{\getrefnumber{C-eq:wcpstate}}\digesteqlabel{eq:wcpstate}
+  \rho_x\;=\;\sum_{\mathsf{n}\ge0}P_{\mu}(\mathsf{n})\,
+  \dyad{\mathsf{n},a} ,
+\end{equation*}
+which does not depend on the round type $z$. It is a state:
+$\sum_{\mathsf{n}\ge0}P_{\mu}(\mathsf{n})=1$ and each $\dyad{\mathsf{n},a}$
+is a rank-one projector.
+\end{enumerate}
+The physical-source assumption of the model, which asserts that the device
+emits \eqref{eq:wcpstate}, is Assumption~\ref{ass:wcp}; the model declares it
+in the place of Assumption~\ref{ass:ens}.
+\end{digestclaim}
+
+% claim transmitter/decoy/def:tagged-source
+\digestlabel{def:tagged-source}{7.2}\pdfbookmark[2]{Definition 7.2 Tagged virtual source: cutoffs, flags and sector map}{digest-transmitter/decoy/def:tagged-source}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/decoy/def:tagged-source}{Definition~7.2}}%
+\begin{digestclaim}[Tagged virtual source: cutoffs, flags and sector map]
+Let a weak-coherent-pulse model be declared (Definition~\ref{def:wcp-model}). A
+\emph{tagged source declaration}
+over it consists of the following.
+\begin{enumerate}[label=(T\arabic*),leftmargin=3.0em]
+\item \emph{(the two cutoffs)} integers $N_{\mathrm{ent}}$ and
+$N_{\mathrm{src}}$ with $0\le N_{\mathrm{ent}}\le N_{\mathrm{src}}$: the
+\emph{entropy cutoff},
+the largest photon number whose sector stays quantum, and the
+\emph{source cutoff},
+the largest photon number that keeps a sector of its own.
+\item \emph{(the sector weights)} declared numbers $\tilde p(\mathsf{n}\mid\mu)$
+for $0\le\mathsf{n}\le N_{\mathrm{src}}$ and $\mu\in\mathrm{Int}$, depending on
+the intensity alone and not on the polarisation or the round type, satisfying
+\begin{equation*}\tag{\getrefnumber{C-eq:weightineq}}\digesteqlabel{eq:weightineq}
+  0\;\le\;\tilde p(\mathsf{n}\mid\mu)\;\le\;P_{\mu}(\mathsf{n})
+  \qquad\text{for every }\mathsf{n}\le N_{\mathrm{src}},\ \mu\in\mathrm{Int} ,
+\end{equation*}
+and the
+\emph{tail weight}
+\begin{equation*}\tag{\getrefnumber{C-eq:tailweight}}\digesteqlabel{eq:tailweight}
+  \tilde w_{\mu}\;\coloneqq\;
+  1-\sum_{\mathsf{n}=0}^{N_{\mathrm{src}}}\tilde p(\mathsf{n}\mid\mu) ,
+\end{equation*}
+the sum formed in increasing $\mathsf{n}$ and rounding nowhere. Then
+$\tilde w_{\mu}\ge0$, because
+$\sum_{\mathsf{n}\le N_{\mathrm{src}}}\tilde p(\mathsf{n}\mid\mu)
+\le\sum_{\mathsf{n}\le N_{\mathrm{src}}}P_{\mu}(\mathsf{n})\le1$ by
+\eqref{eq:weightineq}.
+\item \emph{(the sector index set and the virtual transmitted system)} a
+sector that no letter of $\Xset$ puts positive weight on is not declared: the
+\emph{sector index set}
+carries the sectors the declaration uses and is read off the weights,
+\begin{equation*}\tag{\getrefnumber{C-eq:tset}}\digesteqlabel{eq:tset}
+\begin{aligned}
+  \mathbb{T}\;=\;
+  &\{\mathsf{n}\le N_{\mathrm{ent}}:\
+     \tilde p(\mathsf{n}\mid\mu_x)>0\text{ for some }x\in\Xset\}\\
+  \cup\;&\{(\mathsf{n},a):N_{\mathrm{ent}}<\mathsf{n}\le N_{\mathrm{src}},\
+     \tilde p(\mathsf{n}\mid\mu_x)>0\text{ for some }x\in\Xset
+     \text{ with }a_x=a\}\\
+  \cup\;&\{(a,\mu):\tilde w_{\mu}>0\text{ and }(a,\mu)=(a_x,\mu_x)
+     \text{ for some }x\in\Xset\} ,
+\end{aligned}
+\end{equation*}
+in that declared order: the quantum sectors in increasing photon number, then
+the polarisation flags in the declared order of $(\mathsf{n},a)$, then the tail
+flags in the declared order of $(a,\mu)$. The finite-dimensional virtual
+transmitted system is the orthogonal direct sum over it,
+\begin{equation*}\tag{\getrefnumber{C-eq:avirt}}\digesteqlabel{eq:avirt}
+  \Avirt\;=\;\bigoplus_{t\in\mathbb{T}}S_t ,\qquad
+  S_t=\begin{cases}
+    S_{\mathsf{n}} & t=\mathsf{n}\le N_{\mathrm{ent}},\\
+    \mathbb{C}f_{\mathsf{n},a} & t=(\mathsf{n},a),\\
+    \mathbb{C}f_{a,\mu} & t=(a,\mu),
+  \end{cases}
+\end{equation*}
+with the basis of each summand described next; it is the declared basis of
+$\Avirt$ in the sense of Definition~\ref{def:srcert}, the basis in which
+the blocks of the declaration are written. At a quantum sector
+$t=\mathsf{n}$ the summand is the space $S_{\mathsf{n}}$ of
+Definition~\ref{def:wcp-model}\,(W3), taken into the direct sum with its
+vectors $\ket{\mathsf{n},a}$ and an orthonormal basis of $S_{\mathsf{n}}$;
+like those vectors, that basis is a mathematical object of the model and not
+an array of declared numbers (Proposition~\ref{prop:tagging} returns
+$S_{\mathsf{n}}$ to the Fock space by an isometry $V_{\mathsf{n}}$). There is
+one
+\emph{polarisation flag}
+$f_{\mathsf{n},a}$ per photon number above the entropy cutoff and per
+polarisation of a letter that weights it, shared across intensities and round
+types; and one
+\emph{tail flag}
+$f_{a,\mu}$ per pair a letter carries with
+$\tilde w_{\mu}>0$, shared across round types. The flag vectors are declared
+orthonormal, the summands of \eqref{eq:avirt} are mutually orthogonal in
+$\Avirt$, and $\Pi^{\mathrm v}_t$ is the projector onto $S_t$. Every flag
+sector is one dimensional, and so is the quantum sector $\mathsf{n}=0$. The
+index set is a function of the declared weights.
+\item \emph{(the virtual ensemble)} for $x=(a,\mu,z)\in\Xset$,
+\begin{equation*}\tag{\getrefnumber{C-eq:rvirt}}\digesteqlabel{eq:rvirt}
+  \rvirt_x\;=\;
+  \sum_{\mathsf{n}\le N_{\mathrm{ent}}}
+    \tilde p(\mathsf{n}\mid\mu)\,\dyad{\mathsf{n},a}
+  \;+\;
+  \sum_{N_{\mathrm{ent}}<\mathsf{n}\le N_{\mathrm{src}}}
+    \tilde p(\mathsf{n}\mid\mu)\,\dyad{f_{\mathsf{n},a}}
+  \;+\;
+  \tilde w_{\mu}\,\dyad{f_{a,\mu}} ,
+\end{equation*}
+every sum running over the sectors of the index set \eqref{eq:tset} only: a
+quantum sector or a polarisation flag that no letter puts positive weight on is
+not a sector of $\Avirt$ by (T3) and contributes no term, as the tail flag
+contributes none where $\tilde w_{\mu}=0$. Each $\rvirt_x$ is a state on
+$\Avirt$ that is block diagonal along $\mathbb{T}$. Its component in a quantum
+sector $\mathsf{n}\le N_{\mathrm{ent}}$ is
+$\tilde p(\mathsf{n}\mid\mu)\dyad{\mathsf{n},a}$; in the polarisation flag
+sector $(\mathsf{n},a')$ it is $\tilde p(\mathsf{n}\mid\mu)$ if $a'=a$ and zero
+otherwise; in the tail flag sector $(a',\mu')$ it is $\tilde w_{\mu}$ if
+$(a',\mu')=(a,\mu)$ and zero otherwise. It is positive semidefinite, being a
+sum of non-negative multiples of rank-one projectors, and its trace is
+$\sum_{\mathsf{n}\le N_{\mathrm{src}}}\tilde p(\mathsf{n}\mid\mu)
++\tilde w_{\mu}=1$ by \eqref{eq:tailweight}, the absent terms contributing
+nothing to it: a sector that \eqref{eq:tset} leaves out is one on which
+$\tilde p(\mathsf{n}\mid\mu)$ vanishes for every letter, this one included, or
+a tail flag with $\tilde w_{\mu}=0$. Two labels of the same polarisation and
+different intensities put weight on the same polarisation flag, and two labels
+of the same polarisation and intensity and different round types put weight on
+the same tail flag.
+\item \emph{(the matched sector map)} the retained system and its
+sector structure are not declared: a tagged source is presented as an
+ensemble presentation (Definition~\ref{def:srcert}: a certificate defined from declared
+weighted blocks rather than declared), in which $A$, its structure, $\tau_A$
+and $\{M_x\}$ are the objects \eqref{eq:enspres} defines, $A_t$ being a copy of
+$S_t$ sector by sector and in the same order. In particular
+$\dim\Hs{A_t}=\dim\Hs{S_t}$ whatever the rank of the sector's marginal
+(Proposition~\ref{C-prop:decoy-cert}\,(iii)). The matched pair
+$(\{\Pi^{A}_t\},\{\Pi^{\mathrm v}_t\})$, with $\Pi^{A}_t$ the projectors onto
+Alice's sectors (Definition~\ref{def:source-spec}), is the structure of (T3)
+read on both sides. It is the retained-register sector map of the link of
+(T6), the slot (e) of Definition~\ref{def:source-link}, which fixes how the
+certificate, $\tau_A$ and $\{M_x\}$ are presented, sector by sector. It is a
+statement about those three objects only: it does not assert that any joint
+state of $A$ and another system is block diagonal
+(Definition~\ref{def:source-spec}).
+\item \emph{(the link)} the channel $\Xi_{\mathrm{tag}}$ that
+Proposition~\ref{prop:tagging} constructs and proves to carry each $\rvirt_x$
+to $\rho_x$, recorded as one source link
+(Definition~\ref{def:source-link}) with the following slots: the kind
+\textsf{tagging} (slot (a)); the source descriptor
+$(\Avirt,\{p_x,\rvirt_x\})$ of (T3) and (T4) and the target descriptor
+$(\Asig,\{p_x,\rho_x\})$ of the model (slot (b)); the channel witness supplied
+as a theorem constructor, namely Proposition~\ref{prop:tagging}, with an
+obligation record that names Assumption~\ref{ass:wcp} (slot (c2)); the
+declared descriptor family, every tagged source declaration over every
+weak-coherent-pulse model (slot (d)); the retained-register sector map, the
+matched pair of (T5) (slot (e)); an empty list of
+transported constraint entries, so that no constraint is carried
+across the link, and hence no licence record, a licence being present only
+beside a non-empty list (slot (f)); and the status \textsf{exact}, the identity
+holding with no error term (slot (g)).
+\end{enumerate}
+The cutoffs of (T1), the weights $\tilde p(\mathsf{n}\mid\mu)$ of (T2), and the
+model's alphabet, polarisation labels, intensities and label weights are
+\emph{declared}. The polarisation vectors $\ket{a}$, the number states
+$\ket{\mathsf{n},a}$ and the orthonormal basis of each quantum sector
+$S_{\mathsf{n}}$ of (T3) are objects of the model and are not declared
+numbers. The tail weight \eqref{eq:tailweight}, the index set \eqref{eq:tset}
+and the weighted members $p_x\rvirt_x$ of \eqref{eq:rvirt} are
+\emph{formed}: the tail weight and the index set from the declared numbers in
+exact arithmetic, and each entry of a weighted member, in the basis of its
+sector, as the product of declared numbers with an entry of the dyad of the
+sector's signal vector in that basis, a number fixed by the model and the
+basis. They are the declaration's own data: read sector by sector, the
+weighted members are the blocks that the ensemble presentation of (T5) takes as
+its data. Everything on Alice's side --- $A$, $\tau_A$, $\{M_x\}$ and the
+certificate --- is defined from those blocks and declared by no one.
+\end{digestclaim}
+
+\section*{8\quad The tagging channel}\pdfbookmark[1]{8 The tagging channel}{digest-group-transmitter/decoy/prop:tagging}
+
+% claim transmitter/decoy/prop:tagging
+\digestlabel{prop:tagging}{8.1}\pdfbookmark[2]{Proposition 8.1 Tagging channel for weights at or below the Poisson weights}{digest-transmitter/decoy/prop:tagging}
+\begin{mainclaim}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/decoy/prop:tagging}{Proposition~8.1}}%
+\begin{digestclaim}[Tagging channel for weights at or below the Poisson weights]
+Let a weak-coherent-pulse model be given
+(Definition~\ref{def:wcp-model}): labels $x=(a,\mu,z)$ with $z$ the
+round type, unit polarisation vectors
+$\ket{a}$, Poisson weights
+$P_\mu(\mathsf{n})=e^{-\mu}\mu^{\mathsf{n}}/\mathsf{n}!$ and model states
+$\rho_x=\sum_{\mathsf{n}\ge0}P_\mu(\mathsf{n})\,\dyad{\mathsf{n},a}$ on the
+two-mode Fock space. Let a tagged source be declared on it
+(Definition~\ref{def:tagged-source}) with cutoffs
+$0\le N_{\mathrm{ent}}\le N_{\mathrm{src}}$, virtual states $\rvirt_x$ of
+\eqref{eq:rvirt} and declared weights $\tilde p(\mathsf{n}\,|\,\mu)$,
+$\mathsf{n}\le N_{\mathrm{src}}$, satisfying the inequality
+\eqref{eq:weightineq} of Definition~\ref{def:tagged-source}\,(T2), which
+reads
+\begin{equation*}\tag{\getrefnumber{C-eq:tag-ineq}}\digesteqlabel{eq:tag-ineq}
+  0\le\tilde p(\mathsf{n}\,|\,\mu)\le P_\mu(\mathsf{n})
+  \qquad\text{for every intensity }\mu\text{ and every }
+  \mathsf{n}\le N_{\mathrm{src}} ,
+\end{equation*}
+with tail weights
+$\tilde w_\mu=1-\sum_{\mathsf{n}\le N_{\mathrm{src}}}\tilde p(\mathsf{n}\,|\,\mu)$.
+Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(the tail states)} for every polarisation $a$ and every intensity
+$\mu$ with $\tilde w_\mu>0$,
+\begin{equation*}\tag{\getrefnumber{C-eq:tailstate}}\digesteqlabel{eq:tailstate}
+  \vartheta_{a,\mu}\coloneqq\frac{1}{\tilde w_\mu}\Big[
+  \sum_{\mathsf{n}\le N_{\mathrm{src}}}
+  \big(P_\mu(\mathsf{n})-\tilde p(\mathsf{n}\,|\,\mu)\big)\dyad{\mathsf{n},a}
+  +\sum_{\mathsf{n}>N_{\mathrm{src}}}P_\mu(\mathsf{n})\,\dyad{\mathsf{n},a}
+  \Big]
+\end{equation*}
+is a state on the Fock space. Where $\tilde w_\mu=0$ the declaration carries no
+tail flag for $(a,\mu)$ (Definition~\ref{def:tagged-source}) and no tail state
+is defined.
+\item \emph{(one channel)} the map
+\begin{equation*}\tag{\getrefnumber{C-eq:xitag}}\digesteqlabel{eq:xitag}
+\begin{aligned}
+  \Xi_{\mathrm{tag}}(\zeta)\coloneqq{}&
+  \sum_{\mathsf{n}\le N_{\mathrm{ent}}}
+    V_{\mathsf{n}}\,\Pi^{\mathrm v}_{\mathsf{n}}\,\zeta\,
+    \Pi^{\mathrm v}_{\mathsf{n}}V_{\mathsf{n}}^{\dagger}
+  +\sum_{N_{\mathrm{ent}}<\mathsf{n}\le N_{\mathrm{src}}}\sum_{a}
+    \bra{f_{\mathsf{n},a}}\zeta\ket{f_{\mathsf{n},a}}\,\dyad{\mathsf{n},a}\\
+  &+\sum_{(a,\mu):\,\tilde w_\mu>0}
+    \bra{f_{a,\mu}}\zeta\ket{f_{a,\mu}}\,\vartheta_{a,\mu} ,
+\end{aligned}
+\end{equation*}
+in which $\Pi^{\mathrm v}_{\mathsf{n}}$ projects $\Hs{\Avirt}$ onto the quantum
+sector $S_{\mathsf{n}}$, $V_{\mathsf{n}}$ is the isometry that embeds that
+sector into the Fock space as $\operatorname{span}\{\ket{\mathsf{n},a}\}_a$,
+and every sum runs over the sectors of the declared index set $\mathbb{T}$
+only, is a channel from $\Avirt$ to the Fock space, and
+\begin{equation*}\tag{\getrefnumber{C-eq:tagid}}\digesteqlabel{eq:tagid}
+  \Xi_{\mathrm{tag}}(\rvirt_x)=\rho_x\qquad\text{for every label }x .
+\end{equation*}
+A quantum sector or a polarisation flag that no letter puts weight on is not a
+sector of $\Avirt$ by Definition~\ref{def:tagged-source}\,(T3) and contributes
+no term to \eqref{eq:xitag}, exactly as for the tail flags.
+The channel $\Xi_{\mathrm{tag}}$ depends on the declared weights and the
+cutoffs and on no label.
+\item \emph{(the role of the inequality)} \eqref{eq:tagid} holds for every
+family of weights satisfying \eqref{eq:tag-ineq}. Where \eqref{eq:tag-ineq}
+fails at an intensity $\mu$, its two halves fail differently.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item If $\tilde p(\mathsf{n}\,|\,\mu)>P_\mu(\mathsf{n})$ for some
+$\mathsf{n}\le N_{\mathrm{src}}$ and $\tilde w_\mu>0$, the operator
+\eqref{eq:tailstate} is not positive semidefinite, for every polarisation $a$,
+and the construction is not available: where a letter $x$ has intensity $\mu$,
+the map \eqref{eq:xitag} sends the state $\dyad{f_{a_x,\mu}}$ to
+$\vartheta_{a_x,\mu}$ and is not positive.
+\item If $\tilde p(\mathsf{n}\,|\,\mu)<0$ for some
+$\mathsf{n}\le N_{\mathrm{src}}$ while
+$\tilde p(\mathsf{n}'\,|\,\mu)\le P_\mu(\mathsf{n}')$ for every
+$\mathsf{n}'\le N_{\mathrm{src}}$, then $\tilde w_\mu>0$ and the operator
+\eqref{eq:tailstate} is a state for every polarisation $a$. What fails is the
+virtual state: for every letter $x$ of intensity $\mu$ the operator $\rvirt_x$
+of \eqref{eq:rvirt} is not positive semidefinite or has trace greater than
+one, so it is not a state.
+\end{enumerate}
+\item \emph{(the published case)} for
+$\tilde p(\mathsf{n}\,|\,\mu)=P_\mu(\mathsf{n})$ and
+$N_{\mathrm{ent}}=N_{\mathrm{src}}$ the virtual states are those of
+\cite[Eq.~(145)]{tupkary2026decoy} and \eqref{eq:tagid} is
+\cite[Lemma~9.2]{tupkary2026decoy}.
+\end{enumerate}
+\end{digestclaim}
+\end{mainclaim}
+
+\section*{9\quad The certificate and the emitted declaration}\pdfbookmark[1]{9 The certificate and the emitted declaration}{digest-group-transmitter/decoy/prop:decoy-cert}
+
+% claim transmitter/decoy/cor:emitted-decoy
+\digestlabel{cor:emitted-decoy}{9.2}\pdfbookmark[2]{Corollary 9.2 The emitted decoy declaration}{digest-transmitter/decoy/cor:emitted-decoy}
+\begin{mainclaim}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/decoy/cor:emitted-decoy}{Corollary~9.2}}%
+\begin{digestclaim}[The emitted decoy declaration]
+Let a weak-coherent-pulse model (Definition~\ref{def:wcp-model}) and a tagged
+source declaration over it (Definition~\ref{def:tagged-source}) be presented,
+with the certified inequality \eqref{eq:weightineq},
+$0\le\tilde p(\mathsf{n}\mid\mu)\le P_\mu(\mathsf{n})$, discharged for every
+$\mathsf{n}\le N_{\mathrm{src}}$ and every intensity $\mu\in\mathrm{Int}$. Its
+\emph{decoy declaration} is the ensemble presentation, in the sense of
+Definition~\ref{def:srcert}, whose declared data are exactly
+\begin{itemize}[leftmargin=1.6em]
+\item the alphabet $\Xset$ with its declared order and the weights $p_x$;
+\item the matched sector structure, matched meaning that Alice's system and
+  $\Avirt$ carry one ordered index set: the sectors $S_t$ of
+  Definition~\ref{def:tagged-source}\,(T3) that some letter puts positive
+  weight on, in the declared order of $\mathbb{T}$, each with its orthonormal
+  basis of (T3);
+\item the weighted blocks $\sigma^{\mathrm v,(t)}_x=p_xw_{x,t}
+  \dyad{\varphi_{x,t}}$ of \eqref{C-eq:decoy-blocks}, as block lists;
+\item the specified ensemble $\{p_x,\rho_x\}$ of the model as the source model,
+  the source segment with the one tagging link of
+  Definition~\ref{def:tagged-source}\,(T6) and its obligation record, and the
+  assumption ledger;
+\end{itemize}
+so that no retained system, no measurement, no marginal and no certificate is
+among them. Below, \emph{emitted} refers to this decoy declaration: the emitted
+source descriptor, segment and assumption ledger are the ones it
+declares. Then
+the following hold.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(a certificate, and an admissible specification)} where (E1) to
+(E3) of Definition~\ref{def:srcert} hold of the declared blocks, the objects
+\eqref{eq:enspres} --- the retained system $A=\bigoplus_tA_t$ with $A_t$ a copy
+of $S_t$, the marginal $\tau_A$, the POVM $\{M_x\}$ and the blocks
+$(\Psi_t)_t$ --- are a source-replacement certificate in block form
+with every non-zero block a multiple of a rank-one projector, satisfying (SR1)
+and (SR2) exactly against the tagged virtual ensemble of
+Definition~\ref{def:tagged-source}\,(T4); the data are a source specification
+in the sense of Definition~\ref{def:source-spec} in
+trusted-source mode; and
+Theorem~\ref{thm:certificate-sufficiency} holds of it, its part (i) reading (E1) to (E3) as the
+decided conditions.
+\item \emph{(the segment, and the source identity at the emitted descriptors)}
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{(the source identity)} The emitted source descriptor is
+$(\Avirt,\{\sigma^{\mathrm v}_x\})$ with $\sigma^{\mathrm v}_x=p_x\rvirt_x$ for
+the tagged ensemble of Definition~\ref{def:tagged-source}\,(T4) with the
+declared weights, hence a member of the declared descriptor family of
+Proposition~\ref{prop:tagging}, every tagged source declaration over every
+weak-coherent-pulse model; so the source identity \eqref{eq:srcmap}, here
+$\Xi_{\mathrm{tag}}(\rvirt_x)=\rho_x$, holds exactly at the emitted
+descriptors, as that proposition's conclusion.
+\item \emph{(the segment record)} The emitted segment satisfies the
+interface conditions (S1) (descriptor match), (S2) (index preservation)
+and (S4) (slots) of Definition~\ref{def:source-segment}, and its (S3) (source
+identity) is the conclusion of (a). Its list of
+transported constraint entries is empty and it carries no licence
+record. Its obligation record, the triple a consumer compares with the
+soundness registry to admit the link, is
+$\big(\textsf{tagging},\ \text{the id of Proposition~\ref{prop:tagging}},\
+\{\mathrm{A\textnormal{-}WCP}\}\big)$, together with the member of the declared
+descriptor family that its descriptors are
+(Definition~\ref{def:source-link}\,(c2)). The third component is the union of
+the assumption closure of Proposition~\ref{prop:tagging}, which is empty, and
+the physical-source assumption A-WCP that this submodule declares for the model
+that proposition is stated over (Definition~\ref{def:source-segment}\,(A1)).
+Inside an artefact that this submodule emits and whose assumption ledger lists
+A-WCP, the segment meets the admission conditions (A1) to (A3) of
+Definition~\ref{def:source-segment}: the registry entry, the decided triple
+and the provenance.
+\end{enumerate}
+\item \emph{(what the certificate reaches)} every state reached from the
+certificate of (i) by an attack on the
+transmitted system and the adversary's
+registers is block diagonal along $\mathbb{T}$ with $A$-marginal $\tau_A$, and
+pinching $A$ along $\mathbb{T}$ after the attack is the same operation as
+pinching the virtual signal before it (Lemma~\ref{lem:matched-pinching});
+Theorem~\ref{thm:certificate-sufficiency}\,(iii) holds against the tagged ensemble of
+Definition~\ref{def:tagged-source}\,(T4) itself;
+and a positive operator constrained only to have the marginal $\tau_A$ need not
+be block diagonal.
+\item \emph{(the entries of the declared blocks)} (E1) to (E3) are conditions on
+the declared blocks, and every entry of a block is a product
+$p_x\,w_{x,t}\,\big(\dyad{\varphi_{x,t}}\big)_{ij}$ of the declared weight
+$p_x$, the weight $w_{x,t}$, which is a declared sector weight or a
+tail weight formed from them, and an entry of the dyad of $\ket{\varphi_{x,t}}$ in the
+orthonormal basis of $S_t$ of Definition~\ref{def:tagged-source}\,(T3), a
+number fixed by the model and that basis and not a declared number.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{(the weights)} The products $p_xw_{x,t}$ are formed from the
+declared $p_x$, the declared $\tilde p(\mathsf{n}\mid\mu)$ and the
+tail weight \eqref{eq:tailweight}, which is itself formed exactly and rounds nowhere.
+Choosing the $p_x$ and the $\tilde p(\mathsf{n}\mid\mu)$ with few enough
+significant bits makes every product exact, and lowering a $\tilde p$ to a
+value that is still non-negative is permitted by \eqref{eq:weightineq} and
+yields again a tagged source declaration by (v).
+\item \emph{(the signal dyads)} The entries of $\dyad{\varphi_{x,t}}$ are the
+number $1$ on every flag sector and on the vacuum, and on a quantum sector
+$\mathsf{n}\ge1$ the entries of $\dyad{\mathsf{n},a}$ in the basis of
+$S_{\mathsf{n}}$. For every unit vector $\ket{b}\in\mathbb{C}^2$, in
+$\mathrm{Pol}$ or not, write
+$\ket{\mathsf{n},b}\coloneqq(c^{\dagger}_b)^{\mathsf{n}}\ket{\vac}/
+\sqrt{\mathsf{n}!}$, which for $b\in\mathrm{Pol}$ is the vector of
+\eqref{eq:numberstate}; then
+$\big|\braket{\mathsf{n},a}{\mathsf{n},b}\big|^2=|\braket{a}{b}|^{2\mathsf{n}}$
+for all unit vectors $a,b$. Let every polarisation be one of the four
+vectors of $\Dset$, with $\ket{H},\ket{V}$ the fixed orthonormal basis of the
+one-photon space of Definition~\ref{def:wcp-model}\,(W1) and
+$\ket{\pm}=(\ket{H}\pm\ket{V})/\sqrt2$, distinct polarisations being distinct
+vectors, and put $v_H=(1,1,0)$, $v_V=(1,-1,0)$ and $v_{\pm}=(1,0,\pm1)$. If
+$|\mathrm{Pol}|\ge2$, then $S_1$ is the one-photon space,
+$\{\ket{1,H},\ket{1,V}\}$ is an orthonormal basis of it, and in that basis
+$\dyad{1,H}$, $\dyad{1,V}$ and $\dyad{1,\pm}$ are
+$\big(\begin{smallmatrix}1&0\\0&0\end{smallmatrix}\big)$,
+$\big(\begin{smallmatrix}0&0\\0&1\end{smallmatrix}\big)$ and
+$\tfrac12\big(\begin{smallmatrix}1&\pm1\\\pm1&1\end{smallmatrix}\big)$. If
+$|\mathrm{Pol}|\ge3$, then $S_2$ is the two-photon space, and it has an
+orthonormal basis in which $\dyad{2,a}=\tfrac12\,v_av_a^{\transpose}$ for every
+$a\in\Dset$. So every entry of these dyads is $0$, $1$ or $\pm\tfrac12$ at one
+photon and $0$ or $\pm\tfrac12$ at two.
+\item \emph{(the sector sums)} With the entries of (a) and (b) representable,
+(E3) is a condition on the sums $\sum_x\sigma^{\mathrm v,(t)}_x$, accumulated
+entry by entry in the declared order, and on nothing else.
+\end{enumerate}
+\item \emph{(lowered weights)} if
+$0\le\tilde p'(\mathsf{n}\mid\mu)\le\tilde p(\mathsf{n}\mid\mu)$ for every
+$\mathsf{n}\le N_{\mathrm{src}}$ and every $\mu$, then the weights $\tilde p'$
+are again a tagged source declaration over the same model and
+Proposition~\ref{prop:tagging} holds of it, the difference passing into the
+tail weight. Its weights, its virtual ensemble, its tail states and its sector
+list are those formed from $\tilde p'$: the sector list may gain a tail flag,
+where $\tilde w_{\mu}$ was zero and $\tilde w'_{\mu}$ is not, and it may lose a
+polarisation flag or a quantum sector, where a weight is lowered to zero at
+every letter that carried it, so that neither sector list need contain the
+other.
+\end{enumerate}
+\end{digestclaim}
+\end{mainclaim}
+
+\section*{10\quad The physical-source assumption}\pdfbookmark[1]{10 The physical-source assumption}{digest-group-transmitter/decoy/ass:wcp}
+
+% claim transmitter/decoy/ass:wcp
+\digestlabel{ass:wcp}{10.1}\pdfbookmark[2]{Assumption 10.1 Emission of the declared weak-coherent-pulse states}{digest-transmitter/decoy/ass:wcp}
+\SetShortId{A-WCP}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/decoy/ass:wcp}{Assumption~10.1}}%
+\begin{digestassumption}[Emission of the declared weak-coherent-pulse states]
+For the tagged source declaration of Definition~\ref{def:tagged-source},
+with the cutoffs, the weights and the polarisations it declares, the physical
+source satisfies:
+(i) in every round it emits the specified state $\rho_x$ of
+Definition~\ref{def:wcp-model} of the letter $x=(a,\mu,z)$ drawn in that
+round, and nothing else;
+(ii) the intensity is the declared $\mu$ exactly, with no fluctuation and no
+uncertainty interval;
+(iii) the phase randomisation is full, so that the emitted state is the phase
+average \eqref{eq:wcpstate};
+(iv) the emission is in the two optical modes declared in
+Definition~\ref{def:wcp-model}\,(W1), and the polarisation is the declared
+$\ket{a}$;
+(v) no degree of freedom other than those two modes carries any dependence on
+$x$;
+(vi) the round type $z$ changes nothing the source emits;
+(vii) the letters $x_1,\dots,x_n$ of the $n$ rounds are drawn independently,
+each with the weights $p_x$ of Definition~\ref{def:wcp-model}\,(W2);
+(viii) given those letters, the systems the source emits in the $n$ rounds
+are in the product state $\rho_{x_1}\otimes\dots\otimes\rho_{x_n}$ of the
+per-round states;
+(ix) neither the letter of a round nor the state emitted in it depends on
+what happens in the other rounds, their outcomes and public messages
+included.
+\end{digestassumption}
+
+\section*{11\quad Emission and refusals}\pdfbookmark[1]{11 Emission and refusals}{digest-group-transmitter/decoy/req:decoy-emission}
+
+% claim transmitter/decoy/req:decoy-emission
+\digestlabel{req:decoy-emission}{11.1}\pdfbookmark[2]{Requirement 11.1 Emission of the tagged ensemble as declared}{digest-transmitter/decoy/req:decoy-emission}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/decoy/req:decoy-emission}{Requirement~11.1}}%
+\begin{digestrequirement}[Emission of the tagged ensemble as declared]
+When the engine emits an artefact from a tagged source declaration over
+a weak-coherent-pulse model, the artefact is that declaration's decoy
+declaration (Corollary~\ref{cor:emitted-decoy}) and nothing else: the engine
+declares no retained system, no measurement, no marginal and no certificate,
+and it rounds or otherwise alters no declared number. The matched
+sector structure among the declared data of that corollary is emitted as
+the retained-register sector map of
+Definition~\ref{def:tagged-source}\,(T5), with
+the block kind \iface{proof_sector}, the tag that records a decomposition
+licensed by a proof, here source replacement, rather than by the device's own
+mode structure;
+it names Alice's sectors only as copies of the declared sectors $S_t$, so it
+declares no retained system. An artefact emitted from a tagged declaration
+carries A-WCP and not A-ENS in its assumption ledger
+(Assumption~\ref{ass:wcp}).
+\end{digestrequirement}
+
+% claim transmitter/decoy/req:cutoff-order
+\digestlabel{req:cutoff-order}{11.2}\pdfbookmark[2]{Requirement 11.2 Order of the entropy and source cutoffs}{digest-transmitter/decoy/req:cutoff-order}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/decoy/req:cutoff-order}{Requirement~11.2}}%
+\begin{digestrequirement}[Order of the entropy and source cutoffs]
+The engine refuses, with no artefact, a declaration whose cutoffs are not
+integers with $0\le N_{\mathrm{ent}}\le N_{\mathrm{src}}$, which is (T1) of
+Definition~\ref{def:tagged-source} (\iface{cutoffs_out_of_order}, the one
+refusal for a cutoff that is not an integer and for cutoffs out of order).
+\end{digestrequirement}
+
+% claim transmitter/decoy/req:entropy-cutoff
+\digestlabel{req:entropy-cutoff}{11.3}\pdfbookmark[2]{Requirement 11.3 Entropy cutoff of at most two photons}{digest-transmitter/decoy/req:entropy-cutoff}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/decoy/req:entropy-cutoff}{Requirement~11.3}}%
+\begin{digestrequirement}[Entropy cutoff of at most two photons]
+The engine refuses, with no artefact, a declaration with
+$N_{\mathrm{ent}}\ge3$ (\iface{entropy_cutoff_above_two}). The refusal is a
+scope decision and not a consequence of anything the claims state: every claim
+of this submodule is stated for arbitrary $N_{\mathrm{ent}}\le N_{\mathrm{src}}$
+and nothing in them fails at $N_{\mathrm{ent}}\ge3$. What is missing is a
+construction of the kind Corollary~\ref{cor:emitted-decoy}\,(iv)(b) supplies
+for the four polarisations $\Dset$ at one and at two photons: a declared
+basis in which the signal dyads have exactly declarable entries. This
+repository has no such construction at three photons and above. Admitting such
+a sector would mean deciding exact conditions on dyad entries that differ from
+the entries of the signal states, so until the construction exists the sector
+is refused rather than declared with entries that are not the numbers written.
+\end{digestrequirement}
+
+% claim transmitter/decoy/req:signal-dyads
+\digestlabel{req:signal-dyads}{11.4}\pdfbookmark[2]{Requirement 11.4 Signal dyads formed by the exhibited construction}{digest-transmitter/decoy/req:signal-dyads}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/decoy/req:signal-dyads}{Requirement~11.4}}%
+\begin{digestrequirement}[Signal dyads formed by the exhibited construction]
+The engine forms the entries of the signal dyads of a decoy declaration
+itself, and takes neither a dyad nor a basis of a sector from a request. On
+the vacuum sector and on every flag sector it forms the number $1$. On a
+quantum sector $\mathsf{n}\in\{1,2\}$ of the index set it forms them only where
+every polarisation of $\mathrm{Pol}$ is declared as one of the four vectors of
+$\Dset$, distinct polarisations as distinct vectors, and
+$|\mathrm{Pol}|\ge\mathsf{n}+1$; it then forms the dyad of $\ket{\mathsf{n},a}$
+with the entries Corollary~\ref{cor:emitted-decoy}\,(iv)(b) states for it. It
+decides of the formed dyads, exactly, that each is a rank-one projector on
+$S_{\mathsf{n}}$ (Hermitian, idempotent and of unit trace) and that
+$\tr\big[\dyad{\mathsf{n},a}\,\dyad{\mathsf{n},b}\big]
+=|\braket{a}{b}|^{2\mathsf{n}}$ for every pair of polarisations of
+$\mathrm{Pol}$, the value that Definition~\ref{def:wcp-model}\,(W3) gives by
+that corollary and that is $0$, $2^{-\mathsf{n}}$ or $1$ for two vectors of
+$\Dset$. It refuses, with no artefact, a declaration whose index set carries
+a quantum sector $\mathsf{n}\ge1$ outside this construction, or at which one of
+these decisions fails (\iface{quantum_sector_outside_construction}). A
+declaration with $N_{\mathrm{ent}}\ge3$ is refused under its own reason
+(Requirement~\ref{req:entropy-cutoff}).
+\end{digestrequirement}
+
+% claim transmitter/decoy/req:sector-weight-bound
+\digestlabel{req:sector-weight-bound}{11.5}\pdfbookmark[2]{Requirement 11.5 Certified bound on the sector weights}{digest-transmitter/decoy/req:sector-weight-bound}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/decoy/req:sector-weight-bound}{Requirement~11.5}}%
+\begin{digestrequirement}[Certified bound on the sector weights]
+The obligation \eqref{eq:weightineq} of Definition~\ref{def:tagged-source}\,(T2),
+$0\le\tilde p(\mathsf{n}\mid\mu)\le P_\mu(\mathsf{n})$ for every
+$\mathsf{n}\le N_{\mathrm{src}}$ and every intensity $\mu\in\mathrm{Int}$ of
+Definition~\ref{def:wcp-model}\,(W2), is an inequality and never an equality:
+its right-hand side is not a declared datum, and at a positive intensity,
+declared as a binary64 number, it is a transcendental number (at $\mu=0$ it is
+$1$ for $\mathsf{n}=0$ and $0$ for $\mathsf{n}\ge1$). For every such
+$(\mathsf{n},\mu)$ the engine forms, from the declared intensity $\mu$ and in
+exact rational arithmetic, the lower end
+$\underline{P}_\mu(\mathsf{n})\coloneqq\max(0,S_{K+1})\,\mu^{\mathsf{n}}/\mathsf{n}!$
+of the enclosure of Lemma~\ref{C-lem:poisson-enclosure}, with $S_{K+1}$ the
+partial sum \eqref{C-eq:expsum} at $K=K_\mu$, the least even integer
+$K\ge\mu$ with $t_{K+1}=\mu^{K+1}/(K+1)!\le2^{-90}$, which exists because
+$t_{K+1}\to0$. It records $K_\mu$ for every intensity in the artefact, and it
+reads no enclosure of $P_\mu(\mathsf{n})$ from the request. By part (iv) of
+that lemma no even $K$ with $\mu\le K<K_\mu$ gives a larger lower end, so the
+rule refuses no weight that a smaller admissible index would admit. It
+refuses, with no artefact, a declaration in which
+$\tilde p(\mathsf{n}\mid\mu)<0$ or
+$\tilde p(\mathsf{n}\mid\mu)>\underline{P}_\mu(\mathsf{n})$ at some
+$(\mathsf{n},\mu)$ (\iface{sector_weight_above_poisson}). Since
+$\underline{P}_\mu(\mathsf{n})\le P_\mu(\mathsf{n})$ by that lemma, every
+declaration violating \eqref{eq:weightineq} is refused, and every declaration
+it admits satisfies \eqref{eq:weightineq}. It refuses, with no artefact, a
+declaration presenting the obligation as an equality
+$\tilde p(\mathsf{n}\mid\mu)=P_\mu(\mathsf{n})$ to be decided
+(\iface{sector_weight_as_equality}). No condition of this submodule compares
+$\tilde p(\mathsf{n}\mid\mu)$ with $P_{\mu}(\mathsf{n})$ for equality and none
+is decided at a tolerance.
+\end{digestrequirement}
+
+% claim transmitter/decoy/req:shared-flags
+\digestlabel{req:shared-flags}{11.6}\pdfbookmark[2]{Requirement 11.6 Shared polarisation and tail flags}{digest-transmitter/decoy/req:shared-flags}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/decoy/req:shared-flags}{Requirement~11.6}}%
+\begin{digestrequirement}[Shared polarisation and tail flags]
+The engine refuses, with no artefact, a declaration carrying a flag family finer
+than the one Definition~\ref{def:tagged-source}\,(T3) declares
+(\iface{flag_family_split_by_intensity}). That family is one
+polarisation flag $f_{\mathsf{n},a}$ for each sector $(\mathsf{n},a)$ of
+the index set of (T3), $N_{\mathrm{ent}}<\mathsf{n}\le N_{\mathrm{src}}$, shared
+by every intensity and both round types, and one
+tail flag $f_{a,\mu}$ for each sector $(a,\mu)$ of
+that index set, shared by both round types; a finer family is one with separate
+flags where (T3) declares one. In particular the engine refuses a family whose
+polarisation flags are split by intensity at a photon number
+$N_{\mathrm{ent}}<\mathsf{n}\le N_{\mathrm{src}}$. A family split by intensity
+still satisfies the source identity but gives up the relation across
+intensities that is the decoy content of the declaration, one photon number's
+weight at every intensity sitting on one flag
+(Remark~\ref{C-rem:no-intensity-split}), and without the refusal that loss would
+be silent.
+\end{digestrequirement}
+
+% claim transmitter/decoy/req:exact-decoy-blocks
+\digestlabel{req:exact-decoy-blocks}{11.7}\pdfbookmark[2]{Requirement 11.7 Binary64 entries of the emitted blocks and sector sums}{digest-transmitter/decoy/req:exact-decoy-blocks}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/decoy/req:exact-decoy-blocks}{Requirement~11.7}}%
+\begin{digestrequirement}[Binary64 entries of the emitted blocks and sector sums]
+The engine decides (E3) of Definition~\ref{def:srcert} on the sums of the
+declared blocks of a decoy declaration, accumulated entry by entry in the
+declared order. Each entry of a block, a product of declared numbers, the
+tail weight formed from them and a formed entry of a signal dyad
+(Corollary~\ref{cor:emitted-decoy}\,(iv)), is
+required to be a binary64 number and is refused, with no artefact, when it is
+not (\iface{formed_entry_not_declarable}). Those sums are required to round
+nowhere, so that their entries are binary64 numbers, and a declaration at a
+sector of which the accumulation rounds fails (E3) and is refused, with no
+artefact (\iface{ensemble_presentation_not_admissible}). No entry is ever
+rounded, because rounding an entry of a declared block would change which
+ensemble is declared and so which ensemble the source identity of
+Corollary~\ref{cor:emitted-decoy}\,(ii) is asserted of.
+\end{digestrequirement}
+
+% claim transmitter/decoy/req:decoy-ensemble-conditions
+\digestlabel{req:decoy-ensemble-conditions}{11.8}\pdfbookmark[2]{Requirement 11.8 Positivity and weight sums of the emitted blocks}{digest-transmitter/decoy/req:decoy-ensemble-conditions}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-transmitter/decoy/req:decoy-ensemble-conditions}{Requirement~11.8}}%
+\begin{digestrequirement}[Positivity and weight sums of the emitted blocks]
+The engine decides (E1) and (E2) of Definition~\ref{def:srcert} on the declared
+blocks of a decoy declaration, as it decides (E3)
+(Requirement~\ref{req:exact-decoy-blocks}). It refuses, with no artefact, a
+declared block failing (E1) or a weight sum failing (E2)
+(\iface{ensemble_presentation_not_admissible}).
+\end{digestrequirement}
+
+\bibliographystyle{plain}
+\bibliography{../../../refs/references}
+
+\end{document}

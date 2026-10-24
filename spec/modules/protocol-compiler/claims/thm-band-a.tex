@@ -1,0 +1,203 @@
+% ---
+% id: protocol-compiler/thm:band-a
+% kind: thm
+% title: "The Band-A route"
+% summary: >-
+%   On the direct one-sector route every chain condition but the receiver
+%   family's exact admissibility holds by inspection, and the identity link,
+%   which delivers the declared measurement, is sound by exhibition. The
+%   receiver's residual physical content is the ideal-receiver assumption.
+% prominence: standard
+% status: accepted
+% uses: [def:chaincond, def:exact, def:banda, def:compile, def:weighted, transmitter/def:source-segment]
+% mentions: [thm:gates, ass:atk, ass:link, reductions/ex:identity, req:band-a-identity-link]
+% assumes: [A-IDEAL]
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "A-ATK is not declared and thm:gates is a mention: (iii) says that the link transports no entry and that the gate is not engaged where the specification declares none, (iv) names the licence for the entries the specification declares itself, and A-ATK is declared where it is spent, at thm:gates. A-LINK is not declared, and thm:chain-consumption is neither used nor mentioned: (v) proves every clause of A-LINK of the identity link, and (ii) states directly, at the identity, what thm:chain-consumption (iii) and (iv) buy on a general chain, so no step uses that theorem or its A-LINK. That the family the link delivers is the declared one and the outcome correspondence the identity are hypotheses, Definition def:banda (b); the engine decides them on the record (req:band-a-identity-link)."
+% ---
+
+On the direct route no reduction runs: the chain is one identity link, given
+as data, which transports no constraint entry and delivers the declared
+measurement unchanged. The theorem records what that makes trivial and what
+it does not. The one link of the receiver segment is the identity link of
+\xref{reductions/ex:identity}. That the link delivers the declared
+measurement on the identity outcome correspondence is part of the hypothesis,
+Definition~\ref{def:banda}\,(b), and not a consequence of its channel being
+the identity: a link record carries its target POVM and its outcome
+correspondence as data of their own, and the engine decides both on the
+record (Requirement~\ref{req:band-a-identity-link}). The attack-set licence
+(Assumption~\ref{ass:atk}) is asserted only for a non-empty constraint list;
+on this route that list is the specification's own (iii), so where the
+specification declares no entry the licence is not invoked and nothing proved
+here rests on it.
+
+\begin{theorem}\label{thm:band-a}
+For a Band-A specification:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item the block structure of a Band-A declaration is the one-block structure:
+$\Smap$ is the singleton map $\big((s_0,d_{s_0})\big)$, $d_{\Qsys}=d_{s_0}$,
+and every $\Qsys$-operator is a one-element \tref{block list}, so that its
+single block \emph{is} the whole operator. Two consequences follow, and they
+differ. The typing half of D(iii) is not vacuous but trivial to satisfy: an
+operator is a one-element list, and V1's sector-map comparison is one
+identifier and one dimension. The five predicates of D(iii) are \emph{not}
+vacuous at all --- with $|\SecSet|=1$ the per-block predicates are the
+full-space ones, decided once each on $d_{\Qsys}\times d_{\Qsys}$ matrices, and
+a Band-A declaration is decided exactly like any other, condition~(S)
+included;
+\item the \tref[interface conditions on a chain]{interface conditions} of
+Definition~\ref{def:chaincond} hold by inspection, save the predicates and
+summation condition of (C3), which are decided: descriptors match because
+source and target of $\idmap$ coincide; the outcome correspondence is the
+identity bijection $\gamma=\idmap$ on $\Vset=\Vph$, as
+Definition~\ref{def:banda}\,(b) requires; (C3)'s typing half holds
+because the declared receiver family is already a one-element block list
+against the singleton map, and its predicates and summation condition are the
+declared receiver POVM's own, so (C3) holds exactly when that family is
+\tref{exactly admissible}, which is decided on it and is not given by
+inspection; the pullback identity (C4) reads
+$\idmap^{\dagger}(F_v)=F_v=\Fph_v$ and holds \emph{identically} --- entry for
+entry, since $\idmap^{\dagger}=\idmap$, every fibre $\gamma^{-1}(v)$ is a
+singleton, and the delivered $F_v$ \emph{is} the declared $\Fph_v$, the same
+matrix, by Definition~\ref{def:banda}\,(b); the source conditions (S1)--(S4) of
+\xref{transmitter/def:source-segment} are vacuous, quantifying over an empty
+list of links --- the empty \tref{source segment} being that definition's at
+$L_{\mathrm s}=0$, which Definition~\ref{def:banda}\,(b) requires of a Band-A
+chain and which is therefore a hypothesis of this theorem --- and the
+\tref{virtual ensemble} of (S3) is the specified one, so the source identity
+reads $\rho_x=\rho_x$; the ordering (X1) holds because the source segment is
+empty; and the slots of (C5) are present and empty. The one link of the
+receiver segment is the identity link.
+\emph{So both conditions that a general chain has to decide on computed data
+are met here by exhibition}, and what a verified pullback identity and a
+verified source identity buy on a general chain holds on this path without
+appeal to any obligation of the chain's \tref{producer}: measuring the
+family the link delivers after $\idmap$ reproduces the physical statistics,
+$\tr[F_v\,\idmap(\rho)]=\tr[\Fph_v\,\rho]$ for every $v$ and every operator
+$\rho$, and $\idmap$ is exactly trace-preserving \emph{by exhibition}, the
+supplied channel data being exactly that map rather than binary64 data
+trusted to be trace-preserving, so its adjoint is unital and summing the
+pullback identity over $v$ returns $\sum_v\Fph_v=\idon{}$, which on this path
+is the same statement as (C3)'s own completeness, $\{\Fph_v\}$ being
+$\{F_v\}$: the identity holds as a triviality and carries no content this
+path did not already have;
+\item the link transports no constraint entry, so $\CList$ is the
+specification's own list $\Spec_{\mathrm{con}}$ and the constraint-soundness
+obligation of the link (the transported-constraint clause of
+Assumption~\ref{ass:link}) is vacuous; where $\Spec_{\mathrm{con}}$ is empty,
+$\CList=\varnothing$ and the two-part gate of Theorem~\ref{thm:gates} is not
+engaged;
+\item consequently no emitted slot, and no claim of this contract used in the
+Band-A path, depends on an artefact of the receiver module or of the
+reductions module. The residual physical content of the receiver is
+Assumption~\ref{ass:ideal}, and it is an idealization of the receiver, not a
+reduction of it; an entry the specification declares itself engages the
+gate, and with it the attack-set licence of Assumption~\ref{ass:atk}, as on
+every route; and
+\item \emph{(the identity link is sound)} the Band-A chain satisfies every
+condition of Assumption~\ref{ass:link}: (i)(a) the channel of its one link,
+$\idmap_{\Qsys}$, exists, the link supplying it as data; (i)(b) that link
+satisfies the pullback identity \eqref{eq:pullback}; (i)(c) the protocol
+using the measurement the link delivers is the protocol using the declared
+receiver family $\{\Fph_v\}$, the delivered $\{F_v\}$ being that family, so
+security of the one is security of the other, and where a setting-dependent
+weighting $P(f\,|\,t)$ is applied after the link
+(Definition~\ref{def:weighted}), the emitted family
+$\{P(f\,|\,t(v))\,F_v\}$ is the identically weighted declared family
+$\{P(f\,|\,t(v))\,\Fph_v\}$, so the same holds of the weighted protocol; (ii) its source segment is empty; (iii) its link transports no
+constraint entry; and (iv) $\idmap_{\Qsys}$ is completely positive and
+trace-preserving. No clause of Assumption~\ref{ass:link} is therefore a
+premise on this path; that the declared family is the measurement the
+receiver performs is Assumption~\ref{ass:ideal}, and no condition on the link.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) $\sum_sd_s=d_{s_0}$ is the one-term sum, so $d_{\Qsys}=d_{s_0}$. The
+typing half: a block list against a singleton map is a one-element list, and
+$\bigoplus_{s\in\{s_0\}}F^{(s_0)}=F^{(s_0)}$, so the operator and its block
+coincide; V1's comparison is then a comparison of two one-element lists. The
+predicates: at $|\SecSet|=1$ the family $\{F_v^{(s_0)}\}_v$ is $\{F_v\}_v$ and
+$\Qsys_{s_0}=\Qsys$, so each per-block condition of
+Definition~\ref{def:exact} --- Hermiticity, positivity, completeness, and the
+summation condition (S) on the completeness sum --- is literally the full-space
+one, and none of them is empty.
+
+(ii) Each condition is evaluated at $L_{\mathrm s}=0$ and $L=1$,
+$\Lambda_1=\idmap$: (C1) both descriptors of $\idmap_{\Qsys}$, at its source
+and at its target, are $(\Qsys,\{s_0\},(d_{s_0}))$ and the physical receiver
+space is $\Qsys$ by Definition~\ref{def:banda}\,(a), and the two descriptors
+carry the same singleton \tref{sector map}, so (C1) holds --- and the emitted
+$\{F_v\}$ carries that same singleton map, so V1's comparison passes as well;
+(C2) the outcome correspondence is the identity map on $\Vset=\Vph$
+(Definition~\ref{def:banda}\,(b)), a tabulated bijection, in particular a
+total surjection with singleton fibres; (C3): its typing half is (i), the
+family being a one-element list against the singleton map, and by (i) its
+blocks are the declared receiver family itself, the same matrices, so its
+predicates and summation condition are that family's exact admissibility,
+which is decided exactly on those matrices and which nothing in this theorem
+supplies; (C4) for every operator $Y$ and every
+$\rho$, $\tr[Y\idmap(\rho)]=\tr[Y\rho]$, so $\idmap^{\dagger}=\idmap$ and
+\eqref{eq:pullback}, whose fibre $\gamma^{-1}(v)$ is $\{v\}$ for
+$\gamma=\idmap$, reads $F_v=\Fph_v$; this holds entry for entry because
+Definition~\ref{def:compile} fills $\{F_v\}$ from the last link's
+\tref[target povm]{target POVM}, and that target POVM is the declared family
+itself, $F_v=\Fph_v$ for every $v$, by Definition~\ref{def:banda}\,(b), so
+the delivered matrix \emph{is} the declared one --- a clause of the
+hypothesis, and not a consequence of the link's channel being $\idmap$, which
+fixes nothing of the target POVM; (C5) is Definition~\ref{def:banda}\,(b),
+which gives the one link its status tag, \emph{exact}, and its constraint and
+licence slots, both empty; (S1)--(S4) quantify over the links of
+$\Chsrc$ and that list is empty, and the source identity (S3) holds with $\Xi$
+the identity and $\rvirt_x=\rho_x$, as \xref{transmitter/def:source-segment}
+says of the empty segment; (X1) is the shape of the record, with nothing in
+the first component.
+
+(iii) $\CList$ is the concatenation of the specification's entry list
+$\Spec_{\mathrm{con}}$ with the entries transported by the links
+(Definition~\ref{def:compile}); the source segment has no links and the
+single receiver link has an empty constraint slot
+(Definition~\ref{def:banda}\,(b)), so the links transport no entry and
+$\CList$ is $\Spec_{\mathrm{con}}$'s list. The transported-constraint clause
+of Assumption~\ref{ass:link} quantifies over the entries a link transports
+and is vacuous. Where $\Spec_{\mathrm{con}}$ is empty, $m=0$ and the gate's
+premise "$m\ge1$" fails, so Theorem~\ref{thm:gates}\,(ii) is not engaged, and
+no step of this proof invokes that theorem's statement.
+
+(iv) By (ii) and (iii) every emitted slot is filled from
+$\Spec_{\mathrm{src}}$, $\Spec_{\mathrm{rec}}$, $\Spec_{\mathrm{pub}}$ and
+$\Spec_{\mathrm{con}}$, and the only chain-derived slots ($\Qsys$, $\SecSet$,
+$(d_s)$, $\{F_v\}$, $\CList$) take the values of the directly declared
+receiver data and of the specification's own entry list. The
+channel-existence clause of Assumption~\ref{ass:link} --- that the link's
+channel exists as claimed --- is discharged by exhibition, since $\idmap$ is
+a channel; what remains of the receiver is Assumption~\ref{ass:ideal}. An
+entry of $\Spec_{\mathrm{con}}$ is declared by the specification, as on any
+route, and the gate it engages is Theorem~\ref{thm:gates}'s, whose licence is
+Assumption~\ref{ass:atk}; nothing in this proof rests on it.
+
+(v) Each clause is evaluated at $L_{\mathrm s}=0$ and $L=1$,
+$\Lambda_1=\idmap_{\Qsys}$ (Definition~\ref{def:banda}\,(b)). (i)(a) and
+(iv): $\idmap_{\Qsys}$ is completely positive and trace-preserving, the
+identity on $\Lin{\Qsys}$ tensored with any identity being an identity; it is
+a channel that exists, and the link supplies it as data, exactly that map
+(Definition~\ref{def:banda}\,(b)). (i)(b) is the pullback identity of (ii),
+$\idmap^{\dagger}(F_v)=F_v=\Fph_v$ entry for entry. (i)(c): by (ii), that
+is by the target-POVM clause of Definition~\ref{def:banda}\,(b), the
+delivered $\{F_v\}$ is the declared $\{\Fph_v\}$, the same matrices, and
+nothing else of the protocol depends on the link, so the protocol using the
+delivered measurement and the protocol using the declared one are one
+protocol, and a security statement about it implies itself. Where a
+setting-dependent weighting is applied after the link, the emitted family is
+$\{P(f\,|\,t(v))\,F_v\}_{(v,f)\in\Vset_P}$ (Definition~\ref{def:compile},
+Definition~\ref{def:weighted}), and with $F_v=\Fph_v$ entry for entry it is
+the declared family weighted by the same $P$ through the same setting map,
+the same matrices again; so the weighted protocol using the emitted
+measurement and the weighted protocol using the declared one are again one
+protocol. Clause (ii) of
+the assumption quantifies over the links of the source segment, and there are
+none. Clause (iii) quantifies over the constraint entries the link transports,
+and its constraint slot is empty (Definition~\ref{def:banda}\,(b)).
+\end{proof}

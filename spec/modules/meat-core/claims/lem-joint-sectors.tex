@@ -1,0 +1,145 @@
+% ---
+% id: meat-core/lem:joint-sectors
+% kind: lem
+% title: "The objective split over joint sectors"
+% summary: >-
+%   On states block-diagonal along Alice's and the measured sectors, the branch
+%   maps, the statistics and K split per joint sector; each deficit is
+%   non-positive, concave and positively homogeneous. Key-inert joint pairs add
+%   zero, so the sum may be restricted to the joint key-active index set.
+% prominence: standard
+% status: implemented
+% uses: [def:joint-sectors, def:declaration, def:branch, lem:branch-maps, thm:branch-formula, cor:f-nonpos, lem:cone-concavity, def:keyinert, def:maps, def:admissible-declaration]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.joint:evaluate_joint_branch
+% lean:
+% notes: "Part (iii) repeats the argument of prop:exact-cancellation on the joint sector and does not use that proposition, whose hypothesis (key-inertness of the whole measured sector) is strictly stronger."
+% ---
+
+With Alice sectors, the sector form of Theorem~\ref{thm:branch-formula}\,(iii)
+refines once more: a state block diagonal along the joint sectors splits the
+objective into one deficit per joint sector, and key-inertness is read per
+joint pair (Definition~\ref{def:joint-sectors}).
+
+\begin{lemma}\label{lem:joint-sectors}
+Let $\Decl$ satisfy Definition~\ref{def:admissible-declaration} in the general format of
+Definition~\ref{def:declaration}, let $\alpha\in(1,\infty)$ and
+$\hat c\in\Chatset$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(decomposition)} For $s\in\SecSet$ and
+$\sigma=\bigoplus_{t}\sigma_t\in\Pos{A\Qsys_s}$ with
+$\sigma_t\in\Pos{A_t\Qsys_s}$,
+\begin{equation}\label{eq:G-joint}
+  \cG_{\hat c,s}(\sigma)=\bigoplus_{t\in\mathbb{T}}
+  \cG_{\hat c,(t,s)}(\sigma_t),\qquad
+  \Theta_{\hat c,s}(\sigma)=\bigoplus_{t\in\mathbb{T}}
+  \Theta_{\hat c,s}(\sigma_t),\qquad
+  \Phimap_s[\sigma]=\sum_{t}\Phimap_s[\sigma_t],
+\end{equation}
+the direct sums along the mutually orthogonal subspaces
+$\Hs{R\,XY\,C_AC_B}\otimes\Hs{A_t\Qsys_s}$.
+\item \emph{(additivity)} For such $\sigma$,
+$f_{\hat c,s}(\sigma)=\sum_tf_{\hat c,(t,s)}(\sigma_t)$. Consequently, for
+every $\omega=\bigoplus_{(t,s)}\omega^{(t,s)}$ block diagonal along the joint
+sectors,
+\begin{equation}\label{eq:K-joint}
+  P_{\hat c}(\omega)=\sum_{(t,s)}P_{\hat c,(t,s)}\big(\omega^{(t,s)}\big),
+  \qquad
+  K_{\hat c}(\omega)=P_{\hat c}(\omega)
+  +\sum_{(t,s)}f_{\hat c,(t,s)}\big(\omega^{(t,s)}\big),
+\end{equation}
+and for every $\sigma\in\Pos{A_t\Qsys_s}$: $f_{\hat c,(t,s)}(\sigma)\le0$,
+$0\le P_{\hat c,(t,s)}(\sigma)+f_{\hat c,(t,s)}(\sigma)$, and
+$f_{\hat c,(t,s)}$ is concave and positively $1$-homogeneous on
+$\Pos{A_t\Qsys_s}$.
+\item \emph{(key-inert joint pairs)} If $\hat c\in\Chkey$ and
+$(\hat c,(t,s))$ is key-inert (Definition~\ref{def:joint-sectors}), then
+$f_{\hat c,(t,s)}(\sigma)=0$ for \emph{every} $\sigma\in\Pos{A_t\Qsys_s}$.
+Hence the second sum of \eqref{eq:K-joint} may be restricted to
+$(t,s)\in\mathbb{J}_K(\hat c)$, as an identity and not as a bound.
+\item \emph{(relation to the sector notions)} If $(\hat c,s)$ is key-inert in
+the sense of Definition~\ref{def:keyinert} then $(\hat c,(t,s))$ is key-inert
+for every $t$; the converse fails in general, and holds when
+$|\mathbb{T}|=1$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) By Definition~\ref{def:admissible-declaration}\,(iii) in the general format every $M_x$ is
+block diagonal along $\mathbb{T}$, and by blockwise functional calculus so
+is $\sqrt{M_x}=\bigoplus_t\sqrt{M^{(t)}_x}$. Write
+$\widetilde\Pi_t$ for $\Pi^{A}_t$ acting on the $A$ factor of
+$\Hs{R\,XY\,C_AC_B\,A\Qsys_s}$. Each term of $K^{(s)}_{\kappa}$ in
+\eqref{eq:kraus} carries the operator $\sqrt{M_x}\otimes\sqrt{F^{(s)}_v}$ on
+$A\Qsys_s$, which commutes with $\Pi^{A}_t\otimes\idon{}$, so
+$K^{(s)}_{\kappa}(\Pi^{A}_t\otimes\idon{})=\widetilde\Pi_tK^{(s)}_{\kappa}$.
+Since $\sigma=\sum_t(\Pi^{A}_t\otimes\idon{})\sigma(\Pi^{A}_t\otimes\idon{})$
+and $\sigma_t=(\Pi^{A}_t\otimes\idon{})\sigma(\Pi^{A}_t\otimes\idon{})$,
+\begin{equation*}
+  K^{(s)}_{\kappa}\,\sigma\,K^{(s)\dagger}_{\kappa}
+  =\sum_t\widetilde\Pi_t\,K^{(s)}_{\kappa}\,\sigma_t\,
+  K^{(s)\dagger}_{\kappa}\,\widetilde\Pi_t ,
+\end{equation*}
+and the $t$-th term is $K^{(s)}_{\kappa}\sigma_tK^{(s)\dagger}_{\kappa}$,
+supported on the range of $\widetilde\Pi_t$. Summing over the pass, resp.\
+fail, classes of $\phi^{-1}(\hat c)$ gives the two direct sums; the
+statistics statement is linearity of \eqref{eq:Phimap} in its argument.
+
+(ii) The subspaces of (i) are invariant under $\cZ$, which acts on $R$
+alone, and under powers; so for an operator
+$X=\bigoplus_tX_t$ along them, $X^{1/\alpha}=\bigoplus_tX_t^{1/\alpha}$,
+$\cZ(X^{1/\alpha})=\bigoplus_t\cZ(X_t^{1/\alpha})$, the $\alpha$-th power is
+again blockwise, and the trace adds. With $X=\cG_{\hat c,s}(\sigma)$ and (i),
+\eqref{eq:f-def} gives $f_{\hat c,s}(\sigma)=\sum_tf_{\hat c,s}(\sigma_t)$,
+which is the claim by \eqref{eq:joint-deficit}. For $\omega$ block diagonal
+along the joint sectors, put $\omega_s\coloneqq\bigoplus_t\omega^{(t,s)}$;
+then $\omega=\bigoplus_s\omega_s$ is block diagonal along $\SecSet$,
+Lemma~\ref{lem:branch-maps}\,(iii) gives
+$\cG_{\hat c}(\omega)=\bigoplus_s\cG_{\hat c,s}(\omega_s)$ and
+$\Phimap[\omega]=\sum_s\Phimap_s[\omega_s]$, and by the same blockwise
+argument along $\SecSet$ together with \eqref{eq:fK},
+$K_{\hat c}(\omega)=P_{\hat c}(\omega)+\sum_sf_{\hat c,s}(\omega_s)$; insert
+the additivity just proved, and the additivity of $\Phimap_s$ from (i), to
+obtain \eqref{eq:K-joint}. For the bounds let $\sigma\in\Pos{A_t\Qsys_s}$.
+$f_{\hat c,(t,s)}(\sigma)=f_{\hat c,s}(\sigma)\le0$ by
+Corollary~\ref{cor:f-nonpos}, stated on all of $\Pos{A\Qsys_s}$. Regard
+$\sigma$ as an element $\varrho$ of $\Pos{A\Qsys}$ supported on one joint
+sector: then $\cG_{\hat c}(\varrho)=\cG_{\hat c,s}(\sigma)$ by
+Lemma~\ref{lem:branch-maps}\,(iii), so
+$K_{\hat c}(\varrho)=P_{\hat c}(\sigma)+f_{\hat c,s}(\sigma)$ by
+\eqref{eq:fK} and \eqref{eq:f-def}, and the cone clause of
+Theorem~\ref{thm:branch-formula} gives $K_{\hat c}(\varrho)\ge0$. Concavity on
+$\Pos{A_t\Qsys_s}$ is the restriction to a convex subcone of the concavity
+of $f_{\hat c,s}$ on $\Pos{A\Qsys_s}$, Lemma~\ref{lem:cone-concavity}\,(c);
+positive $1$-homogeneity is part~(a) of that lemma applied to
+$T\circ\cG_{\hat c,s}$, the map $\cG_{\hat c,s}$ and the trace being linear.
+
+(iii) Fix a pass class $\kappa$ and let $r_{\kappa}$ be the constant value
+of $r$ on $E^{(t,s)}_{\kappa}$. For $\sigma\in\Pos{A_t\Qsys_s}$ one has
+$\sigma=(\Pi^{A}_t\otimes\idon{})\sigma(\Pi^{A}_t\otimes\idon{})$, so only
+$K^{(s)}_{\kappa}(\Pi^{A}_t\otimes\idon{})$ enters
+$K^{(s)}_{\kappa}\sigma K^{(s)\dagger}_{\kappa}$, and its term for $(x,v)$
+carries $\sqrt{M^{(t)}_x}\otimes\sqrt{F^{(s)}_v}$, which vanishes unless
+$(x,v)\in E^{(t,s)}_{\kappa}$. Hence
+$K^{(s)}_{\kappa}(\Pi^{A}_t\otimes\idon{})
+=\ket{r_{\kappa}}_R\otimes\widetilde K_{\kappa}$ with $\widetilde K_{\kappa}$
+carrying no $R$ factor, and
+$K^{(s)}_{\kappa}\sigma K^{(s)\dagger}_{\kappa}
+=\dyad{r_{\kappa}}_R\otimes\widetilde K_{\kappa}\sigma
+\widetilde K_{\kappa}^{\dagger}$ lies in one eigenspace of the key pinching.
+A sum of such operators over $\kappa$ is a fixed point of $\cZ$, so
+$\cG_{\hat c,(t,s)}(\sigma)$ is block diagonal for $\cZ$ and
+$f_{\hat c,(t,s)}(\sigma)=0$ by the equality case of
+Corollary~\ref{cor:f-nonpos}. The restriction of the sum follows.
+
+(iv) $E^{(t,s)}_{\kappa}\subseteq E^{(s)}_{\kappa}$, since $M^{(t)}_x\ne0$
+implies $M_x\ne0$; a map constant on a set is constant on a subset. For the
+failure of the converse take two Alice sectors, $\Xset=\{0,1\}$ with
+$M_0=\Pi^{A}_{1}$, $M_1=\Pi^{A}_{2}$, one announcement class, and
+$r(x,v)=x$: on each joint sector one $x$ occurs and $r$ is constant, on the
+$\Qsys$ sector both occur and it is not. With $|\mathbb{T}|=1$ the two sets
+coincide.
+\end{proof}

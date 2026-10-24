@@ -1,0 +1,61 @@
+% ---
+% id: reductions/ass:recv
+% kind: ass
+% title: "Supplier artefact whose claims hold of the device"
+% summary: >-
+%   A supplier artefact read by a reduction instance is that module's own
+%   output at the accepted version it declares, and the device facts its claims state
+%   hold of the numbers exactly as declared. It is the premise behind a
+%   reduction on supplier numbers, save an exact, rigorous artefact the run
+%   built.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-RECV
+% verification: never
+% category: supplied-artefact
+% affects: [secrecy]
+% user_statement: >-
+%   The receiver data your reduction uses (blocks, high-photon weights with
+%   their quantifier domain, dark-count channel) come from a receiver artefact produced by an
+%   accepted version of the receiver module, the version the artefact names,
+%   on the inputs it names, with its own validation results attached, and the
+%   device facts that module's claims state are true of those numbers exactly
+%   as declared, under its own assumptions. Where this run built it from a
+%   declaration describing a valid receiver exactly, every weight evaluated
+%   rigorously, both halves follow and the report omits this premise
+%   ([[reductions/req:recv-row-provenance]]). For another artefact this run
+%   built, acceptance is the status the report gives the receiver's claims
+%   and you rely on the second half, floating-point weights included; a
+%   receiver file from outside the run needs your own justification for both
+%   halves.
+% lean:
+% ---
+
+For the receiver supplier the numbers in question are the photon-number
+blocks, the high-photon weights with their quantifier domain and the
+\tref{dark-count channel}. Which of a
+supplier's claims are consumed, and so which of its assumptions the imported
+facts rest on, is stated where the supplier's artefact is consumed; the
+assumption says that those facts hold of the numbers declared. Where the run
+built a receiver artefact itself, from a declaration with a model admissible
+exactly and with every weight evaluated rigorously, both clauses hold
+without it, by the receiver's own theorems under its own assumptions, and
+the engine omits its row; at a weight evaluated in floating point, or at a
+declaration admitted only within the receiver's tolerances, clause~(ii)
+remains a premise.
+
+\begin{assumption}\label{ass:recv}
+Every declared block, weight, matrix and scalar that a
+\tref{reduction instance} of this module reads from a supplier's artefact
+satisfies:
+(i) the artefact is the output of the supplying module, at the module version
+it declares, which is an \emph{accepted} version of the supplying module, and
+on the inputs it declares, and the validation results it carries are that
+module's own;
+(ii) the facts the supplier's claims state hold of those numbers as declared,
+under that module's own assumption ledger.
+\end{assumption}

@@ -1,0 +1,148 @@
+% ---
+% id: meat-core/thm:oracle
+% kind: thm
+% title: "Limit of the value as the Rényi order tends to one"
+% summary: >-
+%   If every acceptable distribution gives each key-live value probability at
+%   least some p₀ > 0 and some feasible state reproduces an acceptable
+%   distribution, the value tends, as α → 1, to a blockwise relative-entropy
+%   program. The limit is a validation reference and not a bound.
+% prominence: standard
+% status: implemented
+% uses: [thm:branch-formula, lem:b-derivative, prop:exact-cancellation, thm:reduction, def:admissible-declaration, def:admissible-acceptance-set, def:feasible, foundations/lem:kernel, foundations/def:kl]
+% mentions: [rem:oracle]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.limit:check_limit_hypotheses
+% lean:
+% ---
+
+As the R\'enyi order tends to one, the weight $\alpha/(\alpha-1)$ of the
+divergence term of the objective diverges, and the entropy part of each
+branch tends to a relative entropy to its pinching. Remark~\ref{rem:oracle} says what the
+limit validates and on which declarations it is available.
+
+\begin{theorem}\label{thm:oracle}
+Let $\Decl$ satisfy Definition~\ref{def:admissible-declaration} and let
+$\acSet$ satisfy Definition~\ref{def:admissible-acceptance-set}. Assume that
+there is $p_0>0$ with $q(\hat c)\ge p_0$ for every $\mathbf q\in\acSet$ and
+$\hat c\in\Chkey$, and that the asymptotic feasible set
+$\Feas_1\coloneqq\{\omega\in\Feas:\Phimap[\omega]\in\acSet\}$ is
+nonempty. Then
+\begin{equation}\label{eq:oracle}
+  \lim_{\alpha\downarrow1}\hlow(\alpha)
+  \;=\;h_1\coloneqq
+  \inf_{\omega\in\Feas_1}\ \sum_{\hat c\in\Chkey}\
+  \sum_{s\in\SecSet_K(\hat c)}
+  \Dtwo\Big(\cG_{\hat c,s}(\omega_s)\,\Big\|\,
+  \cZ\big(\cG_{\hat c,s}(\omega_s)\big)\Big).
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} The upper bound evaluates the objective at a state that
+reproduces an acceptable distribution exactly, where only the entropy part
+survives, and passes to the limit with the derivative of
+Lemma~\ref{lem:b-derivative} at $\alpha=1$. The lower bound takes
+near-optimal points along $\alpha_n\downarrow1$, uses the divergence part
+to force a limit point that reproduces its distribution, and bounds the
+entropy part from below by the continuous majorant of that lemma.
+
+\emph{Notation.} Write $\sigma_{\hat c,s}(\omega)\coloneqq\cG_{\hat c,s}(\omega_s)$ and,
+for $P_{\hat c}(\omega)>0$,
+$e_{\hat c}(\alpha,\omega)\coloneqq\frac{1}{1-\alpha}\log_2
+\frac{K_{\hat c}(\omega)}{P_{\hat c}(\omega)}\ge0$.
+
+\emph{Upper bound.} Fix $\omega\in\Feas_1$ and take
+$\mathbf q\coloneqq\Phimap[\omega]\in\acSet$. All divergence terms of
+$O_{\alpha}$ vanish, and $q(\hat c)=P_{\hat c}(\omega)\ge p_0$ for
+$\hat c\in\Chkey$. Then
+\begin{equation*}
+  O_{\alpha}(\mathbf q,\omega)
+  =\sum_{\hat c\in\Chkey}P_{\hat c}\,e_{\hat c}(\alpha,\omega)
+  =\sum_{\hat c\in\Chkey}\frac{P_{\hat c}}{(1-\alpha)\ln2}\,
+  \ln\frac{K_{\hat c}(\alpha)}{P_{\hat c}} ,
+\end{equation*}
+and $K_{\hat c}(\alpha)-P_{\hat c}
+=\sum_{s}\big(B_{\sigma_{\hat c,s}}(\alpha)
+-B_{\sigma_{\hat c,s}}(1)\big)$ by \eqref{eq:c5-sector} and
+$B_{\sigma}(1)=\tr\sigma$ together with
+$P_{\hat c}-\sum_s\tr\sigma_{\hat c,s}=\tr\Theta_{\hat c}$ cancelling
+between $K$ and $P$ (both formulas from \eqref{eq:fK}). By
+Lemma~\ref{lem:b-derivative} and l'H\^opital (or the $C^1$ mean value
+theorem), as $\alpha\downarrow1$,
+\begin{equation*}
+  O_{\alpha}(\mathbf q,\omega)\longrightarrow
+  -\frac{1}{\ln2}\sum_{\hat c\in\Chkey}\sum_{s}
+  B'_{\sigma_{\hat c,s}}(1)
+  =\sum_{\hat c\in\Chkey}\sum_{s}
+  \Dtwo\big(\sigma_{\hat c,s}\|\cZ(\sigma_{\hat c,s})\big),
+\end{equation*}
+where the sum may be restricted to $s\in\SecSet_K(\hat c)$ because
+key-inert sectors have $\sigma$ already $\cZ$-block-diagonal
+(Proposition~\ref{prop:exact-cancellation}) and hence zero relative entropy. Therefore
+$\limsup_{\alpha\downarrow1}\hlow(\alpha)\le
+h_1$-objective of $\omega$, for every $\omega\in\Feas_1$, so
+$\limsup\hlow(\alpha)\le h_1$.
+
+\emph{Lower bound.} Let $\alpha_n\downarrow1$ and pick feasible
+$(\mathbf q_n,\omega_n)$ with
+$O_{\alpha_n}(\mathbf q_n,\omega_n)\le\hlow(\alpha_n)+\frac1n$; by the
+upper bound this sequence of values is bounded above by some $C<\infty$.
+Decompose $O_{\alpha}=\frac{\alpha}{\alpha-1}\sfD(\mathbf q\|\Phimap)
++\sum_{\hat c\in\Chkey}q(\hat c)e_{\hat c}$ (undo
+\eqref{eq:rearrange}); both parts are non-negative (the divergence by
+Gibbs' inequality of \xref{foundations/def:kl}, $\mathbf q_n$ and
+$\Phimap[\omega_n]$ being probability vectors, and $e_{\hat c}\ge0$ since $K_{\hat c}\le P_{\hat c}$ by
+Theorem~\ref{thm:branch-formula}'s \emph{cone clause}, the points $\omega_n$ being
+feasible but not pure). Hence
+$\sfD(\mathbf q_n\|\Phimap[\omega_n])\le C\frac{\alpha_n-1}{\alpha_n}
+\to0$. By compactness pass to a subsequence with
+$(\mathbf q_n,\omega_n)\to(\mathbf q^{*},\omega^{*})
+\in\acSet\times\Feas$: $\acSet$ is a closed subset of the simplex
+(Definition~\ref{def:admissible-acceptance-set}) and $\Feas$ is compact
+(Definition~\ref{def:feasible}). $\sfD(\mathbf q\|\mathbf p)$ is the sum
+over $\hat c$ of the kernel $d(q(\hat c),p(\hat c))$ of
+\xref{foundations/lem:kernel}, which is lower semicontinuous, and
+$\Phimap$ is continuous, so
+$\sfD(\mathbf q^{*}\|\Phimap[\omega^{*}])\le
+\liminf_n\sfD(\mathbf q_n\|\Phimap[\omega_n])=0$; by the equality case of
+Gibbs' inequality (\xref{foundations/def:kl})
+$\mathbf q^{*}=\Phimap[\omega^{*}]$ and
+$\omega^{*}\in\Feas_1$; in particular
+$P_{\hat c}(\omega^{*})=q^{*}(\hat c)\ge p_0$ for $\hat c\in\Chkey$, so
+$P_{\hat c}(\omega_n)\ge p_0/2$ eventually. For each
+$\hat c\in\Chkey$, using $\ln(1+u)\le u$ with
+$u_n\coloneqq\frac{K_{\hat c}(\omega_n)-P_{\hat c}(\omega_n)}
+{P_{\hat c}(\omega_n)}\in[-1,0]$ and $\frac{1}{1-\alpha_n}<0$:
+\begin{equation*}
+  e_{\hat c}(\alpha_n,\omega_n)
+  \;\ge\;\frac{u_n}{(1-\alpha_n)\ln2}
+  \;=\;\frac{1}{\ln2\,P_{\hat c}(\omega_n)}
+  \sum_{s}\Big[-\frac{B_{\sigma_{\hat c,s}(\omega_n)}(\alpha_n)
+  -B_{\sigma_{\hat c,s}(\omega_n)}(1)}{\alpha_n-1}\Big].
+\end{equation*}
+By the mean value theorem there are $\xi_n\in(1,\alpha_n)$ with the
+bracket equal to $-B'_{\sigma_{\hat c,s}(\omega_n)}(\xi_n)
+\ge-c_{\sigma_{\hat c,s}(\omega_n)}(\xi_n)$ by \eqref{eq:majorant}. Joint
+continuity of $(\alpha,\sigma)\mapsto c_{\sigma}(\alpha)$
+(Lemma~\ref{lem:b-derivative}) and
+$\sigma_{\hat c,s}(\omega_n)\to\sigma_{\hat c,s}(\omega^{*})$ (the maps
+$\cG_{\hat c,s}$ are continuous) give
+$c_{\sigma(\omega_n)}(\xi_n)\to
+c_{\sigma(\omega^{*})}(1)=B'_{\sigma(\omega^{*})}(1)$. Hence
+\begin{equation*}
+  \liminf_n\ q_n(\hat c)\,e_{\hat c}(\alpha_n,\omega_n)
+  \;\ge\;\frac{q^{*}(\hat c)}{\ln2\,P_{\hat c}(\omega^{*})}
+  \sum_{s}\big(-B'_{\sigma_{\hat c,s}(\omega^{*})}(1)\big)
+  \;=\;\sum_{s}\Dtwo\big(\sigma_{\hat c,s}(\omega^{*})\,\big\|\,
+  \cZ(\sigma_{\hat c,s}(\omega^{*}))\big),
+\end{equation*}
+using $q^{*}(\hat c)=P_{\hat c}(\omega^{*})$. Dropping the non-negative
+divergence part and summing over $\hat c$ (a finite sum, so
+$\liminf$ passes through),
+$\liminf_n\hlow(\alpha_n)\ge h_1$-objective of
+$\omega^{*}\ge h_1$. Combining with the upper bound proves
+\eqref{eq:oracle}.
+\end{proof}

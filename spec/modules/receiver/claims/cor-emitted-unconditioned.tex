@@ -1,0 +1,49 @@
+% ---
+% id: receiver/cor:emitted-unconditioned
+% kind: cor
+% title: "Emitted multiclick weight of a probe-free receiver"
+% summary: >-
+%   For a receiver without probe modes the one emitted weight bounds the
+%   multiclick element on every block above the cutoff and lies in [0, 1],
+%   under [[A-EIG]] only where a computed block eigenvalue enters it. The slot
+%   entry of the multiclick set meets the guarantee of [[def:slot]].
+% prominence: standard
+% status: implemented
+% uses: [thm:emitted-bound, cor:unconditioned-family, def:pmc, def:pmcex, def:enclosed-weight, def:slot, def:instrument]
+% assumes: [A-TRUST, A-PASSIVE, A-VAC, A-MODES, A-THRESH, A-PORT, A-EXACT, A-NOSEL, A-ROUND, A-EIG]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.bound:emitted_weight
+% lean:
+% notes: "The assumptions are the device set (no probe is declared), with A-EIG invoked only where a depth is declared. Theorem thm:emitted-bound is instantiated once per setting family; a run selects this corollary, bound to bound:emitted_weight, where Inp_S is empty, and the instance of the submodule that constructs its family where it is not, so a manifest names one closure."
+% ---
+
+\begin{corollary}
+\label{cor:emitted-unconditioned}
+Let $\Recv$ be a \tref{receiver instrument} with $\InpS=\varnothing$
+(Definition~\ref{def:instrument}), let $N$ be the declared cutoff, and let
+$\pmc$ be computed by Definition~\ref{def:pmc}, or by
+Definition~\ref{def:pmcex} where an exact-window depth is declared, from the
+one-setting family of Corollary~\ref{cor:unconditioned-family}, or let it be
+a real with $0\le\pmc\le\check p_{\mc}$, where $\check p_{\mc}$ is an
+\tref{enclosed weight} of that family's one setting
+(Definition~\ref{def:enclosed-weight}), $\check p_{\mc}$ itself included. Then
+\begin{equation}\label{eq:emitted-unconditioned}
+  \blk{M}{\gtN}_{\mc}\ \succeq\ \pmc\,\id^{(>N)},\qquad 0\le\pmc\le1,
+\end{equation}
+with no hypothesis beyond the ledger where $\pmc$ is given by
+Definition~\ref{def:pmc} or~\ref{def:enclosed-weight} and under
+Assumption~\ref{ass:eig} where it is given by Definition~\ref{def:pmcex}; and
+the strengthening slot
+$\{(\MCK,\pmc)\}$ satisfies the guarantee of Definition~\ref{def:slot}.
+\end{corollary}
+
+\begin{proof}
+By Corollary~\ref{cor:unconditioned-family} the receiver is a setting
+family with $\Tset=\{\off\}$ and $M_{\mc|\off}=M_{\mc}$, so
+Theorem~\ref{thm:emitted-bound} applies and \eqref{eq:pmcstatement} at the one
+setting is \eqref{eq:emitted-unconditioned}; the range and the hypothesis
+clause are the theorem's. The slot guarantee is
+\eqref{eq:emitted-unconditioned} read as $\sum_{S\in\MCK}\blk{M}{\gtN}_S
+\succeq\pmc\,\id^{(>N)}$ at the one setting.
+\end{proof}

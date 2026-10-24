@@ -1,0 +1,72 @@
+% ---
+% id: receiver/def:enclosed-weight
+% kind: def
+% title: "The weight evaluated on enclosed bound data"
+% summary: >-
+%   Enclosed bound data take c and γ from below and each d and β from above,
+%   within [0, 1], and rigorous window bounds lie below the exact block
+%   eigenvalues. The enclosed weight is the per-setting weight formed on them,
+%   with no computed eigenvalue and no eigenvalue slack.
+% prominence: standard
+% status: implemented
+% uses: [def:setting-family, def:bounddata, def:pmc, def:pmcex, def:exactbnd, lem:windowtail]
+% mentions: [thm:enclosed-weight, rem:ia, rem:exacteig]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.rigorous:enclosed_weight
+% lean:
+% ---
+
+The weights of Definitions~\ref{def:pmc} and~\ref{def:pmcex} are formulas in
+the bound data of a setting and, where a depth is declared, in computed block
+eigenvalues. The same formulas, evaluated on numbers known to lie on the
+conservative side of the exact data, give a weight that rests on no premise
+about how it was computed (Theorem~\ref{thm:enclosed-weight}). The four
+directions are those Remark~\ref{rem:ia} reads off the bound function, and in
+the window a rigorous lower bound on the exact block eigenvalue takes the
+place of the computed eigenvalue less the slack, which is why the slack does
+not enter (Remark~\ref{rem:exacteig}).
+
+\begin{definition}\label{def:enclosed-weight}
+Fix a cutoff $N$, a \tref{setting family}
+(Definition~\ref{def:setting-family}) and a setting $t\in\Tset$, and write
+$\big(\gamma,\{\beta_k\},c,\{d_k\}\big)$ for the
+\tref{bound data of the setting}, the index $t$ omitted.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item Reals $\big(\check\gamma,\{\check\beta_k\},\check c,\{\check d_k\}\big)$
+  are
+  \term[Reals that bound the bound data of a setting from the conservative
+  side, c and γ from below and each d and β from above, all within 0 and
+  1.]{enclosed bound data} of $t$ when
+  \begin{equation}\label{eq:enclosed-directions}
+    0\le\check\gamma\le\gamma,\qquad \beta_k\le\check\beta_k\le1,\qquad
+    0\le\check c\le c,\qquad d_k\le\check d_k\le1
+    \qquad(k=1,\dots,K).
+  \end{equation}
+  $\check\Bnd$ denotes the \tref{bound function} \eqref{eq:beta} of this
+  tuple, and $\check T_m$ and $\underline{\check\Bnd}_{N,m}$ the quantities
+  $T_m$ and $\underline{\Bnd}_{N,m}$ of \eqref{eq:windowtail} formed from it.
+\item Where $t$ carries an \tref{exact-window depth} $m^{\ast}_t$
+  (Definition~\ref{def:pmcex}), reals $w(n)$, $N<n\le m^{\ast}_t$, are
+  \term[Reals at most the exact block bound of a setting at each index of its
+  exact window.]{rigorous window bounds} of $t$ when
+  $w(n)\le\Bnd^{\ast(t)}(n)$ for each such $n$, $\Bnd^{\ast(t)}$ being the
+  \tref{exact block bound} \eqref{eq:exactbnd} at $t$.
+\item The
+  \term[The per-setting weight formed on enclosed bound data and, at an exact
+  window, on rigorous window bounds, with no computed eigenvalue and no
+  eigenvalue slack.]{enclosed weight} $\check p^{(t)}_{\mc}$ of $t$ formed
+  from them is \eqref{eq:pmcdef} where $t$ carries no exact-window depth and
+  \eqref{eq:pmcex} where it carries one, its branch chosen by
+  \tref{predicate (X)} at $t$ as there, each read with $\check\Bnd$,
+  $\underline{\check\Bnd}_{N,m_t}$ and $\check T_{m_t}$ in place of
+  $\Bnd^{(t)}$, $\underline{\Bnd}^{(t)}_{N,m_t}$ and $T^{(t)}_{m_t}$, and with
+  \begin{equation}\label{eq:enclosed-ell}
+    \check\ell(n)\ \coloneqq\ \max\big\{\check\Bnd(n),\ w(n)\big\},
+    \qquad N<n\le m^{\ast}_t ,
+  \end{equation}
+  in place of $\ell^{(t)}(n)$ of \eqref{eq:elldef}. No computed eigenvalue of
+  a block and no \tref{eigenvalue slack} enters it.
+\end{enumerate}
+\end{definition}

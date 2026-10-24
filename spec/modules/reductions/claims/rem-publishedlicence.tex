@@ -1,0 +1,43 @@
+% ---
+% id: reductions/rem:publishedlicence
+% kind: rem
+% title: "The published squashed-attack-set format"
+% summary: >-
+%   The adjoint format of the admissible set is the published squashed-attack-set
+%   format, and the published inclusion is the special case of [[thm:licence]]
+%   (i) at one flag-state operator with constant zero. The licence generalises
+%   it to any certified carried operator in either source mode.
+% prominence: standard
+% status: accepted
+% uses: [def:attset, thm:licence, cor:sequential, lem:sep]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Lemma 9.4, Eq. (151)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:publishedlicence}
+The adjoint format of \eqref{eq:attset} is the published squashed-attack-set
+format: \cite[Lemma~9.4, Eq.~(151)]{tupkary2026decoy} constructs, for a
+flag-state-squashed measurement, the set
+$\AttSet_j\coloneqq\{\Aev^{\mathrm{Sq}}_j:
+\Aev^{\mathrm{Sq}\dagger}_j(F^{(Q)}_o\otimes\idon{E_j})\succeq
+\lambda_{\min}\Aev^{\mathrm{Sq}\dagger}_j(\Pi_{Sq}\otimes\idon{E_j})\}$ from
+the physical operator inequality
+$M^{(B)}_o\succeq\lambda_{\min}\Pi_{m>N_{\mathrm{FSS}}}$, the projector being
+onto the photon numbers above the cutoff $N_{\mathrm{FSS}}$ of the flag-state
+squasher, and
+proves the inclusion $\AttSet_j\supseteq\Lambda\circ
+\mathrm{CPTP}(E_{j-1},\Bsys_jE_j)$; its Eq.~(152) is the dimension-independent
+marginal form of the same set, and the modelling step of restricting the
+attack-channel set at all is its Def.~8.3 with Rem.~8.4. That inclusion is the
+special case of Theorem~\ref{thm:licence}\,(i) at
+$\hat O=F_o-\lambda_{\min}\Pi_{Sq}$, $c=0$; that theorem is the general
+statement, for an arbitrary carried operator with a spectral pull-back
+certificate, in either source mode, with the round-model bookkeeping of
+Corollary~\ref{cor:sequential} attached. It is proved there from
+\eqref{eq:pairing}, positivity and unitality, and appeals to no published
+result.
+\end{remark}

@@ -1,0 +1,68 @@
+% ---
+% id: meat-core/frank-wolfe/rem:fo-iterate-repair
+% kind: rem
+% title: "A repaired iterate as a construction step"
+% summary: >-
+%   A block repaired while the iterate is formed makes the repaired point the
+%   iterate, at which every term of the bracket is evaluated, so no
+%   perturbation that (H-NOPERT) forbids occurs. The repair moves the coupling
+%   residual by at most the dimension times its size and says nothing about
+%   the backend.
+% prominence: standard
+% status: accepted
+% uses: [thm:firstorder, rem:fo-nopert, rem:fo-arithmetic]
+% mentions: [req:iterate-checks, req:iterate-repair, foundations/req:norm-conversion, rem:fo-iterate-checks, rem:fo-oracle-repair, rem:fo-check-exposures]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:fo-iterate-repair}
+\emph{On a formed iterate: a construction step, and the only repair this
+module licenses on an iterate.} The point consumed at iterate $t$ is formed
+by the engine --- in the intended use a convex combination of oracle
+returns --- and Requirement~\ref{req:iterate-checks} requires it to be
+per-block positive semidefinite at exactly $0$; a block failing that check
+is rejected or projected (Requirement~\ref{req:iterate-repair}).
+\emph{The repaired point is $x_t$.} The repair belongs to the formation of
+the iterate, upstream of the point the theorem is applied at, and it is a
+different act from the oracle repair of Remark~\ref{rem:fo-oracle-repair},
+which touches only the search; everything in \eqref{eq:hlb} --- the
+objective $O^{J}_{\alpha}(x_t)$, the gradient $(\lmoq_t,\lmoJ_t)$ and the
+pairings with $x_t$ --- is then evaluated at that one point. \emph{This is not the perturbation route
+Remark~\ref{rem:fo-nopert} closes, and (H-NOPERT) is not violated}: that
+route takes the gradient at a perturbed operator and concludes something
+about the objective at the unperturbed one, which needs a domination
+statement this module does not prove, whereas here no second function
+enters the argument at all --- Theorem~\ref{thm:firstorder} concludes about
+the infimum over the whole set and asks of $x_t$ only that it lie in
+$\acSet\times\Feas^{J}(\varepsilon)$. What (H-NOPERT) forbids is a
+perturbation applied \emph{to} $x_t$, between the point being fixed and the
+gradient being taken; a repair applied \emph{before} the point is fixed is a
+different act, and it is the one Requirement~\ref{req:iterate-repair}
+licenses.
+
+\emph{The repair moves the residuals by a bounded amount.} A projection
+moves the coupling and $\bowtie_k$ residuals of
+Remark~\ref{rem:fo-iterate-checks}: if the repair moves each block by at
+most $\delta$ in the operator norm, the coupling residual moves by at most
+$d_{\Qsys}\,\delta$ in $\|\cdot\|_{\max}$, since
+$\|\tr_{\Qsys_s}\Delta_s\|\le d_s\|\Delta_s\|$, $\sum_sd_s=d_{\Qsys}$ and
+$\|\cdot\|_{\max}\le\|\cdot\|$, a bound that carries its dimension factor
+as \xref{foundations/req:norm-conversion} asks. The requirement nevertheless
+measures the residuals again rather than bounding them in advance.
+What the repair establishes is a hypothesis of
+Theorem~\ref{thm:firstorder}, on an object the engine itself chose, and it
+says nothing whatever about the backend.
+
+\emph{What it does not establish.} $\lmin$ is itself computed, so a block
+whose true minimum eigenvalue is negative within the eigensolver's own
+backward error passes the check unrepaired, and the reassembly of a
+projected block is itself rounded. That residue is a third one-sided
+exposure of the kind Remark~\ref{rem:fo-check-exposures} names, and it is
+named there with the other two. Its \emph{nature} is the unbudgeted
+arithmetic this module declares everywhere (Remark~\ref{rem:fo-arithmetic}),
+and not a window this module chose while knowing it admitted points at which
+its own theorem does not apply.
+\end{remark}

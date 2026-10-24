@@ -1,0 +1,46 @@
+% ---
+% id: protocol-compiler/req:no-lattice-exponent
+% kind: req
+% title: "No lattice exponent and no snapping of the emission"
+% summary: >-
+%   The compiler declares no lattice exponent for what it emits, so it never
+%   rounds or snaps its emission and never declares a nearby family: a failed
+%   emission condition refuses. It owes its consumer the five exact conditions,
+%   not a lattice.
+% prominence: standard
+% status: implemented
+% uses: [def:weighted]
+% mentions: [def:exact, req:weighted-family-emission, foundations/req:who-snaps, foundations/req:exact-emission, foundations/req:declared-lattice]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.weights:decide_emission
+% lean:
+% ---
+
+\xref{foundations/req:exact-emission} binds every producer, and the
+choice-weighted families are this module's products. Five of its items bind
+every producer, and for these families they are the five conditions of
+Definition~\ref{def:exact} --- the \tref{sector map}, exact Hermiticity, exact
+positive semidefiniteness, exact completeness per block, and condition~(S);
+a sixth, (D-LAT) of \xref{foundations/req:declared-lattice}, binds only a
+producer that declares a \tref{lattice exponent} $k\le53$. That requirement
+makes a producer that cannot establish the conditions that bind it refuse,
+naming the predicate; only a producer that declares $k$ may instead declare a
+nearby family established under all six, carrying three disclosures, and
+\xref{foundations/req:who-snaps} lets only such a producer snap its own
+emission. (D-LAT) is a \emph{sufficient} condition for the five to be
+establishable and is not among the conditions the consuming engine states,
+so this module states no (D-LAT) obligation of its own.
+
+\begin{requirement}\label{req:no-lattice-exponent}
+The engine declares no lattice exponent for the families it emits. It
+establishes the five conditions of Definition~\ref{def:exact} of those
+families directly, on the numbers it is about to emit, and refuses where one
+fails (Requirement~\ref{req:weighted-family-emission}); it neither rounds nor
+snaps its own emission, and it never declares a nearby family
+(\iface{no_snapping}). A specification whose weighting does not land exactly
+on the lattice is a specification to be re-declared at the \tref{instance}.
+What the engine owes its consumer is the five conditions, and it decides them
+rather than inheriting them from a lattice.
+\end{requirement}

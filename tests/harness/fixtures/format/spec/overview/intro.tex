@@ -1,0 +1,15 @@
+% spec/overview/intro.tex -- AUTHORED (not generated). The introduction of the
+% spec-wide overview PDF; `python -m harness.assemble_contract --all` builds it
+% through the generated frame overview.tex. The generated part (every contract's
+% main results in module dependency order, then the module map) is chain.tex,
+% placed by the \input below.
+\begin{center}
+{\LARGE\bfseries CERTIQS-KEY}\\[4pt]
+{\large An overview of the contracts}
+\end{center}
+
+\noindent The reading paths through the contracts are written in step P8 of
+the readability sweep. Until then this page lists each contract's main results
+and draws the module map.
+
+\input{chain}

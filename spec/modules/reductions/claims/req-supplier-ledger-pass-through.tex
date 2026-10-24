@@ -1,0 +1,35 @@
+% ---
+% id: reductions/req:supplier-ledger-pass-through
+% kind: req
+% title: "Pass-through of the supplier's assumption ledger"
+% summary: >-
+%   The row of [[A-RECV]] carries every machine key of the supplied ledger, as
+%   supplied and in the supplier's order, beside the artefact's version. The
+%   engine keeps no list of the supplier's keys and adds no presence rule of
+%   its own.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [ass:recv]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The facts a \tref{reduction instance} imports from a supplier rest on the
+supplier's assumptions (Assumption~\ref{ass:recv}); a consumer inherits them
+only if the artefact names them by the supplier's own machine keys.
+
+\begin{requirement}\label{req:supplier-ledger-pass-through}
+On the row of Assumption~\ref{ass:recv} in the assumption ledger
+\iface{assumption_ledger}, the engine carries, as machine keys and beside the
+artefact's module version \iface{module_version}, every key the supplied
+ledger carries, as supplied and in the supplier's order; a key beyond those
+the supplier's presence rules require is carried rather than refused. The
+engine holds no list of the supplier's keys and adds no presence rule of its
+own: what it reads from the supplying module, as it is installed where the
+check runs, is that module's machine keys and the set of keys its rules make
+conditional, and it evaluates the condition itself on the artefact's own
+data.
+\end{requirement}

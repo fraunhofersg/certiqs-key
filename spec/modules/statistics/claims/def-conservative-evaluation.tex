@@ -1,0 +1,46 @@
+% ---
+% id: statistics/def:conservative-evaluation
+% kind: def
+% title: "Exact data and conservative evaluation"
+% summary: >-
+%   An evaluation of the construction is conservative when the honest envelope,
+%   the completeness budget and its allocation are exact rationals and every
+%   tail comparison is decided exactly or against an upward-rounded tail. It
+%   is the arithmetic under which rounding can only widen the acceptance set.
+% prominence: standard
+% status: implemented
+% uses: [def:envelope]
+% mentions: [statistics/binomial-box/def:endpoint-rule, statistics/binomial-box/def:interval, statistics/binomial-box/lem:widening, statistics/binomial-box/req:input-refusal, statistics/binomial-box/req:rule-in-force, statistics/binomial-box/req:enclosure-substrate, foundations/req:consumer-decides-exactly, foundations/def:exact-island]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.exact:as_exact_rational
+% lean:
+% ---
+
+With exact data the construction of the acceptance set lies on the
+\tref{exact island}, the computations the engine must carry out exactly
+(\xref{foundations/def:exact-island}\,(ii)). Rounding in
+the safe direction enlarges $\acSet$, which lowers the consumer's $\hlow$, an
+infimum over a superset being at most the infimum over a subset
+(Lemma~\ref{lem:widening}); it costs rate, never soundness. The consuming
+engine's outward rounding of the emitted bounds is such a rounding: it is the
+one alteration of emitted data that
+\xref{foundations/req:consumer-decides-exactly} allows a consumer, which
+still decides every predicate on a replaced bound exactly. The engine refuses
+inexact data (Requirement~\ref{req:input-refusal}) and decides its tail
+comparisons in this way on each evaluation
+(Requirements~\ref{req:rule-in-force} and~\ref{req:enclosure-substrate}).
+
+\begin{definition}\label{def:conservative-evaluation}
+An evaluation of the acceptance-set construction is a
+\term[An evaluation of the acceptance-set construction on exact rational
+data that decides every tail comparison exactly or against a bound rounding
+the tail upward.]{conservative evaluation} when the honest envelope's vectors
+${\honest}^{-},{\honest}^{+}$ (Definition~\ref{def:envelope}; for a single
+declared law, $\honest$ itself), $\ecomp$ and the allocation are exact
+rationals, and every tail comparison an endpoint rule makes
+(Definition~\ref{def:endpoint-rule}; for the exact rule, those of
+Definition~\ref{def:interval}) is decided either exactly or against a bound
+that rounds the tail \emph{upward}.
+\end{definition}

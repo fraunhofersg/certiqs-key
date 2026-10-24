@@ -1,0 +1,36 @@
+% ---
+% id: meat-core/rem:plus2
+% kind: rem
+% title: "The constant in the key length and the source's convention"
+% summary: >-
+%   The key-length bound carries the constant +1 where its source derivation
+%   and the published fixed-length statement carry +2: one announced bit buys
+%   secrecy on the accepted state by an elementary contraction. The source's
+%   secrecy definition, conditioned on the acceptance test alone, does not
+%   spend it.
+% prominence: standard
+% status: accepted
+% uses: [thm:keylength]
+% mentions: [req:secrecy-convention]
+% assumes: []
+% refs:
+%   - "kamin2025renyi, Thm. 7, Eq. (44)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:plus2}
+The derivation this module's key-length theorem generalises proves
+\eqref{eq:secrecy-at} with $\lambda=\lEC+\lceil\log_2\frac1{\eev}\rceil$ and
+stops there, i.e.\ its secrecy statement is for the $\wedge\OmAT$ state and
+its constant is $+2$; the published fixed-length statement of
+\cite[Thm.~7, Eq.~(44)]{kamin2025renyi} reaches the accepted state by a
+different route (conditioning on the verification event), with the same
+constant. This module spends one deterministic bit (the announced flag) to
+reach the accepted state by an elementary contraction argument instead,
+avoiding any further import. The cost is exactly one bit in
+\eqref{eq:keylength}, which the $\wedge\OmAT$ secrecy definition of that
+derivation does not spend; what an instance adopting that definition declares
+is Requirement~\ref{req:secrecy-convention}.
+\end{remark}

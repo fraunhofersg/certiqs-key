@@ -1,0 +1,34 @@
+% ---
+% id: receiver/req:one-mode-per-port
+% kind: req
+% title: "One mode per port only where the rank criterion holds"
+% summary: >-
+%   The engine uses a one-mode-per-port representation of a receiver only
+%   where every emitted port Gram has rank at most one, the criterion of
+%   [[thm:representation-independence]] (iv), and never by default. Ranks are
+%   decided on the Grams after every detector efficiency is applied.
+% prominence: standard
+% status: implemented
+% uses: [thm:representation-independence]
+% mentions: [rem:rankone, req:tolerance-tests, receiver/detector-imperfections/rem:effrank]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.grams:one_mode_per_port
+% lean:
+% ---
+
+A receiver architecture must not assume one \tref{optical mode} per detector
+unless rank one is established
+(\repodoc{spec/architecture.md#32-the-seven-cores}, the receiver core).
+Remark~\ref{rem:rankone} explains why nothing else in this contract needs
+the assumption.
+
+\begin{requirement}\label{req:one-mode-per-port}
+The engine uses a one-mode-per-port representation of a receiver only where
+the criterion of Theorem~\ref{thm:representation-independence}\,(iv), $\rk A_k\le1$ for every $k$,
+holds, and never assumes it by default. The criterion is decided on the
+emitted port Grams, that is after every detector efficiency is applied
+(Remark~\ref{rem:effrank}), with each rank decided as
+Requirement~\ref{req:tolerance-tests} fixes.
+\end{requirement}

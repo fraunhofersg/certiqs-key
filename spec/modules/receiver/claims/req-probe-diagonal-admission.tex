@@ -1,0 +1,30 @@
+% ---
+% id: receiver/req:probe-diagonal-admission
+% kind: req
+% title: "Admission of Gaussian-tier probe states only"
+% summary: >-
+%   The engine admits declared probe states of the Gaussian tier only, which
+%   are occupation-diagonal by construction, and refuses any other. Conditioning
+%   on an admitted probe therefore keeps the channel photon-number blocks.
+% prominence: standard
+% status: implemented
+% uses: [def:probe]
+% mentions: [rem:blockmeaning]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.settings:check_probe_declaration
+% lean:
+% ---
+
+The channel grading of the blocks is recovered from the total one only under
+a condition on the probe state (Remark~\ref{rem:blockmeaning});
+occupation-diagonality is the stronger form of that condition which
+validation can check.
+
+\begin{requirement}\label{req:probe-diagonal-admission}
+The engine admits a \tref{probe declaration} (input \iface{probe_declaration})
+only in the \tref{Gaussian tier} of Definition~\ref{def:probe}, whose states
+are \tref{occupation-diagonal} by construction, and refuses a declared probe
+state outside it under the \iface{fail_closed} convention.
+\end{requirement}

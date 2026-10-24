@@ -1,0 +1,128 @@
+% ---
+% id: receiver/detector-imperfections/prop:efficiency-normalization
+% kind: prop
+% title: "A receiver as uniform loss followed by its normalized station"
+% summary: >-
+%   Every click pattern of a probe-free receiver is the pull-back, through the
+%   pure-loss channel of the factored loss t, of the same pattern of its
+%   normalized station, and so is every dark-count composition. The
+%   statistics agree, and the loss can be handed to the adversary.
+% prominence: standard
+% status: accepted
+% uses: [def:normalized-station, def:pure-loss, lem:pure-loss-lift, receiver/thm:click-povm, receiver/def:physmodel, receiver/thm:port-grams, receiver/def:gram, def:darkadm, def:dark-composed, receiver/def:coarse]
+% mentions: [receiver/cor:unconditioned-family]
+% assumes: [A-TRUST, A-PASSIVE, A-VAC, A-MODES, A-THRESH, A-PORT, A-EXACT, A-NOSEL, A-ROUND]
+% refs: []
+% provenance: newly-derived
+% lean:
+% user_statement: >-
+%   If your receiver has no probe source, the largest of its detector
+%   efficiencies can be treated as uniform loss in front of the whole
+%   receiver, followed by a receiver whose best detector is perfect and whose
+%   other detectors keep their efficiencies relative to it. The dark counts
+%   stay at the detectors. Both descriptions give the same click
+%   probabilities for every input, so the loss in front can be counted as
+%   part of the channel the adversary controls. A detector efficiency that
+%   depends on time slot, wavelength or spatial mode is covered if declared
+%   as mode-dependent loss in front of the detector, which stays in place; a
+%   dependence on a degree of freedom the adversary can use but your
+%   declaration does not carry is efficiency mismatch, which this does not
+%   address.
+% ---
+
+The idea is that a scalar factor common to all port Grams is a loss that
+commutes with every passive element, so it can be moved to the front of the
+receiver, where it acts on the channel modes alone.
+
+\begin{proposition}\label{prop:efficiency-normalization}
+Let $\Recv$ be a \tref{receiver instrument} without
+\tref{declared source modes}, with efficiencies $\eta_k$,
+$\eta_{\max}>0$, as in Definition~\ref{def:normalized-station}, let
+$t\in[\eta_{\max},1]$ and let $\Recv'$ be a \tref{normalized station} of
+$\Recv$ at the \tref{factored loss} $t$. Let $\{M_S\}$ and $\{M'_S\}$,
+$S\subseteq[K]$, be their click-pattern POVMs on
+$\Hs{\Chan}=\mathcal{F}(\mathbb{C}^{\InpC})$ (Theorem~\ref{thm:click-povm}).
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{The click patterns.} For every $S\subseteq[K]$,
+  \begin{equation}\label{eq:normalization}
+    M_S\;=\;(\Lambda^{\mathrm{loss}}_t)^{\dagger}\big(M'_S\big),
+    \qquad\text{equivalently}\qquad
+    \tr[M_S\,\rho]=\tr\big[M'_S\,\Lambda^{\mathrm{loss}}_t(\rho)\big]
+    \ \ \text{for every }\rho\in\Tcl{\Chan}.
+  \end{equation}
+\item \emph{Classical post-processing, dark counts included.} For every
+  column-stochastic matrix $R$ on $2^{[K]}$, in particular every
+  \tref{dark-count channel}, and every \tref{declared coarse-graining} $\cg$
+  onto $\Vset$,
+  \begin{equation}\label{eq:normalizationdark}
+    \sum_{S'}R_{S|S'}M_{S'}=(\Lambda^{\mathrm{loss}}_t)^{\dagger}
+    \Big(\sum_{S'}R_{S|S'}M'_{S'}\Big),
+    \qquad
+    \sum_{S'}R_{\cg^{-1}(v)|S'}M_{S'}=(\Lambda^{\mathrm{loss}}_t)^{\dagger}
+    \Big(\sum_{S'}R_{\cg^{-1}(v)|S'}M'_{S'}\Big),
+  \end{equation}
+  so the \tref{dark-composed family} of $\Recv$ with $R$ and $\cg$
+  (Definition~\ref{def:dark-composed}) is the pull-back of that of $\Recv'$
+  with the same $R$ and $\cg$: the dark counts act after the factored loss.
+\item \emph{The device.} Under the receiver's device assumptions,
+  Assumptions~\ref{ass:trust}, \ref{ass:passive}, \ref{ass:vac},
+  \ref{ass:modes}, \ref{ass:thresh}, \ref{ass:port}, \ref{ass:exact},
+  \ref{ass:nosel} and~\ref{ass:round}, $\{M_S\}$ is the measurement the
+  physical receiver makes on the light it receives in its channel modes, and,
+  by Assumptions~\ref{ass:modes} and~\ref{ass:port}, every port responds
+  alike to every mode through which light reaches it; the physical receiver,
+  followed by any dark-count channel, therefore acts on that light exactly as
+  $\Lambda^{\mathrm{loss}}_t$ followed by $\Recv'$ and the same dark-count
+  channel.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) By \eqref{eq:normalizedgrams}, $A_k=t\,A'_k$ for every $k$, so
+$A_J=t\,A'_J$ for every $J\subseteq[K]$, in the notation of
+Definition~\ref{def:gram}. The family $\{A'_k\}$ is the port-Gram family of a
+receiver instrument, hence admissible (Theorem~\ref{thm:port-grams}\,(i)), so
+$0\preceq A'_J\preceq\id$ and $X_J\coloneqq\id-A'_J$ satisfies
+$0\preceq X_J\preceq\id$, in particular $X_J^{\dagger}X_J\preceq\id$. By
+Theorem~\ref{thm:click-povm}\,(ii) and Lemma~\ref{lem:pure-loss-lift},
+\begin{equation*}
+  \Pvac{J}=\Fock(\id-A_J)=\Fock\big(t\,X_J+(1-t)\,\id\big)
+  =(\Lambda^{\mathrm{loss}}_t)^{\dagger}\big(\Fock(X_J)\big)
+  =(\Lambda^{\mathrm{loss}}_t)^{\dagger}\big(\Pvac{J}'\big),
+\end{equation*}
+with $\Pvac{J}'=\Fock(\id-A'_J)$ the joint no-click element of $\Recv'$.
+Each $M_S$ is the same signed sum \eqref{eq:incexc} of the elements
+$\Pvac{([K]\setminus S)\cup T}$ as $M'_S$ is of the elements
+$\Pvac{([K]\setminus S)\cup T}'$, and $(\Lambda^{\mathrm{loss}}_t)^{\dagger}$
+is linear, which gives the first identity of \eqref{eq:normalization}. The
+second is the first paired with $\rho$, by the pairing of
+Definition~\ref{def:pure-loss}.
+
+(ii) Both sides of each identity are finite linear combinations with the same
+scalar coefficients, of $\{M_{S'}\}$ on the left and of $\{M'_{S'}\}$ inside
+the adjoint on the right, so (i) and linearity give them; the fibre sums are
+the coefficients $R_{\cg^{-1}(v)|S'}=\sum_{S\in\cg^{-1}(v)}R_{S|S'}$ of
+Definition~\ref{def:dark-composed}. Neither column-stochasticity nor any other
+property of $R$ (Definition~\ref{def:darkadm}) is used.
+
+(iii) These are the device assumptions under which the click-pattern POVM
+of a probe-free receiver is the physical receiver's measurement, the set
+Corollary~\ref{cor:unconditioned-family} reads its \tref{setting family} under:
+Assumption~\ref{ass:trust}\,(i) makes the declared instrument, efficiencies
+included, the physical one; Assumption~\ref{ass:passive} makes its optics a
+passive linear map; Assumption~\ref{ass:vac} puts vacuum on every undeclared
+input, the probe-free receiver having no other declared input than its
+channel modes; Assumptions~\ref{ass:thresh} and~\ref{ass:port} make each
+detector a threshold detector on its port's total photon number;
+Assumption~\ref{ass:exact} makes the declared parameters exact; and
+Assumptions~\ref{ass:nosel} and~\ref{ass:round} fix the device
+independently of the adversary and identically in every round. Under them the
+measurement on the channel modes is the click-pattern POVM of $\Recv$ of
+Definition~\ref{def:physmodel} and Theorem~\ref{thm:click-povm}.
+Assumption~\ref{ass:modes}\,(i) says that every optical path from outside to
+a detector is a declared mode, and Assumption~\ref{ass:port}\,(i) that a port
+clicks exactly when its modes carry a photon, whichever mode carries it; so no
+mode outside the declaration reaches a detector with an efficiency of its
+own, and each port's efficiency is the scalar $\eta_k$ of
+\eqref{eq:efficiencygrams}. The rest is (i) and (ii).
+\end{proof}

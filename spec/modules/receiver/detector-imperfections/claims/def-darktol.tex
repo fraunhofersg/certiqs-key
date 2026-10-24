@@ -1,0 +1,46 @@
+% ---
+% id: receiver/detector-imperfections/def:darktol
+% kind: def
+% title: "Receiver tolerances deciding dark-channel admissibility"
+% summary: >-
+%   For a declared dark-count matrix, column-stochasticity is decided at ε_4 and
+%   monotonicity at ε_2. This is item (iii) of [[receiver/def:tolmap]]; the slack
+%   the two tests admit is carried into the bound by [[prop:dark-slack-bound]].
+% prominence: standard
+% status: accepted
+% uses: [receiver/def:tolmap, receiver/def:residuals, def:darkadm]
+% mentions: [thm:dark-counts, prop:dark-slack-bound, receiver/def:evaluation-model]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Item (iii) of the core's def:tolmap decides an admissibility condition of thm:dark-counts, so it is stated here; the core's item (iii) is a pointer to this definition and keeps its number so that items (iv) and (v) keep their names."
+% ---
+
+Proposition~\ref{prop:dark-slack-bound} states what both slacks cost and which
+side of each test each step uses: the lower side of (D1)'s column sum together
+with the upper side of (D2)'s entry bound gives \eqref{eq:d2slack}, the upper
+side of (D1)'s column sum permits $r_{\min}>1$ \eqref{eq:rminupper}, and what a
+downstream module composes with is \eqref{eq:darkpmcslack} rather than
+\eqref{eq:darkpmc}. The floating-point evaluation model in which the two tests
+decide is Definition~\ref{def:evaluation-model}.
+
+\begin{definition}
+\label{def:darktol}
+This definition extends the list of Definition~\ref{def:tolmap} by its
+item~(iii), under the same rule: an exact condition about \tref{declared data}
+is decided in floating point by a receiver
+tolerance, fixed here, and by no other threshold.
+
+\emph{Dark-channel admissibility} (Definition~\ref{def:darkadm}) for a
+\emph{declared} $R$: (D1) column-stochasticity is decided at
+$\varepsilon_4$, admitted when $R_{S|S'}\ge-\varepsilon_4$ for every
+entry and $\big|\sum_SR_{S|S'}-1\big|\le\varepsilon_4$ for every column;
+and (D2) monotonicity is decided at $\varepsilon_2$: an entry counts as
+positive when $R_{S|S'}>\varepsilon_2$, so the channel is refused exactly
+when some entry with $S'\not\subseteq S$ exceeds $\varepsilon_2$.
+$\varepsilon_4$ bounds the completeness residual \eqref{eq:res4}, which is
+the same kind of quantity as a column sum's defect from one; $\varepsilon_2$
+is the threshold at which this contract already calls a spectral quantity
+zero.
+\end{definition}

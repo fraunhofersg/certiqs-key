@@ -1,0 +1,1482 @@
+# spec/modules/transmitter/interface.yaml -- the transmitter module's
+# interface: inputs, outputs, parameters, conventions and refusal rules
+# (spec/claim-format.md section 5). The claim files under claims/ are the
+# contract; this file authors no mathematics and repeats none. Where this file
+# and a claim disagree, the claim decides.
+#
+# Every row names, in a `locator` field, the claim label it rests on. Machine
+# keys and refusal strings are binding for the implementation: the code is
+# written onto these names, not the reverse.
+#
+# A declaration with one sector, a pure-form certificate and an empty source
+# segment is the degenerate case of the general declaration, entry for entry,
+# and its wire record omits every key the general declaration adds
+# (`artifact_bindings.what_the_degenerate_case_emits`).
+
+module_id: transmitter
+
+# ---------------------------------------------------------------------------
+# source_modes
+#   The mode is a property of the declared data, not a second datum: it is
+#   `trusted` exactly when the marginal slot is filled. It is stated here
+#   because it governs the presence column of four rows below.
+# ---------------------------------------------------------------------------
+source_modes:
+  values: [trusted, untrusted]
+  trusted_requires:
+    "d_A = 1": ["alice_marginal (OPTIONAL: filled with [1] when the slot is empty)"]
+    "d_A >= 2": [alice_marginal, source_replacement_certificate]
+  trusted_requires_note: >-
+    A mapping keyed by the condition, so that no single key reads as the
+    whole rule. At d_A = 1 the request is served with tau_A = [1] and no
+    certificate is demanded (d_A_one_rule), and the marginal slot may be left
+    empty: an empty slot is filled with [1], the only admissible value there,
+    and the fill is recorded in the artefact (req:marginal-fill).
+  untrusted_marginal_value: "none (the machine value null, spelling nomarg)"
+  rule: >-
+    In trusted-source mode the specification carries tau_A in S_=(A) and, at
+    d_A >= 2, a source-replacement certificate; at d_A = 1 no certificate is
+    demanded and tau_A = [1] is the only marginal. In untrusted-source mode
+    it carries neither, and the marginal slot holds `none`. The mode is
+    derived from the presence of alice_marginal and is never separately
+    declared.
+  locator: "def:source-spec (the two modes; the d_A = 1 clause); rem:da1; rem:source-mode (a)"
+  sector_structures_and_modes: >-
+    A sector structure with more than one sector is declared only in
+    trusted-source mode, and only together with a certificate in block form
+    or an ensemble presentation (def:source-spec, the two modes). Untrusted
+    mode therefore carries the one-sector structure, and so does every
+    declaration at d_A = 1, which admits one sector only (`d_A_one_rule`
+    below).
+  mode_of_an_empty_slot_at_d_A_1: >-
+    The mode being derived from the presence of alice_marginal, an empty
+    slot would read as untrusted. At d_A = 1 the slot is filled before the
+    mode is read: a request whose `source_mode_request` is `trusted` and
+    whose marginal slot is empty has the slot filled with tau_A = [1], and
+    the emitted mode, derived from the now-present marginal exactly as
+    everywhere else, is `trusted`; the artefact records that the slot was
+    filled (d_A_one_rule). An `untrusted` request is untouched: its slot
+    stays empty and its emitted mode is untrusted. So the derivation rule
+    gains no second carrier -- the request key decides whether the slot is
+    filled, the emitted marginal decides the emitted mode -- and nothing
+    turns on the classification at d_A = 1, where the two modes impose the
+    same condition on every consumer (rem:da1).
+  not_a_free_choice: >-
+    A declared tau_A deletes from a consumer's feasible set every state whose
+    A-marginal differs, hence every attack that would have produced one.
+    Untrusted mode is always available and always more conservative:
+    dropping the marginal loses rate, never gains any. Declaring tau_A
+    without the attestation of A-SRC overstates the key in the unsafe
+    direction. Locator: rem:source-mode (b); ass:src.
+
+# ---------------------------------------------------------------------------
+# inputs
+#   Every declared datum of def:source-spec, plus the source segment of
+#   def:source-segment. The blanket reading is the number model of
+#   def:source-spec: every numeric datum is binary64 and every condition
+#   below is decided exactly on those numbers, the sums in the declared
+#   order, rounding nowhere. This module declares no numerical tolerance, and
+#   no condition below is read at one.
+# ---------------------------------------------------------------------------
+inputs:
+
+  - name: signal_alphabet
+    symbol: X
+    type: ordered label list
+    presence: always
+    domain: >-
+      Finite and non-empty, labels pairwise distinct; the order is declared
+      and is the order every sum over X is accumulated in.
+    locator: "def:source-spec, first paragraph"
+    order_note: >-
+      The declared order is a datum, not a presentation: the completeness sum
+      sum_x M_x and the weight sum sum_x p_x are binary64 sums, and a binary64
+      sum is a determinate number only once its accumulation order is fixed.
+      Locator: def:source-spec, the number model; the `summation_order`
+      convention below.
+
+  - name: alice_system
+    symbol: "A, d_A = dim H(A)"
+    type: "int + declared basis"
+    presence: "always, EXCEPT in an ensemble presentation, where A is not declared but defined (the `ensemble_presentation` row)"
+    domain: >-
+      d_A >= 1; A is the system Alice retains. A carries a declared
+      computational basis, which is part of the datum: the certificate is
+      written against it. In an ensemble presentation A is not declared: it
+      is the direct sum of copies of the declared sectors (the
+      `ensemble_presentation` row).
+    locator: "def:source-spec, first paragraph; def:srcert (in pure and in block form Psi is declared together with the declared computational basis of A)"
+
+  - name: alice_sector_structure
+    symbol: "T, {Pi^A_t}, d_{A_t}"
+    type: ordered index set + basis-aligned decomposition
+    presence: "always; THE ONE-SECTOR STRUCTURE IS THE DEFAULT"
+    domain: >-
+      A finite ordered index set T and a decomposition of H(A) into subspaces
+      each spanned by vectors of the declared basis, d_{A_t} >= 1, with
+      projectors Pi^A_t. The default is one sector, with A_t = A; at one
+      sector a block list is a matrix, and every condition on its blocks is
+      the same condition on that matrix. More than one sector requires
+      trusted mode and either a block-form certificate or an ensemble
+      presentation (def:source-spec, the two modes); in a presentation this
+      structure is not declared at all but defined, A_t being a copy of S_t
+      (the `ensemble_presentation` row). A submodule's link may emit the
+      structure (def:source-link (e)); the block form of the certificate is
+      written against it, and its block kind is `proof_sector`.
+    locator: "def:source-spec (the sector structure; the one-sector case); def:tagged-source (T5) for the case that exercises it"
+    what_it_is_not: >-
+      The one row an implementation could turn into a licence. It is a
+      declaration about {M_x}, tau_A and the certificate, which are block
+      diagonal by their presentation. It is no statement about an operator on
+      A together with a further system: that a joint state is block diagonal
+      along T is either proved of the states a certificate reaches
+      (lem:matched-pinching) or licensed by a theorem of the consuming module
+      under that module's own preconditions, and is never inferred from this
+      presentation. Locator: def:source-spec, 'What the sector structure is
+      not'; rem:boundary, 'What the block form adds'.
+
+  - name: alice_povm_spec
+    symbol: "{M_x}_{x in X}"
+    type: "block list against T (a matrix list at one sector)"
+    presence: "always, EXCEPT in an ensemble presentation, where {M_x} is not declared but defined and the POVM condition is a theorem (the `ensemble_presentation` row)"
+    domain: >-
+      Presented as a block list against the declared sector structure,
+      M_x = (+)_t M^{(t)}_x: each block Hermitian and positive semidefinite,
+      and sum_x M^{(t)}_x = 1_{A_t} for every t, with the sum taken in the
+      declared order of X. All decided exactly, entry by entry, rounding
+      nowhere. At one sector this is the condition on the matrix M_x.
+    locator: "def:source-spec, first paragraph"
+    where_it_is_used: >-
+      thm:certificate-sufficiency (ii) uses the POVM condition and nothing
+      weaker: it is what makes Pi_S (sum_x M_x) Pi_S = Pi_S hold outright,
+      hence what makes the certificate's signal-side marginal agree with the
+      virtual average signal state. A source/POVM mismatch of that kind is
+      therefore a detected defect and not a silent one. The proof of (ii)
+      also uses Hermiticity, which is why the domain names it. Locator:
+      thm:certificate-sufficiency (ii).
+
+  - name: specified_ensemble
+    symbol: "{p_x, rho_x}_{x in X} on A'"
+    type: "weighted members (matrices), or a submodule's source model"
+    presence: always
+    domain: >-
+      Declared in one of two ways (def:source-spec, 'How the specified
+      ensemble is declared'). (a) As matrices, for a finite-dimensional A':
+      by its weighted members sigma_x >= 0 with p_x = tr sigma_x,
+      sum_x p_x = 1 in the declared order rounding nowhere, and
+      rho_x = sigma_x / p_x where p_x > 0. A declaration by the pair
+      (p_x, rho_x) with rho_x in S_=(A') is the declaration of the weighted
+      member sigma_x = p_x rho_x with the product formed exactly, which is
+      what every accepted instance declares. (b) By a source model, for a
+      separable A': a named definition of a submodule of this module that
+      fixes p_x and rho_x as mathematical objects and not as matrices,
+      together with the physical-source assumption that submodule declares in
+      the place of A-ENS. A specification declared by a source model is
+      presented with a non-empty source segment, so that what a consumer
+      receives is the finite-dimensional virtual ensemble and never the
+      model.
+    locator: "def:source-spec, first paragraph and 'How the specified ensemble is declared'; decoy/def:wcp-model for the one model that exists"
+    why_weighted_members: >-
+      The ensemble is read through its weighted members because the
+      conditions of this module are bilinear in the declared data: a
+      normalised rho_x with a dyadic p_x need not have an exactly
+      representable product, while the product is declarable as one operator.
+      A declared pair (p_x, rho_x) is the case in which the product is formed
+      exactly.
+    what_it_is_not: >-
+      A' is the transmitted system and is not A: A is retained, A' is sent.
+      The specified ensemble is what the physical source is assumed to emit
+      (A-ENS); the certificate is written against the virtual ensemble, and
+      the two coincide exactly when the source segment is empty.
+      Locator: ass:ens; def:srcert, 'One reading at every L_s'.
+
+  - name: source_mode_request
+    symbol: null
+    type: enum
+    presence: always
+    domain: >-
+      `trusted` or `untrusted`. At d_A >= 2, `trusted` additionally requires
+      alice_marginal and every field of source_replacement_certificate. At
+      d_A = 1 it requires neither: the marginal slot may be left empty, the
+      request is served with tau_A = [1] with the fill recorded in the
+      artefact, and the emitted mode is `trusted` (see `d_A_one_rule` and
+      `source_modes.mode_of_an_empty_slot_at_d_A_1`). A present but failing
+      certificate is refused at every d_A.
+    locator: "def:source-spec ('declared in one of two modes'); rem:da1"
+    no_fallback: >-
+      A trusted request at d_A >= 2 without the certificate is refused
+      (`trusted_mode_without_certificate`) and is never served in untrusted
+      mode: no claim of this module establishes that an unattested trusted
+      request may be served at all. Whether a consumer may instead fall back
+      to untrusted mode is a claim for that consumer to make. The refusal is
+      the safe direction.
+
+  - name: alice_marginal
+    symbol: tau_A
+    type: "matrix on A, or null"
+    presence: "trusted mode only; null in untrusted mode; NOT DECLARED in an ensemble presentation, where tau_A is the transpose of the declared sum (the `ensemble_presentation` row)"
+    domain: >-
+      Trusted: tau_A in S_=(A) -- Hermitian, positive semidefinite, and
+      tr tau_A = 1 with the trace accumulated over the row index without
+      rounding -- all three decided exactly on the declared matrix, and
+      presented as a block list against the declared sector structure,
+      tau_A = (+)_t tau^{(t)}_A with each block positive semidefinite and the
+      block traces summing to one in the declared order. A singular tau_A is
+      admissible; tau_A = 0 is not. Untrusted: the machine value null,
+      spelling nomarg. In an ensemble presentation none of this is decided:
+      tau_A is not a declared datum there but the transpose of the sum of
+      (E3), it is a state by lem:ensemble-presentation (i), and an
+      implementation that validates it on formed numbers decides nothing
+      while introducing a rounding (`ensemble_presentation`,
+      `what_is_decided_and_what_is_theorem`).
+    locator: "def:source-spec; rem:source-mode (c); rem:da1 (the d_A = 1 value)"
+    zero_and_maximally_mixed_note: >-
+      Two values an implementation could mistake for "no marginal", and
+      neither is: tau_A = 0 fails normalisation, and even with normalisation
+      dropped it would admit no state at all, a state omega with omega_A = 0
+      having tr omega = 0, hence omega = 0 (rem:source-mode (c)).
+      At d_A >= 2, tau_A = 1_A/d_A is not neutral either -- it fixes the
+      marginal to the maximally mixed state and excludes every adversarial
+      source that sends anything else (ass:src). The way to say "no marginal"
+      is nomarg.
+
+  - name: source_replacement_certificate
+    symbol: "(tau_A, Psi, {p_x, rho^v_x})"
+    type: record
+    presence: "trusted mode; demanded only at d_A >= 2"
+    domain: >-
+      Trusted mode only. The marginal tau_A in S_=(A) (the `alice_marginal`
+      row); the certificate operator Psi in L(A A^v), a rank-one projector --
+      Psi Hermitian, Psi^2 = Psi, tr Psi = 1, each decided exactly and the
+      trace summed without rounding; and the virtual ensemble
+      {p_x, rho^v_x} on the virtual transmitted system A^v that the
+      certificate is written against -- the ensemble the source segment starts
+      from, equal to the specified ensemble on A' exactly when that segment is
+      empty. The virtual ensemble carries its own conditions, p_x >= 0,
+      sum_x p_x = 1 in the declared order rounding nowhere, and
+      rho^v_x in S_=(A^v); they are decided before the five and are not
+      among them. Conditions (SR1) tr_{A^v} Psi = tau_A and
+      (SR2) tr_A[(M_x (x) 1_{A^v}) Psi] = p_x rho^v_x are exact matrix
+      identities, decided entry by entry. (SR3), retention, is an attestation
+      and is decided by no function of the declared data.
+    locator: "def:srcert; def:source-spec; thm:certificate-sufficiency (i)"
+    block_form: >-
+      The certificate is declared in one of two forms, pure and block, or
+      defined by an ensemble presentation (def:srcert; the presentation has
+      its own row). The domain above is the pure form's. In block form A
+      carries a sector structure and the virtual system a matched one (the
+      same ordered index set, the sector S_t against A_t), and the
+      certificate is a block list (Psi_t)_t with Psi_t in L(A_t S_t), each
+      block Hermitian and positive semidefinite by an exact decision, with
+      sum_t tr Psi_t = 1 in the declared order rounding nowhere, and no
+      purity condition, globally or per block. Every weighted virtual member
+      sigma^v_x is block diagonal along the matched sectors (S_t)_t, its
+      entries outside the diagonal blocks zero, decided entry by entry; and
+      (SR1) and (SR2) then read block by block (eq:srblock). The block
+      diagonality and eq:srblock together are (SR1) and (SR2) of Psi;
+      eq:srblock alone is (SR2) against the sector-pinched members only. The
+      block form makes a certificate declarable for a
+      source that draws a sector and then prepares a state in it, which has
+      no exactly declarable pure certificate: a globally pure Psi carries
+      cross-sector amplitudes that are not dyadic rationals. The pure form is
+      kept as a form of its own, rather than replaced by positivity
+      everywhere, because replacing it would change what a consumer refuses
+      of a pure-form certificate, which the frozen oracle registries and the
+      accepted instances pin (design.md, decision 12).
+    the_five_decided_conditions:
+      - "Psi = Psi^dagger"
+      - "Psi^2 = Psi"
+      - "tr Psi = 1, rounding nowhere"
+      - "(SR1) tr_{A^v} Psi = tau_A"
+      - "(SR2) tr_A[(M_x (x) 1_{A^v}) Psi] = p_x rho^v_x for every x in X"
+    the_five_are_the_pure_form: >-
+      The list above is the pure form's, and it is the list the five frozen
+      refusal reasons name. In block form the conditions a consumer
+      decides are: per block, Hermiticity and positive semidefiniteness by an
+      exact decision; the total trace; the block diagonality of every
+      sigma^v_x along the matched sectors, decided entry by entry; and (SR1),
+      (SR2) block by block. There is no idempotence condition there, and no
+      consumer may add one. In an
+      ensemble presentation they are (E1) to (E3) and no others, the
+      conditions of the block form being theorems of the presentation
+      (`ensemble_presentation`). Locator: def:srcert;
+      thm:certificate-sufficiency (i).
+    no_condition_is_stated_on_a_vector: >-
+      An implementation must not accept a vector. No decided condition is
+      stated on a vector, which is not a declared datum (def:srcert, 'What
+      is decided'). The unit vector with Psi = |psi><psi| exists by
+      Psi^2 = Psi and tr Psi = 1 and is never itself declared; the purity
+      conditions are what recover it where an argument needs one
+      (thm:certificate-sufficiency (ii)).
+
+  - name: ensemble_presentation
+    symbol: "(S_t)_t and {sigma^v_x} as block lists"
+    type: "matched sector structure + weighted block lists"
+    presence: "the third form of a certificate; trusted mode"
+    domain: >-
+      The third form in which a certificate is supplied, and the only one in
+      which A is not declared. What is declared is the matched sector
+      structure (S_t)_t on A^v, each S_t with its declared orthonormal basis,
+      and the weighted virtual ensemble as block lists
+      sigma^{v,(t)}_x in L(S_t) -- and nothing else: no Psi, no {M_x}, no
+      tau_A, no basis of A. The decided conditions are three and are all
+      there are: (E1) every block Hermitian and positive semidefinite,
+      decided exactly; (E2) p_x = sum_t tr sigma^{v,(t)}_x for every x and
+      sum_x p_x = 1, the sums formed in the declared orders and rounding
+      nowhere; (E3) for every t the sum over x of the blocks, accumulated
+      entry by entry in the declared order of X, rounds nowhere, so that its
+      entries are binary64 numbers.
+    locator: "def:srcert ('Ensemble presentation'); lem:ensemble-presentation; def:source-spec (the two modes)"
+    what_is_defined_from_it: >-
+      A_t is a copy of S_t; tau^{(t)}_A is the transpose of the sum in (E3);
+      Psi_t and M^{(t)}_x are the canonical purification of that sum and its
+      square-root measurement (lem:ensemble-presentation, eq:enspres). They
+      are a block-form certificate with (SR1), (SR2) holding exactly against
+      exactly the declared ensemble and with every non-zero block a multiple
+      of a rank-one projector. Of these only tau_A is ever formed as numbers,
+      and by (E3) it is admissible declared data; Psi_t and M^{(t)}_x carry
+      square roots and quotients, are formed by no one and are never
+      rounded.
+    what_is_decided_and_what_is_theorem: >-
+      Decided: (E1), (E2), (E3). Theorems of the presentation, decided by
+      nothing because there is no second declared datum to compare with:
+      (SR1), (SR2), positivity of the blocks Psi_t, the POVM condition and
+      the purity of the blocks. Attestation, as in every form: (SR3). An
+      implementation that "re-decides" (SR1) or the POVM condition on formed
+      numbers is re-deciding nothing and would introduce the rounding this
+      form exists to avoid. Locator: def:srcert;
+      thm:certificate-sufficiency (i).
+    what_a_consumer_reads: >-
+      N^{(t)}_x = (sigma^{v,(t)}_x)^T, the transposed declared blocks, which
+      are entrywise the declared numbers and sum over x to tau^{(t)}_A
+      (lem:ensemble-presentation (v)). A consumer whose declaration carries
+      Alice's measurement as {M_x} cannot receive a presentation and refuses
+      it; a consumer receives one through the ensemble form of its
+      declaration, which carries {N_x} in the place of {M_x} (def:srcert,
+      'What a consumer reads of a presentation').
+
+  - name: source_segment
+    symbol: "Ch_src = (Xi_1, ..., Xi_{L_s})"
+    type: ordered list of source links
+    presence: always
+    domain: >-
+      L_s >= 0 by def:source-segment. A link is admitted by kind: a link of
+      kind k may appear only where a submodule of this module declares k and
+      supplies its soundness claim, so that k has an entry in the emitted
+      `soundness_registry`; a link of any other kind is refused, never
+      silently ignored or emptied (`link_kind_deferred` for the core's
+      declared and unproven `source-map`, `source_link_kind_not_admitted` for
+      a kind the vocabulary does not have). A non-empty list additionally
+      meets (A1) to (A3), the conditions a consumer decides on data, and
+      carries no transported constraint entry. Where the list is empty,
+      L_s = 0, A^v = A', the virtual ensemble is the specified one and the
+      source identity (S3) holds by inspection: that is every
+      matrix-declared specification. A specification declared by a source
+      model comes with a non-empty list (def:source-spec (b)).
+    locator: "def:source-segment; def:source-link"
+    link_shape: >-
+      Each link is
+      (kind, source descriptor, target descriptor, channel witness Gamma,
+      declared descriptor family, retained-register sector map,
+      transported constraint entries CList, licence, status) with both
+      descriptors Alice-side -- a transmitted system and a weighted-member
+      ensemble on it, indexed by the same X with tr sigma^in_x = tr sigma^out_x
+      = p_x -- the licence present exactly when CList is non-empty, and
+      status in {exact, certified_outer, exploratory_numeric}, `exact` meaning
+      Gamma(sigma^in_x) = sigma^out_x with no error term.
+      Locator: def:source-link, Eq. eq:source-link.
+    the_witness_in_one_of_two_ways: >-
+      As data: both systems finite dimensional, the channel declared, and the
+      identity decided exactly as (S3) says. As a theorem constructor: the
+      witness is a named claim of a submodule that constructs one channel per
+      member of a declared family of descriptors and proves the identity for
+      it; (S3) is then not decided on numbers, and the link carries an
+      obligation record -- the triple (kind, the soundness claim's id, the
+      short ids of the assumptions the obligation carries, def:source-segment
+      (A1)) together with the member of the family the declared descriptors
+      are -- which travels with the link and, where the link carries a
+      licence record, in it. The triple is decided against the soundness
+      registry; the family member is not. No claim of this module discharges
+      an obligation. Locator: def:source-link (c2), Eq. eq:obligation.
+    the_declared_descriptor_family: >-
+      The slot that makes a link sound rather than merely well typed: the
+      family of source descriptors the witness's identity is asserted for. It
+      must contain the link's own declared source descriptor. For a data link
+      it is that descriptor alone and the containment is decidable, so a link
+      failing it is refused (`source_link_family_excludes_its_descriptor`).
+      For a constructor link it is not decidable: the family is the extension
+      of a claim's hypothesis, the emitting module asserts membership and
+      records it, and what a consumer decides instead is the registry triple
+      and the provenance of the artefact. The row says so rather than leaving
+      an implementation to discover it. Locator: def:source-link (d);
+      def:source-segment (A1) to (A3).
+    the_soundness_registry: >-
+      A finite closed list emitted with every artefact, one entry per
+      admitted source-link kind, each the triple (kind, soundness claim id,
+      assumption short ids). It is the registry of the module version that
+      emitted the artefact and is never supplied by a request. The table is
+      the `soundness_registry` output row. A consumer refuses a constructor
+      link whose triple is not in the registry of the artefact carrying it
+      (`source_link_not_in_registry`), refuses one whose named assumptions
+      are not all in the emitted ledger
+      (`source_link_assumption_not_in_ledger`), and accepts a non-empty
+      segment only inside an artefact emitted by the admitting module
+      (`source_segment_not_from_admitting_module`). Locator:
+      def:source-segment (A1), (A2), (A3).
+    the_sector_map_slot: >-
+      A link may emit a matched pair of sector structures, one on A and one on
+      the Alice-side descriptor the certificate is written against, over one
+      ordered index set, with block kind `proof_sector` (the
+      `alice_sector_structure` row). Empty means the one-sector structure.
+      Locator: def:source-link (e); decoy/def:tagged-source (T5).
+    the_admission_rule: >-
+      No source link kind is admitted unless the submodule that declares it
+      supplies its soundness claim -- the statement that the link's witness
+      satisfies the source identity at every member of its declared
+      descriptor family. That is a condition on the kind, applied where a
+      link is admitted; what a consumer decides is (A1) to (A3), the registry
+      rows above. A link with a non-empty CList is refused whatever its kind
+      (`source_link_entry_present`): no claim of this repository transports
+      an Alice-side entry. The rule is the whole of what this module says
+      about which segments exist: a segment is admitted exactly where this
+      rule and (A1) to (A3) are met, and refused by a named string otherwise.
+      Locator: def:source-segment, 'Which kinds are admitted, and what a
+      consumer decides'; rem:segment-scope.
+    kind_vocabulary: [source-map, tagging]
+    kinds_with_a_soundness_claim: [tagging]
+    kinds_declared_and_refused: [source-map]
+    kind_note: >-
+      The vocabulary is open to the kinds a submodule declares. The core
+      declares exactly one, `source-map`, and no claim of this repository
+      proves it, so it is refused when present (`link_kind_deferred`). The
+      decoy submodule declares `tagging` and supplies decoy/prop:tagging as
+      its soundness claim, so the kind is admitted, has a registry entry and
+      may be carried by an artefact of that submodule. Locator:
+      def:source-link (a); def:source-segment; decoy/interface.yaml
+      `link_kind`.
+
+# ---------------------------------------------------------------------------
+# outputs
+#   The transmitter artefact. Nothing here is a second source of truth for an
+#   input: the module emits the declared data it has decided, together with
+#   the virtual pair a consumer reads, the segment, the licence record and the
+#   assumption ledger.
+# ---------------------------------------------------------------------------
+outputs:
+
+  - name: signal_alphabet
+    symbol: X
+    presence: always
+    content: >-
+      the declared alphabet with its order, which is the order every consumer
+      re-accumulates a sum over X in.
+    locator: "def:source-spec"
+
+  - name: alice_dim
+    symbol: d_A
+    presence: always
+    content: "d_A = dim H(A), with the declared computational basis of A."
+    locator: "def:source-spec"
+    key_name_note: >-
+      The input side carries this number inside `alice_system`.
+
+  - name: alice_marginal
+    symbol: "tau_A, or none"
+    presence: always
+    content: >-
+      the decided tau_A in trusted mode; the machine value null, spelling
+      nomarg, in untrusted mode. Its presence is the emitted mode.
+    locator: "def:source-spec; rem:source-mode (a), (c)"
+    filled_slot_note: >-
+      At d_A = 1 the emitted value may be the one the module filled,
+      tau_A = [1], rather than one a request declared, and the artefact
+      records which of the two it is. The presence rule above applies, so a
+      filled slot emits the mode `trusted`. Locator: req:marginal-fill;
+      d_A_one_rule.
+
+  - name: alice_marginal_slot_filled
+    symbol: null
+    presence: always
+    content: >-
+      whether this module filled the marginal slot itself, with tau_A = [1]
+      at d_A = 1, rather than emitting one a request declared: the record the
+      `alice_marginal` row's `filled_slot_note` says the artefact keeps, and a
+      datum a consumer reads.
+    locator: "req:marginal-fill; d_A_one_rule"
+
+  - name: alice_povm
+    symbol: "{M_x}_{x in X}"
+    presence: >-
+      always; an empty mapping with an ensemble presentation, where {M_x} is
+      defined by eq:enspres and formed by no one. A consumer in ensemble form
+      reads `alice_ensemble_operators` instead, and one whose declaration
+      carries {M_x} refuses the presentation (def:srcert, 'What a consumer
+      reads of a presentation').
+    content: >-
+      the decided POVM on A, in the declared order of X. Emitted unchanged:
+      this module transforms no declared operator.
+    locator: "def:source-spec"
+    choice_weighted_presentation_note: >-
+      What this row carries when the family was presented as a choice. The
+      protocol compiler's def:spec (a) allows {M_x} to be itself presented as
+      a choice-weighted family (protocol-compiler/def:weighted); the choice
+      record is the compiler's own input (its `public_choices` row), not a
+      datum of this module, and this row then carries the decided POVM that
+      presentation resolves to, verified here as a POVM like any other. The
+      compiler re-constructs the family from the record it holds and takes
+      def:weighted's emission decision on its own products
+      (protocol-compiler/def:compile; its decide_never_infer convention)
+      rather than reading the construction off this row.
+
+  - name: alice_ensemble_operators
+    symbol: "{N^(t)_x}"
+    presence: "with an ensemble presentation only"
+    content: >-
+      the operators N^(t)_x of lem:ensemble-presentation (v), per signal and
+      Alice sector: what a consumer reads of Alice's side in that form (the
+      `ensemble_presentation` input row's `what_a_consumer_reads`), where
+      `alice_povm` is empty.
+    locator: "lem:ensemble-presentation (v); def:srcert ('Ensemble presentation')"
+
+  - name: virtual_transmitted_system
+    symbol: "A^v"
+    presence: always
+    content: >-
+      the virtual transmitted system: the source descriptor of Xi_1, equal to
+      the specified transmitted system A' when the segment is empty.
+    locator: "def:source-segment (S1)"
+
+  - name: soundness_registry
+    symbol: null
+    presence: always
+    content: >-
+      The closed list of admitted source-link kinds, emitted verbatim with
+      every artefact, one entry per kind: (kind, the id of its soundness
+      claim, the assumptions the obligation carries). It is a datum of the
+      emitting module version and never of a request. The registry is
+      closed: a kind not in it is refused, and adding an entry is a change to
+      the claims, not a configuration. The entries are:
+    table:
+      - kind: tagging
+        soundness_claim: "transmitter/decoy/prop:tagging"
+        assumptions: [A-WCP]
+        why_this_list: >-
+          Both sources of the third component, and only one of them
+          contributes here. The assumption closure of the soundness claim,
+          which `python -m harness.check_claims --assumptions
+          transmitter/decoy/prop:tagging` computes, is empty: no claim of that
+          closure lists an assumption among its dependencies; the proposition,
+          an identity among the states of decoy/def:wcp-model, lists none,
+          and neither does any definition it uses, directly or in turn
+          (cor:emitted-decoy, proof of (ii)(b)). A-WCP is carried for the
+          second reason of def:source-segment (A1): it is the physical-source
+          assumption the submodule declares for the model that proposition is
+          stated over. A-WCP is not a premise of prop:tagging and must not be
+          added to its `assumes`; a registry built from the claim graph alone
+          would produce the empty list and match no emitted triple, which is
+          the defect this field exists to prevent.
+      - kind: source-map
+        soundness_claim: null
+        assumptions: null
+        note: >-
+          Declared and not admitted: no claim of this repository proves it,
+          so it has no entry a triple can match, and a link of this kind is
+          refused (`link_kind_deferred`). It is listed here so that a reader
+          sees the vocabulary and the registry side by side.
+    locator: "def:source-segment (A1); def:source-link (a); decoy/interface.yaml link_kind"
+    the_third_component: >-
+      Defined in def:source-segment (A1), and it has two sources: the
+      assumption closure of the soundness claim, which the command
+      `python -m harness.check_claims --assumptions <claim>` computes and
+      which may be empty; together with the physical-source assumption the
+      submodule declares for the source model that claim is stated over,
+      which is not a premise of the claim and is never made one. An entry
+      lists the union, and (A2) compares the whole of it, so omitting either
+      source is refused. Locator: def:source-segment (A1);
+      def:source-link (c2).
+    what_it_decides: >-
+      A consumer compares a constructor link's triple with the entries and
+      refuses a link that matches none, and demands that the entry's
+      assumptions be in the emitted ledger. It decides that the obligation
+      names a claim this repository proved for that kind and that the
+      assumptions that obligation carries travel -- not that the claim's
+      conclusion covers the link's descriptors, which is family membership
+      and is asserted by the emitting module. Locator: def:source-segment
+      (A1), (A2) and the paragraph after (A3).
+
+  - name: virtual_ensemble
+    symbol: "{p_x, rho^v_x}_{x in X}"
+    presence: >-
+      always; with an ensemble presentation its `states` are an empty
+      mapping, rho^v_x = sigma^v_x / p_x being a quotient of declared numbers
+      that need not be binary64 and is formed by no one
+      (`virtual_ensemble_weighted_members`).
+    content: >-
+      The pair a consumer receives, emitted by its weighted members like
+      every ensemble of this module. The object a consumer receives is the
+      virtual protocol, and the source identity Xi(rho^v_x) = rho_x, from the
+      virtual states to the specified ones, is what carries the description
+      back to the specified ensemble (def:source-segment (S3)). At L_s = 0
+      the pair is the specified one.
+    locator: "def:source-segment (S1), (S3); def:srcert, 'One reading at every L_s'"
+    in_every_form: >-
+      This row carries declared data in every form: in the pure and block
+      forms it is the declared virtual ensemble, and in an ensemble
+      presentation it is the declared blocks themselves, from which the
+      certificate is defined. Nothing here is formed from a certificate, and
+      nothing is rounded.
+
+  - name: virtual_ensemble_weighted_members
+    symbol: "{sigma^v_x}, per virtual sector"
+    presence: "with a block-form certificate or an ensemble presentation only"
+    content: >-
+      the weighted members of the virtual ensemble as block lists over the
+      matched virtual sectors; in an ensemble presentation, the declared
+      blocks themselves. This is what the `virtual_ensemble` row emits the
+      pair by in those forms.
+    locator: "def:srcert ('Ensemble presentation'); lem:ensemble-presentation"
+
+  - name: alice_sector_map
+    symbol: "T, {Pi^A_t}, and the matched {Pi^v_t} where a link emitted one"
+    presence: "always; the one-sector structure by default"
+    content: >-
+      the declared sector structure of A in its declared order, with the
+      matched structure on A^v where the segment's link emitted one, and the
+      block kind `proof_sector`. It is emitted as a presentation datum: it
+      says how {M_x}, tau_A and the certificate are presented and nothing
+      about any joint state.
+    locator: "def:source-spec ('What the sector structure is not'); def:source-link (e); lem:matched-pinching"
+    what_a_consumer_may_read_it_as: >-
+      What the states reached from a block-form certificate satisfy is
+      lem:matched-pinching: block diagonal along T with marginal tau_A, and
+      pinching A after the attack equal to pinching the virtual signal before
+      it. A restriction of a consumer's feasible set is not in it: a positive
+      operator merely constrained to have the marginal tau_A need not be block
+      diagonal, and a consumer that minimises over block-diagonal operators
+      does so under a theorem of its own module. Locator: rem:boundary,
+      'What the block form adds'.
+    sign_and_direction_note: >-
+      The channel of the source identity runs from the virtual states to the
+      specified ones (def:source-segment (S3)); reversing the direction is a
+      silent error.
+
+  - name: source_segment
+    symbol: "Ch_src"
+    presence: "always; EMPTY unless a submodule supplied an admitted link"
+    content: >-
+      the ordered list of source links with their descriptors, channel
+      witnesses, declared descriptor families, sector maps, constraint
+      entries, licence slots, status tags and, per constructor link,
+      obligation records. Emitted empty rather than omitted where there is no
+      link, so that a consumer composing a chain reads a segment and not a
+      silence.
+    locator: "def:source-segment; def:source-link"
+    the_obligation_record: >-
+      Per link whose channel is a theorem constructor: the triple (kind, the
+      soundness claim's id, the assumption short ids) plus the member of the
+      claim's declared family the emitted descriptors are. The triple is what
+      a consumer decides against the emitted `soundness_registry`; the family
+      member is asserted by this module and re-proved by no one. It carries
+      no verdict on a number, there being none decided. Locator:
+      def:source-link (c2), Eq. eq:obligation; def:source-segment (A1) to
+      (A3), (S3), (S4).
+    who_emits_a_non_empty_segment: >-
+      The core emits an empty list for every matrix-declared specification;
+      the one submodule that admits a kind emits the list of its own link
+      (decoy/interface.yaml).
+
+  - name: source_replacement_license
+    symbol: null
+    presence: "trusted mode at d_A >= 2 only"
+    content: >-
+      the record carrying (SR1)-(SR3) of def:srcert with its provenance, and
+      naming assumption A-SRC. Vacuous at d_A = 1, and then neither emitted
+      nor demanded.
+    locator: "def:srcert (SR1)-(SR3); ass:src; rem:da1; req:licence-scope; req:attestation-record; rem:boundary"
+    declared_form: >-
+      The record names the declared form, `pure`, `block` or
+      `ensemble_presentation`, because which conditions were decided depends
+      on it, and it carries the sector structure with a block-form
+      certificate or a presentation. What it does not carry is a licence to
+      restrict a consumer's feasible set: what a block-form certificate buys
+      beyond the two identities is the reached-state statement of
+      lem:matched-pinching and nothing else (rem:boundary, 'What the block
+      form adds'). A constructor link's obligation record is not in this
+      record: it travels with the link in the source segment (the
+      `source_segment` row; rem:boundary, 'Links supplied by a theorem').
+    with_an_ensemble_presentation: >-
+      With an ensemble presentation the record carries the declared blocks
+      and the sector structure, and not Psi or {M_x}: those are defined,
+      carry square roots and quotients, and are formed by no one, so a
+      consumer re-decides (E1) to (E3) and nothing else
+      (`certificate_travels_note` below is read that way for this form).
+    certificate_travels_note: >-
+      The record carries the certificate it was decided on. Beside the two
+      verdicts and the attestation as supplied, the emitted record carries
+      the certificate itself -- tau_A, Psi and the virtual pair
+      {p_x, rho^v_x} of def:srcert -- so that a consumer can re-decide the
+      conditions on the emitted data rather than take this module's verdicts
+      on trust (protocol-compiler/def:eligible (G2) re-decides the five
+      pure-form conditions, and (E1) to (E3) of a presentation; the
+      compiler's `transmitter_artifact` input row types the key as the
+      certificate record with its attestation). Carrying the certificate
+      asserts nothing more than the verdicts do: never_asserts_sr3_note below
+      applies unchanged.
+    wire_form: >-
+      The record is JSON as this module emits it: every matrix written by
+      foundations.exact.serialize_matrix (nested lists of exact [re, im]
+      rational strings, read back without loss by deserialize_matrix) and
+      every exact weight as its "p/q" string. A consumer that writes the
+      record to a file passes it through and converts nothing. The code is
+      certiqs_key.transmitter.certificate.SourceReplacementLicense.as_machine_record.
+    never_asserts_sr3_note: >-
+      The one place an implementation could turn a pass-through into an
+      assertion. By req:attestation-record the engine records the (SR3)
+      attestation it receives and passes it through: it never verifies it and
+      never asserts it of any physical apparatus. (SR3) is decided by no
+      function of the declared data (thm:certificate-sufficiency (i)), so the
+      emitted record is a pass-through of the supplied attestation, never an
+      assertion of it by this module.
+    what_a_verified_certificate_buys: >-
+      Eq. eq:srmain and Eq. eq:srident outright -- the commutation of Alice's
+      measurement with every admitted attack, and the identification of the
+      declared trusted-source data with the virtual source, as identities for
+      every channel of the admitted form. That is what a consumer of the
+      record is entitled to read it as asserting, and it is all of it.
+      Locator: rem:boundary, 'What a verified certificate buys'.
+    key_name_note: >-
+      One key for one attestation: the machine key
+      `source_replacement_license` has exactly one assumption behind it,
+      A-SRC (design.md, decision 3).
+
+  - name: certificate_form
+    symbol: null
+    presence: "on every record but the degenerate one; an absent key means `pure`"
+    content: >-
+      the declared form of the certificate, `pure`, `block` or
+      `ensemble_presentation`: the value the licence record names (the
+      `source_replacement_license` row), because which conditions were
+      decided depends on it, carried beside the licence so that a consumer
+      reads the form without opening it.
+    locator: "def:srcert"
+
+  - name: assumption_ledger
+    symbol: null
+    presence: always
+    content: >-
+      the assumptions the emitted artefact rests on, per mode, named below by
+      short id and emitted as the machine keys of `rows` (`ledger_spelling`).
+      A-SEQ always; A-ENS in trusted mode for a specification whose ensemble
+      is declared as matrices, and never in untrusted mode, where the round
+      model takes no system from a source and the engine's accumulation
+      theorem does not use it (meat-core/thm:accumulated-entropy names it
+      among the hypotheses of trusted-source mode only). The protocol-compiler
+      claims that declare A-ENS without a mode condition (thm:typing,
+      thm:sifting-and-key, req:validator-refusals, req:tag-reading,
+      req:no-window, req:feasibility-witness, req:operator-form, rem:sidecond,
+      rem:alphabet, rem:chain-and-validator, rem:chaincond-reductions,
+      rem:source-segment-rules) do not use it in untrusted mode either, so a
+      run lists it there as not engaged. A-SRC in trusted mode at d_A >= 2
+      only. A specification declared by a source model
+      carries that
+      model's own physical-source assumption in the place of A-ENS
+      (def:source-spec (b); decoy/ass:wcp), and each constructor link adds
+      the assumptions of its registry entry (def:source-link (c2);
+      def:source-segment (A1)). Whether the segment is empty is data of the
+      emitted `source_segment` row, which a consumer reads there and inherits
+      from no ledger key.
+    locator: "ass:ens; ass:seq; ass:src; rem:da1; def:source-spec (b); def:source-link (c2); def:source-segment (A1)"
+    rows:
+      - {id: A-ENS, machine_key: source_ensemble}
+      - {id: A-SEQ, machine_key: sequential_round_model}
+      - {id: A-SRC, machine_key: source_replacement_license}
+    emission_rule:
+      always: [A-SEQ]
+      trusted_mode_matrix_declared_ensemble: [A-ENS]
+      model_declared_ensemble: ["the model's own assumption, in the place of A-ENS, e.g. A-WCP"]
+      per_constructor_link: ["whatever its registry entry names"]
+      trusted_mode_d_A_at_least_2: [A-SRC]
+      trusted_mode_d_A_equals_1: []
+      untrusted_mode: []
+    ledger_spelling: >-
+      The rule above names short ids; the emitted ledger carries the machine
+      key of each (`source_ensemble`, `sequential_round_model`,
+      `source_replacement_license`, and `wcp_source_model` for the decoy
+      submodule's A-WCP), and frozen expectations pin them. A registry
+      entry's third component is a list of short ids (def:source-segment
+      (A1)), so (A2) compares through the declared mapping: one machine key
+      per assumption short id, declared by the module that owns the
+      assumption in the ledger rows of its interface, total on the
+      assumptions this module and its submodules may emit, and injective. A
+      consumer deciding (A2) maps each short id of the entry to its key and
+      demands that key in the ledger; a short id with no declared key is
+      refused (`source_link_assumption_not_in_ledger`), which is why the
+      mapping's totality is part of this row and not of an implementation.
+      The mapping is certiqs_key.transmitter.reasons.ASSUMPTION_MACHINE_KEYS
+      with certiqs_key.transmitter.decoy.reasons.DECOY_ASSUMPTION_MACHINE_KEYS;
+      the compiler's source-side check
+      (certiqs_key.protocol_compiler.chain.check_source_segment) reads the
+      emitted ledger through it before check_source_link decides (A2). Why
+      the wire keeps the machine keys: design.md, decision 18.
+    why_a_seq_is_here: >-
+      A-SEQ is the stated hypothesis of fact:sr and of
+      thm:certificate-sufficiency (iii), and a transmitter claim cannot assume
+      another module's assumption; it is carried here, and the consuming
+      modules use this one. Locator: ass:seq; fact:sr, 'Symbol map and
+      hypothesis check'.
+    why_a_src_is_absent_at_d_A_1: >-
+      At d_A = 1 what the licence licenses is tr omega = 1, which every
+      normalised state satisfies: it deletes no attack, so the assumption is
+      vacuous and must not be demanded. Locator: rem:da1; req:licence-scope.
+
+  - name: assumption_bindings
+    symbol: null
+    presence: always
+    content: >-
+      Beside each row of `assumption_ledger`, in its order, the declared
+      values the row's assumption's clauses are about, each named by the
+      input it comes from (`binds`). A value is a string, an integer, a list,
+      or an object of further names, an exact rational written "p/q"; an
+      operator is bound by its shape (the alphabet that indexes it and its
+      dimension) and never inlined, its entries being the other output keys.
+      The core's rows are read off the artefact's own fields, so an artefact
+      built directly carries them as an emitted one does; a row a source
+      model supplies in the place of A-ENS carries that model's values.
+    locator: "ass:ens; ass:seq; ass:src; decoy/ass:wcp"
+    binds:
+      A-ENS: "source_ensemble -- the alphabet X, the weights p_x of ass:ens (i) and the transmitted system the states of (ii) act on (the virtual ensemble, which is the specified one at an empty segment, the only case A-ENS is emitted in, and that in trusted mode only); the states are operators and are not inlined"
+      A-SEQ: "nothing: its clauses are about the order of the physical protocol's steps, which no input of this module declares"
+      A-SRC: "source_mode and alice_marginal -- the premise of ass:src, trusted-source mode filling the marginal slot; alice_povm -- the declared measurement of (ii); the party label of A, whose laboratory (i) names, is no input or field of this module and is bound by the consumer's A-SRC row (meat-core/interface.yaml, assumption_ledger.binds A-SRC: party_partition (b))"
+      A-WCP: "the decoy submodule's (transmitter/decoy/interface.yaml, outputs.assumption_ledger.binds)"
+    fixed_here: >-
+      The key, its shape and its names are this file's; values are bound
+      per assumption, and no claim states
+      that the values are emitted. The code is
+      certiqs_key.transmitter.artifact.TransmitterArtifact.assumption_bindings.
+
+  - name: mathematical_spec_version
+    symbol: null
+    presence: always
+    content: >-
+      `transmitter@<version>` of the accepted contract. An artefact may not
+      claim a draft version, nor a version whose conditions it does not
+      implement. The string the code emits is
+      `artifact_bindings.mathematical_spec_version`.
+    locator: "module.yaml version; PRINCIPLES.md section 6"
+
+# ---------------------------------------------------------------------------
+# not_outputs
+#   What this module never emits, recorded because a reader could take the
+#   silence for permission.
+# ---------------------------------------------------------------------------
+not_outputs:
+
+  - item: any receiver-side object
+    detail: >-
+      no receiver POVM, no outcome alphabet of the receiver, no sector map, no
+      squashed family, no measurement of Bob's. Every descriptor of a source
+      link is Alice-side, and no condition of this module mentions the
+      receiver's systems, its outcome alphabets or its measurements.
+    locator: "def:source-link, 'Alice-side descriptor discipline'; def:source-segment (S1)"
+
+  - item: any feasible set, marginal constraint or constraint entry
+    detail: >-
+      the module states what tau_A is and what the certificate licenses; what
+      a declared tau_A does to a program -- the feasible set, the marginal
+      condition omega_A = tau_A, the constraint classes, the Choi
+      parametrisation -- is the consuming engine's, which is meat-core. The
+      division is deliberate (design.md, decision 1).
+    locator: "rem:boundary; design.md, decision 1"
+    consequence_for_a_source_link_entry: >-
+      A source link may carry transported constraint entries (def:source-link,
+      CList), but an Alice-side entry has no expressible form as a constraint
+      operator on the consumer's system, whose entries are Hermitian and
+      sector-block-diagonal there. No rule is added here and no
+      transformation is invented: a link with a non-empty list is refused,
+      whatever its kind (def:source-segment, the admission rule), and the
+      slot is kept in the type so that the discipline has a name rather than
+      so that it may be used. The sector map a link may emit is not such an
+      entry: it is a presentation datum and licenses no constraint (the
+      `alice_sector_map` output row).
+
+  - item: a security reduction
+    detail: >-
+      thm:certificate-sufficiency (iii) is a statement about the source. It is
+      not a security reduction and does not say that the consuming engine's
+      optimisation is sound; that argument -- granting the adversary a
+      purification of Alice's retained system and the transmitted system,
+      restricting to the declared feasible set, accumulating over rounds --
+      lives in the engine's claims, which import A-SRC for it
+      (rem:boundary). No statement about Eve being granted a purification of
+      A is made here either (rem:import).
+    locator: "rem:boundary; rem:import, closing sentence"
+
+  - item: any assertion of (SR3) about a physical source
+    detail: >-
+      the module records the attestation and never verifies it, never asserts
+      it of any physical apparatus, and emits no field that could be read as
+      deciding it. No consumer verifies it either.
+    locator: "ass:src; req:attestation-record; rem:boundary; thm:certificate-sufficiency (i)"
+
+  - item: a per-round or multi-round description
+    detail: >-
+      the module describes one round. That every round is described by the
+      same data is the consumer's round-homogeneity assumption and is not
+      asserted here; it is under that assumption that the round superscript
+      is dropped. What this module's own attestation A-ENS does cover across
+      rounds is the source's independence: the letters and emitted systems
+      of the n rounds are in product form (ass:ens).
+    locator: "fact:sr, 'Symbol map and hypothesis check'"
+
+# ---------------------------------------------------------------------------
+# never_verified
+#   The ledger's assumptions this module never verifies.
+# ---------------------------------------------------------------------------
+never_verified:
+  own: [A-ENS, A-SEQ, A-SRC]
+  note: >-
+    The list holds, of the `assumption_ledger` rows, those whose assumption
+    carries `verification: never` (spec/claim-format.md section 3.2), each
+    saying so in the sentence the contract generates from that field: A-ENS
+    and A-SEQ are attestations about the
+    sender and the physical protocol, and A-SRC's (SR3) is the retention of
+    Alice's system, which the module records and passes through. The code
+    reads the field from the claim-closure table, and
+    tests/unit/test_never_verified_agree.py holds this list to it. No code
+    path of this module decides any of them, and a consumer that carries one
+    of their keys carries this mark with it. The decoy submodule's A-WCP,
+    which takes the place of A-ENS for a model-declared ensemble, is marked
+    in that submodule's interface.
+  locator: "ass:ens; ass:seq; ass:src; req:attestation-record; rem:boundary"
+
+# ---------------------------------------------------------------------------
+# parameters
+# ---------------------------------------------------------------------------
+parameters:
+  free_numerical_parameters: none
+  rule: >-
+    The module has no parameter beyond the declared data, and says so rather
+    than leaving it to inference. d_A, |X| and the entries of {M_x}, tau_A,
+    Psi and the two ensembles are declared data, decided and emitted; the
+    module chooses none of them, optimises none of them and supplies no
+    default for any of them. There is no threshold, no cutoff, no error term
+    and no free scalar.
+  tolerances: >-
+    None. No `declared_tolerance` row, no window on any predicate, no defect
+    functional, and no statement of this module is made "at" a number. A
+    declaration failing any condition is refused with a machine-readable
+    reason naming it; it is never admitted within a margin.
+    Locator: def:source-spec, the number model; def:srcert;
+    thm:certificate-sufficiency (i).
+  locator: "def:source-spec; def:srcert; thm:certificate-sufficiency (i)"
+
+# ---------------------------------------------------------------------------
+# conventions
+#   Declared once, used everywhere. Each is a reading the claim files take;
+#   none adds a rule.
+# ---------------------------------------------------------------------------
+conventions:
+
+  number_model: "binary64, declared data exactly admissible"
+
+  exact_decisions: true
+  exact_decisions_note: >-
+    Every condition of this module is decided exactly on the declared dyadic
+    entries -- Hermiticity, positivity, the POVM completeness identity, the
+    ensemble weight sums, the conditions on Psi, (SR1), (SR2) and the source
+    identity (S3). A quantity a condition compares is formed in exact
+    arithmetic on the declared entries as well as compared exactly, so that
+    the identity decided is the identity written. Locator: def:source-spec,
+    the number model; def:srcert for the certificate and the virtual
+    ensemble; def:source-segment (S3) for the source identity, whose
+    composite is formed in exact arithmetic as well.
+  what_is_formed_in_exact_arithmetic: >-
+    Named site by site, so that an implementation cannot satisfy the
+    convention at four sites and miss the fifth: the products entering
+    Psi^2 and (SR2), and the additions entering the partial traces of (SR1)
+    and (SR2) and the accumulated trace tr Psi, are formed as well as taken
+    in exact arithmetic, so that what is compared is the quantity written
+    and not a rounded image of it; that the operands are exactly represented
+    does not on its own deliver that (thm:certificate-sufficiency (i),
+    proof). The fifth site binds every source link whose channel is
+    supplied as data: the composite Xi = Xi_{L_s} o ... o Xi_1 of the source
+    identity (S3) is formed in exact arithmetic as well. A constructor link
+    forms no composite and decides no identity, its share of (S3) being the
+    conclusion of the claim its obligation names, so this site is empty for
+    `tagging`, the one admitted kind. Locator: def:source-segment (S3).
+
+  summation_order: "the declared order of X for a sum over X; the declared order of the sector index set for a sum over sectors; for a trace, the row index"
+  summation_order_note: >-
+    A binary64 sum is a determinate number only once the accumulation order
+    is fixed, so the order is part of the datum. Sums over X are accumulated
+    in the declared order of X (sum_x M_x, per block; sum_x p_x, for both
+    ensembles; the entrywise sector sums of (E3)); sums over sectors in the
+    declared order of the sector index set (the block traces of tau_A and of
+    a block-form certificate, and the per-letter sums of (E2)); and the
+    traces tr tau_A and tr Psi over the row index of the declared array.
+    Each rounds nowhere. Locator: def:source-spec; def:srcert; the
+    `alice_marginal` row.
+
+  rounding: nowhere
+  no_snapping: true
+  no_snapping_note: >-
+    No present datum is silently corrected to make a condition pass, and no
+    condition is read more loosely to admit one. A certificate whose declared
+    entries do not satisfy Psi^2 = Psi exactly is refused, not repaired
+    (rem:certificate-forms, 'Why the certificate is an operator and not a
+    vector'). Where a rounding is unavoidable it is absorbed at the instance
+    that declares the certificate, which is why the datum is an operator
+    (below).
+
+  certificate_is_an_operator_not_a_vector: true
+  certificate_is_an_operator_note: >-
+    The type is part of the rule, and an implementation must not accept a
+    vector. The reason is rem:certificate-forms, 'Why the certificate is an
+    operator and not a vector': no binary64 number squares to 1/2, so a
+    declared vector with entries fl(1/sqrt 2) yields a |psi><psi| whose
+    entries are not 1/2, and (SR1) fails exactly for the certificate as an
+    instance declares it, while the operator |Phi^+><Phi^+| has every entry
+    equal to 1/2, a binary64 number; and every quantity (SR1), (SR2) and
+    thm:certificate-sufficiency read off the certificate is a function of Psi
+    and never of a vector. The purity conditions Psi^2 = Psi and
+    tr Psi = 1 are what recover the vector where an argument needs one
+    (thm:certificate-sufficiency (ii)), and they are two exact identities on
+    the declared matrix.
+
+  decide_never_infer: true
+  decide_never_infer_note: >-
+    A condition on a declared object is decided by inspecting that object,
+    never by inferring it from a property of the objects it was built from.
+    The module's own worked case: thm:certificate-sufficiency (i) proves
+    that (SR1) implies tau_A in S_=(A), and req:marginal-decided requires
+    the engine to decide tau_A in S_=(A) on the declared matrix directly,
+    also where a certificate is present and satisfies (SR1), and never to
+    infer it from that implication; consumers decide it the same way under
+    their own rules. So an implementation validates the declared tau_A even
+    where a certificate is present and (SR1) has passed.
+
+  source_mode: derived
+  source_mode_note: >-
+    `trusted` or `untrusted`, derived from whether alice_marginal is present,
+    and never emitted as a second key: a second carrier of the mode would be
+    a second source of truth. The asymmetry with the input side is
+    deliberate -- `source_mode_request` is an input key, a request not being
+    an emission. Locator: rem:source-mode (a); def:source-spec.
+
+  fail_closed: >-
+    A datum that is not there, an entry that is dropped, and a datum that is
+    quietly changed all leave the emitted artefact describing something other
+    than what was declared. Each is a refusal with a machine-readable reason
+    and no artefact. The one filled slot the module permits is tau_A = [1]
+    at d_A = 1, where a trusted request may leave the marginal slot empty; it
+    is argued rather than defaulted, and it is not filled silently -- the
+    artefact records that the slot was filled (see `d_A_one_rule`).
+
+  what_the_attack_may_not_touch: >-
+    The channel modelling the adversary's attack acts on the transmitted
+    system and the adversary's registers, and on neither the retained system
+    A nor the outcome register X. That it does not act on A is (SR3); that
+    it does not act on X is a hypothesis of thm:certificate-sufficiency (iii)
+    and cannot be dropped: without it the statement is ill-typed (X does not
+    exist until the measurement creates it) and false (an overwriting
+    channel refutes it). What the restriction excludes is exactly the public
+    announcements, which A-SEQ places after both parties' measurements, so
+    nothing is lost. Locator: rem:xreg; thm:certificate-sufficiency (iii).
+
+# ---------------------------------------------------------------------------
+# d_A_one_rule
+#   rem:da1 with req:licence-scope, req:marginal-fill and
+#   req:failing-certificate, stated here in full because it is the one corner
+#   where a conforming implementation fills a slot rather than refusing, and
+#   the one place where "demand the certificate" would be wrong.
+# ---------------------------------------------------------------------------
+d_A_one_rule:
+  locator: "rem:da1; req:licence-scope; req:marginal-fill; req:failing-certificate"
+  the_marginal_is_unique: >-
+    At d_A = 1, S_=(A) = {[1]}, so the only marginal a trusted-mode
+    specification can carry is tau_A = [1].
+  the_two_modes_coincide: >-
+    For any state omega on A and the transmitted system the A-marginal is the
+    1x1 matrix tr omega, so omega_A = tau_A and tr omega = 1 are the same
+    condition on the same number. The two modes impose the same condition on
+    every consumer.
+  the_licence_is_vacuous: >-
+    What the certificate licenses at d_A = 1 is tr omega = 1, which every
+    normalised state satisfies: it excludes nothing, and A-SRC deletes no
+    attack.
+  the_rule: >-
+    A consumer must not demand the attestation at d_A = 1; the certificate of
+    def:srcert is demanded only at d_A >= 2, for exactly that reason. A
+    request in trusted-source mode at d_A = 1 may leave the marginal slot
+    empty and is served with tau_A = [1], the unique element of S_=(A); the
+    served specification is in trusted-source mode, the two modes imposing
+    the same condition there (req:licence-scope; req:marginal-fill).
+  the_exception_to_the_rule: >-
+    Unless that request carries a certificate that fails a condition decided
+    of its form (pure, block or ensemble presentation), in which case it is
+    refused, at every d_A: a certificate that does not verify is a defect in
+    the supplied data, not a weaker claim (req:failing-certificate). An
+    implementation must not drop this clause.
+  the_fill_is_recorded: >-
+    The emitted artefact records that the slot was filled -- that the emitted
+    alice_marginal is the module's value and not a declared datum -- so that
+    nothing is filled silently and a consumer can tell the two apart. It is
+    the only slot this module ever fills (conventions.fail_closed), and the
+    emitted mode stays derived from the presence of the marginal, which the
+    fill makes present (source_modes.mode_of_an_empty_slot_at_d_A_1).
+  why_the_filled_slot_is_not_a_default: >-
+    S_=(A) is a singleton there, so the filled value is the only admissible
+    one and the filled slot excludes nothing. At d_A = 1 the filled value [1]
+    is 1_A/d_A; at d_A >= 2, tau_A = 1_A/d_A is never substituted: it is a
+    strictly stronger claim than nomarg, not a neutral one (rem:source-mode
+    (c); protocol-compiler/rem:notfallback).
+  it_is_the_safe_direction: >-
+    This is the shape in which a protocol with no trusted source is declared,
+    and it removes an assumption rather than adding one (rem:source-mode).
+
+# ---------------------------------------------------------------------------
+# refusal_reasons
+#   One machine string per refusal, derived from the claims. The strings
+#   under `frozen_spellings` have frozen spellings that consumers already
+#   recognise, and must not drift. Every refusal emits no artefact.
+# ---------------------------------------------------------------------------
+refusal_reasons:
+
+  frozen_spellings:
+    - alice_marginal_trace_rounds
+    - alice_povm_summation_rounds
+    - link_kind_deferred
+
+  table:
+
+    - reason: signal_alphabet_empty_or_unordered
+      condition: >-
+        X is empty, or carries no declared order, or its labels are not
+        pairwise distinct.
+      locator: "def:source-spec, first paragraph"
+
+    - reason: alice_povm_element_not_admissible
+      condition: "Some M_x is not Hermitian, or is not positive semidefinite."
+      locator: "def:source-spec, first paragraph; thm:certificate-sufficiency (ii) uses Hermiticity"
+
+    - reason: alice_povm_not_complete
+      condition: "sum_x M_x != 1_A as an identity of the declared numbers."
+      locator: "def:source-spec, first paragraph"
+
+    - reason: alice_povm_summation_rounds
+      condition: >-
+        The completeness sum, accumulated in the declared order of X, does not
+        round nowhere.
+      locator: "def:source-spec, the number model"
+
+    - reason: ensemble_weights_not_normalized
+      condition: >-
+        Some p_x < 0, or sum_x p_x != 1 in the declared order, or that sum
+        does not round nowhere. Applies to the specified ensemble and, in
+        trusted mode, to the virtual one; the report names which.
+      locator: "def:source-spec; def:srcert, first sentence"
+
+    - reason: ensemble_state_not_admissible
+      condition: >-
+        Some rho_x is not in S_=(A'), or some rho^v_x is not in S_=(A^v) --
+        not Hermitian, not positive semidefinite, or not of unit trace. The
+        report names which ensemble and which x.
+      locator: "def:source-spec; def:srcert, first sentence"
+      decided_before_the_five: >-
+        The virtual ensemble's own conditions are decided before the five
+        conditions on the certificate and are not among them.
+
+    - reason: alice_marginal_not_admissible
+      condition: >-
+        Trusted mode and tau_A is not in S_=(A): not Hermitian, not positive
+        semidefinite, or of trace != 1. tau_A = 0 fails here, its trace being
+        0, and is not the way to express "no marginal".
+      locator: "def:source-spec; rem:source-mode (c)"
+      note: >-
+        A singular tau_A is admissible and must not be refused.
+
+    - reason: alice_marginal_trace_rounds
+      condition: >-
+        tr tau_A = 1 holds only as a computed sum: the trace, accumulated over
+        the row index, does not round nowhere.
+      locator: "def:source-spec, the number model"
+
+    - reason: trusted_mode_without_certificate
+      condition: >-
+        Trusted mode is requested at d_A >= 2 and the certificate is absent,
+        or a field of it is absent.
+      locator: "def:source-spec ('it additionally carries'); ass:src (stated of a specification in trusted-source mode); outputs.assumption_ledger.emission_rule (trusted_mode_d_A_at_least_2); req:licence-scope (the d_A >= 2 scope)"
+      no_fallback: >-
+        See the `source_mode_request` row: a trusted request without the
+        attestation is refused here, not served in untrusted mode.
+      rests_on_this_row: >-
+        Back-pointer: protocol-compiler/req:gate-outcomes and the cells of
+        rows 2 and 4 of the gate outcome table of
+        protocol-compiler/def:gate-outcome-table (with the use paragraph of
+        its prop:conservative and its rem:notfallback) rest on this row: they
+        read those rows as
+        unreachable through the transmitter artefact, refused there with
+        trusted_mode_without_certificate. req:gate-outcomes uses
+        req:licence-scope, which states this refusal, so it is among that
+        requirement's dependents; this row itself is not a claim, so an edit
+        to its condition puts those compiler sites into the re-review scope by
+        hand. The compiler's interface records the same coupling on its own
+        side (`coupling`).
+
+    - reason: certificate_not_hermitian
+      condition: "Psi != Psi^dagger."
+      locator: "def:srcert, the three conditions on Psi"
+
+    - reason: certificate_not_idempotent
+      condition: "Psi^2 != Psi, the product formed in exact arithmetic."
+      locator: "def:srcert; thm:certificate-sufficiency (i), proof"
+
+    - reason: certificate_trace_not_one
+      condition: >-
+        tr Psi != 1, or the accumulated trace rounds. Together with
+        idempotence this is what makes Psi a rank-one projector, hence
+        Psi = |psi><psi| for a unit vector that is never itself declared.
+      locator: "def:srcert; thm:certificate-sufficiency (ii), proof"
+
+    - reason: certificate_marginal_identity_fails
+      condition: "(SR1) tr_{A^v} Psi != tau_A, as an exact matrix identity."
+      locator: "def:srcert (SR1)"
+
+    - reason: certificate_signal_identity_fails
+      condition: >-
+        (SR2) tr_A[(M_x (x) 1_{A^v}) Psi] != p_x rho^v_x for some x, as an
+        exact matrix identity. The report names the first x at which it fails.
+      locator: "def:srcert (SR2)"
+
+    - reason: source_link_kind_not_admitted
+      condition: >-
+        A segment carries a link whose kind has no entry in the emitted
+        soundness_registry and is not a declared deferred kind. The segment
+        is refused, never silently emptied. The declared but unproven
+        source-map kind trips link_kind_deferred instead.
+      locator: "def:source-segment (admission rule); def:source-link (a)"
+      compatibility_change: >-
+        Artefacts of transmitter@0.2.1 and later use this string; records of
+        earlier versions carry `source_segment_not_empty` for the refusal and
+        keep that spelling. A consumer reading records of both versions
+        recognises both names, interpreting each under the version its record
+        names. The change is to the refusal vocabulary and moves no number.
+
+    - reason: link_kind_deferred
+      condition: >-
+        A source link is present whose kind this module declares and for which
+        no claim of this repository proves the link's identity -- which is
+        `source-map`, the core's one declared kind. The kind is declared,
+        reserved and refused.
+      locator: "def:source-link (a); def:source-segment (the admission rule)"
+      note: >-
+        The reason for the core's one declared kind: `source-map` is
+        declared, reserved and refused because no claim of this repository
+        proves its identity, and that is a condition on the kind and not on
+        the segment. A kind with no registry entry and no declaration at all
+        trips `source_link_kind_not_admitted`.
+
+    - reason: source_link_entry_present
+      condition: >-
+        A source link carries a non-empty list of transported constraint
+        entries, or a licence record without one. No claim of this repository
+        transports an Alice-side entry.
+      locator: "def:source-link (f); def:source-segment (the admission rule)"
+      reachable: "yes"
+
+    - reason: source_link_family_excludes_its_descriptor
+      condition: >-
+        A data link's declared descriptor family does not contain the link's
+        own declared source descriptor, so the witness's identity is asserted
+        at no descriptor the link carries. For a constructor link the
+        condition is not decidable and this reason does not fire: what is
+        decided there is the registry triple, by the three registry reasons
+        below.
+      locator: "def:source-link (d); def:source-segment (A1) to (A3)"
+      reachable: "yes"
+
+    - reason: source_link_not_in_registry
+      condition: >-
+        A constructor link's triple (kind, soundness claim id, assumption
+        short ids) matches no entry of the artefact's emitted
+        `soundness_registry`, entry by entry as declared strings.
+      locator: "def:source-segment (A1), (A2)"
+      reachable: "yes"
+
+    - reason: source_link_assumption_not_in_ledger
+      condition: >-
+        A constructor link's registry entry names an assumption short id that
+        is not in the emitted assumption ledger.
+      locator: "def:source-segment (A2)"
+      reachable: "yes"
+
+    - reason: source_segment_not_from_admitting_module
+      condition: >-
+        A non-empty source segment is presented other than inside an artefact
+        emitted by the module that admits its links.
+      locator: "def:source-segment (A3)"
+      reachable: "yes"
+
+    - reason: certificate_block_not_admissible
+      condition: >-
+        A certificate declared in block form fails one of its conditions: some
+        block is not Hermitian, or is not positive semidefinite by an exact
+        decision, or the block traces do not sum to one, or that sum rounds,
+        or (SR1) or (SR2) fails at some sector, or a weighted virtual member
+        sigma^v_x has a non-zero entry outside the diagonal blocks of the
+        matched sectors, so that (SR2) fails as an identity of operators even
+        where it holds block by block. The report names the sector, or the
+        pair of sectors, and the condition. The five pure-form reasons are not reused for a
+        block: a block form carries no idempotence condition.
+      locator: "def:srcert (block form); thm:certificate-sufficiency (i)"
+
+    - reason: ensemble_presentation_not_admissible
+      condition: >-
+        A certificate supplied as an ensemble presentation fails (E1), (E2) or
+        (E3): a declared block is not Hermitian or not positive semidefinite
+        by an exact decision, a weight sum is not one or rounds, or a sector's
+        entrywise sum over X rounds. The report names the sector, the letter
+        where one is at fault, and the condition. Nothing else is decided of
+        a presentation: (SR1), (SR2), positivity of the defined blocks, the
+        POVM condition and purity are theorems (lem:ensemble-presentation),
+        and an implementation that re-decides them on formed numbers is
+        introducing the rounding the form exists to avoid.
+      locator: "def:srcert ('Ensemble presentation'); lem:ensemble-presentation; thm:certificate-sufficiency (i)"
+
+    - reason: formed_entry_not_declarable
+      condition: >-
+        A quantity a declaration forms from its declared numbers -- an entry
+        of a weighted block, a tail weight -- is not admissible as declared
+        data. It is refused and never rounded: rounding it would change which
+        ensemble is declared, and with it the ensemble every identity of the
+        declaration is asserted of. A sector sum of (E3) that rounds is not
+        this reason but `ensemble_presentation_not_admissible`
+        (decoy/req:exact-decoy-blocks).
+      locator: "def:srcert (E1) to (E3); decoy/cor:emitted-decoy (iv)"
+      why_the_core_owns_it: >-
+        The string is the core's because the condition is one of the ensemble
+        presentation and not of the decoy source; the decoy submodule's table
+        points here.
+
+  the_alice_side_descriptor_discipline_has_no_reason: >-
+    No string refuses a source link whose descriptor is not Alice-side,
+    because no claim requires this module to refuse one and the condition
+    holds by construction. def:source-link's "Alice-side descriptor
+    discipline" is a property of the type: each descriptor of a source link
+    names a transmitted system and an ensemble on it, with the signal
+    alphabet and the weights p_x, and has no slot through which a receiver's
+    system, outcome alphabet or measurement could be named. What remains
+    decidable of a presented segment -- descriptor match, the index set X
+    and the untouched weights -- is def:source-segment (S1) and (S2), which
+    the consuming compiler decides on the chain record and refuses with its
+    own `chain_interface_condition_failed`, naming the condition
+    (protocol-compiler/def:chaincond). Locator: def:source-link;
+    def:source-segment (S1), (S2).
+
+  the_block_form_has_one_reason_and_names_the_sector: >-
+    A deliberate asymmetry. The pure form's five conditions get five reasons,
+    because each names a condition an implementation decides on one
+    operator. The block form's conditions are decided per sector, so the
+    report must name the sector to be useful, and one reason with the sector
+    and the condition in its report says more than five reasons without
+    them. Locator: def:srcert; the `certificate_block_not_admissible` row.
+
+  the_five_decided_conditions_are_five_reasons: >-
+    The five conditions a consumer decides on a pure-form certificate get
+    five distinct reasons -- `certificate_not_hermitian`,
+    `certificate_not_idempotent`, `certificate_trace_not_one`,
+    `certificate_marginal_identity_fails`,
+    `certificate_signal_identity_fails` -- so that a refusal names the
+    condition that failed (this file's fail_closed convention;
+    req:failing-certificate states the refusal itself). A pure-form
+    certificate present at d_A = 1 and failing one of them is refused under
+    the same reason: the refusal is at every d_A. The block form and the
+    ensemble presentation have their own reasons
+    (`certificate_block_not_admissible`,
+    `ensemble_presentation_not_admissible`), refused at every d_A in the
+    same way.
+
+# ---------------------------------------------------------------------------
+# artifact_bindings
+# ---------------------------------------------------------------------------
+artifact_bindings:
+  mathematical_spec_version: "transmitter@0.13.0"
+  package: "src/certiqs_key/transmitter/"
+  package_note: >-
+    `certificate.py` holds the certificate conditions of the pure and the
+    block form and the licence record, `presentation.py` the ensemble
+    presentation with the objects lem:ensemble-presentation defines from it,
+    `links.py` the source-link tuple with the obligation triple and the
+    closed soundness registry, `artifact.py` the source specification and the
+    emitted artefact, `reasons.py` the refusal strings and the ledger's
+    machine keys, and `decoy/` the submodule. The machine keys above are
+    binding: the code is written onto these names, not the reverse.
+  what_the_degenerate_case_emits: >-
+    The wire form of a one-sector, pure-form, empty-segment artefact omits
+    the keys of the general declaration: `certificate_form`,
+    `alice_sector_map`, `soundness_registry`, `alice_ensemble_operators` and
+    `virtual_ensemble_weighted_members` appear on the wire only where the
+    declaration uses what they carry, an absent key meaning its default
+    exactly as an absent `alice_marginal` means untrusted mode. That case is
+    the degenerate case of the general declaration entry for entry, and a
+    run manifest digests its record (`certiqs_key.runs.flow.artefact_digest`),
+    so a record that gained keys for a structure nothing declared would move
+    an accepted instance. (`assumption_bindings` is on every record, as
+    `assumption_ledger` is: it describes no structure of the general
+    declaration but the values each ledger row binds.) The two rows remain
+    "always" as properties of the
+    artefact object, which is what an in-process consumer reads:
+    `TransmitterArtifact.alice_sectors` answers with the one-sector map and
+    `soundness_registry` is always populated.
+  rows_whose_key_the_degenerate_record_omits:
+    - certificate_form
+    - alice_sector_map
+    - soundness_registry
+    - alice_ensemble_operators
+    - virtual_ensemble_weighted_members
+  rows_whose_key_the_degenerate_record_omits_note: >-
+    The keys `what_the_degenerate_case_emits` names, as rows of the `outputs`
+    table. Every key on the wire has a row there and every row a key. A test
+    reads this list: tests/oracles/test_transmitter_registry_interface.py
+    asserts that the degenerate record's key set is the table's names minus
+    these, and that an ensemble presentation's record carries every row's
+    key, so a key added without a row, or a row written without a key, fails.
+  consumes_note: >-
+    Nothing. Every input is declared data arriving from an instance.
+  produces_note: >-
+    The output keys above. Their consumers are protocol-compiler (which
+    re-binds its source-side gate onto the artefact), reductions (which
+    composes the source segment into a chain) and meat-core (which reads the
+    emitted mode and the marginal). Neither relation is a contract-dependency
+    edge in this direction: see `depends_on_modules`.
+
+# ---------------------------------------------------------------------------
+# submodules
+# ---------------------------------------------------------------------------
+submodules:
+  decoy:
+    what_it_adds: >-
+      A source model for a phase-randomised weak-coherent-pulse source, its
+      physical-source assumption A-WCP in the place of A-ENS, the tagged
+      virtual source with its flags and sector map, the source link kind
+      `tagging` with its soundness claim, and the emitted declaration, which
+      declares its weighted blocks and compresses, snaps and rounds nothing.
+      Its rows are in `decoy/interface.yaml`, which adds to the tables above
+      and changes none of them.
+    locator: "decoy/module.yaml; decoy/interface.yaml"
+
+# ---------------------------------------------------------------------------
+# depends_on_modules
+# ---------------------------------------------------------------------------
+depends_on_modules: []
+depends_on_modules_note: >-
+  Empty, as module.yaml declares. This module imports no other module's
+  claims: it is the device leaf on Alice's side, symmetric with `receiver`.
+  The traffic runs the other way. reductions composes the source segment
+  with the receiver-stage links of a chain and states the ordering rule this
+  module deliberately does not state (def:source-link). meat-core reads the
+  emitted mode and marginal and owns everything the marginal does to a
+  program -- the feasible set, the marginal condition, the constraint
+  classes, the Choi parametrisation (rem:boundary; design.md, decision 1).
+  protocol-compiler consumes the artefact and carries the declaration. Each
+  of the three lists `transmitter` in its own `depends_on`.

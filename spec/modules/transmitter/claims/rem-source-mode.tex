@@ -1,0 +1,84 @@
+% ---
+% id: transmitter/rem:source-mode
+% kind: rem
+% title: "The two source modes"
+% summary: >-
+%   Only trusted-source mode asserts that Alice's retained system never reaches
+%   the adversary. A declared marginal deletes attacks at d_A ≥ 2 and needs an
+%   attestation there; zero never means no marginal, and the maximally mixed
+%   marginal means none only at d_A = 1, where it is [1].
+% prominence: standard
+% status: accepted
+% uses: [def:source-spec]
+% mentions: [ass:src, ass:ens, ass:seq, rem:da1, meat-core/lem:product-marginal, meat-core/def:roundmodel, meat-core/rem:modes-da1, protocol-compiler/prop:conservative]
+% assumes: []
+% refs:
+%   - "winick2018reliable, Eqs. (36)-(39)"
+%   - "kamin2025renyi, Rem. 1"
+% provenance: newly-derived
+% lean:
+% notes: "The feasible-set inclusion of (b) is proved where the feasible sets are defined (meat-core/rem:modes-da1 (a), protocol-compiler/prop:conservative); this remark only points at it."
+% ---
+
+\begin{remark}\label{rem:source-mode}
+\emph{(a) What each mode asserts.} In \emph{trusted-source mode}
+($\tau_A\in\Seq{A}$) the specification asserts, through
+Assumption~\ref{ass:src}, that Alice's register $A$ never passes through
+the adversary's hands, so that in every round the joint state of $A$, the
+transmitted system and the adversary's registers has $A$-marginal $\tau_A$.
+That is the content of the source-replacement step, and the published
+analyses state it in those words:
+\cite[Eqs.~(36)--(39)]{winick2018reliable} adds marginal constraints to
+the entanglement-based statistics constraints \emph{for prepare-and-measure
+protocols}, on the stated ground that ``system $A$ is inaccessible to Eve,
+and hence [$\rho_A$] is fixed, independent of Eve's attack'';
+\cite[Rem.~1]{kamin2025renyi} imposes
+$\tr_{B^n}[\sigma_{A^nB^n}]=\tau_A^{\otimes n}$ ``because we assume Eve has
+no access to Alice's lab''. That $n$-round product form of the condition is
+the consuming engine's \xref{meat-core/lem:product-marginal}, which derives
+it from Assumption~\ref{ass:src}, the independence of the source's rounds
+(Assumption~\ref{ass:ens} or the premise a \tref{source model} declares in
+its place) and Assumption~\ref{ass:seq}, together with that engine's
+premises on private local randomness, a sealed laboratory and the finite
+dimension of the adversary's registers. In \emph{untrusted-source mode}
+($\tau_A=\nomarg$) the specification asserts nothing about $A$: the
+adversary may prepare $A$ jointly with the transmitted system, and no
+marginal condition is asserted at all. $\{M_x\}$ is then Alice's
+measurement of whatever system $A$ reaches her, and no condition relates
+$A$ or $\{M_x\}$ to the signal ensemble, the certificate that would do so
+being absent; the consuming engine's round model accordingly lets the
+attack supply $A$ (\xref{meat-core/def:roundmodel}). A protocol with no
+trusted source can also be declared at $d_A=1$, with Alice's measured system
+placed on the receiver side (Remark~\ref{rem:da1}).
+
+\emph{(b) The mode is not a free choice.} A declared $\tau_A$ \emph{deletes}
+from a consumer's feasible set every state whose $A$-marginal differs,
+hence every attack that would have produced one. That is a different
+\emph{kind} of input from a constraint on a register the adversary holds,
+and a more demanding one to justify: such a constraint restricts what the
+adversary's channel may do to a register she holds, whereas $\tau_A$
+asserts that a register never reached her at all. Declaring one at
+$d_A\ge2$ without the attestation of Assumption~\ref{ass:src} overstates the
+key in the unsafe direction; at $d_A=1$ it deletes nothing
+(Remark~\ref{rem:da1}).
+Untrusted-source mode is always available and always more conservative:
+every state feasible with the marginal declared is feasible without it, so
+dropping the marginal loses rate, never gains any, and can never turn an
+unsound declaration into a sound-looking one. That inclusion is proved
+where the feasible sets are defined, in \xref{meat-core/rem:modes-da1}\,(a)
+and \xref{protocol-compiler/prop:conservative}.
+
+\emph{(c) How ``no marginal'' is expressed.} The way to say ``no marginal''
+is $\tau_A=\nomarg$. The value $\tau_A=0$ is inadmissible, for two
+independent reasons. First, trusted-source mode requires
+$\tau_A\in\Seq{A}$, a normalized state, which $\tau_A=0$ fails. Second,
+even with normalization dropped it would express the opposite of leaving
+the marginal free: a state $\omega$ on $A$ and the transmitted system with
+$\omega_A=0$ has $\tr\omega=\tr\omega_A=0$ and hence $\omega=0$, so the
+condition admits no state at all. Nor, at $d_A\ge2$, is
+$\tau_A=\idon{A}/d_A$ a neutral way to say that nothing is known about the
+source: it fixes the marginal to the maximally mixed state and excludes
+every adversarial source that sends anything else. At $d_A=1$ it is $[1]$,
+the only state on $A$, and imposes the same condition as $\nomarg$
+(Remark~\ref{rem:da1}).
+\end{remark}

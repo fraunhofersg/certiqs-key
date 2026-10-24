@@ -1,0 +1,63 @@
+% ---
+% id: foundations/def:evaluated-off-snap
+% kind: def
+% title: "A reference handed beside a snap; a block evaluated off its snap"
+% summary: >-
+%   A declarer hands a reference beside a snap when it passes on the
+%   reference's centres and radii with it, unaltered. A block is evaluated off
+%   its snap when nothing its key length is computed from reads the snapped
+%   block, save the points and the values fixed before the first round.
+% prominence: standard
+% status: implemented
+% uses: [def:snap, def:exact-reference, def:sector-map, def:declared-data]
+% mentions: [meat-core/ass:fixed]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.runs.direct_route:direct_route
+% lean:
+% ---
+
+A snap serves a run in two ways. A search reads the snapped family to find
+points, and the numbers from which the run computes its key length read it
+again at those points. The second reading is the one a premise about the snap
+is needed for. A run that holds a \tref{reference} of the family can do the
+second reading on a family that carries the reference in place of the snap,
+and then the snap only steers the search: the points it chose are points like
+any other, and a lower bound that holds at any admissible point holds at
+them. The definition names the two things a record states when a run does
+this: what the declarer passes on beside the snap, and on which blocks the
+snapped data are read by nothing the key length rests on. Which values a
+run of the engine fixes before its first round is listed in
+\xref{meat-core/ass:fixed}; the definition names the values by that property
+and does not depend on the list.
+
+\begin{definition}\label{def:evaluated-off-snap}
+Let $F$ be a \tref{snap} (Definition~\ref{def:snap}) of data $D$ against a
+\tref{sector map} with blocks $s\in\mathsf{S}$
+(Definition~\ref{def:sector-map}), over an alphabet $J$, where $D$ is an
+operator family read as a measurement, the data an instance states of it or a
+reference of it, or a producer's exact construction of what it emits
+(Definition~\ref{def:declared-data}).
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item Where $D$ is an operator family read as a measurement and the declarer
+  holds a reference $G$ of it (Definition~\ref{def:exact-reference}), the
+  declarer \emph{hands the reference beside the snap} on a block $s$ when it
+  passes to every consumer of $F$, together with $F$ and altered by no step,
+  the centre $C^{(s)}_j$, with entries in $\mathbb{Q}(i)$, and the radii
+  $r^{(s)}_j$, rationals, of an entrywise enclosure of $G^{(s)}_j$ for every
+  $j\in J$, with the identity of the reference and the claims that establish
+  it. The reference so passed is the
+  \term[a reference of a snapped measurement family that its declarer passes, with its centres and radii and unaltered, to every consumer of the snap]{handed reference},
+  and $s$ is a \emph{handed block}.
+\item A block $s$ of $F$ is
+  \term[said of a block of a snap in a run: no number from which the run computes its key length reads the snapped block, save the points at which those numbers are evaluated and the values other than the output length that the run fixes before its first round]{evaluated off its snap}
+  in a run when the record of the run shows that no number from which the run
+  computes its key length reads $F^{(s)}_j$ for any $j\in J$, save in two
+  places: the points at which those numbers are evaluated, which any
+  computation may have chosen, a computation on $F$ among them; and every
+  value the run fixes before its first round other than the output length,
+  the acceptance set and the transcript length $\lEC$ among them, whatever
+  they were computed from.
+\end{enumerate}
+\end{definition}

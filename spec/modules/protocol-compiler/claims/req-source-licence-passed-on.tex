@@ -1,0 +1,35 @@
+% ---
+% id: protocol-compiler/req:source-licence-passed-on
+% kind: req
+% title: "The source-replacement licence passed on with the declaration"
+% summary: >-
+%   A declaration carries the transmitter's source-replacement licence record,
+%   re-decided by gate (G2), to the consuming engine exactly when it is emitted
+%   in trusted-source mode with Alice's dimension at least two. Its certificate
+%   and attestation are the ones supplied.
+% prominence: standard
+% status: accepted
+% uses: [def:eligible]
+% mentions: [transmitter/req:attestation-record, transmitter/req:licence-scope, transmitter/def:srcert]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.compile:compile_specification
+% lean:
+% ---
+
+The record gate (G2) consumes is what licenses a declared marginal at
+$d_A\ge2$, and the consuming engine receives it with the declaration rather
+than from the transmitter.
+
+\begin{requirement}\label{req:source-licence-passed-on}
+The engine passes the transmitter's source-replacement \tref{licence record}
+\iface{source_replacement_license} (\xref{transmitter/def:srcert}) on to the
+consuming engine with a declaration exactly when it emits that declaration in
+\tref{trusted-source mode} at $d_A\ge2$, after gate (G2) of
+Definition~\ref{def:eligible} has re-decided its conditions on the emitted
+data; the certificate and the attestation (SR3) it carries are the ones
+supplied, and the engine asserts no attestation of its own
+(\xref{transmitter/req:attestation-record}). At $d_A=1$ the record is neither
+demanded nor emitted (\xref{transmitter/req:licence-scope}).
+\end{requirement}

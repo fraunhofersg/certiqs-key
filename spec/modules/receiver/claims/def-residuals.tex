@@ -1,0 +1,99 @@
+% ---
+% id: receiver/def:residuals
+% kind: def
+% title: "The six residuals"
+% summary: >-
+%   Six residuals, each exactly zero in exact arithmetic, check contractivity,
+%   Gram positivity, the deficiency identity, POVM completeness, block
+%   Hermiticity and positivity, and window consistency. Which exist depends on
+%   the input route and on whether an exact window is requested.
+% prominence: standard
+% status: implemented
+% uses: [lem:exactbasic, def:setting-family, cor:unconditioned-family, lem:deficiency, thm:coarse-graining, thm:representation-independence, def:pmcex]
+% mentions: [thm:exact-and-evaluated, cor:emitted-unconditioned, thm:emitted-bound, req:residual-emission, req:residual-refusal, rem:exacteig]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.residuals:evaluate_residuals
+% lean:
+% ---
+
+Route (iii) changes the nature of the arithmetic. Where the Grams are
+\tref{declared data}, the only numerical step is an eigenvalue computation. Where they are
+\emph{compiled}, $\Gmat$ is a product of many matrices, and $A_k$, $\lmin$ and
+$\lmax$ are derived quantities whose floating-point error compounds through the
+product. The residuals below check the consistency of that evaluation; which of
+them the artifact carries, and what a residual above its tolerance causes, are
+Requirements~\ref{req:residual-emission} and~\ref{req:residual-refusal}.
+Remark~\ref{rem:exacteig} states which direction of failure the window
+residual $r_6$ is blind to.
+
+\begin{definition}\label{def:residuals}
+The \term[The six consistency checks on the floating-point evaluation of this contract, each exactly zero in exact arithmetic.]{residuals} of an evaluation of this contract are those of the six quantities
+below that exist on the input route taken and for the evaluation requested
+(which exist is stated after \eqref{eq:rhodef}):
+\begin{align}
+  r_1&\coloneqq\big\lVert\big(\Gmat^\dagger\Gmat-\id\big)_{+}\big\rVert
+    &&\text{(contractivity defect: the positive part must be }0),
+    \label{eq:res1}\\
+  r_2&\coloneqq\max_k\ \max\big\{0,\,-\lmin(A_k)\big\}
+    &&\text{(Gram positivity)},\label{eq:res2}\\
+  r_3&\coloneqq\big\lVert\,\id_{\Inp}-A_\Sigma
+     -\Gmat_{\Inp}^\dagger\Emd{\mathrm{un}}\Gmat_{\Inp}
+     -\big(\id_{\Inp}-\Gmat_{\Inp}^\dagger\Gmat_{\Inp}\big)\big\rVert
+    &&\text{(deficiency identity \eqref{eq:deficiencyid})},\label{eq:res3}\\
+  r_4&\coloneqq\Big\lVert\,\id-\sum_{S\subseteq[K]}
+     \blk{M}{\eqn}_{S|t}\Big\rVert\ \ \text{for each emitted }n
+     \text{ and each setting }t
+    &&\text{(POVM completeness, blockwise)},\label{eq:res4}\\
+  r_5&\coloneqq\max_{v,\,n,\,t}\ \varrho\big(\blk{M}{\eqn}_{v|t}\big)
+    &&\text{(block Hermiticity and positivity)},\label{eq:res5}\\
+  r_6&\coloneqq\max_{t,\ N<n\le m^{\ast}_t}
+     \big(\Bnd^{(t)}(n)-\widehat\Bnd^{\ast(t)}(n)\big)_{+}
+    &&\text{(window consistency, Lem.~\ref{lem:exactbasic})},\label{eq:res6}
+\end{align}
+in which the \term[The larger of the spectral norm of X minus its adjoint and the negative part of the smallest eigenvalue of the Hermitian part of X: one number, measured in the spectral norm.]{Hermiticity-and-positivity defect} of a square matrix $X$ is
+\begin{equation}\label{eq:rhodef}
+  \varrho(X)\ \coloneqq\ \max\Big\{\,\big\lVert X-X^\dagger\big\rVert,\ \
+    \big(-\lmin\big(\tfrac12(X+X^\dagger)\big)\big)_{+}\,\Big\} ,
+\end{equation}
+where $\Emd{\mathrm{un}}$ projects onto the declared modes in no port,
+$(\cdot)_+$ is the positive part, and $\lVert\cdot\rVert$ is the spectral norm
+throughout \eqref{eq:res1}--\eqref{eq:rhodef}. The maximum in \eqref{eq:res5}
+runs over exactly the blocks $\blk{M}{\eqn}_{v|t}$ of the coarse-grained
+elements, before any \tref{dark-count channel}, that the artifact emits: every
+emitted outcome letter
+$v\in\Vset$, every photon number $0\le n\le N$, and every setting $t\in\Tset$
+of the \tref{setting family} (Definition~\ref{def:setting-family}; one setting when
+$\InpS=\varnothing$, Corollary~\ref{cor:unconditioned-family}); the emitted
+bound of the one-setting family is Corollary~\ref{cor:emitted-unconditioned},
+and that of a setting family a submodule constructs is that submodule's
+instance of Theorem~\ref{thm:emitted-bound}. Here $\blk{M}{\eqn}_{v|t}$ is the
+emitted block: the $n$-photon block of the coarse-grained conditional element
+$F_{v|t}$, written $\blk{F}{\eqn}_v$ in Theorem~\ref{thm:coarse-graining}\,(i) at a single
+setting.
+
+\emph{Which residuals exist on which route.} $r_2$, $r_4$ and $r_5$ are
+functions of the port Grams and of the emitted blocks, which every route
+produces, so all three exist on all three routes. $r_1$ \eqref{eq:res1} and
+$r_3$ \eqref{eq:res3} are written on $\Gmat$ and $\Gmat_{\Inp}$, and route (i)
+supplies no \tref{instrument matrix}: there the Grams are the declared datum and no
+$\Gmat$ exists, so $r_1$ and $r_3$ are \emph{not defined}. Synthesizing a
+$\Gmat$ from Theorem~\ref{thm:representation-independence}\,(ii) to evaluate them on would test the
+synthesis rather than the declaration. This agrees with
+Theorem~\ref{thm:exact-and-evaluated}\,(iv), where route (i) is the case in which ``there is
+no compilation''. On routes (ii) and (iii) all five of $r_1,\dots,r_5$ exist.
+
+\emph{$r_6$ depends on the request, not on the route.} It compares the two
+evaluations of a single proved inequality, $\Bnd^{(t)}(n)\le
+\Bnd^{\ast(t)}(n)$ (Lemma~\ref{lem:exactbasic}), so its exact value is $0$
+like the other five, and it exists on all three routes but \emph{only at the
+settings whose declaration carries an \tref{exact-window depth}}
+(Definition~\ref{def:pmcex}), over exactly the indices $N<n\le m^{\ast}_t$ that
+depth names. A declaration that requests no exact window computes no
+$\widehat\Bnd^{\ast}$ and has nothing to compare, so $r_6$ is not defined
+there, as $r_1$ and $r_3$ are not on route (i).
+
+No residual bounds the distance between a computed quantity and the exact
+one (Theorem~\ref{thm:exact-and-evaluated}\,(ii)).
+\end{definition}

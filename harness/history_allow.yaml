@@ -1,0 +1,143 @@
+# The allow-list of `python -m harness.check_history` (its header says why).
+#
+# allow:   justified exceptions; a hit here is a present fact or a necessary
+#          name, never history.
+# pending: history found and not yet cleaned; listed and counted, failing
+#          only under --strict. Clean the lines, then drop the path.
+#
+# Each entry: path (an fnmatch glob, `*` also crossing `/`, or a list of
+# them), category (attribution, dates, predecessor, pointers, identity,
+# claim-notes), reason, and optionally match (a regular expression the line
+# must contain). A path that covers no finding fails --check, so both lists
+# only shrink. Pending entries name files, not folders, so that new history
+# in another file fails.
+
+allow:
+  # --- Process and layout documents: they say what the non-shipped folders
+  # hold, and quote the trailer a human decision is recorded by.
+  - path: [AGENTS.md, PRINCIPLES.md]
+    category: pointers
+    reason: the entry point and the principles name state/, reports/ and context/ to say what each holds
+  - path: README.md
+    category: identity
+    match: 'elias\.x\.huber@fraunhofer\.sg'
+    reason: the licence section's contact for use under other terms, a work address chosen for the purpose
+  - path: LICENSE
+    category: predecessor
+    match: 'predecessor in interest|the predecessor has it'
+    reason: the verbatim AGPL-3.0 text (section 10, 'the predecessor in interest'), a legal term that must not be edited
+  - path: harness/README.md
+    category: pointers
+    reason: the tool table says which folders each tool reads, writes or never touches
+  - path: harness/dashboard.py
+    category: pointers
+    reason: the tool generates state/DASHBOARD.md from state/open-items/
+  - path: harness/relabel.py
+    category: pointers
+    reason: names the history folders the tool never rewrites
+  - path: [harness/build_pages_site.py, tests/harness/test_build_pages_site.py]
+    category: pointers
+    reason: the Pages site's deny list names the folders it must never serve, and its test checks them
+  - path: harness/roles/drafter.md
+    category: pointers
+    reason: the rule that a context/ note is evidence, never authority
+  - path: spec/style.md
+    category: pointers
+    reason: states the rule that nothing under spec/ cites reports/, state/ or context/
+  - path: .gitignore
+    category: pointers
+    reason: says which tracked PDFs live under context/
+  - path: pyproject.toml
+    category: pointers
+    match: 'reports/migration-toolkit'
+    reason: the ruff and mypy exclusion of a non-shipped folder; inert where the folder is absent
+  - path: pyproject.toml
+    category: predecessor
+    match: 'reports/migration-toolkit'
+    reason: the same exclusion, whose folder name contains the word
+  - path: tests/oracles/test_reductions_registry_interface.py
+    category: pointers
+    match: 'context/'
+    reason: the test that refuses a registry citing context/ spells the folder it refuses
+
+  # --- Present facts that look like history.
+  - path: harness/claim_graph.py
+    category: dates
+    match: 'build date'
+    reason: the fixed SOURCE_DATE_EPOCH that makes generated PDFs reproducible
+  - path: src/certiqs_key/runs/report/__init__.py
+    category: dates
+    match: 'JSON Schema \(2020-12\)'
+    reason: the JSON Schema draft the report schema is written in
+  - path: spec/architecture.md
+    category: predecessor
+    match: 'migration fixtures'
+    reason: schema-migration fixtures of a data format, not the repository's history
+  - path: tests/oracles/data/*/PROVENANCE.md
+    category: dates
+    reason: the capture or commit date of a dataset is a fact about the data
+  - path: tests/harness/test_no_predecessor_process_in_the_tree.py
+    category: predecessor
+    match: '^\s*"[A-Z_]+\.(md|yaml)",\s*$'
+    reason: the document names the test refuses, spelled as its patterns
+  - path:
+      - tests/golden/test_receiver_povm_residual6_against_registry.py
+      - tests/oracles/test_receiver_povm_registry.py
+    category: predecessor
+    match: 'witness\["ARCHITECTURE_SPEC\.md'
+    reason: the key of a frozen registry witness the test reads
+
+  # --- Synthetic repositories and inputs of the harness and reader tests.
+  - path: tests/harness/fixtures/*
+    category: dates
+    reason: synthetic fixture data (refs index dates, open-item dates)
+  - path: tests/harness/fixtures/*
+    category: predecessor
+    reason: synthetic claims and open items whose words no test reads as history
+  - path: [tests/harness/test_assemble_contract.py, tests/harness/test_dashboard.py]
+    category: dates
+    reason: synthetic commit and open-item dates of throwaway repositories
+  - path: [tests/harness/test_dashboard.py, tests/harness/test_relabel.py]
+    category: predecessor
+    reason: a synthetic open-item id and a synthetic docstring naming an oracle code
+  - path:
+      - tests/harness/test_check_claims.py
+      - tests/harness/test_dashboard.py
+      - tests/harness/test_relabel.py
+    category: pointers
+    reason: synthetic state/, reports/ and context/ trees the tools must read, refuse or leave alone
+  - path: tests/unit/test_declared_reader.py
+    category: dates
+    reason: a YAML date as reader input, which the reader must keep a string
+
+pending:
+  # --- Pointers into reports/ and state/, which a published tree does not
+  # have: state the substance where the pointer is, or drop it.
+  - path:
+      - tests/oracles/registry_instances_bbm92.py
+      - tests/oracles/registry_instances_decoy_bb84.py
+    category: pointers
+    reason: frozen registries cite the working reports their values were derived in; they take id-only edits
+  - path: tests/unit/test_report_key_order.py
+    category: dates
+    reason: the dated name of a report a test reads (a path constant, so behaviour)
+
+  # --- The predecessor: its Slice 2, its governance documents, the move.
+  - path:
+      - spec/modules.yaml
+      - tests/golden/test_slice2_parity_columns.py
+    category: predecessor
+    reason: the slice2-n1to5 dataset, named and narrated after the predecessor's Slice 2; a rename candidate
+  - path:
+      - tests/oracles/test_protocol_compiler_registry.py
+      - tests/oracles/test_receiver_povm_registry.py
+    category: predecessor
+    reason: comments of the registry tests in the frozen records' vocabulary (STATUS.yaml, the gates); reworded with the registries
+  - path:
+      - tests/oracles/registry.py
+      - tests/oracles/registry_protocol_compiler.py
+      - tests/oracles/registry_receiver_povm.py
+      - tests/oracles/registry_reductions.py
+      - tests/oracles/registry_statistics_acceptance.py
+    category: predecessor
+    reason: frozen registries cite the predecessor's governance documents in comments and entry strings; comments go, a string a test asserts on moves to allow with a match

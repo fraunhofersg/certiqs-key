@@ -1,0 +1,33 @@
+% ---
+% id: meat-core/def:keyinert
+% kind: def
+% title: "Key-inert pair"
+% summary: >-
+%   A key-live acceptance value and a sector form a key-inert pair when the raw
+%   key is constant on the effective outcomes of each passing announcement
+%   class. The predicate is finite and read off the declaration, and it marks
+%   the pairs whose deficit cancels exactly ([[prop:exact-cancellation]]).
+% prominence: standard
+% status: implemented
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.branch:is_key_inert
+% lean:
+% ---
+
+\begin{definition}\label{def:keyinert}
+For $\hat c\in\Chkey$ and $s\in\SecSet$ define the
+\term[The outcome pairs of a pass class whose element of Alice's measurement is non-zero and whose element of the measured family is non-zero on the given sector.]{effective outcome set}
+of a \tref{pass class} $\kappa\in\Kann_{\mathrm{pass}}(\hat c)$ on sector $s$ as
+\begin{equation*}
+  E^{(s)}_{\kappa}\coloneqq
+  \big\{(x,v)\in a^{-1}(\kappa):\ M_x\ne0,\ F^{(s)}_v\ne0\big\}.
+\end{equation*}
+The pair $(\hat c,s)$ is
+\term[Said of a key-live acceptance value and a sector on which the raw-key map is constant on the effective outcome set of every pass class of that value.]{key-inert}
+if for every $\kappa\in\Kann_{\mathrm{pass}}(\hat c)$ the raw-key map $r$ is
+constant on $E^{(s)}_{\kappa}$. This is a finite, mechanically checkable
+predicate on the declaration.
+\end{definition}

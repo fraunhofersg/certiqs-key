@@ -1,0 +1,37 @@
+% ---
+% id: meat-core/req:frame-constructed
+% kind: req
+% title: "Construction and exact check of the support frame"
+% summary: >-
+%   The engine constructs the declared isometry of every support frame it uses
+%   and never takes it as declared input. It decides the two identities of the
+%   frame on that isometry exactly, at zero, and refuses a frame that fails
+%   them.
+% prominence: standard
+% status: implemented
+% uses: [def:support-frame, lem:choi-marginal]
+% mentions: [thm:choi]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.joint:marginal_frame
+% lean:
+% ---
+
+Lemma~\ref{lem:choi-marginal} and Theorem~\ref{thm:choi} hold on any
+isometry satisfying \eqref{eq:iota}, and both constructions of
+Definition~\ref{def:support-frame} satisfy it by arithmetic on $0$ and $1$,
+the \tref{full frame} for every admissible $\tau_A$. A frame is therefore
+constructed to satisfy \eqref{eq:iota} rather than fitted to it.
+
+\begin{requirement}\label{req:frame-constructed}
+In \tref{trusted-source mode} the engine constructs the
+\tref{declared isometry} $\iota$ of every \tref{support frame} it uses and
+never takes $\iota$ as declared input:
+by the full frame, which is always available, by the
+\tref{diagonal frame}, or by another construction for which it exhibits
+\eqref{eq:iota} exactly. It decides both identities of \eqref{eq:iota} on
+the isometry it constructed, entrywise as binary64 data at exactly zero
+(\iface{choi_isometry}), and refuses a frame that fails either of them
+with \iface{choi_isometry_inexact}.
+\end{requirement}

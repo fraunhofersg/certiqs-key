@@ -1,0 +1,124 @@
+% ---
+% id: meat-core/frank-wolfe/rem:feas-tol
+% kind: rem
+% title: "Scope of reading the feasible set at a tolerance"
+% summary: >-
+%   A run reads the relaxed feasible set at the larger of its two residual
+%   windows; every result holds at every window, and each reading is
+%   conservative. The relaxation always has a subject, and a supplier's window,
+%   the declared tolerance and a run's windows relax the set independently.
+% prominence: standard
+% status: accepted
+% uses: [prop:relaxed-set-properties, def:relaxed-feasible-set, meat-core/def:admissible-declaration]
+% mentions: [meat-core/def:untrusted-choi, meat-core/def:feasible, meat-core/lem:choi-marginal, meat-core/req:exact-admission, meat-core/thm:keylength, cor:fo-keylength, protocol-compiler/def:exact, foundations/req:consumer-decides-exactly, foundations/req:norm-conversion, foundations/req:exact-emission, req:iterate-checks, req:negative-estimate-refused]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:feas-tol}
+\emph{The window a run reads.} A run reads the relaxed feasible set at the
+larger of its two declared windows on computed residuals, the window on
+the coupling residual and the window on the declared-row residuals
+(Requirement~\ref{req:iterate-checks}). A per-block positive semidefinite
+$J$ whose coupling residual and whose $\bowtie_k$ residuals each pass
+their own window lies in $\Feas^{J}(\varepsilon)$ at that larger
+$\varepsilon$, by Proposition~\ref{prop:relaxed-set-properties}\,(a) from
+the smaller window to the larger and by its (c$'$) for the normalisation
+clause, which the coupling clause implies; so the normalisation clause
+adds no check to any run. In untrusted-source mode the coupling residual
+a run measures is $|\sum_s\tr\omega_s-1|$, the relaxed normalisation
+clause itself (Definition~\ref{def:untrusted-choi}\,(b)). Every statement
+of Proposition~\ref{prop:relaxed-set-properties} holds for every
+$\varepsilon\ge0$, so no claim of this module depends on which window a
+run reads, and each candidate reading is conservative by its (a) and (d).
+
+\emph{What the conservative reading buys.} By
+Proposition~\ref{prop:relaxed-set-properties}\,(d), every lower-bound
+claim of this module holds verbatim with $\Feas$ read at any
+$\varepsilon\ge0$: the number can only come out lower, never higher, and a
+run that reads the set at any such $\varepsilon$, in particular at the
+windows it declares, reports a bound on the same $\hqkd$.
+Theorem~\ref{thm:keylength} and Corollary~\ref{cor:fo-keylength} inherit
+this, their right-hand sides being non-decreasing in the bound they
+consume. The Choi-form quantity of (d$'$) is conservative by its own
+inclusion $\Feas^{J}\subseteq\Feas^{J}(\varepsilon)$, not by a bijection
+with the state form.
+
+\emph{The two relaxed quantities are not compared.} At $\varepsilon>0$ the
+quantities $\hlow[\Feas^{J}(\varepsilon)]$ and $\hlow[\Feas(\varepsilon)]$
+need not agree, and no relation between them is asserted:
+$\chi_{\Qsys}$ carries $\Feas^{J}(\varepsilon)$ neither into nor onto
+$\Feas(\varepsilon)$ in general. Forward, the coupling residual is
+transported \emph{conjugated},
+$\omega_A-\tau_A=W_{\tau}\big(\sum_s\tr_{\Qsys_s}J_s-\idon{A_0}\big)
+W_{\tau}^{\dagger}$ by \eqref{eq:WWtau}, and
+$\|W_{\tau}YW_{\tau}^{\dagger}\|_{\max}$ is not $\|Y\|_{\max}$; backward,
+for a singular $\tau_A$ the set $\Feas(\varepsilon)$ contains states not
+supported on $\operatorname{supp}\tau_A\otimes\Hs{\Qsys}$, which are the
+image of no $J$ whatever.
+
+\emph{The floor of (c$''$) and the window of the penalty sum.} The floor
+\eqref{eq:relaxed-objective-floor} is not the two-sided window
+$\log_2\frac{1}{1-d_{A_0}\varepsilon}$ that \eqref{eq:penaltyshift-fw}
+yields on the penalty sum alone
+($|\log_2(1+\varsigma)|\le\log_2\frac{1}{1-d_{A_0}\varepsilon}$ for
+$|\varsigma|\le d_{A_0}\varepsilon<1$): that window bounds the penalty
+\emph{sum} on both sides, whereas the floor bounds the objective from below
+and carries the prefactor $\frac{\alpha}{\alpha-1}>1$ that the objective
+attaches to that sum, applied to the one-sided shift
+$\log_2(1+x)$, $x\coloneqq d_{A_0}\varepsilon$, which is smaller than
+$\log_2\frac{1}{1-x}$ for $x\in(0,1)$. The floor is therefore less than
+$\frac{\alpha}{\alpha-1}$ times the window, their ratio tending to that
+factor as $x\to0$, and it can lie on either side of the window itself: at
+$\alpha=1.1$ and $x=0.01$ the two are $0.158$ and $0.0145$, at $\alpha=10$
+and $x=0.5$ they are $0.650$ and $1$. The objective at a point of the
+relaxed set may be negative, by at most the floor; what a run does with a
+negative estimate is Requirement~\ref{req:negative-estimate-refused}.
+
+\emph{(e) What it is worth, and when it is worth nothing.} With
+$\CList=\varnothing$ and in untrusted-source mode the one condition left
+to relax is the normalisation, and
+$\Feas(\varepsilon)=\{\omega\in\Pos{A\Qsys}\ \text{sector-block-diagonal}:
+|\sum_s\tr\omega_s-1|\le\varepsilon\}$, which is strictly larger than
+$\Feas$ for $\varepsilon>0$. The relaxation is never without a subject,
+and that is why: in untrusted-source mode the normalisation is the single
+unconditional constraint the feasible set carries
+(Definition~\ref{def:feasible}), a run measures its residual like any
+other, and a relaxation that exempted it would exempt the only condition
+there is. With $\CList=\varnothing$ in \emph{trusted}-source mode the
+marginal row is relaxed and the normalisation follows it by
+Proposition~\ref{prop:relaxed-set-properties}\,(c$'$). Where the
+relaxation has a declared-row subject its content is that a declaration
+whose constraint rows or whose marginal are satisfied only to within a
+positive window by any reachable state is not thereby made infeasible.
+
+\emph{(f) Composition, and one obligation this places on a producer.} A
+\tref{supplier} that certifies the non-emptiness of the feasible set from
+a supplied witness certifies it of $\Feas(\varepsilon)$ at \emph{that
+supplier's own} declared window, not of $\Feas$: under an exact reading a
+binary64 witness certifies nothing, and a set read at some positive number
+is what such a witness can be a witness for. That window is a declared
+number of the supplier's contract, and it is neither the
+\tref{declared tolerance} $\tnum$ nor either of the two windows at which
+this module reads its own feasible set; a consumer that identifies any two
+of the three has performed a conversion this module does not license, and
+\xref{foundations/req:norm-conversion} says what such a conversion must
+carry. What \emph{is} claimed of all of them is (a) and (d) of
+Proposition~\ref{prop:relaxed-set-properties}: each is a relaxation of
+$\Feas$, so each reading is conservative, and no relation between the three
+sets is asserted or needed. They can disagree, in a known direction: this
+module decides every predicate on declared data \emph{exactly}
+(Requirement~\ref{req:exact-admission};
+\xref{foundations/req:consumer-decides-exactly}), so a declaration a
+supplier would admit at some tolerance of its own is refused here. That is
+the safe direction and the licensed one; what it asks of a
+\tref{producer} is that it emit exactly admissible data
+(\xref{foundations/req:exact-emission}), which the compiler decides on the
+numbers it emits (\xref{protocol-compiler/def:exact}). The normalisation is
+on neither side of that comparison: it is relaxed with the coupling
+residual, at that residual's own window and with the dimension factor
+Proposition~\ref{prop:relaxed-set-properties}\,(c$'$) derives, and it is
+compared with $\tnum$ nowhere.
+\end{remark}

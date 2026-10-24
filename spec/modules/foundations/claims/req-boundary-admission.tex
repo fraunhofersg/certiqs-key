@@ -1,0 +1,53 @@
+% ---
+% id: foundations/req:boundary-admission
+% kind: req
+% title: "Exact admissibility at every module boundary"
+% summary: >-
+%   Declared operator data cross every module boundary exactly admissible, so
+%   every sum a predicate reads is the exact sum. The declarer makes them so,
+%   or, for data an instance passes on unchanged, the consumer's exact decision
+%   on entry does, and a consumer that finds otherwise refuses them.
+% prominence: main
+% status: accepted
+% uses: [def:declared-data, def:exact-admissibility, def:declared-order, lem:exact-accumulation]
+% mentions: [req:who-snaps, req:exact-emission, req:consumer-decides-exactly]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+On \tref{exactly admissible} data every sum a predicate reads
+\tref{rounds nowhere}, and so is the exact sum
+(Lemma~\ref{lem:exact-accumulation}): each predicate a module decides is a
+predicate on the declared numbers and not on their rounding.
+
+\begin{requirement}\label{req:boundary-admission}
+Declared operator data are exactly admissible at every
+\tref{module boundary} (Definition~\ref{def:declared-data}). Precisely:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item every declared operator family that a consumer reads as a measurement,
+  that is, as a positive operator-valued measure or as a family with a
+  declared completeness constant, is exactly admissible with that constant for
+  the \tref{sector map} the consumer holds
+  (Definition~\ref{def:exact-admissibility});
+\item every other declared operator, and every declared matrix or vector
+  whose entries are \tref[declared value]{declared values}, satisfies exactly,
+  on those values, each condition its declaration states of it, such as
+  Hermiticity, positivity, a trace, a column sum or an identity with another
+  declared operator, and every sum such a condition reads rounds nowhere in
+  its \tref{declared order} (Definition~\ref{def:declared-order}).
+\end{enumerate}
+This is established before the data cross the boundary. An instance
+establishes it by constructing or snapping what it declares
+(Requirement~\ref{req:who-snaps}), or by passing on unchanged, from a
+supplier's output (Definition~\ref{def:declared-data}\,(ii)), data whose
+conditions the consumer decides exactly on entry, that decision then
+establishing it. A producer establishes it by constructing exactly what it
+emits and by deciding exactly, before emitting, each condition that its
+construction does not already establish, a sum that rounds nowhere among them;
+for a measurement family that decision is the one of
+Requirement~\ref{req:exact-emission}. Data that fail it do not cross, because
+a consumer that finds one of its admission predicates violated refuses them
+(Requirement~\ref{req:consumer-decides-exactly}).
+\end{requirement}

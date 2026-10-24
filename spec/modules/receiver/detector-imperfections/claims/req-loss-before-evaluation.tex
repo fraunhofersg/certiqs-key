@@ -1,0 +1,57 @@
+% ---
+% id: receiver/detector-imperfections/req:loss-before-evaluation
+% kind: req
+% title: "The factored loss is applied before the artefact is evaluated"
+% summary: >-
+%   Where the receiver was compiled at a factored loss t below one, every
+%   evaluation of its emitted measurement on a state of the channel system
+%   that stands for the receiver's statistics, the honest statistics among
+%   them, is made on the state after the pure-loss channel; one that cannot is
+%   refused.
+% prominence: standard
+% status: implemented
+% uses: [prop:efficiency-normalization, def:pure-loss, def:normalized-station]
+% mentions: [req:normalization-record]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.runs.pipeline:LossAppliedProvider
+% lean:
+% user_statement: >-
+%   When the receiver is analysed at its normalized station, the expected
+%   (honest) statistics the analysis is built around are those of your actual
+%   receiver: the efficiency moved into the channel is applied to the expected
+%   input before the normalized measurement is evaluated. Without this the
+%   acceptance test would be set for a receiver more efficient than yours, and
+%   the reported key would be one your device does not reach.
+% ---
+
+The emitted measurement of a normalized receiver is not the receiver's: the
+receiver's click statistics on an input $\rho$ are those of the emitted
+measurement on $\Lambda^{\mathrm{loss}}_t(\rho)$
+(Proposition~\ref{prop:efficiency-normalization}\,(i), second form, and (ii)).
+A consumer that evaluated the emitted measurement on $\rho$ itself would form
+the statistics of a more efficient receiver. The factor travels in the record
+of Requirement~\ref{req:normalization-record}. The states the key-rate program
+optimises over are another matter: the loss is handed to the adversary
+(Proposition~\ref{prop:efficiency-normalization}\,(iii)), so it is already
+part of the channel those states range over, and applying it to them again
+would be sound but would give up the gain the normalization exists for.
+
+\begin{requirement}\label{req:loss-before-evaluation}
+Where a receiver artefact's \iface{efficiency_record} carries a factored loss
+$t<1$, every evaluation of its emitted blocks or dark-composed
+family, or of a target formed from them, on a state that stands
+for the receiver's statistics on an input $\rho$ of the channel system (an
+honest-statistics provider forming the honest law among them) is made on
+$\Lambda^{\mathrm{loss}}_t(\rho)$, or on the state the same construction forms
+from $\Lambda^{\mathrm{loss}}_t(\rho)$, in place of $\rho$, with the $t$ of that
+receiver's record. Where the input is a joint state of which that receiver's
+channel system is one factor, such as a state shared with another party or
+with a second normalized receiver, $\Lambda^{\mathrm{loss}}_t$ stands here for
+$\idmap\otimes\Lambda^{\mathrm{loss}}_t$ acting on that receiver's
+channel-system factor, each receiver with the $t$ of its own record. The states the
+key-rate program optimises over are not inputs in this sense, and the loss
+is not applied to them. A consumer that cannot apply $\Lambda^{\mathrm{loss}}_t$ to
+the input it is handed refuses with \iface{factored_loss_not_applied}.
+\end{requirement}

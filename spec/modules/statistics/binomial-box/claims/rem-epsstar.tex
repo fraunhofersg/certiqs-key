@@ -1,0 +1,56 @@
+% ---
+% id: statistics/binomial-box/rem:epsstar
+% kind: rem
+% title: "Exact evaluation of $\\varepsilon^{\\star}$ and its conservative report"
+% summary: >-
+%   The figure ε* is exactly computable at a rational envelope and generally
+%   below the budget, as integrality, the guard and degenerate coordinates
+%   leave budget unspent. An upward-rounded evaluation clamped at the budget
+%   still bounds the honest failure probability; a downward-rounded one need
+%   not.
+% prominence: standard
+% status: accepted
+% uses: [statistics/cor:tail-forms, statistics/lem:exact-strict-tails, rem:guard, def:endpoint-rule, prop:rule-exact, thm:completeness-bound, statistics/def:conservative-evaluation]
+% mentions: [rem:completeness-on-rules, req:completeness-report]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Which figure is reported on which rule and evaluation is
+Requirement~\ref{req:completeness-report}; the remark gives the mathematics
+it rests on, and Remark~\ref{rem:completeness-on-rules} the figures a
+closed-form rule can afford.
+
+\begin{remark}
+\label{rem:epsstar}
+Every term of $\varepsilon^{\star}$ is one of the closed forms
+\eqref{eq:tails-used} of Corollary~\ref{cor:tail-forms}, at the envelope's
+lower value for a lower tail and at its upper value for an upper tail, so
+$\varepsilon^{\star}$ is exactly computable at a rational envelope (for a
+single law, at rational $\honest$; Lemma~\ref{lem:exact-strict-tails}) and is
+generally strictly smaller than
+$\ecomp$ --- the integrality of $k^{\pm}$ and the guard of
+Remark~\ref{rem:guard} both leave budget unspent, and the degenerate-mass
+convention of Definition~\ref{def:endpoint-rule}\,(c) leaves a side's budget
+entirely unspent where that side's envelope value is $0$ or $1$
+(Proposition~\ref{prop:rule-exact}\,(v) for the exact rule, read side-wise).
+Where the tails cannot be evaluated exactly they are rounded \emph{upward}
+(a \tref{conservative evaluation},
+Definition~\ref{def:conservative-evaluation}): by \eqref{eq:completeness} an upward-rounded
+evaluation of $\varepsilon^{\star}$ is still at least the honest failure
+probability, whereas a downward-rounded one need not be, and would claim a
+completeness the set does not have.
+
+Upward rounding can carry the figure above $\ecomp$ --- in the degenerate
+case where every tail meets its allocation exactly and the allocation sums to
+exactly $\ecomp$, any strict over-estimate exceeds the budget and leaves the
+interval $[0,\ecomp]$. Clamping closes this without weakening anything: for
+every upward-rounded evaluation $\tilde\varepsilon\ge\varepsilon^{\star}$,
+the figure $\min\{\ecomp,\tilde\varepsilon\}$ is again a valid bound, since
+both $\ecomp$ and $\tilde\varepsilon$ are at least $\varepsilon^{\star}$,
+which by \eqref{eq:completeness} is at least the honest failure probability;
+and it lies in $[0,\ecomp]$ by construction. Exact evaluation needs no clamp,
+because $\varepsilon^{\star}\le\ecomp$ is part of \eqref{eq:completeness}.
+\end{remark}

@@ -1,0 +1,32 @@
+% ---
+% id: reductions/rem:chain-admission
+% kind: rem
+% title: "The admission rule and what this module emits"
+% summary: >-
+%   This module states the admission rule of a chain and decides no instance of
+%   it; the protocol compiler decides both its halves. Every entry this module
+%   emits carries a real constant and every artefact an empty source segment,
+%   so no emitted artefact can violate the rule.
+% prominence: standard
+% status: accepted
+% uses: [def:chain, def:attset]
+% mentions: [protocol-compiler/def:chaincond, protocol-compiler/req:chain-refusals]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:chain-admission}
+This module states the admission rule of Definition~\ref{def:chain} and
+decides no instance of it. It declares no general entry and emits none, every
+entry it emits carrying a real scalar (Definition~\ref{def:attset}), and every
+artefact it emits has an empty source segment; so no artefact of this module
+can violate the rule. The rule is decided where a declaration's source
+segment is assembled with its constraint list, which is the protocol
+compiler's chain condition (\xref{protocol-compiler/def:chaincond}). It
+decides both halves of the rule: the \emph{entry} half, a general entry
+beside a non-empty source segment, and the \emph{mode} half, a declaration
+carrying a non-empty source segment in untrusted-source mode, each refused by
+name there (\xref{protocol-compiler/req:chain-refusals}).
+\end{remark}

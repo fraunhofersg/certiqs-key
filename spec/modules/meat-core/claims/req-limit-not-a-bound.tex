@@ -1,0 +1,28 @@
+% ---
+% id: meat-core/req:limit-not-a-bound
+% kind: req
+% title: "The order-one limit as a validation reference only"
+% summary: >-
+%   The engine reports the order-one limit of [[thm:oracle]], however
+%   computed, as a bound of no kind, and never as the first-order bound. The
+%   limit validates an implementation as α → 1 and says nothing about h_low at
+%   a finite order.
+% prominence: standard
+% status: accepted
+% uses: [rem:oracle, thm:oracle]
+% mentions: [meat-core/frank-wolfe/thm:firstorder]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Remark~\ref{rem:oracle} says what the limit $h_1$ of
+Theorem~\ref{thm:oracle} validates: the $\alpha\to1^{+}$ behaviour of an
+implementation, and no finite-$\alpha$ value.
+
+\begin{requirement}\label{req:limit-not-a-bound}
+The engine never reports the limit $h_1$ of \eqref{eq:oracle}, however
+computed, as a bound of any kind; in particular it never reports it as the
+first-order bound $\hlb$ of Theorem~\ref{thm:firstorder}.
+\end{requirement}

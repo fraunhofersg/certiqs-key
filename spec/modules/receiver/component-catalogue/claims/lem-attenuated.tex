@@ -1,0 +1,47 @@
+% ---
+% id: receiver/component-catalogue/lem:attenuated
+% kind: lem
+% title: "Admissibility of an attenuated unitary"
+% summary: >-
+%   A unitary with a positive semidefinite contraction on either side is a
+%   passive local element, lossless exactly when both contractions are the
+%   identity. Every catalogue entry has this form, so the lemma carries most of
+%   the catalogue's admissibility proof.
+% prominence: technical
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Derived in full. The reference index lists two optics textbooks, and a locator into either could not be verified against a copy of the registered edition; the catalogue cites neither."
+% ---
+
+The catalogue has ten \tref[entry type]{entry types}, each a short matrix with
+a short verification. Every one of them is a unitary core with a positive
+semidefinite attenuation on one or both sides, so the following lemma does
+almost all of the work.
+
+\begin{lemma}\label{lem:attenuated}
+Let $V$ be unitary on $\mathbb{C}^\Sigma$ and let $D_1,D_2$ be positive
+semidefinite contractions on $\mathbb{C}^\Sigma$. Then
+$\Gmat_\Sigma\coloneqq D_2VD_1$ satisfies
+$\Gmat_\Sigma^\dagger\Gmat_\Sigma\preceq\id_\Sigma$, and
+$\Gmat_\Sigma^\dagger\Gmat_\Sigma=\id_\Sigma$ if and only if
+$D_1=D_2=\id_\Sigma$.
+\end{lemma}
+
+\begin{proof}
+\emph{The bound.} Conjugation by a unitary preserves the Löwner order, so
+$V^\dagger D_2^2V\preceq V^\dagger\id V=\id$. Since $X\preceq Y$ implies
+$Z^\dagger XZ\preceq Z^\dagger YZ$ for any $Z$,
+$\Gmat_\Sigma^\dagger\Gmat_\Sigma=D_1(V^\dagger D_2^2V)D_1\preceq D_1\id
+D_1=D_1^2\preceq\id$.
+
+\emph{The equality case.} If the composite equals $\id$, the chain forces
+$D_1^2=\id$. A positive semidefinite contraction with $D_1^2=\id$ has all its
+eigenvalues in $[0,1]$ squaring to $1$, hence equal to $1$, so $D_1=\id$. Then
+$V^\dagger D_2^2V=\id$ gives $D_2^2=\id$, and the same argument gives
+$D_2=\id$. Conversely, $D_1=D_2=\id$ gives $\Gmat_\Sigma=V$, which is
+unitary.
+\end{proof}

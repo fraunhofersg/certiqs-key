@@ -1,0 +1,35 @@
+% ---
+% id: protocol-compiler/req:weight-preparation
+% kind: req
+% title: "Preparation of user weights before the module boundary"
+% summary: >-
+%   Decimal and rational user weights may be converted to binary64 by the
+%   declaring entry point before they reach this module, with the moves
+%   recorded and normalisation and bound directions preserved. The preparation
+%   asserts no bound on the resulting change of key rate.
+% prominence: standard
+% status: implemented
+% uses: [def:weighted]
+% mentions: [req:binary64-weights, foundations/req:who-snaps]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.runs.inputs:prepare_probabilities
+% lean:
+% ---
+
+This module reads only binary64 weights
+(Requirement~\ref{req:binary64-weights}); ordinary user inputs reach that
+type through a preparation that belongs to the declarer
+(\xref{foundations/req:who-snaps}).
+
+\begin{requirement}\label{req:weight-preparation}
+Ordinary decimal and rational user inputs for the weights of
+Definition~\ref{def:weighted} may be converted and prepared by the declaring
+entry point before they cross the \tref{module boundary} into this module. An
+entry point that does so records the supplied and the prepared values and
+their displacement,
+preserves normalisation and every required bound direction, and leaves this
+module's exact tests unchanged. The preparation asserts no bound on a
+resulting change of the key rate.
+\end{requirement}

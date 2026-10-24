@@ -1,0 +1,53 @@
+% ---
+% id: meat-core/prop:exact-cancellation
+% kind: prop
+% title: "Exact cancellation of key-inert sectors"
+% summary: >-
+%   On a key-inert pair the sector deficit vanishes for every positive input,
+%   so the sector contributes nothing to the entropy term. Its variables still
+%   enter the outcome probabilities, the statistics and the marginal constraint.
+% prominence: standard
+% status: implemented
+% uses: [thm:branch-formula, def:branch, cor:f-nonpos, lem:branch-maps]
+% mentions: [def:classes, thm:removal]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.declaration.sectors:classify_sector
+% lean:
+% ---
+
+On a key-inert pair every pass class writes a single raw-key value, so the
+branch output never mixes key values and the key pinching leaves it
+unchanged; the equality case of Corollary~\ref{cor:f-nonpos} does the rest.
+
+\begin{proposition}\label{prop:exact-cancellation}
+If $(\hat c,s)$ is key-inert, then for \emph{every}
+$\sigma\in\Pos{A\Qsys_s}$ the operator $\cG_{\hat c,s}(\sigma)$ is
+block-diagonal for the key pinching $\cZ$, and consequently
+$f_{\hat c,s}(\sigma)=0$. In particular such sectors contribute nothing to
+$K_{\hat c}$ in \eqref{eq:c5-sector}, for every input; they remain
+optimization variables, entering through $\Phimap$, $P_{\hat c}$, and the
+marginal constraint.
+\end{proposition}
+
+\begin{proof}
+Fix a pass class $\kappa$ and let $r_{\kappa}$ be the constant value of $r$
+on $E^{(s)}_{\kappa}$. Every term of $K^{(s)}_{\kappa}$
+(Definition~\ref{def:branch}) with $(x,v)\notin E^{(s)}_{\kappa}$ vanishes,
+because $\sqrt{M_x}\otimes\sqrt{F^{(s)}_v}=0$ there. Hence
+$K^{(s)}_{\kappa}=\ket{r_{\kappa}}_{R}\otimes\widetilde K_{\kappa}$ for an
+operator $\widetilde K_{\kappa}$ carrying no $R$ factor, and
+$K^{(s)}_{\kappa}\sigma K^{(s)\dagger}_{\kappa}
+=\dyad{r_{\kappa}}_{R}\otimes
+\widetilde K_{\kappa}\sigma\widetilde K_{\kappa}^{\dagger}$ is supported in
+a single $R$-eigenspace. A sum of such operators over
+$\kappa$ is $R$-block-diagonal (each term lies in one block, possibly
+different blocks for different $\kappa$), hence a fixed point of $\cZ$.
+By Corollary~\ref{cor:f-nonpos} (equality case), $f_{\hat c,s}(\sigma)=0$.
+The last sentence of the statement restates
+Lemma~\ref{lem:branch-maps}\,(i),(iii): the sector still carries statistics
+weight, so removing it from the \emph{optimization} (rather than from the
+objective sum) is a different operation, governed by the sector classes of
+Definition~\ref{def:classes} and Theorem~\ref{thm:removal}.
+\end{proof}

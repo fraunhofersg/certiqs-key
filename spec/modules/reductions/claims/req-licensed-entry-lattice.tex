@@ -1,0 +1,34 @@
+% ---
+% id: reductions/req:licensed-entry-lattice
+% kind: req
+% title: "Lattice condition on the entries of emitted constraint operators"
+% summary: >-
+%   Where the licence is present, every entry of every emitted constraint
+%   operator is decided to satisfy the lattice condition before the licence is
+%   issued, and the request is refused otherwise. The modulus
+%   bound binds these entries, not the coefficients that form them.
+% prominence: standard
+% status: implemented
+% uses: [def:reduction-instance]
+% mentions: [def:exactadm, cor:entries]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.validation:rule_licensed_hermiticity
+% lean:
+% ---
+
+A certified entry is a combination of transported operators whose
+coefficients need only be integer multiples of $2^{-\kappa}$
+(Definition~\ref{def:reduction-instance}\,(I4)). Condition
+\eqref{eq:latinv}, the modulus bound $|x|\le1$ included, binds the entries of
+the operator the combination produces, and those are emitted numbers.
+
+\begin{requirement}\label{req:licensed-entry-lattice}
+Where the licence is present, the engine decides, on the emitted numbers and
+before the licence is issued, that every entry of every emitted constraint
+operator satisfies \eqref{eq:latinv}, and refuses the request
+otherwise, with the reason \iface{constraint_without_certificate} (the lattice
+half of the rule \iface{licensed_hermiticity};
+Corollary~\ref{cor:entries}\,(iii)).
+\end{requirement}

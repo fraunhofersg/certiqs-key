@@ -1,0 +1,33 @@
+% ---
+% id: reductions/req:transported-set-certificates
+% kind: req
+% title: "Certificates carried with the transported set"
+% summary: >-
+%   Whatever the request carries, the engine emits the transported set with the
+%   certificate case of each operator. The positivity certificate of every
+%   sector projector travels there, and becomes a constraint entry only where a
+%   caller requests it as one.
+% prominence: standard
+% status: implemented
+% uses: [cor:entries, cor:pullback]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.channels:TransportedOperator
+% lean:
+% ---
+
+Every instance transports its sector projectors, and their pull-backs are
+positive for every instance (Corollary~\ref{cor:entries}\,(i)); that
+certificate is a property of the channel and does not wait for a request.
+
+\begin{requirement}\label{req:transported-set-certificates}
+Whatever the request carries, the engine emits in
+\iface{transported_operators}, per operator of the \tref{transported set},
+the certificate case of Corollary~\ref{cor:pullback} that makes it usable. In
+particular the certificate $(\Pi_s,\succeq,0)$ of every sector projector of
+every instance travels there and not as a constraint entry; such an operator
+becomes an entry of \iface{constraint_list} only where a caller requests it
+as an entry (Corollary~\ref{cor:entries}\,(i)).
+\end{requirement}

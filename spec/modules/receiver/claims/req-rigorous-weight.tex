@@ -1,0 +1,120 @@
+% ---
+% id: receiver/req:rigorous-weight
+% kind: req
+% title: "Rigorous evaluation of the multiclick weight"
+% summary: >-
+%   Wherever the port Grams are enclosed, the engine bounds the four inputs and
+%   the window blocks from rational enclosures, forms the enclosed weight exactly
+%   with no eigenvalue slack and emits it rounded down. Elsewhere it emits the
+%   floating-point weight and records why.
+% user_statement: >-
+%   Wherever your receiver declaration describes a valid receiver exactly, the
+%   engine computes each high-photon multiclick weight it can from rational
+%   enclosures of the receiver's model, every bound taken on the safe side, and
+%   emits that weight rounded down: no floating-point eigenvalue is trusted
+%   and no eigenvalue slack is subtracted. The artifact records, setting by
+%   setting, whether it did. Where the declaration is valid only within the
+%   receiver tolerances, or a needed enclosure cannot be formed at a setting,
+%   the engine emits the floating-point weight there instead and records why;
+%   a key rate that reads such a weight is not certified.
+% prominence: standard
+% status: implemented
+% uses: [thm:enclosed-weight, def:enclosed-weight, rem:ia, req:exact-route-decision, thm:enclosed-blocks, lem:enclosure-arithmetic, def:complex-enclosure, cor:unconditioned-family, def:setting-family, thm:multiclick-bound, def:exactbnd, def:pmc, def:pmcex, def:slot, def:evaluation-model, foundations/lem:least-eigenvalue-bound, foundations/cor:least-eigenvalue-over-enclosure, foundations/def:exact-reference, foundations/req:rounding-direction]
+% mentions: [req:exact-window-record, req:eig-ledger-row, req:evaluation-label, ass:eig]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.rigorous:rigorous_weights
+% lean:
+% ---
+
+Remark~\ref{rem:ia} reads off the \tref{bound function} the direction in which each
+input of the weight must be bounded, and Theorem~\ref{thm:enclosed-weight}
+shows that a weight formed from bounds taken in those directions is a bound
+outright. The receiver holds what that needs: rational enclosures of its port
+Grams for every declaration with a model admissible exactly
+(Requirement~\ref{req:exact-route-decision}), from which the operators of the
+bound, the prefactors and the window blocks are enclosed by the rules that
+enclose its photon-number blocks, and the least-eigenvalue bounds of
+\xref{foundations/lem:least-eigenvalue-bound} and
+\xref{foundations/cor:least-eigenvalue-over-enclosure}, which turn an
+enclosure of a matrix into bounds on its extreme eigenvalues.
+
+\begin{requirement}\label{req:rigorous-weight}
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{Where it applies.} On every declaration whose port Grams the
+  engine encloses by Requirement~\ref{req:exact-route-decision}\,(iii), the
+  engine evaluates the weight of every setting by (ii) to (iv), in exact
+  rational arithmetic: the rigorous evaluation of
+  Definition~\ref{def:evaluation-model}. At a setting where it cannot, it
+  emits the weight of Definition~\ref{def:pmc} or~\ref{def:pmcex} evaluated in
+  floating point, with the reason \iface{port_grams_not_enclosed} where the
+  declaration has no model admissible exactly and
+  \iface{bound_inputs_not_enclosed} where a reciprocal that (ii) forms
+  receives no enclosure.
+\item \emph{The enclosures.} At each setting $t$ the engine forms, from the
+  enclosures of the port Grams by the rules of
+  Lemma~\ref{lem:enclosure-arithmetic},
+  \tref[complex enclosure]{complex enclosures} of $B^{(t)}$ and of every
+  $B^{(t)}_k$, of $\gamma^{(t)}$ and of every $\beta^{(t)}_k$, and, where $t$
+  carries an \tref{exact-window depth} $m^{\ast}_t$, of
+  $\blk{M}{\eqn}_{\mc|t}$ for $N<n\le m^{\ast}_t$, each enclosure of one of
+  these Hermitian matrices made Hermitian-centred by part~(v) of that lemma.
+  For a receiver without a probe these are, by
+  Corollary~\ref{cor:unconditioned-family}, $B=A_\Sigma$ and
+  $B_k=A_{[K]\setminus\{k\}}$, sums of enclosed Grams, $\gamma=\beta_k=1$
+  exactly, and the blocks of \eqref{eq:family-mc}, formed from the enclosures
+  of Theorem~\ref{thm:enclosed-blocks}\,(ii) taken with $m^{\ast}_t$ as its
+  cutoff. For a \tref{setting family} a submodule constructs they are the
+  enclosures of its prefactors, its operators and its window blocks that the
+  submodule states, formed by the same rules.
+\item \emph{The four inputs and the window bounds.} For an
+  \tref{entrywise enclosure} $(C,r)$ of a Hermitian matrix $X$ and a rational
+  $\rho\ge0$ with $\rho^{2}\ge\sum_{i,l}r_{il}^{2}$, an upper bound on
+  $\lmax(C)$ from \xref{foundations/lem:least-eigenvalue-bound}\,(iv) plus
+  $\rho$ bounds $\lmax(X)$ from above, and a lower bound on $\lmin(C)$ from
+  part~(ii) of that lemma less $\rho$ bounds $\lmin(X)$ from below
+  (\xref{foundations/cor:least-eigenvalue-over-enclosure}\,(i),~(ii)); for a
+  complex enclosure $(x_c,r)$ of a real $x$,
+  $\mathrm{Re}\,x_c-r\le x\le\mathrm{Re}\,x_c+r$. By these rules the engine
+  forms an upper bound $u$ on $\lmax(B^{(t)})$, lower bounds $\ell_k$ on
+  $\lmin(B^{(t)}_k)$, a lower bound $g$ on $\gamma^{(t)}$, upper bounds $b_k$
+  on $\beta^{(t)}_k$ and lower bounds $\lambda_n$ on
+  $\lmin(\blk{M}{\eqn}_{\mc|t})$. Its \tref{enclosed bound data} are
+  \eqref{eq:enclosed-construction} of Theorem~\ref{thm:enclosed-weight}\,(i),
+  each of the four intersected with $[0,1]$, and its
+  \tref{rigorous window bounds} are $\max\{0,\lambda_n\}$. The output of a
+  floating-point eigensolver may enter only as the basis $V$ of
+  \xref{foundations/lem:least-eigenvalue-bound}, read as the exact rational
+  matrix it is; a basis for which the engine forms no rational $\theta<1$
+  satisfying the hypothesis of that lemma is replaced by the identity, which
+  admits $\theta=0$. No computed eigenvalue is used as a bound, and
+  $\varepsilon_{\mathrm{eig}}$ is not subtracted.
+\item \emph{The weight.} The engine computes the \tref{enclosed weight}
+  $\check p^{(t)}_{\mc}$ (Definition~\ref{def:enclosed-weight}) as an exact
+  rational and emits, as the setting's weight in the
+  \tref{strengthening slot} \iface{high_photon_bounds}
+  (Definition~\ref{def:slot}), the largest binary64 number at or below it,
+  rounded down as \xref{foundations/req:rounding-direction} rounds an emitted
+  lower bound; by Theorem~\ref{thm:enclosed-weight}\,(iii) the emitted number
+  bounds the \tref{multiclick element} of its setting on every block above the
+  cutoff. The \tref{uniform weight} is the minimum of the emitted per-setting
+  weights.
+\item \emph{What stays.} The floating-point evaluation of the blocks, the
+  residuals and their tests, and, at a setting carrying a depth, the computed
+  values of Requirement~\ref{req:exact-window-record}, are formed as they are
+  without this requirement. At a setting evaluated by (ii) to (iv), the
+  floating-point weight of Definition~\ref{def:pmc} or~\ref{def:pmcex} enters
+  no emitted number, and it may be recorded beside the emitted one as a
+  diagnostic.
+\item \emph{The record.} Per setting, in \iface{bound_quantifier_domain}: the
+  evaluation that produced the emitted weight, \iface{rigorous} or
+  \iface{floating_point}, with the reason of (i) where it is
+  \iface{floating_point}; and, where it is \iface{rigorous}, the enclosed
+  bound data, the rigorous window bounds and the enclosed weight as exact
+  rationals, so that a reader can recompute the weight. A setting whose weight
+  is \iface{rigorous} is not one at which Assumption~\ref{ass:eig} is invoked
+  (Requirement~\ref{req:eig-ledger-row}), and the artifact's evaluation label
+  follows Requirement~\ref{req:evaluation-label}.
+\end{enumerate}
+\end{requirement}

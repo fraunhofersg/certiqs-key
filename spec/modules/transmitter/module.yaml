@@ -1,0 +1,142 @@
+id: transmitter
+kind: core
+version: 0.13.0
+title: "Transmitter source model (transmitter)"
+abstract: >-
+  The transmitter module describes Alice's side of a protocol: what she
+  prepares, the system she retains, and whether her source is trusted. Its
+  input is a source specification, with an ordered alphabet, a retained system
+  carrying a sector structure, her measurement and the signal ensemble,
+  declared as binary64 matrices or through a submodule's source model and
+  connected by source links to the virtual ensemble on which the certificate
+  is written. In trusted-source mode a source-replacement certificate,
+  declared as a pure projector or as positive sector blocks or defined from
+  the virtual ensemble, describes the preparation as a measurement of Alice's
+  retained system. The module's main results are these:
+  [[thm:certificate-sufficiency]] shows that the certificate's algebraic
+  conditions are, in either declared form, finitely many exact decisions and
+  that her measurement commutes with every attack that leaves her retained
+  system and outcome alone, which retention and the sequential round
+  structure make every attack of a round; [[lem:ensemble-presentation]]
+  constructs from the virtual ensemble, given as sector blocks, a certificate
+  with pure blocks whose defining identities hold with no error term; and
+  [[lem:matched-pinching]] states what a block certificate implies for the
+  states an attack reaches. Every
+  condition the module decides is decided exactly on the declared entries,
+  while the retention of Alice's system remains an attestation that the
+  module records and never verifies. The module emits an
+  artefact: the declared data with the source segment, a licence record for a
+  verified certificate, which lets a consumer fix Alice's marginal, and an
+  assumption ledger naming the assumptions the artefact rests on. Its
+  consumers are the protocol compiler, the reductions module and the key-rate
+  engine of meat-core; the module itself states no key rate, builds no
+  optimisation problem and restricts no feasible set. Its decoy submodule
+  declares a weak-coherent-pulse source and the tagging link that makes it
+  finite.
+depends_on: []
+notation_version: "0.4.0"   # the spec/notation.md version this module pins
+submodules: [decoy]         # characterization is planned in spec/modules.yaml
+reading_groups:
+- title: Source specifications and source modes
+  start: def:source-spec
+  abstract: Alice's side of a protocol is fixed by what she declares and by the
+    mode in which she declares it. [[def:source-spec]] lists the declared data
+    and the number model in which every condition is decided exactly. In
+    trusted-source mode her retained system never reaches the adversary and a
+    certificate ties it to the signal ensemble; in untrusted-source mode nothing
+    does. [[rem:source-mode]] says what each mode asserts, why a declared
+    marginal needs an attestation, and why untrusted-source mode is always the
+    safe choice.
+- title: Source links and the source segment
+  start: def:source-link
+  abstract: A security proof may analyse a replacement of the protocol, reached
+    by a reduction chain whose source stage, the source segment, changes what
+    Alice emits and whose receiver stage changes the measurement. A source link
+    maps one Alice-side ensemble to another with the same labels and weights, and
+    a segment of links runs from the virtual ensemble, on which the certificate is
+    written, to the specified one; each channel is declared data or a named
+    theorem of a submodule, and in the second case the link carries an obligation
+    record. Because each link applies one channel to the transmitted system for
+    every label, the adversary could apply it herself, so, in trusted-source
+    mode, security of the virtual protocol carries over to the specified one
+    ([[reductions/lem:source-transfer]]). [[def:source-segment]] states which
+    link kinds are admitted and what a consumer decides of a presented segment;
+    the one admitted kind is the decoy submodule's tagging link
+    ([[prop:tagging]]).
+- title: The source-replacement certificate
+  start: fact:sr
+  abstract: Source replacement describes a preparation as the measurement of a
+    system Alice retains, so that a security proof can work with an entangled
+    state. The imported construction is canonical, and [[def:srcert]] abstracts
+    the property that makes declared data such a description, as an operator on
+    Alice's system and the virtual transmitted system, the system of the virtual
+    ensemble from which the source segment produces the specified one. It is
+    declared as a pure projector or as positive sector blocks, or defined from
+    the virtual ensemble alone. The section's main result,
+    [[lem:ensemble-presentation]], constructs the certificate an ensemble
+    presentation defines, so that no square root or quotient of a declared
+    number is ever declared. Every decided condition is decided exactly on the
+    declared binary64 entries, in the sense of the number model of
+    [[def:source-spec]]; the retention condition is an attestation.
+- title: Sufficiency of the certificate and its scope
+  start: thm:certificate-sufficiency
+  abstract: The section's first main result, [[thm:certificate-sufficiency]], shows that the
+    certificate's algebraic conditions are, in either declared form, finitely
+    many exact decisions and that Alice's measurement may be moved across every attack that acts only on the transmitted system
+    and the adversary's registers, starting from a register in a product state
+    with the source; retention and the sequential round structure make the
+    attack of a round such a channel. [[rem:xreg]] shows that the hypothesis on
+    the attack cannot be dropped, [[cor:noncanonical]] that BB84 admits a
+    certificate on a qubit, and [[rem:certificate-forms]] what purity adds.
+    [[lem:matched-pinching]], the second main result, states what a block
+    certificate implies for the states an attack reaches; the closing remarks
+    bound what a verified certificate buys, down to a one-dimensional retained
+    system.
+- title: Assumptions
+  start: ass:ens
+  abstract: Three assumptions carry what declared matrices cannot establish,
+    that the source emits the declared ensemble in every round and
+    independently of every other round, that each round runs
+    preparation, measurement and then announcements, and, in trusted-source
+    mode, that Alice's retained system never reaches the adversary. Each is an
+    attestation about the devices and how the protocol is run; the module
+    records each in the artefact's assumption ledger, the list of assumptions
+    the artefact rests on, and never verifies it. A specification declared by
+    the decoy submodule's source model carries that submodule's premise,
+    [[A-WCP]], in the place of [[A-ENS]].
+- title: Certificate and licence requirements
+  start: req:licence-scope
+  abstract: These requirements bind the engine, here the implementation of this
+    module, which answers a request, a submitted source specification whose
+    marginal slot may be empty, with an artefact or a refusal. The licence is
+    what a verified certificate with its retention attestation gives a consumer,
+    the right to impose the declared marginal on the states it optimises over,
+    and the licence record is its data form. The requirements fix when a
+    certificate is demanded, how the one-dimensional case is served, when a
+    certificate is refused, how a declared marginal is decided, and how the
+    retention attestation is recorded.
+order:
+  - def:source-spec
+  - rem:source-mode
+  - def:source-link
+  - def:source-segment
+  - rem:segment-scope
+  - fact:sr
+  - rem:import
+  - def:srcert
+  - lem:ensemble-presentation
+  - thm:certificate-sufficiency
+  - rem:xreg
+  - cor:noncanonical
+  - rem:certificate-forms
+  - lem:matched-pinching
+  - rem:boundary
+  - rem:da1
+  - ass:ens
+  - ass:seq
+  - ass:src
+  - req:licence-scope
+  - req:marginal-fill
+  - req:failing-certificate
+  - req:marginal-decided
+  - req:attestation-record

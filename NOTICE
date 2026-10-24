@@ -1,0 +1,34 @@
+CERTIQS-KEY
+
+This file lists the material in this tree that comes from third parties, and
+the terms it comes under. The licence of the project itself is in LICENSE.
+
+1. Comparison numbers from Renyi-ConicQKD
+
+   tests/oracles/data/navarro2025conic-fixedlength/ holds numbers produced by
+   running the code of https://github.com/MarianaNvrr/Renyi-ConicQKD at commit
+   e89f73db901176186b806f63bb13335422dc91b9. That code is licensed under the
+   GNU General Public License, version 3. Only the numerical outputs of
+   running it are included here; no file of that repository is copied,
+   vendored or modified in this tree. How the numbers were produced is in
+   that folder's PROVENANCE.md. The method and the figure they reproduce come
+   from the paper the code accompanies; please cite it:
+
+     M. Navarro, A. González Lorente, P. V. Parellada, C. Pascual-García
+     and M. Araújo, "Finite-size quantum key distribution rates from
+     Rényi entropies using conic optimization", arXiv:2511.10584.
+
+2. Bibliographic metadata
+
+   refs/index.json and the bibliography generated from it hold bibliographic
+   metadata only (titles, authors, years, DOIs, arXiv identifiers) of the
+   publications the claims cite. The publications themselves are not
+   redistributed in this tree; each citation resolves through its DOI or
+   arXiv identifier.
+
+3. Dependencies
+
+   The Python packages this project uses (NumPy, SciPy, pydantic, h5py,
+   PyYAML and the optional extras) are declared in pyproject.toml and
+   installed by the user's package manager under their own licences. None of
+   them is vendored, copied or modified in this tree.

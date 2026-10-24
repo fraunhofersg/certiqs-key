@@ -1,0 +1,2158 @@
+% GENERATED FILE -- DO NOT EDIT.
+%
+% Produced by harness/assemble_contract.py from module.yaml and claims/*.tex.
+% Edit the claim files and regenerate; `--check` fails if this file is stale.
+\documentclass[11pt,a4paper]{article}
+\pdftrailerid{7be292a621b11dfc217b4c36955e9d54}
+%% --- 1. Mathematics (order matters: physics after braket wins \ket, \tr) ---
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{dsfont}
+\usepackage{braket}
+\usepackage{physics}
+%% --- 2. Page furniture ------------------------------------------------------
+\usepackage{xcolor}
+\usepackage{array}    % >{...} column prefixes in the wide tables of some claims
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xltabular}              % front- and back-matter tables across pages
+\usepackage{needspace}
+\usepackage{xurl}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+%% --- 3. Links and navigation (hyperref late; bookmark, refcount after it) ---
+\usepackage{xr-hyper}   % before hyperref: the contract's labels
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{refcount}
+%% --- 4. Colours: every distinction also has a shape (rule, caps, size, weight)
+\definecolor{nnGrey}{gray}{0.40}      % non-normative text
+\definecolor{metaGrey}{gray}{0.30}    % the generated meta line
+\definecolor{techGrey}{gray}{0.45}    % heading of a technical claim
+\definecolor{mainRule}{RGB}{0,110,140}
+\definecolor{reqAccent}{RGB}{165,70,0}
+\definecolor{linkBlue}{RGB}{0,62,150}
+\definecolor{extLink}{RGB}{120,40,140}  % links into another PDF
+\hypersetup{colorlinks=true, linkcolor=linkBlue, citecolor=linkBlue,
+  urlcolor=linkBlue, filecolor=extLink, bookmarksnumbered=true,
+  bookmarksopen=true, bookmarksopenlevel=1, pdfdisplaydoctitle=true}
+% A link into another PDF (\href to a .pdf, \hyperref{file}..., xr-hyper) is a
+% relative URI, <file>#nameddest=<destination>, in the file-link colour:
+% browser viewers (Edge, Chrome) ignore hyperref's default GoToR action.
+\makeatletter
+\renewcommand*{\hyper@linkfile}[3]{% anchor text, file name, destination
+  \begingroup
+    \ifx\\#3\\\def\CQ@target{#2}\else\def\CQ@target{#2\hyper@hash nameddest=#3}\fi
+    \let\@urlcolor\@filecolor
+    \hyper@linkurl{#1}{\CQ@target}%
+  \endgroup}
+\makeatother
+%% --- 5. The mapped Unicode set (harness/contract_navigation.py, UNICODE_TEX)
+\DeclareUnicodeCharacter{03B1}{\ensuremath{\alpha}}
+\DeclareUnicodeCharacter{03B2}{\ensuremath{\beta}}
+\DeclareUnicodeCharacter{03B3}{\ensuremath{\gamma}}
+\DeclareUnicodeCharacter{03B4}{\ensuremath{\delta}}
+\DeclareUnicodeCharacter{03B5}{\ensuremath{\varepsilon}}
+\DeclareUnicodeCharacter{03F5}{\ensuremath{\epsilon}}
+\DeclareUnicodeCharacter{03B6}{\ensuremath{\zeta}}
+\DeclareUnicodeCharacter{03B7}{\ensuremath{\eta}}
+\DeclareUnicodeCharacter{03B8}{\ensuremath{\theta}}
+\DeclareUnicodeCharacter{03D1}{\ensuremath{\vartheta}}
+\DeclareUnicodeCharacter{03B9}{\ensuremath{\iota}}
+\DeclareUnicodeCharacter{03BA}{\ensuremath{\kappa}}
+\DeclareUnicodeCharacter{03BB}{\ensuremath{\lambda}}
+\DeclareUnicodeCharacter{03BC}{\ensuremath{\mu}}
+\DeclareUnicodeCharacter{03BD}{\ensuremath{\nu}}
+\DeclareUnicodeCharacter{03BE}{\ensuremath{\xi}}
+\DeclareUnicodeCharacter{03C0}{\ensuremath{\pi}}
+\DeclareUnicodeCharacter{03C1}{\ensuremath{\rho}}
+\DeclareUnicodeCharacter{03F1}{\ensuremath{\varrho}}
+\DeclareUnicodeCharacter{03C3}{\ensuremath{\sigma}}
+\DeclareUnicodeCharacter{03C2}{\ensuremath{\varsigma}}
+\DeclareUnicodeCharacter{03C4}{\ensuremath{\tau}}
+\DeclareUnicodeCharacter{03C5}{\ensuremath{\upsilon}}
+\DeclareUnicodeCharacter{03C6}{\ensuremath{\varphi}}
+\DeclareUnicodeCharacter{03D5}{\ensuremath{\phi}}
+\DeclareUnicodeCharacter{03C7}{\ensuremath{\chi}}
+\DeclareUnicodeCharacter{03C8}{\ensuremath{\psi}}
+\DeclareUnicodeCharacter{03C9}{\ensuremath{\omega}}
+\DeclareUnicodeCharacter{0393}{\ensuremath{\Gamma}}
+\DeclareUnicodeCharacter{0394}{\ensuremath{\Delta}}
+\DeclareUnicodeCharacter{0398}{\ensuremath{\Theta}}
+\DeclareUnicodeCharacter{039B}{\ensuremath{\Lambda}}
+\DeclareUnicodeCharacter{039E}{\ensuremath{\Xi}}
+\DeclareUnicodeCharacter{03A0}{\ensuremath{\Pi}}
+\DeclareUnicodeCharacter{03A3}{\ensuremath{\Sigma}}
+\DeclareUnicodeCharacter{03A5}{\ensuremath{\Upsilon}}
+\DeclareUnicodeCharacter{03A6}{\ensuremath{\Phi}}
+\DeclareUnicodeCharacter{03A8}{\ensuremath{\Psi}}
+\DeclareUnicodeCharacter{03A9}{\ensuremath{\Omega}}
+\DeclareUnicodeCharacter{00E1}{\'a}
+\DeclareUnicodeCharacter{00E0}{\`a}
+\DeclareUnicodeCharacter{00E2}{\^a}
+\DeclareUnicodeCharacter{00E4}{\"a}
+\DeclareUnicodeCharacter{00E5}{\aa{}}
+\DeclareUnicodeCharacter{00E9}{\'e}
+\DeclareUnicodeCharacter{00E8}{\`e}
+\DeclareUnicodeCharacter{00EA}{\^e}
+\DeclareUnicodeCharacter{00EB}{\"e}
+\DeclareUnicodeCharacter{00ED}{\'{\i}}
+\DeclareUnicodeCharacter{00EF}{\"{\i}}
+\DeclareUnicodeCharacter{00F3}{\'o}
+\DeclareUnicodeCharacter{00F2}{\`o}
+\DeclareUnicodeCharacter{00F4}{\^o}
+\DeclareUnicodeCharacter{00F6}{\"o}
+\DeclareUnicodeCharacter{00F8}{\o{}}
+\DeclareUnicodeCharacter{00FA}{\'u}
+\DeclareUnicodeCharacter{00F9}{\`u}
+\DeclareUnicodeCharacter{00FB}{\^u}
+\DeclareUnicodeCharacter{00FC}{\"u}
+\DeclareUnicodeCharacter{00F1}{\~n}
+\DeclareUnicodeCharacter{00E7}{\c{c}}
+\DeclareUnicodeCharacter{00DF}{\ss{}}
+\DeclareUnicodeCharacter{00C4}{\"A}
+\DeclareUnicodeCharacter{00C5}{\AA{}}
+\DeclareUnicodeCharacter{00C9}{\'E}
+\DeclareUnicodeCharacter{00D6}{\"O}
+\DeclareUnicodeCharacter{00DC}{\"U}
+\DeclareUnicodeCharacter{2013}{\textendash{}}
+\DeclareUnicodeCharacter{2014}{\textemdash{}}
+\DeclareUnicodeCharacter{2018}{`}
+\DeclareUnicodeCharacter{2019}{'}
+\DeclareUnicodeCharacter{201C}{``}
+\DeclareUnicodeCharacter{201D}{''}
+\DeclareUnicodeCharacter{2026}{\ldots{}}
+\DeclareUnicodeCharacter{00A0}{~}
+\DeclareUnicodeCharacter{00A7}{\S{}}
+\DeclareUnicodeCharacter{2264}{\ensuremath{\le}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\ge}}
+\DeclareUnicodeCharacter{2260}{\ensuremath{\neq}}
+\DeclareUnicodeCharacter{2248}{\ensuremath{\approx}}
+\DeclareUnicodeCharacter{2261}{\ensuremath{\equiv}}
+\DeclareUnicodeCharacter{223C}{\ensuremath{\sim}}
+\DeclareUnicodeCharacter{2243}{\ensuremath{\simeq}}
+\DeclareUnicodeCharacter{2245}{\ensuremath{\cong}}
+\DeclareUnicodeCharacter{221D}{\ensuremath{\propto}}
+\DeclareUnicodeCharacter{226A}{\ensuremath{\ll}}
+\DeclareUnicodeCharacter{226B}{\ensuremath{\gg}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\to}}
+\DeclareUnicodeCharacter{2190}{\ensuremath{\leftarrow}}
+\DeclareUnicodeCharacter{2194}{\ensuremath{\leftrightarrow}}
+\DeclareUnicodeCharacter{21D2}{\ensuremath{\Rightarrow}}
+\DeclareUnicodeCharacter{21D0}{\ensuremath{\Leftarrow}}
+\DeclareUnicodeCharacter{21D4}{\ensuremath{\Leftrightarrow}}
+\DeclareUnicodeCharacter{21A6}{\ensuremath{\mapsto}}
+\DeclareUnicodeCharacter{2208}{\ensuremath{\in}}
+\DeclareUnicodeCharacter{2209}{\ensuremath{\notin}}
+\DeclareUnicodeCharacter{2286}{\ensuremath{\subseteq}}
+\DeclareUnicodeCharacter{2282}{\ensuremath{\subset}}
+\DeclareUnicodeCharacter{2287}{\ensuremath{\supseteq}}
+\DeclareUnicodeCharacter{2283}{\ensuremath{\supset}}
+\DeclareUnicodeCharacter{2229}{\ensuremath{\cap}}
+\DeclareUnicodeCharacter{222A}{\ensuremath{\cup}}
+\DeclareUnicodeCharacter{2216}{\ensuremath{\setminus}}
+\DeclareUnicodeCharacter{2205}{\ensuremath{\emptyset}}
+\DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
+\DeclareUnicodeCharacter{2203}{\ensuremath{\exists}}
+\DeclareUnicodeCharacter{2115}{\ensuremath{\mathbb{N}}}
+\DeclareUnicodeCharacter{2124}{\ensuremath{\mathbb{Z}}}
+\DeclareUnicodeCharacter{211A}{\ensuremath{\mathbb{Q}}}
+\DeclareUnicodeCharacter{211D}{\ensuremath{\mathbb{R}}}
+\DeclareUnicodeCharacter{2102}{\ensuremath{\mathbb{C}}}
+\DeclareUnicodeCharacter{00B7}{\ensuremath{\cdot}}
+\DeclareUnicodeCharacter{00D7}{\ensuremath{\times}}
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}
+\DeclareUnicodeCharacter{00B1}{\ensuremath{\pm}}
+\DeclareUnicodeCharacter{2213}{\ensuremath{\mp}}
+\DeclareUnicodeCharacter{221A}{\ensuremath{\surd}}
+\DeclareUnicodeCharacter{2211}{\ensuremath{\sum}}
+\DeclareUnicodeCharacter{220F}{\ensuremath{\prod}}
+\DeclareUnicodeCharacter{222B}{\ensuremath{\int}}
+\DeclareUnicodeCharacter{221E}{\ensuremath{\infty}}
+\DeclareUnicodeCharacter{2202}{\ensuremath{\partial}}
+\DeclareUnicodeCharacter{2207}{\ensuremath{\nabla}}
+\DeclareUnicodeCharacter{2297}{\ensuremath{\otimes}}
+\DeclareUnicodeCharacter{2295}{\ensuremath{\oplus}}
+\DeclareUnicodeCharacter{2218}{\ensuremath{\circ}}
+\DeclareUnicodeCharacter{2308}{\ensuremath{\lceil}}
+\DeclareUnicodeCharacter{2309}{\ensuremath{\rceil}}
+\DeclareUnicodeCharacter{230A}{\ensuremath{\lfloor}}
+\DeclareUnicodeCharacter{230B}{\ensuremath{\rfloor}}
+\DeclareUnicodeCharacter{27E8}{\ensuremath{\langle}}
+\DeclareUnicodeCharacter{27E9}{\ensuremath{\rangle}}
+\DeclareUnicodeCharacter{2016}{\ensuremath{\|}}
+\DeclareUnicodeCharacter{2113}{\ensuremath{\ell}}
+\DeclareUnicodeCharacter{00B0}{\ensuremath{^{\circ}}}
+\DeclareUnicodeCharacter{00B2}{\ensuremath{^{2}}}
+\DeclareUnicodeCharacter{00B3}{\ensuremath{^{3}}}
+\DeclareUnicodeCharacter{00B9}{\ensuremath{^{1}}}
+\DeclareUnicodeCharacter{2080}{\ensuremath{_{0}}}
+\DeclareUnicodeCharacter{2081}{\ensuremath{_{1}}}
+\DeclareUnicodeCharacter{2082}{\ensuremath{_{2}}}
+\DeclareUnicodeCharacter{207F}{\ensuremath{^{n}}}
+\DeclareUnicodeCharacter{2096}{\ensuremath{_{k}}}
+%% --- 6. Numbering: one counter per section -----------------------
+\numberwithin{equation}{section}
+\setcounter{tocdepth}{1}
+%% --- 7. The project macro set, then the claim environments -----------------
+% spec/macros.tex, read relative to this module's directory (latexmk -cd).
+\input{../../macros}
+\makeatletter
+\newcommand*{\ClaimHeadFont}{\bfseries}   % switched by prominence
+\newcommand*{\ClaimNoteFont}{\mdseries}
+\newcommand*{\ClaimShortId}{}
+\newcommand*{\SetShortId}[1]{\renewcommand*{\ClaimShortId}{#1}}
+\newcommand*{\RestatedName}{}
+% Upright bodies throughout: italic is reserved for non-normative text.
+% \@endparpenalty\@M keeps the meta line on the statement's page.
+\newtheoremstyle{claim}{\topsep}{\topsep}{\normalfont\@endparpenalty\@M}{}%
+  {\ClaimHeadFont}{.}{.5em}{\thmname{#1}\thmnumber{ #2}\thmnote{ {\ClaimNoteFont(#3)}}}
+\newtheoremstyle{claimass}{\topsep}{\topsep}{\normalfont\@endparpenalty\@M}{}%
+  {\ClaimHeadFont}{.}{.5em}{\thmname{#1}\thmnumber{ #2}%
+  \ifx\ClaimShortId\@empty\else\ [\textsf{\ClaimShortId}]\fi%
+  \thmnote{ {\ClaimNoteFont(#3)}}}
+\newtheoremstyle{claimremark}{.5\topsep}{.5\topsep}{\small\@endparpenalty\@M}{}%
+  {\itshape}{.}{.5em}{\thmname{#1}\thmnumber{ #2}\thmnote{ {\upshape(#3)}}}
+\newtheoremstyle{claimreq}{\topsep}{\topsep}{\normalfont\@endparpenalty\@M}{}%
+  {\color{reqAccent}\scshape}{.}{.5em}%
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ {\upshape(#3)}}}
+\makeatother
+\theoremstyle{claim}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{restatedclaim}{\RestatedName}
+\theoremstyle{claimass}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{restatedassumption}{\RestatedName}
+\theoremstyle{claimremark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{claimreq}
+\newtheorem{requirement}[theorem]{Requirement}
+\newtheorem*{restatedrequirement}{\RestatedName}
+%% --- 8. Prominence: main results a margin rule and a bold heading ----------
+\newtcolorbox{mainclaim}{enhanced jigsaw, breakable, blanker,
+  borderline west={1.5pt}{-8pt}{mainRule}, left=0pt, right=0pt, top=0pt, bottom=0pt,
+  boxsep=0pt, before skip=\topsep, after skip=\topsep, parbox=false,
+  before upper={\renewcommand*{\ClaimNoteFont}{\bfseries}}}
+\newenvironment{technicalclaim}{\renewcommand*{\ClaimHeadFont}{\mdseries\color{techGrey}}%
+  \renewcommand*{\ClaimNoteFont}{}}{}
+%% --- 9. Non-normative text, the meta line, navigation ------------------------
+\makeatletter
+% Tie what follows to this paragraph: no page break, no list penalty before
+% the next theorem head (the \@nobreak route a section heading uses).
+\newcommand{\keepwithnext}{\par\nobreak\vspace{3pt}\@nobreaktrue
+  \everypar{\if@nobreak\@nobreakfalse\clubpenalty\@M\else\clubpenalty\@clubpenalty\everypar{}\fi}}
+\newcommand{\claimsummary}[2]{% #1 claim id (named destination), #2 summary
+  \par\addvspace{\bigskipamount}\Needspace{6\baselineskip}%
+  {\small\itshape\color{nnGrey}\noindent\hypertarget{claim-#1}{}#2\par}\keepwithnext}
+\newcommand{\claimanchor}[1]{% a claim without a summary: the destination alone
+  \par\addvspace{\bigskipamount}\Needspace{6\baselineskip}%
+  \phantomsection\hypertarget{claim-#1}{}\keepwithnext}
+\newcommand{\claimleadin}[1]{{\color{nnGrey}\noindent#1\par}\keepwithnext}
+\newcommand{\claimmeta}[1]{\par\nobreak\vspace{2pt}%
+  {\footnotesize\color{metaGrey}\raggedright\interlinepenalty\@M\noindent#1\par}%
+  \addvspace{\medskipamount}}
+% After an assumption: the sentence generated from its verification field; after
+% any claim with one: its plain-text reading (user_statement). Both
+% non-normative, both grey.
+\newcommand{\claimverification}[1]{\par\nobreak\vspace{2pt}%
+  {\footnotesize\color{metaGrey}\noindent#1\par}\nobreak}
+\newcommand{\claimreading}[1]{\par\nobreak\vspace{2pt}%
+  {\footnotesize\color{nnGrey}\noindent\emph{Reading:}\enspace#1\par}\nobreak}
+\makeatother
+\newcommand{\claimbookmark}[4]{% #1 id, #2 kind word, #3 label, #4 plain title
+  \bookmark[dest=claim-#1,level=2]{#2 \getrefnumber{#3} #4}}
+\newcommand{\metasep}{\unskip\enspace\textperiodcentered\enspace\ignorespaces}
+\newcommand{\metalabel}[1]{\emph{#1}\enspace}
+\newcommand{\sectionintro}[1]{{\color{nnGrey}\noindent#1\par}\smallskip}
+\newcommand{\sectionimports}[1]{{\footnotesize\color{metaGrey}\raggedright\noindent\metalabel{Imports}#1\par}\smallskip}
+\newenvironment{overview}{\par\color{nnGrey}\itshape\noindent\ignorespaces}{\par}
+% References: the whole "Def. 2.1" is the link; ids are the fallback text of
+% every link into another PDF (a relative URI to a named destination).
+\newcommand{\mref}[2]{\hyperref[#2]{#1~\ref*{#2}}}
+\newcommand{\aref}[2]{\hyperref[#2]{\textsf{#1}}}
+\DeclareUrlCommand{\claimid}{\urlstyle{sf}\def\UrlBreaks{\do\/\do\:\do\-\do\.\do\_}%
+  \def\UrlBigBreaks{}\def\UrlNoBreaks{}}
+\newcommand{\extref}[2]{\hyperref{#1}{}{claim-#2}{\claimid{#2}}}
+\newcommand{\extaref}[3]{\hyperref{#1}{}{claim-#2}{\textsf{#3}}}
+\newcommand{\coderef}[2]{\href{#1}{\claimid{#2}}}
+% Claim-body commands (spec/claim-format.md section 4): \xref{<full id>} prints
+% the kind, title and id of a claim of another contract, linked to its stable
+% destination in that contract's PDF (one \DeclareXref per cited claim below);
+% \term[gloss]{phrase} marks a defined phrase for the index (the gloss feeds
+% the Terms table); \tref[phrase]{text} is a use of a defined term. The
+% assembler rewrites both in the body into \termdef (the definition's named
+% destination term-<slug>) and \termref / \exttermref (a link to it, in this
+% or another contract's PDF); the fallbacks below serve text it copies
+% elsewhere, such as the digest. \iface is an interface key.
+\makeatletter
+\newcommand{\DeclareXref}[4]{% id, kind word, title, contract PDF
+  \@namedef{xref@#1}{\hyperref{#4}{}{claim-#1}{#2 ``#3'' ({\small\claimid{#1}})}}}
+\newcommand{\xref}[1]{\@ifundefined{xref@#1}%
+  {\textbf{[unresolved \nolinkurl{#1}]}\@latex@warning{Unresolved xref #1}}%
+  {\@nameuse{xref@#1}}}
+\makeatother
+\DeclareUrlCommand{\iface}{\urlstyle{tt}}
+\newcommand{\term}[2][]{\emph{#2}\index{#2}}
+\newcommand{\tref}[2][]{#2}
+\newcommand{\termdef}[2]{\hypertarget{#1}{}\emph{#2}\index{#2}}
+\newcommand{\termref}[2]{\hyperlink{#1}{#2}}
+\newcommand{\exttermref}[3]{\hyperref{#1}{}{#2}{#3}}
+\hypersetup{pdftitle={Foundations: quantum-information preliminaries, number model, exact admissibility and emission -- statements digest 0.12.0}}
+
+% The digest: the contract's labels under the prefix C-, its numbers checked.
+\externaldocument[C-]{contract}
+\theoremstyle{claim}\newtheorem*{digestclaim}{\RestatedName}
+\theoremstyle{claimass}\newtheorem*{digestassumption}{\RestatedName}
+\theoremstyle{claimreq}\newtheorem*{digestrequirement}{\RestatedName}
+\makeatletter
+% #1 label, #2 the number the assembler computed: a local label carrying it, so
+% that a reference between two digest items stays in the digest; the build
+% stops when the contract's own number differs.
+\newcommand{\digestlabel}[2]{\phantomsection
+  \edef\digest@theirs{\getrefnumber{C-#1}}\def\digest@ours{#2}%
+  \ifx\digest@theirs\digest@ours\else
+    \PackageError{digest}{#1 is #2 here but \digest@theirs\space in the contract}{}\fi
+  \def\@currentlabel{#2}\label{#1}}
+\makeatother
+% A display's local label (amsmath records the \tag, i.e. the contract's number).
+\newcommand{\digesteqlabel}[1]{\label{#1}}
+
+% Claims of other contracts cited here (\xref, [[...]]).
+\DeclareXref{meat-core/ass:fixed}{Assumption}{Protocol parameters fixed before the run}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/lem:certified-bracket}{Lemma}{The certified bracket from enclosures of the gradient}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/req:bracket-on-reference}{Requirement}{The first-order bound evaluated on the reference companion}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/req:certified-evaluation}{Requirement}{The certified evaluation of the first-order bound}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/thm:firstorder}{Theorem}{The estimate and the first-order lower bound}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/lem:dk}{Lemma}{Divided-difference derivative of a matrix function}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/lem:estimate}{Lemma}{Upper estimate of the value at any feasible point}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/lem:memory-lift}{Lemma}{Approximating an attack by all-at-once attacks with finite memory}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/prop:optol-nobound}{Proposition}{Instability of the rate under measurement perturbations}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/thm:gradient}{Theorem}{Gradient of the pinched trace power on a face}{../meat-core/contract.pdf}
+\DeclareXref{statistics/binomial-box/lem:widening}{Lemma}{Widening the box keeps its guarantees}{../statistics/contract.pdf}
+
+\begin{document}
+\begin{center}
+{\LARGE\bfseries Foundations: quantum-information preliminaries, number model, exact admissibility and emission}\\[4pt]
+{\large Statements digest, version 0.12.0}
+\end{center}
+\noindent{\small Every definition, fact, assumption, result and requirement of the \href{contract.pdf}{contract}, with the contract's numbers; remarks, examples, technical steps and all proofs are left out. Each heading opens its statement in the contract.}
+
+\part*{Mathematics}\pdfbookmark[0]{Mathematics}{digest-part-1}
+
+\section*{1\quad Quantum-information preliminaries}\pdfbookmark[1]{1 Quantum-information preliminaries}{digest-group-foundations/def:pinching}
+
+% claim foundations/def:pinching
+\digestlabel{def:pinching}{1.1}\pdfbookmark[2]{Definition 1.1 Operator conventions and pinching}{digest-foundations/def:pinching}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:pinching}{Definition~1.1}}%
+\begin{digestclaim}[Operator conventions and pinching]
+All Hilbert spaces are finite-dimensional. For a system label $A$,
+$\Lin{A}$ is the space of linear operators on $\Hs{A}$, $\Pos{A}$ its
+positive semidefinite operators, and $\Seq{A}$ and $\Sleq{A}$ the
+normalized and the subnormalized states, of trace equal to one and at most
+one. A channel is a CPTP map; an instrument branch is a CP
+trace-non-increasing (CPTNI) map. For $X\in\Pos{A}$ and $p>0$, the power
+$X^{p}$ is defined by functional calculus on the support of $X$ and by $0^p=0$
+on its kernel; in particular $X^{p}$ is block-diagonal for any orthogonal
+decomposition for which $X$ is.
+
+For a family of orthogonal projectors $\{\Pi_j\}_{j}$ on $\Hs{Q}$ with
+$\sum_j\Pi_j=\idon{Q}$, the associated \emph{pinching} is the channel
+$\tau\mapsto\sum_j\Pi_j\tau\Pi_j$. A pinching is CPTP, self-adjoint as a
+superoperator ($\tr[Y\,\mathcal{E}(W)]=\tr[\mathcal{E}(Y)\,W]$), idempotent,
+and unital. An operator $X$ is a fixed point iff it is block-diagonal,
+$X=\sum_j\Pi_jX\Pi_j$; functional calculus of a block-diagonal PSD operator
+acts blockwise, so a pinching commutes with taking powers of its fixed
+points. Each of these properties is a one-line computation from the form
+$\sum_j\Pi_j(\cdot)\Pi_j$ and orthogonality of the $\Pi_j$;
+self-adjointness is
+$\tr[Y\sum_j\Pi_jW\Pi_j]=\tr[\sum_j\Pi_jY\Pi_j\,W]$ by cyclicity.
+
+A pinching is a uniform mixture of unitary conjugations. Enumerate the
+projectors as $\Pi_1,\dots,\Pi_m$, put $\zeta\coloneqq e^{2\pi i/m}$ and
+$U_k\coloneqq\sum_{j=1}^{m}\zeta^{jk}\Pi_j$ for $k\in\{0,\dots,m-1\}$; each
+$U_k$ is unitary, $U_kU_k^{\dagger}=\sum_j|\zeta^{jk}|^2\Pi_j=\idon{Q}$ by
+orthogonality, and
+\begin{equation*}\tag{\getrefnumber{C-eq:pinch-unitary-mixture}}\digesteqlabel{eq:pinch-unitary-mixture}
+  \sum_{j}\Pi_j X\Pi_j=\frac1m\sum_{k=0}^{m-1}U_kXU_k^{\dagger}
+  \qquad\text{for every }X\in\Lin{Q},
+\end{equation*}
+since the right-hand side is
+$\sum_{j,j'}\big(\frac1m\sum_k\zeta^{(j-j')k}\big)\Pi_jX\Pi_{j'}$ and the
+inner average is $1$ for $j=j'$ and $0$ otherwise. In particular a pinching
+does not increase the operator norm, a mixture of unitary conjugates of $X$
+having norm at most $\|X\|$.
+\end{digestclaim}
+
+% claim foundations/def:renyi
+\digestlabel{def:renyi}{1.2}\pdfbookmark[2]{Definition 1.2 Sandwiched Rényi divergence and conditional entropies}{digest-foundations/def:renyi}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:renyi}{Definition~1.2}}%
+\begin{digestclaim}[Sandwiched Rényi divergence and conditional entropies]
+For $\alpha\in(1,\infty)$, $\rho\in\Sleq{AB}$ and $\sigma\in\Pos{AB}$, on the
+same system,
+\begin{equation*}\tag{\getrefnumber{C-eq:sandwiched}}\digesteqlabel{eq:sandwiched}
+  \Dsand(\rho\,\|\,\sigma)\coloneqq\frac{1}{\alpha-1}\log_2
+  \tr\!\left[\left(\sigma^{\frac{1-\alpha}{2\alpha}}\,\rho\,
+  \sigma^{\frac{1-\alpha}{2\alpha}}\right)^{\alpha}\right]
+\end{equation*}
+when $\operatorname{supp}\rho\subseteq\operatorname{supp}\sigma$, and
+$\Dsand(\rho\|\sigma)\coloneqq+\infty$ otherwise. The exponent
+$\frac{1-\alpha}{2\alpha}$ is negative, and the power of $\sigma$ is taken on
+its support and is zero on its kernel, as for the generalised inverse; where
+$\operatorname{supp}\rho\subseteq\operatorname{supp}\sigma$, $\rho=P\rho P$
+for the projector $P$ onto that support, so the value reads the power on the
+support alone. For
+$\rho_{AB}\in\Seq{AB}$,
+\begin{equation*}\tag{\getrefnumber{C-eq:Hdefs}}\digesteqlabel{eq:Hdefs}
+  \Hsanddown(A|B)_{\rho}\coloneqq-\Dsand(\rho_{AB}\,\|\,\idon{A}\otimes\rho_B),
+  \qquad
+  \Hsandup(A|B)_{\rho}\coloneqq-\inf_{\sigma_B\in\Seq{B}}
+  \Dsand(\rho_{AB}\,\|\,\idon{A}\otimes\sigma_B).
+\end{equation*}
+Both are in bits. These are the definitions of
+\cite[Def.~5.2, Eqs.~(5.18)--(5.19)]{tomamichel2016finite}. Since the
+infimum in \eqref{eq:Hdefs} includes $\sigma_B=\rho_B$,
+\begin{equation*}\tag{\getrefnumber{C-eq:arrow-order}}\digesteqlabel{eq:arrow-order}
+  \Hsanddown(A|B)_{\rho}\;\le\;\Hsandup(A|B)_{\rho}.
+\end{equation*}
+The substitution $\Hsandup\to\Hsanddown$ inside a lower bound is therefore
+conservative, and the reverse is not.
+\end{digestclaim}
+
+% claim foundations/def:kl
+\digestlabel{def:kl}{1.3}\pdfbookmark[2]{Definition 1.3 Classical divergences and the quantum relative entropy}{digest-foundations/def:kl}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:kl}{Definition~1.3}}%
+\begin{digestclaim}[Classical divergences and the quantum relative entropy]
+For probability vectors $\mathbf q,\mathbf p$ on a finite alphabet,
+$\sfD(\mathbf q\|\mathbf p)\coloneqq\sum_c q(c)\log_2\frac{q(c)}{p(c)}$ with
+the conventions $0\log_2\frac{0}{p}=0$ and $q\log_2\frac{q}{0}=+\infty$ for
+$q>0$. For $\alpha\in(1,\infty)$ the classical R\'enyi divergence is
+$D_{\alpha}(\mathbf q\|\mathbf p)\coloneqq
+\frac{1}{\alpha-1}\log_2\sum_{c}q(c)^{\alpha}p(c)^{1-\alpha}$ (with
+$+\infty$ if $\mathbf q\not\ll\mathbf p$), and
+$D_{\infty}(\mathbf q\|\mathbf p)\coloneqq\log_2\max_c\frac{q(c)}{p(c)}$.
+For $X,Y\in\Pos{}$ the quantum relative entropy is
+$\Dtwo(X\|Y)=\tr[X(\log_2X-\log_2Y)]$ when
+$\operatorname{supp}X\subseteq\operatorname{supp}Y$, else $+\infty$.
+
+The Kullback--Leibler divergence of probability vectors is non-negative,
+$\sfD(\mathbf q\|\mathbf p)\ge0$, with equality if and only if
+$\mathbf q=\mathbf p$ (Gibbs' inequality). If $q(c)>0=p(c)$ for some $c$,
+then $\sfD(\mathbf q\|\mathbf p)=+\infty$. Otherwise, with
+$S\coloneqq\{c:q(c)>0\}$, the terms outside $S$ vanish by the first
+convention and $\log_2$ is strictly concave, so Jensen's inequality with the
+weights $q(c)$, $c\in S$, which sum to one, gives
+$-\sfD(\mathbf q\|\mathbf p)=\sum_{c\in S}q(c)\log_2\frac{p(c)}{q(c)}
+\le\log_2\sum_{c\in S}p(c)\le\log_21=0$. Equality in the first step
+forces $p(c)/q(c)$ to be one constant $\gamma$ on $S$, and in the second
+$\sum_{c\in S}p(c)=1$; then $\gamma=\gamma\sum_{c\in S}q(c)
+=\sum_{c\in S}p(c)=1$, so $\mathbf p=\mathbf q$ on $S$, and $\mathbf p$
+vanishes off $S$, its mass on $S$ being one. Conversely
+$\sfD(\mathbf q\|\mathbf q)=0$ term by term.
+\end{digestclaim}
+
+% claim foundations/lem:kernel
+\digestlabel{lem:kernel}{1.4}\pdfbookmark[2]{Lemma 1.4 Extended divergence kernel}{digest-foundations/lem:kernel}
+\begin{mainclaim}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/lem:kernel}{Lemma~1.4}}%
+\begin{digestclaim}[Extended divergence kernel]
+Define $d:[0,\infty)\times[0,\infty)\to(-\infty,+\infty]$ by
+$d(u,v)\coloneqq u\log_2\frac uv$ for $u,v>0$, $d(0,v)\coloneqq0$ for
+$v\ge0$, and $d(u,0)\coloneqq+\infty$ for $u>0$. Then $d$ is jointly
+convex and lower semicontinuous, and non-increasing in $v$.
+\end{digestclaim}
+\end{mainclaim}
+
+% claim foundations/lem:pinchmono
+\digestlabel{lem:pinchmono}{1.5}\pdfbookmark[2]{Lemma 1.5 Pinching lowers the trace power}{digest-foundations/lem:pinchmono}
+\begin{mainclaim}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/lem:pinchmono}{Lemma~1.5}}%
+\begin{digestclaim}[Pinching lowers the trace power]
+Let $\tau\in\Pos{Q}$, let $\cZ$ be a pinching with projectors
+$\{Z_j\}_{j=1}^{m}$, and let $\alpha\in(1,\infty)$. Then
+\begin{equation*}\tag{\getrefnumber{C-eq:pinchmono}}\digesteqlabel{eq:pinchmono}
+  \tr\!\left[\left(\cZ\big(\tau^{1/\alpha}\big)\right)^{\alpha}\right]
+  \;\le\;\tr[\tau],
+\end{equation*}
+with equality if and only if $\cZ(\tau^{1/\alpha})=\tau^{1/\alpha}$,
+equivalently iff $\tau$ is block-diagonal for $\{Z_j\}$, equivalently iff
+$\cZ(\tau)=\tau$.
+\end{digestclaim}
+\end{mainclaim}
+
+% claim foundations/fact:pinch-id
+\digestlabel{fact:pinch-id}{1.6}\pdfbookmark[2]{Fact 1.6 Pinched trace-power form of the conditional Rényi entropy}{digest-foundations/fact:pinch-id}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/fact:pinch-id}{Fact~1.6}}%
+\begin{digestclaim}[Pinched trace-power form of the conditional Rényi entropy]
+Let $\rho_{QE}\in\Seq{QE}$ be pure, let $\{Z_j\}_{j=1}^{d}$ be orthogonal
+projectors on $Q$ with $\sum_jZ_j=\idon{Q}$, let
+$\VZ=\sum_j\ket{j}_{S}\otimes Z_j$ and
+$\sigma_{SQE}\coloneqq\VZ\,\rho_{QE}\,\VZ^{\dagger}$, and let
+$\cZ(\tau)\coloneqq\sum_jZ_j\tau Z_j$. Then, for $\alpha\in(1,\infty)$,
+\begin{equation*}\tag{\getrefnumber{C-eq:pinch-id}}\digesteqlabel{eq:pinch-id}
+  \Hsanddown(S|E)_{\sigma_{SE}}
+  =\frac{1}{1-\alpha}\log_2
+  \tr\!\left[\left(\cZ\big(\rho_Q^{1/\alpha}\big)\right)^{\alpha}\right].
+\end{equation*}
+\emph{Locator note.} The source states no $\alpha$ restriction in the
+theorem; the domain $(1,\infty)$ used here lies inside the domain
+$(0,1)\cup(1,\infty)$ of its entropy definitions and is the only range any
+claim that uses this fact invokes.
+\end{digestclaim}
+
+% claim foundations/fact:concavity
+\digestlabel{fact:concavity}{1.7}\pdfbookmark[2]{Fact 1.7 Concavity of the pinched trace-power functional}{digest-foundations/fact:concavity}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/fact:concavity}{Fact~1.7}}%
+\begin{digestclaim}[Concavity of the pinched trace-power functional]
+Let $\cZ$ be a pinching built from a complete family of mutually orthogonal
+projectors (Def.~22 of the source) and for $\alpha'\in[0,2]$ let
+$Q_{\alpha'}(\rho)\coloneqq
+\tr[(\cZ(\rho^{\alpha'}))^{1/\alpha'}]$ (Eq.~(F6) of the source). Then
+$\rho\mapsto Q_{\alpha'}(\rho)$ is concave on $\Sleq{Q}$ for
+$\alpha'\in[0,1]$.
+\end{digestclaim}
+
+\section*{2\quad The round model}\pdfbookmark[1]{2 The round model}{digest-group-foundations/def:round-model}
+
+% claim foundations/def:round-model
+\digestlabel{def:round-model}{2.1}\pdfbookmark[2]{Definition 2.1 Round model, attack sequences and attack sets}{digest-foundations/def:round-model}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:round-model}{Definition~2.1}}%
+\begin{digestclaim}[Round model, attack sequences and attack sets]
+Fix a number $n\geq1$ of rounds, a per-round system $S$, Alice's system $A$,
+and the instantiating model's source mode: in trusted-source mode Alice
+supplies $A$ in every round, and in untrusted-source mode the adversary
+does. Systems, operators and channels follow the conventions of
+Definition~\ref{def:pinching}, except that $S$ may be separable of infinite
+dimension where the instantiating model declares it so; a channel whose input
+or output includes such a system is a normal CPTP map on trace-class
+operators. The dimensions are the instantiating model's to declare. We write
+$S_j$ and $A_j$ for the copies of $S$ and $A$ in round $j$, and drop the
+round index where one round is in view. This is the \emph{round model} with
+per-round system $S$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item An \emph{attack
+  sequence} is a family $(\Aev_j)_{j=1}^{n}$ of channels whose output carries
+  the systems the adversary supplies in the source mode:
+  \begin{equation*}\tag{\getrefnumber{C-eq:round-attack}}\digesteqlabel{eq:round-attack}
+    \Aev_j\in
+    \begin{cases}
+      \mathrm{CPTP}\big(E_{j-1},\ S_j\,E'_j\big),
+        & \text{trusted-source mode},\\[0.3ex]
+      \mathrm{CPTP}\big(E_{j-1},\ A_j\,S_j\,E'_j\big),
+        & \text{untrusted-source mode},
+    \end{cases}
+  \end{equation*}
+  where $E_0$ is Eve's initial register, $E'_j$ her outgoing memory, and
+  $E_j$ her register after round $j$, which holds $E'_j$ together with what
+  the instantiating model hands her in round $j$. In trusted-source mode $A_j$
+  is \emph{not} an output of $\Aev_j$: it is supplied by Alice and carried
+  into the round as a separate input.
+\item Let $S$ be finite-dimensional, and let
+  $\CList=\{(\hat O_k,\bowtie_k,c_k)\}_{k=1}^{m}$, $m\geq0$, be a
+  finite list of Hermitian operators $\hat O_k$ on $S$, relations
+  $\bowtie_k\in\{\preceq,=,\succeq\}$ between operators, and real numbers
+  $c_k$. For registers $E',E''$, the \emph{attack
+  set} of $\CList$ is
+  \begin{equation*}\tag{\getrefnumber{C-eq:round-attset}}\digesteqlabel{eq:round-attset}
+    \AttSet_{\CList}(E',\,S E'')\coloneqq
+    \Big\{\Aev\in\mathrm{CPTP}(E',S E''):\
+    \Aev^{\dagger}\big(\hat O_k\otimes\idon{E''}\big)
+    \bowtie_k c_k\,\idon{E'}\ \ \forall k\Big\}
+    \qquad\text{(trusted-source mode)},
+  \end{equation*}
+  and, with the constraint operator lifted to the larger supplied system,
+  \begin{equation*}\tag{\getrefnumber{C-eq:round-attset-un}}\digesteqlabel{eq:round-attset-un}
+    \AttSet_{\CList}(E',\,A S E'')\coloneqq
+    \Big\{\Aev\in\mathrm{CPTP}(E',A S E''):\
+    \Aev^{\dagger}\big(\idon{A}\otimes\hat O_k\otimes\idon{E''}\big)
+    \bowtie_k c_k\,\idon{E'}\ \ \forall k\Big\}
+  \end{equation*}
+  in untrusted-source mode; the two are distinguished by the output system
+  named in the argument. For $\CList=\varnothing$ the condition is empty and
+  $\AttSet_{\varnothing}=\mathrm{CPTP}$.
+\item Where $S$ is finite-dimensional and $S=\bigotimes_{f\in\mathbb{F}}S_f$
+  is a product of factors indexed by a finite ordered set $\mathbb{F}$ (with a
+  round index as well, a factor is written $S_{f,j}$), an entry of
+  $\CList$ may be \emph{tagged} with a factor $f$; its operator $\hat O_k$ is
+  then Hermitian on $S_f$, and the entry $(\hat O_k,\bowtie_k,c_k;f)$
+  contributes to the attack set, in place of the condition of
+  \eqref{eq:round-attset} or \eqref{eq:round-attset-un}, the condition
+  \begin{equation*}\tag{\getrefnumber{C-eq:round-attset-pl}}\digesteqlabel{eq:round-attset-pl}
+    \big(\idmap_{R'}\otimes\Aev\big)^{\dagger}
+    \Big(X\otimes\big(\hat O_k-c_k\,\idon{S_f}\big)\otimes\idon{E''}\Big)
+    \;\bowtie_k\;0
+    \qquad\text{for every finite-dimensional }R'\text{ and every }
+    X\in\Pos{R'R\,S_{f^c}} ,
+  \end{equation*}
+  as an operator on $R'E'$, where $S_{f^c}$ is the product of the factors
+  other than $f$, the tensor factors of the argument are written in the order
+  $R'R\,S_{f^c}$, $S_f$, $E''$, and $R$ is $A$ in untrusted-source mode and
+  trivial in trusted-source mode. Untagged entries keep their conditions. The
+  reference system $R'$ is what carries Alice's retained system in
+  trusted-source mode, where $A$ is no output of $\Aev$. With $R'$ trivial and
+  $X=\idon{}$, \eqref{eq:round-attset-pl} is the condition of
+  \eqref{eq:round-attset} or \eqref{eq:round-attset-un} for the lifted operator
+  $\idon{S_{f^c}}\otimes\hat O_k$, because $\Aev^{\dagger}$ is unital; so the
+  attack set with tagged entries is contained in the attack set with the same
+  entries untagged and their operators lifted.
+\item An attack sequence is an \emph{admissible attack sequence} for
+  $\CList$, or \emph{$\CList$-admissible}, if $\Aev_j$ lies in the attack set
+  of $\CList$ of the source mode, \eqref{eq:round-attset} or
+  \eqref{eq:round-attset-un} with the conditions of
+  \eqref{eq:round-attset-pl} for tagged entries, with $E'=E_{j-1}$ and
+  $E''=E'_j$, for every $j$.
+\end{enumerate}
+\end{digestclaim}
+
+% claim foundations/def:round-homogeneity
+\digestlabel{def:round-homogeneity}{2.2}\pdfbookmark[2]{Definition 2.2 Round homogeneity of a per-round family}{digest-foundations/def:round-homogeneity}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:round-homogeneity}{Definition~2.2}}%
+\begin{digestclaim}[Round homogeneity of a per-round family]
+Consider the $n$ rounds of a round model (Definition~\ref{def:round-model}),
+and a \emph{per-round family}: a finite list of objects that a model of the
+run declares for a round, such as operators, channels or a declaration. The
+family is \emph{round-homogeneous}
+if both of the following hold.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{Sameness.} One list of objects, fixed before the run, describes
+  every round: for every $j\in\{1,\dots,n\}$ round $j$ is described by the
+  same objects. No object of the family depends on the round index or on the
+  run.
+\item \emph{No memory.} Every round behaves physically as the objects
+  describe it, whatever the inputs and the outputs of the other rounds are.
+  This excludes memory across rounds, such as detector memory, afterpulsing
+  or correlations between a source's emissions in different rounds. It is a
+  condition on the rounds, not on the objects, and does not follow from (i).
+\end{enumerate}
+An assumption may assert (i) alone of its family, and must then say so; an
+assumption that calls its family round-homogeneous without saying so asserts
+(i) and (ii). Rounds are not averaged: a family that describes the rounds
+only on average over the rounds, or up to a per-round variation, does not
+satisfy (i), and
+per-round variation is not modelled. Round homogeneity constrains the family
+and the rounds it describes, not the adversary: an attack sequence of the
+round model remains arbitrary and may correlate the rounds.
+\end{digestclaim}
+
+% claim foundations/lem:register-compression
+\digestlabel{lem:register-compression}{2.3}\pdfbookmark[2]{Lemma 2.3 Compressing a register onto a finite-dimensional subspace}{digest-foundations/lem:register-compression}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/lem:register-compression}{Lemma~2.3}}%
+\begin{digestclaim}[Compressing a register onto a finite-dimensional subspace]
+\emph{Setting.} In this lemma a Hilbert space may have any dimension, finite
+or infinite, separable or not, in departure from the convention of
+Definition~\ref{def:pinching}, and every system named is of this kind.
+$\Tcl{Z}$ is the space of trace-class operators on $\Hs{Z}$ with the trace
+norm $\|\cdot\|_1$, and $RM$ is the Hilbert-space tensor product of $R$ and
+$M$. A \emph{channel} $\Tcl{Z}\to\Tcl{Z'}$ is a trace-preserving linear map
+$\Phi$ that is completely positive: for every $k\ge1$ the map that applies
+$\Phi$ to every entry of a $k\times k$ matrix of trace-class operators, which
+is $\Tcl{\mathbb{C}^kZ}$, is positive. $\tr_R\colon\Tcl{RM}\to\Tcl{M}$ is the
+partial trace, fixed by $\tr[X\tr_R(\sigma)]=\tr[(\idon{R}\otimes X)\sigma]$
+for every bounded operator $X$ on $\Hs{M}$, and $\tr_M$ likewise.
+\begin{enumerate}[label=(\roman*),leftmargin=2.6em]
+\item \emph{(compression and inclusion)} Let $M^{\circ}$ be a non-zero
+  finite-dimensional subspace of $\Hs{M}$, $V$ its inclusion isometry into
+  $\Hs{M}$, $\Pi\coloneqq VV^{\dagger}$ the orthogonal projection onto it,
+  $\Pi^{\perp}\coloneqq\idon{M}-\Pi$, and $\psi$ a state on $M^{\circ}$. For
+  every system $R$ put, for $\sigma\in\Tcl{RM}$ and
+  $\tau\in\Tcl{RM^{\circ}}$,
+  \begin{equation*}\tag{\getrefnumber{C-eq:compression}}\digesteqlabel{eq:compression}
+  \begin{gathered}
+    \mathcal{P}_R(\sigma)\coloneqq
+      (\idon{R}\otimes V)^{\dagger}\sigma(\idon{R}\otimes V)
+      +\tr_M\big[(\idon{R}\otimes\Pi^{\perp})\,\sigma\,
+        (\idon{R}\otimes\Pi^{\perp})\big]\otimes\psi ,\\
+    \iota_R(\tau)\coloneqq(\idon{R}\otimes V)\,\tau\,(\idon{R}\otimes V)^{\dagger},
+  \end{gathered}
+  \end{equation*}
+  and write $\mathcal{P}$ and $\iota$ for the case of a one-dimensional $R$.
+  Then $\mathcal{P}_R\colon\Tcl{RM}\to\Tcl{RM^{\circ}}$ and
+  $\iota_R\colon\Tcl{RM^{\circ}}\to\Tcl{RM}$ are channels,
+  $\mathcal{P}_R\circ\iota_R$ is the identity, $\|\iota_R(\tau)\|_1=\|\tau\|_1$
+  for every $\tau$, and $\mathcal{P}_R(x\otimes y)=x\otimes\mathcal{P}(y)$ and
+  $\iota_R(x\otimes z)=x\otimes\iota(z)$ for $x\in\Tcl{R}$, $y\in\Tcl{M}$ and
+  $z\in\Tcl{M^{\circ}}$; more generally, for $R=R_1R_2$,
+  $\mathcal{P}_{R_1R_2}(x\otimes y)=x\otimes\mathcal{P}_{R_2}(y)$ and
+  $\iota_{R_1R_2}(x\otimes z)=x\otimes\iota_{R_2}(z)$ for $x\in\Tcl{R_1}$,
+  $y\in\Tcl{R_2M}$ and $z\in\Tcl{R_2M^{\circ}}$. The channel
+  $\mathcal{C}_R\coloneqq\iota_R\circ\mathcal{P}_R$ on $\Tcl{RM}$ is the
+  \emph{compression of $M$ onto $M^{\circ}$}.
+\item \emph{(one compression)} For every state $\sigma$ on $RM$, with
+  $\delta\coloneqq\tr\big[(\idon{R}\otimes\Pi^{\perp})\sigma\big]$,
+  \begin{equation*}\tag{\getrefnumber{C-eq:compression-bound}}\digesteqlabel{eq:compression-bound}
+    \big\|\mathcal{C}_R(\sigma)-\sigma\big\|_1\;\le\;2\sqrt{\delta}+\delta .
+  \end{equation*}
+  For every state $\sigma$ on $RM$ and every $\eta>0$ there is a non-zero
+  finite-dimensional subspace $M^{\circ}$, spanned by finitely many
+  eigenvectors of $\tr_R(\sigma)$, at which $\delta\le\eta$.
+\item \emph{(a sequence of channels)} Let $Z_0,\dots,Z_m$ be systems, $\omega$
+  a state on $Z_0$, $\Phi_k\colon\Tcl{Z_{k-1}}\to\Tcl{Z_k}$ channels for
+  $k=1,\dots,m$, and $\mathcal{C}_k$ a channel on $\Tcl{Z_k}$ for
+  $k=0,\dots,m$. Put $\sigma_0\coloneqq\omega$ and
+  $\sigma_k\coloneqq\Phi_k(\sigma_{k-1})$. Then
+  \begin{equation*}\tag{\getrefnumber{C-eq:compression-sequence}}\digesteqlabel{eq:compression-sequence}
+    \big\|\mathcal{C}_m\Phi_m\mathcal{C}_{m-1}\cdots\Phi_1\mathcal{C}_0(\omega)
+      -\sigma_m\big\|_1
+    \;\le\;\sum_{k=0}^{m}\big\|\mathcal{C}_k(\sigma_k)-\sigma_k\big\|_1 .
+  \end{equation*}
+\item \emph{(maps on different factors)} Let $G\colon\Tcl{R}\to\Tcl{R'}$ and
+  $H\colon\Tcl{M}\to\Tcl{M'}$ be linear maps, and let
+  $G_M\colon\Tcl{RM}\to\Tcl{R'M}$, $G_{M'}\colon\Tcl{RM'}\to\Tcl{R'M'}$,
+  $H_R\colon\Tcl{RM}\to\Tcl{RM'}$ and $H_{R'}\colon\Tcl{R'M}\to\Tcl{R'M'}$ be
+  linear maps, bounded in trace norm, with $G_M(x\otimes y)=G(x)\otimes y$,
+  $G_{M'}(x\otimes y')=G(x)\otimes y'$, $H_R(x\otimes y)=x\otimes H(y)$ and
+  $H_{R'}(x'\otimes y)=x'\otimes H(y)$ for all $x\in\Tcl{R}$,
+  $x'\in\Tcl{R'}$, $y\in\Tcl{M}$, $y'\in\Tcl{M'}$. Then
+  $H_{R'}\circ G_M=G_{M'}\circ H_R$. In particular, with $H=\mathcal{P}$ or
+  $H=\iota$, whose extensions are $\mathcal{P}_R$, $\mathcal{P}_{R'}$,
+  $\iota_R$ and $\iota_{R'}$ by (i),
+  \begin{equation*}\tag{\getrefnumber{C-eq:compression-commute}}\digesteqlabel{eq:compression-commute}
+    \mathcal{P}_{R'}\circ G_M=G_{M^{\circ}}\circ\mathcal{P}_R,
+    \qquad
+    G_M\circ\iota_R=\iota_{R'}\circ G_{M^{\circ}} .
+  \end{equation*}
+\item \emph{(extension by an identity)} For every channel
+  $\Phi\colon\Tcl{Z}\to\Tcl{Z'}$ and every system $K$ there is exactly one
+  linear map $\Phi_K\colon\Tcl{ZK}\to\Tcl{Z'K}$, bounded in trace norm, with
+  $\Phi_K(x\otimes y)=\Phi(x)\otimes y$ for all $x\in\Tcl{Z}$ and
+  $y\in\Tcl{K}$; it is a channel, written $\Phi\otimes\idmap_K$.
+\end{enumerate}
+\end{digestclaim}
+
+\section*{3\quad Binary64 numbers and exact sums}\pdfbookmark[1]{3 Binary64 numbers and exact sums}{digest-group-foundations/def:binary64}
+
+% claim foundations/def:binary64
+\digestlabel{def:binary64}{3.1}\pdfbookmark[2]{Definition 3.1 Binary64 numbers, declared values and dyadic lattices}{digest-foundations/def:binary64}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:binary64}{Definition~3.1}}%
+\begin{digestclaim}[Binary64 numbers, declared values and dyadic lattices]
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item Let $\mathbb{B}$ be the set of real numbers $m\,2^{q}$ with
+  $m,q\in\mathbb{Z}$, $|m|<2^{53}$ and $-1074\le q\le971$, and let
+  $\mathbb{B}_{\mathbb{C}}\coloneqq\{x+iy:\ x,y\in\mathbb{B}\}$. The elements
+  of $\mathbb{B}$ are the \emph{binary64 numbers}, the finite values of the
+  IEEE~754 binary64 format. Every binary64 number is a dyadic rational, an
+  element of $\mathbb{Z}[\tfrac12]$.
+\item For a real number $x$ with $|x|<2^{1024}-2^{970}$, $\mathrm{fl}(x)$ is
+  $x$ rounded to the nearest element of $\mathbb{B}$, a tie going to the
+  element whose $m$ is even in its representation of (i) with the least $q$.
+  For $|x|\ge2^{1024}-2^{970}$, $\mathrm{fl}(x)\coloneqq+\infty$ if $x>0$ and
+  $-\infty$ if $x<0$; the threshold is the midpoint between the largest
+  element $(2^{53}-1)\,2^{971}$ of $\mathbb{B}$ and $2^{1024}$, which is where
+  IEEE~754 rounding to nearest overflows. Further,
+  $\mathrm{fl}(\pm\infty+y)\coloneqq\pm\infty$ for $y\in\mathbb{B}$. The
+  \emph{binary64 sum} of $a$
+  and $b$ is $\mathrm{fl}(a+b)$. On
+  $\mathbb{B}_{\mathbb{C}}$, and on matrices over it, $\mathrm{fl}$ acts on the
+  real and on the imaginary part of every entry separately. Two properties of
+  $\mathrm{fl}$ are all that is used of it: on real input its value lies in
+  $\mathbb{B}\cup\{\pm\infty\}$, and $\mathrm{fl}(x)=x$ for $x\in\mathbb{B}$.
+  The binary64 sum of $a$ and $b$ is \emph{exact} when it equals $a+b$; by
+  those two properties it is exact if and only if the real and the imaginary
+  part of every entry of $a+b$ lie in $\mathbb{B}$.
+\item A \emph{declared value} is a binary64
+  number stated as a datum. It
+  denotes that dyadic rational and nothing else: there is no exact object
+  behind it of which it is an approximation, and every predicate stated of
+  declared values is a predicate of those rationals. A declared complex value
+  is an element of $\mathbb{B}_{\mathbb{C}}$, and a declared matrix is a
+  matrix of declared complex values.
+\item A \emph{lattice exponent} is an integer
+  $k$ with $1\le k\le53$. A real number $x$ is a \emph{lattice value} at $k$ when
+  $2^{k}x\in\mathbb{Z}$ and
+  $|x|\le1$; a complex number, or a matrix, is one when the real and the
+  imaginary part of every entry are.
+\end{enumerate}
+\end{digestclaim}
+
+% claim foundations/lem:binary64-lattice
+\digestlabel{lem:binary64-lattice}{3.2}\pdfbookmark[2]{Lemma 3.2 Binary64 numbers on dyadic lattices}{digest-foundations/lem:binary64-lattice}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/lem:binary64-lattice}{Lemma~3.2}}%
+\begin{digestclaim}[Binary64 numbers on dyadic lattices]
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item For every lattice exponent $k$, every real lattice value at $k$ is a
+  binary64 number, and every complex lattice value at $k$ lies in
+  $\mathbb{B}_{\mathbb{C}}$.
+\item For every integer $e$ with $-1022\le e\le1023$,
+  \begin{equation*}\tag{\getrefnumber{C-eq:binade}}\digesteqlabel{eq:binade}
+    \mathbb{B}\cap\big[2^{e},2^{e+1}\big)
+    \;=\;2^{e-52}\,\mathbb{Z}\cap\big[2^{e},2^{e+1}\big).
+  \end{equation*}
+  In particular the binary64 numbers in $[\tfrac12,1)$ are the multiples of
+  $2^{-53}$ in that interval, and those in $[1,2)$ are the multiples of
+  $2^{-52}$ in it.
+\end{enumerate}
+\end{digestclaim}
+
+% claim foundations/def:declared-order
+\digestlabel{def:declared-order}{3.3}\pdfbookmark[2]{Definition 3.3 Sums in a declared order and sums that round nowhere}{digest-foundations/def:declared-order}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:declared-order}{Definition~3.3}}%
+\begin{digestclaim}[Sums in a declared order and sums that round nowhere]
+Let $(x_1,\dots,x_n)$, $n\ge1$, be a finite sequence of elements of
+$\mathbb{B}_{\mathbb{C}}$, or of matrices of one shape over
+$\mathbb{B}_{\mathbb{C}}$ (Definition~\ref{def:binary64}\,(i)): declared values
+and declared matrices (Definition~\ref{def:binary64}\,(iii)), or the computed
+inner sums of a sum of sums below. Its
+\emph{sequential sum} is
+\begin{equation*}\tag{\getrefnumber{C-eq:seqsum}}\digesteqlabel{eq:seqsum}
+  S_0\coloneqq0,\qquad S_i\coloneqq S_{i-1}+x_i\quad(1\le i\le n),
+\end{equation*}
+and its \emph{computed sequential sum} is $\hat S_0\coloneqq0$,
+$\hat S_i\coloneqq\mathrm{fl}(\hat S_{i-1}+x_i)$ for $1\le i\le n$
+(Definition~\ref{def:binary64}\,(ii)), formed left to right, entrywise, with no
+re-ordering and no re-association. The accumulation \emph{rounds nowhere}
+when
+every one of its $n$ binary64 additions is exact: for every $1\le i\le n$, every
+entry of $\hat S_{i-1}$ is finite and $\hat S_i=\hat S_{i-1}+x_i$.
+
+A \emph{declared order} on a finite alphabet $J$ is a total order
+$j_1\prec j_2\prec\dots\prec j_{|J|}$ on $J$, fixed together with $J$. For a
+family $\{a_j\}_{j\in J}$ of declared values, or of declared matrices of one
+shape, the \emph{sum in the declared order} is the sequential
+sum of
+$(a_{j_1},\dots,a_{j_{|J|}})$, and the family's sum rounds nowhere when that
+accumulation does. The trace of a declared $d\times d$ matrix $X$ is
+accumulated as the sequential sum of $(X_{11},X_{22},\dots,X_{dd})$, in
+increasing row index. A sum of such sums over an alphabet with a declared order
+rounds nowhere when every inner accumulation rounds nowhere and the sequential
+sum, in that order, of the computed inner sums rounds nowhere; that sequential
+sum is then the computed sum of sums. Each computed inner sum is then over
+$\mathbb{B}_{\mathbb{C}}$: its last addition is exact, so it equals a sum of
+finite numbers, and it is a value of $\mathrm{fl}$, which lies in
+$\mathbb{B}\cup\{\pm\infty\}$ entry by entry and part by part
+(Definition~\ref{def:binary64}\,(ii)). The outer sequential sum is therefore
+one of the sequences above.
+\end{digestclaim}
+
+% claim foundations/lem:exact-accumulation
+\digestlabel{lem:exact-accumulation}{3.4}\pdfbookmark[2]{Lemma 3.4 Exactness of a sum that rounds nowhere}{digest-foundations/lem:exact-accumulation}
+\begin{mainclaim}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/lem:exact-accumulation}{Lemma~3.4}}%
+\begin{digestclaim}[Exactness of a sum that rounds nowhere]
+Let $(x_1,\dots,x_n)$ be a finite sequence of elements of
+$\mathbb{B}_{\mathbb{C}}$, or of matrices of one shape over
+$\mathbb{B}_{\mathbb{C}}$, such as declared values or the computed inner sums
+of a sum of sums, with sequential sum $(S_i)_{i=0}^{n}$ and computed
+sequential sum $(\hat S_i)_{i=0}^{n}$ (Definition~\ref{def:declared-order}).
+The following are equivalent:
+\begin{enumerate}[label=(\alph*),leftmargin=2.4em]
+\item the accumulation rounds nowhere;
+\item $\hat S_i=S_i$ for every $0\le i\le n$;
+\item for every $1\le i\le n$, the real and the imaginary part of every entry
+  of $S_i$ are binary64 numbers.
+\end{enumerate}
+If they hold, the computed sum $\hat S_n$ is the exact sum
+$\sum_{i=1}^{n}x_i$.
+\end{digestclaim}
+\end{mainclaim}
+
+\section*{4\quad Declared data and exact admissibility}\pdfbookmark[1]{4 Declared data and exact admissibility}{digest-group-foundations/def:declared-data}
+
+% claim foundations/def:declared-data
+\digestlabel{def:declared-data}{4.1}\pdfbookmark[2]{Definition 4.1 Declared data and the parties to a module boundary}{digest-foundations/def:declared-data}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:declared-data}{Definition~4.1}}%
+\begin{digestclaim}[Declared data and the parties to a module boundary]
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item An \emph{instance} is the party that fixes one protocol's
+  device data, protocol data and run configuration. The data it states are
+  \emph{declared data}, and it is their
+  \emph{declarer}.
+\item A module is a \emph{supplier} when its own claims decide their
+  conditions on the data it reads or emits in floating point, at slacks an
+  instance declares to it, rather than exactly. A floating-point evaluation of
+  a device model is an example. Its numerical output is not
+  declared data until an instance states it as its own declared data, and the
+  instance is then its declarer. Numbers of a supplier's output that reach
+  another module in a run are declared by the instance that fixed the run:
+  those it rounds and states, and those it passes on unchanged, whether in a
+  declaration of its own or by handing the supplier's output on untouched.
+\item A module other than a supplier that emits numerical data to another
+  module as its own declaration, constructed from declared data it read, is a
+  \emph{producer} of those data; they are declared data, and the
+  producer is
+  their declarer. Declared data that a module passes on unchanged keep their
+  declarer, and the module is not their producer. A scalar bound that a
+  producer emits and that a consumer has replaced by its rounding to a
+  binary64 number, in a direction that the producer's own claims license as
+  weakening it, is read, at its replaced value, as its producer's declaration
+  of that bound, and keeps its producer as declarer; a set defined by such
+  bounds is then declared data by (v).
+\item A module other than a supplier that reads declared data is a
+  \emph{consumer} of
+  them. The passage of declared data from their declarer to a consumer is a
+  \emph{module boundary}.
+\item A set defined by declared data, such as a feasible set or an acceptance
+  set, is declared data. An object that a module computes itself in the course
+  of a computation, such as an iterate of an optimiser or the return of an
+  oracle, is a \emph{computed object} and is not declared data.
+\item Every entry of declared operator data is a declared value
+  (Definition~\ref{def:binary64}\,(iii)).
+\end{enumerate}
+\end{digestclaim}
+
+% claim foundations/def:sector-map
+\digestlabel{def:sector-map}{4.2}\pdfbookmark[2]{Definition 4.2 Sector maps and block-list operators}{digest-foundations/def:sector-map}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:sector-map}{Definition~4.2}}%
+\begin{digestclaim}[Sector maps and block-list operators]
+A \emph{sector map} $\mathfrak{m}$ consists of two
+components: a block kind,
+which is a label naming what its blocks are, and a finite non-empty set
+$\mathsf{S}$ of block identifiers listed in a fixed order, each identifier
+$s\in\mathsf{S}$ with a dimension $d_s\ge1$. Two sector maps \emph{agree} when
+they have the same block kind and the same identifiers, in the same order, with
+the same dimensions. A system of dimension $d$ without a declared sector
+decomposition carries the \emph{one-block map} of dimension
+$d$: one
+identifier, with dimension $d$, and a block kind and an identifier that are
+the same for every such system, so that two one-block maps agree if and only
+if their dimensions are equal.
+
+A \emph{block list} against
+$\mathfrak{m}$ is a list
+$X=(X^{(s)})_{s\in\mathsf{S}}$ of complex $d_s\times d_s$ matrices. It denotes
+the operator $\bigoplus_{s\in\mathsf{S}}X^{(s)}$ on
+$\bigoplus_{s\in\mathsf{S}}\mathbb{C}^{d_s}$, and we identify the two: the list
+is the operator, and no entry outside the blocks exists to be written, so a
+block list is block diagonal by construction. A family of block lists against
+$\mathfrak{m}$ is a family
+$\{X_j\}_{j\in J}$ of such lists, $X^{(s)}_j$ being the block $s$ of $X_j$.
+
+Because the direct sum acts block by block, $X=X^{\dagger}$ if and only if
+$X^{(s)}=X^{(s)\dagger}$ for every $s$; $X\succeq0$ if and only if
+$X^{(s)}\succeq0$ for every $s$, since
+$\langle v,Xv\rangle=\sum_s\langle v_s,X^{(s)}v_s\rangle$ for $v=(v_s)_s$; and
+$\sum_{j\in J}X_j=c\,\idon{}$ for a scalar $c$ if and only if
+$\sum_{j\in J}X^{(s)}_j=c\,\idon{d_s}$ for every $s$.
+\end{digestclaim}
+
+% claim foundations/def:exact-admissibility
+\digestlabel{def:exact-admissibility}{4.3}\pdfbookmark[2]{Definition 4.3 Exact admissibility of a declared operator family}{digest-foundations/def:exact-admissibility}
+\begin{mainclaim}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:exact-admissibility}{Definition~4.3}}%
+\begin{digestclaim}[Exact admissibility of a declared operator family]
+Let $\mathfrak{m}$ be a sector map with blocks $s\in\mathsf{S}$ of
+dimensions $d_s$ (Definition~\ref{def:sector-map}), let $J$ be a finite
+non-empty alphabet with a declared order, let $c$ be a declared value,
+and let
+$\{a_j\}_{j\in J}$ be a family of block lists against a sector map
+$\mathfrak{m}'$ whose entries are declared values
+(Definition~\ref{def:binary64}\,(iii)). The family is
+\emph{exactly admissible} for $\mathfrak{m}$ with constant $c$ when
+\begin{itemize}[leftmargin=2.6em]
+\item[(T)] \emph{(sector map)} $\mathfrak{m}'$ agrees with $\mathfrak{m}$;
+\item[(H)] \emph{(Hermiticity)} $a^{(s)}_j=a^{(s)\dagger}_j$ for every
+  $j\in J$ and $s\in\mathsf{S}$;
+\item[(P)] \emph{(positivity)} $a^{(s)}_j\succeq0$ for every $j\in J$ and
+  $s\in\mathsf{S}$;
+\item[(C)] \emph{(completeness)} $\sum_{j\in J}a^{(s)}_j=c\,\idon{d_s}$ for
+  every $s\in\mathsf{S}$, as an identity of the declared numbers;
+\item[(S)] \emph{(the sum rounds nowhere)} for every
+  $s\in\mathsf{S}$, the sum of $\{a^{(s)}_j\}_{j\in J}$ in the declared order
+  of $J$ rounds nowhere (Definition~\ref{def:declared-order}).
+\end{itemize}
+The family is exactly admissible for $\mathfrak{m}$ when it is so with
+constant $c=1$; it is then a positive operator-valued measure on
+$\bigoplus_{s}\mathbb{C}^{d_s}$, by the block-by-block reading of
+Definition~\ref{def:sector-map}. Since the block $s$ of a block list against
+$\mathfrak{m}'$ is a square matrix of the dimension $\mathfrak{m}'$ gives $s$,
+(T) holds if and only if $\mathfrak{m}'$ has the block kind and the
+identifiers of $\mathfrak{m}$, in the same order, and every block $a^{(s)}_j$
+is a $d_s\times d_s$ matrix, $J$ being non-empty. A family on a system without a declared sector
+decomposition is read against the one-block map of that system's dimension,
+and (T) then reduces to the agreement of that dimension with the size of the
+family's matrices.
+
+Each condition is a property of the declared values themselves and involves no
+threshold and no norm: (T) compares declared labels and dimensions, (H) and (C)
+are identities between exactly represented numbers, (P) is a property of
+matrices with dyadic entries, and (S) is a property of the binary64 additions
+that form the declared-order sum. Under (S) the computed
+sum in the declared order is the exact sum
+(Lemma~\ref{lem:exact-accumulation}), so (C) holds if and only if that
+computed sum equals $c\,\idon{d_s}$ on every block.
+\end{digestclaim}
+\end{mainclaim}
+
+\section*{5\quad The declared tolerance and the snap}\pdfbookmark[1]{5 The declared tolerance and the snap}{digest-group-foundations/def:tolerance}
+
+% claim foundations/def:tolerance
+\digestlabel{def:tolerance}{5.1}\pdfbookmark[2]{Definition 5.1 The declared tolerance and the defects it bounds}{digest-foundations/def:tolerance}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:tolerance}{Definition~5.1}}%
+\begin{digestclaim}[The declared tolerance and the defects it bounds]
+The \emph{declared tolerance} is a binary64 number
+$\tnum$ with
+$0\le\tnum<1$, stated by an instance in its run configuration
+(Definition~\ref{def:declared-data}). For a complex matrix $Y$ we write
+$\mxn{Y}\coloneqq\max_{i,l}|Y_{il}|$ for its \emph{entrywise maximum modulus}.
+The \emph{defects} of data are the entrywise maximum moduli of the
+differences
+their predicates name:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item the \emph{Hermiticity defect} $\mxn{X-X^{\dagger}}$ of a square matrix
+  $X$;
+\item the \emph{completeness residue}
+  $\max_{s\in\mathsf{S}}\mxn{\sum_{j\in J}a^{(s)}_j-c\,\idon{d_s}}$ of a family of
+  block lists $\{a_j\}_{j\in J}$ against a
+  sector map with blocks $s\in\mathsf{S}$
+  (Definition~\ref{def:sector-map}), read with a declared constant $c$;
+\item the \emph{column residue} $\max_{l}\big|\sum_{i}P_{il}-1\big|$ of a real
+  matrix $P$ read as column-stochastic;
+\item the \emph{trace residue} $|\tr X-1|$ of a square matrix $X$ read as
+  having unit trace, and the \emph{sum residue} $\big|\sum_{x}p_x-1\big|$ of a
+  vector $p$ read as a probability vector.
+\end{enumerate}
+The sums here are exact sums. A square matrix $X$ passes the
+\emph{positivity floor} at $\tnum$
+when
+$\lmin\big(\tfrac12(X+X^{\dagger})\big)\ge-\tnum$. Data lie
+\emph{within the declared tolerance} when each of their defects is at most
+$\tnum$ and each of their blocks read as positive semidefinite passes the
+positivity floor at $\tnum$.
+\end{digestclaim}
+
+% claim foundations/lem:floor-stricter
+\digestlabel{lem:floor-stricter}{5.2}\pdfbookmark[2]{Lemma 5.2 The positivity floor against entrywise closeness to the cone}{digest-foundations/lem:floor-stricter}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/lem:floor-stricter}{Lemma~5.2}}%
+\begin{digestclaim}[The positivity floor against entrywise closeness to the cone]
+Let $d\ge1$ and $\delta\ge0$, and write $\opn{\cdot}$ for the operator norm and
+$\mxn{\cdot}$ for the entrywise maximum modulus of complex $d\times d$
+matrices.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item $\mxn{Y}\le\opn{Y}\le d\,\mxn{Y}$ for every complex $d\times d$
+  matrix $Y$.
+\item If $X$ is Hermitian and $\lmin(X)\ge-\delta$, then
+  $X+\delta\,\idon{d}\succeq0$ and
+  $\mxn{(X+\delta\,\idon{d})-X}=\delta$.
+\item If $X$ is Hermitian and $\mxn{X-P}\le\delta$ for some $P\succeq0$, then
+  $\lmin(X)\ge-d\delta$. The bound is attained: for the $d\times d$ matrix $E$
+  with every entry equal to $1$, the matrices $X\coloneqq-\delta E$ and
+  $P\coloneqq0$ satisfy $\mxn{X-P}=\delta$ and $\lmin(X)=-d\delta$.
+\end{enumerate}
+\end{digestclaim}
+
+% claim foundations/def:exact-reference
+\digestlabel{def:exact-reference}{5.3}\pdfbookmark[2]{Definition 5.3 Reference of a measurement family, exact or enclosed}{digest-foundations/def:exact-reference}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:exact-reference}{Definition~5.3}}%
+\begin{digestclaim}[Reference of a measurement family, exact or enclosed]
+Let $\mathfrak{m}$ be a sector map with blocks $s\in\mathsf{S}$ of
+dimensions $d_s$ (Definition~\ref{def:sector-map}), let $J$ be a finite
+non-empty alphabet with a declared order, and let $c>0$ be a
+declared value (Definition~\ref{def:binary64}\,(iii)). A
+\emph{entrywise enclosure} of a complex $d\times d$ matrix
+$X$ is a pair $(X_c,r)$ of a Hermitian $d\times d$ matrix $X_c$ with entries
+in $\mathbb{Q}(i)=\{x+iy:x,y\in\mathbb{Q}\}$, its \emph{centre}, and
+rationals $r_{il}=r_{li}\ge0$, its \emph{radii}, with
+\begin{equation*}\tag{\getrefnumber{C-eq:entrywise-enclosure}}\digesteqlabel{eq:entrywise-enclosure}
+  \big|X_{il}-(X_c)_{il}\big|\;\le\;r_{il}\qquad\text{for all }i,l .
+\end{equation*}
+A \emph{reference} against $\mathfrak{m}$ over $J$
+with constant $c$ is a family $G=\{G_j\}_{j\in J}$ of block lists against
+$\mathfrak{m}$ whose blocks are Hermitian and positive semidefinite, with
+\begin{equation*}\tag{\getrefnumber{C-eq:reference-complete}}\digesteqlabel{eq:reference-complete}
+  \sum_{j\in J}G^{(s)}_j\;=\;c\,\idon{d_s}\qquad\text{for every }s\in\mathsf{S},
+\end{equation*}
+read together with an entrywise enclosure $\big(C^{(s)}_j,r^{(s)}_j\big)$ of
+every block $G^{(s)}_j$. It is an
+\emph{exact reference} when every radius is $0$; then
+$G^{(s)}_j=C^{(s)}_j$ has entries in $\mathbb{Q}(i)$, and its Hermiticity,
+positive semidefiniteness and completeness are properties of finitely many
+Gaussian rationals.
+
+For a Hermitian $d_s\times d_s$ matrix $Y$ with entries in $\mathbb{Q}(i)$,
+the pair $\big(C^{(s)}_j-Y,\,r^{(s)}_j\big)$ is an entrywise enclosure of
+$G^{(s)}_j-Y$, since the two differences in \eqref{eq:entrywise-enclosure}
+are equal. A reference is an object of its own beside a family declared from
+it: the entries of the declared family are declared values, and each denotes
+exactly the dyadic rational it is (Definition~\ref{def:binary64}\,(iii)).
+\end{digestclaim}
+
+% claim foundations/def:factor-enclosure
+\digestlabel{def:factor-enclosure}{5.4}\pdfbookmark[2]{Definition 5.4 Factor enclosure of a block}{digest-foundations/def:factor-enclosure}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:factor-enclosure}{Definition~5.4}}%
+\begin{digestclaim}[Factor enclosure of a block]
+Let $d\ge1$ and $k\ge0$ be integers. A
+\emph{matrix box} of complex
+$d\times k$ matrices is a pair $(L_c,t)$ of a $d\times k$ matrix $L_c$ with
+entries in $\mathbb{Q}(i)$, its \emph{centre}, and rationals $t_{im}\ge0$,
+its \emph{radii}; it \emph{contains} a complex $d\times k$ matrix $L$ when
+$|L_{im}-(L_c)_{im}|\le t_{im}$ for all $i,m$. For $k=0$ it contains the one
+$d\times0$ matrix.
+
+A
+\emph{factor enclosure} of a complex $d\times d$ matrix $X$ is a triple $(L_c,t,W)$ of a
+matrix box $(L_c,t)$ of complex $d\times k$ matrices and a diagonal
+$k\times k$ matrix $W$ with positive rational diagonal entries, its
+\emph{core}, such that
+\begin{equation*}\tag{\getrefnumber{C-eq:factor-enclosure}}\digesteqlabel{eq:factor-enclosure}
+  X\;=\;LWL^{\dagger}\qquad\text{for some }L\text{ that }(L_c,t)\text{ contains}.
+\end{equation*}
+The number $k$ is its \emph{number of columns}, a matrix $L$ that the box
+contains is a \emph{factor} of the triple, and the matrices $LWL^{\dagger}$
+with $L$ a factor are its \emph{members}, $X$ among them; for $k=0$ the one
+member is the zero $d\times d$ matrix. Every member is Hermitian and positive
+semidefinite, since $x^{\dagger}LWL^{\dagger}x=\|W^{1/2}L^{\dagger}x\|^{2}$
+for every $x\in\mathbb{C}^{d}$.
+
+A reference $G$ (Definition~\ref{def:exact-reference}) \emph{carries} a
+factor enclosure on a block $G^{(s)}_j$ when it is read, besides the
+entrywise enclosure $\big(C^{(s)}_j,r^{(s)}_j\big)$ of that block, with
+a factor enclosure of $G^{(s)}_j$; the block then satisfies both
+\eqref{eq:entrywise-enclosure} and \eqref{eq:factor-enclosure}.
+\end{digestclaim}
+
+% claim foundations/def:snap
+\digestlabel{def:snap}{5.5}\pdfbookmark[2]{Definition 5.5 Snapping declared data onto a lattice}{digest-foundations/def:snap}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:snap}{Definition~5.5}}%
+\begin{digestclaim}[Snapping declared data onto a lattice]
+Let $D$ be data a declarer is about to declare, a producer's exact
+construction of what it emits (Definition~\ref{def:declared-data}), or a
+reference of an operator family (Definition~\ref{def:exact-reference})
+--- a family of block lists against a sector map
+(Definition~\ref{def:sector-map}) over an alphabet with a declared order, a
+matrix or a vector --- read with the conditions its declaration states of it,
+and let $k$ be a lattice exponent
+(Definition~\ref{def:binary64}\,(iv)). For a family read as a measurement,
+those conditions are exact admissibility with its declared constant
+(Definition~\ref{def:exact-admissibility}); every sum they read is read in its
+declared order (Definition~\ref{def:declared-order}). A \emph{snap} of $D$ at
+$k$ is data $D'$ of the same shape, over the same alphabet in the same order,
+every entry of which is a lattice value at $k$, and which satisfy those
+conditions exactly. Its \emph{displacement} is the largest entrywise modulus
+of $D'-D$, taken over every block of every element
+(Definition~\ref{def:tolerance}), with $D$ replaced by its centres where $D$
+is a reference.
+
+An entry of $D$ is
+\emph{structurally zero} when
+it is known to be exactly zero, which is the following and nothing else: where
+$D$ is given as numbers, an entry that is the number $0$; where $D$ is a
+reference, an entry whose centre and radius are both $0$. An entry of a
+reference whose centre is $0$ and whose radius is not is not structurally
+zero. The
+\emph{structural support} of a block
+$D^{(s)}_j$ is the set of indices $i$ such that row $i$ or column $i$ of
+$D^{(s)}_j$ holds an entry that is not structurally zero. A row, a column or
+an element all of whose entries are structurally zero is structurally zero,
+and an index lies outside the structural support exactly when both its row
+and its column are. For a reference, whose centres are Hermitian and whose
+radii are symmetric (Definition~\ref{def:exact-reference}), row $i$ of a block
+is structurally zero exactly when column $i$ is.
+
+Where $D$ is an operator family read as a measurement against a sector map
+with blocks $s\in\mathsf{S}$, over an alphabet $J$, a block $s$ of a snap
+$F=D'$ of $D$ is
+\emph{kept} when
+$F^{(s)}_j=D^{(s)}_j$ is decided exactly for every $j\in J$, and
+\emph{moved} otherwise. Here $D$ on block $s$ is the data the snap is made
+from: the centres of an exact reference of the block where the snap
+runs on them, a producer's exact construction, or the data as they stand
+where the declarer states them with no model behind them. Where the
+declarer computes the data of the block from a model of it and the snap
+runs on that evaluation, the data the snap is made from are the model, of
+which the evaluation is no exact presentation, so no exact decision equates
+the snap with them and the block is moved, even where the snap leaves the
+evaluation unchanged. A snap with no moved block changes nothing.
+
+The definition fixes what a snap produces and not how. The displacement is a
+record of the move, and it is the whole of what relates $D'$ to $D$ here.
+\end{digestclaim}
+
+% claim foundations/def:evaluated-off-snap
+\digestlabel{def:evaluated-off-snap}{5.7}\pdfbookmark[2]{Definition 5.7 A reference handed beside a snap; a block evaluated off its snap}{digest-foundations/def:evaluated-off-snap}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:evaluated-off-snap}{Definition~5.7}}%
+\begin{digestclaim}[A reference handed beside a snap; a block evaluated off its snap]
+Let $F$ be a snap (Definition~\ref{def:snap}) of data $D$ against a
+sector map with blocks $s\in\mathsf{S}$
+(Definition~\ref{def:sector-map}), over an alphabet $J$, where $D$ is an
+operator family read as a measurement, the data an instance states of it or a
+reference of it, or a producer's exact construction of what it emits
+(Definition~\ref{def:declared-data}).
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item Where $D$ is an operator family read as a measurement and the declarer
+  holds a reference $G$ of it (Definition~\ref{def:exact-reference}), the
+  declarer \emph{hands the reference beside the snap} on a block $s$ when it
+  passes to every consumer of $F$, together with $F$ and altered by no step,
+  the centre $C^{(s)}_j$, with entries in $\mathbb{Q}(i)$, and the radii
+  $r^{(s)}_j$, rationals, of an entrywise enclosure of $G^{(s)}_j$ for every
+  $j\in J$, with the identity of the reference and the claims that establish
+  it. The reference so passed is the
+  \emph{handed reference},
+  and $s$ is a \emph{handed block}.
+\item A block $s$ of $F$ is
+  \emph{evaluated off its snap}
+  in a run when the record of the run shows that no number from which the run
+  computes its key length reads $F^{(s)}_j$ for any $j\in J$, save in two
+  places: the points at which those numbers are evaluated, which any
+  computation may have chosen, a computation on $F$ among them; and every
+  value the run fixes before its first round other than the output length,
+  the acceptance set and the transcript length $\lEC$ among them, whatever
+  they were computed from.
+\end{enumerate}
+\end{digestclaim}
+
+\section*{6\quad Domination and its limits}\pdfbookmark[1]{6 Domination and its limits}{digest-group-foundations/def:domination}
+
+% claim foundations/def:domination
+\digestlabel{def:domination}{6.1}\pdfbookmark[2]{Definition 6.1 Domination of one operator family by another at block weights}{digest-foundations/def:domination}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:domination}{Definition~6.1}}%
+\begin{digestclaim}[Domination of one operator family by another at block weights]
+Let $\mathfrak{m}$ be a sector map with blocks $s\in\mathsf{S}$ of
+dimensions $d_s$ (Definition~\ref{def:sector-map}), let $J$ be a finite non-empty
+alphabet, and let $G=\{G_j\}_{j\in J}$ and $F=\{F_j\}_{j\in J}$ be families of
+block lists against $\mathfrak{m}$ whose blocks are
+Hermitian and positive semidefinite; their entries are arbitrary complex
+numbers. A family is \emph{complete at} a real number $c$ on block $s$ when
+$\sum_{j\in J}G^{(s)}_j=c\,\idon{d_s}$. For weights $q=(q_s)_{s\in\mathsf{S}}$
+with $q_s\in[0,1)$, the family $G$
+\term[said of an operator family G and an operator family F over the same
+alphabet and sector map, at block weights q in [0, 1): G − (1−q)F is positive
+semidefinite for every outcome on every block, with the weight of that
+block]{dominates} $F$ at $q$ when
+\begin{equation*}\tag{\getrefnumber{C-eq:domination}}\digesteqlabel{eq:domination}
+  G^{(s)}_j-(1-q_s)\,F^{(s)}_j\;\succeq\;0
+  \qquad\text{for every }j\in J\text{ and }s\in\mathsf{S}.
+\end{equation*}
+The weight $q_s$ belongs to the block $s$ and is the same for every outcome.
+On a block $s$, the
+\emph{residual family} of the domination is
+$R^{(s)}_j\coloneqq q_s^{-1}\big(G^{(s)}_j-(1-q_s)F^{(s)}_j\big)$ for
+$j\in J$ where $q_s>0$, and $R^{(s)}_j\coloneqq G^{(s)}_j$ where $q_s=0$.
+For a Hermitian matrix $X$ we write $\mathrm{supp}\,X$ for its range, the
+orthogonal complement of its kernel.
+\end{digestclaim}
+
+% claim foundations/lem:domination
+\digestlabel{lem:domination}{6.2}\pdfbookmark[2]{Lemma 6.2 Elementary properties of domination}{digest-foundations/lem:domination}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/lem:domination}{Lemma~6.2}}%
+\begin{digestclaim}[Elementary properties of domination]
+Let $\mathfrak{m}$, $J$ and the families $G=\{G_j\}_{j\in J}$,
+$F=\{F_j\}_{j\in J}$ and $E=\{E_j\}_{j\in J}$ of block lists against
+$\mathfrak{m}$ with Hermitian positive semidefinite blocks be as in
+Definition~\ref{def:domination}, and let $s\in\mathsf{S}$ be a block.
+Say that $G$ dominates $F$ at $q_s$ on block $s$ when
+\eqref{eq:domination} holds at that block.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{(Upward closure.)} If $G$ dominates $F$ at $q_s$ on block $s$ and
+  $q_s\le q'_s<1$, then $G$ dominates $F$ at $q'_s$ on block $s$.
+\item \emph{(Support.)} If $G$ dominates $F$ at some $q_s\in[0,1)$ on block
+  $s$, then $\mathrm{supp}\,F^{(s)}_j\subseteq\mathrm{supp}\,G^{(s)}_j$ for
+  every $j\in J$. Conversely, if
+  $\mathrm{supp}\,F^{(s)}_j\subseteq\mathrm{supp}\,G^{(s)}_j$ for every
+  $j\in J$, then $G$ dominates $F$ on block $s$ at some weight in $[0,1)$.
+\item \emph{(Weight zero.)} If $G$ and $F$ are both complete at the same
+  $c$ on block $s$, then $G$ dominates $F$ at $0$ on block $s$ if and only
+  if $F^{(s)}_j=G^{(s)}_j$ for every $j\in J$.
+\item \emph{(Composition.)} If $G$ dominates $F$ at $q_s$ and $F$ dominates
+  $E$ at $q'_s$ on block $s$, then $G$ dominates $E$ on block $s$ at
+  $1-(1-q_s)(1-q'_s)$, which lies in $[0,1)$ and is at most $q_s+q'_s$.
+\item \emph{(Classical post-processing.)} Let $W$ be a finite non-empty
+  alphabet and let $P_{w|j}\ge0$ be real numbers for $w\in W$ and $j\in J$.
+  Put $G'_w\coloneqq\sum_{j\in J}P_{w|j}G_j$ and
+  $F'_w\coloneqq\sum_{j\in J}P_{w|j}F_j$, block by block. If $G$ dominates
+  $F$ at $q_s$ on block $s$, then $G'$ dominates $F'$ at the same $q_s$ on
+  block $s$. If moreover $\sum_{w\in W}P_{w|j}=1$ for every $j$ and $G$ and
+  $F$ are complete at $c$ on block $s$, then so are $G'$ and $F'$. In
+  particular, multiplying each $G_j$ and $F_j$ by the same number $p_j\ge0$
+  preserves domination at the same weight.
+\item \emph{(Residual family.)} If $G$ and $F$ are both complete at $c$ on
+  block $s$ and $G$ dominates $F$ at $q_s$ there, then the residual family
+  $R^{(s)}$ of Definition~\ref{def:domination} has positive semidefinite
+  elements, is complete at $c$, and satisfies
+  \begin{equation*}\tag{\getrefnumber{C-eq:residual-mixture}}\digesteqlabel{eq:residual-mixture}
+    G^{(s)}_j=(1-q_s)\,F^{(s)}_j+q_s\,R^{(s)}_j
+    \qquad\text{for every }j\in J.
+  \end{equation*}
+\end{enumerate}
+\end{digestclaim}
+
+% claim foundations/lem:absorbing-domination
+\digestlabel{lem:absorbing-domination}{6.3}\pdfbookmark[2]{Lemma 6.3 Domination of a family that absorbs its residue in one element}{digest-foundations/lem:absorbing-domination}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/lem:absorbing-domination}{Lemma~6.3}}%
+\begin{digestclaim}[Domination of a family that absorbs its residue in one element]
+Let $s$ be a block of dimension $d_s$, $J$ a finite non-empty alphabet,
+$c>0$, and $j^{\star}\in J$. Let $\{G_j\}_{j\in J}$ be Hermitian positive
+semidefinite $d_s\times d_s$ matrices with $\sum_{j\in J}G_j=c\,\idon{d_s}$,
+and let $\{F_j\}_{j\in J}$ be Hermitian matrices with
+\begin{equation*}\tag{\getrefnumber{C-eq:absorbing}}\digesteqlabel{eq:absorbing}
+  0\preceq F_j\preceq G_j\quad(j\neq j^{\star}),
+  \qquad
+  F_{j^{\star}}=c\,\idon{d_s}-\sum_{j\neq j^{\star}}F_j .
+\end{equation*}
+Put $\Delta\coloneqq\sum_{j\neq j^{\star}}(G_j-F_j)$, the \emph{absorbed
+residue}.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item $\Delta\succeq0$, $F_{j^{\star}}=G_{j^{\star}}+\Delta\succeq G_{j^{\star}}$,
+  every $F_j$ is positive semidefinite, and $\sum_jF_j=c\,\idon{d_s}$.
+\item For $q\in[0,1)$, $\{G_j\}$ dominates $\{F_j\}$ at $q$ on this block
+  (Definition~\ref{def:domination}) if and only if
+  \begin{equation*}\tag{\getrefnumber{C-eq:absorbing-condition}}\digesteqlabel{eq:absorbing-condition}
+    q\,G_{j^{\star}}-(1-q)\,\Delta\;\succeq\;0 .
+  \end{equation*}
+  For every $j\neq j^{\star}$ and every $q\in[0,1)$,
+  $G_j-(1-q)F_j\succeq0$ holds.
+\item Some $q\in[0,1)$ satisfies \eqref{eq:absorbing-condition} if and only if
+  $\mathrm{supp}\,\Delta\subseteq\mathrm{supp}\,G_{j^{\star}}$; this holds in
+  particular when $G_{j^{\star}}$ is positive definite.
+\item Suppose $\mathrm{supp}\,\Delta\subseteq\mathrm{supp}\,G_{j^{\star}}$,
+  let $\lambda>0$ be the least non-zero eigenvalue of $G_{j^{\star}}$ (its
+  least eigenvalue when it is positive definite) and let
+  $\delta\ge\opn{\Delta}$. If $G_{j^{\star}}\neq0$, then
+  \eqref{eq:absorbing-condition} holds for every $q$ with
+  $\delta/(\lambda+\delta)\le q<1$. If $\Delta=0$, it holds at $q=0$.
+\end{enumerate}
+\end{digestclaim}
+
+% claim foundations/lem:rational-obstruction
+\digestlabel{lem:rational-obstruction}{6.4}\pdfbookmark[2]{Lemma 6.4 Rationality obstruction to the domination of a lattice family}{digest-foundations/lem:rational-obstruction}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/lem:rational-obstruction}{Lemma~6.4}}%
+\begin{digestclaim}[Rationality obstruction to the domination of a lattice family]
+Let $d\ge1$, and read every vector of $\mathbb{C}^{d}$ and every
+$d\times d$ matrix in the standard basis. Call a subspace $U$ of
+$\mathbb{C}^{d}$ \emph{$\mathbb{Q}(i)$-rational} when it is spanned over
+$\mathbb{C}$ by vectors of $\mathbb{Q}(i)^{d}$ (the subspace $\{0\}$ is
+spanned by the empty set), and for a subspace $V$ of $\mathbb{C}^{d}$ put
+\begin{equation*}\tag{\getrefnumber{C-eq:rational-part}}\digesteqlabel{eq:rational-part}
+  \mathcal{R}(V)\;\coloneqq\;\mathrm{span}_{\mathbb{C}}\big(V\cap\mathbb{Q}(i)^{d}\big),
+\end{equation*}
+the \emph{largest $\mathbb{Q}(i)$-rational subspace of $V$}.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item $\mathcal{R}(V)$ is a $\mathbb{Q}(i)$-rational subspace contained in
+  $V$, and it contains every $\mathbb{Q}(i)$-rational subspace contained in
+  $V$.
+\item For every $d\times d'$ matrix $A$ with entries in $\mathbb{Q}(i)$, the
+  range of $A$ is $\mathbb{Q}(i)$-rational. In particular the support of a
+  Hermitian $d\times d$ matrix with entries in $\mathbb{Q}(i)$ is.
+\item Let $\{G_j\}_{j\in J}$ and $\{F_j\}_{j\in J}$ be Hermitian positive
+  semidefinite $d\times d$ matrices over a finite non-empty alphabet $J$,
+  every $F_j$ with entries in $\mathbb{Q}(i)$, such that
+  $G_j-(1-q)F_j\succeq0$ for every $j$, for some $q\in[0,1)$. Then
+  $\mathrm{supp}\,F_j\subseteq\mathcal{R}_j\coloneqq
+  \mathcal{R}(\mathrm{supp}\,G_j)$ for every $j$.
+\item If, in (iii), moreover $\sum_jG_j=\sum_jF_j=c\,\idon{d}$ with $c>0$,
+  then for every $j\in J$
+  \begin{equation*}\tag{\getrefnumber{C-eq:rational-bound}}\digesteqlabel{eq:rational-bound}
+    q\;\ge\;\frac{\lmax\big(P_jG_jP_j\big)}{c},
+  \end{equation*}
+  where $P_j$ is the orthogonal projector onto $\mathcal{R}_j^{\perp}$.
+\item In particular, if $\mathrm{supp}\,G_j$ contains no non-zero vector of
+  $\mathbb{Q}(i)^{d}$, then $q\ge\lmax(G_j)/c$, which equals $\tr G_j/c$
+  when $G_j$ has rank one.
+\end{enumerate}
+\end{digestclaim}
+
+% claim foundations/lem:enclosure-psd
+\digestlabel{lem:enclosure-psd}{6.5}\pdfbookmark[2]{Lemma 6.5 Positive semidefiniteness from an entrywise enclosure}{digest-foundations/lem:enclosure-psd}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/lem:enclosure-psd}{Lemma~6.5}}%
+\begin{digestclaim}[Positive semidefiniteness from an entrywise enclosure]
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item Let $X$ be a Hermitian complex $d\times d$ matrix, $X_c$ a Hermitian
+  $d\times d$ matrix with entries in $\mathbb{Q}(i)$, and $r_{il}\ge0$
+  rationals with $|X_{il}-(X_c)_{il}|\le r_{il}$ for all $i,l$. Let $\rho$ be
+  a rational with
+  \begin{equation*}\tag{\getrefnumber{C-eq:enclosure-radius}}\digesteqlabel{eq:enclosure-radius}
+    \rho\;\ge\;\max_{i}\sum_{l}r_{il}
+    \qquad\text{or}\qquad
+    \rho\ge0\ \text{ and }\ \rho^{2}\;\ge\;\sum_{i,l}r_{il}^{2},
+  \end{equation*}
+  and $\mu\ge0$ a rational. If $X_c-(\rho+\mu)\,\idon{d}\succeq0$, then
+  $X\succeq\mu\,\idon{d}$; in particular $X\succeq0$, and $X$ is positive
+  definite when $\mu>0$. If $X_c-\rho\,\idon{d}$ is positive definite, then
+  $X$ is positive definite. Every hypothesis on $X_c$, $r$, $\rho$ and $\mu$
+  is a property of finitely many rationals and Gaussian rationals.
+\item Let $n_1,\dots,n_d$ be positive rationals and
+  $D\coloneqq\mathrm{diag}(\sqrt{n_1},\dots,\sqrt{n_d})$, and let $a_i,e_i$
+  be rationals with $0\le e_i\le a_i$ and
+  \begin{equation*}\tag{\getrefnumber{C-eq:sqrt-enclosure}}\digesteqlabel{eq:sqrt-enclosure}
+    (a_i-e_i)^{2}\,n_i\;\le\;1\;\le\;(a_i+e_i)^{2}\,n_i .
+  \end{equation*}
+  Then $|a_i-n_i^{-1/2}|\le e_i$. Let $S$ and $Y$ be Hermitian $d\times d$
+  matrices with entries in $\mathbb{Q}(i)$, put $X\coloneqq D^{-1}SD^{-1}-Y$,
+  $A\coloneqq\mathrm{diag}(a_1,\dots,a_d)$, $X_c\coloneqq ASA-Y$ and
+  \begin{equation*}\tag{\getrefnumber{C-eq:scaled-radii}}\digesteqlabel{eq:scaled-radii}
+    r_{il}\;\coloneqq\;\sigma_{il}\,\big(a_ie_l+e_ia_l+e_ie_l\big),
+    \qquad
+    \sigma_{il}\coloneqq|\mathrm{Re}\,S_{il}|+|\mathrm{Im}\,S_{il}| .
+  \end{equation*}
+  Then $X$, $X_c$ and $r$ satisfy the hypotheses of (i) on $X$, $X_c$ and
+  $r$, and the radii do not depend on $Y$.
+\item Let $X$, $X_c$ and $r$ be as in (i), let $F$ be a Hermitian positive
+  semidefinite $d\times d$ matrix with entries in $\mathbb{Q}(i)$, and let
+  $q\in[0,1]$ be rational. Then $X-(1-q)F$, $X_c-(1-q)F$ and $r$ satisfy the
+  hypotheses of (i) on $X$, $X_c$ and $r$. If, for some $\rho$ and $\mu$ as
+  in (i), $X_c-(1-q)F-(\rho+\mu)\idon{d}\succeq0$, then
+  $X_c-(1-q')F-(\rho+\mu)\idon{d}\succeq0$ for every rational
+  $q'\in[q,1]$.
+\end{enumerate}
+\end{digestclaim}
+
+\section*{7\quad The exact island, enclosures and the tiers}\pdfbookmark[1]{7 The exact island, enclosures and the tiers}{digest-group-foundations/def:exact-island}
+
+% claim foundations/def:exact-island
+\digestlabel{def:exact-island}{7.1}\pdfbookmark[2]{Definition 7.1 The exact island}{digest-foundations/def:exact-island}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:exact-island}{Definition~7.1}}%
+\begin{digestclaim}[The exact island]
+The \emph{exact island} is
+the following set of computations of the engine,
+the declarations of its instances included.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{The admission boundary}: every decision that data satisfy a
+  condition their declaration states of them --- among them the conditions of
+  Definition~\ref{def:exact-admissibility}, a trace, a column sum, an identity
+  between declared operators and a lattice condition --- taken by a consumer
+  of declared data it reads, or by a declarer, an instance or a producer
+  (Definition~\ref{def:declared-data}), of data it is about to declare; the
+  decisions by which a snap establishes the conditions of its output
+  (Definition~\ref{def:snap}) are among the latter. So are, for a
+  reference of an operator family that a declarer uses or hands beside
+  its snap (Definition~\ref{def:exact-reference}), the computation of the
+  centres and radii of its entrywise enclosures,
+  whose enclosure of the reference, \eqref{eq:entrywise-enclosure}, the claims
+  of the module that constructs the reference establish, the decisions on
+  those centres and radii and, for an exact reference, on its
+  positivity and completeness; and, for any snap of an operator family read
+  as a measurement, the decisions by which the snap keeps a block, and the
+  decisions on which entries are structurally zero. It
+  contains, further, a
+  producer's construction, block by block, of the operator data it emits, and,
+  for each scalar bound that a consumer replaces as in
+  Definition~\ref{def:declared-data}\,(iii), the decision that the
+  replacement lies on the weakening side of the bound emitted.
+\item \emph{The acceptance side of the optimisation}, the honest model and
+  the completeness budget being declared as exact rational data: the
+  construction of an acceptance set from them; the exact establishment that
+  the optimiser's acceptance-side iterate lies in the acceptance set it reads,
+  for its initial point and for each update as a convex combination, with
+  exact rational weights, of points so established; and the exact
+  certification of the minimum of a linear functional over that set, or of a
+  lower bound on that minimum. The acceptance set the optimiser reads is the
+  set so declared: the constructed set as its producer emits it, with each
+  scalar bound that a consumer has replaced as in
+  Definition~\ref{def:declared-data}\,(iii) at its replaced value.
+\item \emph{The feasible side of the optimisation}: the certification of a
+  lower bound on the minimum of a linear functional over the set the
+  optimiser's linear oracle is asked to minimise over, formed from the
+  functional, from the data of that set and from multipliers, each given to
+  it as values, together with the bounds on least eigenvalues that the
+  certification computes on the way.
+\end{enumerate}
+The decision whether data an instance is about to declare lie
+within the declared tolerance (Definition~\ref{def:tolerance}) is not on
+the exact island. The optimiser's iterate apart from
+its acceptance side, the optimiser's oracle, the objective and its gradient lie
+outside the exact island, and so does a binary64 computation that only
+proposes a candidate, such as a point or a multiplier, for a decision or a
+certification of the island. A certification of (iii) holds of the
+functional and the data as they are given to it, and not of the quantities
+that a binary64 computation of them approximates.
+\end{digestclaim}
+
+% claim foundations/lem:least-eigenvalue-bound
+\digestlabel{lem:least-eigenvalue-bound}{7.2}\pdfbookmark[2]{Lemma 7.2 Least-eigenvalue lower bound from an approximate eigenbasis}{digest-foundations/lem:least-eigenvalue-bound}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/lem:least-eigenvalue-bound}{Lemma~7.2}}%
+\begin{digestclaim}[Least-eigenvalue lower bound from an approximate eigenbasis]
+Let $n\ge1$, let $R$ be a Hermitian complex $n\times n$ matrix, and let
+\begin{equation*}\tag{\getrefnumber{C-eq:real-embedding}}\digesteqlabel{eq:real-embedding}
+  \widetilde R\;\coloneqq\;
+  \begin{pmatrix}\mathrm{Re}\,R&-\mathrm{Im}\,R\\
+  \mathrm{Im}\,R&\mathrm{Re}\,R\end{pmatrix}\in\mathbb{R}^{2n\times2n},
+\end{equation*}
+the real and imaginary parts taken entrywise. Let $V$ be any real
+$2n\times2n$ matrix, put
+\begin{equation*}
+  B\coloneqq V^{\transpose}\widetilde R\,V,\qquad
+  E\coloneqq V^{\transpose}V-\idon{2n},\qquad
+  \gamma\coloneqq\min_{1\le i\le2n}\Big(B_{ii}-\sum_{l\ne i}|B_{il}|\Big),
+\end{equation*}
+and let $\theta$ be a real number with $0\le\theta<1$ and
+$\sum_{i,l}E_{il}^{2}\le\theta^{2}$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item $\widetilde R$ is real symmetric, and $\lmin(\widetilde R)=\lmin(R)$.
+\item $V$ is invertible, and
+\begin{equation*}\tag{\getrefnumber{C-eq:least-eigenvalue-bound}}\digesteqlabel{eq:least-eigenvalue-bound}
+  \lmin(R)\;\ge\;
+  \begin{cases}
+    \gamma/(1+\theta), & \gamma\ge0,\\
+    \gamma/(1-\theta), & \gamma<0.
+  \end{cases}
+\end{equation*}
+\item If the entries of $R$ lie in $\mathbb{Q}(i)$, the entries of $V$ are
+  rational and $\theta$ is rational, then $\widetilde R$, $B$ and $E$ have
+  rational entries, $\gamma$ is rational, the hypothesis on $\theta$ is a
+  comparison of rationals, and the right-hand side of
+  \eqref{eq:least-eigenvalue-bound} is a rational number.
+\item Applied to $-R$, (ii) bounds the largest eigenvalue of $R$, which is
+  $-\lmin(-R)$, from above.
+\end{enumerate}
+\end{digestclaim}
+
+% claim foundations/def:tiers
+\digestlabel{def:tiers}{7.6}\pdfbookmark[2]{Definition 7.6 The tiers of a reported key rate}{digest-foundations/def:tiers}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/def:tiers}{Definition~7.6}}%
+\begin{digestclaim}[The tiers of a reported key rate]
+A \emph{tier} of a reported key-rate number is one
+of the following three labels.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{estimate}: the
+  number is the value of the objective at the point
+  an optimiser returned. It is reported as an estimate of the minimum of the
+  objective and is claimed as no bound.
+\item \emph{first-order}: the number is a lower bound on the minimum of the
+  objective, established by a claim under hypotheses that claim names.
+\item \emph{certified}: the number is a lower bound on the minimum
+  of the objective of the declaration it is formed on, established by a claim
+  under hypotheses that claim names, and every arithmetic step between that
+  declaration's data and the number is exact or
+  \emph{rigorously enclosed}: a
+  computation is rigorously enclosed when each of its operations returns a
+  set of numbers, such as an interval or a ball, that contains the exact
+  result of the operation at every value the sets of its inputs contain, so
+  that the set it ends with contains the exact value, at the exact data, of
+  the quantity it computes. None of those hypotheses is an assumption about
+  how a number was computed, that is, none is an assumption of the category
+  numerical-trust.
+\end{enumerate}
+The tiers are ordered, estimate below first-order below certified, and a
+tier is \emph{stronger} than the tiers below it. A certified number is a
+first-order number as well. There is no other tier.
+\end{digestclaim}
+
+\section*{8\quad The snapped-measurement assumption}\pdfbookmark[1]{8 The snapped-measurement assumption}{digest-group-foundations/ass:snapped-measurement}
+
+% claim foundations/ass:snapped-measurement
+\digestlabel{ass:snapped-measurement}{8.1}\pdfbookmark[2]{Assumption 8.1 The device measures the snapped family where the run reads the snap}{digest-foundations/ass:snapped-measurement}
+\SetShortId{A-SNAP}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/ass:snapped-measurement}{Assumption~8.1}}%
+\begin{digestassumption}[The device measures the snapped family where the run reads the snap]
+Let $F$ be a snap (Definition~\ref{def:snap}) of an operator family $D$ read
+as a measurement, against a sector map with blocks $s\in\mathsf{S}$
+(Definition~\ref{def:sector-map}), over an alphabet $J$, with $D$ the data the
+snap is made from: the data as an instance states them, or, where the
+instance computes those data from a model of the family, that model, a
+reference of the family (Definition~\ref{def:exact-reference}), or a
+producer's exact construction of what it emits
+(Definition~\ref{def:declared-data}). Let $B\subseteq\mathsf{S}$ be the set of
+blocks that the record of the run names as resting on this assumption: the
+moved blocks of $F$ (Definition~\ref{def:snap}), those on which the
+record does not show, by an exact decision, that $F^{(s)}_j=D^{(s)}_j$ for
+every $j\in J$, that are not evaluated off its snap
+(Definition~\ref{def:evaluated-off-snap}). A kept block and a block
+evaluated off its snap do not belong to $B$. Every other moved block belongs
+to $B$, whatever its cause; among them are the blocks on which the snap gives
+an element support outside the structural support of $D^{(s)}_j$
+(Definition~\ref{def:snap}).
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item Where $D$ is the data an instance states as the measurement of a
+  device, the model it computes them from, or a reference of it, then on every block $s\in B$ the block on $s$
+  of the measurement the device performs, read against the sector map, is
+  the family $\{F^{(s)}_j\}_{j\in J}$ with the entries recorded for the snap.
+  On such a block, any statement of another assumption of the run that a
+  model describes that measurement is not asserted, and this clause holds in
+  its place.
+\item Where $D$ is a producer's exact construction of what it emits, every
+  conclusion about the device that the claims of the run draw from the
+  emitted family, under their hypothesis that it is the producer's exact
+  construction, holds when the emitted family is $F^{(s)}$ on every block
+  $s\in B$.
+\end{enumerate}
+\end{digestassumption}
+
+\part*{Engine requirements}\pdfbookmark[0]{Engine requirements}{digest-part-2}
+
+\section*{9\quad Admission}\pdfbookmark[1]{9 Admission}{digest-group-foundations/req:boundary-admission}
+
+% claim foundations/req:boundary-admission
+\digestlabel{req:boundary-admission}{9.1}\pdfbookmark[2]{Requirement 9.1 Exact admissibility at every module boundary}{digest-foundations/req:boundary-admission}
+\begin{mainclaim}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/req:boundary-admission}{Requirement~9.1}}%
+\begin{digestrequirement}[Exact admissibility at every module boundary]
+Declared operator data are exactly admissible at every
+module boundary (Definition~\ref{def:declared-data}). Precisely:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item every declared operator family that a consumer reads as a measurement,
+  that is, as a positive operator-valued measure or as a family with a
+  declared completeness constant, is exactly admissible with that constant for
+  the sector map the consumer holds
+  (Definition~\ref{def:exact-admissibility});
+\item every other declared operator, and every declared matrix or vector
+  whose entries are declared values, satisfies exactly,
+  on those values, each condition its declaration states of it, such as
+  Hermiticity, positivity, a trace, a column sum or an identity with another
+  declared operator, and every sum such a condition reads rounds nowhere in
+  its declared order (Definition~\ref{def:declared-order}).
+\end{enumerate}
+This is established before the data cross the boundary. An instance
+establishes it by constructing or snapping what it declares
+(Requirement~\ref{req:who-snaps}), or by passing on unchanged, from a
+supplier's output (Definition~\ref{def:declared-data}\,(ii)), data whose
+conditions the consumer decides exactly on entry, that decision then
+establishing it. A producer establishes it by constructing exactly what it
+emits and by deciding exactly, before emitting, each condition that its
+construction does not already establish, a sum that rounds nowhere among them;
+for a measurement family that decision is the one of
+Requirement~\ref{req:exact-emission}. Data that fail it do not cross, because
+a consumer that finds one of its admission predicates violated refuses them
+(Requirement~\ref{req:consumer-decides-exactly}).
+\end{digestrequirement}
+\end{mainclaim}
+
+% claim foundations/req:consumer-decides-exactly
+\digestlabel{req:consumer-decides-exactly}{9.2}\pdfbookmark[2]{Requirement 9.2 Exact decision by every consumer}{digest-foundations/req:consumer-decides-exactly}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/req:consumer-decides-exactly}{Requirement~9.2}}%
+\begin{digestrequirement}[Exact decision by every consumer]
+Every consumer (Definition~\ref{def:declared-data}) decides every admission
+predicate it states of declared data exactly, on the declared values,
+and none
+more loosely than exactly: no consumer has an input through which a predicate
+on declared data would be decided at a nonzero defect, and none admits data on
+the ground that they lie within a tolerance of data it would admit. A consumer
+that finds such a predicate violated refuses, with a machine-readable reason
+naming the predicate that failed. It repairs nothing it was handed, and it
+neither snaps nor otherwise alters declared data of another declarer, with one
+exception: it may replace a scalar bound that a producer emits by that bound
+rounded to a binary64 number in a direction that the producer's own claims
+license as weakening it. The direction in which each bound so replaced was
+rounded is recorded where the consumer's reading of the emission is
+specified, nothing else of the emission is altered, and every predicate on
+such a bound is decided exactly on its replaced value. The
+declared tolerance therefore widens nothing that any consumer admits;
+it bounds only how far an instance may move its own declaration
+(Requirement~\ref{req:declared-tolerance}).
+\end{digestrequirement}
+
+% claim foundations/req:declared-order
+\digestlabel{req:declared-order}{9.3}\pdfbookmark[2]{Requirement 9.3 Summation order declared with the data}{digest-foundations/req:declared-order}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/req:declared-order}{Requirement~9.3}}%
+\begin{digestrequirement}[Summation order declared with the data]
+Where a predicate on declared data is a sum, the order in which the sum is
+accumulated is part of the declared data: it is declared with the alphabet
+that indexes the sum, as that alphabet's declared order
+(Definition~\ref{def:declared-order}), or with an alphabet containing it,
+whose declared order it then carries by restriction; and it travels with the
+artefact that carries the data. Where a declared order arrives both with the
+alphabet and with an alphabet containing it, the two are one order: the first
+is the restriction of the second. A consumer that receives two such orders
+that differ takes the order of the containing alphabet, decides the predicate
+in its restriction, and refuses nothing for the difference. Every consumer that decides the predicate,
+and every declarer that decides it of data it is about to declare
+(Definition~\ref{def:declared-data}), decides it in that order, and no
+consumer substitutes an order of its own; a supplier deciding its own
+conditions at slacks declared to it is not bound by this. Only where no
+declared order arrives with the alphabet or with an alphabet containing it is
+the declaration's own listing of the alphabet taken as its declared order.
+Where such a predicate reads the trace of a declared matrix, the trace is
+accumulated in increasing row index.
+\end{digestrequirement}
+
+\section*{10\quad The tolerance, norms and snapping}\pdfbookmark[1]{10 The tolerance, norms and snapping}{digest-group-foundations/req:declared-tolerance}
+
+% claim foundations/req:declared-tolerance
+\digestlabel{req:declared-tolerance}{10.1}\pdfbookmark[2]{Requirement 10.1 One declared tolerance per instance}{digest-foundations/req:declared-tolerance}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/req:declared-tolerance}{Requirement~10.1}}%
+\begin{digestrequirement}[One declared tolerance per instance]
+Each instance declares exactly one declared tolerance $\tnum$
+(Definition~\ref{def:tolerance}) in its run configuration, and $\tnum$ has no
+default: a run whose configuration does not declare it, or declares a value
+that is not a binary64 number in $[0,1)$, is refused before anything is
+constructed. $\tnum$ is the ceiling on the defect an instance may repair in
+what it declares. It binds the data an instance is about to declare other than
+numbers of a supplier's output that it passes on unchanged
+(Definition~\ref{def:declared-data}\,(ii)); those it neither measures nor
+repairs, and their consumer decides their conditions exactly on entry
+(Requirement~\ref{req:boundary-admission}). Of the data it binds that have no
+exact reference on whose centres the snap runs (for those, see the
+next paragraph), the instance
+measures in binary64 the defects (Definition~\ref{def:tolerance}) and, for each
+block read as positive semidefinite, the least eigenvalue of its Hermitian
+part, each on the data as they stand before any step of the snap, and records
+those measured numbers. Data with a measured defect above $\tnum$ or a
+measured least eigenvalue below $-\tnum$ are refused as a modelling error; the
+others may be snapped (Definition~\ref{def:snap}), the snap being recorded
+with the measured defects it corrected (Requirement~\ref{req:who-snaps}). Near
+$\tnum$ this decision on measured numbers may differ from the predicate
+\emph{within the declared tolerance} of Definition~\ref{def:tolerance},
+whose sums are exact, and no bound on that difference is kept. This decision
+is not on the exact island; the exact decisions are those by which the
+snap establishes the conditions of its output
+(Definition~\ref{def:exact-island}\,(i)).
+
+An operator family that an instance snaps on the centres of an
+exact reference (Definition~\ref{def:exact-reference}), as
+Requirement~\ref{req:snap-reference}\,(ii) states, stands before the snap as
+that reference, which is Hermitian, positive semidefinite and complete by the
+exact decision on its entries, and never by a binary64 evaluation. Its defects are
+therefore zero and no block of it falls below the positivity floor:
+$\tnum$ decides nothing for it, and the instance records the defects as zero
+on that ground rather than on a binary64 measurement. $\tnum$ keeps its role
+for the data it binds on which the snap runs as they stand, an evaluation of
+a model whose reference has a radius that is not zero included, since the
+snap does not run on such a reference.
+
+A probability vector that an instance prepares from ordinary numerical inputs
+before declaring it is decided instead by the rule of the input preparation.
+It is refused unless its normalisation defect, computed exactly on the inputs
+as given, is at most $\tnum$, or the sum of the rounding cells of its inputs
+contains $1$: a binary64 input contributes the rounding cell it denotes under
+the preparation's documented representation policy, and an input given
+exactly, as a decimal or a fraction, contributes the one point that is its
+value. A value below $0$ or above $1$ is refused. The preparation records the
+defect, the cells and which of the two grounds admitted the vector. Its snap
+then runs at a \emph{guard}, the larger of $\tnum$ and the completeness
+residue the snap measures on the binary64 conversion of the inputs, which may
+exceed $\tnum$; the guard is recorded, and it admits no vector the rule has
+refused.
+\end{digestrequirement}
+
+% claim foundations/req:tolerance-scope
+\digestlabel{req:tolerance-scope}{10.2}\pdfbookmark[2]{Requirement 10.2 Scope of the declared tolerance}{digest-foundations/req:tolerance-scope}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/req:tolerance-scope}{Requirement~10.2}}%
+\begin{digestrequirement}[Scope of the declared tolerance]
+The declared tolerance governs the repair of an instance's own
+declared data (Requirement~\ref{req:declared-tolerance}) and nothing
+else; in particular no consumer reads it
+(Requirement~\ref{req:consumer-decides-exactly}).
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item A set defined by declared data is the exact set those data define, and
+  the declared tolerance relaxes none of its defining conditions. A consumer
+  that certifies a supplied point as a member of such a set certifies
+  membership in the exact set, deciding it exactly on the declared values of
+  the point. A check of a supplied point at a window of the module's own
+  certifies no membership in such a set, and its window is a number of that
+  module, as in (ii).
+\item The declared tolerance does not govern a module's arithmetic on
+  computed objects (Definition~\ref{def:declared-data}):
+  a window at which a module checks a computed object, or within which it
+  repairs one, is a number that module declares and records in its own right,
+  and it is never the declared tolerance.
+\item The declared tolerance is a numerical tolerance and not a
+  device-uncertainty budget. A declared number that bounds a physical
+  quantity, such as a tail budget, is declared separately and is never derived
+  from the declared tolerance. A slack that an instance declares to a supplier
+  (Definition~\ref{def:declared-data}\,(ii)) for the supplier's own conditions
+  is a declared number of its own. One that bounds the error of the
+  supplier's floating-point evaluation of a quantity, such as a slack on a
+  computed eigenvalue (Requirement~\ref{req:exact-island}), is never derived
+  from the declared tolerance; any other is derived from it, if at all, only
+  as Requirement~\ref{req:norm-conversion} says.
+\end{enumerate}
+\end{digestrequirement}
+
+% claim foundations/req:norm-conversion
+\digestlabel{req:norm-conversion}{10.3}\pdfbookmark[2]{Requirement 10.3 Explicit conversion between norms}{digest-foundations/req:norm-conversion}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/req:norm-conversion}{Requirement~10.3}}%
+\begin{digestrequirement}[Explicit conversion between norms]
+No bound stated in one norm is read as a bound in another. The defects of
+Definition~\ref{def:tolerance} are entrywise maximum moduli and the
+positivity floor is a bound on a least eigenvalue, and neither is
+converted, implicitly, into the other or into a bound in any other norm.
+A declared number that is
+derived from the declared tolerance, or from any bound stated in one norm, for
+use as a bound in another norm is derived explicitly by the party that
+declares it, with the conversion factor between the two norms concerned
+written down (for the operator norm and the entrywise maximum modulus, that of
+Lemma~\ref{lem:floor-stricter}\,(i)), and it is recorded together with that
+factor.
+\end{digestrequirement}
+
+% claim foundations/req:who-snaps
+\digestlabel{req:who-snaps}{10.4}\pdfbookmark[2]{Requirement 10.4 Snapping by the declarer only}{digest-foundations/req:who-snaps}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/req:who-snaps}{Requirement~10.4}}%
+\begin{digestrequirement}[Snapping by the declarer only]
+Declared data are snapped (Definition~\ref{def:snap}) only by their declarer,
+at most once, and before any consumer reads them: an instance snaps what it
+declares about its device and its protocol, on the admission that
+Requirement~\ref{req:declared-tolerance} states (for an operator family
+snapped on the centres of an exact reference, the decisions on the
+reference that Requirement~\ref{req:snap-reference}\,(i) lists; for a
+probability vector prepared from numerical inputs, the rule of the input
+preparation; otherwise within the declared tolerance), and a producer snaps
+only its own emission. No party snaps data it was handed, and no party
+otherwise alters them, with the one exception that
+Requirement~\ref{req:consumer-decides-exactly} states and limits: a consumer
+may replace a scalar bound that a producer emits by that bound rounded in a
+direction that the producer's own claims license as weakening it, recording
+the direction. Every snap is recorded: an instance's in the record of the run,
+with the defects it measured, or decided to be zero, before the snap
+(Definition~\ref{def:tolerance}),
+the displacement and the rule it applied, and a producer's in its emission,
+with the disclosures of Requirement~\ref{req:exact-emission}. The record of a
+snap of an operator family read as a measurement carries, besides, the
+identity of every reference the declarer uses or hands beside the snap
+(the model, the exact parameters from which it is formed, and its
+entrywise enclosures where any radius is not
+zero, with the claims that establish them;
+Definition~\ref{def:exact-reference}); the \emph{reference kind} of the snap
+per block (\emph{exact}, where the snap runs on the centres of an exact
+reference of the block, or \emph{none}, where it runs on the data as they
+stand); whether the run declares that enclosed references are not used; the
+status of every block, kept or moved
+(Definition~\ref{def:snap}); the steps of the procedure that made each moved
+block (Requirement~\ref{req:support-safe-snap}); and the flag
+\iface{support_not_preserved} of every block snapped by the last resort
+(Requirement~\ref{req:support-safe-snap}\,(iv)). Where the declarer hands the
+reference beside the snap (Definition~\ref{def:evaluated-off-snap}\,(i)), the
+record names the handed blocks, with the kind of the reference handed on each
+(\emph{exact}, every radius zero, or \emph{enclosed}, with the largest radius
+of the block and the largest radius of the enclosures of irrational inputs
+(square roots, trigonometric values) from which the constructing module
+computed the centres exactly, as its claims state it), and, for every block
+on which it hands none, the cause of
+Requirement~\ref{req:snap-reference}\,(iii)(a). The record of the run names
+every moved block of the snap that is evaluated off its snap
+(Definition~\ref{def:evaluated-off-snap}\,(ii)), and every moved block that
+rests on Assumption~\ref{ass:snapped-measurement}, with its cause, group and
+fix (Requirement~\ref{req:snap-reference}\,(iii)); a kept block is named as
+kept and in neither list. Handing the reference alters neither the snap nor
+the reference. A producer that declares a lattice exponent
+re-establishes its lattice at each emission whose exact construction lies off
+it, by a snap of that emission or by refusing it
+(Requirements~\ref{req:declared-lattice} and~\ref{req:exact-emission}); a
+producer that declares no lattice exponent snaps nothing.
+\end{digestrequirement}
+
+% claim foundations/req:snap-reference
+\digestlabel{req:snap-reference}{10.5}\pdfbookmark[2]{Requirement 10.5 Snaps of a measurement family: kept, or moved and disclosed}{digest-foundations/req:snap-reference}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/req:snap-reference}{Requirement~10.5}}%
+\begin{digestrequirement}[Snaps of a measurement family: kept, or moved and disclosed]
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{The reference.} Before it snaps an operator family read as a
+  measurement, an instance of what it declares or a producer of its own
+  emission (Definition~\ref{def:declared-data}), the declarer decides
+  exactly, of every reference of the family it uses or hands beside
+  the snap (Definition~\ref{def:exact-reference}), that every centre is
+  Hermitian with entries in $\mathbb{Q}(i)$ and that the radii are
+  non-negative rationals with $r_{il}=r_{li}$, of every factor
+  enclosure it carries (Definition~\ref{def:factor-enclosure}) that the
+  centre of its matrix box has entries in $\mathbb{Q}(i)$, that its
+  radii are non-negative rationals and that its core is diagonal with
+  positive rational entries, and, for an exact reference, that it is
+  positive semidefinite and complete at its constant. For a reference with a
+  radius that is not zero, three properties are not decided by the declarer:
+  that its enclosures enclose it, \eqref{eq:entrywise-enclosure}, and that it
+  is positive semidefinite and complete at its constant. They are
+  established by the claims of the module that constructs the reference,
+  which the record names, and its centres and radii are computed in exact
+  rational arithmetic on the exact island
+  (Definition~\ref{def:exact-island}\,(i)); a binary64 evaluation
+  establishes none of them. A reference of which any of them is not so
+  established is neither used nor handed. Nor is it decided by the
+  declarer, of any reference, that a block on which it carries a factor
+  enclosure is a member of it, \eqref{eq:factor-enclosure}: that too is
+  established by the claims of the module that constructs the reference,
+  which the record names, and the centres and radii of the factor enclosure are computed in exact
+  rational arithmetic or by a rigorously enclosed computation
+  (Definition~\ref{def:tiers}). A factor enclosure of which either is not so
+  established is not carried, and the reference is read without it. A producer's exact
+  construction, where it is exactly Hermitian, positive semidefinite and
+  complete, is an exact reference of its emission. An instance that holds a
+  reference so established hands it beside its snap
+  (Definition~\ref{def:evaluated-off-snap}\,(i)) on every block, save that,
+  in a run whose configuration declares that enclosed references are not
+  used, by the option \iface{reference_enclosure}, it hands only the blocks
+  every radius of which is zero.
+\item \emph{The snap.} Every such snap is made block by block. A block is
+  kept, $F^{(s)}=G^{(s)}$, where the declarer establishes an exact
+  reference $G$ of that block, against the sector map of the block
+  alone, decided as (i) states, every element of which is a
+  lattice value at the lattice exponent $k$
+  (Definition~\ref{def:binary64}\,(iv)), and where exact admissibility at the
+  constant $c$ (Definition~\ref{def:exact-admissibility}) and the lattice
+  condition at $k$, decided last on the block, hold. For a producer the
+  block kept is the one its own claims keep. Every other block is made by a
+  procedure that meets Requirement~\ref{req:support-safe-snap} and aims at
+  fidelity to the data it starts from rather than at any other property: an
+  instance's is one procedure for every such block, the support-safe steps
+  specified with the shared numerical code, run on the centres of an exact
+  reference of the block where the declarer establishes one, and otherwise
+  on the data as they stand, admitted within the declared tolerance; a
+  producer's is the procedure its own claims state. Where that procedure
+  yields on a block no data that satisfy the conditions of
+  Definition~\ref{def:snap}, the block is snapped by the last resort of
+  Requirement~\ref{req:support-safe-snap}\,(iv), which the record flags;
+  where the last resort too yields no such data, the declarer refuses the
+  data, naming the block and the condition that failed. Every block made by
+  this procedure or the last resort is moved
+  (Definition~\ref{def:snap}) unless the snap is decided exactly to equal on
+  it the data it is made from.
+\item \emph{Resting.} A moved block \emph{rests on
+  Assumption~\ref{ass:snapped-measurement}} when it is not evaluated
+  off its snap (Definition~\ref{def:evaluated-off-snap}); a kept block and
+  a block evaluated off its snap do not. The record of the run names every
+  block that rests on the assumption with its cause, its group and a fix.
+  The group is \emph{last resort} for a block snapped by the last resort,
+  whose fix is a model that includes the noise the device has, so that
+  every element of the block is positive definite, together with the fix of
+  its cause; otherwise it is the group of its cause:
+  \begin{enumerate}[label=(\alph*),leftmargin=2.0em]
+  \item \emph{no usable reference}: no reference is handed on the block,
+    because the declarer holds no reference of the family, because a
+    reference fails the decisions of (i) or a property that (i) leaves to
+    the constructing module is not established, or because the run declares
+    that enclosed references are not used and a radius of the block is not
+    zero; for a class of a producer's snap of its own emission, because the
+    producer forms no companion that carries its exact construction past
+    the snap, a \emph{bypassing companion}. The fix is a model of the family
+    with a reference that the run uses, and for the last of the instance's
+    causes an exact reference, or a run that uses enclosed references; for a
+    producer's class, declared numbers on which its exact construction stays
+    on the lattice, so that the class is kept;
+  \item \emph{reference bracket withdrawn}: a reference is handed on the
+    block, or, for a producer's class, a bypassing companion is formed, and
+    a companion carrying the reference on the block, or bypassing the class,
+    is evaluated, but the key length the run reports is formed from a number
+    on the snapped declaration, for one of three causes. Either no evaluated
+    point contributes a bound on the companion, so the run's first-order
+    number is formed on the snapped declaration
+    (\xref{meat-core/frank-wolfe/req:bracket-on-reference}); or the certified
+    evaluation finds the two enclosures of a block the companion carries
+    inconsistent, the bracket on the companion being withdrawn and the run's
+    first-order number formed on the snapped declaration, the cause
+    \iface{factor_enclosure_inconsistent}
+    (\xref{meat-core/frank-wolfe/req:certified-evaluation}\,(iv)); or a point
+    contributes, but the certified evaluation on the companion certifies no
+    point and the key length is formed from a number certified on the snapped
+    declaration in its place, the cause \iface{companion_not_certified}
+    (\xref{meat-core/frank-wolfe/req:certified-evaluation}\,(i)). The fix is
+    the one the reasons recorded at the evaluated points of the companion
+    name: the withdrawal reasons for the first cause and the reasons of the
+    certified evaluation for the third; for the second, no change of the
+    declaration, an inconsistency being a defect of the engine in the
+    modules that carry the enclosures, so the fix says that and that the
+    defect be reported;
+  \item \emph{reference bracket not evaluated}: a reference is handed on the
+    block, or, for a producer's class, a bypassing companion is formed, but
+    no companion carrying the reference on the block, or bypassing the class,
+    is evaluated, because none is formed, compiled or admitted. The fix is
+    the one the reason recorded for the companion names.
+  \end{enumerate}
+\item \emph{The strict option.} A run whose configuration declares the
+  \emph{strict option} \iface{strict_snaps} refuses wherever a moved
+  block would rest on Assumption~\ref{ass:snapped-measurement}, naming the
+  block, its cause, its group and the fix, and reports no key length that
+  rests on the assumption. It refuses as soon as the resting is decided: a
+  declarer when it snaps a moved block on which it hands no reference, a
+  producer when it snaps a moved class that no bypassing companion it forms
+  carries past the snap, and the run, after its search and before any key
+  length is reported, where a moved block or class is not evaluated off its
+  snap. A strict run forms no certified number on the snapped declaration in
+  place of a companion's
+  (\xref{meat-core/frank-wolfe/req:certified-evaluation}\,(i)), so the
+  cause \iface{companion_not_certified} of (iii)(b) does not arise in it,
+  and it refuses on the other two. A strict run none of whose
+  moved blocks rests on the assumption proceeds as one that does not declare
+  the option. In a run that does not declare it, the run proceeds; its record
+  carries, for every snap, the status of each block, kept or moved, the flag
+  of every block snapped by the last resort, the blocks that rest on the
+  assumption with their causes, groups and fixes, and
+  Assumption~\ref{ass:snapped-measurement} among the assumptions the run
+  rests on, naming those blocks, so that a report on the key rate can flag
+  that the rate rests on a snap. A run none of whose blocks rests on the
+  assumption does not rest on it.
+\end{enumerate}
+\end{digestrequirement}
+
+% claim foundations/req:support-safe-snap
+\digestlabel{req:support-safe-snap}{10.6}\pdfbookmark[2]{Requirement 10.6 Support-safe snaps of a measurement family}{digest-foundations/req:support-safe-snap}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/req:support-safe-snap}{Requirement~10.6}}%
+\begin{digestrequirement}[Support-safe snaps of a measurement family]
+Every snap $F$ at a lattice exponent $k$ of an operator family $D$ read as a
+measurement (Definition~\ref{def:snap}), against a sector map with blocks
+$s\in\mathsf{S}$ (Definition~\ref{def:sector-map}) and with constant $c$, by
+an instance of what it declares or by a producer of its own emission, with
+$D$ the data as they stand or a reference of the family
+(Definition~\ref{def:exact-reference}), satisfies (i) to (iii) on every block
+$s$ and for every outcome $j$, save on a block snapped by the last resort of
+(iv).
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{No revival.} The structural support of $F^{(s)}_j$ is
+  contained in that of $D^{(s)}_j$. In particular, if $D^{(s)}_j$ is
+  structurally zero, then $F^{(s)}_j=0$; and for every index $i$ at
+  which both row $i$ and column $i$ of $D^{(s)}_j$ are structurally zero,
+  row $i$ and column $i$ of $F^{(s)}_j$ are zero, which for a reference is
+  every index whose row is structurally zero.
+\item \emph{Lift per coordinate.} A step of the snap that changes the
+  elements in order to make them positive semidefinite does one of two
+  things. Either it adds to $F^{(s)}_j$ only a matrix $\sum_it_ie_ie_i^{*}$
+  with $t_i\ge0$, $e_i$ the $i$-th coordinate vector of the block, and
+  $t_i>0$ only for indices $i$ in the structural support of $D^{(s)}_j$; or
+  it replaces the family on the block by $(1-w)E+wT$. Here
+  $w\in(0,1)$ is rational; $E$ is the family on the block as the
+  preceding steps of the snap left it or, where every entry of $D^{(s)}$ is a Gaussian rational, $D^{(s)}$
+  itself; and $T$ is a family complete at $c$ on the block whose element
+  $T^{(s)}_j$ is, for every $j$, a diagonal matrix with non-negative entries
+  that are non-zero only at indices in the structural support of
+  $D^{(s)}_j$.
+\item \emph{Residue.} A step of the snap that adds to an element what the sum
+  of the elements lacks of $c\,\idon{d_s}$, or a part of it, adds it to
+  $F^{(s)}_j$ only where the structural support of $D^{(s)}_j$ contains every
+  index $i$ such that row $i$ or column $i$ of what it adds has a non-zero
+  entry.
+\item \emph{Last resort.} Where a procedure meeting (i) to (iii) yields on a
+  block $s$ no family that satisfies the conditions of
+  Definition~\ref{def:snap}, the snap may, on that block alone, replace the
+  family by $(1-w)E+wU$ and then restore the lattice condition and
+  completeness; (i) to (iii) do not bind on that block. Here $w\in(0,1)$ is
+  rational; $E$ is the family that procedure produced on the block or, where
+  every entry of $D^{(s)}$ is a Gaussian rational, $D^{(s)}$ itself; and $U$
+  is a family complete at $c$ on the block whose element $U^{(s)}_j$ is, for
+  every $j$, a positive rational multiple of $\idon{d_s}$, or zero where
+  $D^{(s)}_j$ is structurally zero. The record of the snap flags the block
+  \iface{support_not_preserved}, since an element may then have support
+  where $D^{(s)}_j$ is structurally zero.
+\end{enumerate}
+\end{digestrequirement}
+
+\section*{11\quad Emission}\pdfbookmark[1]{11 Emission}{digest-group-foundations/req:declared-lattice}
+
+% claim foundations/req:declared-lattice
+\digestlabel{req:declared-lattice}{11.1}\pdfbookmark[2]{Requirement 11.1 The declared lattice condition}{digest-foundations/req:declared-lattice}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/req:declared-lattice}{Requirement~11.1}}%
+\begin{digestrequirement}[The declared lattice condition]
+(D-LAT) Let $k$ be the one lattice exponent
+(Definition~\ref{def:binary64}\,(iv)) at which a declarer declares operator
+data. Every entry of every operator of those data is a lattice value at
+$k$: the real and the imaginary part of the entry are integer multiples of
+$2^{-k}$ and have modulus at most $1$. Each entry is then exactly a binary64
+number, by Lemma~\ref{lem:binary64-lattice}\,(i).
+
+Operator data are declared at a lattice exponent $k$, and (D-LAT) binds them,
+in these cases and no other: the data an instance snaps at $k$
+(Definition~\ref{def:snap}); the data an instance declares to a consumer that
+admits declared data only at a declared lattice exponent $k$; and every
+operator that a producer which declares a lattice exponent $k$ emits
+(Definition~\ref{def:declared-data}). Where data of the second case are
+numbers of a supplier's output that the instance passes on unchanged
+(Definition~\ref{def:declared-data}\,(ii)), the instance does not establish
+(D-LAT) of them: the consumer's exact decision on entry establishes it, and
+the consumer refuses data that fail it
+(Requirement~\ref{req:boundary-admission}). A producer that declares no
+lattice exponent has no obligation under (D-LAT).
+\end{digestrequirement}
+
+% claim foundations/req:rounding-direction
+\digestlabel{req:rounding-direction}{11.2}\pdfbookmark[2]{Requirement 11.2 Rounding direction of emitted bounds}{digest-foundations/req:rounding-direction}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/req:rounding-direction}{Requirement~11.2}}%
+\begin{digestrequirement}[Rounding direction of emitted bounds]
+(D-DIR) Every emitted scalar bound is rounded onto the lattice in the direction
+that weakens the claim it carries, never to nearest: a lower bound \emph{down},
+an upper bound \emph{up}, a constraint constant in the direction that enlarges
+the feasible set for its declared relation. The direction is recorded per
+bound, and where a family's completeness depends on a rounded weight the
+complementary quantity is \emph{recomputed} from the rounded weights, never
+rounded independently.
+
+It binds every producer that declares a lattice exponent $k$
+(Definition~\ref{def:declared-data}), for each scalar bound it emits, the
+lattice being that of the lattice values at $k$
+(Definition~\ref{def:binary64}\,(iv)); the claim that states the emission names
+the direction of each such bound. A producer that declares no lattice exponent,
+and that constructs an emitted scalar bound exactly and then rounds it to a
+binary64 number, rounds it in the same direction, never to nearest.
+\end{digestrequirement}
+
+% claim foundations/req:exact-emission
+\digestlabel{req:exact-emission}{11.3}\pdfbookmark[2]{Requirement 11.3 Exact verification before emission}{digest-foundations/req:exact-emission}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/req:exact-emission}{Requirement~11.3}}%
+\begin{digestrequirement}[Exact verification before emission]
+(D-EMIT) Every producer (Definition~\ref{def:declared-data}) emits an operator
+family as a measurement only after establishing, of the
+numbers it will emit and by exact arithmetic on them: (i) the
+sector map is the
+consumer's, decided and never measured; (ii) exact Hermiticity; (iii) exact
+positive semidefiniteness, by a rational $LDL^{*}$ with the zero-pivot rule or
+an equivalent exact decision, never by a floating-point eigenvalue; (iv) exact
+completeness per sector block, as an identity of the emitted numbers; (v) the
+completeness sum in the declared order rounds nowhere in
+binary64, and, where
+it emits Alice's measurement $\{M_x\}$ and her marginal $\tau_A$ of a protocol
+declaration, so do the completeness sum of the one and the trace of the other;
+(vi) where it declares a lattice exponent $k$, Requirement~\ref{req:declared-lattice}
+of every entry at $k$. Conditions (i)--(v) of a family are its exact
+admissibility with constant $1$ for the sector map the consumer holds
+(Definition~\ref{def:exact-admissibility}), and the clause of (v) on
+$\{M_x\}$ and $\tau_A$ binds only a producer that emits them.
+
+A producer that cannot establish the conditions that bind it \emph{refuses,
+naming the predicate}, save in the one case below; it repairs nothing it was
+handed. A producer that declares a lattice exponent $k$ may, where the family it
+constructed fails any of (ii)--(iv) or (vi), instead \emph{declare} a nearby
+family established under all six: a snap at $k$ of its own emission
+(Definition~\ref{def:snap}), made as Requirement~\ref{req:snap-reference}
+states. Its moved blocks are related to its exact construction by no
+claim; a run that consumes the emission evaluates the numbers its key length
+rests on with the exact construction in their place where it can, and
+otherwise rests, on the blocks that Requirement~\ref{req:snap-reference}\,(iii)
+names, on Assumption~\ref{ass:snapped-measurement}\,(ii): what it concludes
+from the emitted family holds of the snapped family. A run that declares the
+strict option of Requirement~\ref{req:snap-reference}\,(iv) refuses there
+instead. The producer must disclose that the emitted numbers are a
+declaration and not the constructed ones, the measured per-block
+displacement, the rounding direction of every weight that it rounds in
+constructing the emission, and, separately, the status of every block, kept
+or moved, and the flag of every block snapped by the last resort of
+Requirement~\ref{req:support-safe-snap}\,(iv). A producer that
+declares no lattice exponent declares no nearby family.
+\end{digestrequirement}
+
+\section*{12\quad Arithmetic and tiers}\pdfbookmark[1]{12 Arithmetic and tiers}{digest-group-foundations/req:exact-island}
+
+% claim foundations/req:exact-island
+\digestlabel{req:exact-island}{12.1}\pdfbookmark[2]{Requirement 12.1 Exact arithmetic on the island, unbudgeted rounding elsewhere}{digest-foundations/req:exact-island}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/req:exact-island}{Requirement~12.1}}%
+\begin{digestrequirement}[Exact arithmetic on the island, unbudgeted rounding elsewhere]
+Every decision, certification and construction of the exact island
+(Definition~\ref{def:exact-island}) is computed in exact rational arithmetic on
+the values it is given, so that what it decides, certifies or constructs holds
+of those values exactly. A candidate proposed by binary64 arithmetic, such as
+a point or a multiplier, enters the exact island only as a value given to such
+a decision or certification, and nothing is established of it by the
+arithmetic that proposed it. Outside the exact island the engine may compute
+in binary64, and it neither bounds nor budgets the rounding of those
+computations: no module other than a supplier tracks a floating-point error
+budget, and no result of the engine rests on one except as follows. A
+supplier (Definition~\ref{def:declared-data}\,(ii)) may allow for the error of
+one of its own floating-point evaluations by a slack that an instance declares
+to it, under an assumption of its own claims, which it does not verify, that
+the slack bounds that error on the side that would make its output unsound.
+A result that rests on such an evaluation rests on that assumption, and the
+supplier carries the assumption, with its slack, in its output. A computation
+outside the exact island that is rigorously enclosed
+(Definition~\ref{def:tiers}) is neither: each of its operations bounds its
+own rounding, so what it establishes holds of the exact quantity and no
+allowance is assumed to bound its error. The engine forms every number it
+reports at the certified tier from such computations and from the
+exact island alone.
+\end{digestrequirement}
+
+% claim foundations/req:tiers
+\digestlabel{req:tiers}{12.2}\pdfbookmark[2]{Requirement 12.2 Reporting of the tiers}{digest-foundations/req:tiers}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-foundations/req:tiers}{Requirement~12.2}}%
+\begin{digestrequirement}[Reporting of the tiers]
+Every run that reports a key rate reports it at every tier of
+Definition~\ref{def:tiers} that it reaches: the estimate always, the
+first-order number wherever the hypotheses of the claim that establishes it
+held, and the certified number wherever the requirement of the solver that
+forms it reports it at that tier, which may withhold the tier from a number
+that meets Definition~\ref{def:tiers}\,(iii) but rests on an upstream
+premise; together with the field
+\iface{reported_tier}, which names the strongest tier reached, the tier that
+carries the run's claim. Where the first-order number is reported, the number
+at that strongest tier is the headline key rate, and the key length the run
+reports is formed from it; a number at a weaker tier is recorded beside it.
+No module reports a number under a tier stronger than the checks that number
+has passed support, and a request naming a tier that
+Definition~\ref{def:tiers} does not list is refused as an unknown tier.
+\end{digestrequirement}
+
+\bibliographystyle{plain}
+\bibliography{../../../refs/references}
+
+\end{document}

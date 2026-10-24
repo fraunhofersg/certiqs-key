@@ -1,0 +1,50 @@
+% ---
+% id: meat-core/rem:removal-general-format
+% kind: rem
+% title: "Removal in the general format"
+% summary: >-
+%   A party-local entry makes clause (d) unsatisfiable, since the removal
+%   theorem excludes it; several measured factors leave the checklist no
+%   declared value to read, though the theorem can hold. Either way no sector
+%   is flagged, so no set of sectors is deleted.
+% prominence: standard
+% status: accepted
+% uses: [def:classes, thm:removal, prop:removal-compose]
+% mentions: [req:removal-checklist, def:declaration]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Requirement~\ref{req:removal-checklist} sets the removable flag for no
+sector of a declaration whose list carries an entry declared
+\tref{party-local}, nor of one with more than one \tref{measured factor}.
+The two grounds differ in kind.
+
+\begin{remark}\label{rem:removal-general-format}
+\emph{A party-local entry is excluded by the theorem.}
+Theorem~\ref{thm:removal} is stated for a list carrying no entry declared
+party-local, so for a list carrying one, clause~(d) of
+Definition~\ref{def:classes} is unsatisfiable and no sector carries a
+witness in its sense.
+
+\emph{Several measured factors are excluded by the checklist, not by the
+theorem.} The theorem's proof reads the sector blocks as operators and
+needs no factorisation of them, so its hypotheses can hold of a declaration
+with more than one measured factor. What fails there is the decision
+procedure: the blocks $F^{(s)}_v$ are products \eqref{eq:productfamily}
+that are never formed as data, so the bit-level test of (W1) and the
+residuals of (W6) have no \tref{declared value} to read. This ground is a
+refusal of the flag and not a soundness ground.
+
+\emph{Both close the deletion of a set.} Both refusals retain sectors,
+which is unconditionally sound, and both are stated of the flag. The flag is
+what closes the composite deletion: the hypothesis of
+Proposition~\ref{prop:removal-compose} quantifies over sectors carrying a
+witness in the sense of~(d), and a run deletes a set of sectors only on the
+strength of the flag, which is set for none of them in either case. So no
+composite deletion is available for a declaration carrying a party-local
+entry or measuring more than one factor, and the proposition is not reached
+there.
+\end{remark}

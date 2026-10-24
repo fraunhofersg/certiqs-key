@@ -1,0 +1,347 @@
+% =============================================================================
+%  spec/macros.tex -- the one macro set every generated contract inputs.
+%
+%  Two parts: part A, the macros spec/notation.md catalogues, and part B,
+%  the macros local to one module, grouped by module.
+%  harness/assemble_contract.py emits \input{../../macros} for it, so the
+%  file is read from spec/modules/<id>/.
+%
+%  RULES
+%    * A macro that spec/notation.md catalogues is a verbatim copy of it
+%      (part A). Changing one is a notation change: bump spec/notation.md.
+%    * Part B holds the module-local macros. A macro defined by two modules
+%      with the same expansion appears once, under the first module (in the
+%      order below) that defines it. Two macros with the same name and
+%      DIFFERENT expansions are both kept under a module prefix, and the
+%      claims write the prefixed names:
+%        \Chain  -> \redChain (reductions, \mathfrak{C}: the reduction chain)
+%                   \pcChain  (protocol-compiler, \mathfrak{R}: the two-segment
+%                             chain; \Chsrc and \Chrec are built on it)
+%        \Nmsm   -> \redNmsm  (reductions, \mathcal{N}: a POVM measurement
+%                             channel)
+%                   \pcNmsm   (\mathcal{N}_{\mathsf A}: Alice's measurement
+%                             channel, written by
+%                             transmitter/thm:certificate-sufficiency,
+%                             transmitter/rem:xreg and
+%                             reductions/lem:source-transfer)
+%    * Deliberately omitted: a \provenance{tag}{details} macro. Provenance
+%      is a header field of every claim file (spec/claim-format.md section
+%      3); a claim body that calls such a macro fails to compile, which is
+%      the intended signal.
+%
+%  REQUIRED PACKAGES, loaded by the assembler's preamble before this file:
+%    amsmath, amssymb, amsfonts, mathtools, dsfont, braket, physics, xcolor
+%    (braket before physics, so that physics wins for \ket, \bra, \tr, ...).
+%
+%  This file contains only definitions: no \usepackage, no document body.
+% =============================================================================
+
+
+% =============================================================================
+%  PART A -- notation macros, the ones spec/notation.md catalogues, each a
+%  verbatim copy of its catalogue row; grouped under numbered headings.
+% =============================================================================
+
+% -----------------------------------------------------------------------------
+% 1. State spaces and operator sets (a "system label" -> spaces of operators)
+% -----------------------------------------------------------------------------
+\newcommand{\Hs}[1]{\mathcal{H}(#1)}        % Hilbert space of a system label
+\newcommand{\Lin}[1]{\mathcal{L}(#1)}       % bounded linear operators on H(#1)
+\newcommand{\Linn}[2]{\mathcal{L}(#1,#2)}   % linear maps H(#1) -> H(#2)
+\newcommand{\Pos}[1]{\mathrm{Pos}(#1)}      % positive semidefinite operators on H(#1)
+\newcommand{\Density}{\mathrm{D}}           % density operators: \Density(A) = D(A)
+\newcommand{\Seq}[1]{S_{=}(#1)}             % normalized states (trace = 1)
+\newcommand{\Sleq}[1]{S_{\leq}(#1)}         % subnormalized states (0 <= trace <= 1)
+\newcommand{\id}{\mathds{1}}                % identity operator
+\newcommand{\idon}[1]{\mathds{1}_{#1}}      % identity on a named system, e.g. \idon{C}
+
+% DEPRECATED: applies \mathcal to both arguments itself, so it takes bare
+% letters, not system labels. Prefer \Linn; do not use in new contracts.
+\providecommand{\Lop}[2]{\mathcal{L}(\mathcal{#1}, \mathcal{#2})}
+
+
+% -----------------------------------------------------------------------------
+% 2. Composite systems
+% -----------------------------------------------------------------------------
+\newcommand{\dsum}{\oplus}                  % direct sum of system labels
+% Tensor product: use \otimes directly.
+% n-fold direct sum of an operator space: \Lin{A}^{\oplus n}
+
+
+% -----------------------------------------------------------------------------
+% 3. Events, conditioning and classical registers (for STATES)
+%    Convention:  \wedge  -> subnormalized "and-event" component, e.g. \rho_{A\wedge x}
+%                 |        -> normalized conditional state,        e.g. \rho_{A|x}
+% (Write these directly in subscripts; no extra macros needed.)
+% -----------------------------------------------------------------------------
+
+
+% -----------------------------------------------------------------------------
+% 4. Photon-number subspaces / direct-sum blocks
+%    Convention:  operators carry the restriction "on top", in brackets;
+%                 states carry it as a \wedge subscript (see Sec. 3).
+% -----------------------------------------------------------------------------
+\newcommand{\Pnum}[1]{P_{#1}}               % photon-number projector (system from context)
+\newcommand{\Pnumon}[2]{P_{#1}^{#2}}        % with explicit system superscript, e.g. P_n^C
+\newcommand{\blk}[2]{#1^{(#2)}}             % operator block, e.g. \blk{M}{\leqN} = M^{(<=N)}
+\newcommand{\leqN}{\leq N}                  % use as \blk{M}{\leqN}
+\newcommand{\gtN}{> N}                      % use as \blk{M}{\gtN}
+\newcommand{\eqn}{= n}                      % use as \blk{M}{\eqn}
+
+
+% -----------------------------------------------------------------------------
+% 5. System labels used in the protocol
+% -----------------------------------------------------------------------------
+\newcommand{\Chan}{C}                       % quantum-channel (Eve) input to Bob
+\newcommand{\Prb}{P}                        % probe input
+\newcommand{\Flag}{{\mathrm{Flg}}}          % flag system (EXISTS ONLY AFTER squashing)
+\newcommand{\Loss}{{\mathrm{Lss}}}          % loss system
+\newcommand{\Vc}{{\mathrm{Vcm}}}            % vacuum system
+\newcommand{\Nout}{N_{\mathrm{out}}}
+\newcommand{\Nin}{N_{\mathrm{in}}}
+
+
+% -----------------------------------------------------------------------------
+% 6. Alphabets
+% -----------------------------------------------------------------------------
+\newcommand{\Yset}{\mathcal{Y}}             % Bob's (coarse-grained) detection alphabet
+\newcommand{\Yraw}{\mathcal{Y}_{\mathrm{raw}}}% raw click patterns {0,1}^4
+\newcommand{\Yscset}{\mathcal{Y}_{\singlec}}% single-click outcomes
+\newcommand{\Ymcset}{\mathcal{Y}_{\mc}}     % multi-click outcomes
+\newcommand{\Tset}{\mathcal{T}_{\mathrm{set}}}% private setting set (the probe settings in the optical instance)
+\newcommand{\Xset}{\mathcal{X}}             % Alice's alphabet
+\newcommand{\Dset}{\{H,V,+,-\}}             % polarization / detector labels
+\newcommand{\pass}{\top}                    % pass sifting
+
+
+% -----------------------------------------------------------------------------
+% 7. Mode / outcome abbreviations
+% -----------------------------------------------------------------------------
+\newcommand{\on}{{\mathrm{on}}}
+\newcommand{\off}{{\mathrm{off}}}
+\newcommand{\dc}{{\mathrm{dc}}}             % dark count
+\newcommand{\sq}{\mathrm{sq}}               % squashed
+\newcommand{\mc}{\mathrm{mc}}               % multi-click
+\newcommand{\nc}{\mathrm{nc}}               % no-click
+\newcommand{\singlec}{\mathrm{sc}}          % single-click
+\newcommand{\vac}{\mathrm{vac}}             % vacuum
+\newcommand{\kout}{{k_\mathrm{out}}}
+\newcommand{\kin}{{k_\mathrm{in}}}
+
+
+% -----------------------------------------------------------------------------
+% 8. Maps, channels and miscellaneous operators
+% -----------------------------------------------------------------------------
+\newcommand{\Prob}{\mathrm{Prob}}           % probability (use \Prob[\cdot] or \Prob(\cdot))
+\newcommand{\lmin}{\lambda_{\min}}          % minimum eigenvalue
+\newcommand{\Wflag}{W_{\Flag}}              % flag-space weight
+\newcommand{\transpose}{\mathsf{T}}
+\newcommand{\innerp}[2]{\left\langle #1 \vert #2 \right\rangle}
+\renewcommand{\vec}[1]{\boldsymbol{#1}}     % NB: overrides the LaTeX arrow accent
+
+
+% -----------------------------------------------------------------------------
+% 9. Key-rate numerics
+% -----------------------------------------------------------------------------
+\newcommand{\cG}{\mathcal{G}}               % protocol map
+\newcommand{\cZ}{\mathcal{Z}}               % pinching map
+\newcommand{\Amap}{\mathcal{A}_{\mathrm{ann}}} % announcement + measurement map
+\newcommand{\Amapnb}{\mathcal{A}_{\mathrm{ann}|\mathrm{nb}}}
+\newcommand{\simpl}{}                       % empty suffix for simplified block maps
+\newcommand{\acSet}{\mathcal{S}_{\mathrm{acc}}} % acceptance set
+\newcommand{\testE}{\mathcal{E}_{\mathrm{test}}} % test-statistics map
+\newcommand{\ecLeak}{\mathrm{leak}^{\mathrm{EC}}_{\mathrm{obs}}}
+\newcommand{\pgen}{p_{\mathrm{gen}}}
+\newcommand{\askeyr}{R_{\infty}}             % asymptotic key rate
+\newcommand{\ppass}{p_{\mathrm{pass}}}       % sifting pass probability
+
+
+% -----------------------------------------------------------------------------
+% 10. Finite-size analysis / Renyi entropies
+% -----------------------------------------------------------------------------
+
+% --- Round types: test vs. key generation (register T, alphabet \Fset) --------
+\newcommand{\tst}{\mathrm{test}}            % test round
+\newcommand{\gen}{\mathrm{gen}}             % key-generation round
+\newcommand{\Fset}{\mathcal{T}}             % round-type alphabet {test, gen} (not \Tset)
+\newcommand{\Chat}{\widehat{C}}             % acceptance-test register
+\newcommand{\Chatset}{\widehat{\mathcal{C}}}% its alphabet
+
+% --- Basis / key extraction functions ----------------------------------------
+\newcommand{\bA}{b_{A}}                     % Alice's basis-extraction function
+\newcommand{\bB}{b_{B}}                     % Bob's basis-extraction function
+\newcommand{\kB}{k_{B}}                     % Bob's key-extraction function
+
+% --- Maps --------------------------------------------------------------------
+\newcommand{\Mprot}{\mathcal{M}}            % single-round protocol map
+\newcommand{\Phimap}{\boldsymbol{\Phi}}     % test-statistics map
+\newcommand{\Pdeph}{\mathcal{P}}            % dephasing (pinching) map on \Blreg
+
+% --- Isometries --------------------------------------------------------------
+\newcommand{\Vmsm}{V_{\mathrm{msm}}}        % measurement isometry
+\newcommand{\Vann}{V_{\mathrm{ann}}}        % announcement isometry
+\newcommand{\VI}{V_{I}}                     % Eve's copy of the announcements
+\newcommand{\VChat}{V_{\Chat}}              % acceptance-data isometry
+\newcommand{\VR}{V_{R}}                     % sifting + key map -> raw key R
+\newcommand{\VZ}{V_{Z}}                     % raw key -> key register Z
+\newcommand{\Wprot}{W}                      % full protocol isometry
+
+% --- Renyi entropies ---------------------------------------------------------
+% SECURITY-CRITICAL: see spec/notation.md §4. Never change an arrow to
+% make an inequality work out; never convert silently between the sandwiched
+% (tilde) and Petz (overline) families.
+\newcommand{\Hsandup}{\widetilde{H}^{\uparrow}_{\alpha}}   % sandwiched, up
+\newcommand{\Hsanddown}{\widetilde{H}^{\downarrow}_{\alpha}}% sandwiched, down
+\newcommand{\Hpetzup}{\overline{H}^{\uparrow}_{\alpha}}    % Petz, up
+\newcommand{\Hpetzdown}{\overline{H}^{\downarrow}_{\alpha}}% Petz, down
+\newcommand{\hup}{h^{\uparrow}_{\alpha}}                   % single-round rate
+\newcommand{\hqkd}{h^{\uparrow,\mathrm{QKD}}_{\alpha}}     % single-round QKD rate
+\newcommand{\hlow}{\underline{h}_{\alpha}}                 % lower bound on \hqkd
+% --- spec/notation.md 3.5 and 4.5 -------------------------------------------
+% \hlb  is the first-order linearization lower bound on \hlow: the headline
+%       key rate (the `first-order` tier of foundations/def:tiers). NOT \hlow
+%       itself.
+% \tnum is the instance's one declared numerical tolerance. Its
+%       near-collision with the declared marginal \tau_A is disclosed in
+%       spec/notation.md 3.5; bare \tau is reserved and denotes neither.
+\newcommand{\hlb}{\underline{h}^{\mathrm{FO}}_{\alpha}}    % first-order lower bound on \hlow
+\newcommand{\tnum}{\tau_{\mathrm{num}}}                    % declared numerical tolerance
+
+
+% =============================================================================
+%  PART B -- module-local macros, grouped by module. Deprecated aliases,
+%  defined so that a text written with them compiles, used in no new contract: \Lop,
+%  \testE, \Pdeph, \pass, \ecLeak (spec/notation.md section 3.9).
+% =============================================================================
+
+% --- meat-core -----------------------------------------------------------------
+\newcommand{\SecSet}{\mathbb{S}}            % sector index set of Q
+\newcommand{\Qsys}{Q}                       % declared sector-carrying measured system
+\newcommand{\Vset}{\mathcal{V}}             % declared joint outcome alphabet of the Q-POVM
+\newcommand{\CAset}{\mathcal{C}_{A}}        % Alice announcement alphabet
+\newcommand{\CBset}{\mathcal{C}_{B}}        % Bob announcement alphabet
+\newcommand{\Party}{\mathfrak{P}}           % declared party partition
+\newcommand{\Oset}[1]{\mathcal{O}_{#1}}     % readout alphabet of party #1
+\newcommand{\rd}[1]{\pi_{#1}}               % readout map of party #1
+\newcommand{\Sadm}{\mathcal{S}_{A}}         % admissible Alice subspace
+\newcommand{\nomarg}{\mathsf{none}}         % "no trusted marginal declared"
+\newcommand{\Zset}{\mathcal{Z}_{\perp}}     % raw-key alphabet incl. \perp
+\newcommand{\Zval}{\mathcal{Z}}             % key alphabet without \perp
+\newcommand{\Etil}{\widetilde{E}}           % single-round purifying register
+\newcommand{\Ehat}{\widehat{E}}             % Eve's n-round register
+\newcommand{\OmAT}{\Omega_{\mathrm{AT}}}    % acceptance event
+\newcommand{\epa}{\varepsilon_{\mathrm{PA}}}
+\newcommand{\eev}{\varepsilon_{\mathrm{EV}}}
+\newcommand{\lEC}{\lambda_{\mathrm{EC}}}
+\newcommand{\Decl}{\mathfrak{D}}            % protocol declaration
+\newcommand{\CList}{\mathfrak{L}}           % declared constraint list
+\newcommand{\PinS}{\mathcal{P}_{\SecSet}}   % sector pinching on Q
+\newcommand{\Feas}{\mathcal{W}}             % feasible set of block states
+\newcommand{\Chkey}{\Chatset_{\mathrm{key}}}% key-live acceptance values
+\newcommand{\Kann}{\mathcal{K}}             % announcement-class alphabet
+\newcommand{\hold}{\mathsf{h}}              % declared key holder (A or B)
+\newcommand{\sfD}{D}                        % classical KL divergence (base 2)
+\newcommand{\Dtwo}{D}                       % quantum relative entropy (base 2)
+\newcommand{\Dsand}{\widetilde{D}_{\alpha}} % sandwiched Renyi divergence
+\newcommand{\idmap}{\mathrm{id}}            % identity channel
+\newcommand{\Aev}{\mathcal{A}}              % Eve's per-round attack channel
+\newcommand{\AttSet}{\mathfrak{A}}          % licensed attack-channel set
+\newcommand{\Chacc}{\Chatset_{\mathrm{acc}}}% acceptance support of \acSet
+\newcommand{\epsstar}{\varepsilon^{\star}}      % distance to an exact POVM
+\newcommand{\dfH}{\Delta_{\mathrm{herm}}}       % Hermiticity defect
+\newcommand{\dfP}{\Delta_{\mathrm{pos}}}        % negative part
+\newcommand{\dfC}{\Delta_{\mathrm{cpl}}}        % completeness defect
+\newcommand{\lmoq}{g}                       % acceptance-side gradient block
+\newcommand{\lmoJ}{G}                       % feasible-side gradient block
+\newcommand{\bacc}{\beta_{\mathrm{acc}}}    % certified acceptance-side minimum
+\newcommand{\Itset}{\mathfrak{I}}           % finite index set of iterates (C22)
+
+% --- reductions ----------------------------------------------------------------
+\newcommand{\Bsys}{B}                        % physical (pre-squashing) system
+\newcommand{\Tcl}[1]{\mathcal{T}(#1)}        % trace-class operators on H(#1)
+\newcommand{\Ins}{\mathcal{I}}               % generalized-instrument branch map
+\newcommand{\redNmsm}{\mathcal{N}}              % POVM measurement channel
+\newcommand{\Eprot}{\mathcal{E}}             % n-round protocol channel
+\newcommand{\Grnd}{\mathsf{G}}               % one round map of a protocol
+\newcommand{\Kfin}{\mathsf{K}}               % end-of-protocol processing
+\newcommand{\Crit}{\mathsf{sec}}             % value of a security criterion
+\newcommand{\Pflag}{\Pi_{\Flag}}             % flag-sector projector on Q
+\newcommand{\Pleq}{\Pi_{\leqN}}              % preserved-block projector
+\newcommand{\Pgt}{\Pi_{\gtN}}                % above-cutoff projector
+\newcommand{\Sph}{S^{\mathrm{ph}}}           % family of physical inputs
+\newcommand{\Srch}{S^{\mathrm{rch}}}         % reachable squashed states
+\newcommand{\Ssq}{S^{\sq}}                   % squashed admissible set
+\newcommand{\Ffss}{F^{\mathrm{FSS}}}         % flag-state-squasher target
+\newcommand{\Fwp}{F^{\mathrm{WP}}}           % multi-bound WPFSS target
+\newcommand{\Mwp}{M^{\mathrm{WP}}}           % renormalized above-cutoff POVM
+\newcommand{\Mdec}{{M'}^{\mathrm{ph}}}       % declared physical family on B
+\newcommand{\Ppvm}{P^{\Flag}}                % flag PVM
+\newcommand{\Lmp}{{\Lambda_{\mathrm{mp}}}}   % measure-and-prepare channel
+\newcommand{\Lwp}{{\Lambda^{\mathrm{WP}}}}   % multi-bound WPFSS channel
+\newcommand{\Lfss}{{\Lambda^{\mathrm{FSS}}}} % flag-state-squasher channel
+\newcommand{\lmax}{\lambda_{\max}}           % maximum eigenvalue
+\newcommand{\Lnoise}{\widetilde{\Lambda}}    % flag-noise channel
+\newcommand{\cg}{\varpi}                     % declared coarse-graining map
+\newcommand{\MCK}{\mathsf{MC}}               % multiclick raw-pattern set
+\newcommand{\redChain}{\mathfrak{C}}            % reduction chain
+\newcommand{\Lnk}{\ell}                      % a single typed link
+\newcommand{\dsq}{\preceq}                      % the squashing relation
+\newcommand{\opn}[1]{\left\lVert #1\right\rVert}           % operator (spectral) norm
+\newcommand{\mxn}[1]{\left\lVert #1\right\rVert_{\max}}    % entrywise max modulus
+\newcommand{\Fld}{\mathbb{F}}                   % exact ordered substrate field
+\newcommand{\Fldi}{\mathbb{F}_{i}}              % its Gaussian extension F + iF
+\newcommand{\lat}[1]{\big\lfloor #1\big\rfloor_{\kappa}} % round DOWN onto the lattice
+
+% --- protocol-compiler ---------------------------------------------------------
+\newcommand{\Spec}{\mathfrak{S}}             % protocol specification (compiler input)
+\newcommand{\pcChain}{\mathfrak{R}}            % reduction chain (two typed segments)
+\newcommand{\Chsrc}{\pcChain_{\mathrm{src}}}   % its Alice-side source-map segment
+\newcommand{\Chrec}{\pcChain_{\mathrm{rec}}}   % its receiver-side squashing segment
+\newcommand{\rvirt}{\rho^{\mathrm{v}}}       % virtual (PRE-source-map) signal state
+\newcommand{\Fph}{F^{\mathrm{ph}}}           % physical (pre-reduction) POVM element
+\newcommand{\Vph}{\mathcal{V}^{\mathrm{ph}}} % physical outcome alphabet
+\newcommand{\Tpub}{\mathcal{T}_{\mathrm{pub}}}% public-choice alphabet
+\newcommand{\Uset}{\mathcal{U}}              % residual outcome alphabet
+\newcommand{\idxm}{\mathsf{idx}}             % label-to-index map
+\newcommand{\Asig}{A'}                       % transmitted (signal) system -- the REAL one
+\newcommand{\Avirt}{A''}                     % virtual transmitted system (source descriptor of Xi_1)
+\newcommand{\Abar}{\bar{A}}                  % Alice's measured register
+\newcommand{\Ahat}{\hat{A}}                  % Alice's shield register
+\newcommand{\pcNmsm}{\mathcal{N}_{\mathsf A}}  % Alice's measurement channel (see the RULES block)
+\newcommand{\Phip}{\Phi^{+}}                 % maximally entangled vector label
+\newcommand{\Smap}{\mathfrak{s}}             % the emitted sector map (fraktur: a compile-time object)
+
+% --- receiver ------------------------------------------------------------------
+\newcommand{\Modes}{\mathbb{M}}              % declared ordered mode set
+\newcommand{\Inp}{\mathbb{I}}                % declared input modes
+\newcommand{\InpC}{\mathbb{I}_{\Chan}}       % channel input modes
+\newcommand{\InpS}{\mathbb{I}_{\Prb}}        % probe (source) input modes
+\newcommand{\Env}{\mathbb{E}}                % dilation (environment) modes
+\newcommand{\Port}[1]{\mathbb{P}_{#1}}       % mode set of detector port #1
+\newcommand{\Emd}[1]{E_{#1}}                 % coordinate projector on modes #1
+\newcommand{\Gmat}{G}                        % instrument (transfer) matrix
+\newcommand{\Fock}{\mathfrak{F}}             % Fock / second-quantization functor
+\newcommand{\Symn}[1]{\mathrm{Sym}^{#1}}     % symmetric tensor power
+\newcommand{\normord}[1]{{:}\mspace{2mu}#1\mspace{2mu}{:}}   % normal ordering
+\newcommand{\rk}{\operatorname{rank}}        % rank (physics.sty owns \rank)
+\newcommand{\SCK}{\mathsf{SC}}               % single-click pattern set
+\newcommand{\Recv}{\mathfrak{R}}             % receiver instrument tuple
+\newcommand{\Cat}{\mathfrak{C}}              % component catalogue
+\newcommand{\Grph}{\mathfrak{E}}             % declared element graph
+\newcommand{\defic}{\mathbb{L}}              % loss deficiency operator
+\newcommand{\Pvac}[1]{\Pi_{\vac}(#1)}        % joint no-click element on ports #1
+\newcommand{\pmc}{p_{\mc}}                   % uniform high-photon mc weight
+\newcommand{\Bnd}{\beta}                     % the scalar bound function beta(n)
+\newcommand{\Rot}{R}                         % planar rotation matrix
+\newcommand{\Wplate}{W}                      % retarder (wave-plate) matrix
+\newcommand{\Bsp}{B}                         % beamsplitter core matrix
+
+% --- statistics ----------------------------------------------------------------
+\newcommand{\honest}{p^{\mathrm{hon}}}          % honest per-round distribution
+\newcommand{\ecomp}{\varepsilon_{\mathrm{comp}}}% completeness budget
+\newcommand{\simplex}[1]{\Delta(#1)}            % probability simplex
+\newcommand{\Chatcon}{\Chatset_{\mathrm{con}}}  % constrained outcomes
+\newcommand{\Ireg}[3]{\mathcal{I}_{#1}(#2,#3)}  % regularized incomplete beta
+\newcommand{\Ncount}[1]{\mathsf{N}_{#1}}        % per-outcome count
+\newcommand{\qlo}{\mathbf{q}^{-}}               % box lower bounds
+\newcommand{\qhi}{\mathbf{q}^{+}}               % box upper bounds

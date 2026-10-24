@@ -1,0 +1,54 @@
+% ---
+% id: receiver/def:slot
+% kind: def
+% title: "The strengthening slot"
+% summary: >-
+%   The artifact carries high-photon lower bounds on disjoint sets of raw
+%   outcomes, one weight per set and setting; a set's uniform weight is its
+%   minimum over the settings. The receiver carries one entry, the multiclick
+%   set with the per-setting multiclick weights.
+% prominence: standard
+% status: implemented
+% uses: [def:setting-family]
+% mentions: [def:pmc, def:pmcex, def:enclosed-weight, thm:emitted-bound, thm:coarse-graining]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.bound:StrengtheningSlot
+% lean:
+% notes: "The mentions of def:pmc, def:pmcex and thm:emitted-bound are pointers for the sentence on the emitted entry and the per-setting guarantee."
+% ---
+
+The slot is indexed by sets of raw outcomes rather than by emitted letters:
+lower bounds on disjoint raw outcomes add, while a bound on a merged outcome
+implies nothing about its parts (Theorem~\ref{thm:coarse-graining}).
+
+\begin{definition}\label{def:slot}
+The
+\term[The list of disjoint raw-outcome sets with per-setting high-photon lower-bound weights that the artifact carries.]{strengthening slot}
+is the finite list of pairs in which the artifact carries the high-photon
+evidence,
+\begin{equation}\label{eq:slot}
+  \Big\{\big(\mathcal{O}_i,\ (p^{(t)}_i)_{t\in\Tset}\big)\Big\}_{i=1}^{r},
+  \qquad \mathcal{O}_i\subseteq2^{[K]}\ \text{pairwise disjoint},\quad
+  p^{(t)}_i\ge0,
+\end{equation}
+one weight per entry and per setting $t\in\Tset$ of the setting family
+(Definition~\ref{def:setting-family}), with the guarantee
+$\sum_{S\in\mathcal{O}_i}\blk{M}{\gtN}_{S|t}\succeq p^{(t)}_i\,\id^{(>N)}$
+for every setting $t\in\Tset$ and every $i$. The
+\term[The minimum over the settings of a slot entry's weights; it bounds the entry at every setting.]{uniform weight of an entry}
+$i$ is $p_i\coloneqq\min_{t\in\Tset}p^{(t)}_i$; since
+$0\le p_i\le p^{(t)}_i$, it carries the guarantee
+$\sum_{S\in\mathcal{O}_i}\blk{M}{\gtN}_{S|t}\succeq p_i\,\id^{(>N)}$ for
+every setting $t\in\Tset$ and every $i$, one weight at every setting. At a
+one-setting family, $\Tset=\{\off\}$, an entry has the single weight
+$p^{(\off)}_i=p_i$ and is written $(\mathcal{O}_i,p_i)$. The artifact
+carries $r=1$ with
+$(\mathcal{O}_1,(p^{(t)}_1)_{t\in\Tset})=(\MCK,(\pmc^{(t)})_{t\in\Tset})$,
+the per-setting weights of Theorem~\ref{thm:emitted-bound}, each given at its
+setting by Definition~\ref{def:pmc} or~\ref{def:pmcex} or as a non-negative
+real at most the enclosed weight of Definition~\ref{def:enclosed-weight},
+whose uniform weight is $\pmc$; at a
+one-setting family that entry is $(\MCK,\pmc)$.
+\end{definition}

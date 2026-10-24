@@ -1,0 +1,34 @@
+% ---
+% id: reductions/req:certified-entries-only
+% kind: req
+% title: "Emission of certified constraint entries only"
+% summary: >-
+%   Every constraint entry the engine emits carries exactly one certificate,
+%   named by its case of [[cor:pullback]], and is of the certified kind of
+%   [[cor:transported]], never an assumption on the input. The artefact records
+%   each entry's certificate case.
+% prominence: standard
+% status: accepted
+% uses: [cor:transported]
+% mentions: [cor:pullback, rem:unsound, req:transported-set-certificates]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A certified family is sound for every family of \tref{physical inputs},
+while an assumed one is sound only for the family it was assumed on
+(Corollary~\ref{cor:transported}); an emitted entry therefore never rests on
+an assumption about the input (Remark~\ref{rem:unsound} gives the standard
+way a constraint fails to be sound).
+
+\begin{requirement}\label{req:certified-entries-only}
+Every constraint entry the engine emits carries exactly one
+\tref{certificate}, named by its case of Corollary~\ref{cor:pullback}
+(identity, positivity or spectral bounds), and is of the certified kind, case
+(i) of Corollary~\ref{cor:transported}; the engine emits no entry of the
+assumed kind, case (ii). Each emitted entry's certificate case is recorded
+with the \tref{transported set}, as
+Requirement~\ref{req:transported-set-certificates} states.
+\end{requirement}

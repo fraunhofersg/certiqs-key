@@ -1,0 +1,41 @@
+% ---
+% id: meat-core/req:row-form-by-construction
+% kind: req
+% title: "Frame-free rows only where the construction exhibits tightness"
+% summary: >-
+%   The engine imposes a constraint row without its conjugation only where the
+%   construction of the frame exhibits a trivial kernel of W_τ without computing
+%   a rank, and the conjugated row everywhere else. No numerical test on τ_A
+%   licenses the frame-free form.
+% prominence: standard
+% status: implemented
+% uses: [prop:frame-free-rows, def:support-frame]
+% mentions: [rem:tightness-by-construction, thm:choi]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.oracles.joint_rows:prebuilt_rows
+% lean:
+% ---
+
+By Proposition~\ref{prop:frame-free-rows} the frame-free form of a row is
+exact on a tight frame and only a restriction on any other, while the
+conjugated form is exact on every frame (Theorem~\ref{thm:choi}). Deciding
+tightness of a given $\tau_A$ would be a rank decision on a computed
+spectrum; the construction of the frame can exhibit it instead
+(Remark~\ref{rem:tightness-by-construction}).
+
+\begin{requirement}\label{req:row-form-by-construction}
+In trusted-source mode the engine imposes a homogeneous row of
+\eqref{eq:choi-feas} in its frame-free form \eqref{eq:frame-free-row}, and
+in the general format the row of an Alice sector $t$ of a homogeneous or a
+party-local entry in its unconjugated form, only where the construction
+that produced the frame (of sector $t$) exhibits $\ker W_{\tau}=0$
+($\ker W_t=0$) exactly, with no rank computed and no window declared.
+Of the two constructions of Definition~\ref{def:support-frame} that is the
+\tref{diagonal frame}; on a frame produced by the \tref{full frame}
+construction the conjugated form is imposed, whatever $\tau_A$ is, and so
+it is on every frame whose construction does not exhibit
+$\ker W_{\tau}=0$. The engine licenses the frame-free form by no numerical
+test on $\tau_A$.
+\end{requirement}

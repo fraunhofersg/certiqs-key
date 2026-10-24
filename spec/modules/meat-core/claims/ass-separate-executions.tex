@@ -1,0 +1,66 @@
+% ---
+% id: meat-core/ass:separate-executions
+% kind: ass
+% title: "Executions that share no key and no device state"
+% summary: >-
+%   Several executions, fixed in advance and run against one adversary, touch
+%   none of each other's registers, leave their keys unused until all have
+%   ended, and keep their own premises with the others counted as the
+%   adversary's. It is what lets their security parameters add.
+% prominence: standard
+% status: accepted
+% uses: [def:execution-end]
+% assumes: []
+% refs:
+%   - "portmann2022security, Sec. II.E"
+% provenance: newly-derived
+% short_id: A-SEPARATE
+% verification: never
+% category: protocol-structure
+% affects: [secrecy, correctness]
+% user_statement: >-
+%   You run several executions, one after another or at the same time, and
+%   want their security parameters to add. Their number and parameters are
+%   fixed before the first starts. Each execution has its own key material,
+%   randomness, seeds and pre-shared authentication key, such as a separate
+%   part of one pool. No device, memory or random source carries information
+%   between them. An execution has ended once both parties have fixed
+%   their output, key or abort, after the closing messages; no key is used
+%   or read, and nothing else leaks from an ended one, until all have ended.
+%   The
+%   assumptions each execution's run record lists must still hold when an
+%   attacker holds and runs every other execution, her memory, which then
+%   holds their systems, of any dimension. A key that
+%   authenticates another execution, a key used early, or parameters chosen
+%   from an earlier execution's data violate this.
+% lean:
+% ---
+
+Composable frameworks add the errors of protocols composed in sequence or
+in parallel \cite[Sec.~II.E]{portmann2022security}. For the trace-distance
+parameter of this contract, the corresponding sum needs the executions to
+be separate in the sense below, so that each can be analysed with every
+other one on the adversary's side.
+
+\begin{assumption}\label{ass:separate-executions}
+For executions $1,\dots,N$ of the protocol, run against one adversary:
+(i) $N$ and, for every execution, the parameters fixed before its run (its
+acceptance set, round count, output length, transcript length, error
+budgets and authentication parameters) are fixed before the first of the
+$N$ executions starts;
+(ii) no operation of the honest parties of one execution acts on a register
+that the honest parties of another execution use, hold or output: no
+execution uses any part of another execution's key, local randomness,
+seeds or pre-shared key, no device, memory or random source carries a
+state from one execution into another, and the executions interact only
+through systems and classical channels the adversary has access to;
+(iii) from the \tref{end of an execution}
+(Definition~\ref{def:execution-end}) until the end of the last of the $N$
+executions, no part of that execution's key is used, read or otherwise
+acted on, and no information about any other register of its parties
+leaves their laboratories;
+(iv) for every execution, every assumption on which its key and its
+security parameter rest holds when every register of the honest parties of
+every other execution is counted as part of the adversary's information,
+and every operation of those parties as part of the adversary's actions.
+\end{assumption}

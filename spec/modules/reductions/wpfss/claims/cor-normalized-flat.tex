@@ -1,0 +1,150 @@
+% ---
+% id: reductions/wpfss/cor:normalized-flat
+% kind: cor
+% title: "The flat instance of a normalized station"
+% summary: >-
+%   The flat instance built on a normalized station, precomposed with the
+%   pure-loss channel of the factored loss, is a reduction instance for the
+%   receiver itself. Its emission is the normalized one with that channel in
+%   front; nothing else emitted changes.
+% prominence: standard
+% status: implemented
+% uses: [reductions/def:sound, reductions/lem:precomposed-instance, prop:flat-instance, cor:emitted-flat, cor:flat-companion, def:weight-route, reductions/thm:emit, reductions/thm:emitted-product, reductions/cor:reference-companion, reductions/def:system-setting, receiver/detector-imperfections/prop:efficiency-normalization, receiver/detector-imperfections/def:normalized-station, receiver/detector-imperfections/def:pure-loss, receiver/detector-imperfections/def:dark-composed, receiver/thm:click-povm, receiver/thm:coarse-graining]
+% assumes: [A-RECV, A-PROBE, A-TSM]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.wpfss.api:FlatInstanceBuilder
+% lean:
+% user_statement: >-
+%   When the receiver is analysed at its normalized station, the finite model
+%   the key rate is computed on is exactly the one computed for the normalized
+%   station. It is a valid model of your actual receiver where the receiver
+%   facts the run carries as [[A-RECV]] hold and where the largest detector
+%   efficiency may be factored out as loss in front of the receiver, which the
+%   reading of [[receiver/detector-imperfections/prop:efficiency-normalization]]
+%   conditions on the receiver's device assumptions and which an efficiency
+%   mismatch the adversary can exploit breaks. The factored loss is then
+%   counted as part of the channel the adversary controls. The certified
+%   high-photon weights, constraints and their constants are those of the
+%   normalized station.
+% ---
+
+The normalization changes the device a reduction is built on, not the
+reduction: the receiver is the \tref{normalized station} preceded by a known loss
+(\xref{receiver/detector-imperfections/prop:efficiency-normalization}), and
+a known channel in front of a reduction instance is absorbed by
+Lemma~\ref{lem:precomposed-instance}.
+
+\begin{corollary}\label{cor:normalized-flat}
+Let $\Recv$ be a \tref{receiver instrument} without \tref{declared source modes}, with
+efficiencies $\eta_k$ and $\eta_{\max}>0$, let $t\in[\eta_{\max},1]$, and let
+$\Recv'$ be a normalized station of $\Recv$ at the
+\tref{factored loss} $t$
+(\xref{receiver/detector-imperfections/def:normalized-station}), both with
+the channel system $\Chan$. Let the data of
+Definition~\ref{def:weight-route} be supplied for $\Recv'$, with
+$\Tset=\{\off\}$ and $q_{\off}=1$, pass every refusal rule of this module's
+interface, and let $\mathcal{J}'_{\mathrm{flat}}$ be the flat instance of
+Proposition~\ref{prop:flat-instance} at the declared route. Put
+$\Phi\coloneqq\Lambda^{\mathrm{loss}}_t$, the \tref{pure-loss channel} of
+transmittance $t$ on $\Chan$
+(\xref{receiver/detector-imperfections/def:pure-loss}), and
+$\mathcal{J}_{\mathrm{flat}}\coloneqq\mathcal{J}'_{\mathrm{flat}}\circ\Phi$.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(the instance)} $\mathcal{J}_{\mathrm{flat}}$ is a reduction
+  instance on $\Chan$ with the datum, sectors, scalar values, target,
+  transported set, entries, constants and \tref{class-marginal flag} of
+  $\mathcal{J}'_{\mathrm{flat}}$; its channel is that of
+  $\mathcal{J}'_{\mathrm{flat}}$ precomposed with $\Phi$, the
+  \tref[pull-back]{pull-backs} of its transported set are $\Phi^{\dagger}$ of
+  those of $\mathcal{J}'_{\mathrm{flat}}$, and its reachable states
+  (Definition~\ref{def:sound}) are those of that composite channel. Where the supplied blocks are those of
+  $\Recv'$'s coarse-grained click-pattern POVM, in the bare form, or of its
+  \tref{dark-composed family} with the declared dark-count matrix, in the
+  dark-composed form, its handed model is the post-processed joint family of
+  steps~1--2 of Definition~\ref{def:weight-route} formed from $\Recv$'s own
+  measurement with the same dark-count matrix.
+\item \emph{(the emission)} Theorem~\ref{thm:emit} holds of
+  $\mathcal{J}_{\mathrm{flat}}$: its declared datum, emitted family, routed
+  weights, entries and constants are those Corollary~\ref{cor:emitted-flat}
+  gives for $\mathcal{J}'_{\mathrm{flat}}$, its channel is
+  $\Lambda\circ\Phi$ with $\Lambda$ that of $\mathcal{J}'_{\mathrm{flat}}$,
+  and for every $v\in\Vset$
+  \begin{equation}\label{eq:normalized-flat}
+    (\Lambda\circ\Phi)^{\dagger}(F_v)\;=\;\Phi^{\dagger}(M'_v)
+    \qquad\text{exactly, on }\Chan,
+  \end{equation}
+  with $M'$ the declared model \eqref{eq:flat-declared} of
+  $\mathcal{J}'_{\mathrm{flat}}$. Where moreover the normalizer kept every
+  class, the right-hand side is the family of (i) formed from $\Recv$'s
+  measurement.
+\item \emph{(several measuring factors)} Where each factor $f$ of
+  Theorem~\ref{thm:emitted-product} is such an instance
+  $\mathcal{J}^{f}_{\mathrm{flat}}=\mathcal{J}'^{f}_{\mathrm{flat}}\circ
+  \Lambda^{\mathrm{loss}}_{t_f}$, each at its own factored loss $t_f$, that
+  theorem applies, with channel
+  $\bigotimes_f\big(\Lambda_f\circ\Lambda^{\mathrm{loss}}_{t_f}\big)$ and every
+  entry at the constant of its factor.
+\item \emph{(the reference companion)} $\mathcal{J}_{\mathrm{flat}}$
+  satisfies (H-REF) of Corollary~\ref{cor:reference-companion}, and its
+  reference companion at a family $G$ is that of
+  $\mathcal{J}'_{\mathrm{flat}}$ at $G$ precomposed with $\Phi$: the same
+  target and entries, the companion's channel precomposed with $\Phi$, and
+  $\Phi^{\dagger}$ of the companion's pull-backs.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+$\Hs{\Chan}$ is separable (Definition~\ref{def:system-setting}) and $\Phi$ is
+a channel on it, so Lemma~\ref{lem:precomposed-instance} applies to
+$\mathcal{J}'_{\mathrm{flat}}$, which is a reduction instance by
+Proposition~\ref{prop:flat-instance}.
+
+(i) The first sentence is Lemma~\ref{lem:precomposed-instance}\,(ii), the
+reachable states being by Definition~\ref{def:sound} the images of the
+\tref{physical inputs} under the instance's channel. For the
+second: every click-pattern element commutes with the photon number
+(\xref{receiver/thm:click-povm}\,(iii)), so do the coarse-grained elements
+(\xref{receiver/thm:coarse-graining}) and the dark-composed ones
+(\xref{receiver/detector-imperfections/def:dark-composed}), and so does the
+post-processed joint family, a non-negative combination of them; it is
+therefore block diagonal for $\bigoplus_{m\le N}\Hs{\Chan_m}$, and the handed
+model of $\mathcal{J}'_{\mathrm{flat}}$ is that family itself
+(Proposition~\ref{prop:flat-instance}). Steps~1--2 of
+Definition~\ref{def:weight-route} form each element as a fixed linear
+combination, with coefficients from the dark-count matrix and $q_{\off}=1$, of
+the coarse-grained click-pattern elements, which are fibre sums of the click
+patterns; by
+\xref{receiver/detector-imperfections/prop:efficiency-normalization}\,(ii) the
+same combination formed from $\Recv$'s measurement is $\Phi^{\dagger}$ of the
+one formed from $\Recv'$'s. That is the model map of
+$\mathcal{J}_{\mathrm{flat}}$ at the handed datum
+(Lemma~\ref{lem:precomposed-instance}\,(ii)).
+
+(ii) $\mathcal{J}_{\mathrm{flat}}$ is a reduction instance whose handed datum,
+\tref{class weights} and lattice exponent are those of
+$\mathcal{J}'_{\mathrm{flat}}$, so Theorem~\ref{thm:emit} applies to it, and
+by Lemma~\ref{lem:precomposed-instance}\,(iii) its declared datum, emitted
+family, entries and constants are those of $\mathcal{J}'_{\mathrm{flat}}$,
+which Corollary~\ref{cor:emitted-flat} describes, the routed weights being
+scalar values of the target. Its emitted channel is $\Lambda\circ\Phi$ and
+its declared model $\Phi^{\dagger}(M')$, so \eqref{eq:normalized-flat} is
+\eqref{eq:emitidentity} for $\mathcal{J}_{\mathrm{flat}}$. Where the
+normalizer kept every class, the declared datum is the handed one, $M'$ is the
+handed model of $\mathcal{J}'_{\mathrm{flat}}$, and (i) identifies
+$\Phi^{\dagger}(M')$.
+
+(iii) Theorem~\ref{thm:emitted-product} asks of each factor only that it be a
+reduction instance to which Theorem~\ref{thm:emit} applies, which (ii) gives,
+with channel $\Lambda_f\circ\Lambda^{\mathrm{loss}}_{t_f}$ and the entries
+and constants of $\mathcal{J}'^{f}_{\mathrm{flat}}$.
+
+(iv) $\mathcal{J}'_{\mathrm{flat}}$ satisfies (H-REF)
+(Corollary~\ref{cor:flat-companion}); $\mathcal{J}_{\mathrm{flat}}$ has the
+same rule forming its datum and is a reduction instance over the same
+substrate by Lemma~\ref{lem:precomposed-instance}\,(ii), so it satisfies
+(H-REF) as well. Its reference companion at $G$ is
+$\mathcal{J}_{\mathrm{flat}}$ at the datum $A^{\mathrm{ref}}$ formed from
+$G$, which is $\mathcal{J}'_{\mathrm{flat}}$ at $A^{\mathrm{ref}}$
+precomposed with $\Phi$ by Lemma~\ref{lem:precomposed-instance}\,(iii).
+\end{proof}

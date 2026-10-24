@@ -1,0 +1,203 @@
+% ---
+% id: reductions/thm:emitted-product
+% kind: thm
+% title: "The emission of several measuring parties"
+% summary: >-
+%   Several measuring parties are emitted as one exactly admissible artefact per
+%   party with a combination rule, never a product matrix. The product target is
+%   a POVM squashing the product of the declared models, and every entry keeps
+%   its constant, scoped to its factor.
+% prominence: standard
+% status: implemented
+% uses: [def:reduction-instance, thm:emit, def:emitnorm, prop:tensor, cor:blockdiag, prop:pinching, thm:licence, lem:party-local, def:licensed, lem:sep]
+% mentions: [rem:unsound, def:exactadm, def:joint-family, req:emission-record]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.factors:reduce_factors
+% lean:
+% notes: "Deliberately a theorem about a product of instances, each at its own emitted datum, and not a tensor reduction instance: a product sector of a data sector and a scalar sector fits neither kind of def:reduction-instance (I2) unless every factor has one class, the stability clause fails for scalar values off the two-point set at the lattice scale, and a normalised product would declare a non-product joint model. The theorem adds no assumption; the factors' own instance claims carry theirs."
+% ---
+
+Where several parties measure, each party's measurement is its own
+reduction instance and is emitted as one; the theorem says what the product
+of the emitted factors is, without forming a product datum. At one factor its
+parts (i), (ii), (iv) and (v) are Theorem~\ref{thm:emit} again and its part
+(iii) is Theorem~\ref{thm:licence}\,(v) (part~(vi)). A class-marginal
+identity is emitted in expectation form, as in Remark~\ref{rem:unsound}, and
+what a factor's emission records is Requirement~\ref{req:emission-record}.
+
+\begin{theorem}
+\label{thm:emitted-product}
+Let $\mathbb{F}$ be a finite ordered set of \emph{factors}, each $f$ with a
+party label, and for each $f$ let $\mathcal{J}^{f}$ be a
+\tref{reduction instance} (Definition~\ref{def:reduction-instance}) on a
+system $\Bsys_f$ over
+$\big(\Vset^{f},\{\Vset^{f}_{t}\}_{t\in\Tset^{f}},\{q^{f}_{t}\}\big)$ to
+which Theorem~\ref{thm:emit} applies, with emitted datum $A'_f$, emitted
+target $F^{f}\coloneqq F^{f}[A'_f]$ on
+$\Qsys_f=\bigoplus_{s\in\SecSet^{f}}\Qsys_{f,s}$, channel
+$\Lambda_f\coloneqq\Lambda_f[A'_f]$, declared model ${M'}^{\mathrm{ph},f}=M^{f}[A'_f]$
+and entry list $\CList^{f}$. Put $\Bsys\coloneqq\bigotimes_f\Bsys_f$,
+$\Qsys\coloneqq\bigotimes_f\Qsys_f$, $\Vset\coloneqq\prod_f\Vset^{f}$,
+$\Lambda\coloneqq\bigotimes_f\Lambda_f$, all products in the order of
+$\mathbb{F}$, and for $v=(v_f)_f\in\Vset$
+\begin{equation}\label{eq:producttarget}
+  F_v\coloneqq\bigotimes_{f}F^{f}_{v_f},\qquad
+  \Mdec_v\coloneqq\bigotimes_{f}{M'}^{\mathrm{ph},f}_{v_f} .
+\end{equation}
+Suppose that \emph{what is emitted} is the ordered list of the factors'
+artefacts, each with its party label, and the rule \eqref{eq:producttarget},
+and that no entry of any $F_v$ is emitted, declared or rounded. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(a measurement, block diagonal for the product sector map)}
+  $\{F_v\}_{v\in\Vset}$ is a POVM on $\Qsys$: every $F_v$ is Hermitian and
+  positive semidefinite and $\sum_{v\in\Vset}F_v=\idon{\Qsys}$, as identities
+  of the exact rational numbers the factors emitted. With the \emph{product
+  sector map} --- index set $\prod_f\SecSet^{f}$ in the product order, the
+  last factor fastest, identifiers the factors' identifiers joined in that
+  order, dimensions the products, projectors
+  $\Pi_{s}=\bigotimes_f\Pi^{f}_{s_f}$ --- every $F_v$ is block diagonal, its
+  block at $s=(s_f)_f$ being the Kronecker product
+  $\bigotimes_fF^{f,(s_f)}_{v_f}$ of the factors' blocks. The party
+  partition assigns every tensor factor of $\Hs{\Qsys_{f,s_f}}$ to the party
+  of $f$.
+\item \emph{(the \tref{squashing relation} and the declared model)}
+  $\Lambda^{\dagger}(F_v)=\Mdec_v$ for every $v$, exactly, so
+  $\Mdec\dsq_{\Lambda}F$; the declared joint model is the \emph{product} of
+  the factors' declared models. $\Lambda$ is of the form the artefact
+  records for one factor: with $\PinS$ the pinching for the product
+  projectors, $\PinS\circ\Lambda=\Lambda$, and the squashed
+  analysis may be restricted to states block diagonal for the product sector
+  map without excluding a reachable one. The transported set contains every
+  product projector $\Pi_s$, every lifted projector
+  $\idon{}\otimes\Pi^{f}_{s_f}\otimes\idon{}$ and every lifted transported
+  operator $\idon{}\otimes\hat O\otimes\idon{}$, $\hat O$ transported by
+  $\mathcal{J}^{f}$, with pull-back the lift of $\hat O$'s pull-back.
+\item \emph{(entries keep their constants)} for every factor $f$ and every
+  entry $(\hat O_k,\bowtie_k,c_k)\in\CList^{f}$, the certificate
+  $\Lambda_f^{\dagger}(\hat O_k)\bowtie_kc_k\,\idon{\Bsys_f}$ which
+  $\mathcal{J}^{f}$ discharges at $A'_f$ is a certificate on that factor's
+  channel in the sense of Theorem~\ref{thm:licence}\,(v). So the joint list
+  $\CList\coloneqq\bigsqcup_f\{(\hat O_k,\bowtie_k,c_k;f)\}$, each entry
+  scoped to its factor and carrying the same operator, the same relation and
+  the same constant, is licensed with its entries read party-locally
+  (Definition~\ref{def:licensed}), or as scalars on the lifted operators
+  $\idon{}\otimes\hat O_k\otimes\idon{}$, or any mixture; every squashed
+  \tref{attack sequence} against $\Mdec$ is admissible for it and reproduces
+  the protocol's output state; and the lifted operators are block diagonal
+  for the product sector map with entries that are the factor's emitted
+  entries and zeros and ones. No constant is re-derived and none is rounded.
+\item \emph{(class-marginal identities)} with classes
+  $\Vset_{t}=\prod_f\Vset^{f}_{t_f}$ and weights $q_t=\prod_fq^{f}_{t_f}$,
+  $\sum_{v\in\Vset_t}\Mdec_v=q_t\,\idon{\Bsys}$ holds for every $t$ if every
+  factor's \tref{class-marginal identity} is discharged. Where it is
+  discharged for the factors in a subset $\mathbb{G}\subseteq\mathbb{F}$ only,
+  the identity holds for the classes that are full in every factor outside
+  $\mathbb{G}$:
+  $\sum_{v:\,v_f\in\Vset^{f}_{t_f}\,(f\in\mathbb{G})}\Mdec_v
+  =\prod_{f\in\mathbb{G}}q^{f}_{t_f}\,\idon{\Bsys}$. What is emitted for it
+  is the expectation-form
+  entry on the pulled-back class sum and never an operator identity on
+  $\Qsys$. The weight $q_t$ is a product of declared numbers and is formed
+  exactly by whoever reads it; it is not emitted as a number of this module,
+  and it could not be: each $q^{f}_{t_f}$ lies on its factor's declared
+  lattice (Definition~\ref{def:exactadm}\,(b),
+  Definition~\ref{def:joint-family}\,(a)), and a product of two lattice
+  numbers lies in general on a finer lattice only and need not be a binary64
+  number, exactly as for the blocks of \eqref{eq:producttarget}.
+\item \emph{(what was rounded)} the numbers behind \eqref{eq:producttarget}
+  are the factors' emitted numbers and nothing else. Every displacement,
+  kept or moved class and rounding direction is a factor's and is
+  recorded with that factor's emission,
+  and Theorem~\ref{thm:emit}\,(v) applies to each factor as it stands: no
+  bound relates a key length computed from $\Mdec$ alone to one computed
+  from the product of the handed models. The product introduces no further
+  displacement.
+\item \emph{(one factor)} for $|\mathbb{F}|=1$ parts (i), (ii), (iv) and (v)
+  are the corresponding statements of Theorem~\ref{thm:emit} for that
+  instance, and what is emitted is that instance's artefact, every entry
+  untagged. Part (iii) at one factor is Theorem~\ref{thm:licence}\,(v) at one
+  factor, which says \emph{more} than (i)--(iv) of that theorem in
+  \tref{untrusted-source mode} with $d_A>1$ and the same otherwise
+  (Definition~\ref{def:licensed}); the untagged entry that is emitted is
+  implied by it (Lemma~\ref{lem:party-local}\,(iii)), so the one-factor
+  emission asserts nothing beyond Theorem~\ref{thm:licence}\,(i)--(iv).
+\end{enumerate}
+These statements are about the factors' instance links and their emitted
+families.
+\end{theorem}
+
+\begin{proof}
+(i) By Theorem~\ref{thm:emit}\,(ii) each $F^{f}_{v_f}$ is Hermitian and
+positive semidefinite with $\sum_{v_f}F^{f}_{v_f}=\idon{\Qsys_f}$, exactly.
+A tensor product of Hermitian operators is Hermitian and of positive
+semidefinite operators positive semidefinite, and
+$\sum_{v\in\Vset}\bigotimes_fF^{f}_{v_f}
+=\bigotimes_f\sum_{v_f}F^{f}_{v_f}=\idon{\Qsys}$ by multilinearity. These
+are identities between polynomials in the emitted entries, which are dyadic
+rationals. Each $F^{f}_{v_f}=\bigoplus_{s_f}F^{f,(s_f)}_{v_f}$ is block
+diagonal for $\{\Pi^{f}_{s_f}\}$, so
+$\bigotimes_fF^{f}_{v_f}=\bigoplus_{s}\bigotimes_fF^{f,(s_f)}_{v_f}$ along
+$\Hs{\Qsys}=\bigoplus_s\bigotimes_f\Hs{\Qsys_{f,s_f}}$, the distributive law
+for tensor products over direct sums; the stated order of the index set is a
+convention for listing the summands. The party partition is each factor's
+own (Definition~\ref{def:reduction-instance}\,(I2)) with its party's label
+in place of the default one.
+
+(ii) $\Lambda^{\dagger}(\bigotimes_fF^{f}_{v_f})
+=\bigotimes_f\Lambda_f^{\dagger}(F^{f}_{v_f})=\bigotimes_f{M'}^{\mathrm{ph},f}_{v_f}$ by
+Lemma~\ref{lem:sep}\,(ii) and Theorem~\ref{thm:emit}\,(iii) for each factor;
+this is Proposition~\ref{prop:tensor} iterated. Each
+$\Lambda_f=\mathcal{P}_f\circ\Lambda_{0,f}$ with $\mathcal{P}_f$ the
+pinching for $\{\Pi^{f}_{s_f}\}$
+(Definition~\ref{def:reduction-instance}\,(I3)), and
+$\bigotimes_f\mathcal{P}_f$ is the pinching $\PinS$ of
+Proposition~\ref{prop:pinching} for the product projectors, because
+$\big(\bigotimes_f\mathcal{P}_f\big)(\xi)=\sum_{s}\Pi_s\,\xi\,\Pi_s$ by
+multilinearity; a pinching is idempotent, so $\PinS\circ\Lambda=\Lambda$.
+Every $F_v$, every $\Pi_s$ and every lifted operator named is block
+diagonal for the product projectors by (i), so
+Corollary~\ref{cor:blockdiag}\,(iii) applies to $\Lambda$. For a transported
+$\hat O$ of factor $f$ with pull-back $O$,
+$\Lambda^{\dagger}(\idon{}\otimes\hat O\otimes\idon{})
+=\idon{}\otimes\Lambda_f^{\dagger}(\hat O)\otimes\idon{}
+=\idon{}\otimes O\otimes\idon{}$ by the same lemma and unitality of the
+other factors' adjoints; $\Pi_s$ is a product of lifted projectors and its
+pull-back is $\bigotimes_f\Lambda_f^{\dagger}(\Pi^{f}_{s_f})$.
+
+(iii) The certificate of an entry of $\CList^{f}$ is discharged by
+$\mathcal{J}^{f}$ at every admissible datum, in particular at $A'_f$
+(Definition~\ref{def:reduction-instance}\,(I4), Theorem~\ref{thm:emit}\,(iii)),
+and it is a statement about $\Lambda_f$ and $\hat O_k$ alone. That is the
+hypothesis of Theorem~\ref{thm:licence}\,(v), whose conclusion is the
+admissibility in the party-local set, in the scalar set for the lifted
+operators, and for every mixture, together with the equality of output
+states and the security implication, the relation $\Mdec\dsq_{\Lambda}F$
+being (ii). The lifted operator is a Kronecker product of $\hat O_k$ with
+identity matrices, so its entries are entries of $\hat O_k$, zeros and ones,
+and it is block diagonal because $\hat O_k$ is for $\{\Pi^{f}_{s_f}\}$.
+
+(iv) $\sum_{v\in\Vset_t}\Mdec_v
+=\bigotimes_f\sum_{v_f\in\Vset^{f}_{t_f}}{M'}^{\mathrm{ph},f}_{v_f}$. Where factor $f$
+discharges its identity the $f$-th factor of this product is
+$q^{f}_{t_f}\idon{\Bsys_f}$ (Theorem~\ref{thm:emit}\,(iii)); summing over all
+$t_f$ for $f\notin\mathbb{G}$ replaces those factors by $\idon{\Bsys_f}$, by
+completeness of ${M'}^{\mathrm{ph},f}$. The remark on the emitted form is
+Definition~\ref{def:reduction-instance}, fourth consequence, applied to the
+pulled-back class sum.
+
+(v) \eqref{eq:producttarget} is a function of the factors' emitted numbers,
+and by hypothesis nothing else is emitted; so there is no number to which a
+further displacement could attach.
+
+(vi) With one factor, \eqref{eq:producttarget} is $F_v=F^{f}_v$, the product
+sector map is the factor's and $\Lambda=\Lambda_f$, so (i), (ii), (iv) and
+(v) are Theorem~\ref{thm:emit}'s. For (iii): by
+Definition~\ref{def:licensed} the party-local reading at one factor is the
+entry of the source mode in \tref{trusted-source mode} and at $d_A=1$, and in
+untrusted-source mode with $d_A>1$ it is an operator inequality on $A$ whose
+trace is the scalar entry, Lemma~\ref{lem:party-local}\,(iii); the emitted
+entry is the untagged one in every case, which
+Theorem~\ref{thm:licence}\,(i)--(iv) license on the same certificate.
+\end{proof}

@@ -1,0 +1,75 @@
+% ---
+% id: meat-core/rem:not-licensed
+% kind: rem
+% title: "Limits of the attack-set licence"
+% summary: >-
+%   The constrained accumulation theorem licenses only restricting the
+%   single-round infimum to marginals meeting a licensed list. Limits on
+%   the purifying register, data-dependent or multi-round constraints, a
+%   trusted marginal, other proof techniques, the reduction and the test
+%   statistics lie beyond it.
+% prominence: standard
+% status: accepted
+% uses: [thm:constrained-accumulation, def:homog, def:hqkd-list, lem:purifier-indep, rem:homog, def:roundmodel]
+% mentions: [ex:fss, def:declaration, protocol-compiler/req:no-fixed-fraction]
+% assumes: [A-ATK, A-SRC, A-TSM]
+% refs:
+%   - "tupkary2026decoy, Rem. 9.4"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:not-licensed}
+Theorem~\ref{thm:constrained-accumulation} licenses exactly one thing:
+restricting the single-round infimum to marginals satisfying a declared list
+that is licensed for the declared source mode (Definition~\ref{def:homog}; in
+the \tref{basic format}, $\tau_A$-homogeneous in trusted-source mode and
+scalar in untrusted-source mode), under A-ATK
+(\xref{protocol-compiler/ass:atk}). In the general format of
+Definition~\ref{def:declaration} the licensed class carries a third form, the
+entries declared \tref{party-local}, in either mode, whose right-hand side is
+a real $c_k$ and whose state-level reading is the operator relation of
+Definition~\ref{def:homog}. What that adds to the following list is
+\emph{nothing}: every item (a) to (g) is a statement about what is \emph{not}
+licensed, each holds of the third form as it holds of the other two, and
+item (b)'s right-hand sides read $c_k\tau_A$, $c_k$, or $c_k$ times the
+marginal that is actually there, all three with \emph{declared} constants.
+The theorem does \emph{not} license:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{Constraints on the purifying register.} $\CList$'s syntax
+touches $\sigma_{A\Qsys}$ only; the inner infimum of
+\eqref{eq:hqkd-list} still ranges over \emph{all} extensions of a
+feasible $A\Qsys$-marginal (Lemma~\ref{lem:purifier-indep}), and no
+constraint on $\Etil$ --- equivalently, on Eve's side information ---
+is expressible or admitted.
+\item \emph{Data-dependent constraints.} $\Theta_k=c_k\tau_A$
+(respectively $\Theta_k=c_k$) with \emph{declared} constants $c_k$;
+observed statistics enter only through
+$\acSet$ (Remark~\ref{rem:homog}\,(c)).
+\item \emph{A trusted marginal.} Nothing in
+Theorem~\ref{thm:constrained-accumulation} licenses declaring $\tau_A$. That
+is a separate input with a separate attestation, A-SRC
+(\xref{transmitter/ass:src}), and in particular a licensed $\CList$ never
+substitutes for it: a constraint list restricts what \emph{Eve's
+channel} may do, whereas $\tau_A$ asserts that a register never
+reached her at all.
+\item \emph{Joint multi-round constraints.} Admissibility is per round
+(Definition~\ref{def:roundmodel}); no constraint on the joint
+$n$-round state is licensed, and none is expressible in $\CList$.
+\item \emph{Reuse under other proof techniques.} The restriction is
+compatible with the accumulation route imported here; it is \emph{not}
+usable with postselection-based reductions
+(\cite[Rem.~9.4]{tupkary2026decoy}). A module importing $\CList$ into
+a different proof technique must re-establish the licence there.
+\item \emph{The reduction itself.} Nothing here establishes a
+squashing reduction, the existence of a licensed attack set for a
+given receiver, or the value of a receiver constant such as
+$\lambda_{\min}$ (Example~\ref{ex:fss}); these are obligations of the
+reductions and receiver modules, assumed through Assumption~A-ATK and never
+verified here.
+\item \emph{Test-statistics changes.} Nothing here licenses a
+fixed-fraction test-statistics model
+(\xref{protocol-compiler/req:no-fixed-fraction}) or any modification of
+$\acSet$ (A-TSM (\xref{reductions/ass:tsm}) stands unchanged).
+\end{enumerate}
+\end{remark}

@@ -1,0 +1,38 @@
+% ---
+% id: statistics/binomial-box/req:enclosure-substrate
+% kind: req
+% title: "Log-space arithmetic with directed rounding"
+% summary: >-
+%   The enclosure evaluation computes in log space with directed rounding: the
+%   window's products are dyadic numbers rounded in the direction each bound
+%   requires, and the only numbers formed have the magnitude of logarithms.
+%   No mass point, power of p or binomial coefficient is ever formed.
+% prominence: standard
+% status: implemented
+% uses: [rem:local-evaluation, lem:pmf-enclosure, lem:tail-majorant, lem:log-enclosure]
+% mentions: [statistics/def:conservative-evaluation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.dyadic:round_dyadic
+% lean:
+% ---
+
+A tail comparison of the enclosure evaluation is decided against a bound that
+rounds the tail upward, which is what a \tref{conservative evaluation}
+(Definition~\ref{def:conservative-evaluation}) admits;
+exact rationals for the window would have denominators that grow with the
+window (Remark~\ref{rem:local-evaluation}).
+
+\begin{requirement}\label{req:enclosure-substrate}
+On the enclosure evaluation the engine computes everything in log space with
+directed rounding: the mass point through \eqref{eq:pmf-enclosure}, the window
+through the rationals $A_T$ and $B_T$ of \eqref{eq:window-rationals}, whose
+logarithms Lemma~\ref{lem:log-enclosure} encloses, and the budget through the
+same lemma. It holds the products $\prod r_l$ inside $A_T$ and $B_T$ as
+dyadic numbers with an explicit binary exponent, rounded in the direction
+each bound requires (down for $A_T$ in the lower bound, up for $A_T+B_T$ in
+the upper), not as exact rationals, and the Stirling remainders and the root
+bounds as rationals of the size of a logarithm; the only numbers it ever
+forms have the magnitude of logarithms.
+\end{requirement}

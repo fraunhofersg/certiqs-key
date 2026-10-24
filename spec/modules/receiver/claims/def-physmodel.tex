@@ -1,0 +1,49 @@
+% ---
+% id: receiver/def:physmodel
+% kind: def
+% title: "The physical measurement model"
+% summary: >-
+%   The receiver's measurement is a unitary dilation of its instrument matrix
+%   applied to the declared inputs with vacuum everywhere else, followed by
+%   commuting threshold measurements on the detector ports. The input-side
+%   click POVM is derived from this model.
+% prominence: standard
+% status: accepted
+% uses: [lem:dilation, def:instrument, def:fock, lem:fock-functor, lem:fock-maps]
+% mentions: [thm:port-grams, ass:vac, ass:port]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{definition}\label{def:physmodel}
+Fix a \tref{receiver instrument} $\Recv$ and a unitary extension $U$ of $\Gmat$
+on $\mathbb{C}^{\Modes\sqcup\Env}$ (Lemma~\ref{lem:dilation} supplies one; any
+other may be used, and by Theorem~\ref{thm:port-grams}\,(v) the choice does not
+matter). Let
+$\iota:\mathbb{C}^{\Inp}\hookrightarrow\mathbb{C}^{\Modes\sqcup\Env}$ be the
+inclusion of the \tref{declared input modes} and
+$\Fock(\iota):\mathcal{F}(\mathbb{C}^{\Inp})\to
+\mathcal{F}(\mathbb{C}^{\Modes\sqcup\Env})$ the induced map, which under the
+factorization
+$\mathcal{F}(\mathbb{C}^{\Modes\sqcup\Env})\cong
+ \mathcal{F}(\mathbb{C}^{\Inp})\otimes
+ \mathcal{F}(\mathbb{C}^{(\Modes\sqcup\Env)\setminus\Inp})$, the occupation
+identification of Lemma~\ref{lem:fock-maps}\,(ii),
+is $\ket{\psi}\mapsto\ket{\psi}\otimes\ket{\vac}$: it prepares vacuum on every
+undeclared input mode and on every dilation mode
+(Assumption~\ref{ass:vac}). The \term[The isometry from the Fock space of the declared input modes that prepares vacuum elsewhere and applies the lifted unitary dilation.]{measurement isometry} of the receiver is
+\begin{equation}\label{eq:measisometry}
+  V\coloneqq\Fock(U)\,\Fock(\iota)
+  \ :\ \mathcal{F}(\mathbb{C}^{\Inp})\longrightarrow
+        \mathcal{F}(\mathbb{C}^{\Modes\sqcup\Env}) .
+\end{equation}
+The detectors measure, on the output side, the $K$ commuting binary projective
+measurements $\{\Pi^{0}_{k},\id-\Pi^{0}_{k}\}$ where
+$\Pi^0_k\coloneqq\Fock(\id-\Emd{\{k\}})$, with the projector $\Emd{\{k\}}$ of
+$\mathbb{C}^{\Modes}$ extended by zero to $\mathbb{C}^{\Modes\sqcup\Env}$, is
+the projector onto ``no photon in the modes of $\Port{k}$''
+(Lemma~\ref{lem:fock-functor}\,(iv), Assumption~\ref{ass:port}). For $J\subseteq[K]$ put
+$\Pi^0_J\coloneqq\prod_{k\in J}\Pi^0_k$.
+\end{definition}

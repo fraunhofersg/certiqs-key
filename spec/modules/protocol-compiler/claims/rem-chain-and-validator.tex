@@ -1,0 +1,73 @@
+% ---
+% id: protocol-compiler/rem:chain-and-validator
+% kind: rem
+% title: "Chain conditions and validator checks"
+% summary: >-
+%   The last clause of (C1), (C4) and the source identity are decided on the
+%   chain alone; V3 re-runs (C3) on the emitted family, weighted where a
+%   weighting follows the chain. The chain's last target descriptor, a supplied
+%   witness and the physical family stay outside V1's list, keeping V1 complete.
+% prominence: standard
+% status: accepted
+% uses: [def:chaincond, def:validator, def:compile, thm:feasibility]
+% mentions: [thm:validator-soundness, thm:chain-consumption, def:weighted, def:declaration]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "thm:validator-soundness is a mention: the remark names eq:predcount only to say what it does not count, and a uses edge would carry A-SPEC into this remark."
+% ---
+
+Some conditions on what the compiler emits are decided where the chain is
+consumed and some by the validator. This remark says which, and which objects
+each of them compares.
+
+\begin{remark}\label{rem:chain-and-validator}
+\emph{What is decided on the chain.} The last clause of
+Definition~\ref{def:chaincond}\,(C1), that the target descriptor of
+$\Lambda_L$ is $(\Qsys,\Smap)$, is decided at (C1) and nowhere else: it is a
+condition on the chain record and not on a slot of \eqref{eq:declaration}, so
+no target condition quantifies over it and check V1 does not read it
+(Definition~\ref{def:validator}). Nothing is lost by keeping it there alone:
+the emitted $\Smap$ \emph{is} that descriptor by construction
+(Definition~\ref{def:compile}), and what V1 decides on the emitted data is
+that the map carried by this same link's target POVM $\{F_v\}$ is $\Smap$.
+(C4) and (S3) are conditions on the chain and not checks of the validator
+either: they are decided where the chain is consumed, and they are \emph{not}
+among the decisions counted by \eqref{eq:predcount} of
+Theorem~\ref{thm:validator-soundness}, a count of V2, V3 and V6 alone; V7's decisions are
+counted in the prose that follows that equation and are not terms of it. What
+V3 re-runs on the emitted data is (C3), or, where the Bob-side weighting of
+Definition~\ref{def:weighted} follows the chain, (C3)'s predicates on the
+weighted family the chain's family yields
+(Theorem~\ref{thm:chain-consumption}\,(ii)); (C1)'s last clause is re-run by no
+check, V1 reading the maps of the declared $\Qsys$-operator families and no
+others; and nothing re-runs (C4) or (S3).
+
+\emph{Which objects V1 does not compare.} At a non-trivial chain two families
+answer to the receiver's measurement, the emitted family $\{F_v\}$ and the
+physical family $\{\Fph_w\}$, and V1 compares the first only. \emph{Two
+objects are outside V1's list, and each is compared where it belongs},
+because carrying either in V1 would make V1 refuse a candidate that
+D(i)--D(viii) admit, and so falsify Theorem~\ref{thm:validator-soundness}\,(ii). \emph{The
+chain's last target descriptor} is required to be $(\Qsys,\Smap)$ by (C1),
+which decides that equality by the same four-component comparison and is
+where a chain is refused for it, as above; what V1 decides instead, that the
+map carried by that link's target POVM $\{F_v\}$ is $\Smap$, is a condition
+on a declared $\Qsys$-operator and is D(i)'s. \emph{A supplied feasibility
+witness} is not a $\Qsys$-operator at all: $\omega^{\star}$ is a
+\tref{block list} on $A\Qsys$, an input consumed and never emitted
+(Theorem~\ref{thm:feasibility}\,(ii)), and branch~(c) of V7 already requires it to be
+a block list against $\Smap$, which is the one place its map is compared.
+\emph{The physical family $\{\Fph_w\}$ is not in the list either}: at a
+non-trivial receiver segment it lives on the physical receiver space, which
+is not $\Qsys$, so it is not a $\Qsys$-operator family and has no map to
+compare against $\Smap$; its descriptor is matched instead by (C1), against
+the source descriptor of $\Lambda_1$. The two coincide exactly when the
+receiver segment does not change the space --- in \tref{Band A}, where
+$\Lambda_1=\idmap$ and $F_v=\Fph_v$ --- and there the comparison is the same
+one either way. Including the physical family at a non-trivial chain would
+not be a useful refusal: it would refuse every such chain, and V1 is claimed
+complete for D(i), which asks only that every declared
+\emph{$\Qsys$-operator} be a block list against $\Smap$.
+\end{remark}

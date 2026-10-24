@@ -1,0 +1,117 @@
+% ---
+% id: statistics/binomial-box/lem:guard
+% kind: lem
+% title: "The honest-containment guard for every rule"
+% summary: >-
+%   For every admissible endpoint rule the guarded endpoints enclose the
+%   envelope interval, still meet both tail budgets and widen the rule's
+%   interval by an exactly known number of counts. Where the guard acts, the
+%   emitted frequency endpoint lies within 1/n of that side's envelope value.
+% prominence: standard
+% status: implemented
+% uses: [def:endpoint-rule, statistics/def:envelope]
+% mentions: [prop:rule-exact]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.intervals:guarded_endpoints
+% lean:
+% ---
+
+The guard acts on whatever endpoints a rule returns, so its properties hold
+for every rule at once; what is particular to the exact rule is
+Proposition~\ref{prop:rule-exact}.
+
+\begin{lemma}\label{lem:guard}
+Let $R$ be an admissible endpoint rule (Definition~\ref{def:endpoint-rule})
+and $\hat c\in\Chatcon$; write $p^{\mp}\coloneqq p^{\mp}_{\hat c}$ for the
+envelope's values at $\hat c$,
+$R^{-}\coloneqq R^{-}(n,p^{-},\varepsilon^{-}(\hat c))$,
+$R^{+}\coloneqq R^{+}(n,p^{+},\varepsilon^{+}(\hat c))$, and let
+$k^{\mp}(\hat c)$ be the guarded endpoints \eqref{eq:guard}. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(ordering)}
+\begin{equation}\label{eq:ordering}
+  0\ \le\ k^{-}(\hat c)\ \le\ \lfloor n p^{-}\rfloor
+  \ \le\ \lceil n p^{+}\rceil\ \le\ k^{+}(\hat c)\ \le\ n ;
+\end{equation}
+\item \emph{(the budgets are met)} the maps $k\mapsto\Pr[\Ncount{\hat c}^{-}<k]$
+and $k\mapsto\Pr[\Ncount{\hat c}^{+}>k]$ are non-decreasing and non-increasing
+respectively on the integers; consequently
+\begin{equation}\label{eq:budget-met}
+  \Pr\big[\Ncount{\hat c}^{-}<k^{-}(\hat c)\big]\le\varepsilon^{-}(\hat c),
+  \qquad
+  \Pr\big[\Ncount{\hat c}^{+}>k^{+}(\hat c)\big]\le\varepsilon^{+}(\hat c),
+\end{equation}
+and more generally \emph{every} pair $(\tilde k^{-},\tilde k^{+})$ with
+$0\le\tilde k^{-}\le R^{-}$ and $R^{+}\le\tilde k^{+}\le n$ satisfies
+\eqref{eq:budget-met} in place of $k^{\mp}(\hat c)$: enlarging the rule's
+interval is always admissible;
+\item \emph{(exact cost of the guard)} relative to the rule's own interval
+$[R^{-},R^{+}]$, the guard \eqref{eq:guard} enlarges the interval by exactly
+\begin{equation}\label{eq:guard-cost}
+  R^{-}-k^{-}(\hat c)
+    =\max\big\{0,\ R^{-}-\lfloor np^{-}\rfloor\big\},
+  \qquad
+  k^{+}(\hat c)-R^{+}
+    =\max\big\{0,\ \lceil np^{+}\rceil-R^{+}\big\}
+\end{equation}
+counts on the lower and the upper side respectively;
+\item \emph{(distance from the honest value)} measured from the envelope's
+value on each side, the guard costs at most $1/n$ \emph{unconditionally}:
+\begin{equation}\label{eq:guard-from-p}
+  0\le p^{-}-\frac{k^{-}(\hat c)}{n}
+    \le\max\Big\{p^{-}-\frac{R^{-}}{n},\ \frac1n\Big\},
+  \qquad
+  0\le \frac{k^{+}(\hat c)}{n}-p^{+}
+    \le\max\Big\{\frac{R^{+}}{n}-p^{+},\ \frac1n\Big\},
+\end{equation}
+so on whichever side the guard is active, the emitted endpoint lies within
+$1/n$ of that side's envelope value.
+\end{enumerate}
+With the degenerate envelope, $p^{-}=p^{+}=p_{\hat c}$, both
+$\Ncount{\hat c}^{\mp}$ are binomial $(n,p_{\hat c})$, and (i)--(iv) are
+statements about that single law.
+\end{lemma}
+
+\begin{proof}
+\emph{(i).} The chain \eqref{eq:ordering} is immediate from \eqref{eq:guard}:
+$k^{-}(\hat c)$ is a minimum one of whose arguments is $\lfloor np^{-}\rfloor$,
+$k^{+}(\hat c)$ a maximum one of whose arguments is $\lceil np^{+}\rceil$, and
+$\lfloor np^{-}\rfloor\le np^{-}\le np^{+}\le\lceil np^{+}\rceil$ because
+$p^{-}\le p^{+}$ (Definition~\ref{def:envelope}); the outer bounds
+hold because $R^{-}\ge0$, $\lfloor np^{-}\rfloor\ge0$, $R^{+}\le n$ and
+$\lceil np^{+}\rceil\le n$ (Definition~\ref{def:endpoint-rule}\,(a) and
+$0\le p^{-}\le p^{+}\le1$).
+
+\emph{(ii).} The function $k\mapsto\Pr[\Ncount{\hat c}^{-}<k]$ is
+non-decreasing, because the events $\{\Ncount{\hat c}^{-}<k\}$ increase with
+$k$; similarly $k\mapsto\Pr[\Ncount{\hat c}^{+}>k]$ is non-increasing. Hence
+for $0\le\tilde k^{-}\le R^{-}$,
+$\Pr[\Ncount{\hat c}^{-}<\tilde k^{-}]\le\Pr[\Ncount{\hat c}^{-}<R^{-}]
+\le\varepsilon^{-}(\hat c)$ by \eqref{eq:rule-admissible} at
+$p=p^{-}$, and for $R^{+}\le\tilde k^{+}\le n$,
+$\Pr[\Ncount{\hat c}^{+}>\tilde k^{+}]\le\Pr[\Ncount{\hat c}^{+}>R^{+}]
+\le\varepsilon^{+}(\hat c)$ by \eqref{eq:rule-admissible} at $p=p^{+}$.
+Since \eqref{eq:guard} gives $0\le k^{-}(\hat c)\le R^{-}$ and
+$R^{+}\le k^{+}(\hat c)\le n$ (the latter by (i)), \eqref{eq:budget-met} is
+the case $(\tilde k^{-},\tilde k^{+})=(k^{-}(\hat c),k^{+}(\hat c))$.
+
+\emph{(iii).} The two identities \eqref{eq:guard-cost} are \eqref{eq:guard}
+together with $\kappa-\min\{\kappa,x\}=\max\{0,\kappa-x\}$ and
+$\max\{\kappa,x\}-\kappa=\max\{0,x-\kappa\}$, valid for all reals
+$\kappa,x$.
+
+\emph{(iv).} By \eqref{eq:guard},
+\begin{equation*}
+  p^{-}-\frac{k^{-}(\hat c)}{n}
+  =p^{-}-\frac{\min\{R^{-},\lfloor np^{-}\rfloor\}}{n}
+  =\max\Big\{p^{-}-\frac{R^{-}}{n},\
+              \frac{np^{-}-\lfloor np^{-}\rfloor}{n}\Big\},
+\end{equation*}
+and $np^{-}-\lfloor np^{-}\rfloor\in[0,1)$, so the second entry lies in
+$[0,1/n)$ and the maximum is bounded by $\max\{p^{-}-R^{-}/n,\,1/n\}$;
+non-negativity holds because the second entry is non-negative. The upper
+display of \eqref{eq:guard-from-p} is the mirror statement at $p^{+}$, using
+$\lceil np^{+}\rceil-np^{+}\in[0,1)$.
+\end{proof}

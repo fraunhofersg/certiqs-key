@@ -1,0 +1,63 @@
+% ---
+% id: reductions/wpfss/rem:absorbneeded
+% kind: rem
+% title: "Necessity of the absorbing hypothesis"
+% summary: >-
+%   Without the absorbing condition the routed bound is unproved and fails in
+%   general, unsafely: a single-click letter loses weight to multiclick
+%   patterns under a dark count at another port, and no other column restores
+%   it. The
+%   receiver's multiclick entry is absorbing, so its slot is admitted.
+% prominence: standard
+% status: accepted
+% uses: [prop:route, def:targets, receiver/def:slot]
+% mentions: [receiver/detector-imperfections/def:darkadm, req:absorbing-bounded-letters]
+% assumes: [A-RECV]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:absorbneeded}
+Without \eqref{eq:absorbing}, \eqref{eq:routebound} is no longer proved, and
+it fails in general, in the direction that certifies a weight the device does
+not have. Under the supplier's \tref{independent product form}
+(\xref{receiver/detector-imperfections/def:darkadm}), a bounded
+\emph{single-click} letter $y_i=\cg(\{k\})$ whose fibre $\cg^{-1}(y_i)$ is
+$\{\{k\}\}$, as it is when $\cg$ is injective off the \tref{multiclick set}
+and maps no multiclick pattern to $y_i$, has $R^{\cg}_{y_i|y_i}=R_{\{k\}|\{k\}}
+=\prod_{k'\ne k}(1-p_{\dc|k'})<1$
+whenever some $p_{\dc|k'}>0$, because a dark count at another port moves the
+pattern $\{k\}$ into the multiclick set and never back. And, for any
+monotone dark-count channel,
+$r_{\min,i}=0$, because monotonicity kills \emph{at least one} other column:
+any other single-click letter $y'=\cg(\{k''\})$, $k''\ne k$, has
+$R^{\cg}_{y_i|y'}=0$ since $\{k''\}\not\subseteq\{k\}$, which is all a minimum
+needs, and $K\ge2$ supplies such a letter. Formula \eqref{eq:routebound} would
+then assert $\blk{\widetilde M}{\gtN}_{y_i|t}\succeq p^{(t)}_i\idon{}$, while
+in fact the inequality that does hold is
+$\widetilde M_{y_i|t}\succeq R^{\cg}_{y_i|y_i}M_{y_i|t}$ with
+$R^{\cg}_{y_i|y_i}<1$, and the columns that remain do not compensate: under
+the independent product form the only other column
+feeding $y_i$ is the no-click one,
+$R^{\cg}_{y_i|\cg(\varnothing)}=p_{\dc|k}\prod_{k'\ne k}(1-p_{\dc|k'})$, which
+multiplies $M_{\cg(\varnothing)|t}$ and not $M_{y_i|t}$ and carries no
+high-photon weight of its own. In the sub-case $p_{\dc|k}=0$ with some
+$p_{\dc|k'}>0$ that column vanishes too and the loss is exactly the factor
+$R^{\cg}_{y_i|y_i}=\prod_{k'\ne k}(1-p_{\dc|k'})<1$: for a receiver whose
+certified weight is attained and positive,
+$\lmin\big(\blk{M}{\gtN}_{y_i|t}\big)=p^{(t)}_i>0$, the smallest eigenvalue of
+$\blk{\widetilde M}{\gtN}_{y_i|t}$ is $R^{\cg}_{y_i|y_i}\,p^{(t)}_i<p^{(t)}_i$,
+and \eqref{eq:routebound} is false. A weight asserted above
+the true one makes \eqref{eq:certweights} false, so $\Fwp$ is not a squashing
+of the real receiver and the emitted licence certifies an inclusion that does
+not hold, the failure Assumption~\ref{ass:recv}'s ledger row calls a security
+break. Condition \eqref{eq:absorbing} is therefore a declared input validity
+condition at every bounded letter
+(Requirement~\ref{req:absorbing-bounded-letters}), and no bound is stated for
+a letter that fails it. The multiclick letter of the canonical declaration is
+absorbing (Proposition~\ref{prop:route}\,(iii)), which is why the slot the
+receiver emits, the single entry $(\MCK,(p^{(t)}_{\mc})_{t\in\Tset})$ of its
+\xref{receiver/def:slot}, written $(\MCK,p_{\mc})$ at a probe-free receiver,
+is admitted.
+\end{remark}

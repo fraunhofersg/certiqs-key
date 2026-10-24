@@ -1,0 +1,30 @@
+% ---
+% id: reductions/req:no-approximate-relations
+% kind: req
+% title: "Refusal of approximate squashing relations"
+% summary: >-
+%   A declared relation carrying an error term is refused, and no link is
+%   emitted with the status reserved for approximate squashing. No theorem of
+%   this contract converts an error term into a security penalty
+%   ([[rem:why-exact]]).
+% prominence: standard
+% status: accepted
+% uses: [rem:why-exact]
+% mentions: [thm:transfer, req:mixed-status-chain]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Theorem~\ref{thm:transfer} rests on an equality of output states and has no
+penalty slot, so an error term in a declared relation has nowhere to enter
+(Remark~\ref{rem:why-exact}). The refusal of a chain containing a link that
+is not exact is Requirement~\ref{req:mixed-status-chain}.
+
+\begin{requirement}\label{req:no-approximate-relations}
+The engine refuses a declared \tref{squashing relation} that carries an error
+term, with the reason \iface{approximate_squashing_unsupported}, and emits no
+link with the status \iface{certified_outer}, which is reserved for
+approximate squashing.
+\end{requirement}

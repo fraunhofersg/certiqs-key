@@ -1,0 +1,40 @@
+{
+ "alpha": "search",
+ "device": {
+  "alice_efficiency": {
+   "A": "4/5",
+   "D": "4/5",
+   "H": "4/5",
+   "V": "4/5"
+  },
+  "bob_efficiency": {
+   "A": "4/5",
+   "D": "4/5",
+   "H": "4/5",
+   "V": "4/5"
+  }
+ },
+ "f_ec": 1.1,
+ "id": "c1e5-02-efficiency",
+ "labels": {
+  "coincidences": 100000,
+  "effect": "efficiency",
+  "loss_db": 0.0,
+  "rounds": 170000,
+  "rung": 2,
+  "source": "neumann2022transnational",
+  "value": "0.8 per detector"
+ },
+ "model": {
+  "alice_transmittance": "1",
+  "bob_transmittance": "1",
+  "visibility": "49/50"
+ },
+ "parameters": {},
+ "rounds": 170000,
+ "solver": {
+  "budget_seconds": 600,
+  "max_iterations": null,
+  "method": "auto"
+ }
+}

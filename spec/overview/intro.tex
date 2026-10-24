@@ -1,0 +1,740 @@
+% spec/overview/intro.tex -- AUTHORED (not generated). The introduction of the
+% spec-wide overview PDF; `python -m harness.assemble_contract --all` builds it
+% through the generated frame overview.tex. The generated part (every contract's
+% main results in module dependency order, then the module map) is chain.tex,
+% placed by the \input at the end.
+% The frame declares every claim this file cites with \xref (generated).
+
+% A claim identifier breaks preferably after "/" or ":"; a break at a hyphen,
+% which belongs to the identifier and could be misread as hyphenation, is left
+% for a line that cannot be set otherwise. An identifier never stretches, so
+% that no space opens inside it; the spaces between words take the stretch.
+\DeclareUrlCommand{\claimid}{\urlstyle{sf}\def\UrlBreaks{\do\-\do\.\do\_}%
+  \def\UrlBigBreaks{\do\/\do\:}\def\UrlNoBreaks{}%
+  \mathchardef\UrlBreakPenalty=5000\relax\Urlmuskip=0mu\relax}
+\setlength{\emergencystretch}{2em}
+
+\begin{center}
+{\LARGE\bfseries CERTIQS-KEY}\\[4pt]
+{\large An overview of the contracts}
+\end{center}
+
+\noindent The contracts of CERTIQS-KEY state and prove what it takes to
+compute, from a declared description of a quantum key distribution protocol
+and its devices, a fixed-length key length together with a security
+parameter $\varepsilon$, the sum of the privacy-amplification and
+error-verification errors and twice the authentication error. The protocol
+is $\varepsilon$-secure in the composable sense whenever every assumption the
+key length rests on holds of the devices, the laboratories and the run and,
+for a number that is not certified, the bound the run computed lies below the
+value it bounds, a condition no assumption covers (\emph{What a key length is
+about} below). Each of those assumptions is named. There
+is one contract per \emph{core module}, which holds the claims every protocol
+needs in one area, and the contract includes the module's
+\emph{submodules}, small bundles of claims for one device, source model,
+squasher or statistical method that a protocol uses only when it needs them.
+A \emph{claim} is one numbered definition, theorem, lemma, assumption,
+requirement (an obligation on the implementation) or other statement, and
+its identifier, such as \claimid{meat-core/thm:keylength}, gives its module,
+a prefix naming its kind, and a name. This overview says what the contracts
+establish together, explains the terms they use throughout, says how the
+modules fit and how a contract is laid out, and suggests four reading paths;
+the main results of every contract and the module map close it.
+
+\section*{What the contracts establish}
+
+Consider a fixed-length protocol of $n$ rounds. In each round Alice prepares
+a signal, a receiver measures it, and the parties announce public
+information, sift and record a raw key. After the last round the protocol
+accepts when the observed frequencies of the acceptance outcomes lie in an
+\emph{acceptance set} fixed before the run; on acceptance, error correction,
+error verification and privacy amplification turn the raw key into the key.
+The user declares the protocol and its devices in a \emph{protocol
+specification} (\xref{protocol-compiler/def:spec}). The contracts replace
+Alice's source and the receiver by finite models and compile the result into
+a \emph{protocol declaration} (\xref{protocol-compiler/def:declaration}):
+Alice's system and its marginal, a finite measured system split into sectors,
+the measurements of both parties, what each party reads and announces, the
+map from the announcements to the acceptance outcome, the raw-key map with
+the party that holds the key, and a list of constraint entries, possibly
+empty, which the next section explains.
+
+From the declaration the contracts derive the channel of one round
+(\xref{meat-core/thm:protocol-channel}). The published theorem of
+marginal-constrained entropy accumulation, MEAT
+(\xref{meat-core/fact:meat}), applied to that channel, bounds the R\'enyi
+entropy of order $\alpha>1$ of the accepted raw key, given everything the
+adversary holds, from below by $n$ times a \emph{single-round rate} less the
+penalty $\alpha/(\alpha-1)\cdot\log_2(1/\Pr[\mathrm{accept}])$, against every
+adaptive attack whose quantum memory is finite-dimensional, of any dimension
+(\xref{meat-core/thm:accumulated-entropy}); the security of the key extends,
+by a limit over those dimensions, to an adversary whose memory has any
+dimension and who receives the signals as they are released
+(\xref{meat-core/cor:composed-security}, through \xref{meat-core/lem:memory-lift}).
+The single-round rate is an infimum, over the distributions in the acceptance set and the single-round
+states that meet the declared marginal, of a divergence penalty plus the
+conditional entropy of the round's key (\xref{meat-core/def:hqkd-list}). The
+contracts bound it from below by the value $\hlow$ of a finite convex program
+(\xref{meat-core/thm:reduction}); the summaries, which are plain text, write
+$\hlow$ as h\_low. For $\alpha\in(1,2)$ a key of length
+\[
+  \ell\;\le\;n\,\hlow-\lEC-\big\lceil\log_2(1/\eev)\big\rceil
+  -\alpha/(\alpha-1)\cdot\log_2(1/\epa)+1
+\]
+is then $\epa$-secret (\xref{meat-core/thm:keylength}) and $\eev$-correct
+(\xref{meat-core/lem:ev-correctness}) on the accepted state, $\lEC$ being the
+length in bits of the error-correction transcript of the post-processing
+model (\xref{meat-core/def:postprocessing-model}), fixed before the run
+(\xref{meat-core/ass:fixed}). Both statements are about the accepted state
+left unnormalised, that is, counted over all runs, aborted ones included:
+secrecy bounds the trace distance of the key jointly with the event of
+acceptance from a uniform key independent of everything the adversary holds,
+and correctness bounds the probability that the run accepts and the two keys
+differ. Counted that way the penalty in $\Pr[\mathrm{accept}]$ cancels, which
+is why no such term appears in $\ell$. Both are stated in the setting where
+every classical message arrives as sent; over an authentication scheme within
+$\varepsilon_{\mathrm{auth}}$ that consumes $k_{\mathrm{auth}}$ bits of
+pre-shared key (\xref{meat-core/ass:auth}), the protocol is
+$(\epa+\eev+2\varepsilon_{\mathrm{auth}})$-secure and a run in which both
+parties output a key gains $\ell-k_{\mathrm{auth}}$ bits
+(\xref{meat-core/cor:composed-security}), and the security parameters of
+separate executions add (\xref{meat-core/cor:separate-executions}). Any lower
+bound $h\le\hlow$ may replace $\hlow$ in the displayed bound on $\ell$
+through $\max\{0,h\}$, with the same security statement (\xref{meat-core/cor:keylength-bound}); this is how a
+computed number becomes a key length. The constant $+1$ is the announced
+outcome of error verification at work: announcing it costs one bit and makes
+secrecy hold on the accepted state, where the derivation this bound
+generalises, with its secrecy conditioned on the acceptance test alone,
+carries $+2$; the published fixed-length statement reaches the accepted
+state with $+2$ by another route, which this module does not import
+(\xref{meat-core/rem:plus2}). The bound is for an ideal
+privacy-amplification hash family (A-HASH); for a family that is only
+two-universal it is tightened by one further bit, $\ell\to\ell-1$
+(\xref{meat-core/req:hash-penalty}).
+
+\emph{What a key length is about.} It is a statement about the declared
+model, and it holds of an apparatus only through the assumptions that the
+apparatus is that model exactly: a trusted source emits exactly the declared
+states (\xref{transmitter/ass:ens}, or for a decoy source
+\xref{transmitter/decoy/ass:wcp}), the receiver is one declared measurement
+(\xref{receiver/ass:trust}, \xref{protocol-compiler/ass:spec}) and a
+declared parameter carries no uncertainty (\xref{receiver/ass:exact}). No
+tolerance computed from the declared dimensions, alphabet sizes and $\alpha$
+can stand in for exactness: two exactly admissible measurements within
+$\epsilon$ of each other, in operator norm outcome by outcome, can have rate
+bounds far apart (\xref{meat-core/prop:optol-nobound}). And what a run computes is a lower
+bound on $\hlow$ only in the sense of its tier (\emph{Three tiers} below): a
+\emph{first-order} number, which a run reports unless its certified
+evaluation succeeds, is a lower bound in exact real arithmetic, and no claim
+bounds the rounding of the binary64 evaluation a run performs, nor does an
+assumption cover it (\xref{meat-core/frank-wolfe/rem:fo-arithmetic}): the
+security of a key length from a first-order number also needs the bound the
+run computed to lie below $\hlow$, which no assumption covers and a run
+cannot check. A certified number removes that condition. Every
+assumption a key length rests on is named in~(d) of the reading paths.
+
+\emph{Exact decisions and named assumptions.} Every condition on declared
+numbers is decided exactly. A declared number is a binary64
+(double-precision) value, read as the dyadic rational it denotes. A sum that
+a decision reads is formed in a declared order and \emph{rounds nowhere}:
+each of its binary64 additions is exact, so the computed sum is the exact sum
+(\xref{foundations/lem:exact-accumulation}). An operator family handed from
+one module to another is exactly admissible, a property of its declared
+numbers that the next section states
+(\xref{foundations/req:boundary-admission}). Where a number is only evaluated
+in floating point, as in the receiver's device model, the contract says so
+and asserts no enclosure of it (\xref{receiver/def:evaluation-model}); the reductions
+module, which reads the receiver's output, rests on the attestation that the
+device facts the receiver states hold of its numbers as declared
+(\xref{reductions/ass:recv}). What declared numbers cannot settle, such as
+that a source emits the declared states or that a receiver is exactly
+characterised, is an \emph{assumption}: a checkable hypothesis, stated once
+and printed with what its failure puts at stake (secrecy, correctness or
+completeness) and whether the engine verifies it. Each claim names the
+assumptions it declares, and the claims it uses name theirs, so that a key
+length can be traced to every assumption behind it.
+
+\emph{Three tiers.} A key-rate number a run reports carries one of three
+tiers (\xref{foundations/def:tiers}). An \emph{estimate} is the value of the
+objective at the point an optimiser returned. At an exactly feasible point it
+bounds $\hlow$ from above (\xref{meat-core/lem:estimate}), so it backs no key
+length. A \emph{first-order} number is a lower bound on $\hlow$: the best
+linearisation of the objective over the iterates of a Frank--Wolfe run. It
+lies below $\hlow$ under the hypotheses of
+\xref{meat-core/frank-wolfe/thm:firstorder}, with its two linear minima
+bounded from below rather than trusted: the acceptance-side one exactly, and
+the feasible-side one from the solver's dual in exact arithmetic
+(\xref{meat-core/frank-wolfe/lem:feasible-side-dual}), and a key length
+follows from it (\xref{meat-core/frank-wolfe/cor:fo-keylength}). That theorem
+holds in exact real arithmetic. A run evaluates the objective and its
+gradient in binary64, and no claim bounds the rounding error of that
+evaluation (\xref{meat-core/frank-wolfe/rem:fo-arithmetic}): the key-length
+statement is about the exact first-order bound at the run's iterates, and no
+assumption covers the rounding. A \emph{certified} number closes that gap at
+a run's final points: the same bound formed again from the declaration's
+exact data, every step exact or rigorously enclosed, only the gradient
+needing an enclosure (\xref{meat-core/frank-wolfe/lem:certified-bracket}),
+and its key length computed exactly, its one logarithm enclosed until the
+integer part is decided
+(\xref{meat-core/frank-wolfe/cor:certified-keylength}). A run reports it
+where its certified evaluation succeeds
+(\xref{meat-core/frank-wolfe/req:certified-evaluation}) and otherwise keeps
+its first-order number with the reasons; the declaration's modelling
+premises remain, and no premise about arithmetic is added.
+
+\emph{The reference companion.} Where a measurement was moved onto the
+binary64 lattice by a \emph{snap} (\emph{Emission} below) and the run holds
+a \emph{reference} of the model it was declared from, exact or known through
+an entrywise enclosure (\xref{foundations/def:exact-reference}), the engine
+may admit a \emph{reference companion}: the declaration compiled with the
+reference in place of the snapped measurement
+(\xref{meat-core/prop:reference-companion}). Where it admits one, the bound
+is formed on the companion, at points a search on the snapped declaration
+found, and its key length is that of the protocol whose declaration is the
+companion, the reference model's
+(\xref{meat-core/frank-wolfe/cor:fo-reference},
+\xref{meat-core/frank-wolfe/cor:certified-keylength-reference}); the
+companion's bracket can still be withdrawn, and its certified number can
+fall back to one on the snapped declaration
+(\xref{meat-core/frank-wolfe/req:bracket-on-reference},
+\xref{meat-core/frank-wolfe/req:certified-evaluation}), and the key length
+is then formed on the snapped declaration. Where the companion's bound
+stands, the run records the bound on the snapped declaration beside it; no
+key length is formed from that bound, which serves only diagnostics and the
+statistics check, and that check can only withhold a key. No claim relates
+the two bounds. A first-order number on a companion known through an
+enclosure is
+evaluated at the enclosure's centres, a displacement no claim bounds; the
+certified number is evaluated over the enclosure where every element the
+gradient reads has a rank fixed throughout it, and then holds of the
+companion itself (\xref{meat-core/frank-wolfe/rem:fo-arithmetic}). Where
+a run reads a moved measurement instead, its key length is about the moved
+data, and A-SNAP, that the device performs the moved measurement on the
+blocks the run record names, is a premise of it
+(\xref{foundations/ass:snapped-measurement}).
+
+\emph{Scope.} The contracts treat fixed-length protocols in which the same
+declaration describes every round, with devices characterised exactly: a
+receiver is one declared measurement rather than a family of possible
+devices, and a declared parameter carries no uncertainty. Variable-length
+protocols, sources correlated across rounds and uncertainty sets over devices
+lie outside them.
+
+\section*{Terms used throughout}
+
+Each contract defines its terms where it first needs them. The terms below
+recur across the modules, and a reader meets them in the summaries of the
+main results before any definition.
+
+\begin{description}[leftmargin=0pt,itemsep=3pt]
+\item[Declared data; specification; declaration.] Declared data are numbers
+  a party states rather than computes: an \emph{instance}, the party that
+  fixes one protocol's data, or a module that hands data on as its own
+  declaration (\xref{foundations/def:declared-data}). The protocol
+  specification is what the user declares; the protocol declaration is the
+  finite object the protocol compiler emits from it and the MEAT core reads.
+  \emph{Declaration} alone means data a party states as its own, so the output
+  of a module is also called a declaration, as in ``the emitted decoy
+  declaration''.
+\item[Emission; artefact; supplier.] A module \emph{emits} data when it hands
+  them to another module, its \emph{consumer}, as its own declaration. Before
+  emitting it decides exactly that the data meet the conditions the consumer
+  reads, and otherwise it refuses (\xref{foundations/req:exact-emission}). A
+  device module emits an \emph{artefact}: its data with the records a consumer
+  reads, such as a licence record and an assumption ledger naming the
+  assumptions the data rest on. Where exact products have left the lattice of
+  binary64 values a module emits on, the module may move its own data back
+  onto the lattice by a \emph{snap} (\xref{foundations/def:snap}) and emit the
+  moved data, which its theorems are then about. No claim relates a key length
+  computed from the moved data to one computed from the data before the move:
+  measurements close to each other entry by entry can have rate bounds far
+  apart (\xref{meat-core/prop:optol-nobound}). A \emph{supplier}, such as the
+  receiver, decides its conditions in floating point, and its output becomes
+  declared data only when an instance states it.
+\item[Sector map; exact admissibility.] An operator on a system split into
+  sectors is held as a block list, one matrix per sector, against a
+  \emph{sector map}: the ordered sector identifiers with their dimensions and
+  a label saying what they are. Two sector maps \emph{agree} when all of these
+  coincide (\xref{foundations/def:sector-map}). A family of block lists is
+  \emph{exactly admissible} when five conditions hold of its declared numbers:
+  its sector map agrees with the consumer's; every block is exactly Hermitian;
+  every block is exactly positive semidefinite; on each sector the blocks sum
+  to the identity (or to a declared constant); and that sum, formed in the
+  declared order, rounds nowhere (\xref{foundations/def:exact-admissibility}).
+\item[Source modes; source replacement.] In \emph{trusted-source mode} Alice
+  keeps a system of her own that never reaches the adversary and that only her
+  declared measurement touches (\emph{retention}, \xref{transmitter/ass:src}),
+  and her marginal on it is a declared state. A \emph{source-replacement
+  certificate}, checked exactly, then describes her preparation as that
+  measurement on her retained system, and a consumer may fix her marginal;
+  across rounds the marginal is a product, derived from the source's premises
+  (\xref{meat-core/lem:product-marginal}). In \emph{untrusted-source mode} the adversary
+  supplies Alice's system as well, as for an entanglement source outside the
+  parties' control: no marginal is declared and no certificate is needed.
+\item[Squashing; spectral certificates.] A \emph{squashing channel} maps the physical measured system, whose photon number is
+  unbounded, to a finite system, so that its adjoint takes every element of a
+  finite \emph{target} POVM to the physical element; the physical and the
+  squashed protocol then produce the same output state. A squasher may also
+  \emph{carry operators} on the finite system whose \emph{pull-backs}, their
+  images under the adjoint, express facts about the device. A \emph{spectral
+  certificate} states that such a pull-back is equal to, at most or at least a
+  multiple of the identity, whatever the input
+  (\xref{reductions/thm:licence}). The squashers of the submodule wpfss
+  (weight-preserving and flag-state squashers) carry the receiver's multiclick
+  weights into the finite model in this way.
+\item[Constraint entries; attack-set licence.] A \emph{constraint entry} is an
+  operator $\hat O$ on the finite measured system, a relation $\bowtie$ among
+  $\le$, $=$ and $\ge$, and a right-hand side, in the simplest form a real
+  constant $c$; a squasher's carried operators with their spectral
+  certificates yield such entries. A list of entries with real constants cuts
+  out an \emph{attack set}: the adversary's round channels
+  $\mathcal{A}$ with $\mathcal{A}^{\dagger}(\hat O\otimes\mathds{1})\bowtie
+  c\,\mathds{1}$ for every entry, the identities acting on the other systems
+  (\xref{foundations/def:round-model}). On a non-empty list the MEAT core
+  minimises only over states that meet every entry, and the resulting
+  \emph{constrained} rate and value are never below the \emph{unconstrained}
+  ones, those of an empty list. Their use in a key length needs the
+  \emph{attack-set licence} (\xref{protocol-compiler/ass:atk}): the list is
+  \emph{licensed}, every right-hand side being a real constant, read as a
+  multiple of Alice's marginal in trusted-source mode and as a number in
+  untrusted-source mode, or the entry being party-local
+  (\xref{reductions/def:licensed}); and every physical attack, once squashed,
+  lies in the attack set. The reductions module proves
+  the licence for entries that carry spectral certificates
+  (\xref{reductions/thm:licence}). A \emph{party-local} entry is scoped to one
+  factor of a product measured system, such as one party's device.
+\item[Key-length eligibility.] The protocol compiler's emission gates decide
+  whether a well-formed declaration may back a key-length claim: its checks
+  pass, the transmitter's licence record for the source-replacement
+  certificate is present and re-decided where Alice's marginal has dimension
+  two or more, and a non-empty constraint list is licensed and carries a
+  record of its attack-set licence (\xref{protocol-compiler/def:eligible}). A
+  declaration that fails a gate is refused, or emitted marked as not eligible.
+  Eligibility is a property of the declaration and its records: passing the
+  gates asserts nothing about the apparatus or about whether the physical
+  attacks lie in the attack set (\xref{protocol-compiler/thm:gates}), which
+  remain assumptions (\xref{protocol-compiler/ass:spec},
+  \xref{protocol-compiler/ass:atk}).
+\item[Acceptance set; honest model; completeness.] The acceptance set is a
+  closed convex subset of the probability simplex on the acceptance outcomes
+  (\xref{meat-core/def:admissible-acceptance-set}). The statistics module builds it from an
+  \emph{honest model}: one law of an honest round's acceptance outcome, or an
+  \emph{honest envelope}, a range of probabilities per outcome within which
+  each honest round's law, given the rounds before it, stays. The
+  \emph{completeness budget} is the probability of aborting an honest run that
+  the user allows. The honest model bears on completeness, never on the
+  soundness of a key.
+\end{description}
+
+\section*{How the contracts fit}
+
+We describe the modules in the order in which the main results at the end
+list them: each comes after every module it builds on, that is, every module
+whose claims its own claims may use. Each item gives the contract's title,
+with the module's name in parentheses, then what the module builds on, what
+it establishes and its submodules.
+
+\begin{description}[leftmargin=0pt,itemsep=3pt]
+\item[Foundations: quantum-information preliminaries, number model, exact
+  admissibility and emission (foundations)] builds on no other module
+  and is specific to no protocol. It states the quantum-information
+  preliminaries the entropy optimisation is written in, the round model with
+  its attack sets, and the number model: binary64 values, sums that round
+  nowhere, exact admissibility (\xref{foundations/def:exact-admissibility})
+  and the rules of emission.
+\item[Receiver POVM (receiver)] builds on foundations. It turns a
+  declared passive optical receiver into the click-pattern POVM it performs,
+  and into weights that bound its \emph{multiclick element}, the sum of the
+  POVM elements with two or more clicks, from below on every photon-number
+  block above a cutoff (\xref{receiver/thm:emitted-bound}). Its submodules add
+  detector efficiency and dark counts
+  (\xref{receiver/detector-imperfections/thm:dark-counts}) and a catalogue of
+  optical components
+  (\xref{receiver/component-catalogue/thm:catalogue-admissibility}).
+\item[Transmitter source model (transmitter)] builds on no other
+  module. It describes what Alice prepares, the system she retains and the
+  source mode, and in trusted-source mode the source-replacement certificate,
+  whose conditions are finitely many exact decisions
+  (\xref{transmitter/thm:certificate-sufficiency}). Its decoy submodule makes
+  a phase-randomised weak-coherent-pulse source finite through one tagging
+  channel (\xref{transmitter/decoy/prop:tagging}).
+\item[Proof reductions by squashing (reductions)] builds on receiver,
+  transmitter and foundations. It replaces the physical receiver, and in
+  trusted-source mode the physical source as well, by finite models whose
+  security transfers to the physical protocol with the same $\varepsilon$
+  when the squashed inputs analysed contain the squashed image of every
+  physical input (\xref{reductions/thm:transfer}), and it emits them as a reduction chain
+  with the constraint entries it certifies. Its submodule wpfss provides the
+  flag-state and weight-preserving squashers
+  (\xref{reductions/wpfss/prop:chain}); its domination submodule relates a
+  measurement family to one that dominates it.
+\item[Protocol compiler (protocol-compiler)] builds on receiver,
+  reductions, transmitter and foundations. It compiles a specification into
+  the protocol declaration and decides exactly that the declaration is well
+  formed, and its emission gates decide whether the declaration may back a
+  key-length claim (\xref{protocol-compiler/thm:gates}).
+\item[MEAT key-rate engine (meat-core)] builds on protocol compiler,
+  reductions, transmitter and foundations. It turns the declaration and the
+  acceptance set into the convex program and a key length, through entropy
+  accumulation (\xref{meat-core/thm:accumulated-entropy}) and the reduction of
+  the single-round rate to that program (\xref{meat-core/thm:reduction}). Its
+  Frank--Wolfe submodule supplies the first-order lower bound on the program's
+  value (\xref{meat-core/frank-wolfe/thm:firstorder}).
+\item[Acceptance statistics (statistics)] builds on reductions alone,
+  for the assumption that each round's public choices enter the test only
+  through the recorded outcome (\xref{reductions/ass:tsm}). Before the run it
+  builds, from the honest model, the acceptance set the observed frequencies
+  are tested against (\xref{statistics/thm:geometry-validation}). Its
+  binomial-box submodule constructs a box and bounds the probability that an
+  honest run fails the test
+  (\xref{statistics/binomial-box/thm:completeness-bound}), and its singleton
+  submodule evaluates a one-point test exactly. Statistics and the MEAT core
+  do not build on each other: the MEAT core assumes of its acceptance set what
+  statistics proves of the sets it builds.
+\end{description}
+
+\noindent Data move towards the key length. The receiver hands its
+click-pattern POVM and its multiclick weights to the reductions module. The
+transmitter hands Alice's source, with its certificate, to the reductions
+module, the protocol compiler and the MEAT core. The reductions module emits
+a reduction chain in two segments: source links that replace Alice's signal
+states, then receiver links that replace the receiver's measurement, with the
+constraint entries the chain certifies. The protocol compiler joins that
+chain, the transmitter's artefact and the public part of the protocol into
+the protocol declaration. The statistics module builds the acceptance set on
+the declaration's acceptance outcomes, and the MEAT core computes the key
+length from the declaration and the acceptance set.
+
+Not every protocol uses every module. An ideal qubit protocol declares its
+measurement directly and reaches the compiler through one identity link, with
+no squasher and no constraint entries; the compiler calls this direct route
+Band~A (\xref{protocol-compiler/thm:band-a}). In untrusted-source mode Alice's
+source carries no certificate.
+
+\section*{How to read a contract}
+
+A contract is one PDF: the core module's mathematics in Part~I, closed by its
+assumptions, the requirements on an implementation in Part~II, then one part
+per submodule. A statements digest beside it gives every definition,
+assumption, result and requirement with the contract's numbers, without
+proofs, remarks, examples or technical steps. A claim's identifier names its
+module, with a submodule's path inside it
+(\claimid{meat-core/frank-wolfe/thm:firstorder}), then its kind:
+\textsf{def} a definition; \textsf{thm}, \textsf{prop}, \textsf{lem} and
+\textsf{cor} a theorem, proposition, lemma and corollary; \textsf{fact} a
+published result imported in the contracts' notation with its citation;
+\textsf{ass} an assumption; \textsf{req} a requirement; \textsf{rem} a remark;
+\textsf{ex} an example. An assumption states a checkable hypothesis, with
+what its failure puts at stake beside it, and its heading also shows a short
+id, such as A-SEQ, by which summaries name it.
+
+Grey text is non-normative: the module overview, the section introductions,
+the grey italic summary line above each claim and the grey lead-in before it
+explain, and nothing in them is assumed or proved. The statements, set
+upright, the proofs and the assumptions are the contract. A main result, one
+of the few results a module exists to establish, is framed by a thin rule in
+the margin and has a bold heading. The front matter lists the main results
+with every assumption each rests on, and a table, \emph{Assumptions at a
+glance}, of every assumption the contract states or its claims assume. Below
+each statement a small grey meta line lists what the claim uses, the
+assumptions it declares, the claims that use it, whether it is published,
+with its citation, or newly derived, its status and the code that implements
+it. Claims are numbered within their section on one counter, so
+``Proposition 7.3'' names one claim whatever its kind; a reference to another
+contract gives the claim's kind, title and identifier, and opens that
+contract's PDF at the claim.
+
+This overview explains in the same sense: where it and a contract differ, the
+contract's statement is what is claimed. Its last two sections are generated
+from the claim files. \emph{Main results, module by module} gives each main
+result's number and title in its contract, followed by its summary line, a
+paraphrase in words set there in ordinary type, not the statement; the
+heading opens the statement. A reading path names a claim by the same title,
+so a path's entry and a main result match by title. \emph{The module map}
+draws the relations of ``How the contracts fit'' as arrows, from each module
+to each module it builds on; a text rendering loses the arrows, and that
+section states the same relations in words.
+
+\section*{Reading paths}
+
+Four paths lead through the claims. Each lists claims in the order we
+suggest reading them, with one line on what each adds to its title; a link
+opens the statement in its contract. To see why a key length is secure,
+read~(a). To declare a new source or receiver, read~(b), then~(d). To choose
+an acceptance test and see where the finite-size terms come from, read~(c).
+To audit a reported key length, read~(d), then items 8 to~11 of~(a) and the
+paragraphs above on what a key length is about, the three tiers and the
+reference companion.
+
+\subsection*{(a) The key-rate chain}
+
+\begin{enumerate}[itemsep=1pt]
+\item \xref{protocol-compiler/def:declaration}: the finite object the rest of
+  the chain reads, whose parts ``What the contracts establish'' lists.
+\item \xref{protocol-compiler/thm:validator-soundness}: the validator's
+  checks, each decided exactly and sector block by sector block, establish
+  that a declaration is well formed; only the check that exhibits a feasible
+  state can refuse a well-formed declaration.
+\item \xref{protocol-compiler/thm:gates}: which well-formed declarations are
+  eligible to back a key-length claim, a decision on the declaration that
+  asserts nothing about the apparatus.
+\item \xref{meat-core/thm:protocol-channel}: the channel of one round, with
+  classical key, acceptance and announcement registers; its acceptance
+  marginal is the statistics map, the affine map from a state to the
+  distribution of the acceptance outcome.
+\item \xref{meat-core/fact:meat}: the published accumulation theorem, in the
+  contracts' notation, for sequential channels with quantum memory under a
+  product marginal constraint.
+\item \xref{meat-core/thm:accumulated-entropy}: that theorem applied to the
+  round channel: $n$ times the single-round rate, less the penalty, on
+  acceptance, in either source mode.
+\item \xref{meat-core/thm:reduction}: for an unconstrained declaration, the
+  value $\hlow$ bounds the single-round rate from below.
+\item \xref{meat-core/thm:keylength}: the key length displayed above.
+\item \xref{meat-core/cor:keylength-bound}: any lower bound on $\hlow$ gives
+  a key length.
+\item \xref{meat-core/frank-wolfe/thm:firstorder}: the lower bound a run
+  computes, and the estimate above it; the bound holds also at iterates that
+  lie only in the \emph{relaxed} feasible set, where the marginal condition
+  and the declared rows hold within a window.
+\item \xref{meat-core/frank-wolfe/cor:fo-keylength}: the key length from the
+  first-order bound, clamped at zero.
+\end{enumerate}
+With a non-empty constraint list the chain runs with the constrained rate and
+value in place of the unconstrained ones, under the attack-set licence
+(\xref{meat-core/thm:constrained-accumulation},
+\xref{meat-core/cor:constrained-key-length}); \xref{reductions/thm:licence}
+proves the licence for entries that carry spectral certificates. A run may
+also give up the entropy terms of chosen pairs of a sifted acceptance value
+and a joint sector, an Alice sector with a sector of the measured system, to
+compute a smaller value faster: the \emph{dropped program}
+(\xref{meat-core/def:dropped}), whose first-order bound again bounds $\hlow$
+from below (\xref{meat-core/frank-wolfe/cor:fo-dropped}).
+
+\subsection*{(b) The device models and what they certify}
+
+What the transmitter and the receiver establish about the declared devices,
+then how the reductions carry it to the finite model the key-rate chain
+starts from.
+
+\smallskip\noindent\emph{The source.}
+\begin{enumerate}[itemsep=1pt]
+\item \xref{transmitter/thm:certificate-sufficiency}: the certificate's
+  conditions are finitely many exact decisions, and under retention and the
+  sequential round structure, measuring Alice's retained system before or
+  after any attack gives the same state (source replacement).
+\item \xref{transmitter/lem:ensemble-presentation}: a certificate built from
+  a virtual ensemble given as sector blocks, whose defining identities hold
+  with no error term.
+\item \xref{transmitter/lem:matched-pinching}: every state an admitted attack
+  reaches from a block certificate is block diagonal and has Alice's declared
+  marginal.
+\item \xref{transmitter/decoy/prop:tagging}: one channel, the same for every
+  letter, maps each tagged virtual state to the phase-randomised weak coherent
+  state it stands for, whenever the declared sector weights are at most the
+  Poisson weights.
+\item \xref{transmitter/decoy/cor:emitted-decoy}: the decoy source as the
+  transmitter emits it, with an exact certificate and its identity with the
+  physical source through the tagging channel.
+\end{enumerate}
+
+\noindent\emph{The receiver.}
+\begin{enumerate}[resume,itemsep=1pt]
+\item \xref{receiver/thm:click-povm}: the click patterns form a POVM,
+  computed by inclusion and exclusion from the port Gram matrices, one
+  positive operator per detector port whose quadratic form is the squared norm
+  of the amplitude sent to that port; every element is block diagonal in the
+  total photon number.
+\item \xref{receiver/thm:coarse-graining}: merging click patterns into the
+  protocol's outcomes keeps a POVM; lower bounds on disjoint patterns add, and
+  a merged outcome's bound says nothing of its parts.
+\item \xref{receiver/thm:emitted-bound}: for each probe setting (one, without
+  a probe) a weight in $[0,1]$ that bounds the multiclick element from below
+  on every photon-number block above the cutoff.
+\item \xref{receiver/detector-imperfections/thm:efficiency}: an efficiency the
+  same for every mode a port collects scales that port's Gram matrix, and it
+  is applied exactly once.
+\item \xref{receiver/detector-imperfections/thm:dark-counts}: dark counts
+  raise a multiclick bound $p_{\mathrm{mc}}$ to
+  $(1-r_{\min})\,p_{\mathrm{mc}}+r_{\min}$, where $r_{\min}$ is the least
+  probability that they turn a pattern with at most one click into a
+  multiclick one.
+\item \xref{receiver/component-catalogue/thm:catalogue-admissibility}: every
+  catalogue entry is a contraction over its whole declared parameter range;
+  only the generic block needs this checked when it is admitted.
+\end{enumerate}
+
+\noindent\emph{From the devices to the finite model.}
+\begin{enumerate}[resume,itemsep=1pt]
+\item \xref{reductions/thm:transfer}: if the squashed inputs analysed contain
+  the squashed image of every physical input, a bound $\varepsilon$ on any
+  security criterion of the squashed protocol holds for the physical one.
+\item \xref{reductions/thm:licence}: spectral certificates on the pull-backs
+  of the carried operators place every squashed physical attack in the attack
+  set of the constraint list; this is the attack-set licence.
+\item \xref{reductions/thm:two-sided}: in trusted-source mode, source
+  replacement and squashing compose, in either order, into one exact
+  reduction.
+\item \xref{reductions/thm:emit}: what a reduction instance emits is exactly
+  admissible and squashes the model it declares with no error term; where
+  moving the data back onto the lattice changed them, the declared model is
+  the moved one, as under \emph{Emission} above.
+\item \xref{reductions/wpfss/prop:chain}: with total certified weight below
+  one, the receiver squashes both to the flag-state target and to the
+  weight-preserving one, and a weight the latter encodes holds on every
+  squashed state.
+\item \xref{reductions/wpfss/cor:emitted-flat}: the flag-state squasher as
+  emitted for an optical receiver with no branch register, its weights
+  rounded down and still
+  certified.
+\end{enumerate}
+
+\subsection*{(c) Statistics and the finite-size terms}
+
+\begin{enumerate}[itemsep=1pt]
+\item \xref{statistics/thm:geometry-validation}: an acceptance set that passes
+  its validation predicate satisfies \xref{meat-core/def:admissible-acceptance-set}.
+\item \xref{statistics/binomial-box/thm:box-construction}: the box, one
+  interval per outcome, contains every law of the honest envelope.
+\item \xref{statistics/binomial-box/thm:completeness-bound}: an honest run
+  fails the test with probability at most the completeness budget, with no
+  independence across rounds assumed.
+\item \xref{statistics/singleton/thm:singleton-completeness}: for a one-point
+  acceptance set and independent honest rounds of one law, the probability of
+  acceptance is multinomial.
+\item \xref{statistics/thm:box-oracle}: exact linear minimisation over a box,
+  with a dual witness of the same value.
+\item \xref{meat-core/thm:accumulated-entropy}: the acceptance probability
+  enters the entropy bound as the penalty
+  $\alpha/(\alpha-1)\cdot\log_2(1/\Pr[\mathrm{accept}])$.
+\item \xref{meat-core/thm:keylength}: the deductions for error correction,
+  error verification and privacy amplification of the post-processing model
+  (\xref{meat-core/def:postprocessing-model}).
+\end{enumerate}
+The honest model bears on completeness, rate and usability, never on the
+soundness of a key: the acceptance set is fixed before the run, and the
+observed frequencies only decide whether the run accepts.
+
+\subsection*{(d) The assumptions a user checks}
+
+Each contract's front matter lists its main results with every assumption
+each rests on, and a table, \emph{Assumptions at a glance}, of every
+assumption the contract states or its claims assume; the module names below
+open the contracts. We name here, with their short ids, the assumptions
+attested of the apparatus, the laboratories and the run, as opposed to those
+decided on declared numbers: every assumption a claim behind a key length
+declares. The Frank--Wolfe submodule also states
+\xref{meat-core/frank-wolfe/ass:lmo} (A-LMO), on which no claim rests.
+\begin{enumerate}[itemsep=2pt]
+\item \href{../modules/foundations/contract.pdf}{Foundations}:
+  \xref{foundations/ass:snapped-measurement} (A-SNAP), where a run reads a
+  measurement moved onto the lattice by a snap: on the blocks its record
+  names, the device performs the moved measurement.
+\item \href{../modules/transmitter/contract.pdf}{Transmitter}:
+  \xref{transmitter/ass:src} (A-SRC), in trusted-source mode;
+  \xref{transmitter/ass:ens} (A-ENS), or for a decoy source
+  \xref{transmitter/decoy/ass:wcp} (A-WCP) in its place;
+  \xref{transmitter/ass:seq} (A-SEQ).
+\item \href{../modules/receiver/contract.pdf}{Receiver}:
+  \xref{receiver/ass:trust} (A-TRUST); \xref{receiver/ass:modes} (A-MODES),
+  the assumption a bright-illumination attack targets;
+  \xref{receiver/ass:passive} (A-PASSIVE); \xref{receiver/ass:thresh}
+  (A-THRESH); \xref{receiver/ass:port} (A-PORT); \xref{receiver/ass:vac}
+  (A-VAC); \xref{receiver/ass:nosel} (A-NOSEL); \xref{receiver/ass:exact}
+  (A-EXACT); \xref{receiver/ass:round} (A-ROUND);
+  and \xref{receiver/ass:eig} (A-EIG), where the smallest eigenvalues of a
+  finite window of photon-number blocks are computed rather than bounded
+  analytically.
+\item \href{../modules/reductions/contract.pdf}{Reductions}:
+  \xref{reductions/ass:recv} (A-RECV); \xref{reductions/ass:meas} (A-MEAS);
+  \xref{reductions/ass:probe} (A-PROBE), where the receiver has a private
+  setting; \xref{reductions/ass:round} (A-ROUND-SQ);
+  \xref{reductions/ass:tsm} (A-TSM), that each round's public choices enter
+  the test only through the recorded outcome;
+  \xref{reductions/ass:constdecl} (A-CONST), with constraint entries, that
+  their constants are fixed before the run by the device facts that certify
+  them.
+\item \href{../modules/statistics/contract.pdf}{Statistics}:
+  \xref{statistics/ass:alphabet} (A-ALPHABET), an acceptance value recorded
+  in every one of the $n$ rounds; \xref{statistics/ass:hon-env} (A-HON-ENV),
+  or \xref{statistics/ass:hon} (A-HON) for a singleton set, which bear on
+  completeness only; and \xref{statistics/ass:reach} (A-REACH), that a
+  feasible state produces statistics in the declared honest envelope (for a
+  single declared law, that law), which no proof of secrecy uses but
+  without which the declared devices do not describe the accepted statistics
+  and a key length for them is not warranted.
+\item \href{../modules/protocol-compiler/contract.pdf}{Protocol compiler}:
+  \xref{protocol-compiler/ass:spec} (A-SPEC);
+  \xref{protocol-compiler/ass:coin} (A-COIN);
+  \xref{protocol-compiler/ass:rhom} (A-RHOM);
+  \xref{protocol-compiler/ass:alice-meas} (A-ALICE-MEAS), where no
+  source-replacement certificate is demanded and Alice has two or more
+  letters;
+  \xref{protocol-compiler/ass:ideal} (A-IDEAL), on the direct route only. Two
+  more are obligations of whoever produced the reduction chain,
+  \xref{protocol-compiler/ass:link} (A-LINK) and, with a non-empty constraint
+  list, \xref{protocol-compiler/ass:atk} (A-ATK). For a chain the reductions
+  module emits, its theorems discharge A-LINK when the chain's status is exact,
+  and A-ATK for the entries whose certificates it established
+  (\xref{protocol-compiler/rem:obligations-discharged}).
+\item \href{../modules/meat-core/contract.pdf}{MEAT core}:
+  \begin{itemize}[itemsep=1pt,leftmargin=1.2em]
+  \item \xref{meat-core/ass:keyreg} (A-KEYREG): the post-processing acts on
+    the raw key the rounds write, and reconciliation runs one way from the
+    key holder through a transcript of the fixed length $\lEC$;
+  \item \xref{meat-core/ass:hash} (A-HASH): privacy amplification uses an
+    ideal two-universal family, and error verification a two-universal one;
+  \item \xref{meat-core/ass:seed} (A-SEED): the post-processing seeds are
+    drawn with their declared laws, privately, independently and afresh, and
+    in trusted-source mode the source's letters and prepared systems are
+    independent of the adversary, who never holds a purification of a
+    prepared system;
+  \item \xref{meat-core/ass:fixed} (A-FIXED): the acceptance set, $n$,
+    $\ell$, $\lEC$, $\epa$, $\eev$, the authentication parameters and the
+    R\'enyi order $\alpha$ are fixed before the run and applied unchanged, which is what makes the
+    protocol fixed-length;
+  \item \xref{meat-core/ass:conform} (A-CONFORM): the implementation runs
+    the analysed post-processing: it applies the acceptance test and the
+    verification abort, sends no message beyond the model's, outputs the
+    model's key or nothing, uses no key before the execution ends and acts
+    on an authentication failure as prescribed;
+  \item \xref{meat-core/ass:lab} (A-LAB), at each party: its laboratory is
+    sealed, so that nothing about its records leaves it but the key, the
+    public messages and, in trusted-source mode at the source's party, the
+    emitted systems, and the adversary acts on it only through the systems
+    its declared measurements receive and the messages; it excludes every
+    side channel, optical, electromagnetic, acoustic, power, timing or
+    classical;
+  \item \xref{meat-core/ass:auth} (A-AUTH), for the composed security: every
+    classical message goes through one authentication scheme that uses at
+    most $k_{\mathrm{auth}}$ bits of pre-shared key and realises the
+    authenticated channel within $\varepsilon_{\mathrm{auth}}$, a reused
+    key's distance from an ideal one included;
+  \item \xref{meat-core/ass:separate-executions} (A-SEPARATE), for adding
+    the security parameters of several executions: they are fixed in
+    advance, share no key, randomness or device state, leave their keys
+    unused until all have ended, and keep their premises with the others
+    counted as the adversary's.
+  \end{itemize}
+  A first-order number adds no assumption about its solver: its linear
+  minima are bounded in exact arithmetic
+  (\xref{meat-core/frank-wolfe/lem:feasible-side-dual}).
+\end{enumerate}
+The key-length theorem \xref{meat-core/thm:keylength} rests on A-KEYREG,
+A-HASH, A-SEED, A-FIXED, A-CONFORM, A-LAB at both parties and A-SEQ, and,
+through the accumulation theorem, on A-RHOM, in trusted-source
+mode on A-SRC and A-ENS, and with a non-empty constraint list on A-ATK. The
+composed security, \xref{meat-core/cor:composed-security}, and with it a key
+length from any lower bound, \xref{meat-core/cor:keylength-bound}, adds
+A-AUTH; the sum over executions, \xref{meat-core/cor:separate-executions},
+adds A-SEPARATE. The receiver, reductions, compiler and statistics
+assumptions enter through the declaration a run is formed on, so which of
+them a key length rests on depends on its route, and the run record lists
+them. A key length on a reference companion rests in addition, through the
+reductions claims that build the companion, on A-MEAS, A-ROUND-SQ, A-CONST
+with constraint entries, and A-SNAP, the last only on the blocks its record
+names. No assumption covers the rounding of the first-order bound as a run evaluates it (\xref{meat-core/frank-wolfe/rem:fo-arithmetic}):
+the key-length statement is about the exact bound, and only a certified
+number removes that gap.
+
+\input{chain}

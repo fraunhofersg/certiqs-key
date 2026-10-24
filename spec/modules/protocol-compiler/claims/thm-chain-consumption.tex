@@ -1,0 +1,369 @@
+% ---
+% id: protocol-compiler/thm:chain-consumption
+% kind: thm
+% title: "Decided identities and named obligations of a consumed chain"
+% summary: >-
+%   Chain conditions are decided by finite computation; a verified pullback
+%   identity reproduces the coarse-grained physical statistics and a verified
+%   source identity maps the virtual source onto the specified one. Link
+%   soundness and attack-set licences stay obligations this theorem does not
+%   discharge.
+% prominence: standard
+% status: accepted
+% uses: [def:chaincond, def:exact, thm:measurements-and-statistics, def:validator, thm:validator-soundness, def:target, def:compile, def:declaration, def:spec, transmitter/def:source-segment]
+% mentions: [rem:coarse, rem:relabel, lem:weighted, def:weighted, def:banda, ass:atk, thm:gates, thm:band-a, reductions/thm:two-sided, rem:obligations-discharged, transmitter/rem:segment-scope]
+% assumes: [A-LINK]
+% refs:
+%   - "tupkary2026decoy, Lemma 9.3, Eq. (146)"
+%   - "tupkary2026decoy, Lemma 9.1, Eqs. (138)-(139)"
+%   - "tupkary2026decoy, Rem. 9.2"
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.chain:check_chain
+% lean:
+% notes: "A-LINK is declared because the consistency reading of (iii) and (iii') is conditional on trace preservation of the supplied channel data, an occurrence of the assumption in the statement; A-ATK is a mention, spent at thm:gates (iii). reductions/thm:two-sided is a mention: (v') names it, and no step composes a source segment with a receiver segment. def:spec is a use: Step 3 reads the physical family as the POVM of its clause (b) for the clause of (iii) on the opposite direction."
+% ---
+
+Consuming a chain buys only what its record makes decidable. The theorem
+states what each decided identity implies and lists what stays an obligation
+of the chain's producer; where those obligations are discharged for the chains
+the reductions module emits is Remark~\ref{rem:obligations-discharged}.
+The attack-set licence that (v) names is Assumption~\ref{ass:atk}. It occurs
+in no hypothesis of this theorem: it is spent at the gate that tests for its
+record, Theorem~\ref{thm:gates}\,(iii), and is named here and not declared.
+
+How the compiler applies the Bob-side weighting of (ii) after the chain is
+Remark~\ref{rem:relabel}. Remark~\ref{rem:coarse} reads the clause of (iii)
+on a coarse-graining in the opposite direction as the reason (C2) runs from
+the physical alphabet onto the emitted one. That (A1)--(A3) do not decide whether the claim an obligation
+record names applies to the descriptors of the link carrying that record,
+as (v$'$) says, is
+\xref{transmitter/rem:segment-scope}.
+
+\begin{theorem}
+\label{thm:chain-consumption}
+Let a chain be presented to the compiler, with the
+\tref[interface conditions on a chain]{interface conditions} of
+Definition~\ref{def:chaincond}. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item (C1)--(C5) and (S1)--(S4) are decided by finite enumeration and finitely
+many arithmetic operations on the emitted data, and a chain failing any of
+them is refused. (X1) is not decided,
+because it is not a condition on data: it is the type of the record;
+\item (C3) is exactly the part of D(iii) concerning $\{F_v\}$, in both halves
+--- typing against $\Smap$, and the per-block predicates and summation
+condition of Definition~\ref{def:exact} --- hence a chain passing the interface
+conditions yields an emitted $\{F_v\}$ for which Theorem~\ref{thm:measurements-and-statistics}
+applies. Where the Bob-side weighting of Definition~\ref{def:weighted} is
+applied after the chain (Definition~\ref{def:compile}), (C3) is decided on the family the chain delivered,
+the emitted family is its weighting $N_{v,f}=P(f\,|\,t(v))F_v$, check V3
+decides the emitted family itself (Theorem~\ref{thm:measurements-and-statistics}\,(i)), and
+Lemma~\ref{lem:weighted}\,(i), (ii) is what says the weighting cannot break
+what (C3) established; the identity of conjunct lists asserted here is between
+(C3) and D(iii) on the chain's family;
+\item \emph{(what a verified (C4) buys)} when the composite receiver channel
+$\Lambda$ is given as data, (C4) is \emph{equivalent} to the statement that
+measuring the emitted family $\{F_v\}$ after $\Lambda$ reproduces the
+\emph{$\gamma$-coarse-grained} physical measurement statistics:
+\begin{equation}\label{eq:pullbackstats}
+  \tr[F_v\,\Lambda(\rho)]=\sum_{w\in\gamma^{-1}(v)}\tr[\Fph_w\,\rho]
+\end{equation}
+for every $v\in\Vset$ and every operator $\rho$ on the physical receiver space.
+Consistency with completeness holds \emph{under one hypothesis this contract
+names and does not verify}: if the supplied channel data are trace-preserving,
+so that $\Lambda^{\dagger}$ is unital, then summing \eqref{eq:pullback} over
+$v$ returns completeness of the physical family and nothing more, whereas the
+same identity read with a coarse-graining in the opposite direction --- a
+total surjection $\gamma':\Vset\to\Vph$, with
+$\Lambda^{\dagger}(F_v)=\Fph_{\gamma'(v)}$ --- does not in general, forcing
+every physical element covered more than once by $\gamma'$ to vanish. That
+trace preservation is
+Assumption~\ref{ass:link}, not a check: nothing here evaluates it;
+\item \emph{(what a verified (S3) buys)} when the composite source channel
+$\Xi$ is given as data, (S3) of
+\xref{transmitter/def:source-segment} --- the source identity,
+that definition's equation, decided by this module on the presented data
+(Definition~\ref{def:chaincond}) --- says that the virtual source, pushed
+through $\Xi$, is the specified source: $\Xi(\rvirt_x)=\rho_x$ for every $x$,
+hence
+\begin{equation}\label{eq:srcresid}
+  (\idmap_X\otimes\Xi)\Big(\sum_{x\in\Xset}p_x\dyad{x}_X\otimes\rvirt_x\Big)
+  =\sum_{x\in\Xset}p_x\dyad{x}_X\otimes\rho_x ,
+\end{equation}
+and, averaging, $\sum_xp_x\Xi(\rvirt_x)=\sum_xp_x\rho_x$: the
+prepare-and-measure states of the emitted virtual description map onto the
+specified ones, index by index, with the weights unchanged by (S2). The
+compiler decides the source identity (S3) and nothing beyond it; and
+\item the following are \emph{named and never discharged here}: that each link
+of either segment is a sound reduction --- that its channel exists as claimed
+for a link supplying only a theorem constructor, that a link supplying
+its channel as data supplies a completely positive and trace-preserving map,
+and that every reachable state after the reduction satisfies every transported
+constraint entry --- and that any restricted \tref{attack set} claimed by a
+link is licensed. These are obligations of the chain's producer, the
+soundness of each link being Assumption~\ref{ass:link}. No claim of this contract discharges them for a
+presented chain in general --- for the \tref{Band A} identity link, which
+Definition~\ref{def:banda}\,(b) fixes with its channel supplied as data, its
+outcome correspondence and its target POVM,
+Theorem~\ref{thm:band-a}\,(v) discharges every clause of
+Assumption~\ref{ass:link} by exhibition --- and
+no proof below invokes them.
+\end{enumerate}
+\emph{The general format.} For a chain presented as
+Definition~\ref{def:spec}\,(c$'$), with the interface conditions read as in the
+general-format paragraph of Definition~\ref{def:chaincond}, (i)--(v) hold with
+the following readings, of which the five above are the case of one
+\tref{measured factor} and an empty \tref{source segment}.
+\begin{enumerate}[label=(\roman*$'$),leftmargin=2.6em]
+\item (C1)--(C5) are decided per measured factor and (S1)--(S4) as before, all
+by finite enumeration and finitely many arithmetic operations, and a chain
+failing any of them is refused.
+\emph{And (A1)--(A3), the licensed-only rule and the declared-source-mode
+rule are decided as well}: the first three by comparing finitely many declared
+strings and one finite list against another, the fourth by reading $m$
+declared tags, and the fifth by reading one declared slot. (X1) is again not
+decided, being the type of the record.
+\item (C3) is exactly the part of D(iii) concerning the declared measured
+families, \emph{factor by factor}: for each $f$, (C3) read for $f$ and
+D(iii)'s clauses on $\{F^{f}_{v_f}\}$ are the same list of conjuncts, so a
+chain passing the interface conditions yields per-factor families for which
+Theorem~\ref{thm:measurements-and-statistics}\,(i$'$) applies. \emph{That the product family is a POVM on
+$\Qsys$ is on neither side of that pairing}, being a consequence of the
+factors' conditions and no condition on data
+(Definition~\ref{def:declaration}\,(DX3), Theorem~\ref{thm:validator-soundness}, general
+format). The Bob-side weighting sentence applies per factor, to that factor's
+delivered family.
+\item \emph{(what a verified (C4) buys, per factor and jointly)} when every
+link of segment $f$ supplies its channel as data,
+\eqref{eq:pullback-factor} is equivalent to
+$\tr[F^{f}_{v_f}\Lambda_f(\rho_f)]
+=\sum_{w_f\in\gamma_f^{-1}(v_f)}\tr[F^{\mathrm{ph},f}_{w_f}\rho_f]$ for every
+$v_f$ and every operator $\rho_f$ on factor $f$'s physical receiver space.
+\emph{And the joint statement follows for every operator, product or not}: if
+every segment supplies its channels as data then, with
+$\Lambda\coloneqq\bigotimes_f\Lambda_f$, $\gamma\coloneqq\prod_f\gamma_f$ and
+$F^{\mathrm{ph}}_w\coloneqq\bigotimes_fF^{\mathrm{ph},f}_{w_f}$,
+\begin{equation}\label{eq:pullback-product}
+  \Lambda^{\dagger}(F_v)=\sum_{w\in\gamma^{-1}(v)}F^{\mathrm{ph}}_w ,
+  \qquad\text{hence}\qquad
+  \tr[F_v\,\Lambda(\rho)]=\sum_{w\in\gamma^{-1}(v)}\tr[F^{\mathrm{ph}}_w\,\rho]
+\end{equation}
+for every $v\in\Vset$ and every operator $\rho$ on the product physical space.
+\emph{Neither side of \eqref{eq:pullback-product} is formed or decided by
+anything}: it is a consequence of the per-factor identities, and the objects in
+it --- the product channel, the product physical family, the product target
+family --- are data of no one. The consistency reading holds under the same
+hypothesis read per factor: if every factor's supplied channel data are trace
+preserving, so that each $\Lambda_f^{\dagger}$ is unital, then so is
+$\Lambda^{\dagger}$ and summing \eqref{eq:pullback-product} over $v$ returns
+completeness of the product physical family and nothing more. That trace
+preservation is Assumption~\ref{ass:link}, per factor, and is evaluated
+nowhere.
+\item (S3) is as in (iv), with the split by kind of witness: what a
+\emph{decided} (S3) buys is \eqref{eq:srcresid} and its averaged form, for the
+data links' share of the composite; for a link supplying a theorem constructor
+this module decides nothing and what its share buys is what the claim its
+obligation record names concludes, which this contract neither states nor
+asserts.
+\item the list of obligations named and never discharged here gains three
+items, each per the general format: that each link of \emph{each} receiver
+segment is a sound reduction, factor by factor; that a non-empty source
+segment composes with the receiver segments as a reduction, which is
+\xref{reductions/thm:two-sided}, used by no step here; and that the claim an
+obligation record names applies to that link's descriptors, which (A1)--(A3)
+do \emph{not} decide. These are again the obligations of (v),
+Assumption~\ref{ass:link} and the attack-set licence, and the emitting
+module's own assertion; no claim of this contract discharges them, save as (v) says of
+the \tref{Band A} identity link, and no proof below invokes them.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} Items (i) and (i$'$) count what each condition decides. Items
+(ii) and (ii$'$) compare two lists of conjuncts. Items (iii) and (iii$'$) are
+the Hilbert--Schmidt duality between an adjoint identity and a statistics
+identity, both exact, with trace preservation of the supplied channels as the
+one hypothesis of the consistency reading. Items (iv) and (iv$'$) are the
+linearity of a channel, and (v) and (v$'$) are statements about what this
+contract asserts.
+
+\emph{Step 1 ((i), decidability).} (C1) and (S1) compare finitely many
+declared descriptors --- for (C1)'s last clause, the four components of a
+sector map, the same combinatorial comparison V1 makes on the map of a
+declared $\Qsys$-operator family and taken here on the descriptor, at (C1);
+(C2) enumerates a finite table and checks totality and surjectivity by
+counting preimages; (C3) is check V3 of Definition~\ref{def:validator}
+restricted to $\{F_v\}$, namely $|\SecSet|(2|\Vset|+1)$ exact decisions on
+blocks of size $d_s$ together with $|\SecSet|$ summation decisions, finite by
+Theorem~\ref{thm:validator-soundness}\,(iv); (C4) decides $|\Vset|$ matrix identities on
+matrices of the declared dimensions --- the adjoint of a channel given as data
+(by Kraus operators or as a matrix acting on operators) is computed by finitely
+many arithmetic operations, and each right-hand side of \eqref{eq:pullback} is
+a finite sum over the tabulated fibre $\gamma^{-1}(v)$; (S2) compares two finite
+index sets and $|\Xset|$ declared weights; (S3) decides $|\Xset|$ matrix
+identities on matrices of the declared dimensions; (C5) and (S4) check the
+presence of fields. (X1) is a statement about which of the two lists a link was
+written into, which the record answers by construction.
+
+\emph{Step 2 ((ii), the conjunct lists).} (ii) is the statement of (C3)
+against D(iii), conjunct by conjunct. D(iii) asks two things of the emitted
+$\{F_v\}$: that it be a family of block lists against $\Smap$, and that each
+block family $\{F_v^{(s)}\}_v$ satisfy the predicates and the summation
+condition of Definition~\ref{def:exact}. (C3) states the first as the type of
+the object the last link delivers and the second as those same conditions, on
+the emitted blocks. The two lists of conjuncts are identical, so (C3) is
+D(iii) restricted to $\{F_v\}$ and Theorem~\ref{thm:measurements-and-statistics} applies to what the
+chain delivered. Nothing in (ii) is inferred from the physical family, so a
+chain that merely \emph{claims} a POVM property cannot pass one off as
+checked: the predicates are decided on the matrices the compiler emits. The
+block-diagonality half, by contrast, is a property the type carries and no
+check confirms. An entry that the chain's producer has \emph{mis-assigned} to
+a block is a well-typed object no predicate can catch. V1 refuses a
+mis-assignment that also disagrees about the sectors; one that does not is a
+defect of the chain's producer under Assumption~\ref{ass:link}, named there
+and not discharged here.
+
+\emph{Step 3 ((iii), what a verified (C4) buys).} The \tref{measurement channel} of
+$\{F_v\}$ sends $\sigma$ to $\sum_v\tr[F_v\sigma]\dyad{v}$; the
+$\gamma$-coarse-graining of the physical measurement channel sends $\rho$ to
+$\sum_v\big(\sum_{w\in\gamma^{-1}(v)}\tr[\Fph_w\rho]\big)\dyad{v}$, the fibres
+$\gamma^{-1}(v)$ partitioning $\Vph$ because $\gamma$ is a total surjection
+(C2). Two maps into the same classical register agree on all inputs iff their
+diagonal entries agree, i.e.\ iff \eqref{eq:pullbackstats} holds; and by the
+definition of the adjoint with respect to the Hilbert--Schmidt inner product,
+$\tr[F_v\Lambda(\rho)]=\tr[\Lambda^{\dagger}(F_v)\rho]$, so
+\eqref{eq:pullbackstats} holds for all $\rho$ iff \eqref{eq:pullback} holds for
+all $v$ --- the second direction because an operator whose trace against every
+$\rho$ vanishes is the zero operator, the trace pairing being non-degenerate.
+Both directions are available here because both sides are exact identities.
+For the consistency claim, summing \eqref{eq:pullback} over $v$ gives
+$\Lambda^{\dagger}\big(\sum_vF_v\big)=\sum_{w\in\Vph}\Fph_w$; with
+$\sum_vF_v=\idon{\Qsys}$ from (C3) and $\Lambda^{\dagger}$ unital --- which is
+where trace preservation of the supplied data is used, and it is
+Assumption~\ref{ass:link} and not a check --- the left-hand side is
+$\idon{}$, so what (C4) returns is $\sum_w\Fph_w=\idon{}$: completeness of the
+physical family, a condition that family already satisfies, so (C4) adds no
+restriction beyond the two completeness conditions.
+The opposite direction, under the same hypothesis, is the identity
+$\Lambda^{\dagger}(F_v)=\Fph_{\gamma'(v)}$ for every $v\in\Vset$, with
+$\gamma':\Vset\to\Vph$ a total surjection. Summing it over $v$, the left-hand
+side is again $\Lambda^{\dagger}\big(\sum_vF_v\big)=\idon{}$, by linearity of
+$\Lambda^{\dagger}$, (C3) and unitality. On the right, the fibres
+$\gamma'^{-1}(w)$ partition $\Vset$ because $\gamma'$ is total, so grouping
+the terms by the value of $\gamma'$ gives
+$\sum_{w\in\Vph}|\gamma'^{-1}(w)|\,\Fph_w=\idon{}$. The physical family is a
+POVM (Definition~\ref{def:spec}\,(b)): $\sum_w\Fph_w=\idon{}$ and every
+$\Fph_w\succeq0$. Subtracting,
+$\sum_{w\in\Vph}\big(|\gamma'^{-1}(w)|-1\big)\Fph_w=0$, and every coefficient
+is a non-negative integer because $\gamma'$ is surjective, so every term is
+positive semidefinite. A vanishing sum of positive semidefinite operators has
+every term zero: its trace is a sum of non-negative traces, so each term has
+trace zero, and a positive semidefinite operator of trace zero is zero. Hence
+$\Fph_w=0$ for every $w$ with $|\gamma'^{-1}(w)|\ge2$. That is a restriction
+the physical family need not satisfy, so this reading does not in general
+return completeness and nothing more. It does exactly when every physical
+element covered more than once already vanishes, in particular when $\gamma'$
+is a bijection: then every non-zero term of
+$\sum_w|\gamma'^{-1}(w)|\,\Fph_w$ has coefficient one, and the summed
+identity is $\sum_w\Fph_w=\idon{}$.
+In the bijective case $\gamma$ is a bijection,
+\eqref{eq:pullback} reads $\Lambda^{\dagger}(F_v)=\Fph_{\gamma^{-1}(v)}$, and
+that is the published form of the condition,
+\cite[Lemma~9.3, Eq.~(146)]{tupkary2026decoy}, read at the level of operators
+--- there the two families are indexed by one alphabet.
+
+\emph{Step 4 ((iv), what a verified (S3) buys).} By linearity,
+$\idmap_X\otimes\Xi$ sends $\sum_xp_x\dyad{x}_X\otimes\rvirt_x$ to
+$\sum_xp_x\dyad{x}_X\otimes\Xi(\rvirt_x)$; substituting
+$\Xi(\rvirt_x)=\rho_x$ from the source identity (S3) gives
+\eqref{eq:srcresid}, and tracing out $X$ gives its averaged form. The step is
+linear in each $\rvirt_x$ and uses no property of the declared weights. That
+the converse implication --- security of the virtual protocol transfers to the
+real one --- requires more than the source identity is exactly the content of
+Assumption~\ref{ass:link}: the published template is
+\cite[Lemma~9.1, Eqs.~(138)--(139)]{tupkary2026decoy}, whose hypothesis is the
+existence of such a $\Xi$ and whose conclusion this module does not assert.
+
+\emph{Step 5 ((v), what is asserted).} (v) is a statement about what this
+contract asserts. Its content is that Assumption~\ref{ass:link} and the
+attack-set licence are named as obligations of the chain's producer, and
+that no proof above invokes them: no step invokes Assumption~\ref{ass:link}
+as an established obligation, its trace-preserving clause entering (iii) only
+as the stated hypothesis of the consistency reading; no step invokes the
+attack-set licence; and no step uses a theorem of the reductions
+module. The discharge (v) names is Theorem~\ref{thm:band-a}'s, for the
+Band-A identity link alone, and no step above rests on it. The
+trace-preserving clause of Assumption~\ref{ass:link} is the hypothesis under
+which (iii)'s consistency reading holds, so this theorem's statement is
+conditional on it and declares it. The order rule (X1) is not an exception --- it is a
+\emph{typing} property of the emitted record, and its warrant is the published
+one: \cite[Rem.~9.2]{tupkary2026decoy} resolves the tension between source
+maps, which are formulated for unrestricted attack sets, and squashing maps,
+which restrict them, by applying the source-map lemma first, so that
+restrictions arise only afterwards. The compiler enforces the order; it does
+not claim that either lemma applies to a given device.
+
+\emph{The general format.} The steps are those above, read per factor.
+
+\emph{Step 1 in the general format ((i$'$)).} Each clause of (i) is the
+clause of (i) applied to one segment, the data being per factor and finite;
+the refusal naming the factor is the record's own field. For (A1): the
+registry an artefact emits is a finite list of triples of declared strings,
+the obligation record a triple of declared strings, and the comparison is
+entry by entry, including the two components of the assumption list; the
+ledger membership test is a finite list against a finite list. For (A3): the
+provenance test reads which module emitted the artefact the segment is
+presented in, a declared field. The licensed-only rule reads $m$ tags,
+terminating and exact. The declared-source-mode rule reads one declared slot,
+whether the \tref{marginal slot} holds $\nomarg$, beside whether the source
+segment is empty, which the record answers by its shape. None of the five is
+an operator predicate and none is decided at a window.
+
+\emph{Step 2 in the general format ((ii$'$)).} For each $f$, D(iii) asks of
+$\{F^{f}_{v_f}\}$ that it be a family of block lists against factor $f$'s map
+and that each block family satisfy the predicates and the summation condition
+of Definition~\ref{def:exact}, and (C3) read for $f$ states the type and those
+same conditions on that factor's emitted blocks; the two lists of conjuncts
+are identical, factor by factor. What Step 2 says of the physical family and
+of the block-diagonality half applies per factor unchanged, the
+mis-assignment exposure now being one per factor and V1's per-factor map
+comparison what catches an assignment that also disagrees about that factor's
+sectors.
+
+\emph{Step 3 in the general format ((iii$'$)).} The per-factor equivalence is
+(iii)'s argument with $\Qsys_f$, $\Lambda_f$, $\gamma_f$ and factor $f$'s two
+families in place of $\Qsys$, $\Lambda$, $\gamma$ and the two families: the
+fibres $\gamma_f^{-1}(v_f)$ partition factor $f$'s physical alphabet because
+$\gamma_f$ is a total surjection (C2), the adjoint identity is the
+Hilbert--Schmidt pairing, and both directions are available because both
+sides are exact identities. For \eqref{eq:pullback-product}: the adjoint of a
+tensor product of maps is the tensor product of their adjoints, so
+$\Lambda^{\dagger}(F_v)=\bigotimes_f\Lambda_f^{\dagger}(F^{f}_{v_f})$ by
+\eqref{eq:productfamily}, this is
+$\bigotimes_f\sum_{w_f\in\gamma_f^{-1}(v_f)}F^{\mathrm{ph},f}_{w_f}$ by
+\eqref{eq:pullback-factor}, and expanding the product of sums by
+multilinearity gives
+$\sum_{w\in\gamma^{-1}(v)}\bigotimes_fF^{\mathrm{ph},f}_{w_f}$, the index set
+being exactly $\gamma^{-1}(v)=\prod_f\gamma_f^{-1}(v_f)$. The statistics form
+follows for \emph{every} operator $\rho$ on the product physical space, product
+or not, because $\tr[F_v\Lambda(\rho)]=\tr[\Lambda^{\dagger}(F_v)\rho]$ is
+linear in $\rho$ and \eqref{eq:pullback-product} is an identity of operators.
+For the consistency reading, a tensor product of unital maps is unital, so
+summing over $v$ and using $\sum_{v_f}F^{f}_{v_f}=\idon{\Qsys_f}$ per factor
+(C3) gives $\sum_{w}F^{\mathrm{ph}}_w=\idon{}$, which the product physical
+family already satisfies; nothing is added and nothing is evaluated.
+
+\emph{Steps 4 and 5 in the general format ((iv$'$) and (v$'$)).} The first is
+(iv)'s computation, which is linear in each $\rvirt_x$ and reads only the
+identity, together with the split by kind of witness made in (S3) of
+\xref{transmitter/def:source-segment}, restated here and not re-derived. The second is
+again a statement about what this contract asserts: no step above invokes
+Assumption~\ref{ass:link} as an established obligation, per factor or
+otherwise, or the attack-set licence, and none uses a theorem of the
+reductions module, and the three items named are named and not used --- in particular no
+step above composes a source segment with a receiver segment, which is why the
+composition rule appears in the list rather than in a hypothesis. What is
+declared here is unchanged: the trace-preserving clause of
+Assumption~\ref{ass:link} occurs in (iii$'$)'s consistency reading as in
+(iii)'s, and the attack-set licence is named here and spent at the gate
+(Theorem~\ref{thm:gates}\,(iii)).
+\end{proof}

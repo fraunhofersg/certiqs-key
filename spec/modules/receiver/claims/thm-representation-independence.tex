@@ -1,0 +1,111 @@
+% ---
+% id: receiver/thm:representation-independence
+% kind: thm
+% title: "Representation independence of the click-pattern POVM"
+% summary: >-
+%   Two receivers have the same click-pattern POVM exactly when their port
+%   Grams agree, every admissible Gram family is realised by some instrument,
+%   and a one-mode-per-port description exists exactly when every Gram has
+%   rank at most one.
+% prominence: standard
+% status: implemented
+% uses: [def:gram, thm:port-grams, thm:click-povm]
+% mentions: [ass:port]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.grams:realizing_instrument
+% lean:
+% ---
+
+The port Grams carry exactly the information the click statistics can
+reveal, no more and no less. The theorem makes this precise in both
+directions and says when a description with one \tref{optical mode} per
+detector port exists. Under the mode-insensitive port response of
+Assumption~\ref{ass:port}, item (iii) is what makes $A_k$, rather than the
+individual rows feeding port $k$, the right object.
+
+\begin{theorem}\label{thm:representation-independence}
+Let $\Recv,\Recv'$ be \tref[receiver instrument]{receiver instruments} on the same declared input space
+$\mathbb{C}^{\Inp}$ with the same number of ports $K$.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{Determination, in both directions.} $\Recv$ and $\Recv'$ induce the
+  same click-pattern POVM if and only if $A_k=A_k'$ for every $k$. In
+  particular the POVM depends on the \tref{instrument matrix} only through the
+  port Grams.
+\item \emph{Realizability.} Every \tref[admissible Gram family]{admissible family} $\{A_k\}_{k=1}^{K}$ on
+  $\mathbb{C}^{\Inp}$ (Definition~\ref{def:gram}) is the port-Gram family of
+  some receiver instrument, in which port $k$ collects at most
+  $\rk A_k\le|\Inp|$ modes.
+\item \emph{Port-local unitaries are invisible.} If
+  $\Gmat'=\big(\bigoplus_kV_k\oplus V_{\mathrm{rest}}\big)\Gmat$ with each
+  $V_k$ unitary on $\mathbb{C}^{\Port{k}}$ and $V_{\mathrm{rest}}$ unitary on
+  the remaining modes, then $A_k'=A_k$ for every $k$.
+\item \emph{One mode per port.} There is a receiver instrument with
+  $|\Port{k}|=1$ for every $k$ inducing the same POVM as $\Recv$ if and only if
+  $\rk A_k\le1$ for every $k$. In that case, writing
+  $A_k=\lambda_ku_ku_k^\dagger$ with $\lambda_k\ge0$ and $u_k$ a unit vector,
+  the single row of port $k$ is $g_k=e^{i\varphi_k}\sqrt{\lambda_k}\,
+  u_k^\dagger$, unique up to the phase $\varphi_k$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} The \tref{joint no-click elements} are lifts of $\id-A_J$, and the
+click-pattern POVM and these elements determine each other; the one-photon
+block of a lift is the matrix itself, which recovers the Grams. Realisation
+takes square roots of the Grams as rows. For (iv), by (i) a
+one-mode-per-port instrument with the same POVM has the same Grams, each of
+rank at most one by Theorem~\ref{thm:port-grams}\,(ii); conversely, Grams of
+rank at most one give single rows that realise the family.
+
+(i) If $A_k=A_k'$ for all $k$ then $A_J=A_J'$ for all $J$, so by
+Theorem~\ref{thm:port-grams}\,(iii) the two receivers have the same joint no-click
+elements $\Pvac{J}=\Fock(\id-A_J)$, and by \eqref{eq:incexc} of
+Theorem~\ref{thm:click-povm} the same $M_S$ for every $S$. Conversely, suppose the
+POVMs agree. ``No port in $J$ clicks'' is the union of the disjoint outcomes
+whose click set avoids $J$, so
+\begin{equation}\label{eq:recoverpivac}
+  \Pvac{J}=\sum_{S\subseteq[K]\setminus J}M_S
+\end{equation}
+(Theorem~\ref{thm:click-povm}\,(i)), and hence $\Fock(\id-A_J)=\Fock(\id-A_J')$.
+Reading off the one-photon block, whose value is
+$\Fock(\id-A_J)^{(1)}=\id-A_J$, gives $A_J=A_J'$ for all $J$, and in
+particular $A_{\{k\}}=A_k=A_k'$.
+
+(ii) Write $r_k\coloneqq\rk A_k\le|\Inp|$ and diagonalize
+$A_k=U_k\Lambda_kU_k^\dagger$ over its non-zero eigenvalues, with $\Lambda_k$
+the positive diagonal $r_k\times r_k$ matrix of those eigenvalues and
+$U_k\in\mathbb{C}^{\Inp\times r_k}$ with orthonormal columns. Put
+$C_k\coloneqq\Lambda_k^{1/2}U_k^\dagger\in\mathbb{C}^{r_k\times\Inp}$, so
+that $C_k^\dagger C_k=U_k\Lambda_kU_k^\dagger=A_k$ with $r_k$ rows. Let
+$\Modes'$ consist of the $|\Inp|$ input modes, with the split of $\Inp$ that
+$\Recv$ declares, together with $K$ blocks of $r_1,\dots,r_K$ output modes,
+let $\Port{k}'$ be the $k$-th output block, and let $\Gmat'$ have the rows of
+$C_k$ in the block $\Port{k}'$ and zeros elsewhere. Then
+$\Emd{\{k\}}\Gmat'_{\Inp}=C_k$, so $A_k'=C_k^\dagger C_k=A_k$, and
+$\Gmat'^\dagger_{\Inp}\Gmat'_{\Inp}=\sum_kA_k\preceq\id$, so $\Gmat'$ is a
+contraction and extends to a contraction on all of $\mathbb{C}^{\Modes'}$ by
+padding with zeros. Port $k$ collects $r_k=\rk A_k$ modes.
+
+(iii) The ports are pairwise disjoint, so
+$\Emd{\{k\}}\big(\bigoplus_jV_j\oplus V_{\mathrm{rest}}\big)
+=V_k\Emd{\{k\}}$ as maps into $\mathbb{C}^{\Port{k}}$. Hence
+$A_k'=\Gmat_{\Inp}^\dagger\Emd{\{k\}}V_k^\dagger V_k\Emd{\{k\}}\Gmat_{\Inp}
+=\Gmat_{\Inp}^\dagger\Emd{\{k\}}\Gmat_{\Inp}=A_k$.
+
+(iv) If a one-mode-per-port instrument induces the same POVM then by (i) its
+Grams are the $A_k$, and by Theorem~\ref{thm:port-grams}\,(ii) each has rank at most
+$|\Port{k}|=1$. Conversely, if $\rk A_k\le1$, write
+$A_k=\lambda_ku_ku_k^\dagger$ (possible for a rank-$\le1$ positive semidefinite
+matrix, with $\lambda_k=0$ allowed) and set
+$g_k\coloneqq\sqrt{\lambda_k}u_k^\dagger$. Stacking the $g_k$ as $K$ single
+rows gives a matrix with $\sum_kg_k^\dagger g_k=\sum_kA_k\preceq\id$, hence a
+contraction, whose port Grams are the $A_k$; by (i) it induces the same POVM.
+For uniqueness, let $g$ be a row vector with $g^\dagger g=\lambda uu^\dagger$.
+Taking traces, $\lVert g\rVert^2=\lambda$. The range of $g^\dagger g$ is spanned
+by $g^\dagger$ when $g\neq0$, and equals $\operatorname{span}\{u\}$, so
+$g^\dagger=cu$ for some $c\in\mathbb{C}$ with $|c|^2=\lambda$, i.e.\
+$g=\bar c\,u^\dagger$ with $\bar c=e^{i\varphi}\sqrt\lambda$. If $\lambda=0$
+then $g=0$ and the statement is vacuous.
+\end{proof}

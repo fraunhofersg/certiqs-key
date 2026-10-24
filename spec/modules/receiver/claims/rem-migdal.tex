@@ -1,0 +1,31 @@
+% ---
+% id: receiver/rem:migdal
+% kind: rem
+% title: "Mode and particle descriptions in the literature"
+% summary: >-
+%   The lift of a unitary acts on n photons as its n-fold tensor power on the
+%   symmetric subspace, the standard dictionary between the mode and particle
+%   descriptions. A published statement of it corroborates the lemma; no claim
+%   depends on the citation.
+% prominence: standard
+% status: accepted
+% uses: [lem:fock-functor]
+% assumes: []
+% refs:
+%   - "migdal2014multiphoton, Eqs. (9)-(10)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:migdal}
+Lemma~\ref{lem:fock-functor}\,(v) with (i) is the standard dictionary between the
+mode (second-quantized) and particle (symmetric-tensor) descriptions of $n$
+photons in $d$ modes: a mode transformation $a_i\mapsto\sum_jU_{ij}a_j$ acts on
+the $n$-photon sector as $U^{\otimes n}$ restricted to $\Symn{n}$. The same
+correspondence is recorded in \cite[Eqs.~(9)--(10)]{migdal2014multiphoton},
+where Eq.~(9) is the mode-level transformation of the creation operators and
+Eq.~(10) states that it is ``equivalent to the action of the same $U$ on each
+particle'', $\ket{\psi'}_P=U^{\otimes n}\ket{\psi}_P$ in the particle
+representation. That reference is corroboration only: the lemma is proved in
+full, and no claim of this contract depends on the reference.
+\end{remark}

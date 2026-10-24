@@ -1,0 +1,100 @@
+% ---
+% id: protocol-compiler/ex:two-party-shape
+% kind: ex
+% title: "Declaration of a two-party protocol with an untrusted source"
+% summary: >-
+%   An untrusted source serves two measuring parties; the measured system is a
+%   product of two factors with their own sector maps and families, and no
+%   product matrix is formed. A party-local entry bounds Bob's flag weight by
+%   1/8 conditionally on every state of Alice's measured factor.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [def:declaration, def:target, def:feasible, def:homog, def:exact, def:spec, transmitter/rem:da1, rem:party-local-soundness]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The numbers are chosen dyadic so that every exact predicate of def:exact holds of them as written."
+% ---
+
+The example writes out the general format of
+Definition~\ref{def:declaration} for a protocol in which an untrusted source
+serves two \tref{measuring parties}. It illustrates the format and asserts nothing
+about any physical protocol.
+
+\begin{example}\label{ex:two-party-shape}
+\emph{Systems and sector map.}
+\tref[untrusted-source mode]{Untrusted-source mode}, $d_A=1$: the
+\tref{marginal slot} holds $\nomarg$, $\Xset=\{x_0\}$ and $M_{x_0}=[1]$
+(\xref{transmitter/rem:da1}). The sector map has no factor tagged $A$ and two
+factors tagged $\Qsys$, in this order: $f=\mathsf a$ with party label
+$\mathsf A$ and $f=\mathsf b$ with party label $\mathsf B$
+(Definition~\ref{def:declaration}\,(DX1)). Each factor has a \tref{data sector} of
+dimension $2$ and a flag sector of dimension $1$,
+$\SecSet^{f}=(\mathrm{d},\mathrm{fl})$, $d_{f,\mathrm d}=2$,
+$d_{f,\mathrm{fl}}=1$. The product map has the four sectors
+$(\mathrm d,\mathrm d),(\mathrm d,\mathrm{fl}),(\mathrm{fl},\mathrm d),
+(\mathrm{fl},\mathrm{fl})$ in that order, the last factor fastest, of
+dimensions $4,2,2,1$; $|\mathbb{T}|=1$, so these are also the
+\tref[joint sector]{joint sectors}, and a state $\omega$ is a list of four blocks of those sizes.
+
+\emph{Family.} Each factor declares its own family over
+$\Vset^{f}=(0,1,\mathrm{fl})$, in this order:
+$F^{f,(\mathrm d)}_0=\mathrm{diag}(1,0)$,
+$F^{f,(\mathrm d)}_1=\mathrm{diag}(0,1)$, $F^{f,(\mathrm d)}_{\mathrm{fl}}=0$,
+and $F^{f,(\mathrm{fl})}_0=F^{f,(\mathrm{fl})}_1=[0]$,
+$F^{f,(\mathrm{fl})}_{\mathrm{fl}}=[1]$. Each is \tref{exactly admissible}
+for its factor's map, its two completeness sums rounding nowhere
+(Definition~\ref{def:exact}, per measured factor). The \tref{outcome alphabet} is
+$\Vset=\Vset^{\mathsf a}\times\Vset^{\mathsf b}$ with nine letters, and
+$F_{(v_{\mathsf a},v_{\mathsf b})}=F^{\mathsf a}_{v_{\mathsf a}}\otimes
+F^{\mathsf b}_{v_{\mathsf b}}$ by the rule \eqref{eq:productfamily}; its block
+on $(\mathrm d,\mathrm{fl})$, for instance, is
+$F^{\mathsf a,(\mathrm d)}_{v_{\mathsf a}}\otimes
+F^{\mathsf b,(\mathrm{fl})}_{v_{\mathsf b}}$, a $2\times2$ matrix that is
+written down by nobody. Nine $9\times9$ arrays are never formed.
+
+\emph{\tref[party partition]{Party partition} and announcements.}
+$\rd{\mathsf A}(x_0,v)=v_{\mathsf a}$ and $\rd{\mathsf B}(x_0,v)=v_{\mathsf b}$,
+which is \emph{not} the \tref{default party partition}: under the default one
+both parties' data would sit in $\rd{\mathsf B}$ and party computability would
+be vacuous. A transcript with $L=2$: $\pi=(\mathsf A,\mathsf B)$, each party
+announcing whether its outcome is a flag,
+$a_1(v_{\mathsf a})=a_2(v_{\mathsf b},\kappa_1)=\mathrm{fl}$ on the flag
+letter and $\mathrm{ok}$ otherwise. Sifting passes on
+$\kappa=(\mathrm{ok},\mathrm{ok})$; $\hold=\mathsf A$, $d_Z=2$, and the key
+rule $r^{0}_{\mathsf A}$ of the specification's public part
+(Definition~\ref{def:spec}\,(d)), into $\Zval=\{0,1\}$, is
+$r^{0}_{\mathsf A}(v_{\mathsf a},\kappa)=v_{\mathsf a}$ for
+$v_{\mathsf a}\in\{0,1\}$ and $r^{0}_{\mathsf A}(\mathrm{fl},\kappa)=0$, a
+value no passing round reads, since $v_{\mathsf a}=\mathrm{fl}$ announces
+$\kappa_1=\mathrm{fl}$. Party computability, \eqref{eq:partycomp}, requires
+the raw key to be a function of Alice's own readout and the transcript, as it
+is.
+
+\emph{A party-local entry.} Let $\hat O$ be the block list on factor
+$\mathsf b$ with $\hat O^{(\mathrm d)}=0$ and $\hat O^{(\mathrm{fl})}=[1]$,
+the projector onto Bob's flag sector, and declare
+$(\hat O,\preceq,\tfrac18;\mathsf b)$ with the tag party-local. By the last
+line of \eqref{eq:feas-general}, with $s_{f^c}=s_{\mathsf a}$, it reads, for
+each of Alice's two sectors $s_{\mathsf a}$,
+\begin{equation*}
+  \tr_{\Qsys_{\mathsf b,\mathrm{fl}}}\omega^{(s_{\mathsf a},\mathrm{fl})}
+  -\tfrac18\Big(\tr_{\Qsys_{\mathsf b,\mathrm d}}
+  \omega^{(s_{\mathsf a},\mathrm d)}
+  +\tr_{\Qsys_{\mathsf b,\mathrm{fl}}}\omega^{(s_{\mathsf a},\mathrm{fl})}\Big)
+  \;\preceq\;0
+  \qquad\text{on }\Hs{\Qsys_{\mathsf a,s_{\mathsf a}}} ,
+\end{equation*}
+a $2\times2$ and a $1\times1$ condition: Bob's flag weight is at most
+$\tfrac18$ \emph{conditionally on every state of Alice's measured factor
+$\mathsf a$}. The same
+entry without the tag reads
+$\tr[(\idon{}\otimes\hat O)\omega]\le\tfrac18$, one real inequality, which is
+the trace of the sum of the two conditions above and does not imply them: it
+allows all of Bob's flag weight to sit where Alice's measured factor is in
+one fixed state. Which reading the \tref{producer} of the entries may emit is decided by
+its certificate (Definition~\ref{def:homog},
+Remark~\ref{rem:party-local-soundness}), not here.
+\end{example}

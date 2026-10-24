@@ -1,0 +1,42 @@
+% ---
+% id: reductions/req:uncertified-operator-refused
+% kind: req
+% title: "Refusal of a requested operator without a decided certificate"
+% summary: >-
+%   A requested operator is emitted only where a claim gives a condition on
+%   the emitted numbers implying its certificate and the engine decides that
+%   condition exactly. Every other requested operator is refused, and none is
+%   emitted at some other constant or on the caller's word.
+% prominence: standard
+% status: implemented
+% uses: [cor:entries]
+% mentions: [thm:licence, rem:unsound]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.validation:rule_constraint_certificate
+% lean:
+% ---
+
+Parts (i)--(iii) of Corollary~\ref{cor:entries} cover every entry the module
+can emit. A requested operator they do not cover has no certificate to be
+emitted on, and a certificate the caller declares is not one: nothing in this
+contract decides it, and no assumption of the ledger names it as a premise,
+while an entry on a false certificate excludes reachable states, the
+security break of Remark~\ref{rem:unsound}.
+
+\begin{requirement}\label{req:uncertified-operator-refused}
+The engine emits an operator that a request carries as an entry only where
+Corollary~\ref{cor:entries} covers it: as a default carried operator (part
+(i)), as the class-marginal entry of an instance that discharges the
+class-marginal identity (part (ii)), or, under part (iii), where a claim
+stated for the instance gives a decided certificate for the operator's form
+and the engine decides that condition exactly on the emitted numbers and the
+request's declared constants, finding that it holds. It refuses, with
+\iface{constraint_without_certificate}, every other requested operator: one
+outside the form of Corollary~\ref{cor:entries}\,(i)--(iii), one of that form
+for which no claim stated for the instance gives a decided certificate, and
+one whose decided certificate fails at the emitted numbers. It takes no
+certificate \eqref{eq:certificate} from the request on trust, and it never
+emits a requested operator at some other constant.
+\end{requirement}

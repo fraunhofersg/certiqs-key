@@ -1,0 +1,27 @@
+% ---
+% id: foundations/fact:concavity
+% kind: fact
+% title: "Concavity of the pinched trace-power functional"
+% summary: >-
+%   The pinched trace-power functional is concave on subnormalised states for
+%   every parameter in [0, 1]. This is the analytic ingredient behind the
+%   convexity of the engine's objective.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs:
+%   - "kamin2025renyi, App. F.1, Thm. 24"
+% provenance: published
+% lean:
+% notes: "Stated after kamin2025renyi (arXiv:2504.12248v2), App. F.1, Thm. 24 with Def. 22 and Eq. (F6), with the parameter substitution made explicit; corroborated by Cor. 27 of the same appendix."
+% ---
+
+\begin{fact}\label{fact:concavity}
+Let $\cZ$ be a pinching built from a complete family of mutually orthogonal
+projectors (Def.~22 of the source) and for $\alpha'\in[0,2]$ let
+$Q_{\alpha'}(\rho)\coloneqq
+\tr[(\cZ(\rho^{\alpha'}))^{1/\alpha'}]$ (Eq.~(F6) of the source). Then
+$\rho\mapsto Q_{\alpha'}(\rho)$ is concave on $\Sleq{Q}$ for
+$\alpha'\in[0,1]$.
+\end{fact}

@@ -1,0 +1,51 @@
+% ---
+% id: transmitter/decoy/req:signal-dyads
+% kind: req
+% title: "Signal dyads formed by the exhibited construction"
+% summary: >-
+%   The engine forms the entries of the quantum-sector signal dyads itself, by
+%   the construction of [[cor:emitted-decoy]] (iv)(b), and takes no dyad or
+%   basis from a request. It refuses a quantum sector above the vacuum that the
+%   construction does not cover.
+% prominence: standard
+% status: implemented
+% uses: [cor:emitted-decoy, def:wcp-model, def:tagged-source]
+% mentions: [req:entropy-cutoff]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.decoy.emit:emit_decoy_declaration
+% lean:
+% ---
+
+The source identity at the emitted descriptors
+(Corollary~\ref{cor:emitted-decoy}\,(ii)) holds because the emitted blocks are
+the tagged ensemble of the model: on a quantum sector their dyads are the
+matrices of the projectors $\dyad{\mathsf{n},a}$ in an orthonormal basis of
+$S_{\mathsf{n}}$. The polarisation vectors and that basis are objects of the
+model whose coordinates are in general not binary64 numbers, so those entries
+cannot be declared; they exist as numbers only through a construction, and
+Corollary~\ref{cor:emitted-decoy}\,(iv)(b) gives one for polarisations among
+the four of $\Dset$ at one and at two photons.
+
+\begin{requirement}\label{req:signal-dyads}
+The engine forms the entries of the signal dyads of a decoy declaration
+itself, and takes neither a dyad nor a basis of a sector from a request. On
+the vacuum sector and on every flag sector it forms the number $1$. On a
+quantum sector $\mathsf{n}\in\{1,2\}$ of the index set it forms them only where
+every polarisation of $\mathrm{Pol}$ is declared as one of the four vectors of
+$\Dset$, distinct polarisations as distinct vectors, and
+$|\mathrm{Pol}|\ge\mathsf{n}+1$; it then forms the dyad of $\ket{\mathsf{n},a}$
+with the entries Corollary~\ref{cor:emitted-decoy}\,(iv)(b) states for it. It
+decides of the formed dyads, exactly, that each is a rank-one projector on
+$S_{\mathsf{n}}$ (Hermitian, idempotent and of unit trace) and that
+$\tr\big[\dyad{\mathsf{n},a}\,\dyad{\mathsf{n},b}\big]
+=|\braket{a}{b}|^{2\mathsf{n}}$ for every pair of polarisations of
+$\mathrm{Pol}$, the value that Definition~\ref{def:wcp-model}\,(W3) gives by
+that corollary and that is $0$, $2^{-\mathsf{n}}$ or $1$ for two vectors of
+$\Dset$. It refuses, with no artefact, a declaration whose index set carries
+a quantum sector $\mathsf{n}\ge1$ outside this construction, or at which one of
+these decisions fails (\iface{quantum_sector_outside_construction}). A
+declaration with $N_{\mathrm{ent}}\ge3$ is refused under its own reason
+(Requirement~\ref{req:entropy-cutoff}).
+\end{requirement}

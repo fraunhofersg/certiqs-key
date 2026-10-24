@@ -1,0 +1,81 @@
+% ---
+% id: reductions/wpfss/rem:minweight
+% kind: rem
+% title: "Per-setting weights against the minimum over the settings"
+% summary: >-
+%   The route forms each joint outcome's weight from its own setting's
+%   certified weight; consuming each entry's minimum over the settings instead
+%   would be sound but weakly smaller everywhere. A slot with one weight at
+%   every setting, as at every probe-free receiver, gives the same numbers
+%   either way.
+% prominence: standard
+% status: accepted
+% uses: [prop:route, reductions/cor:monotone, receiver/def:slot, receiver/thm:emitted-bound, prop:weight-monotone, def:weight-route, reductions/def:joint-family, cor:oneabsorbing]
+% mentions: [rem:peqone, req:total-weight-refusal]
+% assumes: [A-RECV]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:minweight}
+\emph{What is consumed.} The hypothesis Proposition~\ref{prop:route} runs on
+is the guarantee the supplier's contract \emph{states} at each setting: one
+weight $p^{(t)}_i$ per slot entry and per setting $t\in\Tset$, with
+$\sum_{S\in\mathcal{O}_i}\blk{M}{\gtN}_{S|t}\succeq p^{(t)}_i\idon{}$ at that
+setting (\xref{receiver/def:slot} and the first conclusion of
+\xref{receiver/thm:emitted-bound}). The weight route forms the weight of a
+joint outcome $(y_i,t)$ from $p^{(t)}_i$, the weight of that outcome's own
+setting (\eqref{eq:weightroute}). Assumption~\ref{ass:recv} names the
+supplier's weights generically, and which claims state them is
+Proposition~\ref{prop:route}\,(iv).
+
+\emph{Consuming the minimum would also be sound, and is weakly smaller at
+every joint outcome.} The \tref{uniform weight of an entry},
+$p_i=\min_tp^{(t)}_i$, satisfies the supplier's guarantee at every setting, so
+a route consuming it in place of $p^{(t)}_i$, the \emph{uniform route}, would
+be certified too. Since
+$1-r_{\min,i}\ge0$ and $p_i\le p^{(t)}_i$,
+\begin{equation*}
+  q_t\Big(\big(1-r_{\min,i}\big)p_i+r_{\min,i}\Big)
+  \;\le\;
+  q_t\Big(\big(1-r_{\min,i}\big)p^{(t)}_i+r_{\min,i}\Big)=\hat p_{(y_i,t)}
+\end{equation*}
+at every $(y_i,t)$, and $\lat{\cdot}$ is non-decreasing, so every routed weight
+of that route would be at most the one \eqref{eq:weightroute} emits.
+\emph{Where the per-setting total $p$ is below one},
+Proposition~\ref{prop:weight-monotone}\,(ii) and Corollary~\ref{cor:monotone} then
+make that route's target the cleaner one, which grants the adversary at least
+as much. At a slot with a single entry, $r=1$, that holds whenever the
+uniform route's total is below one. Each of the two totals is at most
+$\sum_tq_t\big((1-r_{\min,1})w_t+r_{\min,1}\big)\le1$, $w_t\in[0,1]$ being the
+weight it reads at $t$, and reaches one exactly when $r_{\min,1}=1$ or $w_t=1$
+at every $t$, because every $q_t$ is positive and a lattice number, which
+$\lat{\cdot}$ leaves unchanged (Definitions~\ref{def:joint-family}
+and~\ref{def:weight-route}); and $p_1=\min_tp^{(t)}_1$ is $1$ exactly when
+every $p^{(t)}_1$ is, so the two totals reach one together. At $r\ge2$, where
+every $r_{\min,i}$ vanishes (Corollary~\ref{cor:oneabsorbing}), the
+per-setting total can reach one where the uniform one is below it: with two
+settings $a,b$, $q_a=q_b=\tfrac12$, $p^{(a)}_1=p^{(b)}_2=1$ and the other two
+weights $0$, the totals are $1$ and $0$. The per-setting route is then refused
+for its total (Requirement~\ref{req:total-weight-refusal}), a conservative
+refusal (Remark~\ref{rem:peqone}), and there is no second target to compare it
+with. What the per-setting route gains at entry $i$ is, before rounding,
+$\sum_tq_t(1-r_{\min,i})\big(p^{(t)}_i-p_i\big)\ge0$ of routed weight: nothing
+at a setting whose weight is the minimum, and at any other setting the
+difference its own floor makes, for instance at a bright probe setting, where
+the high-photon multiclick floor is expected to be the larger one, an
+expectation no claim states.
+
+\emph{The uniform case is the special case, number for number.} If
+$p^{(t)}_i=p_i$ for every $t$, which holds at every one-setting family
+$\Tset=\{\off\}$, whose one weight is its
+\tref[uniform weight of an entry]{uniform weight} (\xref{receiver/def:slot}),
+and so at every probe-free receiver, \eqref{eq:weightroute} is evaluated on
+the same declared numbers $q_t$, $r_{\min,i}$ and $p_i$ as the uniform route
+evaluates, in the same exact substrate and with the same downward rounding. The routed weights,
+their total $p$, the complement $1-p$ and everything the flat instance builds
+from them are then the numbers that route gives, so at a declaration without
+a probe the two routes emit the same numbers.
+\end{remark}

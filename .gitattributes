@@ -1,0 +1,4 @@
+* text=auto eol=lf
+*.pdf binary
+*.png binary
+# Exact reviewed machine evidence in this run must retain its executed bytes.

@@ -1,0 +1,57 @@
+% ---
+% id: foundations/def:domination
+% kind: def
+% title: "Domination of one operator family by another at block weights"
+% summary: >-
+%   A family G dominates a family F at block weights q when G − (1−q)F is
+%   positive semidefinite for every outcome on every block, one weight per
+%   block. The residual family is what G holds beyond the weighted F,
+%   rescaled by the weight.
+% prominence: standard
+% status: accepted
+% uses: [def:sector-map]
+% mentions: [meat-core/prop:optol-nobound]
+% assumes: []
+% refs:
+%   - "nahar2025imperfect, Thm. 3, Eq. (20)"
+% provenance: newly-derived
+% notes: "The relation is the hypothesis of the generic noise channel of nahar2025imperfect, Thm. 3, Eq. (20), with G in the role of the noisy POVM and F in that of the noiseless one; the channel itself is not stated in this module. No requirement uses the relation: a snap is not related to its model by domination, and a declared device weight is future scope (spec/future-scope.md section 13)."
+% lean:
+% ---
+
+Two \tref{exactly admissible} measurements that are entrywise close can have key-rate
+bounds far apart, by an amount the distance between them does not control
+(\xref{meat-core/prop:optol-nobound}). A small change can alter which
+outcomes a measurement treats as impossible on some direction, and a bound on
+its size says nothing about that. Domination is a relation between two families
+under which the dominated family gains no support; it bounds the dominated
+family from above and not from below. It is the hypothesis under which a measurement $G$ is
+a noise channel followed by $F$ together with classical flags of weight at
+most $q_s$ on block $s$ \cite[Thm.~3, Eq.~(20)]{nahar2025imperfect}.
+
+\begin{definition}\label{def:domination}
+Let $\mathfrak{m}$ be a \tref{sector map} with blocks $s\in\mathsf{S}$ of
+dimensions $d_s$ (Definition~\ref{def:sector-map}), let $J$ be a finite non-empty
+alphabet, and let $G=\{G_j\}_{j\in J}$ and $F=\{F_j\}_{j\in J}$ be families of
+\tref[block list]{block lists} against $\mathfrak{m}$ whose blocks are
+Hermitian and positive semidefinite; their entries are arbitrary complex
+numbers. A family is \emph{complete at} a real number $c$ on block $s$ when
+$\sum_{j\in J}G^{(s)}_j=c\,\idon{d_s}$. For weights $q=(q_s)_{s\in\mathsf{S}}$
+with $q_s\in[0,1)$, the family $G$
+\term[said of an operator family G and an operator family F over the same
+alphabet and sector map, at block weights q in [0, 1): G − (1−q)F is positive
+semidefinite for every outcome on every block, with the weight of that
+block]{dominates} $F$ at $q$ when
+\begin{equation}\label{eq:domination}
+  G^{(s)}_j-(1-q_s)\,F^{(s)}_j\;\succeq\;0
+  \qquad\text{for every }j\in J\text{ and }s\in\mathsf{S}.
+\end{equation}
+The weight $q_s$ belongs to the block $s$ and is the same for every outcome.
+On a block $s$, the
+\term[on a block with weight q, the family (G − (1−q)F)/q where q is positive,
+and G itself where q is zero]{residual family} of the domination is
+$R^{(s)}_j\coloneqq q_s^{-1}\big(G^{(s)}_j-(1-q_s)F^{(s)}_j\big)$ for
+$j\in J$ where $q_s>0$, and $R^{(s)}_j\coloneqq G^{(s)}_j$ where $q_s=0$.
+For a Hermitian matrix $X$ we write $\mathrm{supp}\,X$ for its range, the
+orthogonal complement of its kernel.
+\end{definition}

@@ -1,0 +1,28 @@
+% ---
+% id: protocol-compiler/rem:nosearch
+% kind: rem
+% title: "Feasibility by witness rather than by search"
+% summary: >-
+%   Deciding non-emptiness of the feasible set for a general list is a
+%   semidefinite feasibility problem, while whoever produced the entries can
+%   exhibit a reachable state. A supplied witness turns D(vii) into a check,
+%   and refusing when no candidate verifies avoids an infimum over the empty
+%   set.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:nosearch}
+Deciding $\Feas\ne\varnothing$ for a general list is a semidefinite
+feasibility problem. Whoever produced the entries produced them from a
+reachable-state argument and can exhibit a reachable state, and a supplied
+witness turns D(vii) into a check. Refusing when no candidate verifies is the
+safe direction: a declaration whose feasible set is empty makes the consuming
+engine's infimum an infimum over the empty set, which is exactly the pathology
+the refusal prevents.
+\end{remark}

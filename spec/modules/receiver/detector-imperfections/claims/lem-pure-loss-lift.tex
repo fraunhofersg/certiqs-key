@@ -1,0 +1,51 @@
+% ---
+% id: receiver/detector-imperfections/lem:pure-loss-lift
+% kind: lem
+% title: "The pure-loss channel on the lift of a contraction"
+% summary: >-
+%   The adjoint of the pure-loss channel of transmittance t takes the lift of
+%   a contraction X to the lift of tX + (1 − t)·1. Every joint no-click
+%   element is such a lift, so loss in front of a receiver acts on its Grams
+%   as a scalar.
+% prominence: technical
+% status: accepted
+% uses: [def:pure-loss, receiver/lem:fock-maps]
+% mentions: [prop:efficiency-normalization, receiver/thm:click-povm]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The \tref{joint no-click elements} of a receiver are lifts $\Fock(\id-A_J)$ of
+contractions (Theorem~\ref{thm:click-povm}\,(ii)), so the following identity
+is what Proposition~\ref{prop:efficiency-normalization} needs from the
+pure-loss channel.
+
+\begin{lemma}\label{lem:pure-loss-lift}
+Let $t\in[0,1]$ and let $X$ be an operator on $\mathbb{C}^{\InpC}$ with
+$X^{\dagger}X\preceq\id$. Then
+\begin{equation}\label{eq:purelosslift}
+  (\Lambda^{\mathrm{loss}}_t)^{\dagger}\big(\Fock(X)\big)
+  \;=\;\Fock\big(t\,X+(1-t)\,\id\big).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1 (the adjoint).} By Lemma~\ref{lem:fock-maps}\,(iii) with
+$X_2=\id$, under the identification of Definition~\ref{def:pure-loss},
+$\Fock(X)\otimes\idon{\mathcal{F}(\mathbb{C}^{\InpC'})}=\Fock(X\oplus\id)$,
+an operator of norm at most one (Lemma~\ref{lem:fock-maps}\,(i)). So
+\eqref{eq:purelossadj} and Lemma~\ref{lem:fock-maps}\,(i) give
+\begin{equation*}
+  (\Lambda^{\mathrm{loss}}_t)^{\dagger}\big(\Fock(X)\big)
+  =\Fock(w_t)^{\dagger}\,\Fock(X\oplus\id)\,\Fock(w_t)
+  =\Fock\big(w_t^{\dagger}(X\oplus\id)w_t\big).
+\end{equation*}
+
+\emph{Step 2 (the compression).} For $v\in\mathbb{C}^{\InpC}$ write $v'$ for
+its copy in $\mathbb{C}^{\InpC'}$. Then $w_tv=\sqrt t\,v+\sqrt{1-t}\,v'$,
+$(X\oplus\id)w_tv=\sqrt t\,Xv+\sqrt{1-t}\,v'$, and $w_t^{\dagger}$ maps
+$a+b'$ to $\sqrt t\,a+\sqrt{1-t}\,b$, so
+$w_t^{\dagger}(X\oplus\id)w_t=t\,X+(1-t)\,\id$.
+\end{proof}

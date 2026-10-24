@@ -1,0 +1,33 @@
+% ---
+% id: reductions/req:exact-admission-refusal
+% kind: req
+% title: "Refusal of a declaration outside the substrate"
+% summary: >-
+%   A declaration whose entries are not exactly representable in the field
+%   chosen for the arithmetic is refused, never rounded into it. A declaration
+%   on the declared lattice is never refused on this ground.
+% prominence: standard
+% status: accepted
+% uses: [def:substrate]
+% mentions: [def:exactadm, foundations/req:boundary-admission, foundations/req:consumer-decides-exactly]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Declared operator data cross every \tref{module boundary} \tref{exactly admissible}
+(\xref{foundations/req:boundary-admission}), and a consumer that finds one of
+its admission predicates violated refuses rather than repairs
+(\xref{foundations/req:consumer-decides-exactly}). For this module one
+such predicate is that the declared entries lie in the field that carries its
+arithmetic.
+
+\begin{requirement}\label{req:exact-admission-refusal}
+The engine refuses a declaration whose entries are not exactly representable
+in the field $\Fld$ chosen for the arithmetic
+(Definition~\ref{def:substrate}), with the reason
+\iface{declaration_not_exactly_admissible}, rather than rounding the entries
+into that field. No declaration whose entries satisfy \eqref{eq:latinv} is
+refused on this ground.
+\end{requirement}

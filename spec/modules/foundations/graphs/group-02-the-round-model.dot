@@ -1,0 +1,15 @@
+digraph claims {
+  rankdir=LR;
+  graph [label="2 The round model\nArrow: claim -> prerequisite. Solid: uses; dashed: assumes.\nDeclared dependencies, not a proof check. Mentions excluded.", labelloc=t, fontsize=13, fontname="Arial", bgcolor="white", pad=0.25, nodesep=0.3];
+  node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11, margin="0.13,0.09"];
+  edge [color="#526777", arrowsize=0.65];
+  subgraph "cluster_foundations" {
+    label="foundations"; color="#cbd5df";
+    "foundations/def:pinching" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">foundations/def:pinching<BR/>Operator conventions and pinching<BR/>implemented<BR/>BOUNDARY: further prerequisites omitted</TD></TR><TR><TD HREF="../claims/def-pinching.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-foundations/def:pinching" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled,dashed", URL="../claims/def-pinching.tex", target="_top"];
+    "foundations/def:round-homogeneity" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">foundations/def:round-homogeneity<BR/>Round homogeneity of a per-round<BR/>family<BR/>accepted</TD></TR><TR><TD HREF="../claims/def-round-homogeneity.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-foundations/def:round-homogeneity" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../claims/def-round-homogeneity.tex", target="_top"];
+    "foundations/def:round-model" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">foundations/def:round-model<BR/>Round model, attack sequences and<BR/>attack sets<BR/>accepted</TD></TR><TR><TD HREF="../claims/def-round-model.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-foundations/def:round-model" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../claims/def-round-model.tex", target="_top"];
+    "foundations/lem:register-compression" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">foundations/lem:register-compression<BR/>Compressing a register onto a finite-<BR/>dimensional subspace<BR/>accepted</TD></TR><TR><TD HREF="../claims/lem-register-compression.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-foundations/lem:register-compression" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../claims/lem-register-compression.tex", target="_top"];
+  }
+  "foundations/def:round-homogeneity" -> "foundations/def:round-model";
+  "foundations/def:round-model" -> "foundations/def:pinching";
+}

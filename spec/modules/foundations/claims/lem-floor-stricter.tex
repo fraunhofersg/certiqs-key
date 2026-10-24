@@ -1,0 +1,70 @@
+% ---
+% id: foundations/lem:floor-stricter
+% kind: lem
+% title: "The positivity floor against entrywise closeness to the cone"
+% summary: >-
+%   A Hermitian matrix with least eigenvalue at least −δ lies within entrywise
+%   distance δ of the positive cone, but entrywise distance δ only guarantees a
+%   least eigenvalue of −dδ in dimension d, and that factor is attained. The two
+%   tests are different quantities and never interchangeable.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [def:tolerance]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The declared tolerance governs two kinds of test, entrywise defects of
+differences and a floor on the least eigenvalue
+(Definition~\ref{def:tolerance}). The lemma compares them.
+
+\begin{lemma}\label{lem:floor-stricter}
+Let $d\ge1$ and $\delta\ge0$, and write $\opn{\cdot}$ for the operator norm and
+$\mxn{\cdot}$ for the entrywise maximum modulus of complex $d\times d$
+matrices.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item $\mxn{Y}\le\opn{Y}\le d\,\mxn{Y}$ for every complex $d\times d$
+  matrix $Y$.
+\item If $X$ is Hermitian and $\lmin(X)\ge-\delta$, then
+  $X+\delta\,\idon{d}\succeq0$ and
+  $\mxn{(X+\delta\,\idon{d})-X}=\delta$.
+\item If $X$ is Hermitian and $\mxn{X-P}\le\delta$ for some $P\succeq0$, then
+  $\lmin(X)\ge-d\delta$. The bound is attained: for the $d\times d$ matrix $E$
+  with every entry equal to $1$, the matrices $X\coloneqq-\delta E$ and
+  $P\coloneqq0$ satisfy $\mxn{X-P}=\delta$ and $\lmin(X)=-d\delta$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) For standard basis vectors $e_i,e_l$,
+$|Y_{il}|=|\langle e_i,Ye_l\rangle|\le\opn{Y}$ by the Cauchy--Schwarz
+inequality, which is the first inequality. For a unit vector $v$, the
+Cauchy--Schwarz inequality applied to each row gives
+\begin{equation*}
+  \|Yv\|^{2}=\sum_i\Big|\sum_lY_{il}v_l\Big|^{2}
+  \le\sum_i\Big(\sum_l|Y_{il}|^{2}\Big)\Big(\sum_l|v_l|^{2}\Big)
+  =\sum_{i,l}|Y_{il}|^{2}\le d^{2}\mxn{Y}^{2},
+\end{equation*}
+so $\opn{Y}\le d\,\mxn{Y}$.
+
+(ii) The Hermitian matrix $X+\delta\,\idon{d}$ has the eigenvalues of $X$
+shifted by $\delta$, which are non-negative, so it is positive semidefinite.
+The difference $\delta\,\idon{d}$ has diagonal entries $\delta$ and
+off-diagonal entries $0$, so its entrywise maximum modulus is $\delta$.
+
+(iii) $X-P$ is Hermitian, $X$ and $P$ being so. For a unit vector $v$,
+\begin{equation*}
+  \langle v,Xv\rangle=\langle v,Pv\rangle+\langle v,(X-P)v\rangle
+  \ge0-\opn{X-P}\ge-d\,\mxn{X-P}\ge-d\delta,
+\end{equation*}
+by $P\succeq0$, the Cauchy--Schwarz inequality and (i). Since
+$\lmin(X)=\min_{\|v\|=1}\langle v,Xv\rangle$ for Hermitian $X$, this gives
+$\lmin(X)\ge-d\delta$. For the example, let $u$ be the unit vector with every
+entry $d^{-1/2}$; then $E=d\,uu^{\dagger}$, whose eigenvalues are $d$, on $u$,
+and $0$, on the orthogonal complement of $u$. So the least eigenvalue of
+$-\delta E$ is $-d\delta$, and every entry of $-\delta E-0$ has modulus
+$\delta$.
+\end{proof}

@@ -1,0 +1,41 @@
+% ---
+% id: reductions/def:system-setting
+% kind: def
+% title: "The system setting of the reductions"
+% summary: >-
+%   The physical system Bob's receiver acts on has a separable Hilbert space,
+%   possibly infinite-dimensional, while every target space and every side
+%   register other than the adversary's is finite-dimensional with declared
+%   dimensions. The squashing relations and their transport are stated in it.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The adversary's registers are not part of this setting: they are the round model's (foundations/def:round-model), finite-dimensional, of a dimension declared nowhere, as every register of that model is. An adversary whose memory has any dimension is reached by meat-core/lem:memory-lift, which compresses her registers before any reduction of this contract applies."
+% ---
+
+Bob's physical receiver acts on a system whose Hilbert space may be infinite
+dimensional; in every optical application it is a \tref{Fock space}. Every
+other system of the analysis, apart from the adversary's registers, is
+finite-dimensional and declared. Separability is no restriction on such a
+receiver: a Fock space over countably many modes has the countable
+occupation-number basis. It is used only to type the systems, and for a
+branch register whose dimension is nowhere declared it is a convention.
+
+\begin{definition}\label{def:system-setting}
+The
+\term[The setting of this contract: a separable, possibly infinite-dimensional physical system and finite-dimensional, declared target spaces and side registers other than the adversary's.]{system setting}
+of this contract is the following:
+\begin{enumerate}[label=(\alph*),leftmargin=2.4em]
+\item the Hilbert space $\Hs{\Bsys}$ of the system $\Bsys$ that Bob's
+  physical receiver acts on is separable and may be infinite-dimensional;
+\item every target space $\Hs{\Qsys}$ is finite-dimensional, with declared
+  dimensions;
+\item every side register other than the adversary's registers, that is,
+  Alice's retained system and the classical registers, is finite-dimensional,
+  with declared dimensions.
+\end{enumerate}
+\end{definition}

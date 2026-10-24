@@ -1,0 +1,70 @@
+% ---
+% id: protocol-compiler/rem:alphabet
+% kind: rem
+% title: "The outcome alphabet is chosen upstream"
+% summary: >-
+%   Bob's emitted outcome alphabet is chosen upstream, the receiver's declared
+%   coarse-graining deciding how much of the click pattern survives. Every
+%   object of this module indexed by it is stated over any finite alphabet, so a
+%   fine-grained instance changes declared data and no claim here.
+% prominence: standard
+% status: accepted
+% uses: [def:declaration, def:spec, def:chaincond, def:phi, def:weighted]
+% mentions: [rem:coarse, rem:relabel, receiver/def:clickalphabet, receiver/def:coarse, receiver/thm:coarse-graining, reductions/def:joint-family]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:alphabet}
+Nothing in this module fixes what Bob's \tref{outcome alphabet} is. The emitted
+$\Vset$ is the alphabet of the family the last link of $\Chrec$ delivered
+(Definition~\ref{def:spec}\,(c)), and that family's alphabet is the upstream
+modules': the raw outcome of a threshold-detector receiver is the
+\emph{click pattern}, the set $S\subseteq[K]$ of ports that fired
+(\xref{receiver/def:clickalphabet}), and it is the receiver's
+\tref{declared coarse-graining} --- a surjection from $2^{[K]}$ onto the
+emitted alphabet (\xref{receiver/def:coarse},
+\xref{receiver/thm:coarse-graining}) --- that decides how much of the pattern
+survives, \emph{before} the joint alphabet with Bob's setting is formed
+(\xref{reductions/def:joint-family}) and before any reduction runs. A
+coarse-graining that keeps every pattern, one that keeps only click, no-click
+and multi-click, and one that keeps the single clicks and merges the rest are
+three declarations of that map, and this module receives the result of
+whichever was declared.
+
+Every object of this module that is indexed by $\Vset$ is stated over an
+arbitrary finite non-empty alphabet and admits any finite disjoint union.
+The family slot $\{F_v\}_{v\in\Vset}$ of \eqref{eq:declaration} is a family
+of block lists over a finite alphabet, and D(iii) is decided element by
+element whatever $|\Vset|$ is. The outcome correspondence $\gamma$ of
+Definition~\ref{def:chaincond}\,(C2) is a total surjection from any finite
+physical alphabet onto any finite emitted one, the direction being the only
+thing (C2) fixes (Remark~\ref{rem:coarse}), so a finer emitted alphabet is a
+$\gamma$ with smaller fibres and nothing else. The readouts of the
+\tref{party partition} and Bob's \tref{announcement map} $a_B$
+(Definition~\ref{def:spec}\,(d))
+are declared on the alphabets the specification names, and $\phi$
+(Definition~\ref{def:phi}) on the announcement classes; a finer $\Vset$ is a
+larger table for each and no new condition. And both forms of
+Definition~\ref{def:weighted} are constructions over a disjoint union ---
+$\bigsqcup_t\Uset_t\times\{t\}$, and the support $\Vset_P\subseteq
+\Vset\times\mathcal{F}$ --- so a disjoint union over settings and choice
+values is what they produce, not something they have to be extended to.
+
+A \emph{fine-grained instance} --- one whose receiver keeps more of the click
+pattern than the coarsest sound choice, or one whose outcome carries a
+setting and a choice value beside the detection result --- therefore changes
+the receiver's declared coarse-graining and the instance's public part, and
+changes no claim of this module: the compiler's claims are stated for the
+alphabet it is handed. What it does change downstream is not this module's
+either: the size of the declaration, the number of exact decisions V3 takes,
+and which coarse outcomes carry a bound
+(\xref{receiver/thm:coarse-graining}\,(iii): a bound on a coarse outcome does
+not descend to its fibres), which is the receiver's trade-off and the reason
+its coarse-graining is declared data rather than a convention. Which
+alphabets that coarse-graining can reach is the receiver's question; where a
+setting-dependent choice value enters the alphabet is
+Remark~\ref{rem:relabel}.
+\end{remark}

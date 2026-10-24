@@ -1,0 +1,70 @@
+% ---
+% id: receiver/lem:exactbasic
+% kind: lem
+% title: "Range of the exact block bound"
+% summary: >-
+%   The exact block bound lies between the analytic bound and one on every
+%   photon-number block, and it is non-negative when the multiclick element is
+%   positive. That positivity holds at every setting of a setting family but
+%   does not follow from the multiclick bound's hypotheses.
+% prominence: standard
+% status: accepted
+% uses: [thm:multiclick-bound, def:exactbnd, lem:fock-monotone, lem:fock-block-spectrum, lem:fock-functor]
+% mentions: [def:setting-family, rem:exactpositivity]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The three bounds of the lemma need different hypotheses. The comparison with
+the analytic bound and the upper bound hold under the hypotheses of
+Theorem~\ref{thm:multiclick-bound} alone. Non-negativity needs the
+\tref{multiclick element} itself to be positive, \eqref{eq:mcpos}, which holds at every setting
+of a \tref{setting family} (Definition~\ref{def:setting-family}\,(a)), because
+there $M_{\mc}$ is a sum of elements of a POVM; those are the only instances
+to which this module applies Theorem~\ref{thm:multiclick-bound}. It does not follow
+from \eqref{eq:bbkhyp} and \eqref{eq:prefactorform}, and
+Remark~\ref{rem:exactpositivity} is the instance that shows so.
+
+\begin{lemma}
+\label{lem:exactbasic}
+Let the hypotheses of Theorem~\ref{thm:multiclick-bound} hold. Then, for every
+$n\ge0$,
+\begin{equation}\label{eq:exactbasic}
+  \Bnd(n)\ \le\ \Bnd^{\ast}(n)\ \le\ 1 .
+\end{equation}
+If in addition
+\begin{equation}\label{eq:mcpos}
+  M_{\mc}\ \succeq\ 0 ,
+\end{equation}
+then $\Bnd^{\ast}(n)\ge0$ as well, so that $\Bnd^{\ast}(n)\in[0,1]$.
+\end{lemma}
+
+\begin{proof}
+\emph{Lower comparison.} $\Bnd(n)\le\Bnd^{\ast}(n)$ is \eqref{eq:mcbound}.
+
+\emph{Upper bound.} For $\Bnd^{\ast}(n)\le1$ it suffices that
+$M_{\mc}\preceq\id$, which is the operator form of the argument that closes
+the proof of Theorem~\ref{thm:multiclick-bound}. From $B_k\preceq B$,
+Lemma~\ref{lem:fock-monotone} gives $\Fock(\id-B_k)\succeq\Fock(\id-B)$;
+multiplying by $\beta_k>0$, summing, and then using $\beta_k\ge\gamma$
+together with $\Fock(\id-B)\succeq0$ (Lemma~\ref{lem:fock-block-spectrum}),
+\begin{equation}\label{eq:mcupper}
+  \sum_{k=1}^{K}\beta_k\Fock\big(\id-B_k\big)
+  \ \succeq\ \Big(\sum_{k=1}^{K}\beta_k\Big)\Fock(\id-B)
+  \ \succeq\ K\gamma\,\Fock(\id-B)
+  \ \succeq\ (K-1)\gamma\,\Fock(\id-B) ,
+\end{equation}
+so \eqref{eq:prefactorform} gives $M_{\mc}=\id+(K-1)\gamma\Fock(\id-B)
+-\sum_k\beta_k\Fock(\id-B_k)\preceq\id$. Every summand is photon-number block
+diagonal (Lemma~\ref{lem:fock-functor}\,(i)), so the $n$-photon block of
+$M_{\mc}$ is its compression by $\Pi_n$ and inherits the bound:
+$\blk{M}{\eqn}_{\mc}\preceq\id^{(=n)}$, whence $\Bnd^{\ast}(n)\le1$.
+
+\emph{Non-negativity.} Under \eqref{eq:mcpos} the same compression inherits
+positivity, since
+$\bra{\psi}\Pi_nM_{\mc}\Pi_n\ket{\psi}=\bra{\Pi_n\psi}M_{\mc}\ket{\Pi_n\psi}
+\ge0$ for every $\ket\psi$; so $\blk{M}{\eqn}_{\mc}\succeq0$ and
+$\Bnd^{\ast}(n)\ge0$.
+\end{proof}

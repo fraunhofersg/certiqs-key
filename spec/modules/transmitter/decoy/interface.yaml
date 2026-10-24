@@ -1,0 +1,610 @@
+# spec/modules/transmitter/decoy/interface.yaml -- the `decoy` submodule's
+# interface: what a tagged decoy declaration takes in, what it emits, the
+# refusals it fixes and the conventions it reads (spec/claim-format.md
+# section 5). The claim files under claims/ are the contract; this file
+# authors no mathematics and repeats none.
+#
+# What is here and what is not. The core states the source specification, the
+# certificate, the link type, the segment and the number model
+# (`../interface.yaml`) and names no decoy object; this file adds rows to the
+# core's tables and changes none of them. Every row names, in a `locator`
+# field, the claim label it rests on: a bare label is this submodule's, a
+# label prefixed `transmitter/` is the core's. None of the core's refusal
+# strings is reused here for a new condition.
+#
+# The emission forms the weighted blocks from the declared numbers and the
+# signal dyads it forms itself, the certificate is defined from them, and
+# nothing is compressed, snapped or rounded: the declared data of the emitted
+# presentation are the rows `weighted_blocks` and `sector_structure`, which no
+# request supplies.
+
+module_id: decoy
+parent_module: transmitter
+
+# ---------------------------------------------------------------------------
+# inputs
+#   The blanket reading is the core's (transmitter/interface.yaml, inputs):
+#   every numeric datum is binary64, every condition is decided exactly on
+#   those numbers, sums in the declared order, rounding nowhere. This
+#   submodule declares no tolerance of its own; the one number that is not a
+#   declared datum is the Poisson weight of `sector_weights`, and what is
+#   decided there is an inequality against the rational lower bound the
+#   emission forms on it (lem:poisson-enclosure). The rows `weighted_blocks`
+#   and `sector_structure` are formed by the emission from the others and are
+#   listed here because they are the declared data of the emitted
+#   presentation; a request supplies neither.
+# ---------------------------------------------------------------------------
+inputs:
+
+  - name: polarisation_set
+    symbol: "Pol, with |a> in C^2 per a"
+    type: "ordered label list (each label standing for a unit vector of the model; no coordinates)"
+    presence: always
+    domain: >-
+      Finite and non-empty; each polarisation a declared label standing for a
+      unit vector of the one-photon space, a mathematical object of the model
+      whose coordinates are not declared. The set is not fixed to the four
+      BB84 states by any claim of this submodule. A quantum sector above the
+      vacuum is emitted only where every polarisation is declared as one of
+      the four vectors H, V, + and -, distinct labels as distinct vectors, and
+      there are at least n + 1 of them at n photons; there the emission forms
+      the signal dyads itself (req:signal-dyads).
+    locator: "def:wcp-model (W1); cor:emitted-decoy (iv)(b); req:signal-dyads"
+    refusal_reasons: [quantum_sector_outside_construction]
+
+  - name: intensity_set
+    symbol: Int
+    type: ordered list of non-negative reals
+    presence: always
+    domain: >-
+      Finite and non-empty; each intensity a declared non-negative binary64
+      number. An intensity of zero is admissible and is the vacuum-only
+      letter.
+    locator: "def:wcp-model (W1)"
+
+  - name: signal_alphabet
+    symbol: "X, x = (a, mu, z)"
+    type: ordered label list
+    presence: always
+    domain: >-
+      A subset of Pol x Int x {test, gen} with a declared order, and weights
+      p_x > 0 summing to one in that order, rounding nowhere. A label of
+      weight zero is not a letter: the alphabet carries the labels the source
+      prepares. The core's `signal_alphabet` row is what this row supplies.
+    locator: "def:wcp-model (W2); transmitter/def:source-spec"
+
+  - name: entropy_cutoff
+    symbol: N_ent
+    type: int
+    presence: always
+    domain: >-
+      0 <= N_ent <= N_src. Values above two are refused
+      (`entropy_cutoff_above_two`), a scope refusal and not a limit of the
+      claims, which are stated for arbitrary N_ent. The decoy instance
+      declares N_ent = 1 by default.
+    locator: "def:tagged-source (T1); req:entropy-cutoff; rem:cutoffs"
+
+  - name: source_cutoff
+    symbol: N_src
+    type: int
+    presence: always
+    domain: >-
+      N_src >= N_ent. Raising it adds at most |Pol| one-dimensional sectors
+      per photon number, only for polarisations to which some carried letter
+      assigns positive weight there, and never requires raising N_ent. It is
+      not the receiver's cutoff, which is no datum of this submodule.
+    locator: "def:tagged-source (T1); rem:cutoffs"
+
+  - name: sector_weights
+    symbol: "ptilde(n | mu), 0 <= n <= N_src"
+    type: weight table
+    presence: always
+    domain: >-
+      One declared binary64 number per photon number n <= N_src and intensity
+      mu, depending on the intensity alone and not on the polarisation or the
+      round type. 0 <= ptilde(n | mu) <= P_mu(n), with P_mu(n) = e^-mu mu^n /
+      n!. The upper bound is an inequality and never an equality: its right
+      side is not a declared number, and what is decided is that the declared
+      number lies at or below the rational lower end of the enclosure of
+      P_mu(n) that the emission forms from the declared mu in exact rational
+      arithmetic (lem:poisson-enclosure), at the summation index K_mu that
+      req:sector-weight-bound fixes, the least even K >= mu with
+      mu^(K+1)/(K+1)! <= 2^-90. A declarer computes the same lower end and
+      declares at or below it. K_mu is recorded per intensity in the
+      artefact. No enclosure is read from a request.
+      The tail weight wtilde_mu is formed from this table and is not
+      declared.
+    locator: "def:tagged-source (T2); lem:poisson-enclosure; req:sector-weight-bound"
+    why_not_an_equality: >-
+      Stated here because an implementation could try to decide it. No
+      condition of this submodule compares ptilde with P_mu for equality, and
+      none is read at a tolerance; the published statement this construction
+      generalises does state an equality with the exact Poisson weights, and
+      the inequality is this repository's own (req:sector-weight-bound;
+      def:tagged-source, notes).
+    refusal_reasons: [sector_weight_above_poisson, sector_weight_as_equality]
+
+  - name: weighted_blocks
+    symbol: "sigma^{v,(t)}_x = p_x w_{x,t} |phi_{x,t}><phi_{x,t}|"
+    type: block lists
+    presence: always
+    domain: >-
+      The only operators this submodule declares, formed by the emission and
+      supplied by no request. One block per sector t of T and letter x, formed
+      from the declared p_x, the sector weight w_{x,t} (a declared ptilde or a
+      tail weight formed from them) and the dyad of the sector's signal vector
+      in the orthonormal basis of that sector, whose entries the emission
+      forms by the construction of cor:emitted-decoy (iv)(b)
+      (req:signal-dyads). They are the
+      declared data of an ensemble presentation in the core's sense
+      (transmitter/interface.yaml, `ensemble_presentation`), so the
+      conditions are (E1), (E2), (E3) and nothing else, and every formed
+      entry must be a binary64 number, refused and never rounded when it is
+      not.
+    locator: "prop:decoy-cert eq:decoy-blocks; cor:emitted-decoy (i), (iv); req:signal-dyads; transmitter/def:srcert"
+    where_the_arithmetic_bites: >-
+      The three places, and they are all of them (cor:emitted-decoy (iv)):
+      the products p_x * w_{x,t}, which a declarer makes exact by choosing the
+      p_x and the ptilde on a coarse enough dyadic grid, lowering a ptilde
+      being permitted by eq:weightineq and giving again a tagged declaration;
+      the entries of the signal dyads, which are 1 on every flag sector and on
+      the vacuum, and with the four polarisations are, in a basis the claim
+      exhibits, 0, 1 and +/- 1/2 at one photon and 0 and +/- 1/2 at two
+      photons, while at three photons and above this submodule asserts
+      nothing and the emission refuses; and the entrywise sector sums of
+      (E3).
+    refusal_reasons: [formed_entry_not_declarable, ensemble_presentation_not_admissible]
+    which_string_fires_where: >-
+      Which of the two strings is emitted for which failure
+      (req:exact-decoy-blocks; req:decoy-ensemble-conditions). A formed entry
+      that is not a binary64 number -- a product p_x * w_{x,t} * (a dyad
+      entry), or the tail weight of eq:tailweight -- is
+      `formed_entry_not_declarable`, refused before any block is declared. A
+      sector sum that rounds is (E3) itself and is
+      `ensemble_presentation_not_admissible`, the report naming the sector:
+      the condition there is that the sum rounds nowhere, and it is decided
+      on the declared blocks after they exist. (E1) and (E2) are that same
+      string.
+
+  - name: sector_structure
+    symbol: "T, {Pi^v_t}, the declared basis of each S_t"
+    type: ordered sector list + bases
+    presence: always
+    domain: >-
+      The sectors of def:tagged-source (T3) that some letter puts positive
+      weight on, in the declared order, each with its orthonormal basis, an
+      object of the model. The index set is read off the declared weights and
+      the entries in the basis are formed by the emission (req:signal-dyads),
+      so a request supplies neither. Alice's system is not declared: A_t is a copy of S_t and the
+      matched pair is this structure read on both sides
+      (transmitter/lem:ensemble-presentation), so no rank is read, nothing is
+      compressed and dim A_t = dim S_t whatever the rank of the sector's
+      marginal. The block kind is `proof_sector`.
+    locator: "def:tagged-source (T3), (T5); prop:decoy-cert (ii), (iii); req:decoy-emission"
+
+# ---------------------------------------------------------------------------
+# outputs
+#   What the emission hands the core, and through it the compiler. Nothing
+#   here is a second source of truth for an input.
+# ---------------------------------------------------------------------------
+outputs:
+
+  - name: source_specification
+    symbol: "S_src"
+    presence: always
+    content: >-
+      The core's specification, in trusted-source mode, as an ensemble
+      presentation: X with its order, the sector structure T with the
+      declared basis of each sector, the weighted blocks, and the specified
+      ensemble as the source model (def:wcp-model), which is the core's
+      declaration case (b). A, {M_x} and tau_A are not declared and are the
+      objects transmitter/lem:ensemble-presentation defines; of them only
+      tau_A is formed as numbers.
+    locator: "cor:emitted-decoy (i); transmitter/def:source-spec; transmitter/def:srcert"
+
+  - name: virtual_ensemble
+    symbol: "{sigma^v_x} on A^v, by weighted blocks"
+    presence: always
+    content: >-
+      The pair a consumer receives, finite dimensional, block diagonal along
+      T: the quantum sectors below N_ent carry the signal states, the
+      polarisation flags between the cutoffs carry ptilde(n | mu), the tail
+      flags carry wtilde_mu. It is the declared datum itself -- the weighted
+      blocks of the `weighted_blocks` input row, emitted as declared -- and
+      is formed from no certificate: the ensemble is declared and the
+      certificate is defined from it.
+    locator: "def:tagged-source (T3), (T4); prop:decoy-cert eq:decoy-blocks; transmitter/def:srcert"
+
+  - name: source_segment
+    symbol: "Ch_src = (Xi_tag)"
+    presence: always
+    content: >-
+      Exactly one link, of kind `tagging`: descriptors as in def:tagged-source
+      (T6), channel witness supplied as a theorem constructor, empty list of
+      transported constraint entries, no licence record, status `exact`, and
+      the obligation record below. It is emitted as a segment and never as a
+      silence.
+    locator: "def:tagged-source (T6); cor:emitted-decoy (ii)"
+
+  - name: link_obligation_record
+    symbol: null
+    presence: always
+    content: >-
+      The triple (`tagging`, `transmitter/decoy/prop:tagging`, [A-WCP]),
+      which is this submodule's entry in the core's emitted
+      `soundness_registry` and is what a consumer decides the link against,
+      together with the member of the claim's declared family of descriptors
+      that the emitted pair is, which is asserted here and decided by no one.
+      It carries no verdict on a number, (S3) being not decided for this
+      link. The emitted descriptor is a tagged source declaration, so the
+      membership asserted is the identity of the thing with itself
+      (cor:emitted-decoy (ii)).
+    locator: "transmitter/def:source-link (c2), Eq. eq:obligation; transmitter/def:source-segment (A1) to (A3); cor:emitted-decoy (ii)"
+
+  - name: alice_sector_map
+    symbol: "({Pi^A_t}, {Pi^v_t})"
+    presence: always
+    content: >-
+      The matched pair of sector structures, in the declared order of T, with
+      block kind `proof_sector`. It is a statement about {M_x}, tau_A and the
+      certificate and about no joint state; what the states reached from the
+      certificate satisfy is transmitter/lem:matched-pinching, and a
+      restriction of a consumer's feasible set is that consumer's theorem.
+    locator: "def:tagged-source (T5); cor:emitted-decoy (iii)"
+
+  - name: assumption_ledger
+    symbol: null
+    presence: always
+    content: >-
+      A-WCP always; A-SEQ and A-SRC as the core's trusted-source emission
+      carries them. A-ENS is not emitted: A-WCP is declared in its place for a
+      specification declared by this source model, and asserts its content
+      together with the conditions the model needs (transmitter/def:source-spec
+      (b)).
+    locator: "ass:wcp; req:decoy-emission; transmitter/def:source-spec (b); cor:emitted-decoy (ii)"
+    emission_rule:
+      always: [A-WCP, A-SEQ]
+      conditional: {A-SRC: "trusted-source mode at d_A >= 2"}
+      never: [A-ENS]
+    rows:
+      - id: A-WCP
+        machine_key: wcp_source_model
+        never_verified: true
+    binds:
+      A-WCP: "signal_alphabet -- each letter x = (a, mu, z) with its polarisation, intensity and round type (ass:wcp (i), (vi)); signal_weights -- p_x (vii); intensities -- each mu by name and declared value (ii); polarisations -- the declared |a> (iv); entropy_cutoff and source_cutoff -- N_ent and N_src of def:tagged-source (T1), the cutoffs with which the premise fixes the declaration"
+      A-SEQ: "nothing, as in the core"
+      A-SRC: "the core's A-SRC bindings, Alice's measurement in the form the ensemble presentation defines"
+    binds_note: >-
+      Emitted as the declaration's `assumption_bindings` beside its ledger,
+      and carried into the core artefact this submodule admits, A-WCP's as
+      that artefact's `source_model_bindings`, so the core's
+      `assumption_bindings` output row reads them (transmitter/interface.yaml).
+    never_verified_note: >-
+      A-WCP carries `verification: never` (spec/claim-format.md section 3.2):
+      the sentence the contract generates from that field says the engine
+      does not verify it; no consumer verifies it either. The flag repeats the field, which the code reads from the
+      claim-closure table, and every ledger that carries the key, the
+      compiler's included, carries the mark with it.
+    machine_keys_note: >-
+      The emitted ledger carries machine keys and a registry entry names short
+      ids, so (A2) of transmitter/def:source-segment compares through the
+      declared mapping. This submodule declares the key of the one assumption
+      it owns in `rows`; the core's `assumption_ledger` row carries the
+      mapping of the others and the requirement that it be total.
+    the_rule_in_force: >-
+      The core's `emission_rule` is the rule, and the row above is its reading
+      for an artefact of this submodule: A-WCP in the place of A-ENS
+      (transmitter/def:source-spec (b)), A-SEQ always, A-SRC because the
+      declaration is trusted-source when d_A >= 2 (absent at the reachable
+      d_A = 1 vacuum-only presentation, where (SR3) is vacuous), and A-WCP once
+      more as the assumption the tagging link's registry entry names, which is
+      one key and not two. Locator: transmitter/interface.yaml, output row
+      `assumption_ledger`; cor:emitted-decoy (ii).
+
+  - name: mathematical_spec_version
+    symbol: null
+    presence: always
+    content: >-
+      `transmitter/decoy@<version>` of the accepted contract; no artefact may
+      claim a draft version, nor a version whose conditions it does not
+      implement.
+    locator: "module.yaml version; PRINCIPLES.md section 6"
+    what_stands_in_front_of_an_artefact: >-
+      What decides a segment is the core's admission rule with (A1) to (A3),
+      which this submodule's link meets -- kind `tagging`, the registry entry
+      (tagging, transmitter/decoy/prop:tagging, {A-WCP}), A-WCP in the ledger
+      above, and the artefact emitted by the admitting module. The consumer's
+      form is the ensemble form of the consuming modules' declarations, and
+      what stands between the decoy declaration and a consumer of that form
+      is named in rem:decoy-consumers (b) to (d), each a named refusal:
+      trusted-source mode only; the licensed-only rule on the consumer's
+      constraint list (`general_entry_beside_source_segment`, which nothing of
+      this submodule can trip, its entry list being empty); and this
+      submodule's own refusals, of which N_ent >= 3 and
+      formed_entry_not_declarable are the two a declarer meets first. A
+      consumer whose declaration carries {M_x} refuses the declaration, which
+      is that consumer's form and not a condition here. Locator:
+      rem:decoy-consumers; cor:emitted-decoy (ii); transmitter/def:srcert;
+      transmitter/def:source-segment (A1) to (A3).
+
+# ---------------------------------------------------------------------------
+# not_outputs
+# ---------------------------------------------------------------------------
+not_outputs:
+
+  - item: any receiver-side object, and the receiver's cutoff
+    detail: >-
+      No receiver POVM, no outcome alphabet, no Q-side sector map, and no
+      reading of the receiver's flag-state cutoff. The three cutoffs are three
+      different objects, and only two of them are data here.
+    locator: "rem:cutoffs; transmitter/def:source-link (Alice-side descriptor discipline)"
+
+  - item: any constraint entry
+    detail: >-
+      The link's list of transported constraint entries is empty and no
+      licence record is emitted. An Alice-side entry has no expressible form
+      as a constraint operator on the consumer's system, and the core refuses
+      a non-empty list.
+    locator: "def:tagged-source (T6); transmitter/def:source-link"
+
+  - item: a support-compression record
+    detail: >-
+      Nothing is compressed and nothing is snapped: A_t is a copy of S_t, the
+      declared blocks are the emitted ones, and a number that cannot be
+      represented is refused rather than moved. So no record of a
+      compression, a rank kept, a discarded weight, a snap displacement or a
+      rounding direction is emitted. The rules for a declarer that compresses
+      a block-form declaration are `spec/architecture.md` §2.9 ('There is no
+      support-compression utility'); no claim of this submodule uses them.
+    locator: "cor:emitted-decoy (i), (iv); prop:decoy-cert (iii); rem:wcp-virtual-model"
+
+  - item: a yield, a statistic or an observed frequency
+    detail: >-
+      The submodule declares a source and a channel. It sets no model
+      probability equal to an observed frequency, declares no yield variable
+      and states no statistics constraint.
+    locator: "def:tagged-source; cor:emitted-decoy"
+
+  - item: a key rate, or any comparison of two of them
+    detail: >-
+      No claim here computes or bounds a key length, and none compares the
+      emitted declaration with any other declaration of the same source --
+      neither one with other weights, nor one with a finer flag family.
+    locator: "cor:emitted-decoy (v); rem:decoy-consumers; rem:no-intensity-split"
+
+# ---------------------------------------------------------------------------
+# link_kind
+#   The one row that touches the core's vocabulary, and it only adds to it.
+# ---------------------------------------------------------------------------
+link_kind:
+  adds: [tagging]
+  witness: "theorem constructor (prop:tagging), never data"
+  emits_sector_map: true
+  rule: >-
+    The core's source-stage kind vocabulary is open to the kinds a submodule
+    adds (transmitter/def:source-link). This submodule adds `tagging` and
+    supplies its soundness claim, prop:tagging, which is what the core's
+    admission rule demands of any admitted link; the core's own kind
+    `source-map` keeps its declaration and its refusal, no claim of this
+    repository proving it.
+  locator: "transmitter/def:source-link; transmitter/def:source-segment (the admission rule)"
+
+# ---------------------------------------------------------------------------
+# parameters
+# ---------------------------------------------------------------------------
+parameters:
+  free_numerical_parameters: none
+  declared_integers: [N_ent, N_src]
+  tolerances: >-
+    None, and no row names one. No condition here is read at a number,
+    nothing is compared within a margin, and a declaration failing a
+    condition is refused with a named reason.
+  locator: "cor:emitted-decoy (iv); transmitter/interface.yaml parameters"
+
+# ---------------------------------------------------------------------------
+# conventions
+# ---------------------------------------------------------------------------
+conventions:
+  photon_number_symbol: >-
+    Photon number is written with a sans-serif n. The letter n is the round
+    count everywhere in this repository, and a decoy claim that used it for a
+    photon number would collide with every accumulation statement.
+  number_model: "the core's: binary64 declared data, exactly admissible"
+  exact_decisions: true
+  exact_decisions_note: >-
+    Every condition of this submodule is decided exactly on the declared
+    entries: (E1) to (E3) on the weighted blocks, the weight sums, the tail
+    weight, the cutoff ordering. Nothing is decided of the certificate: its
+    blocks, the POVM and the marginal are defined from the declared blocks
+    and their conditions are theorems (transmitter/lem:ensemble-presentation),
+    so an implementation re-deciding them on formed numbers would be
+    introducing a rounding. The one condition whose right-hand side is not a
+    declared number is the certified inequality on the sector weights, and it
+    is decided against the rational lower end of the enclosure of
+    lem:poisson-enclosure, which the emission forms from the declared
+    intensity, not by a comparison of two declared numbers.
+  rounding: >-
+    Down, for a sector weight, and nowhere else. Rounding a sector weight
+    down yields another tagged source declaration, of which prop:tagging
+    holds; it is not a perturbation of the first one, and the tail weight
+    absorbs the difference. Locator: cor:emitted-decoy (v).
+  nothing_is_compressed: >-
+    The retained system is not compressed and no rank is read: A_t is a copy
+    of S_t, of the same dimension whatever the rank of the sector's marginal,
+    and nothing here licenses a consumer to compress, truncate or re-rank an
+    operator it was handed either. Locator: prop:decoy-cert (iii);
+    cor:emitted-decoy (i); def:tagged-source (T5).
+  fail_closed: >-
+    Every condition that fails is a refusal with a machine-readable reason
+    and no artefact. Nothing is repaired, and nothing is snapped to make a
+    condition pass. Two or more sectors imply d_A >= 2; a vacuum-only
+    declaration with one polarisation, intensity zero, both cutoffs zero and
+    vacuum weight one has d_A = 1. Its presentation defines tau_A = [1] and a
+    certificate (lem:ensemble-presentation (i)); SR3 is vacuous there
+    (transmitter/rem:da1). No refusal is added for it.
+  locator: "cor:emitted-decoy; transmitter/interface.yaml conventions"
+
+# ---------------------------------------------------------------------------
+# refusal_reasons
+#   One machine string per condition. None of the core's strings is reused
+#   for a new condition, and none of these has a frozen spelling from
+#   elsewhere (`frozen_spellings` is empty).
+# ---------------------------------------------------------------------------
+refusal_reasons:
+
+  frozen_spellings: []
+
+  table:
+
+    - reason: sector_weight_above_poisson
+      condition: >-
+        For some (n, mu) with n <= N_src the declared ptilde(n | mu) is
+        negative, or lies above the rational lower end of the enclosure of
+        P_mu(n) that the emission forms from the declared mu
+        (lem:poisson-enclosure). Every weight above P_mu(n) is refused, and
+        so is a weight between that lower end and P_mu(n). The report names
+        the first (n, mu) at which it fails.
+      locator: "def:tagged-source (T2); lem:poisson-enclosure; req:sector-weight-bound"
+
+    - reason: sector_weight_as_equality
+      condition: >-
+        The declaration presents ptilde(n | mu) = P_mu(n) as a decided
+        equality, or asks for the Poisson weight to be represented exactly.
+      locator: "def:tagged-source (T2); req:sector-weight-bound"
+
+    - reason: cutoffs_out_of_order
+      condition: >-
+        The cutoffs are not integers with 0 <= N_ent <= N_src, which is (T1).
+      locator: "def:tagged-source (T1); req:cutoff-order"
+
+    - reason: entropy_cutoff_above_two
+      condition: >-
+        N_ent >= 3. A scope refusal with its own reason, not a consequence of
+        any claim: every claim of this submodule is stated for arbitrary
+        N_ent, and what is missing is the construction req:entropy-cutoff
+        names, a declared basis in which the signal dyads have exactly
+        declarable entries at three photons and above. Until that exists the
+        sector is refused rather than declared at a tolerance.
+      locator: "req:entropy-cutoff; rem:cutoffs"
+
+    - reason: quantum_sector_outside_construction
+      condition: >-
+        The index set carries a quantum sector at n = 1 or n = 2 and some
+        polarisation is not declared as one of the four vectors H, V, + and
+        -, or two polarisations as the same vector, or there are fewer than
+        n + 1 polarisations; or a dyad the emission forms fails to be a
+        rank-one projector with tr[X_a X_b] = |<a|b>|^(2n). The signal dyads
+        of such a sector are not formed by the construction of
+        cor:emitted-decoy (iv)(b), the only one this submodule has, and are
+        never taken from a request. The report names the photon number and
+        the polarisation. N_ent >= 3 is refused first, under its own reason.
+      locator: "req:signal-dyads; cor:emitted-decoy (iv)(b); def:wcp-model (W1), (W3)"
+
+    - reason: flag_family_split_by_intensity
+      condition: >-
+        The declaration carries a polarisation flag per intensity at a photon
+        number N_ent < n <= N_src, or any flag family finer than
+        def:tagged-source (T3) declares.
+      locator: "def:tagged-source (T3); rem:no-intensity-split; req:shared-flags"
+      note: >-
+        The remark says what a split declaration is: not a source map that
+        fails, but a declaration without the relation that makes it a decoy
+        declaration. It is refused so that the loss is not silent.
+
+  reasons_of_the_core_this_submodule_trips_most:
+    - reason: formed_entry_not_declarable
+      detail: >-
+        The core's string (transmitter/interface.yaml): an entry a declaration
+        forms -- a product p_x * w_{x,t} * (a dyad entry), a tail weight -- is
+        not a binary64 number. Refused and never rounded. It is the refusal a
+        decoy declarer meets most often, and cor:emitted-decoy (iv) says how a
+        declarer removes it: coarser dyadic grids for p_x and ptilde, ptilde
+        lowered rather than raised; the signal dyads the emission forms at one
+        and two photons have the entries 0, 1 and +/- 1/2 and never cause it.
+        A sector sum of (E3) that rounds is the next
+        string, not this one (`weighted_blocks.which_string_fires_where`).
+      locator: "cor:emitted-decoy (iv); req:exact-decoy-blocks; transmitter/def:srcert (E1) to (E3)"
+    - reason: ensemble_presentation_not_admissible
+      detail: >-
+        The core's string: (E1), (E2) or (E3) fails on the declared blocks.
+        The report names the sector and the letter.
+      locator: "transmitter/def:srcert; transmitter/lem:ensemble-presentation; req:exact-decoy-blocks"
+
+  certificate_conditions_are_not_decided_here: >-
+    A tagged source is presented as an ensemble presentation, so the core's
+    block-form reasons (certificate_block_not_admissible and the five
+    pure-form strings) cannot fire on an artefact of this submodule: no
+    certificate is declared, and the conditions of the block form are
+    theorems. What fires is the pair above.
+
+# ---------------------------------------------------------------------------
+# artifact_bindings
+# ---------------------------------------------------------------------------
+artifact_bindings:
+  mathematical_spec_version: "transmitter/decoy@0.8.0"
+  mathematical_spec_version_note: >-
+    The string names an accepted version of the submodule contract, so it is
+    claimable. What it does not mean: that anything is emitted by a complete
+    analysis.
+  package: "src/certiqs_key/transmitter/decoy/"
+  package_note: >-
+    `model.py` is def:wcp-model, `tagged.py` is def:tagged-source with the
+    index set of (T3) and the tail weight of eq:tailweight, `bases.py` is the
+    construction of cor:emitted-decoy (iv)(b) at zero, one and two photons,
+    `enclosure.py` is lem:poisson-enclosure at the index K_mu of
+    req:sector-weight-bound, `emit.py` is the emission with its refusals, and
+    `reasons.py` holds the strings of this file's table. What the contract
+    requires of the package beyond that: req:signal-dyads requires the signal
+    dyads to be formed by the construction of `bases.py` and none to be taken
+    from a request, and req:sector-weight-bound requires the enclosure of
+    lem:poisson-enclosure, at the index K_mu that requirement fixes, to be
+    formed in the package (`enclosure.py`) and recorded (the emitted record's
+    `sector_weights` table carries K_mu per intensity as `poisson_index`); an
+    implementation conforms only once both hold. The machine keys above are
+    binding: the code is written onto these names, not the reverse.
+  what_is_not_built_here: >-
+    A helper that rounds a supplier's Poisson weights down onto a dyadic
+    grid. Neither interface names one among this submodule's inputs or
+    outputs; a declarer for which a product is not representable removes the
+    refusal by declaring on a coarser dyadic grid (the lead-in of
+    req:exact-decoy-blocks), which is a declarer's act on data it is about
+    to declare. Building the helper inside the module that decides the
+    result would put the choice of grid where the decision is taken. It
+    belongs to the instances, and the emission refuses an unrepresentable
+    product rather than rounding one.
+  the_enclosure_is_formed_here: >-
+    What req:sector-weight-bound requires: the enclosure of P_mu(n) that the
+    condition of (T2) is decided against must be formed by the emission from
+    the declared mu, in exact rational arithmetic, by lem:poisson-enclosure at
+    the index K_mu, the least even K >= mu with mu^(K+1)/(K+1)! <= 2^-90,
+    which the artefact records per intensity; an implementation must read no
+    enclosure from a request. The condition is decided against the lower
+    end, which is what makes ptilde <= P_mu(n) follow; the upper end decides
+    nothing. No floating-point evaluation and no other module enters it.
+  consumes_note: >-
+    What the contract lets the emission consume: declared data from an
+    instance -- the polarisation labels with the vectors they stand for, the
+    intensities, the alphabet with its weights, the cutoffs and the sector
+    weights -- and nothing from another module. An implementation must
+    consume no enclosure, no signal dyad and no sector basis
+    (req:sector-weight-bound; req:signal-dyads).
+  produces_note: >-
+    The output keys above, which are the core's input keys plus the ones
+    this submodule adds: the obligation record, the sector map and the weight
+    table, which carries the summation index K_mu of each intensity's
+    enclosure (req:sector-weight-bound). Their consumer is the core's
+    emission and, through it, the protocol compiler.
+  where_k_mu_travels: >-
+    K_mu travels only in the decoy declaration's record (its `sector_weights`
+    table, as `poisson_index`, req:sector-weight-bound). The core artefact a
+    run record carries has no slot for it, and none is added: K_mu is a
+    function of the declared intensity alone, which a run record carries
+    exactly, so it is recomputed from the recorded intensities by
+    lem:poisson-enclosure's index rule (`poisson_index` of
+    `src/certiqs_key/transmitter/decoy/enclosure.py`).
+
+depends_on_modules: []
+depends_on_modules_note: >-
+  Empty, as module.yaml declares. This submodule uses its core's claims and
+  nothing else: no sibling submodule, no foreign module. It is a source model
+  and a source map, both Alice-side.

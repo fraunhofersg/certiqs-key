@@ -1,0 +1,173 @@
+% ---
+% id: statistics/thm:box-oracle
+% kind: thm
+% title: "Acceptance support and the exact box oracle"
+% summary: >-
+%   Over a non-empty canonical box, filling the coordinates of smallest
+%   coefficient first minimises a rational linear functional exactly, with a
+%   dual witness of the same value. The outcomes with a positive upper bound
+%   include every outcome on which a point of the box puts weight, and can
+%   include more.
+% prominence: main
+% status: implemented
+% uses: [def:taxonomy, thm:geometry-validation, def:matched-alphabet]
+% mentions: [meat-core/frank-wolfe/def:first-order-setting, meat-core/frank-wolfe/rem:acc-side, foundations/req:rounding-direction]
+% assumes: [A-ALPHABET]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.minimization:box_minimum
+% lean:
+% ---
+
+The consuming engine minimises linear functionals over the acceptance set and
+needs to know on which outcomes an accepted frequency can put weight. Over a
+canonical box the minimum has a closed form, and the outcomes with a positive
+upper bound form a closed-form superset of the outcomes that can carry weight.
+The dual witness of (iii) has the format of instantiation~(b) of
+\xref{meat-core/frank-wolfe/rem:acc-side}: \eqref{eq:dualfeas} implies, at
+every outcome, the dual-feasibility inequality that instantiation requires,
+and the witness
+attains the minimum, \eqref{eq:dualvalue}, which is why the bound it gives is
+tight. Rounded down, that bound remains a lower bound, the direction of
+\xref{foundations/req:rounding-direction}, so the remark's certified
+acceptance-side bound $\bacc$ may be taken as any downward-rounded evaluation
+of $\langle g,\mathbf{q}^{\mathrm{opt}}\rangle$.
+
+\begin{theorem}\label{thm:box-oracle}
+Let $\Chatset$ and $n$ be a \tref{matched alphabet and round count}
+(Definition~\ref{def:matched-alphabet}), let $\acSet$ be a non-empty
+\tref[canonical box form]{canonical box}, \eqref{eq:boxset}, with
+$0\le\qlo\le\qhi$, and let $g\in\mathbb{Q}^{\Chatset}$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(acceptance support)} The set
+$\Chatset^{+}\coloneqq\{\hat c\in\Chatset: q^{+}(\hat c)>0\}$ contains
+$\operatorname{supp}\mathbf{q}$ for every $\mathbf{q}\in\acSet$; hence it
+contains the acceptance support
+$\Chacc=\bigcup_{\mathbf{q}\in\acSet}\operatorname{supp}\mathbf{q}$ of
+\xref{meat-core/frank-wolfe/def:first-order-setting}, which it need not equal: the box
+constraints together with the simplex constraint can force $q(\hat c)=0$ at an
+outcome with $q^{+}(\hat c)>0$. For a $\mathrm{singleton}$ geometry, which
+declares no box, the union of the supports is
+$\operatorname{supp}\mathbf{q}^{\ast}$, the acceptance support itself.
+\item \emph{(exact minimum in closed form)} Enumerate
+$\Chatset=\{c_1,\dots,c_m\}$ so that $g(c_1)\le\dots\le g(c_m)$. Put
+$r\coloneqq1-\sum_{\hat c}q^{-}(\hat c)$ and
+$D_i\coloneqq q^{+}(c_i)-q^{-}(c_i)\ge0$, let $j^{\ast}$ be the least index
+with $\sum_{i\le j^{\ast}}D_i\ge r$, and define
+\begin{equation}\label{eq:greedy}
+  q^{\mathrm{opt}}(c_i)\coloneqq
+  \begin{cases}
+    q^{+}(c_i), & i<j^{\ast},\\[2pt]
+    q^{-}(c_i)+\big(r-\sum_{i'<j^{\ast}}D_{i'}\big), & i=j^{\ast},\\[2pt]
+    q^{-}(c_i), & i>j^{\ast}.
+  \end{cases}
+\end{equation}
+Then $j^{\ast}$ exists, $\mathbf{q}^{\mathrm{opt}}\in\acSet$, and
+\begin{equation}\label{eq:exactmin}
+  \langle g,\mathbf{q}^{\mathrm{opt}}\rangle
+  \;=\;\min_{\mathbf{q}\in\acSet}\ \langle g,\mathbf{q}\rangle ,
+\end{equation}
+the minimum being attained. All quantities are exact rationals when
+$g,\qlo,\qhi$ are.
+\item \emph{(dual witness)} With $B,\mathbf{b}$ as in
+\eqref{eq:boxrows}, $\lambda\coloneqq g(c_{j^{\ast}})$, $v\coloneqq-\lambda$ and
+$\mathbf{u}\coloneqq(\mathbf{u}^{+},\mathbf{u}^{-})$ given by
+$u^{+}(\hat c)\coloneqq\max\{\lambda-g(\hat c),0\}$ and
+$u^{-}(\hat c)\coloneqq\max\{g(\hat c)-\lambda,0\}$, one has
+$\mathbf{u}\ge0$,
+\begin{equation}\label{eq:dualfeas}
+  g(\hat c)+(B^{\transpose}\mathbf{u})(\hat c)+v=0
+  \qquad\text{for every }\hat c\in\Chatset,
+\end{equation}
+in particular the left-hand side is $\ge0$, and
+\begin{equation}\label{eq:dualvalue}
+  -\langle\mathbf{b},\mathbf{u}\rangle-v
+  \;=\;\langle g,\mathbf{q}^{\mathrm{opt}}\rangle
+  \;=\;\min_{\mathbf{q}\in\acSet}\langle g,\mathbf{q}\rangle .
+\end{equation}
+The lower bound $-\langle\mathbf{b},\mathbf{u}\rangle-v$ on the minimum that
+this witness gives is therefore \emph{tight} for the canonical box, and every
+downward-rounded evaluation of $\langle g,\mathbf{q}^{\mathrm{opt}}\rangle$ is
+a lower bound on $\min_{\mathbf{q}\in\acSet}\langle g,\mathbf{q}\rangle$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{(i).} If $\mathbf{q}\in\acSet$ and $q^{+}(\hat c)=0$ then
+$0\le q(\hat c)\le q^{+}(\hat c)=0$, so $\hat c\notin\operatorname{supp}
+\mathbf{q}$; contrapositively $\operatorname{supp}\mathbf{q}\subseteq\Chatset^{+}$,
+and taking the union over $\mathbf{q}\in\acSet$ gives
+$\Chacc\subseteq\Chatset^{+}$. That the inclusion can be strict: on
+$\Chatset=\{c_1,c_2,c_3\}$ with $\qlo=(\tfrac12,\tfrac12,0)$ and
+$\qhi=(\tfrac12,\tfrac12,\tfrac1{10})$ the box is non-empty by
+\eqref{eq:boxfeas}, the simplex constraint forces $q(c_3)=0$ for every
+$\mathbf{q}\in\acSet$, so $\Chacc=\{c_1,c_2\}$ while
+$\Chatset^{+}=\{c_1,c_2,c_3\}$. For a singleton the union
+$\bigcup_{\mathbf{q}\in\acSet}\operatorname{supp}\mathbf{q}$ is
+$\operatorname{supp}\mathbf{q}^{\ast}$ by inspection, which is therefore the
+acceptance support $\Chacc$.
+
+\emph{(ii).} \emph{Existence of $j^{\ast}$.} $\acSet\neq\varnothing$ gives
+$\sum_{\hat c}q^{+}(\hat c)\ge1$ by Theorem~\ref{thm:geometry-validation}\,(iii), hence
+$\sum_{i\le m}D_i=\sum_{\hat c}q^{+}(\hat c)-\sum_{\hat c}q^{-}(\hat c)\ge
+1-\sum_{\hat c}q^{-}(\hat c)=r$, so the index set is non-empty and has a least
+element. Also $r\ge0$, again by Theorem~\ref{thm:geometry-validation}\,(iii).
+
+\emph{Feasibility of $\mathbf{q}^{\mathrm{opt}}$.} For $i\neq j^{\ast}$ the value is
+one of the two box endpoints. At $i=j^{\ast}$ the increment
+$w\coloneqq r-\sum_{i'<j^{\ast}}D_{i'}$ satisfies $w>0$ when
+$j^{\ast}>1$, by minimality of $j^{\ast}$, and $w=r\ge0$ when
+$j^{\ast}=1$; and $w\le D_{j^{\ast}}$ by the defining inequality
+$\sum_{i\le j^{\ast}}D_i\ge r$. Hence
+$q^{-}(c_{j^{\ast}})\le q^{\mathrm{opt}}(c_{j^{\ast}})\le q^{+}(c_{j^{\ast}})$, and
+$\mathbf{q}^{\mathrm{opt}}\ge\qlo\ge0$. Summing,
+$\sum_i q^{\mathrm{opt}}(c_i)=\sum_i q^{-}(c_i)+\sum_{i<j^{\ast}}D_i+w
+=\sum_i q^{-}(c_i)+r=1$. So $\mathbf{q}^{\mathrm{opt}}\in\acSet$.
+
+\emph{Optimality.} Let $\mathbf{q}\in\acSet$ and $\lambda=g(c_{j^{\ast}})$.
+Since $\sum_i\big(q(c_i)-q^{\mathrm{opt}}(c_i)\big)=1-1=0$,
+\begin{equation*}
+  \langle g,\mathbf{q}\rangle-\langle g,\mathbf{q}^{\mathrm{opt}}\rangle
+  =\sum_{i=1}^{m}\big(g(c_i)-\lambda\big)
+   \big(q(c_i)-q^{\mathrm{opt}}(c_i)\big).
+\end{equation*}
+Each summand is non-negative: for $i<j^{\ast}$ the ordering gives
+$g(c_i)-\lambda\le0$ while $q(c_i)-q^{\mathrm{opt}}(c_i)=q(c_i)-q^{+}(c_i)\le0$; for
+$i>j^{\ast}$, $g(c_i)-\lambda\ge0$ while
+$q(c_i)-q^{\mathrm{opt}}(c_i)=q(c_i)-q^{-}(c_i)\ge0$; and at $i=j^{\ast}$ the first
+factor is $0$. Hence
+$\langle g,\mathbf{q}\rangle\ge\langle g,\mathbf{q}^{\mathrm{opt}}\rangle$ for every
+feasible $\mathbf{q}$, which is \eqref{eq:exactmin} with attainment at
+$\mathbf{q}^{\mathrm{opt}}$.
+
+\emph{(iii).} Non-negativity of $\mathbf{u}$ is clear. With the row structure
+\eqref{eq:boxrows}, $B^{\transpose}\mathbf{u}=\mathbf{u}^{+}-\mathbf{u}^{-}$,
+and for every real $x$ one has $\max\{x,0\}-\max\{-x,0\}=x$; applying this at
+$x=\lambda-g(\hat c)$ gives
+$u^{+}(\hat c)-u^{-}(\hat c)=\lambda-g(\hat c)$, so
+$g(\hat c)+(B^{\transpose}\mathbf{u})(\hat c)+v
+=g(\hat c)+\lambda-g(\hat c)-\lambda=0$, which is \eqref{eq:dualfeas}.
+
+For \eqref{eq:dualvalue}, note first that the sorted order and
+$\lambda=g(c_{j^{\ast}})$ give $u^{-}(c_i)=0$ for $i\le j^{\ast}$ and
+$u^{+}(c_i)=0$ for $i\ge j^{\ast}$. Then
+\begin{align*}
+  -\langle\mathbf{b},\mathbf{u}\rangle-v
+  &=-\langle\qhi,\mathbf{u}^{+}\rangle+\langle\qlo,\mathbf{u}^{-}\rangle
+    +\lambda\\
+  &=-\sum_{i<j^{\ast}}q^{+}(c_i)\big(\lambda-g(c_i)\big)
+    +\sum_{i>j^{\ast}}q^{-}(c_i)\big(g(c_i)-\lambda\big)+\lambda\\
+  &=\lambda\Big(1-\sum_{i<j^{\ast}}q^{+}(c_i)-\sum_{i>j^{\ast}}q^{-}(c_i)\Big)
+    +\sum_{i<j^{\ast}}g(c_i)q^{+}(c_i)+\sum_{i>j^{\ast}}g(c_i)q^{-}(c_i)\\
+  &=\lambda\,q^{\mathrm{opt}}(c_{j^{\ast}})+\sum_{i\neq j^{\ast}}g(c_i)q^{\mathrm{opt}}(c_i)
+   \;=\;\langle g,\mathbf{q}^{\mathrm{opt}}\rangle ,
+\end{align*}
+where the fourth line uses $q^{\mathrm{opt}}(c_i)=q^{+}(c_i)$ for $i<j^{\ast}$,
+$q^{\mathrm{opt}}(c_i)=q^{-}(c_i)$ for $i>j^{\ast}$, $\sum_i q^{\mathrm{opt}}(c_i)=1$ and
+$\lambda=g(c_{j^{\ast}})$. Combining with \eqref{eq:exactmin} gives
+\eqref{eq:dualvalue}. In particular $-\langle\mathbf{b},\mathbf{u}\rangle-v$
+is a lower bound on the minimum that it equals, and a downward-rounded
+evaluation of $\langle g,\mathbf{q}^{\mathrm{opt}}\rangle$ is at most
+$\langle g,\mathbf{q}^{\mathrm{opt}}\rangle$, which is the minimum by
+\eqref{eq:exactmin}.
+\end{proof}

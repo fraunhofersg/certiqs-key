@@ -1,0 +1,30 @@
+% ---
+% id: protocol-compiler/req:no-window
+% kind: req
+% title: "Exact decisions without a tolerance"
+% summary: >-
+%   The engine declares no numerical tolerance, so no check of the validator
+%   reads a window and nothing in this contract is decided at one. Licensing
+%   and the admission predicates are decided exactly.
+% prominence: standard
+% status: implemented
+% uses: [def:exact, def:validator]
+% mentions: [def:homog, foundations/req:consumer-decides-exactly, foundations/req:tolerance-scope]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.validation:validate
+% lean:
+% ---
+
+A consumer decides every admission predicate on declared data exactly and
+reads no tolerance (\xref{foundations/req:consumer-decides-exactly},
+\xref{foundations/req:tolerance-scope}).
+
+\begin{requirement}\label{req:no-window}
+The engine declares no numerical tolerance, and there is no window in this
+contract at which anything could be decided: no check of the validator
+(Definition~\ref{def:validator}) reads a window or is decided at one, and
+licensing (Definition~\ref{def:homog}) and the predicates of
+Definition~\ref{def:exact} are decided exactly.
+\end{requirement}

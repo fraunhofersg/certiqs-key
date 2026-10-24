@@ -1,0 +1,729 @@
+# The bbm92 instance as a protocol document: the packaged template.
+#
+# It IS the instance: instances/bbm92/surface.py loads it. Its
+# descriptor, parameter table, presets, default_config, lowered station and
+# reduction requests, preparation and run records are held equal by the
+# equivalence gate (tests/integration/test_declared_equivalence.py). An untrusted pair
+# source feeds two passive optical stations, alice_station and bob_station,
+# docked as two factors (`factor_projection`), with Alice's test coin as a
+# `choice_weighting`; the parameters key_bases, source_model,
+# party_local_view, route and acceptance_map switch the rest.
+#
+# PACKAGED, so it may write the instance's own identity strings: the id
+# bbm92, its readme and the record_label instances.bbm92, from which each
+# station's declared_by is derived (instances.bbm92.<station id>). Only a
+# document loaded from instances/<id>/protocol.yaml is packaged
+# (instances.declared.load_packaged), and only a packaged document is bounded
+# by its own parameter domains alone: a custom copy is also held to the work
+# bounds of instances/declared/limits.py (a photon cutoff of at most 7, among
+# others).
+#
+# TO START A CUSTOM PROTOCOL FROM IT (the MCP server serves it as
+# get_reference("template", name="bbm92")): copy it, give identity a new id,
+# title and summary, delete identity.readme and identity.record_label, edit
+# what differs, and check it with describe_instance(document=...). The format
+# guide is instances/declared/README.md.
+format: certiqs-key/protocol-document
+format_version: '1'
+identity:
+  id: bbm92
+  title: BBM92 with two passive stations
+  summary: An untrusted entangled source, independent optical stations, and an Alice-held
+    test coin.
+  readme: instances/bbm92/README.md
+  record_label: instances.bbm92
+parameters:
+  model_absent: refuse
+  device_absent: refuse
+  check_order: [device, model]
+  table:
+  - name: alice_transmittance
+    section: model
+    kind: fraction
+    quantity: transmittance
+    default: 1
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: false
+    meaning: Probability that Alice's photon of a pair reaches her station
+    station: alice_station
+  - name: bob_transmittance
+    section: model
+    kind: fraction
+    quantity: transmittance
+    default: 1
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: false
+    meaning: Probability that Bob's photon of a pair reaches his station
+    station: bob_station
+  - name: visibility
+    section: model
+    kind: fraction
+    quantity: probability
+    default: 1
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: false
+    meaning: 'Visibility v of the entangled pair: matched-basis bits disagree with
+      probability (1 - v)/2'
+    applies_when:
+      source_model:
+      - ideal_pair
+  - name: mean_pairs
+    section: model
+    kind: fraction
+    quantity: mean_photon_number
+    default: 1/32
+    domain:
+      form: interval
+      lower: 0
+      upper: 10
+    snapped: false
+    meaning: Mean number of photon pairs the SPDC source emits per round, summed over
+      both polarizations
+    applies_when:
+      source_model:
+      - spdc
+  - name: test_fraction
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 1/8
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+      lower_open: true
+      upper_open: true
+    snapped: true
+    meaning: Probability that Alice's public coin makes a round a test round, in which
+      both parties announce their full outcome
+  - name: source_model
+    section: device
+    kind: choice
+    quantity: choice
+    default: ideal_pair
+    domain:
+      form: choices
+      options:
+      - value: ideal_pair
+        meaning: One entangled pair per round, with white noise
+      - value: spdc
+        meaning: SPDC source, multi-pair emission included
+    snapped: false
+    meaning: Model of the source that predicts the expected data; the security analysis
+      never trusts the source
+  - name: key_bases
+    section: device
+    kind: choice
+    quantity: choice
+    default: ZX
+    domain:
+      form: choices
+      options:
+      - value: ZX
+        meaning: Matched Z and matched X rounds
+      - value: Z
+        meaning: Matched Z rounds only; matched X discarded
+    snapped: false
+    meaning: Which matched bases of a generation round give key; with Z, matched-X
+      generation rounds are discarded. Independent of the test coin
+  - name: route
+    section: device
+    kind: choice
+    quantity: choice
+    default: encoded
+    domain:
+      form: choices
+      options:
+      - value: encoded
+        meaning: Weight-preserving flag reduction, no constraints
+      - value: licensed
+        meaning: Flag reduction with a multi-click constraint
+      - value: licensed+two-sector
+        meaning: As licensed, plus a stronger within-cutoff constraint
+    snapped: false
+    meaning: Photon-number reduction applied to each station, mapping any number of
+      incoming photons to a finite system
+  - name: party_local_view
+    section: device
+    kind: choice
+    quantity: choice
+    default: operator
+    domain:
+      form: choices
+      options:
+      - value: operator
+        meaning: As operator inequalities on each station
+      - value: licensed_scalar
+        meaning: As their scalar consequences only (weaker)
+    snapped: false
+    meaning: How each station's multi-click constraints enter the analysis on a licensed
+      route
+    applies_when:
+      route:
+      - licensed
+      - licensed+two-sector
+  - name: acceptance_map
+    section: device
+    kind: choice
+    quantity: choice
+    default: pair-resolved
+    domain:
+      form: choices
+      options:
+      - value: merged-discard
+        meaning: Key rounds, matched-basis test ok/error, one discard value
+      - value: announcement-resolved
+        meaning: Test rounds grouped by announced bases
+      - value: pair-resolved
+        meaning: Every announcement pair its own value
+    snapped: false
+    meaning: How finely the public announcements are grouped into the statistics the
+      protocol checks; a key round is always one value
+  - name: alice_basis_split
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 1/2
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: true
+    meaning: Transmittance of Alice's basis beamsplitter, which is the probability
+      that a photon is measured in the Z basis
+    station: alice_station
+  - name: alice_half_wave_angle
+    section: device
+    kind: fraction
+    quantity: angle_pi
+    unit: pi
+    default: 1/8
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: true
+    meaning: Angle of the half-wave plate in Alice's X arm, in units of pi; 1/8 (22.5
+      degrees) measures the diagonal basis
+    station: alice_station
+  - name: alice_pbs_leak_transmitted
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 0
+    domain:
+      form: interval
+      lower: 0
+      upper: 1/2
+    snapped: true
+    meaning: Fraction of the vertical polarization each of Alice's polarizing
+      beamsplitters transmits instead of reflecting; it clicks the transmitted-path
+      detector (H, or D behind the plate), which watches both polarizations of its path;
+      0 is perfect separation, 1/2 is none
+    station: alice_station
+  - name: alice_pbs_leak_reflected
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 0
+    domain:
+      form: interval
+      lower: 0
+      upper: 1/2
+    snapped: true
+    meaning: Fraction of the horizontal polarization each of Alice's polarizing
+      beamsplitters reflects instead of transmitting; it clicks the reflected-path
+      detector (V, or A behind the plate), which watches both polarizations of its path;
+      0 is perfect separation, 1/2 is none
+    station: alice_station
+  - name: alice_efficiency
+    section: device
+    kind: per_port_fraction
+    quantity: efficiency
+    default: 1
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: true
+    meaning: Detection efficiency of each of Alice's four detectors
+    station: alice_station
+    per_port_of: alice_station
+  - name: alice_dark_count
+    section: device
+    kind: per_port_fraction
+    quantity: probability
+    default: 0
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: true
+    meaning: Dark-click probability per round of each of Alice's four detectors
+    station: alice_station
+    per_port_of: alice_station
+  - name: alice_photon_cutoff
+    section: device
+    kind: int
+    quantity: photon_number
+    default: 1
+    domain:
+      form: interval
+      lower: 1
+      upper: 20
+    snapped: false
+    meaning: 'Photon cutoff N of Alice''s station: photon numbers up to N are modelled
+      exactly and higher ones are bounded'
+    station: alice_station
+  - name: alice_exact_window
+    section: device
+    kind: int
+    quantity: photon_number
+    domain:
+      form: interval
+      lower: 1
+      upper: 20
+    snapped: false
+    meaning: 'Exact-window depth m* of Alice''s station: photon numbers N+1 to m*
+      are evaluated exactly when bounding the high-photon part; must exceed N, and
+      empty leaves only the analytic bound'
+    station: alice_station
+  - name: alice_efficiency_normalization
+    section: device
+    kind: fraction
+    quantity: transmittance
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+      lower_open: true
+    snapped: false
+    meaning: 'Factored loss t of Alice''s station: her detector efficiencies are
+      divided by t and the common loss t is moved into the channel, which leaves the
+      observed statistics unchanged; between her largest efficiency and 1, where 1
+      turns it off, and empty uses her largest efficiency divided by 99/100, or 1
+      where that efficiency is at least 99/100'
+    station: alice_station
+  - name: bob_basis_split
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 1/2
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: true
+    meaning: Transmittance of Bob's basis beamsplitter, which is the probability that
+      a photon is measured in the Z basis
+    station: bob_station
+  - name: bob_half_wave_angle
+    section: device
+    kind: fraction
+    quantity: angle_pi
+    unit: pi
+    default: 1/8
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: true
+    meaning: Angle of the half-wave plate in Bob's X arm, in units of pi; 1/8 (22.5
+      degrees) measures the diagonal basis
+    station: bob_station
+  - name: bob_pbs_leak_transmitted
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 0
+    domain:
+      form: interval
+      lower: 0
+      upper: 1/2
+    snapped: true
+    meaning: Fraction of the vertical polarization each of Bob's polarizing
+      beamsplitters transmits instead of reflecting; it clicks the transmitted-path
+      detector (H, or D behind the plate), which watches both polarizations of its path;
+      0 is perfect separation, 1/2 is none
+    station: bob_station
+  - name: bob_pbs_leak_reflected
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 0
+    domain:
+      form: interval
+      lower: 0
+      upper: 1/2
+    snapped: true
+    meaning: Fraction of the horizontal polarization each of Bob's polarizing
+      beamsplitters reflects instead of transmitting; it clicks the reflected-path
+      detector (V, or A behind the plate), which watches both polarizations of its path;
+      0 is perfect separation, 1/2 is none
+    station: bob_station
+  - name: bob_efficiency
+    section: device
+    kind: per_port_fraction
+    quantity: efficiency
+    default: 1
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: true
+    meaning: Detection efficiency of each of Bob's four detectors
+    station: bob_station
+    per_port_of: bob_station
+  - name: bob_dark_count
+    section: device
+    kind: per_port_fraction
+    quantity: probability
+    default: 0
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: true
+    meaning: Dark-click probability per round of each of Bob's four detectors
+    station: bob_station
+    per_port_of: bob_station
+  - name: bob_photon_cutoff
+    section: device
+    kind: int
+    quantity: photon_number
+    default: 1
+    domain:
+      form: interval
+      lower: 1
+      upper: 20
+    snapped: false
+    meaning: 'Photon cutoff N of Bob''s station: photon numbers up to N are modelled
+      exactly and higher ones are bounded'
+    station: bob_station
+  - name: bob_exact_window
+    section: device
+    kind: int
+    quantity: photon_number
+    domain:
+      form: interval
+      lower: 1
+      upper: 20
+    snapped: false
+    meaning: 'Exact-window depth m* of Bob''s station: photon numbers N+1 to m* are
+      evaluated exactly when bounding the high-photon part; must exceed N, and empty
+      leaves only the analytic bound'
+    station: bob_station
+  - name: bob_efficiency_normalization
+    section: device
+    kind: fraction
+    quantity: transmittance
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+      lower_open: true
+    snapped: false
+    meaning: 'Factored loss t of Bob''s station: his detector efficiencies are
+      divided by t and the common loss t is moved into the channel, which leaves the
+      observed statistics unchanged; between his largest efficiency and 1, where 1
+      turns it off, and empty uses his largest efficiency divided by 99/100, or 1
+      where that efficiency is at least 99/100'
+    station: bob_station
+presets:
+- name: ideal_pair
+  note: One ideal entangled pair per round
+  device:
+    source_model: ideal_pair
+- name: spdc
+  note: Low-brightness polarization-entangled SPDC
+  device:
+    source_model: spdc
+preparations:
+  - site: bbm92.test_coin
+    lattice_exponent: 12
+    family: [1 - test_fraction, test_fraction]
+    rebind: {test_fraction: 1}
+run_defaults:
+  rounds: 100000000
+  endpoint_rule: bernstein
+  completeness_budget: 1/1000000
+  declared_tolerance: 1e-12
+  parameters: {alpha: 1.05, eps_pa: 2^-30, eps_ev: 2^-30, lambda_ec: 0}
+  sections: replace
+  derived:
+    alice_exact_window: alice_photon_cutoff + 1
+    bob_exact_window: bob_photon_cutoff + 1
+  derived_timing: unless_supplied
+alphabets:
+  first:
+    enum:
+      - {label: "gen:Z", round: gen, class: Z}
+      - {label: "gen:X", round: gen, class: X}
+      - {label: "gen:nc", round: gen, class: nc}
+      - {label: "gen:mc", round: gen, class: mc}
+      - {label: "test:nc", round: test, class: nc, letter: nc}
+      - {label: "test:H", round: test, class: Z, letter: H}
+      - {label: "test:V", round: test, class: Z, letter: V}
+      - {label: "test:D", round: test, class: X, letter: D}
+      - {label: "test:A", round: test, class: X, letter: A}
+      - {label: "test:mc", round: test, class: mc, letter: mc}
+  second:
+    enum:
+      - Z
+      - X
+      - {label: nc, class: nc}
+      - {label: mc, class: mc}
+      - {label: H, class: Z}
+      - {label: V, class: Z}
+      - {label: D, class: X}
+      - {label: A, class: X}
+source:
+  kind: untrusted
+  alphabet: {enum: [x0]}
+  transmitted_dim: 1
+  weights: {x0: 1}
+  states: {x0: {identity: 1}}
+  alice_dim: 1
+  alice_povm: {x0: {identity: 1}}
+stations:
+  - id: alice_station
+    party: A
+    measurement:
+      kind: optical
+      modes:
+        - {path: Z, polarization: H}
+        - {path: Z, polarization: V}
+        - {path: X, polarization: H}
+        - {path: X, polarization: V}
+        - {path: Zr, polarization: H}
+        - {path: Zr, polarization: V}
+        - {path: Xr, polarization: H}
+        - {path: Xr, polarization: V}
+      channel_modes: [Z_H, Z_V]
+      route: element_graph
+      elements:
+        - name: bs
+          component: beamsplitter
+          params: {transmittance: {param: alice_basis_split}, phase_pi: 0, loss_1: 0, loss_2: 0}
+          support: [Z_H, Z_V, X_H, X_V]
+        - name: hwp
+          component: half_wave
+          params: {angle_pi: {param: alice_half_wave_angle}, loss: 0}
+          support: [X_H, X_V]
+        - name: pbs_z
+          component: polarizing_beamsplitter
+          params:
+            transmittance_h: {expr: 1 - alice_pbs_leak_reflected}
+            transmittance_v: {param: alice_pbs_leak_transmitted}
+            phase_h_pi: 0
+            phase_v_pi: 0
+            loss_1: 0
+            loss_2: 0
+          support: [Z_H, Z_V, Zr_H, Zr_V]
+        - name: pbs_x
+          component: polarizing_beamsplitter
+          params:
+            transmittance_h: {expr: 1 - alice_pbs_leak_reflected}
+            transmittance_v: {param: alice_pbs_leak_transmitted}
+            phase_h_pi: 0
+            phase_v_pi: 0
+            loss_1: 0
+            loss_2: 0
+          support: [X_H, X_V, Xr_H, Xr_V]
+      edges: [[bs, hwp], [bs, pbs_z], [hwp, pbs_x]]
+      ports:
+        - {label: H, modes: [Z_H, Z_V]}
+        - {label: V, modes: [Zr_H, Zr_V]}
+        - {label: D, modes: [X_H, X_V]}
+        - {label: A, modes: [Xr_H, Xr_V]}
+      detectors:
+        - {port: H, efficiency: {param: alice_efficiency, port: H}, dark_count: {param: alice_dark_count, port: H}}
+        - {port: V, efficiency: {param: alice_efficiency, port: V}, dark_count: {param: alice_dark_count, port: V}}
+        - {port: D, efficiency: {param: alice_efficiency, port: D}, dark_count: {param: alice_dark_count, port: D}}
+        - {port: A, efficiency: {param: alice_efficiency, port: A}, dark_count: {param: alice_dark_count, port: A}}
+      coarse_graining:
+        letters:
+          - {label: nc, class: nc}
+          - {label: H, class: Z, basis: Z, bit: 0}
+          - {label: V, class: Z, basis: Z, bit: 1}
+          - {label: D, class: X, basis: X, bit: 0}
+          - {label: A, class: X, basis: X, bit: 1}
+          - {label: mc, class: mc}
+        map:
+          - {when: {count: "0"}, value: nc}
+          - {when: {count: "1"}, value: "{port}"}
+          - {value: mc}
+      photon_cutoff: {param: alice_photon_cutoff}
+      exact_window: {param: alice_exact_window}
+      efficiency_normalization: {param: alice_efficiency_normalization}
+    reduction:
+      switch: route
+      cases:
+        encoded: {links: [{kind: wpfss}], route: encoded}
+        licensed: {links: [{kind: fss}], route: licensed}
+        licensed+two-sector:
+          links: [{kind: fss}]
+          route: licensed
+          carried_operators: [{library: two_sector_floor}]
+    choice_weighting:
+      choices: [gen, test]
+      settings: ["off"]
+      setting_of: [{value: "off"}]
+      matrix:
+        "off|gen": {expr: 1 - test_fraction}
+        "off|test": {param: test_fraction}
+  - id: bob_station
+    party: B
+    measurement:
+      kind: optical
+      modes:
+        - {path: Z, polarization: H}
+        - {path: Z, polarization: V}
+        - {path: X, polarization: H}
+        - {path: X, polarization: V}
+        - {path: Zr, polarization: H}
+        - {path: Zr, polarization: V}
+        - {path: Xr, polarization: H}
+        - {path: Xr, polarization: V}
+      channel_modes: [Z_H, Z_V]
+      route: element_graph
+      elements:
+        - name: bs
+          component: beamsplitter
+          params: {transmittance: {param: bob_basis_split}, phase_pi: 0, loss_1: 0, loss_2: 0}
+          support: [Z_H, Z_V, X_H, X_V]
+        - name: hwp
+          component: half_wave
+          params: {angle_pi: {param: bob_half_wave_angle}, loss: 0}
+          support: [X_H, X_V]
+        - name: pbs_z
+          component: polarizing_beamsplitter
+          params:
+            transmittance_h: {expr: 1 - bob_pbs_leak_reflected}
+            transmittance_v: {param: bob_pbs_leak_transmitted}
+            phase_h_pi: 0
+            phase_v_pi: 0
+            loss_1: 0
+            loss_2: 0
+          support: [Z_H, Z_V, Zr_H, Zr_V]
+        - name: pbs_x
+          component: polarizing_beamsplitter
+          params:
+            transmittance_h: {expr: 1 - bob_pbs_leak_reflected}
+            transmittance_v: {param: bob_pbs_leak_transmitted}
+            phase_h_pi: 0
+            phase_v_pi: 0
+            loss_1: 0
+            loss_2: 0
+          support: [X_H, X_V, Xr_H, Xr_V]
+      edges: [[bs, hwp], [bs, pbs_z], [hwp, pbs_x]]
+      ports:
+        - {label: H, modes: [Z_H, Z_V]}
+        - {label: V, modes: [Zr_H, Zr_V]}
+        - {label: D, modes: [X_H, X_V]}
+        - {label: A, modes: [Xr_H, Xr_V]}
+      detectors:
+        - {port: H, efficiency: {param: bob_efficiency, port: H}, dark_count: {param: bob_dark_count, port: H}}
+        - {port: V, efficiency: {param: bob_efficiency, port: V}, dark_count: {param: bob_dark_count, port: V}}
+        - {port: D, efficiency: {param: bob_efficiency, port: D}, dark_count: {param: bob_dark_count, port: D}}
+        - {port: A, efficiency: {param: bob_efficiency, port: A}, dark_count: {param: bob_dark_count, port: A}}
+      coarse_graining:
+        letters:
+          - {label: nc, class: nc}
+          - {label: H, class: Z, basis: Z, bit: 0}
+          - {label: V, class: Z, basis: Z, bit: 1}
+          - {label: D, class: X, basis: X, bit: 0}
+          - {label: A, class: X, basis: X, bit: 1}
+          - {label: mc, class: mc}
+        map:
+          - {when: {count: "0"}, value: nc}
+          - {when: {count: "1"}, value: "{port}"}
+          - {value: mc}
+      photon_cutoff: {param: bob_photon_cutoff}
+      exact_window: {param: bob_exact_window}
+      efficiency_normalization: {param: bob_efficiency_normalization}
+    reduction:
+      switch: route
+      cases:
+        encoded: {links: [{kind: wpfss}], route: encoded}
+        licensed: {links: [{kind: fss}], route: licensed}
+        licensed+two-sector:
+          links: [{kind: fss}]
+          route: licensed
+          carried_operators: [{library: two_sector_floor}]
+public:
+  partition: factor_projection
+  transcript:
+    messages:
+      - id: m1
+        sender: A
+        alphabet: first
+        table:
+          - {when: {r.choice: gen}, value: "gen:{r.class}"}
+          - {value: "test:{r.letter}"}
+      - id: m2
+        sender: B
+        alphabet: second
+        table:
+          - {when: {m1.round: gen}, value: "{r.class}"}
+          - {value: "{r.letter}"}
+  sifting:
+    - {when: {m1: "gen:Z", m2: Z}, value: pass}
+    - {when: {m1: "gen:X", m2: X}, value: {switch: key_bases, cases: {ZX: pass, Z: fail}}}
+    - {value: fail}
+  key: {holder: A, alphabet: [0, 1], rule: [{when: {o.letter: [V, A]}, value: 1}, {value: 0}]}
+  acceptance:
+    map:
+      switch: acceptance_map
+      cases:
+        pair-resolved:
+          - {when: {m1: "gen:Z", m2: Z}, value: gen}
+          - {when: {m1: "gen:X", m2: X}, value: {switch: key_bases, cases: {ZX: gen, Z: "{m1}|{m2}"}}}
+          - {value: "{m1}|{m2}"}
+        announcement-resolved:
+          - {when: {m1: "gen:Z", m2: Z}, value: gen}
+          - {when: {m1: "gen:X", m2: X}, value: {switch: key_bases, cases: {ZX: gen, Z: "{m1}|{m2}"}}}
+          - {when: {m1.round: gen}, value: "{m1}|{m2}"}
+          - {when: {m2: [Z, X]}, value: "{m1}|{m2}"}
+          - {when: {m1.class: [Z, X], m2.class: {eq: m1.class}, m2: {eq: m1.letter}}, value: "test-{m1.class}-ok"}
+          - {when: {m1.class: [Z, X], m2.class: {eq: m1.class}}, value: "test-{m1.class}-error"}
+          - {value: "test-{m1.class}-{m2.class}"}
+        merged-discard:
+          - {when: {m1: "gen:Z", m2: Z}, value: gen}
+          - {when: {m1: "gen:X", m2: X}, value: {switch: key_bases, cases: {ZX: gen, Z: disc}}}
+          - {when: {m1.round: gen}, value: disc}
+          - {when: {m2: [Z, X]}, value: disc}
+          - {when: {m1.class: [Z, X], m2.class: {eq: m1.class}, m2: {eq: m1.letter}}, value: "test-{m1.class}-ok"}
+          - {when: {m1.class: [Z, X], m2.class: {eq: m1.class}}, value: "test-{m1.class}-error"}
+          - {value: disc}
+constraints:
+  party_local_view:
+    switch: party_local_view
+    cases: {operator: operator, licensed_scalar: licensed_scalar}
+honest:
+  switch: source_model
+  cases:
+    ideal_pair:
+      library: ideal_pair
+      bind:
+        alice_transmittance: {param: alice_transmittance}
+        bob_transmittance: {param: bob_transmittance}
+        visibility: {param: visibility}
+    spdc:
+      library: spdc_pair
+      bind:
+        mean_pairs: {param: mean_pairs}
+        alice_transmittance: {param: alice_transmittance}
+        bob_transmittance: {param: bob_transmittance}
+channel_interface:
+  variant: bipartite
+  source_model: {switch: source_model, cases: {ideal_pair: ideal_pair, spdc: spdc}}

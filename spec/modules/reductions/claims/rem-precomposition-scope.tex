@@ -1,0 +1,67 @@
+% ---
+% id: reductions/rem:precomposition-scope
+% kind: rem
+% title: "Scope of the precomposition lemma"
+% summary: >-
+%   The precomposition lemma needs only membership in the set the attack-set
+%   displays cut out, at a separable input, and gives the inclusion
+%   of the specified-source attack set, composed with any channel, in the
+%   virtual-source one. A general entry has no reading beside a non-empty
+%   source segment.
+% prominence: standard
+% status: accepted
+% uses: [lem:precomposition]
+% mentions: [def:attset, def:chain, thm:licence, thm:two-sided, rem:ordering, meat-core/def:admissible-declaration, transmitter/def:srcert]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:precomposition-scope}
+\emph{The general entry.} The right-hand side $\Theta$ of
+Lemma~\ref{lem:precomposition}\,(iv), Hermitian and not a real multiple of the
+identity, is the channel-level shape that the Hermitian right-hand side of a
+\emph{general} entry asks for, an entry Definition~\ref{def:attset} records as
+admissible input to the consuming contract and never licensed there. At the state level
+such an entry beside a \tref{source link} fails earlier still, and this is
+separate from the counterexample. There its right-hand side is a Hermitian
+operator on Alice's retained system (Definition~\ref{def:attset};
+\xref{meat-core/def:admissible-declaration}\,(vi)), and the retained system a
+\tref{source-replacement certificate} is written against is the one of the
+\emph{virtual} description, at every length of the \tref{source segment}
+(\xref{transmitter/def:srcert}, ``One reading at every $L_{\mathrm s}$''); no
+contract relates that system or its marginal to the specified description's.
+So such an entry does not merely fail to be preserved: beside a non-empty
+source segment it has no reading to preserve. That, and not the
+counterexample alone, is why the admission rule of
+Definition~\ref{def:chain} is a refusal.
+
+\emph{Membership, and where it comes from.} The hypothesis of
+Lemma~\ref{lem:precomposition}\,(i) to (iii) is \emph{membership} in the set
+the displays of Definition~\ref{def:attset} cut out. The attack sets that
+definition names are those of the \tref{round model}, whose input registers are
+finite-dimensional; the displays themselves carry no condition on the
+dimension of $E'$, and the lemma reads them at a separable input register,
+so (i) to (iii) hold there.
+Obtaining that membership from Theorem~\ref{thm:licence}\,(i), (ii) or (v) is
+a different matter, because that theorem types its attack on a
+finite-dimensional input register. Theorem~\ref{thm:two-sided}\,(ii)
+therefore does not route the first round through the lemma: it applies
+Theorem~\ref{thm:licence} to the pre-composed attack, whose input register is
+the \tref{virtual transmitted system}. The lemma is the inclusion
+Remark~\ref{rem:ordering} needs, and the second of the two routes in the
+proof of Theorem~\ref{thm:two-sided}\,(ii).
+
+\emph{The inclusion.} Write
+$\AttSet^{\mathrm{real}}_1\coloneqq\AttSet_{\CList}(E',\cdot)$ for the set the
+first-round attack of the specified-source protocol is admissible in and
+$\AttSet^{\mathrm{virtual}}_1\coloneqq
+\AttSet_{\CList}(E_{\mathrm{pre}},\cdot)$ for the set its precomposition with
+$\Gamma$ must land in. Then Lemma~\ref{lem:precomposition}\,(i) to (iii) say
+exactly
+$\AttSet^{\mathrm{real}}_1\circ\Gamma\subseteq\AttSet^{\mathrm{virtual}}_1$,
+\emph{for every channel $\Gamma$}. That is the inclusion
+Remark~\ref{rem:ordering} names, and Theorem~\ref{thm:two-sided} is where it
+is spent.
+\end{remark}

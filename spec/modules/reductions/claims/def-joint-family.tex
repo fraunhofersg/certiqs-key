@@ -1,0 +1,97 @@
+% ---
+% id: reductions/def:joint-family
+% kind: def
+% title: "Joint alphabet, classes and the joint family of a private setting"
+% summary: >-
+%   A private setting with exact class weights joins the outcome in one joint
+%   alphabet, partitioned into one class per setting, and its conditional
+%   POVMs form one joint family with each weight inside the elements. The
+%   family satisfies the class-marginal identity and opens no target block.
+% prominence: standard
+% status: accepted
+% uses: [lem:linear, def:exactadm]
+% mentions: [ass:probe, ass:tsm, def:reduction-instance, thm:instrument-instance, rem:unsound, rem:intertwining, cor:blockdiag]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Assumes nothing, like the receiver's def:setting-family: the physical reading of q_t as the measuring party's own weight is A-PROBE and A-TSM, declared by the instance that builds a joint family from a probe. rem:unsound's eq:probeidentity is the identity eq:classmarginal of this definition."
+% ---
+
+A receiver with a private per-round setting, such as a probe setting or an
+internal coin of known bias, is described by one conditional POVM per value
+of the setting, and the analysis reads the pair (outcome, setting) as one
+joint outcome with the setting's weight inside the element
+(\repodoc{spec/notation.md#26-comma-vs-bar-on-povm-subscripts}). The
+definition names that object once and in two layers. The combinatorial layer
+is the joint alphabet with its classes and their weights; the abstract
+\tref{reduction instance} of Definition~\ref{def:reduction-instance} is stated over
+it, and the branching instance of Theorem~\ref{thm:instrument-instance}
+extends it by a branch label. The POVM layer is what a device with a private
+setting hands this module. The weights are the measuring party's own
+(Assumption~\ref{ass:probe}) and enter only through the statistics of the
+joint outcome (Assumption~\ref{ass:tsm}). The identity
+\eqref{eq:classmarginal} is a fact about the \emph{physical} model; which
+squashed form of it is sound is the subject of Remark~\ref{rem:unsound}, and
+why the joint alphabet is built \emph{before} the first squashing link, and
+what may still be relabelled after one, is Remark~\ref{rem:intertwining}.
+
+\begin{definition}\label{def:joint-family}
+Let $\Yset$ be a finite non-empty ordered
+\term[The finite ordered set of device outcomes that a private setting is joined to.]{outcome alphabet},
+let $\Tset$ be a finite non-empty ordered set of
+\term[The finite ordered set of values of a private per-round setting of the receiver.]{settings},
+and let $(q_t)_{t\in\Tset}$ be
+\term[The declared probabilities of the settings: positive lattice values that sum to one exactly.]{class weights},
+each a declared dyadic rational on the declared lattice
+(Definition~\ref{def:exactadm}\,(b)), with $q_t>0$ and
+$\sum_{t\in\Tset}q_t=1$ \emph{exactly}.
+\begin{enumerate}[label=(\alph*),leftmargin=2.4em]
+\item \emph{(the joint alphabet, its classes and weights)} The
+  \term[The product of the outcome alphabet and the settings, ordered with the outcome varying fastest.]{joint alphabet}
+  is $\Vset\coloneqq\Yset\times\Tset$, ordered with $y$ varying
+  fastest, which is its \tref{declared order}; its
+  \term[The blocks of the joint alphabet, one per setting: every outcome paired with that setting, in the order of the outcome alphabet.]{classes}
+  are $\Vset_t\coloneqq\Yset\times\{t\}$, $t\in\Tset$, a partition
+  $\Vset=\bigsqcup_{t\in\Tset}\Vset_t$, each class ordered as $\Yset$ is; and
+  the triple $\big(\Vset,\{\Vset_t\}_{t\in\Tset},\{q_t\}_{t\in\Tset}\big)$ is
+  the \emph{joint alphabet with classes and weights}. When no private setting
+  is declared, $\Tset$ is a singleton $\{\ast\}$ with $q_{\ast}=1$, and
+  $\Vset=\Yset\times\{\ast\}$ is identified with $\Yset$: one class, of weight
+  one.
+\item \emph{(the joint family)} Let $\Bsys$ be a system and, for each
+  $t\in\Tset$, let $\{\widetilde M_{y|t}\}_{y\in\Yset}$ be a
+  \emph{conditional} POVM on $\Bsys$ --- complete at each fixed $t$,
+  $\sum_{y}\widetilde M_{y|t}=\idon{\Bsys}$. Their
+  \term[The POVM over the joint alphabet whose element at an outcome and a setting is the class weight times the conditional element of that outcome given that setting.]{joint family}
+  is
+  \begin{equation}\label{eq:jointfamily}
+    M_{(y,t)}\;\coloneqq\;q_t\,\widetilde M_{y|t},
+    \qquad (y,t)\in\Vset ,
+  \end{equation}
+  formed from the conditional elements and the weights by one product each,
+  exactly. It is a POVM on $\Bsys$ over $\Vset$ by
+  Lemma~\ref{lem:linear}\,(ii) --- $\sum_{(y,t)}q_t\widetilde M_{y|t}
+  =\sum_tq_t\idon{\Bsys}=\idon{\Bsys}$ --- and it satisfies the
+  \term[The operator identity that the elements of each class of a joint family sum to the class weight times the identity.]{class-marginal identity}
+  \begin{equation}\label{eq:classmarginal}
+    \sum_{v\in\Vset_t}M_v\;=\;q_t\,\idon{\Bsys}
+    \qquad\text{for every }t\in\Tset ,
+  \end{equation}
+  an operator identity on $\Bsys$, by completeness of the conditional POVM at
+  $t$.
+\end{enumerate}
+Two consequences are immediate and are used throughout. First, given
+conditional relations $\widetilde M_{|t}\dsq_{\Lambda}\widetilde F_{|t}$,
+$t\in\Tset$, with one common channel $\Lambda$, Lemma~\ref{lem:linear}\,(ii)
+gives the relation $\{q_t\widetilde M_{y|t}\}\dsq_{\Lambda}\{q_t\widetilde
+F_{y|t}\}$ for the joint families: the setting never enters the target space,
+no block is opened for it, and the weights are carried by the target elements
+themselves. A relation for a joint family need not have a target of this
+form. Second, where every $\widetilde M_{y|t}$ is block
+diagonal for an orthogonal decomposition of $\Hs{\Bsys}$, so is every
+$M_{(y,t)}$, and \eqref{eq:classmarginal} holds block by block; where such a
+joint family is itself a target, the decomposition being finite and the
+carried operators block diagonal for it as well,
+Corollary~\ref{cor:blockdiag} applies to it.
+\end{definition}

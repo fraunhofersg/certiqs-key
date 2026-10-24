@@ -1,0 +1,32 @@
+% ---
+% id: reductions/req:post-processing-order
+% kind: req
+% title: "Noise and coarse-graining before the first squashing link"
+% summary: >-
+%   A noise or coarse-graining map on the physical POVM is applied before the
+%   first squashing link, and a request to apply one after a link is refused.
+%   The refusal reaches these two kinds of map and no other, so a relabelling
+%   of both sides after a link stays available.
+% prominence: standard
+% status: accepted
+% uses: [rem:intertwining]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A noise or coarse-graining map changes the physical family a squasher is
+built from, and a squasher built for one physical family is not a squasher
+to the same target for the family the map produces from it
+(Remark~\ref{rem:intertwining}).
+
+\begin{requirement}\label{req:post-processing-order}
+The engine applies a noise or coarse-graining map on the physical POVM
+before the first squashing link, and refuses a request to apply one after a
+squashing link (input \iface{post_processing_order_declaration}, refusal
+\iface{post_processing_order_violated}). The refusal reaches exactly those
+two kinds of map: a stochastic relabelling applied to both sides after a
+link, depending on the private component of the outcome only, is not
+refused by it (Remark~\ref{rem:intertwining}, \eqref{eq:relabel}).
+\end{requirement}

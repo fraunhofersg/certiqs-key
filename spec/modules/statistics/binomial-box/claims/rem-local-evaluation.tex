@@ -1,0 +1,103 @@
+% ---
+% id: statistics/binomial-box/rem:local-evaluation
+% kind: rem
+% title: "Evaluating the exact rule locally"
+% summary: >-
+%   [[prop:bracketed-endpoints]] holds for every search, window and enclosure,
+%   so these are choices outside the proposition. A bisection finds a
+%   bracketed endpoint in about log₂ n evaluations, and the window trades
+%   evaluation time for the last counts of the endpoint.
+% prominence: standard
+% status: accepted
+% uses: [prop:bracketed-endpoints, lem:tail-majorant, lem:pmf-enclosure, lem:stirling-enclosure, lem:log-enclosure, rem:completeness-on-rules, def:interval, def:endpoint-rule, statistics/def:conservative-evaluation]
+% mentions: [prop:rule-bernstein, prop:rule-exact, req:search-procedure, req:enclosure-substrate, req:endpoint-exact-record, req:completeness-report]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:local-evaluation}
+Proposition~\ref{prop:bracketed-endpoints} holds for every bracketed
+endpoint, whatever procedure found it, and for every enclosure of the form
+\eqref{eq:tail-enclosure}. Four choices therefore lie outside the
+proposition: the search, the window, the arithmetic substrate and the report
+of the bracket verdict. Requirements~\ref{req:search-procedure},
+\ref{req:enclosure-substrate} and~\ref{req:endpoint-exact-record} fix the
+engine's search, substrate and report.
+
+\emph{The search.} Certified admissibility $\mathsf{C}^{+}$ is a predicate
+on $\{0,\dots,n\}$ that holds at $n$; a bisection that keeps
+$\mathsf{C}^{+}$ true at its upper end and false at its lower end (starting
+from $n$ and from the fictitious index $-1$), treating an undecided index as
+not certified, returns a bracketed upper endpoint after about $\log_2 n$
+evaluations of the enclosure. A downward scan from any index known to be
+certified is the alternative; the endpoint of the Bernstein rule
+(Proposition~\ref{prop:rule-bernstein}) is admissible and usually certified,
+and is a natural start. Fixing the procedure, with its parameters, makes the
+evaluation a rule in the sense of Definition~\ref{def:endpoint-rule};
+Requirement~\ref{req:search-procedure} fixes it. Where the map
+$k\mapsto\tau^{+}(k)$ is non-increasing (which it is up to the rounding of
+the enclosure, since the tail itself decreases by the factor $r_k$ per count,
+Lemma~\ref{lem:tail-majorant}\,(iv), and the enclosure's width varies
+slowly), every bracketed endpoint is the least certified index, and the
+evaluation is then \tref{monotone in the allocation} as well (the set of certified
+indices grows with $\varepsilon^{+}$ when the logarithm of
+$\varepsilon^{+}$ is enclosed monotonically, as the fixed-grid root bounds of
+Proposition~\ref{prop:rule-bernstein}\,(ii) are); the claims do not rest on
+this.
+
+\emph{The window.} In \eqref{eq:tail-log} the bracket's width is
+$\ln(1+B_T/A_T)$, and $B_T/A_T$ is about $r^{T}/(1-r)$ with $r$ the ratio
+near $k$; at a deviation of $t$ counts above the mean, $1-r_k$ is of the
+order of $t/(np(1-p))$, so a window of $T$ of the order of
+$(\ln\frac{1}{1-r}+c)/(1-r)$ terms leaves a relative slack of about
+$e^{-c}$ in the tail, that is, about $e^{-c}$ nats in $w$. Together with the
+per-count decay $-\ln r_{\kappa^{+}+1}$, which is of the same order
+$t/(np(1-p))$, \eqref{eq:bracket-conservatism} says what the last counts
+cost in evaluation time: the window trades time for the last counts, and
+the exact quantile is reached exactly when the bracket is decided.
+
+\emph{The substrate.} The Stirling remainders and the root bounds are
+rationals of the size of a logarithm, while the products $\prod r_l$ inside
+the rationals $A_T$ and $B_T$ of \eqref{eq:window-rationals}, held as exact
+rationals, would have denominators that grow with the window. Every bound is
+used in the direction a \tref{conservative evaluation}
+(Definition~\ref{def:conservative-evaluation}) admits: a tail comparison is
+decided against a bound that rounds the tail upward.
+Requirement~\ref{req:enclosure-substrate} states the arithmetic of the
+evaluation.
+
+\emph{The verdict.} Whether the bracket was decided is
+Proposition~\ref{prop:bracketed-endpoints}\,(ii)'s condition. The bound
+\eqref{eq:bracket-conservatism} is not computable as it stands: $w$ involves
+the unknown $\ln\Pr[\Ncount{}>\tilde k^{+}-1]$ and $r_{\kappa^{+}+1}$ the
+unknown $\kappa^{+}$. With a certified-inadmissible index $k_{\mathsf{D}}$
+below the bracket in hand and $0<r_{k_{\mathsf{D}}+2}<1$, and the enclosure
+in log space, a computable bound on the excess $\tilde k^{+}-\kappa^{+}$ is
+\eqref{eq:bracket-conservatism} with $-\ln r_{k_{\mathsf{D}}+2}$ in place of
+$-\ln r_{\kappa^{+}+1}$ and
+$W\coloneqq U(\tilde k^{+}-1)-\Lambda(\tilde k^{+}-1)+(\lambda^{+}-\lambda^{-})$
+in place of $w$. Indeed $W\ge w$, because
+$\Lambda(\tilde k^{+}-1)\le\ln\Pr[\Ncount{}>\tilde k^{+}-1]$ and
+$\lambda^{+}\ge\ln\varepsilon^{+}$; and since $k_{\mathsf{D}}$ is certified
+inadmissible, $\kappa^{+}\ge k_{\mathsf{D}}+1$, so the decreasing ratios give
+$r_{\kappa^{+}+1}\le r_{k_{\mathsf{D}}+2}<1$ and
+$-\ln r_{\kappa^{+}+1}\ge-\ln r_{k_{\mathsf{D}}+2}>0$. Where
+$\tilde k^{+}>\kappa^{+}$ and $\kappa^{+}\le n-2$, the hypotheses of
+Proposition~\ref{prop:bracketed-endpoints}\,(iii) then hold and the
+substituted bound is at least its right-hand side; where
+$\tilde k^{+}>\kappa^{+}=n-1$, the excess is $1$, below the substituted bound
+because $W\ge w>0$, the certificate at $\tilde k^{+}-1\ge\kappa^{+}$ having
+failed although that tail is at most $\varepsilon^{+}$; and where
+$\tilde k^{+}=\kappa^{+}$ the excess is $0$.
+Requirement~\ref{req:endpoint-exact-record} says what is recorded.
+Completeness on this evaluation is the figure of
+Remark~\ref{rem:completeness-on-rules}\,(b), from the upper enclosures
+$\tau^{+}$ at the emitted guarded endpoints, clamped by $\ecomp$
+(Requirement~\ref{req:completeness-report}); on the sweep evaluation no
+bracket is formed: the exact rule is evaluated by the closed forms of
+Definition~\ref{def:interval}, its tail comparisons decided exactly or
+against the upper bounds of Proposition~\ref{prop:rule-exact}\,(vii), and
+none of this arises.
+\end{remark}

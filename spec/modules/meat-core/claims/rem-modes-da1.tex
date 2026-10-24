@@ -1,0 +1,83 @@
+% ---
+% id: meat-core/rem:modes-da1
+% kind: rem
+% title: "The two source modes on the program"
+% summary: >-
+%   A declared marginal deletes every feasible state with another marginal, so
+%   untrusted-source mode is always available and never gives a larger value.
+%   At d_A = 1 the two modes coincide, which lets a protocol with no trusted
+%   source be declared there; τ_A = 0 is inadmissible.
+% prominence: standard
+% status: accepted
+% uses: [def:admissible-declaration]
+% mentions: [def:roundmodel, def:feasible, fact:meat, prop:trivial-alice-system, transmitter/rem:source-mode, transmitter/ass:src, lem:product-marginal]
+% assumes: [A-SRC]
+% refs:
+%   - "arqand2025meat, Eq. (1)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:modes-da1}
+\emph{(a) What each mode asserts} is the transmitter's statement
+(\xref{transmitter/rem:source-mode}\,(a): in trusted-source mode the
+declaration asserts, through A-SRC
+(\xref{transmitter/ass:src}), that Alice's register $A$ never passes
+through the adversary's hands, so that $\omega_A=\tau_A$ in every round;
+in untrusted-source mode it asserts nothing about $A$). What that does to
+this module's program is stated here. In untrusted-source mode
+($\tau_A=\nomarg$) the adversary prepares $A\Qsys$ jointly
+(Definition~\ref{def:roundmodel}), the \tref{feasible set} carries only
+$\tr\omega=1$ (Eq.~\eqref{eq:feas}), and Lemma~\ref{lem:product-marginal} is
+not invoked at all. A declared $\tau_A$ \emph{deletes} from the feasible set
+every state whose $A$-marginal differs, hence every attack that would have
+produced one. That is a different \emph{kind} of input from an entry of
+$\CList$, and a more demanding one to justify: an entry of $\CList$
+restricts what Eve's channel may do to a register she holds, whereas
+$\tau_A$ asserts that a register never reached her at all. Declaring one
+without the attestation of Assumption~A-SRC overstates the key in the
+unsafe direction. Untrusted-source mode is always available and always
+more conservative. Precisely: fix the declaration data
+$(\hat O_k,\bowtie_k,c_k)$ and compare the feasible set \eqref{eq:feas}
+with $\tau_A$ declared against the one with $\tau_A=\nomarg$. Every
+$\omega$ feasible in trusted-source mode is feasible in untrusted-source
+mode --- from $\omega_A=\tau_A$ we get $\tr\omega=\tr\tau_A=1$, and taking
+the trace of the operator entry
+$\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\,\omega]\bowtie_k c_k\tau_A$
+gives the scalar entry
+$\tr[(\idon{A}\otimes\hat O_k)\,\omega]\bowtie_k c_k$ (using
+$\tr\tau_A=1$, and that $X\succeq Y$ implies $\tr X\ge\tr Y$). Hence
+the untrusted feasible set is the larger, its infimum the smaller, and
+$\hlow$ computed in untrusted-source mode never exceeds the
+trusted-mode value. Dropping the marginal therefore loses rate; it
+never gains any, and it can never turn an unsound declaration into a
+sound-looking one.
+
+\emph{(b) At $d_A=1$ the two modes are the same declaration}
+(Proposition~\ref{prop:trivial-alice-system}). This is the
+\emph{embedding}: a protocol with no trusted source may be declared at
+$d_A=1$ by folding the system the sender measures into the sectors of
+$\Qsys$ and her outcome components into $v$, with the
+\tref{party partition} naming which components she holds. The
+empty-marginal case is therefore the \emph{safe} direction --- it removes
+an assumption rather than adding one.
+
+The equivalence is also the accumulation paper's own reading of its
+channel conditional entropy: the sentence immediately following
+\cite[Eq.~(1)]{arqand2025meat} records that the definitions of earlier
+works are recovered ``by setting the $C$ register to be trivial and
+omitting the marginal constraint (equivalently, setting $A$ to be
+trivial)''. That sentence is about the source's Eq.~(1), not about its
+Theorem~4.2a; the derivation of Proposition~\ref{prop:trivial-alice-system}
+is this module's own and does not rest on it. The corresponding check on the
+import side is Fact~\ref{fact:meat}, locator note~(vii).
+
+\emph{(c) $\tau_A=0$ is inadmissible}, for the two reasons
+\xref{transmitter/rem:source-mode}\,(c) gives; on this module's side
+Definition~\ref{def:admissible-declaration}\,(ii) refuses it outright, and were the
+normalization dropped, $\omega_A=0$ would give $\tr\omega=0$ and hence
+$\omega=0$, so $\Feas=\varnothing$ in violation of
+Definition~\ref{def:admissible-declaration}\,(vii) and \eqref{eq:hlow-def} would be an
+infimum over the empty set. The absent marginal is $\tau_A=\nomarg$; the
+trivial marginal is $d_A=1$ with $\tau_A=[1]$; $\tau_A=0$ is neither.
+\end{remark}

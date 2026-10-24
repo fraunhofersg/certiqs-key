@@ -1,0 +1,99 @@
+% ---
+% id: meat-core/req:companion-admission
+% kind: req
+% title: "Admission of the reference companion beside its declaration"
+% summary: >-
+%   A compiled reference companion is admitted beside its declaration: shared
+%   components are decided equal, the acceptance set is read from it, and the
+%   maps are generated from the companion's own family, imported to be a
+%   POVM, its binary64 defects measured; only a short polish searches on it.
+% prominence: standard
+% status: implemented
+% uses: [prop:reference-companion, cor:reference-companion-factors, def:admissible-declaration, def:maps, def:branch, def:declaration, def:joint-sectors, reductions/cor:reference-companion, reductions/req:reference-companion, protocol-compiler/req:reference-companion-compiled, foundations/def:exact-reference]
+% mentions: [req:declaration-admission, req:exact-admission, meat-core/frank-wolfe/req:bracket-on-reference, meat-core/frank-wolfe/req:certified-evaluation, meat-core/frank-wolfe/rem:fo-arithmetic]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.declaration.companion:admit_reference_companion
+% lean:
+% notes: "Read for a companion that replaces the families of several measured factors, so that (i) and (ii) speak of the replaced links and of each replaced link's instance."
+% ---
+
+Exact admission exists so that the binary64 numbers of a declaration denote
+exactly what was declared, which a run needs whose estimate and key length
+are read off a solve over them. A reference companion has no run of its own:
+its value is bounded below at points another declaration's search produced
+and at the points of a short search continued on it from them, which serve
+only as points, the hypotheses of the bound being decided at each; and the
+numbers it is evaluated at are an evaluation of a family that is not on the
+binary64 grid. Its admission
+therefore decides exactly what can be decided exactly, the components it
+shares with the declaration, and imports the rest from the claims that
+establish it; the binary64 defects of its evaluation are measured and shown,
+and decide nothing. What is evaluated on it, and when its number counts, is
+Requirement~\ref{req:bracket-on-reference}, and how its number is certified
+is Requirement~\ref{req:certified-evaluation}.
+
+\begin{requirement}\label{req:companion-admission}
+Where the protocol compiler emits a compiled reference companion
+$\Decl^{\mathrm{ref}}$ beside a declaration $\Decl$
+(\xref{protocol-compiler/req:reference-companion-compiled}), the engine
+admits it only beside $\Decl$, after admitting $\Decl$
+(Requirements~\ref{req:exact-admission} and~\ref{req:declaration-admission}),
+and only as follows.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{Decided equal.} It decides exactly, on the declared data, that
+  every component Proposition~\ref{prop:reference-companion}\,(i) names as
+  shared is equal to $\Decl$'s, entry for entry and label for label: the
+  shapes, the \tref[sector map]{sector maps} and the \tref[joint sector]{joint sectors}, the
+  alphabets and their orders, Alice's slots, the \tref{party partition}, the
+  announcement, sifting and raw-key maps; that the companion's entries are
+  those of $\Decl$ save the entries of the links the companion replaced, one
+  per measured factor whose family it replaces, each of which carries the relaxed mark of
+  \xref{reductions/req:reference-companion}\,(iii) and a Hermitian binary64
+  operator with the blocks of its scope; and it reads the acceptance set of
+  $\Decl$, the acceptance set being one per run. A companion that fails a
+  decision of this item is not admitted, the reason naming the component,
+  and the run proceeds without it. The \tref{statistics map}, the
+  \tref{single-round protocol map}, the \tref[branch map]{branch maps}, the
+  objective and its gradient of the companion are generated from the
+  companion's own slots, its measured family among them
+  (Definition~\ref{def:maps}), as for any declaration; no map generated from
+  $\Decl$'s measured family is used for the companion. The announcement,
+  sifting and raw-key maps decided equal above are declared data, not
+  generated maps.
+\item \emph{Imported, never decided.} It decides none of the conditions of
+  Definition~\ref{def:admissible-declaration} on the companion's measured
+  family. That the family it denotes is a POVM, block diagonal for its
+  sector map, is \xref{reductions/cor:reference-companion}\,(i), which rests
+  on the claims that establish the \tref{handed reference}
+  (\xref{foundations/def:exact-reference}) on the blocks where one is
+  handed, on the exact decisions of the declarer's snap on the blocks where
+  the companion carries the snapped block, and on (H-REF) for each instance
+  whose link it replaces;
+  and with (i) above it gives the companion conditions (i)--(vi) and (viii)
+  by Proposition~\ref{prop:reference-companion}\,(ii). Condition (vii) is not
+  decided on it. Nor does it decide that a block of the companion's measured
+  family is a member of a \tref{factor enclosure} the companion carries with
+  it, which is Corollary~\ref{cor:reference-companion-factors}, on the claims
+  that establish the factor enclosures of the handed reference.
+\item \emph{Evaluated and measured.} It reads the companion's family at the
+  binary64 numbers nearest to the centres of its enclosure, rounded once,
+  entrywise to nearest, when the family is docked, and records, per block of
+  the measured family, the completeness defect and the least eigenvalue of
+  those numbers, measured and not decided, and the largest radius of the
+  enclosure. A defect so measured refuses nothing and marks nothing
+  inadmissible; what these numbers mean for the bound evaluated on them is
+  Remark~\ref{rem:fo-arithmetic}.
+\item \emph{Nothing else.} It computes from the companion only what
+  Requirements~\ref{req:bracket-on-reference}
+  and~\ref{req:certified-evaluation} ask. The one program solved over it is
+  the polish of Requirement~\ref{req:bracket-on-reference}\,(i), a search
+  continued from a point of the search on $\Decl$, whose points serve only
+  as points at which those requirements form brackets; no estimate is
+  reported from it, and no key length is reported from it save through
+  those requirements.
+\end{enumerate}
+Requirements~\ref{req:exact-admission} and~\ref{req:declaration-admission}
+bind every declaration but a companion admitted under this requirement.
+\end{requirement}

@@ -1,0 +1,65 @@
+% ---
+% id: transmitter/decoy/rem:cutoffs
+% kind: rem
+% title: "Entropy, source and receiver cutoffs"
+% summary: >-
+%   The entropy cutoff bounds the quantum sectors and the source cutoff the
+%   flagged ones, and raising the second never requires raising the first. The
+%   receiver's cutoff is a different object, which no condition of this
+%   submodule reads.
+% prominence: standard
+% status: accepted
+% uses: [def:tagged-source]
+% mentions: [cor:emitted-decoy, req:entropy-cutoff]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The receiver cutoff is named only to be excluded: no claim of this submodule reads it, and the two sides meet only through the compiler."
+% ---
+
+\begin{remark}\label{rem:cutoffs}
+A reader of a protocol with a decoy source meets three cutoffs that are easily
+conflated, and only two of them are data of this submodule.
+
+\emph{The entropy cutoff $N_{\mathrm{ent}}$} is the largest photon number whose
+sector of $\Avirt$ stays quantum: at $\mathsf{n}\le N_{\mathrm{ent}}$ the sector
+is $S_{\mathsf{n}}$ and carries the signal states $\ket{\mathsf{n},a}$
+themselves, one sector for all polarisations of that photon number. Above it the
+polarisation is tagged: the sector is one dimensional and there is one per
+polarisation, so the declaration separates what a quantum sector keeps
+together. Whether keeping a photon number quantum or tagging it per
+polarisation gives the higher key rate is a question for the consuming program,
+settled by computation and not here.
+
+\emph{The source cutoff $N_{\mathrm{src}}$} is the largest photon number that
+keeps a sector of its own at all. Raising it by one adds at most
+$|\mathrm{Pol}|$ one-dimensional sectors, one per polarisation some letter
+carries at a positive weight, the index set of
+Definition~\ref{def:tagged-source}\,(T3) being read off the weights; and it
+moves the weight $\tilde p(\mathsf{n}\mid\mu)$ out of the tail flag into them,
+so that the weight of that photon number sits on a flag shared by every
+intensity instead of on a flag carried by one intensity alone. Raising
+$N_{\mathrm{src}}$ never requires raising $N_{\mathrm{ent}}$: (T1) demands only
+$N_{\mathrm{ent}}\le N_{\mathrm{src}}$, and the sectors between the two cutoffs
+are one dimensional whatever $N_{\mathrm{src}}$ is.
+
+\emph{The receiver cutoff}, the photon number at which a receiver-side
+reduction stops retaining blocks and starts flagging, is a datum of the
+receiver and of the reduction that consumes it, and not of this submodule. No
+condition of this submodule mentions it, no claim here reads it, and nothing
+ties it to the entropy or the source cutoff: the transmitter's data and the
+receiver's meet only where the protocol compiler composes them. A declaration
+with $N_{\mathrm{ent}}=1$ and a receiver cutoff of two is as well formed as any
+other.
+
+Every claim of this submodule is stated for arbitrary
+$N_{\mathrm{ent}}\le N_{\mathrm{src}}$. The bound $N_{\mathrm{ent}}\le2$ is a
+requirement of the emission, the step that outputs the declaration
+(Requirement~\ref{req:entropy-cutoff}), and concerns which numbers a
+declaration can carry exactly, not any of the mathematics here: for the four
+polarisations $\Dset$, at one and at two photons,
+Corollary~\ref{cor:emitted-decoy}\,(iv)(b) exhibits a declared basis in which
+the signal dyads have the entries $0$ and $\pm\tfrac12$ (and at one photon
+also $1$); at three photons and above no such basis is given here.
+\end{remark}

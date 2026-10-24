@@ -1,0 +1,31 @@
+% ---
+% id: meat-core/frank-wolfe/req:bound-estimate-difference
+% kind: req
+% title: "The recorded difference between the bound and the estimate"
+% summary: >-
+%   The engine records h_lb minus the reported estimate, with its sign, as a
+%   diagnostic, and asserts nothing of it. Their ordering holds only in exact
+%   arithmetic and at an exactly feasible point, neither of which a run
+%   establishes.
+% prominence: standard
+% status: accepted
+% uses: [rem:fo-arithmetic]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.general_keyrate:GeneralKeyRateResult
+% lean:
+% ---
+
+The ordering of $\hlb$ below the objective at the returned point is a
+consequence of exact arithmetic and of the returned point's exact
+membership in $\acSet\times\Feas^{J}$, neither of which a run establishes;
+a positive difference, a bound above the estimate, is evidence about the
+arithmetic or the relaxation, and not by itself evidence that the
+first-order tier is unsound (Remark~\ref{rem:fo-arithmetic}\,(b)).
+
+\begin{requirement}\label{req:bound-estimate-difference}
+The engine records the difference $\hlb$ minus the reported
+\tref{estimate}, with its sign, as a diagnostic, and asserts nothing of it.
+\end{requirement}

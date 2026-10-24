@@ -1,0 +1,60 @@
+% ---
+% id: reductions/cor:sound
+% kind: cor
+% title: "Imposing and intersecting sound constraints"
+% summary: >-
+%   Analysed squashed inputs satisfy the inclusion of [[thm:transfer]] exactly
+%   when they form a sound family, and any intersection of sound families for
+%   one channel and one physical input family is sound. Enlarging a sound
+%   family costs tightness, never soundness.
+% prominence: standard
+% status: accepted
+% uses: [thm:transfer, def:criterion, def:sound, def:opreduction, lem:opreduction-transfer]
+% mentions: [rem:channel-choice]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{corollary}
+\label{cor:sound}
+Let $M\dsq_{\Lambda}F$ and fix a family $\Sph$ of \tref{physical inputs}.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item A family $\Ssq$ satisfies \eqref{eq:inclusion} if and only if it is
+  sound.
+\item An arbitrary intersection of sound families is sound.
+\item Consequently, if $(C^{(i)})_{i\in I}$ is any collection of sound families
+  and $\Crit(\Eprot_F,\sigma)\le\varepsilon$ for every admissible $E$ and every
+  $\sigma\in\bigcap_{i\in I}C^{(i)}_E$, then $\Crit(\Eprot_M,\rho)\le
+  \varepsilon$ for every admissible $E$ and every $\rho\in\Sph_E$, with the
+  same $\varepsilon$ and for every criterion of the form \eqref{eq:criterion}.
+\item The tightest sound family is $\Srch$ itself and the loosest is
+  $\Ssq_E=\Seq{A^{n}\Qsys^{n}E}$; enlarging a sound family costs tightness and
+  never soundness.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(i) The left-hand side of \eqref{eq:inclusion} is $\Srch_E$ by
+\eqref{eq:reachable}, so the inclusion says exactly that $\Ssq_E$ contains
+every reachable state --- equivalently, that the strategy map
+$r\colon\rho\mapsto(\idmap_{A^{n}}\otimes\Lambda^{\otimes n}\otimes
+\idmap_E)(\rho)$ of the proof of Theorem~\ref{thm:transfer}, the one belonging
+to \emph{this} $\Lambda$ and \emph{this} $\Sph$, has its image in $\Ssq_E$,
+which is condition (R3) of Definition~\ref{def:opreduction}. (ii) A reachable
+state lies in every member of the collection, hence in the intersection.
+(iii) By (i), soundness of each $C^{(i)}$ says that \emph{one and the same}
+map $r$ has its image in $C^{(i)}_E$, for every $i$ and every admissible $E$;
+Lemma~\ref{lem:opreduction-transfer}\,(iv) therefore makes $r$ an exact
+operational reduction into $\bigcap_iC^{(i)}_E$, and its part (i) gives the
+bound with the same $\varepsilon$ for every criterion. The hypothesis is one
+map and not one map per $i$, and this matters: part (iv) of that lemma
+exhibits analysed sets, each of them reached by some exact operational
+reduction, whose intersection is empty and over which every bound holds
+vacuously; the concrete form of that failure here is two channels realizing
+one squashing relation, which is why this corollary fixes one $\Lambda$ and
+one $\Sph$ (Remark~\ref{rem:channel-choice}). (iv) Immediate from (i); the
+loosest family satisfies \eqref{eq:inclusion} trivially, which is the
+unconstrained squashing statement.
+\end{proof}

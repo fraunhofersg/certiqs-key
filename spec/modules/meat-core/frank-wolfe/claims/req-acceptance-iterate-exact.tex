@@ -1,0 +1,42 @@
+% ---
+% id: meat-core/frank-wolfe/req:acceptance-iterate-exact
+% kind: req
+% title: "Exact formation of the acceptance-side iterate"
+% summary: >-
+%   The engine forms the acceptance-side iterate on the exact island, from an
+%   exact rational start in the acceptance set by exact rational convex
+%   combinations of points established to lie in it, and records per iterate
+%   whether it did. An iterate where it did not adds nothing to the first-order
+%   bound.
+% prominence: standard
+% status: implemented
+% uses: [rem:acc-side]
+% mentions: [thm:firstorder, req:first-order-withdrawal, foundations/req:exact-island]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.acceptance_iterate:AcceptanceIterate
+% lean:
+% ---
+
+Under conditions ($\alpha$) and ($\beta$) of Remark~\ref{rem:acc-side} the
+acceptance-side iterate lies in $\acSet$ at every step by induction, so the
+acceptance factor of the membership hypothesis of
+Theorem~\ref{thm:firstorder}\,(ii) and~(iiib) is true by construction and
+needs no check; a binary64 convex combination of exact points of a polytope
+can leave the set, and three consumers of that theorem then break (the same
+remark). Every computation of the \tref{exact island} is exact rational
+arithmetic (\xref{foundations/req:exact-island}).
+
+\begin{requirement}\label{req:acceptance-iterate-exact}
+The engine forms the acceptance-side iterate on the \tref{exact island},
+under conditions ($\alpha$) and ($\beta$) of Remark~\ref{rem:acc-side}: it
+initialises it at an exact rational point of $\acSet$, and updates it only by
+convex combinations, with exact rational weights in $[0,1]$, of points
+already established to lie in $\acSet$. An iterate whose acceptance-side
+component was not so formed has not met the membership hypothesis and
+contributes no bracket to $\hlb$, with the reason of
+Requirement~\ref{req:first-order-withdrawal}\,(iv). The run's record states in
+\iface{optimizer_certificate}, of the point consumed at each iterate, whether
+its acceptance-side component was so formed.
+\end{requirement}

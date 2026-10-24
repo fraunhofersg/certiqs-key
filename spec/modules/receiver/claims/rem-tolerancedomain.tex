@@ -1,0 +1,80 @@
+% ---
+% id: receiver/rem:tolerancedomain
+% kind: rem
+% title: "The domain of the receiver tolerances"
+% summary: >-
+%   Every quantity a receiver tolerance bounds, decides or reduces lies in
+%   [0, 1], so at a tolerance of one or more its test is vacuous or degenerate.
+%   The declared domain [0, 1) makes every error term the contract states hold
+%   on every value it admits.
+% prominence: standard
+% status: accepted
+% uses: [def:residuals, def:tolmap, thm:emitted-bound, lem:exactbasic, rem:exacteig, def:pmcex, thm:multiclick-bound]
+% mentions: [rem:ranktwosided, rem:cdirection, receiver/detector-imperfections/prop:dark-slack-bound, req:tolerance-domain, def:setting-family]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:tolerancedomain}
+Each of $\varepsilon_1,\dots,\varepsilon_6$, $\varepsilon_{\mathrm{gap}}$ and
+$\varepsilon_{\mathrm{eig}}$ is declared in $[0,1)$ and validated at input
+(Requirement~\ref{req:tolerance-domain}). A declared number needs a declared
+domain for the same reason a declared parameter does, and here the domain is
+not a convention: \emph{a \tref[receiver tolerances]{receiver tolerance} is a
+slack on a normalized quantity, never a scale.} Every quantity the eight bound,
+decide or reduce already lies in $[0,1]$: eigenvalues of operators between $0$
+and $\id$ (\eqref{eq:res2}, \eqref{eq:eps2rank},
+Definition~\ref{def:tolmap}\,(i),\,(v)), the spectral-norm defects
+\eqref{eq:res1}, \eqref{eq:res3}, \eqref{eq:res4} and \eqref{eq:rhodef} of
+operators bounded by $\id$, entries and column defects of a stochastic matrix
+(Definition~\ref{def:tolmap}\,(iii)), and $c=1-\lmax(B)\in[0,1]$
+(Definition~\ref{def:tolmap}\,(iv)). At $\varepsilon\ge1$ the corresponding
+test is not merely loose, it is \emph{vacuous or degenerate}, and namably so:
+Definition~\ref{def:tolmap}\,(i) would admit every Hermitian family with
+$\lmin\ge-1$; \eqref{eq:eps2rank} would return $\rk_{\varepsilon_2}(A_k)=0$ for
+\emph{every} port Gram, so the rank check could never refuse (the
+under-reporting direction of Remark~\ref{rem:ranktwosided} taken to its
+limit); (iii) would call every declared matrix monotone; (iv) would admit every
+computed $c$; and (v) would admit a $\Gmat$ of operator norm $\sqrt2$.
+$\varepsilon_{\mathrm{gap}}$ is bounded for the same reason at one remove: it
+bounds a slack in $\pmc\in[0,1]$ (Theorem~\ref{thm:emitted-bound}), so a value
+$\ge1$ permits the emitted bound to sit below the attainable one by the whole
+range of the quantity, which is no constraint. The two members the exact
+window adds are bounded on the same argument, up to a computed
+$\widehat\Bnd^{\ast}$ that rounding puts outside $[0,1]$, which is not clamped
+into that interval and is not claimed to lie in it
+(Remark~\ref{rem:exacteig}). $\varepsilon_6$ bounds the positive part of
+$\Bnd(n)-\widehat\Bnd^{\ast}(n)$, where $\Bnd(n)\le1$
+(Theorem~\ref{thm:multiclick-bound}) and the exact value that
+$\widehat\Bnd^{\ast}(n)$ evaluates lies in $[0,1]$
+(Lemma~\ref{lem:exactbasic} with Definition~\ref{def:setting-family}); so at
+$\varepsilon_6\ge1$ the test $r_6\le\varepsilon_6$ can refuse only an
+evaluation that puts $\widehat\Bnd^{\ast}(n)$ below the evaluated $\Bnd(n)$
+less $1$, which is at most $0$ up to rounding, outside the interval where the
+exact value lies. $\varepsilon_{\mathrm{eig}}$ is subtracted from a quantity
+whose exact value $\Bnd^{\ast}$ lies in $[0,1]$ at every receiver
+(Lemma~\ref{lem:exactbasic} with \eqref{eq:mcpos}, which
+Definition~\ref{def:setting-family} gives). So at
+$\varepsilon_{\mathrm{eig}}\ge1$ the second entry of \eqref{eq:elldef} is
+positive only where a computed $\widehat\Bnd^{\ast}$ exceeds $1$; elsewhere it
+is never positive and the exact window is never the binding term: the
+declaration pays the full cost of the computation and buys nothing, which is
+degenerate in the same namable sense as the rest of this list.
+
+Two arguments use the upper bound. Remark~\ref{rem:cdirection}'s even-$n$
+estimate uses $\varepsilon_2^{\,n}\le\varepsilon_2^{\,2}$ for every even
+$n\ge2$, which is exactly $\varepsilon_2\le1$; and the justification of
+\eqref{eq:eps2rank} in Remark~\ref{rem:ranktwosided}, that the spectrum it
+thresholds is normalized to $[0,1]$, is an argument about a threshold
+\emph{inside} that interval.
+
+The domain is a floor, not sizing advice. Nothing here says a tolerance near
+$1$ is sensible; Remark~\ref{rem:ranktwosided} records that the choice of
+$\varepsilon_2$ decides which declarations are accepted, and
+Proposition~\ref{prop:dark-slack-bound} gives the inequality a declarer sizes $\varepsilon_2$
+and $\varepsilon_4$ against. What the declared domain buys is that every error
+term this contract states holds on every value the contract admits.
+\end{remark}

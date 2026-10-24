@@ -1,0 +1,129 @@
+% ---
+% id: meat-core/lem:b-derivative
+% kind: lem
+% title: "Derivative of the pinched trace power at order one"
+% summary: >-
+%   At Rényi order one the derivative of the pinched trace power of a
+%   subnormalised operator is minus ln 2 times its relative entropy to its
+%   pinching. A jointly continuous majorant bounds the derivative just above
+%   order one, which carries the limit of order one through the infimum.
+% prominence: technical
+% status: implemented
+% uses: [def:feasible, fact:meat, lem:dk, def:admissible-declaration, foundations/def:pinching]
+% mentions: [thm:oracle]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.limit:relative_entropy_to_pinching
+% lean:
+% ---
+
+The limit of order one, Theorem~\ref{thm:oracle}, needs the derivative of
+the pinched trace power at $\alpha=1$ and a bound on it just above $1$
+that is continuous in the operator. In the proof, $\Xi(\alpha)$ is the
+derivative of $\sigma^{1/\alpha}$; the letter $\Sigma$ is taken by the
+marginal-constrained range of Fact~\ref{fact:meat}.
+
+\begin{lemma}\label{lem:b-derivative}
+We write $\hlow(\alpha)$ for \eqref{eq:hlow-def} with its
+$\alpha$-dependence explicit, and, for $\sigma\in\Pos{}$ with
+$\tr\sigma\le1$,
+$B_{\sigma}(\alpha)\coloneqq\tr[(\cZ(\sigma^{1/\alpha}))^{\alpha}]$.
+Let $\delta>0$, one number for all $\sigma$, and let $\sigma\succeq0$ with
+$\tr\sigma\le1$ (so $\|\sigma\|\le1$). Then
+$B_{\sigma}\in C^{1}([1,1+\delta])$, with
+$B_{\sigma}(1)=\tr\sigma$ and
+\begin{equation}\label{eq:Bprime}
+  B_{\sigma}'(1)=\tr[\cZ(\sigma)\ln\cZ(\sigma)]-\tr[\sigma\ln\sigma]
+  =-\ln2\;\Dtwo\big(\sigma\,\big\|\,\cZ(\sigma)\big)
+  \;\le\;0,
+\end{equation}
+with the convention $0\ln0=0$. Moreover, for all
+$\alpha\in(1,1+\delta]$,
+\begin{equation}\label{eq:majorant}
+  B_{\sigma}'(\alpha)\;\le\;c_{\sigma}(\alpha)\coloneqq
+  \tr\big[A(\alpha)^{\alpha}\ln A(\alpha)\big]
+  -\frac1{\alpha}\sum_i\lambda_i^{1/\alpha}\ln\lambda_i ,
+  \qquad A(\alpha)\coloneqq\cZ\big(\sigma^{1/\alpha}\big),
+\end{equation}
+where $\lambda_i$ are the eigenvalues of $\sigma$; and
+$(\alpha,\sigma)\mapsto c_{\sigma}(\alpha)$ is jointly continuous on
+$[1,1+\delta]\times\{\sigma\succeq0:\tr\sigma\le1\}$ with
+$c_{\sigma}(1)=B_{\sigma}'(1)$.
+\end{lemma}
+
+\begin{proof}
+\emph{Finiteness.} $\Dtwo(\sigma\|\cZ(\sigma))<\infty$ always: a vector
+in the kernel of $\cZ(\sigma)$ satisfies $\sigma^{1/2}Z_j\ket w=0$ for all
+$j$, hence lies in the kernel of $\sigma$, so
+$\operatorname{supp}\sigma\subseteq\operatorname{supp}\cZ(\sigma)$.
+
+\emph{Fixed supports.} $\operatorname{supp}\sigma^{1/\alpha}
+=\operatorname{supp}\sigma$ for every $\alpha$, and the kernel argument
+above shows $\operatorname{supp}\cZ(\tau)$ depends on $\tau$ only through
+$\operatorname{supp}\tau$; hence
+$S\coloneqq\operatorname{supp}A(\alpha)$ is the same subspace for all
+$\alpha$, and $S$ is $\cZ$-compatible (its projector is a fixed point of
+$\cZ$, being the support projector of a $\cZ$-output, which is
+block-diagonal). On $S$, $A(\alpha)$ is positive definite with
+eigenvalues bounded away from $0$ uniformly on compact
+$\alpha$-intervals (eigenvalues are continuous in $\alpha$ and positive).
+
+\emph{Smoothness.} $\alpha\mapsto\sigma^{1/\alpha}
+=\sum_i\lambda_i^{1/\alpha}P_i$ is $C^{1}$ with
+$\frac{\mathrm d}{\mathrm d\alpha}\sigma^{1/\alpha}
+=-\frac1{\alpha^{2}}\sum_i\lambda_i^{1/\alpha}\ln\lambda_i\,P_i
+\eqqcolon\Xi(\alpha)\succeq0$ (each $-\lambda^{1/\alpha}\ln\lambda\ge0$
+for $\lambda\in[0,1]$; the $\lambda=0$ terms vanish). Hence
+$A'(\alpha)=\cZ(\Xi(\alpha))\succeq0$ is continuous. Restricting to
+$S$, where $A$ is smooth and positive definite,
+$B_{\sigma}(\alpha)=\tr[A(\alpha)^{\alpha}]$ is $C^1$ with
+\begin{equation}\label{eq:Bprime-general}
+  B_{\sigma}'(\alpha)
+  =\tr\big[A^{\alpha}\ln A\big]
+  +\alpha\,\tr\big[A^{\alpha-1}A'\big],
+\end{equation}
+by \eqref{eq:trace-diff} (for the second term) and the scalar chain rule
+in the exponent (for the first; both computed in the joint eigenbasis
+data of $A(\alpha)$, using that
+$\frac{\partial}{\partial\alpha}a^{\alpha}=a^{\alpha}\ln a$ and the
+$C^1$ dependence of eigenvalues and eigenprojectors along the smooth
+positive-definite path on $S$; concretely, write
+$B_{\sigma}(\alpha)=\tr\exp(\alpha\ln A(\alpha))$ on $S$ and
+differentiate the two slots).
+
+\emph{At $\alpha=1$.} $A(1)=\cZ(\sigma)$,
+$A'(1)=\cZ(-\sigma\ln\sigma)$, and $A^{\alpha-1}\to\Pi_S$ as
+$\alpha\downarrow1$ (eigenvalues of $A$ on $S$ bounded below). Hence
+\begin{equation*}
+  B_{\sigma}'(1)=\tr[\cZ(\sigma)\ln\cZ(\sigma)]
+  +\tr[\Pi_S\,\cZ(-\sigma\ln\sigma)]
+  =\tr[\cZ(\sigma)\ln\cZ(\sigma)]-\tr[\sigma\ln\sigma],
+\end{equation*}
+using self-adjointness of $\cZ$, $\cZ(\Pi_S)=\Pi_S$, and
+$\operatorname{supp}(\sigma\ln\sigma)\subseteq\operatorname{supp}\sigma
+\subseteq S$. The identification with the relative entropy uses
+$\tr[\sigma\ln\cZ(\sigma)]=\tr[\cZ(\sigma)\ln\cZ(\sigma)]$ (again
+self-adjointness and block-diagonality of $\ln\cZ(\sigma)$ on $S$), and
+non-positivity is monotonicity of $\Dtwo\ge0$.
+
+\emph{Majorant.} In \eqref{eq:Bprime-general},
+$\|A(\alpha)\|\le\|\sigma^{1/\alpha}\|\le1$ (a pinching is an average of
+unitary conjugates, \xref{foundations/def:pinching}, so it cannot increase
+the operator norm), hence
+$A^{\alpha-1}\preceq\Pi_S\preceq\idon{}$, and $A'\succeq0$ gives
+$\tr[A^{\alpha-1}A']\le\tr[A']=\tr[\Xi(\alpha)]
+=-\frac1{\alpha^{2}}\sum_i\lambda_i^{1/\alpha}\ln\lambda_i$; multiplying
+by $\alpha$ yields \eqref{eq:majorant}. Joint continuity: the map
+$(\alpha,\sigma)\mapsto A(\alpha)$ is jointly continuous; the scalar
+functions $(a,\alpha)\mapsto a^{\alpha}\ln a$ (value $0$ at $a=0$) and
+$(\lambda,\alpha)\mapsto\lambda^{1/\alpha}\ln\lambda$ are jointly
+continuous on $[0,1]\times[1,1+\delta]$; and a trace of a jointly
+continuous spectral function of a jointly continuous operator family is
+jointly continuous. No step restricts $\delta$ or makes it depend on
+$\sigma$: the eigenvalue bound on $S$ holds on every compact
+$\alpha$-interval, and the norm bound and the two scalar functions hold for
+every $\alpha\ge1$. At $\alpha=1$ the two expressions
+\eqref{eq:majorant} and \eqref{eq:Bprime-general} coincide, both equal to
+\eqref{eq:Bprime}.
+\end{proof}

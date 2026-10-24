@@ -1,0 +1,17 @@
+id: migration/core-c
+title: Migrate core C
+kind: task
+status: open
+severity: info
+priority: 1
+needs_human: false
+owner: agent
+module: core-c
+claims: []
+opened: 2026-09-04
+closes_when: core-c exists.
+brief: |
+  The next module.
+links: []
+history:
+  - 2026-09-04: opened.

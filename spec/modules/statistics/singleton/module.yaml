@@ -1,0 +1,42 @@
+id: singleton
+kind: submodule
+version: 0.5.0
+title: "Singleton acceptance set"
+abstract: >-
+  This submodule treats the acceptance test that accepts exactly one declared
+  frequency vector. Its main result is that under independent honest rounds
+  with one law the test's accept probability is the multinomial probability
+  of that vector ([[thm:singleton-completeness]]). A vector off the count
+  grid, or one that puts weight on an outcome the honest law never produces,
+  is never accepted, and then no completeness budget below one exists;
+  otherwise the least budget is one minus the accept probability. That
+  budget is zero only when the honest law and the vector are the same point
+  mass, and at any realistic alphabet and round count it is close to one,
+  which is why the construction map never emits a singleton. An instance
+  that declares one records its least budget, or that none exists, and the
+  singleton reads the honest model in point form only.
+depends_on: [binomial-box]   # rem:singleton-honest reads thm:completeness-bound and thm:monotonicity-limits (a sibling depends_on, check 0b)
+notation_version: "0.5.0"
+reading_groups:
+- title: Completeness of a singleton acceptance set
+  start: thm:singleton-completeness
+  abstract: >-
+    A test that accepts exactly one frequency vector is far more restrictive
+    than a box around the honest law. The main result,
+    [[thm:singleton-completeness]], computes its accept probability from the
+    multinomial law, says when no completeness budget below one exists and
+    when the least budget is zero; the remark explains why the construction
+    map never emits a singleton.
+- title: Requirements
+  start: req:singleton-budget-record
+  abstract: >-
+    An instance that declares a singleton acceptance set records its least
+    completeness budget, or that no admissible budget exists, and claims no
+    completeness the set does not have. The singleton reads the honest model
+    in point form only: a degenerate envelope is read as its law, and a
+    non-degenerate one is refused.
+order:
+  - thm:singleton-completeness
+  - rem:singleton-honest
+  - req:singleton-budget-record
+  - req:singleton-point-form

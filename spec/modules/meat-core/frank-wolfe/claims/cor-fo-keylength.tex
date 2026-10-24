@@ -1,0 +1,73 @@
+% ---
+% id: meat-core/frank-wolfe/cor:fo-keylength
+% kind: cor
+% title: "Key length from the first-order bound"
+% summary: >-
+%   With max{0, h_lb} in place of the rate, the fixed-length key-length bound
+%   gives an ε_pa-secret and ε_ev-correct key for a Rényi order in (1, 2),
+%   whether the iterates are exact or relaxed. If h_lb ≤ 0 and ε_ev < 1, no key
+%   is claimed.
+% prominence: standard
+% status: implemented
+% uses: [thm:firstorder, meat-core/cor:keylength-bound, meat-core/lem:memory-lift, meat-core/lem:honest-attacks]
+% mentions: [meat-core/thm:keylength, meat-core/lem:ev-correctness, meat-core/cor:composed-security, meat-core/prop:monotone, req:iterate-checks]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.general_keyrate:key_length_from_first_order
+% lean:
+% ---
+
+The first-order bound enters the core's key-length corollary as the lower
+bound that corollary asks for. Parts~(ii) and~(iiib) of
+Theorem~\ref{thm:firstorder} conclude the same inequality
+$\max\{0,\hlb\}\le\hlow$ against the same exact $\hlow$, and (iiib), which
+admits an iterate in the \tref{relaxed feasible set}, is the part a run of
+this module is in (Requirement~\ref{req:iterate-checks}).
+
+\begin{corollary}\label{cor:fo-keylength}
+Let $\alpha\in(1,2)$, let the hypotheses of Theorem~\ref{thm:keylength}
+hold in its unconstrained or constrained branch, the run as in
+Lemma~\ref{lem:memory-lift}\,(a) and hypothesis (H-CHAIN) included, at every
+all-at-once attack with finite registers, with $\Feas^{J}$ carrying
+the declared $\CList$ in the constrained branch, let those of
+Lemma~\ref{lem:ev-correctness} hold, A-SEQ with its clause (v) among the
+former, and let $\hlb$ be as in
+Theorem~\ref{thm:firstorder}\,(ii) or~(iiib), at some or all iterates
+with the lower bounds of its part~(iv) in place of the pairings. If the
+output length
+satisfies
+\begin{equation}\label{eq:keylength-fo}
+  \ell\;\le\;n\,\max\{0,\hlb\}-\lEC-\Big\lceil\log_2\frac1{\eev}\Big\rceil
+  -\frac{\alpha}{\alpha-1}\log_2\frac1{\epa}+1,
+\end{equation}
+then the protocol is $\epa$-secret and $\eev$-correct on the accepted
+state, hence, for $\ell\ge1$, $(\epa+\eev)$-secure in the
+\tref{honest-authentication setting}, and under the further hypotheses of
+Corollary~\ref{cor:composed-security}\,(iii)
+$(\epa+\eev+2\varepsilon_{\mathrm{auth}})$-secure over the classical channel
+of that part, with net key gain $\ell-k_{\mathrm{auth}}$ when both parties
+output a key, the secrecy and the security statements holding at every
+output state, whatever the dimension of the adversary's registers and the
+order in which the source releases its signals, as
+Corollary~\ref{cor:composed-security} states them, and the correctness
+statement at every attack; the four conclusions of
+Proposition~\ref{prop:monotone} hold verbatim for the
+\tref{maximal key length} built from \eqref{eq:keylength-fo}; and if
+$\hlb\le0$ and $\eev<1$ no key is claimed.
+\end{corollary}
+
+\begin{proof}
+This is Corollary~\ref{cor:keylength-bound} of the core with
+$h\coloneqq\hlb$. Theorem~\ref{thm:firstorder}\,(ii), respectively~(iiib),
+with its part~(iv) where lower bounds stand in for the pairings, gives
+$\hlb\le\hlow$ in exact real arithmetic, which is that corollary's
+hypothesis \eqref{eq:lower-bound-h}, and \eqref{eq:keylength-fo} is its
+\eqref{eq:keylength-h}. Its clause~(a) applies because $\hlb$ depends on
+the iterates, the pairs or lower bounds its brackets use and the
+declaration, and on none of $(\lEC,\eev,\epa)$; its clause~(b) is the last
+sentence of the statement.
+Nothing is added to the core's argument: no additional subtrahend, no
+floor beyond the one $\max\{0,\cdot\}$ already supplies, and no arithmetic
+requirement of any kind.
+\end{proof}

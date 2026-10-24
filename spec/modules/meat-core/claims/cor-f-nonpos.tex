@@ -1,0 +1,41 @@
+% ---
+% id: meat-core/cor:f-nonpos
+% kind: cor
+% title: "Non-positivity of the sector deficits"
+% summary: >-
+%   Every sector deficit is non-positive on the whole positive cone, with no
+%   trace hypothesis, and vanishes exactly when its passing-branch output is
+%   block-diagonal for the key pinching. [[prop:exact-cancellation]] reads the
+%   equality case.
+% prominence: standard
+% status: implemented
+% uses: [foundations/lem:pinchmono, thm:branch-formula, lem:branch-maps]
+% mentions: [prop:exact-cancellation, cor:concavity]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.branch:evaluate_branch
+% lean:
+% ---
+
+The corollary is stated on the whole cone. It imposes no trace bound
+$\tr\sigma\le1$: such a bound would be inherited from the domain of
+Corollary~\ref{cor:concavity} and is used nowhere, and
+Proposition~\ref{prop:exact-cancellation} invokes the equality case for
+arbitrary $\sigma\in\Pos{A\Qsys_s}$.
+
+\begin{corollary}\label{cor:f-nonpos}
+For every $\hat c$, $s$ and \emph{every} $\sigma\in\Pos{A\Qsys_s}$, with no
+trace hypothesis (in particular not $\tr\sigma\le1$),
+$f_{\hat c,s}(\sigma)\le0$, and
+$f_{\hat c,s}(\sigma)=0$ if and only if $\cG_{\hat c,s}(\sigma)$ is
+block-diagonal for the \tref{key pinching} $\cZ$.
+\end{corollary}
+
+\begin{proof}
+Apply \xref{foundations/lem:pinchmono} with $\tau=\cG_{\hat c,s}(\sigma)$ and
+recall \eqref{eq:f-def}. That lemma is stated on all of $\Pos{}$ and
+consumes no trace hypothesis, and $\cG_{\hat c,s}$ maps
+$\Pos{A\Qsys_s}$ into $\Pos{}$ by Lemma~\ref{lem:branch-maps}\,(i), so the
+statement is on the whole cone.
+\end{proof}

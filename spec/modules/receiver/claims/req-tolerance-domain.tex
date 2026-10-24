@@ -1,0 +1,25 @@
+% ---
+% id: receiver/req:tolerance-domain
+% kind: req
+% title: "Validation of the receiver tolerances against their domain"
+% summary: >-
+%   Each receiver tolerance is validated at input against its declared domain
+%   [0, 1), and a value outside it is refused. At one or more every test the
+%   tolerance decides would be vacuous or degenerate ([[rem:tolerancedomain]]).
+% prominence: standard
+% status: accepted
+% uses: [rem:tolerancedomain]
+% mentions: [def:tolmap]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}\label{req:tolerance-domain}
+The engine validates each of the \tref{receiver tolerances}
+$\varepsilon_1,\dots,\varepsilon_6$, $\varepsilon_{\mathrm{gap}}$ and
+$\varepsilon_{\mathrm{eig}}$ of Definition~\ref{def:tolmap} at input against
+the declared domain $[0,1)$, and refuses a value outside that interval with the
+reason \iface{tolerance_outside_declared_domain}.
+\end{requirement}

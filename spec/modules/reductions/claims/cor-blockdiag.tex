@@ -1,0 +1,46 @@
+% ---
+% id: reductions/cor:blockdiag
+% kind: cor
+% title: "Restriction to block-diagonal squashed states"
+% summary: >-
+%   If every target element and carried operator is block diagonal for a
+%   sector decomposition, the squashing channel followed by the pinching
+%   realises the same relation and makes every reachable state block diagonal.
+%   For that channel the squashed analysis may be restricted to block-diagonal
+%   states.
+% prominence: standard
+% status: accepted
+% uses: [def:sound, prop:pinching, prop:preorder, cor:sound]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Composing a squasher with the pinching of Proposition~\ref{prop:pinching}
+costs nothing when the target and the carried operators are block diagonal,
+and it makes block diagonality of the squashed states a sound constraint.
+
+\begin{corollary}\label{cor:blockdiag}
+Let $(M;O)\dsq_{\Lambda}(F;\hat O)$ and suppose every $F_v$ and every
+$\hat O_k$ is block diagonal for a finite orthogonal decomposition
+$\{\Pi_s\}_{s\in\SecSet}$ of $\Hs{\Qsys}$. Then
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $(M;O)\dsq_{\PinS\circ\Lambda}(F;\hat O)$, with the same target, the same
+  tuple and the same pull-backs;
+\item every state reachable through $\PinS\circ\Lambda$ is block diagonal in
+  each round, so ``$\sigma$ is block diagonal in every round's sector
+  decomposition'' is a sound constraint for that channel
+  (Definition~\ref{def:sound});
+\item consequently the squashed analysis may be restricted to block-diagonal
+  states without excluding a reachable one.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(i) By Proposition~\ref{prop:pinching}, $F\dsq_{\PinS}F$ carrying $\hat O$ as
+well, since $\PinS^{\dagger}(\hat O_k)=\hat O_k$; compose with
+Proposition~\ref{prop:preorder}. (ii) The output of $\PinS$ is block diagonal
+by construction, and $(\PinS\circ\Lambda)^{\otimes n}$ is block diagonal in
+every factor. (iii) is (ii) with Corollary~\ref{cor:sound}\,(i).
+\end{proof}

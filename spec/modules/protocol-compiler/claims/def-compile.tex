@@ -1,0 +1,207 @@
+% ---
+% id: protocol-compiler/def:compile
+% kind: def
+% title: "The compilation map"
+% summary: >-
+%   The compilation map fills the declaration from the specification, passing
+%   declared data through and constructing only the raw-key map, the index map
+%   and the weighted families. In the general format it also assembles the
+%   factor list.
+% prominence: standard
+% status: implemented
+% uses: [def:declaration, def:homog, def:target, def:exact, transmitter/def:source-spec]
+% mentions: [def:weighted, thm:sifting-and-key, def:gate-outcome-table, def:eligible, def:validator, def:spec, def:chaincond, reductions/def:joint-family, transmitter/rem:da1, transmitter/req:marginal-fill, foundations/req:declared-order, req:pass-through, req:derived-objects, req:validator-refusals]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.compile:compile_specification
+% lean:
+% notes: "The edge to def:eligible is a mention: the gate is decided on the emitted data after this map has run, so the map does not depend on it."
+% ---
+
+The compilation map assembles the declaration from the specification. It
+passes the \tref{declared data} through, weights a measurement family where a public
+choice is presented, and constructs only the raw-key map, the index map and
+the weighted families. The list below fills the \tref{basic format}; the
+paragraphs on the general format extend it slot for slot. That the engine
+passes the declared data through unchanged, constructs no right-hand side, and
+forms no product of two factors' families, no \tref{lifted operator} and no
+other derived object of the general format as data is
+Requirements~\ref{req:pass-through} and~\ref{req:derived-objects}; the
+refusals the validator issues on the factor list and on Alice's slots are
+Requirement~\ref{req:validator-refusals}'s.
+
+At $d_A=1$ a trusted-source request may leave the marginal slot empty; the
+transmitter then fills it with $[1]$ and records the fill
+(\xref{transmitter/req:marginal-fill}); why the two
+source modes impose the same condition there is \xref{transmitter/rem:da1}. A
+certificate that is present and fails any of the five conditions of gate (G2)
+is refused at every $d_A$, row~3 of the \tref{gate outcome table} of
+Definition~\ref{def:gate-outcome-table}. The order in which the binding rule below has
+condition~(S) decided on a supplied family is the order that family was
+declared in and also the order the consuming engine re-accumulates in (\xref{foundations/req:declared-order}): one order
+at all three places.
+
+\begin{definition}\label{def:compile}
+The \term[The map from a protocol specification to the protocol declaration it fills, slot by slot.]{compilation map} is the map $\Spec\mapsto\Decl$ that fills
+\eqref{eq:declaration} as follows.
+\begin{itemize}[leftmargin=1.6em]
+\item \emph{Alice's system and measurement.} $A$, $d_A$ and $\{M_x\}$ from
+  $\Spec_{\mathrm{src}}$, weighted by Definition~\ref{def:weighted} where a
+  choice family is presented.
+\item \emph{Alice's marginal.} $\tau_A$ is what the transmitter artefact's
+  marginal slot holds: in trusted-source mode the matrix in the slot --- at
+  $d_A=1$ the value $[1]$ the transmitter filled the slot with, the unique
+  element of $\Seq{A}$ --- and
+  $\tau_A=\nomarg$ where the slot is empty. The mode is read off that slot and
+  off nothing else. A certificate the artefact carries is consumed by gate
+  (G2) of Definition~\ref{def:eligible}.
+\item \emph{The \tref{measured system} and its family.} $(\Qsys,\SecSet,(d_s)_s)$
+  and $\{F_v\}$ from the last link of $\Chrec$. Where $\Spec_{\mathrm{rec}}$
+  declares a setting-dependent public choice, the family is weighted
+  after the chain by the setting-dependent form of
+  Definition~\ref{def:weighted}: the emitted family is then
+  $N_{v,f}=P(f\,|\,t(v))\,F_v$ over the support of $P$, the emitted \tref[outcome alphabet]{outcome
+  alphabet} is that support, and the setting map $t$ through which $P$ is read
+  is the class map of the \tref{joint alphabet} of the chain's \tref{producer} where
+  the chain was emitted by the reductions module
+  (\xref{reductions/def:joint-family}\,(a)), and is declared with the family
+  otherwise.
+\item \emph{The public maps.} $\Party$, $a_A$, $a_B$, $\phi$, $\hold$
+  verbatim from $\Spec_{\mathrm{pub}}$, declared on the emitted alphabets.
+\item \emph{The constraint list.} $\CList$ is the concatenation of
+  $\Spec_{\mathrm{con}}$'s entries with the entries transported by the links
+  of $\Chsrc$ and then those of $\Chrec$, each segment in its own order, each
+  entry with the datum its right-hand-side slot holds and with the tag that
+  datum's type determines (Definition~\ref{def:homog}).
+\item \emph{The raw-key map.}
+\begin{equation}\label{eq:rdef}
+  r(x,v)\coloneqq
+  \begin{cases}
+    r^{0}_{\hold}\big(\rd{\hold}(x,v),\,a(x,v)\big),
+      & \varsigma(a(x,v))=\mathrm{pass},\\[0.3ex]
+    \perp, & \varsigma(a(x,v))=\mathrm{fail},
+  \end{cases}
+  \qquad\text{with }d_Z\coloneqq|\Zval| .
+\end{equation}
+\end{itemize}
+
+\emph{The index map.} Alongside $\Decl$ the compiler emits the
+\term[The emitted choice of a bijection from each alphabet and from the sector set onto an initial segment of the non-negative integers, through which every emitted list is indexed.]{index map}
+$\idxm$, the label-to-index map: a choice, for each of $\Xset$, $\Vset$,
+$\SecSet$, $\Oset{\mathsf A}$, $\Oset{\mathsf B}$, $\CAset$, $\CBset$,
+$\Chatset$ and $\Zset$, of a bijection onto an initial segment of
+$\mathbb{Z}_{\ge0}$; every emitted list, matrix and function table is indexed
+through $\idxm$, and every semantic label is carried as metadata only. Its
+component on $\SecSet$ is the total order the sector map $\Smap$ already
+fixes, and not a second choice: one order on the sectors, required by the last
+clause of D(i) (Definition~\ref{def:target}) and decided by V1. And $\idxm$ is
+what fixes the declared summation order of Definition~\ref{def:exact} on every
+alphabet it indexes; it indexes no basis of a matrix, a trace being
+accumulated in the row order of the emitted array.
+
+\emph{The binding rule.} On the remaining alphabets the choice is the
+compiler's, under one binding rule. Where a supplied family arrives with a
+declared order on the alphabet that indexes it --- as the target POVM of the
+last link of $\Chrec$ does, its \tref{declarer} having established its own
+completeness sum in that order --- the compiler takes \emph{that} order as
+$\idxm$'s component there. So the order in which condition~(S) of
+Definition~\ref{def:exact} is decided on a supplied family here is the order
+that family was declared in, and no family is refused here for an ordering
+its declarer never chose. Where no order arrives with an alphabet the choice is free, and (S) is
+decided in the order the compiler chose and emits. This rule prescribes
+nothing to the declarer of a family: it constrains only which bijection this
+module picks.
+
+Where a choice-weighted presentation is resolved, this same rule settles the
+order the decision on each conditional family is read in, and adds nothing to
+it. The family the weighting produces is indexed by one alphabet --- $\Xset$
+where the presentation is Alice's, the physical receiver alphabet where it is
+a measuring party's, which in \tref[Band A]{Band~A} is the emitted $\Vset$ --- and where a declared order
+arrives with that alphabet the rule above takes \emph{it}, here as everywhere:
+$\Xset$ arrives ordered with the source part
+(Definition~\ref{def:spec}\,(a)), and the physical alphabet with the order the
+fibre sum of Definition~\ref{def:chaincond}\,(C4) is accumulated in.
+Condition~(S) on the conditional family of a choice value is then read in the
+\emph{restriction of that order} to the elements that choice value
+contributes, which is a total order on $\Uset_t$ however the record listed
+it; the two conditions are independent, only the order restricting. Where no order arrives with that alphabet the
+free choice is made as Definition~\ref{def:weighted} says, by the record's own
+listing, and it is emitted. No declarer's order is overridden and no
+presentation is refused for an order. Where the setting-dependent weighting is applied,
+the emitted alphabet is the support of $P$ and its order is the product order
+of Definition~\ref{def:weighted}: $v$ in its declarer's declared order and,
+within each $v$, $f$ in the declared order of the \tref{choice alphabet}, the
+pairs off the support omitted; that is the order (S) is decided in on the
+emitted family and the order $\idxm$ emits on it.
+
+\emph{The general format.} For a specification presented as
+Definition~\ref{def:spec}'s (a$'$)--(e$'$) the map fills the general format
+of Definition~\ref{def:declaration}\,(DX1)--(DX6) as follows. In the
+\tref{basic format} --- one Alice sector, one measured factor, POVM form, two
+messages neither reading the other and no party-local entry --- every clause
+below is the clause of the same subject above, slot for slot, and the map
+emits what those clauses emit.
+
+\emph{The factor list} (DX1) is assembled and not declared as a whole: the
+factor tagged $A$ is the Alice sector map the transmitter artefact declares,
+where it declares one, and it is the first of the list; where the artefact
+declares none, $\mathbb{T}=\{t_0\}$ and no $A$ factor is emitted. The factors
+tagged $\Qsys$ are the entries of $\Spec_{\mathrm{rec}}$ in their declared
+order, each carrying that entry's party label and the sector map of the last
+target descriptor of that entry's receiver segment, which
+Definition~\ref{def:chaincond}\,(C1) decides per factor. The one block kind
+is the kind those maps carry, and the factors' agreement in it is decided by
+the same four-component comparison V1 makes, taken on the factor list
+(Definition~\ref{def:validator}, V1).
+The product sector map, its order, the product alphabet and the
+\tref[joint sector]{joint sectors} are derived from that list by (DX1) and (DX3) and are
+declared, formed and emitted by no one: what is emitted is the factor list and
+the rules.
+
+\emph{Alice's slots.} $\tau_A$ is what the artefact's marginal slot holds,
+the block list along $\mathbb{T}$ included; Alice's measurement slot is the
+artefact's, in the form the artefact declares --- the POVM slot or the
+ensemble slot of (DX4) --- weighted by Definition~\ref{def:weighted} in that
+form where a choice family is presented. The mode is read off the
+marginal slot as above.
+
+\emph{Per measured factor.} $(\Qsys_f,\SecSet^{f},(d_{f,s_f})_{s_f})$ and
+$\{F^{f}_{v_f}\}_{v_f\in\Vset^{f}}$ from the last link of that factor's
+receiver segment and, where that factor's entry of $\Spec_{\mathrm{rec}}$
+declares a setting-dependent public choice, weighted after that segment by the
+setting-dependent form of Definition~\ref{def:weighted}, so that factor $f$'s
+emitted family is $P_f(\,\cdot\mid\cdot\,)$ times that factor's delivered
+family over the support of $P_f$, and factor $f$'s emitted alphabet
+$\Vset^{f}$ is that support in its product order. Each factor's weighting is
+applied to its own family and to nothing else. No product of two factors'
+families is formed by this map, whether emitted or handed on; so the subject of the
+representability decision of Definition~\ref{def:weighted} is, as in the basic
+format, the products \emph{that definition's} two constructions form, and no
+product block \eqref{eq:productfamily} is a product this map forms.
+
+\emph{The public part and the raw key.} $\Party$, $\phi$, $\hold$ verbatim
+from $\Spec_{\mathrm{pub}}$ and the \tref[transcript protocol]{transcript} verbatim: the sender,
+the alphabet and the table of each message, declared on the emitted
+alphabets. The joint announcement function $a$ is not a slot: it is the
+composition \eqref{eq:transcript} of those tables, and $r$ is \eqref{eq:rdef}
+with \emph{that} $a$, which is what Theorem~\ref{thm:sifting-and-key}\,(iv), (vi) is
+stated of. $\CList$ is the concatenation above, each entry carrying in
+addition its \tref{scope}, and each with the datum its right-hand-side slot
+holds and the tag that datum's type determines; for a party-local entry that
+is the tag field it arrives with beside a real scalar
+(Definition~\ref{def:homog}).
+
+\emph{The index map in the general format.} $\idxm$ has one component per
+factor alphabet $\Vset^{f}$ and one per factor \tref{sector set} $\SecSet^{f}$, and,
+where an $A$ factor is emitted, one on $\mathbb{T}$, which is the total order
+that factor's own map fixes. Its components on $\Vset$ and on $\SecSet$ are
+the product orders (DX1) and (DX3) derive from the factors' orders and are not
+further choices, as its component on $\SecSet$ above is not; the joint sectors
+are ordered with $t$ slowest by (DX1). The binding rule above is applied per
+factor: where a factor's target family arrives with a declared order on its
+alphabet, the compiler takes that order there. So condition~(S) of
+Definition~\ref{def:exact} is decided per factor, in that factor's arriving
+order, and per Alice sector on Alice's data; no sum over a product alphabet is
+accumulated by this map or by its consumer.
+\end{definition}

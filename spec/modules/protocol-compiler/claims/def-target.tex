@@ -1,0 +1,137 @@
+% ---
+% id: protocol-compiler/def:target
+% kind: def
+% title: "Target conditions of a well-formed declaration"
+% summary: >-
+%   A declaration with its index map is well-formed when D(i) to D(viii) hold:
+%   agreeing finite data, one sector order, an admissible marginal slot, exact
+%   measurement families, raw-key values in the key alphabet or none,
+%   announcement-determined sifting, typed entries, feasibility and party
+%   computability.
+% prominence: standard
+% status: accepted
+% uses: [def:declaration, def:exact]
+% mentions: [def:compile, def:homog, def:feasible]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The sector order a consumer compares against its own sector map and the
+summation order it reads off the emitted \tref{index map} must be one order,
+so D(i) states their agreement as a condition on the declaration together
+with its index map.
+
+\begin{definition}\label{def:target}
+A declaration \eqref{eq:declaration}, \emph{together with the label-to-index
+map $\idxm$ emitted alongside it} (Definition~\ref{def:compile}), is a
+\term[A declaration, together with its index map, that meets the eight target conditions D(i) to D(viii).]{well-formed declaration}
+when the following hold, every operator predicate below being decided
+\emph{exactly} in the sense of Definition~\ref{def:exact} and every
+combinatorial condition exactly as well:
+\begin{enumerate}[label=D(\roman*),leftmargin=3.2em]
+\item all systems are finite-dimensional, all alphabets are finite and
+  non-empty, all declared maps are total, and \emph{the sector map agrees}:
+  there is one sector map $\Smap$; every declared $\Qsys$-operator is a
+  block list against it, with the same block kind, the same
+  identifiers in the same order and the same dimensions; and
+  $d_{\Qsys}=\sum_{s\in\SecSet}d_s$. That much is condition~(T) of
+  Definition~\ref{def:exact}, stated once for the declaration. \emph{And the
+  order declared on the sectors is one order and not two}: the restriction of
+  $\idxm$ to $\SecSet$ is the total order $\Smap$ fixes. This last clause is a
+  condition on the pair $(\Decl,\idxm)$ and not on a slot of
+  \eqref{eq:declaration};
+\item the marginal slot holds $\tau_A$ with $\tau_A=\tau_A^{\dagger}$,
+  $\tau_A\succeq0$ and $\tr\tau_A=1$, the trace summed in the row order and
+  \tref[rounds nowhere]{rounding nowhere} --- so that $\tau_A\in\Seq{A}$
+  holds of the declared numbers, and a slot holding the zero matrix is
+  inadmissible, its trace being $0$ --- or the value $\nomarg$;
+\item \emph{(typing)} $\{F_v\}$ and every $\hat O_k$ are block lists against
+  $\Smap$ in the sense of Definition~\ref{def:declaration}, so that
+  $\Pi_sF_v\Pi_{s'}=0$ and $\Pi_s\hat O_k\Pi_{s'}=0$ for $s\ne s'$ hold
+  \emph{by construction} and are not conditions on data; and
+  \emph{(five predicates)} $M_x\succeq0$ for each $x$ and $\{M_x\}$ complete on
+  $A$; $F_v^{(s)}\succeq0$ for each $(v,s)$ and $\{F_v^{(s)}\}_v$ complete on
+  $\Qsys_s$ for each $s$; and $\hat O_k^{(s)}$ Hermitian for each $(k,s)$,
+  each decided exactly, each positivity predicate being the two decisions
+  (H) and (P) of Definition~\ref{def:exact} on the same block, and each
+  completeness predicate carrying with it the condition~(S) that its
+  declared-order sum round nowhere. This is where Hermiticity of Alice's and
+  Bob's emitted families enters the target conditions, and it is the only
+  place it does;
+\item $r$ maps into $\Zval\sqcup\{\perp\}$;
+\item \emph{sifting is announcement-determined}: there is
+  $\varsigma:\Kann\to\{\mathrm{pass},\mathrm{fail}\}$ with
+  $r(x,v)=\perp\iff\varsigma(a(x,v))=\mathrm{fail}$;
+\item in trusted-source mode $\bowtie_k\in\{\preceq,=,\succeq\}$ and
+  each entry carries one of the two declared forms of
+  Definition~\ref{def:homog}, \tref{homogeneous} with $c_k\in\mathbb{R}$ or
+  \tref{general} with $\Theta_k$ Hermitian on $A$; in
+  untrusted-source mode $\bowtie_k\in\{\le,=,\ge\}$ with
+  $\Theta_k=c_k\in\mathbb{R}$. The relation symbol and the type of the
+  right-hand side, which is what fixes the tag (Definition~\ref{def:homog}),
+  are combinatorial and are read exactly; the Hermiticity of a general
+  $\Theta_k$ is the exact predicate (H) on one matrix;
+\item the \tref{feasible set} of Definition~\ref{def:feasible} is non-empty,
+  $\Feas\ne\varnothing$;
+\item \emph{party computability}: each party announces a function of its own
+  readout ($a_A$ is defined on $\Oset{\mathsf A}$ and $a_B$ on
+  $\Oset{\mathsf B}$, jointly \eqref{eq:jointann}) and the declared holder
+  computes the raw key from its own readout and the announcements: there is a
+  total $r_{\hold}:\Oset{\hold}\times\Kann\to\Zset$ with
+  \begin{equation}\label{eq:partycomp}
+    r(x,v)=r_{\hold}\big(\rd{\hold}(x,v),\,a(x,v)\big)
+    \qquad\text{for all }(x,v)\in\Xset\times\Vset .
+  \end{equation}
+\end{enumerate}
+The
+\term[The party partition in which Alice reads x and holds her system, and Bob reads v and holds every sector.]{default party partition}
+is $\rd{\mathsf A}(x,v)=x$, $\rd{\mathsf B}(x,v)=v$, with $A$ labelled
+$\mathsf A$ and every $\Qsys_s$ labelled $\mathsf B$.
+
+\emph{The general format.} For a declaration in the general format of
+Definition~\ref{def:declaration}\,(DX1)--(DX6) the conditions read as
+follows, and in the \tref{basic format} --- one Alice sector, one measured
+factor, POVM form, two messages neither reading the other and no party-local
+entry --- they are the eight above.
+D(i): the sector map is one factorised map (at most one factor tagged $A$,
+and then the first, at least one tagged $\Qsys$, one block kind), every
+declared family on a measured factor and every entry's operator is a block
+list against the map of its factor, Alice's data against the factor tagged
+$A$, $d_{\Qsys}=\prod_f\sum_{s_f}d_{f,s_f}$, and the restriction of $\idxm$
+to each factor's sectors is the order that factor's map fixes, the product
+order being derived and not declared. D(ii): $\tau_A$ is a block list along
+$\mathbb{T}$ with every block Hermitian and positive semidefinite and total
+trace $1$, summed without rounding; in ensemble form additionally every
+block is non-zero. D(iii): the typing and the predicates of
+Definition~\ref{def:exact} in their general-format reading, per measured
+factor and per Alice sector, the ensemble-form conditions in place of those
+on $\{M_x\}$ where that form is declared; ensemble form is refused in
+untrusted-source mode. D(vi): an entry carries its scope, which names a
+measured factor of the map, and one of the forms of
+Definition~\ref{def:homog}, the \tref{party-local} form included, in either
+mode, with a real $c_k$; a general $\Theta_k$ is a block list along
+$\mathbb{T}$, Hermitian block by block. \emph{And the relation symbol is
+read by form and not by mode alone}: an \emph{untagged} entry carries
+$\bowtie_k\in\{\preceq,=,\succeq\}$ in trusted-source mode and
+$\bowtie_k\in\{\le,=,\ge\}$ in untrusted-source mode, exactly as stated for
+D(vi), while an entry declared party-local carries
+$\bowtie_k\in\{\preceq,=,\succeq\}$ \emph{in either mode}, its reading being
+the operator relation of the last line of \eqref{eq:feas-general}
+(Definition~\ref{def:homog}, the relation-symbol clause of the \tref[party-local form]{party-local
+form}); where every row of that entry is $1\times1$ (every Alice block, and
+every sector block of every measured factor other than the entry's scope, of
+dimension one, $d_A=1$ at one measured factor included) that relation is
+between $1\times1$ matrices and the three operator symbols are the three
+scalar symbols, which is the degenerate case. Where no entry is party-local,
+as in every declaration of the \tref{basic format}, this clause is D(vi) as
+stated. D(viii): the announcement slot is a \tref{transcript protocol} (DX5),
+every table $a_m$ being total on
+$\Oset{\pi_m}\times\mathcal{C}_1\times\dots\times\mathcal{C}_{m-1}$, so that
+a message reads its sender's readout and earlier messages \emph{by its
+signature}; the joint function $a$ is the composition \eqref{eq:transcript},
+and \eqref{eq:partycomp} holds with it. D(iv), D(v) and D(vii) keep their
+wording, with $a$ the derived function and $\Feas$ the set of
+\eqref{eq:feas-general}.
+\end{definition}

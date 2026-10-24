@@ -1,0 +1,28 @@
+% ---
+% id: reductions/req:unpadded-branch-blocks
+% kind: req
+% title: "Branch blocks emitted as supplied"
+% summary: >-
+%   The engine does not pad the branch blocks of a composite target: a
+%   reduction instance emits the blocks its branches supply. A padded variant a
+%   submodule proves from [[cor:flagsenough]] is emitted only where that
+%   submodule's interface declares it.
+% prominence: standard
+% status: accepted
+% uses: [cor:flagsenough]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Corollary~\ref{cor:flagsenough} allows the branch blocks of a composite
+target to be padded to a common size; this requirement says when the engine
+does so.
+
+\begin{requirement}\label{req:unpadded-branch-blocks}
+The engine does not pad the branch blocks of a composite target: a
+\tref{reduction instance} emits the blocks its branches supply, and a padded variant a
+submodule proves from Corollary~\ref{cor:flagsenough} is not emitted unless
+that submodule's interface declares it.
+\end{requirement}

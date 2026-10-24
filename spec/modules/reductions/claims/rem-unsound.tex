@@ -1,0 +1,110 @@
+% ---
+% id: reductions/rem:unsound
+% kind: rem
+% title: "The standard way to make a squashed constraint unsound"
+% summary: >-
+%   Imposed as an operator identity on a target that fails it, the physical
+%   class-marginal identity would exclude reachable states and void
+%   [[thm:transfer]]. Its sound squashed form is the expectation identity,
+%   whose certificate is available exactly where the reduction instance
+%   discharges it.
+% prominence: standard
+% status: accepted
+% uses: [thm:transfer, cor:pullback, lem:statistics, def:joint-family, lem:linear, def:reduction-instance]
+% mentions: [rem:exactboundary, cor:entries, thm:licence, cor:flag-instance, thm:instrument-instance, cor:register-instance, cor:transported, req:class-marginal-operator-form, req:class-marginal-entry]
+% assumes: [A-CONST]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Case (i) of Corollary~\ref{cor:transported} carries the identity and
+inequality certificates: they hold on every reachable state whatever the
+adversary is allowed to send, so the resulting families are sound for
+\emph{every} choice of $\Sph$ and may be adjoined to any analysis. Its case
+(ii) is an assumption about the input and is sound only for the $\Sph$ it was
+assumed on. The following remark describes the standard way a constraint
+fails to be sound at all.
+
+\begin{remark}
+\label{rem:unsound}
+Equation~\eqref{eq:inclusion} is the whole of soundness, and the standard way
+to violate it is to transplant an operator identity that holds in the
+\emph{physical} model. Take a private setting of a measuring party's. Where the physical
+model \emph{is} a \tref{joint family} (Definition~\ref{def:joint-family}\,(b)) ---
+one branch, $\Bsys$ the system the conditional families live on --- the
+physical POVM satisfies the operator identity
+\begin{equation}\label{eq:probeidentity}
+  \sum_{v\in\Vset_t}M_v\;=\;q_t\,\idon{\Bsys}
+  \qquad\text{for every }t\in\Tset ,
+\end{equation}
+which is the \tref{class-marginal identity} \eqref{eq:classmarginal}: the
+weight $q_t$ is that party's own and
+\eqref{eq:jointfamily} \emph{builds} $M_{(y,t)}=q_t\widetilde M_{y|t}$ out of
+a conditional family that is complete at each fixed $t$
+(Lemma~\ref{lem:linear}\,(ii), a statement about conditional families).
+
+\emph{When \eqref{eq:probeidentity} is available, and when it is not.} It is
+a theorem of the construction where the model is a joint family outright, and
+it is a property of a \tref{reduction instance}'s model only where the instance
+discharges it (Definition~\ref{def:reduction-instance}\,(I4)). An instance built by the
+branching rule inherits it from its branches and from nothing else
+(Theorem~\ref{thm:instrument-instance}, Corollary~\ref{cor:register-instance}):
+a branch whose POVM is an arbitrary one --- the flag instance of an
+uncharacterised branch, Corollary~\ref{cor:flag-instance}, on which nothing
+is assumed and which may be undeclared --- contributes to the class sum
+merely \emph{some} operator between $0$ and its branch weight, and the
+identity on $\Bsys$ is then neither a theorem of this contract nor a
+validated datum unless the branch's declaration establishes it. Whether a
+declaration can establish it for such a branch is a question about what the
+declaration presents (Remark~\ref{rem:exactboundary}). The identity is
+discharged only where every branch establishes it; an undeclared branch, a
+branch missing an element and a branch that does not establish the identity
+alike leave it undischarged, and the entry that rests on it is then refused
+and never emitted (Requirement~\ref{req:class-marginal-entry}). Where it is
+not discharged, \eqref{eq:probeidentity} may still hold of the device, but
+nothing declared establishes it. The squashed operators, where the identity
+is discharged, satisfy
+$\Lambda^{\dagger}\big(\sum_{v\in\Vset_t}F_v\big)=q_t\,\idon{\Bsys}$, while
+$\sum_{v\in\Vset_t}F_v\ne q_t\,\idon{\Qsys}$ on every \tref{scalar sector} of a
+flag-shaped target whose values do not sum to $q_t$ over $\Vset_t$. The sound squashed
+constraint is therefore the \emph{expectation} identity
+$\tr[\sum_{v\in\Vset_t}F_v\,\sigma]=q_t$ on reachable $\sigma$ --- a
+pull-back constraint in the sense of Corollary~\ref{cor:pullback}\,(i) ---
+and \emph{not} the operator identity on $\Qsys$. Imposing the latter would
+exclude reachable states and void Theorem~\ref{thm:transfer}, which is a
+security break rather than a rate loss.
+
+\emph{The two forms, and the certificate of the expectation form.} The
+operator form is refused because it is unsound
+(Requirement~\ref{req:class-marginal-operator-form}). The expectation form is
+sound but is not emitted by default either: the default constraint list is
+empty on the flag-state submodule's encoded route and carries an instance's
+own entries, at their constants, on its licensed route
+(Corollary~\ref{cor:entries}\,(iii)), and adding an entry on the encoded route
+would force a licence there and contradict that route's definition. The sound
+content of the physical identity is instead carried by the target elements
+themselves, which reproduce the statistics exactly
+(Lemma~\ref{lem:statistics}\,(ii)). The expectation form remains available on
+request \emph{under the condition that discharges its certificate, and not
+otherwise}. The entry is $\hat O=\sum_{v\in\Vset_t}F_v$, $\bowtie\,=\,=$,
+$c=q_t$ of Theorem~\ref{thm:licence}. Its hypothesis \eqref{eq:certificate}
+needs two steps, and only the first is unconditional: by the relation and
+linearity, $\Lambda^{\dagger}\big(\sum_{v\in\Vset_t}F_v\big)=\sum_{v\in\Vset_t}M_v$
+always (the fourth consequence of Definition~\ref{def:reduction-instance});
+that this in turn equals $q_t\idon{\Bsys}$ is \eqref{eq:probeidentity}, which
+holds by construction where the model is a joint family and otherwise exactly
+where the instance discharges it. \emph{The certificate is therefore
+available exactly when the instance's \tref{class-marginal flag} says the
+class-marginal identity is discharged}; for a model that is a joint family outright the flag is set
+by Lemma~\ref{lem:linear}\,(ii) alone. The constant $q_t$ is declared before
+the run in either case (Assumption~\ref{ass:constdecl}). The single equality
+entry at $c=q_t$ is what Corollary~\ref{cor:entries}\,(ii) emits, the
+certificate being discharged for the emitted numbers themselves. A request
+for the entry that meets the condition obtains it, under the licence a
+non-empty constraint list requires; a request that does not meet the
+condition is refused (Requirement~\ref{req:class-marginal-entry}), because
+emitting the entry there would impose $\tr[\sum_{v\in\Vset_t}F_v\,\sigma]=q_t$
+on states an uncharacterised branch can reach and for which it is false ---
+the security break this remark is about, arrived at from the other direction.
+\end{remark}

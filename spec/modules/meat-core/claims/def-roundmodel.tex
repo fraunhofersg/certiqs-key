@@ -1,0 +1,152 @@
+% ---
+% id: meat-core/def:roundmodel
+% kind: def
+% title: "Round model and licensed attack sets"
+% summary: >-
+%   The round model is that of foundations at the squashed system, with round
+%   channels that hand every public announcement to the adversary's memory. A
+%   licensed attack set bounds each attack's adjoint by the declared
+%   constraints; whether a protocol reduces to it is the attack-set licence.
+% prominence: standard
+% status: implemented
+% uses: [thm:protocol-channel, fact:meat, def:homog, def:declaration, foundations/def:round-model]
+% mentions: [thm:accumulated-entropy, reductions/def:roundmodel, reductions/def:attset, protocol-compiler/def:declaration, transmitter/ass:src, protocol-compiler/ass:atk]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Eq. (151)"
+%   - "tupkary2026decoy, Def. 8.3, Rem. 8.4"
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.declaration.validation:REQUIRED_ASSUMPTIONS
+% lean:
+% notes: "This round model is foundations/def:round-model at the per-round system Q, and its displays eq:attackchannel, eq:attset, eq:attset-un and eq:attset-pl are that definition's displays at Q, kept here because other claims and the oracle registries cite their labels. The licence protocol-compiler/ass:atk (A-ATK) states the licensed reduction over this definition and its two equations eq:attset and eq:attset-un; an amendment of either is an amendment of what that assumption delivers, which no edge of the graph computes because the compiler carries no edge upward."
+% ---
+
+The \tref{round model} is the one the foundations module, which holds the
+quantum-information preliminaries of this contract, states for a generic
+per-round system, taken at the squashed system $\Qsys$: the system the
+declared family $\{F_v\}$ measures, onto which the
+\tref[squashing channel]{squashing channels} of the reductions module map
+the physical system. The reductions module takes the same model at the
+physical system for its transfer theorems and states its
+\tref[attack set]{attack sets} at $\Qsys$
+(\xref{reductions/def:roundmodel}, \xref{reductions/def:attset}), so the
+attack sets of the two modules are the same sets. The definition below adds
+what this module's accumulation theorems consume: the round channels, the
+retention of the announcements and the licensed list.
+
+\begin{definition}
+\label{def:roundmodel}
+Fix a declaration $\Decl$ with single-round protocol channel
+$\Mprot\in\mathrm{CPTP}(A\Qsys\to Z\Chat I)$ (Theorem~\ref{thm:protocol-channel}).
+The round model of this contract is the round model of
+\xref{foundations/def:round-model} with per-round system $\Qsys$, Alice's
+system $A$ and the declared source mode, the round index of $\Qsys$ and $A$
+dropped. An \tref{attack sequence} is thus a family $(\Aev_j)_{j=1}^{n}$ of
+channels whose output carries the systems the adversary supplies in the
+declared source mode, the display being that definition's with its
+per-round system $S$ taken to be $\Qsys$:
+\begin{equation}\label{eq:attackchannel}
+  \Aev_j\in
+  \begin{cases}
+    \mathrm{CPTP}(E_{j-1},\ \Qsys\,E'_j), &
+      \text{trusted-source mode},\\[0.3ex]
+    \mathrm{CPTP}(E_{j-1},\ A\,\Qsys\,E'_j), &
+      \text{untrusted-source mode},
+  \end{cases}
+\end{equation}
+where $E_0$ is Eve's initial register and $E'_j$ her outgoing memory. In
+trusted-source mode $A$ is \emph{not} an output of $\Aev_j$: it is
+supplied by Alice, inaccessible to the adversary, and carried into the
+round channel as a separate input --- that, and nothing else, is what
+A-SRC (\xref{transmitter/ass:src}) licenses. The generated
+\term[The channel of round j: the attack followed by the single-round protocol map, with the announcement placed in the adversary's register.]{round channel}s
+are
+\begin{equation}\label{eq:roundchannel}
+\begin{gathered}
+  \Mprot_j\coloneqq
+  \begin{cases}
+    (\Mprot\otimes\idmap_{E'_j})\circ(\idmap_{A}\otimes\Aev_j)
+      \;\in\;\mathrm{CPTP}(A\,E_{j-1},\;Z\,\Chat\,E_j), &
+      \text{trusted mode},\\[0.5ex]
+    (\Mprot\otimes\idmap_{E'_j})\circ\Aev_j
+      \;\in\;\mathrm{CPTP}(E_{j-1},\;Z\,\Chat\,E_j), &
+      \text{untrusted mode},
+  \end{cases}\\
+  E_j\coloneqq E'_j\,I_j:
+\end{gathered}
+\end{equation}
+the attack delivers the round input on $\Qsys$ --- and, in
+untrusted-source mode, on $A$ as well --- together with Eve's
+new memory, the protocol channel produces $(Z_j,\Chat_j,I_j)$, and the
+announcement $I_j$ --- classical and public --- is placed in Eve's
+register. Content of $E_{j-1}$ that Eve wishes to retain (earlier
+announcements included) she carries inside $E'_j$; every physical
+attack is represented by a sequence that retains \emph{all}
+announcements, and Theorem~\ref{thm:accumulated-entropy} uses that representation, so
+that $E_n=I_1^n\Ehat$ with $\Ehat$ Eve's retained quantum memory. The
+untrusted-mode round channel has no $A$ input at all, which is what
+makes it an instance of Fact~\ref{fact:meat} with the marginal
+register $A_{j-1}$ trivial (Fact~\ref{fact:meat}, locator note (vii);
+Theorem~\ref{thm:accumulated-entropy}).
+
+For a licensed list $\CList$ (Definition~\ref{def:homog}) and
+finite-dimensional registers $E',E''$, the
+\term[The attack set of a licensed constraint list, at the squashed system, in the declared source mode.]{licensed attack set}
+is the attack set of $\CList$ of \xref{foundations/def:round-model}
+at $S=\Qsys$; its displays at that system are, in trusted-source mode,
+\begin{equation}\label{eq:attset}
+  \AttSet_{\CList}(E',\,\Qsys E'')\coloneqq
+  \Big\{\Aev\in\mathrm{CPTP}(E',\Qsys E''):\
+  \Aev^{\dagger}\big(\hat O_k\otimes\idon{E''}\big)
+  \bowtie_k c_k\,\idon{E'}\ \ \forall k\Big\},
+\end{equation}
+and, with the constraint operator lifted to the larger supplied system,
+\begin{equation}\label{eq:attset-un}
+  \AttSet_{\CList}(E',\,A\Qsys E'')\coloneqq
+  \Big\{\Aev\in\mathrm{CPTP}(E',A\Qsys E''):\
+  \Aev^{\dagger}\big(\idon{A}\otimes\hat O_k\otimes\idon{E''}\big)
+  \bowtie_k c_k\,\idon{E'}\ \ \forall k\Big\}
+\end{equation}
+in untrusted-source mode; the two are distinguished by the output
+system named in the argument. An attack sequence is
+$\CList$-admissible (an \tref{admissible attack sequence} for $\CList$) if
+$\Aev_j$ lies in the set of
+\eqref{eq:attset}, resp.\ \eqref{eq:attset-un}, with $E'=E_{j-1}$ and
+$E''=E'_j$, for every $j$. Where $\CList$ carries entries declared
+\tref{party-local} (Definition~\ref{def:homog}), each such entry $(\hat O_k,\bowtie_k,c_k;f)$
+contributes to the licensed attack set, in place of the scalar condition of
+\eqref{eq:attset} or \eqref{eq:attset-un}, the condition of an entry tagged
+with the factor $f$ in \xref{foundations/def:round-model}\,(iii) at
+$S=\Qsys$. With $\Qsys_{f^c}$ the product of the measured factors other than
+$f$, and $R$ equal to $A$ in untrusted-source mode and trivial in
+trusted-source mode, its display at that system is
+\begin{equation}\label{eq:attset-pl}
+\begin{gathered}
+  \big(\idmap_{R'}\otimes\Aev\big)^{\dagger}
+  \Big(X\otimes\big(\hat O_k-c_k\,\idon{\Qsys_f}\big)\otimes\idon{E''}\Big)
+  \;\bowtie_k\;0\\
+  \text{for every finite-dimensional }R'\text{ and every }
+  X\in\Pos{R'R\,\Qsys_{f^c}} ,
+\end{gathered}
+\end{equation}
+as an operator on $R'E'$, the tensor factors of the argument written in the
+order $R'R\,\Qsys_{f^c}$, $\Qsys_f$, $E''$; untagged entries, those not
+declared party-local, keep their conditions, read for their
+\tref[lifted operator]{lifted operators}
+(\xref{protocol-compiler/def:declaration}\,(DX6)). The reference system $R'$ is what
+carries Alice's retained system in trusted-source mode, where $A$ is no
+output of $\Aev$. With $R'$ trivial and $X=\idon{}$ the condition is the
+scalar one for the lifted operator, so the set with tagged entries is
+contained in the set with the same entries untagged. For
+$\CList=\varnothing$ the condition is empty:
+$\AttSet_{\varnothing}=\mathrm{CPTP}$, every attack sequence is
+admissible, and the model is unrestricted. The adjoint condition in
+\eqref{eq:attset} is exactly the published squashed-attack-set format
+of \cite[Eq.~(151)]{tupkary2026decoy}, and
+restricting attention to a declared subset of channels is the standard
+modelling step of \cite[Def.~8.3, Rem.~8.4]{tupkary2026decoy}. Whether
+a given physical protocol reduces to this model with a given
+$\AttSet_{\CList}$ is \emph{not} decided here: it is what
+A-ATK (\xref{protocol-compiler/ass:atk}) certifies.
+\end{definition}
+

@@ -1,0 +1,34 @@
+% ---
+% id: reductions/rem:sound-and-atk
+% kind: rem
+% title: "Soundness of the emitted constraint list"
+% summary: >-
+%   Every entry this module emits holds on every reachable squashed state, as
+%   a conclusion of [[thm:chain]], [[cor:entries]] and [[thm:licence]] and not
+%   as an assumption. Inside the engine's security chain the whole list is
+%   covered by the stronger [[A-ATK]] through the engine's range lemma.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [def:sound, thm:chain, cor:entries, thm:licence, meat-core/lem:range, protocol-compiler/ass:atk]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:sound-and-atk}
+Every entry of the constraint list $\CList$ this module emits is sound for
+the \tref{reduction chain} that produced the declaration, in the sense of
+Definition~\ref{def:sound}: every reachable squashed state satisfies it. For
+the entries this module emits this is a conclusion and not an assumption:
+the entries are the ones the chain theorem, the emission corollary and the
+licence theorem put into $\CList$ (Theorem~\ref{thm:chain},
+Corollary~\ref{cor:entries}, Theorem~\ref{thm:licence}), under their
+hypotheses. \emph{Inside} the consuming engine's security chain, soundness of
+the whole list, entries a declaration brings itself included, is implied by
+the stronger A-ATK (\xref{protocol-compiler/ass:atk}) through the engine's
+range lemma (\xref{meat-core/lem:range}\,(i)), which is declared there.
+Of an entry this module did not emit, nothing here asserts soundness outside
+that chain.
+\end{remark}

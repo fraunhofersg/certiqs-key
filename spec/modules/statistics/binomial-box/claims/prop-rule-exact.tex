@@ -1,0 +1,277 @@
+% ---
+% id: statistics/binomial-box/prop:rule-exact
+% kind: prop
+% title: "Properties of the exact binomial quantile rule"
+% summary: >-
+%   The exact quantiles are the extremal counts meeting their budgets and form
+%   an admissible endpoint rule, monotone in the allocation, as do counts
+%   decided against upper bounds on the tails. The guard may widen the
+%   interval by many counts, yet a moved endpoint stays within 1/n of the
+%   honest value.
+% prominence: standard
+% status: implemented
+% uses: [def:interval, def:endpoint-rule, lem:guard, statistics/cor:tail-forms, statistics/lem:exact-strict-tails, statistics/def:conservative-evaluation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.rules:SweepExactRule
+% lean:
+% ---
+
+\begin{proposition}\label{prop:rule-exact}
+Assume a \tref{conservative evaluation}
+(Definition~\ref{def:conservative-evaluation}). With the notation of
+Definition~\ref{def:interval}, for every $\hat c\in\Chatcon$:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item the two sets in \eqref{eq:kappaminus}--\eqref{eq:kappaplus} are non-empty
+subsets of the finite set $\{0,\dots,n\}$, so $\kappa^{\pm}(\hat c)$ exist and
+are unique;
+\item \emph{(the exact rule is an admissible endpoint rule)} the pair
+$R^{\mp}_{\mathrm{ex}}=\kappa^{\mp}(\hat c)$ satisfies
+Definition~\ref{def:endpoint-rule}\,(a)--(c): $\kappa^{\pm}(\hat c)\in
+\{0,\dots,n\}$ and
+\begin{equation}\label{eq:exact-admissible}
+  \Pr\big[\Ncount{\hat c}<\kappa^{-}(\hat c)\big]\le\varepsilon^{-}(\hat c),
+  \qquad
+  \Pr\big[\Ncount{\hat c}>\kappa^{+}(\hat c)\big]\le\varepsilon^{+}(\hat c);
+\end{equation}
+if $0<p_{\hat c}<1$ then $\kappa^{-}(\hat c)=0$ at $\varepsilon^{-}(\hat c)=0$
+and $\kappa^{+}(\hat c)=n$ at $\varepsilon^{+}(\hat c)=0$; and
+$\kappa^{-}(\hat c)=\kappa^{+}(\hat c)=0$ at $p_{\hat c}=0$,
+$\kappa^{-}(\hat c)=\kappa^{+}(\hat c)=n$ at $p_{\hat c}=1$. Moreover the
+rule is monotone in the allocation: $\kappa^{-}(\hat c)$ is non-decreasing in
+$\varepsilon^{-}(\hat c)$ and $\kappa^{+}(\hat c)$ is non-increasing in
+$\varepsilon^{+}(\hat c)$. Consequently Lemma~\ref{lem:guard} applies to the
+exact rule, and its guarded endpoints $k^{\mp}(\hat c)$ satisfy
+\eqref{eq:ordering} and \eqref{eq:budget-met};
+\item \emph{(extremality and admissible relaxation)} $\kappa^{-}(\hat c)$ is
+the largest and $\kappa^{+}(\hat c)$ the smallest integer in $\{0,\dots,n\}$
+satisfying the respective inequality of \eqref{eq:exact-admissible}, and
+\emph{every} pair $(\tilde k^{-},\tilde k^{+})$ with
+$0\le\tilde k^{-}\le\kappa^{-}(\hat c)$ and
+$\kappa^{+}(\hat c)\le\tilde k^{+}\le n$ satisfies \eqref{eq:budget-met} in
+place of $k^{\mp}(\hat c)$. Enlarging the interval is therefore always
+admissible; shrinking it beyond $[\kappa^{-},\kappa^{+}]$ is not;
+\item the defining inequalities are the closed forms
+\eqref{eq:tails-used} of Corollary~\ref{cor:tail-forms}, so $\kappa^{\pm}(\hat c)$
+are computable from $n$, $p_{\hat c}$ and the allocation alone
+(Lemma~\ref{lem:exact-strict-tails});
+\item \emph{(degenerate honest mass)} if $p_{\hat c}=0$ then
+$k^{-}(\hat c)=k^{+}(\hat c)=0$, and if $p_{\hat c}=1$ then
+$k^{-}(\hat c)=k^{+}(\hat c)=n$; in both cases $\varepsilon^{-}(\hat c)$ and
+$\varepsilon^{+}(\hat c)$ are unspent, both tails in \eqref{eq:budget-met}
+being exactly zero;
+\item \emph{(exact cost of the guard for this rule)} write $p=p_{\hat c}$.
+Relative to the raw quantile interval
+$[\kappa^{-}(\hat c),\kappa^{+}(\hat c)]$, the guard \eqref{eq:guard}
+enlarges the interval by exactly \eqref{eq:guard-cost} with
+$R^{\mp}=\kappa^{\mp}(\hat c)$, and neither enlargement is bounded by one
+count: for every $n\ge1$ and every $p\in(0,1)$, an allocation with
+$\varepsilon^{-}(\hat c)\ge1-p^{\,n}$ --- admissible whenever $\ecomp$
+permits, since $1-p^{\,n}<1$ --- gives $\kappa^{-}(\hat c)=n$ and a lower
+enlargement of $n-\lfloor np\rfloor$ counts, that is, at least $1-p$ in
+frequency \emph{uniformly in $n$}; symmetrically
+$\varepsilon^{+}(\hat c)\ge1-(1-p)^{n}$ gives $\kappa^{+}(\hat c)=0$ and an
+upper enlargement of $\lceil np\rceil$ counts. The exact conditions are
+\begin{align}
+  \kappa^{-}(\hat c)-k^{-}(\hat c)=0
+    &\iff \varepsilon^{-}(\hat c)
+      <\Pr\big[\Ncount{\hat c}\le\lfloor np\rfloor\big],
+    \label{eq:guard-lo0}\\
+  \kappa^{-}(\hat c)-k^{-}(\hat c)\le1
+    &\iff \varepsilon^{-}(\hat c)
+      <\Pr\big[\Ncount{\hat c}\le\lfloor np\rfloor+1\big],
+    \label{eq:guard-lo1}\\
+  k^{+}(\hat c)-\kappa^{+}(\hat c)=0
+    &\iff \varepsilon^{+}(\hat c)
+      <\Pr\big[\Ncount{\hat c}\ge\lceil np\rceil\big],
+    \label{eq:guard-up0}\\
+  k^{+}(\hat c)-\kappa^{+}(\hat c)\le1
+    &\iff \varepsilon^{+}(\hat c)
+      <\Pr\big[\Ncount{\hat c}\ge\lceil np\rceil-1\big].
+    \label{eq:guard-up1}
+\end{align}
+Measured instead from the honest value, the guard costs at most $1/n$
+unconditionally, \eqref{eq:guard-from-p} of Lemma~\ref{lem:guard}\,(iv);
+\item \emph{(evaluation against upper bounds)} let $U^{-}_k$ and $U^{+}_k$,
+for $k\in\{0,\dots,n\}$, be rationals determined by $n$, $p_{\hat c}$ and
+$k$ alone, with
+$U^{-}_k\ge\Pr[\Ncount{\hat c}<k]$, $U^{+}_k\ge\Pr[\Ncount{\hat c}>k]$,
+$U^{-}_0=0$ and $U^{+}_n=0$, and with every $U^{\mp}_k$ equal to its tail
+when $p_{\hat c}\in\{0,1\}$. Put
+\begin{equation*}
+  \tilde\kappa^{-}(\hat c)\coloneqq\max\big\{k\in\{0,\dots,n\}:\
+    U^{-}_{j}\le\varepsilon^{-}(\hat c)\text{ for }1\le j\le k\big\},
+  \qquad
+  \tilde\kappa^{+}(\hat c)\coloneqq\min\big\{k\in\{0,\dots,n\}:\
+    U^{+}_{k}\le\varepsilon^{+}(\hat c)\big\}.
+\end{equation*}
+Then $\tilde R^{\mp}=\tilde\kappa^{\mp}(\hat c)$ is an admissible endpoint
+rule (Definition~\ref{def:endpoint-rule}\,(a)--(c)), monotone in the
+allocation, with $\tilde\kappa^{-}(\hat c)\le\kappa^{-}(\hat c)$ and
+$\tilde\kappa^{+}(\hat c)\ge\kappa^{+}(\hat c)$, and it is the exact rule
+when every $U^{\mp}_k$ equals its tail. Consequently Lemma~\ref{lem:guard}
+applies to it.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\emph{(i).} $k=0$ belongs to the set in \eqref{eq:kappaminus}, since
+$\Pr[\Ncount{\hat c}<0]=0\le\varepsilon^{-}(\hat c)$; and $k=n$ belongs to the
+set in \eqref{eq:kappaplus}, since
+$\Pr[\Ncount{\hat c}>n]=0\le\varepsilon^{+}(\hat c)$. A non-empty finite set of
+integers has a unique maximum and a unique minimum.
+
+\emph{(ii).} \emph{Admissibility.} $\kappa^{-}(\hat c)$ is an element of the
+set in \eqref{eq:kappaminus} and $\kappa^{+}(\hat c)$ one of the set in
+\eqref{eq:kappaplus}, so both lie in $\{0,\dots,n\}$ and satisfy the
+inequalities that define those sets, which are \eqref{eq:exact-admissible}.
+This is Definition~\ref{def:endpoint-rule}\,(a).
+
+\emph{Monotonicity in the allocation.} Fix every argument but
+$\varepsilon^{-}(\hat c)$. Raising $\varepsilon^{-}(\hat c)$ enlarges the set
+in \eqref{eq:kappaminus}, so its maximum does not fall; raising
+$\varepsilon^{+}(\hat c)$ enlarges the set in \eqref{eq:kappaplus}, so its
+minimum does not rise.
+
+\emph{Zero budget, Definition~\ref{def:endpoint-rule}\,(b).} Let
+$0<p_{\hat c}<1$ and write $p=p_{\hat c}$. At $\varepsilon^{-}(\hat c)=0$:
+for $k\ge1$, $\Pr[\Ncount{\hat c}<k]\ge\Pr[\Ncount{\hat c}=0]=(1-p)^{n}>0$, so
+only $k=0$ lies in the set of \eqref{eq:kappaminus} and
+$\kappa^{-}(\hat c)=0$. At $\varepsilon^{+}(\hat c)=0$: for $k\le n-1$,
+$\Pr[\Ncount{\hat c}>k]\ge\Pr[\Ncount{\hat c}=n]=p^{n}>0$, so only $k=n$ lies
+in the set of \eqref{eq:kappaplus} and $\kappa^{+}(\hat c)=n$.
+
+\emph{Degenerate mass, Definition~\ref{def:endpoint-rule}\,(c).} If
+$p_{\hat c}=0$ then $\Ncount{\hat c}=0$ with probability one, so
+$\Pr[\Ncount{\hat c}<k]$ is $0$ at $k=0$ and $1$ for $k\ge1$; since
+$\varepsilon^{-}(\hat c)<1$ the set in \eqref{eq:kappaminus} is $\{0\}$ and
+$\kappa^{-}(\hat c)=0$; and $\Pr[\Ncount{\hat c}>k]=0$ for every $k\ge0$, so
+the set in \eqref{eq:kappaplus} is all of $\{0,\dots,n\}$ and
+$\kappa^{+}(\hat c)=0$. If $p_{\hat c}=1$ then $\Ncount{\hat c}=n$ with
+probability one, so $\Pr[\Ncount{\hat c}<k]=0$ for every $k\le n$ and
+$\kappa^{-}(\hat c)=n$; and $\Pr[\Ncount{\hat c}>k]$ is $1$ for $k\le n-1$ and
+$0$ at $k=n$, so with $\varepsilon^{+}(\hat c)<1$ the set in
+\eqref{eq:kappaplus} is $\{n\}$ and $\kappa^{+}(\hat c)=n$.
+
+The consequence is Lemma~\ref{lem:guard} applied to $R=R_{\mathrm{ex}}$.
+
+\emph{(iii).} Extremality is the definition of the maximum and the minimum
+together with the monotonicity of the two tails in $k$
+(Lemma~\ref{lem:guard}\,(ii)); the relaxation statement is
+Lemma~\ref{lem:guard}\,(ii) with $R^{\mp}=\kappa^{\mp}(\hat c)$.
+
+\emph{(iv).} By Corollary~\ref{cor:tail-forms}, with $p=p_{\hat c}$, the
+tails in the inequalities that define the sets of \eqref{eq:kappaminus} and
+\eqref{eq:kappaplus} are the closed forms \eqref{eq:tails-used}. Under a
+conservative evaluation $p_{\hat c}$, a coordinate of ${\honest}^{-}$ or of
+${\honest}^{+}$ (Definition~\ref{def:interval}), is rational, the envelope's
+vectors being exact rationals (Definition~\ref{def:conservative-evaluation});
+and $\varepsilon^{\mp}(\hat c)$ are rational by
+Definition~\ref{def:interval}, which also gives $n\ge1$ and
+$p_{\hat c}\in[0,1]$. By
+Lemma~\ref{lem:exact-strict-tails}\,(ii) each inequality, one for each
+$k\in\{0,\dots,n\}$ in each set, is then decided exactly from $n$,
+$p_{\hat c}$, $k$ and $\varepsilon^{\mp}(\hat c)$. So both sets, and with
+them their maximum $\kappa^{-}(\hat c)$ and minimum $\kappa^{+}(\hat c)$, are
+computed exactly from $n$, $p_{\hat c}$ and the allocation alone.
+
+\emph{(v).} By (ii), $\kappa^{-}(\hat c)=\kappa^{+}(\hat c)=0$ at
+$p_{\hat c}=0$, and $\lfloor n\cdot0\rfloor=\lceil n\cdot0\rceil=0$, so
+\eqref{eq:guard} gives $k^{-}(\hat c)=k^{+}(\hat c)=0$; at $p_{\hat c}=1$,
+$\kappa^{\pm}(\hat c)=n$ and $\lfloor n\rfloor=\lceil n\rceil=n$, so
+$k^{-}(\hat c)=k^{+}(\hat c)=n$. In the first case
+$\Pr[\Ncount{\hat c}<0]=0$ and $\Pr[\Ncount{\hat c}>0]=0$ because
+$\Ncount{\hat c}=0$ almost surely; in the second, $\Pr[\Ncount{\hat c}<n]=0$
+and $\Pr[\Ncount{\hat c}>n]=0$ because $\Ncount{\hat c}=n$ almost surely. So
+both tails in \eqref{eq:budget-met} are exactly $0$.
+
+\emph{(vi).} The identities are Lemma~\ref{lem:guard}\,(iii) with
+$R^{\mp}=\kappa^{\mp}(\hat c)$.
+
+\emph{Unboundedness.} If $\varepsilon^{-}(\hat c)\ge1-p^{\,n}$ then
+$\Pr[\Ncount{\hat c}<n]=\Pr[\Ncount{\hat c}\le n-1]=1-p^{\,n}
+\le\varepsilon^{-}(\hat c)$, so $k=n$ is admissible in \eqref{eq:kappaminus}
+and $\kappa^{-}(\hat c)=n$; the lower enlargement is then
+$n-\lfloor np\rfloor\ge n-np=n(1-p)$ counts, i.e.\ at least $1-p$ in
+frequency. Such an $\varepsilon^{-}(\hat c)$ is admissible whenever $\ecomp$
+permits, because $1-p^{\,n}<1$ for $p\in(0,1)$. Symmetrically, if
+$\varepsilon^{+}(\hat c)\ge1-(1-p)^{n}$ then
+$\Pr[\Ncount{\hat c}>0]=1-(1-p)^{n}\le\varepsilon^{+}(\hat c)$, so $k=0$ is
+admissible in \eqref{eq:kappaplus} and $\kappa^{+}(\hat c)=0$, giving an upper
+enlargement of $\lceil np\rceil$ counts.
+
+\emph{The four exact conditions.} We use twice that
+$\varepsilon^{\pm}(\hat c)\le\ecomp<1$, which
+Definition~\ref{def:interval} records for every admissible input.
+
+First, for every integer $K\ge0$,
+\begin{equation*}
+  \kappa^{-}(\hat c)\le K
+  \quad\Longleftrightarrow\quad
+  \Pr\big[\Ncount{\hat c}\le K\big]>\varepsilon^{-}(\hat c).
+\end{equation*}
+If $K+1\le n$: ($\Rightarrow$) $K+1$ is then not admissible in
+\eqref{eq:kappaminus}, by maximality of $\kappa^{-}(\hat c)$, which is exactly
+$\Pr[\Ncount{\hat c}<K+1]=\Pr[\Ncount{\hat c}\le K]>\varepsilon^{-}(\hat c)$;
+($\Leftarrow$) for every integer $j$ with $K+1\le j\le n$, monotonicity of
+$k\mapsto\Pr[\Ncount{\hat c}<k]$ (Lemma~\ref{lem:guard}\,(ii)) gives
+$\Pr[\Ncount{\hat c}<j]\ge\Pr[\Ncount{\hat c}\le K]>\varepsilon^{-}(\hat c)$,
+so no such $j$ is admissible and the maximum is at most $K$. If instead
+$K+1>n$, both sides hold unconditionally: $\kappa^{-}(\hat c)\le n\le K$ by
+(i), and $\Pr[\Ncount{\hat c}\le K]=1>\varepsilon^{-}(\hat c)$.
+By \eqref{eq:guard-cost} the lower enlargement is $0$ iff
+$\kappa^{-}(\hat c)\le\lfloor np\rfloor$ and is at most $1$ iff
+$\kappa^{-}(\hat c)\le\lfloor np\rfloor+1$, so taking $K=\lfloor np\rfloor$
+and $K=\lfloor np\rfloor+1$ gives \eqref{eq:guard-lo0} and
+\eqref{eq:guard-lo1}.
+
+Second, and symmetrically, for every integer $K\le n$,
+\begin{equation*}
+  \kappa^{+}(\hat c)\ge K
+  \quad\Longleftrightarrow\quad
+  \Pr\big[\Ncount{\hat c}\ge K\big]>\varepsilon^{+}(\hat c),
+\end{equation*}
+by the same argument applied to the non-increasing map
+$k\mapsto\Pr[\Ncount{\hat c}>k]$ and the minimality of $\kappa^{+}(\hat c)$:
+for $K-1\ge0$ the index $K-1$ is inadmissible iff
+$\Pr[\Ncount{\hat c}>K-1]=\Pr[\Ncount{\hat c}\ge K]>\varepsilon^{+}(\hat c)$,
+and for $K\le0$ both sides hold unconditionally. Taking $K=\lceil np\rceil$
+and $K=\lceil np\rceil-1$, both of which are at most $n$, gives
+\eqref{eq:guard-up0} and \eqref{eq:guard-up1}.
+
+The distance statement is Lemma~\ref{lem:guard}\,(iv).
+
+\emph{(vii).} Both sets are non-empty: the condition defining the first is
+vacuous at $k=0$, and $k=n$ belongs to the second because $U^{+}_n=0$. Write
+$\tilde k^{\mp}\coloneqq\tilde\kappa^{\mp}(\hat c)$.
+\emph{Admissibility.} If $\tilde k^{-}=0$ then
+$\Pr[\Ncount{\hat c}<\tilde k^{-}]=0$; otherwise
+$\Pr[\Ncount{\hat c}<\tilde k^{-}]\le U^{-}_{\tilde k^{-}}
+\le\varepsilon^{-}(\hat c)$, the last step being the defining condition at
+$j=\tilde k^{-}$. And
+$\Pr[\Ncount{\hat c}>\tilde k^{+}]\le U^{+}_{\tilde k^{+}}
+\le\varepsilon^{+}(\hat c)$. Both endpoints lie in $\{0,\dots,n\}$, so this
+is Definition~\ref{def:endpoint-rule}\,(a); it also places $\tilde k^{-}$
+in the set of \eqref{eq:kappaminus} and $\tilde k^{+}$ in that of
+\eqref{eq:kappaplus}, so $\tilde k^{-}\le\kappa^{-}(\hat c)$ and
+$\tilde k^{+}\ge\kappa^{+}(\hat c)$ by the extremality of (iii).
+\emph{Zero budget.} Let $0<p_{\hat c}<1$. At $\varepsilon^{-}(\hat c)=0$,
+(ii) gives $\kappa^{-}(\hat c)=0$, so $0\le\tilde k^{-}\le0$; at
+$\varepsilon^{+}(\hat c)=0$ it gives $\kappa^{+}(\hat c)=n$, so
+$n\ge\tilde k^{+}\ge n$. This is Definition~\ref{def:endpoint-rule}\,(b).
+\emph{Equality with the exact rule.} If every $U^{\mp}_k$ equals its tail,
+the second set is that of \eqref{eq:kappaplus}; and since
+$k\mapsto\Pr[\Ncount{\hat c}<k]$ is non-decreasing
+(Lemma~\ref{lem:guard}\,(ii)), the condition holds at every $j\le k$
+exactly when it holds at $j=k$, so the first set is that of
+\eqref{eq:kappaminus}. Hence $\tilde k^{\mp}=\kappa^{\mp}(\hat c)$.
+\emph{Degenerate mass.} At $p_{\hat c}\in\{0,1\}$ every bound equals its
+tail, so the rule is the exact one there, and (ii) gives
+Definition~\ref{def:endpoint-rule}\,(c).
+\emph{Monotonicity in the allocation.} The bounds do not depend on the
+allocation. Raising $\varepsilon^{-}(\hat c)$ enlarges the first set, so its
+maximum does not fall; raising $\varepsilon^{+}(\hat c)$ enlarges the second,
+so its minimum does not rise. The consequence is Lemma~\ref{lem:guard}
+applied to $R=\tilde R$.
+\end{proof}

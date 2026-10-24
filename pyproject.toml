@@ -1,0 +1,137 @@
+# pyproject.toml -- the single source of dependency truth for CERTIQS-KEY.
+#
+# The repository does not install dependencies; it declares them here and
+# reports instructions when they are absent. The import package is
+# `certiqs_key`; a dash is not legal in an import name, so the dashed
+# form `certiqs-key` is the distribution name only.
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "certiqs-key"
+version = "0.1.0"
+description = "CERTIQS-KEY: modular, fixed-length MEAT-based QKD key-rate calculations with traceable assumptions"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "AGPL-3.0-only"
+authors = [
+  { name = "Elias X. Huber" },
+  { name = "Becca Verghese" },
+  { name = "Matthieu Croci" },
+  { name = "Ian George" },
+  { name = "Michael Kasper" },
+  { name = "Marco Tomamichel" },
+]
+classifiers = [
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+
+dependencies = [
+  "numpy>=2.1,<2.6",
+  "scipy>=1.14",
+  "pydantic>=2.9",
+  "h5py>=3.11",
+  "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+oracle-qics = ["qics==1.1.3"]
+# The certified tier's ball arithmetic (meat-core/frank-wolfe/req:certified-evaluation),
+# optional like the oracle: without it a run reports its first-order number
+# with the reason certifier_unavailable.
+certify = ["python-flint==0.9.0"]
+plots = ["matplotlib>=3.9"]
+# The MCP server over the run tier (runs/mcp): an
+# adapter, never on the proof path, so it is optional like the plots.
+mcp = ["mcp>=2.3,<3"]
+dev = [
+  "jsonschema>=4.20",   # tests/unit/test_runs_record_schema.py: the checked-in run-record schema is validated against a produced record, rather than a second validator being written here
+  "pytest>=8.0",
+  "pytest-cov>=5.0",
+  "hypothesis>=6.100",
+  "mpmath>=1.3",        # the certified tier's tests check its ball enclosures against high-precision values; without it they are skipped
+  "ruff>=0.9",
+  "mypy>=1.13",
+  "types-PyYAML",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+# THE RUN-RECORD SCHEMA SHIPS WITH THE PACKAGE. A consumer generates types from
+# it and validates a record it was handed, and both are things an INSTALLED
+# caller does; a schema that lived only in the checkout would describe records
+# a caller cannot check. THE CLAIM-CLOSURE TABLE SHIPS FOR THE SAME REASON: a
+# record written from an installed package names the claim graph it rests on
+# (PRINCIPLES.md 2.1), and spec/ is not installed
+# (harness/generate_claim_closure.py writes it). THE KEY-RATE REPORT'S SCHEMA
+# SHIPS for the first reason: a consumer of the report (an application, the
+# MCP adapter) types and validates it from an installed package. THE RUN-INPUT
+# SCHEMA SHIPS beside the record's for the same reason, on the way in: a caller
+# writing a configuration for an instance (the MCP server's agents) checks its
+# shape before the engine decides its values. THE REPORT'S GLOSSARY SHIPS
+# because the installed renderer prints it (runs/report/glossary.py).
+certiqs_key = [
+  "py.typed",
+  "runs/record.schema.json",
+  "runs/run-input.schema.json",
+  "runs/report/report.schema.json",
+  "runs/report/glossary.yaml",
+  "domain/claim_closure.json",
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "--strict-markers --strict-config --import-mode=importlib"
+markers = [
+  "contract: exercises a claim of an accepted contract; would fail if the claim were false. Never skip, xfail or weaken one.",
+  "oracle: compares against the independent oracle registry.",
+  "requires_qics: needs the QICS LinearOracle installed (pip install -e '.[oracle-qics]').",
+  "slow: not run by default in a tight edit loop.",
+  "pins: a bit-for-bit regression pin; holds only on the machine that recorded it, so not run by default (pytest -m pins or --full).",
+]
+filterwarnings = ["error"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+src = ["src", "tests", "harness"]
+extend-exclude = ["reports/migration-toolkit"]   # one-off scripts, kept verbatim
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "C4", "SIM", "RUF", "NPY", "ANN", "D"]
+ignore = ["D203", "D213", "ANN401"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["D100", "D101", "D102", "D103", "D104", "ANN201"]
+# The frozen oracle registries take id-only substitutions when a claim is
+# renamed (AGENTS.md; tests/oracles is never regenerated), and a longer id can
+# push a line past the limit; reflowing it would be more than an id-only edit.
+"tests/oracles/registry_*.py" = ["D100", "D101", "D102", "D103", "D104", "ANN201", "E501"]
+# The same holds for the other oracle files the meat-core renames reached.
+"tests/oracles/registry.py" = ["E501"]
+"tests/oracles/reference.py" = ["E501"]
+"tests/oracles/toy_declarations.py" = ["E501"]
+"tests/oracles/test_sector_classification.py" = ["E501"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src", "harness"]
+exclude = ["^reports/migration-toolkit/"]   # one-off scripts, kept verbatim
+strict = true
+warn_unreachable = true
+enable_error_code = ["truthy-bool", "redundant-expr", "ignore-without-code"]
+
+[[tool.mypy.overrides]]
+module = ["qics.*", "h5py.*", "jsonschema.*"]
+ignore_missing_imports = true

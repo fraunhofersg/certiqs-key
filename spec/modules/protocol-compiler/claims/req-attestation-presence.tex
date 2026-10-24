@@ -1,0 +1,32 @@
+% ---
+% id: protocol-compiler/req:attestation-presence
+% kind: req
+% title: "Attestations tested for presence only"
+% summary: >-
+%   The retention attestation (SR3) behind gate (G2) and the attack-set
+%   licence behind gate (G3)(b) are tested for presence and never for truth.
+%   The engine never supplies one and never verifies one.
+% prominence: standard
+% status: accepted
+% uses: [def:eligible, thm:gates]
+% mentions: [ass:atk, transmitter/def:srcert]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.gates:resolve_gates
+% lean:
+% ---
+
+Neither attestation is a property of the emitted matrices, so no function of
+them decides it (Theorem~\ref{thm:gates}\,(i)); what the engine can do is
+record whether it was supplied.
+
+\begin{requirement}\label{req:attestation-presence}
+The engine tests the attestations of Definition~\ref{def:eligible} for
+presence only, never for truth: at gate (G2) the clause (SR3) of the
+source-replacement licence record \iface{source_replacement_license}
+(\xref{transmitter/def:srcert}), in every form of the certificate, and at gate
+(G3)(b) the attack-set licence record \iface{attack_set_license}, the
+attestation of Assumption~\ref{ass:atk}. It never supplies an attestation and
+never verifies one.
+\end{requirement}

@@ -1,0 +1,133 @@
+% ---
+% id: reductions/lem:party-local
+% kind: lem
+% title: "Party-local transport"
+% summary: >-
+%   For a product squashing channel, a spectral bound certified on one part's
+%   channel holds of every squashed attack as an operator inequality on all
+%   other systems, whose trace is the scalar entry. Without the product
+%   structure the operator form can fail while the scalar form holds.
+% prominence: standard
+% status: accepted
+% uses: [lem:sep]
+% mentions: [def:licensed]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The reference system R' is what lets one statement serve both source modes: in trusted-source mode Alice's retained system is no output of the attack and enters as a reference."
+% ---
+
+A party-local entry (Definition~\ref{def:licensed}) is read against the
+marginal that is actually present rather than a declared one. The lemma shows
+that a certificate on the part's own channel makes that reading hold of every
+squashed attack, and that it can fail once the channel correlates the parts.
+
+\begin{lemma}\label{lem:party-local}
+Let the measured system be a tensor product $\Bsys=\Bsys_f\otimes\Bsys_{f^c}$
+of a \emph{part} $\Bsys_f$ and the product $\Bsys_{f^c}$ of all other parts,
+let $\Lambda_f\colon\Tcl{\Bsys_f}\to\Tcl{\Qsys_f}$ and
+$\Lambda_{f^c}\colon\Tcl{\Bsys_{f^c}}\to\Tcl{\Qsys_{f^c}}$ be channels, and
+put $\Lambda\coloneqq\Lambda_f\otimes\Lambda_{f^c}$ and
+$\Qsys\coloneqq\Qsys_f\otimes\Qsys_{f^c}$. Let $\hat O\in\Lin{\Qsys_f}$ be
+Hermitian with a spectral pull-back certificate \emph{on the part},
+\begin{equation}\label{eq:partcert}
+  \Lambda_f^{\dagger}(\hat O)\;\bowtie\;c\,\idon{\Bsys_f},
+  \qquad\bowtie\,\in\{\preceq,=,\succeq\},\quad c\in\mathbb{R} .
+\end{equation}
+Let $R$ and $R'$ be finite-dimensional systems, $E'$, $E''$
+finite-dimensional, and $\Aev\in\mathrm{CPTP}(E',R\,\Bsys\,E'')$ \emph{any}
+channel, with
+$\Aev^{\sq}\coloneqq(\idmap_R\otimes\Lambda\otimes\idmap_{E''})\circ\Aev$.
+Write $\hat D\coloneqq\hat O-c\,\idon{\Qsys_f}$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(channel level)} for every $X\in\Pos{R'R\,\Qsys_{f^c}}$,
+\begin{equation}\label{eq:partylocal-channel}
+  \big(\idmap_{R'}\otimes\Aev^{\sq}\big)^{\dagger}
+  \big(X\otimes\hat D\otimes\idon{E''}\big)\;\bowtie\;0
+  \qquad\text{as an operator on }R'E' ,
+\end{equation}
+the tensor factors written in the order $R'R\,\Qsys_{f^c}$, $\Qsys_f$, $E''$.
+\item \emph{(state level)} for every $\varrho\in\Pos{R'E'}$, the operator
+$\omega\coloneqq\tr_{E''}\big[(\idmap_{R'}\otimes\Aev^{\sq})(\varrho)\big]$
+on $R'R\,\Qsys$ satisfies
+\begin{equation}\label{eq:partylocal-state}
+  \tr_{\Qsys_f}\!\big[(\idon{R'R\,\Qsys_{f^c}}\otimes\hat D)\,\omega\big]
+  \;\bowtie\;0
+  \qquad\text{as an operator on }R'R\,\Qsys_{f^c},
+\end{equation}
+equivalently
+$\tr_{\Qsys_f}[(\idon{}\otimes\hat O)\,\omega]\bowtie
+c\,\tr_{\Qsys_f}\omega$: the right-hand side is $c$ times the marginal of
+$\omega$ \emph{that is actually there}, and no marginal is assumed.
+\item \emph{(the scalar entry is its trace)} taking the trace of
+\eqref{eq:partylocal-state} gives
+$\tr[(\idon{}\otimes\hat O)\,\omega]\bowtie c\,\tr\omega$, the scalar form.
+With $R'$ trivial and $R=A$, $\Qsys_{f^c}$ trivial (one factor), \eqref{eq:partylocal-state}
+reads $\tr_{\Qsys}[(\idon{A}\otimes\hat O)\omega]\bowtie c\,\omega_A$.
+\item \emph{(the product structure is needed)} if $\Lambda$ is not a product
+the conclusion can fail while the scalar one holds. Let $\Qsys_f$ and
+$\Qsys_{f^c}$ be qubits, $R$, $R'$ trivial, $\hat O=\dyad{0}$, $c=\tfrac12$,
+and let $\Lambda$ discard its input and prepare
+$\tfrac12(\dyad{00}+\dyad{11})$. Then
+$\Lambda^{\dagger}(\idon{}\otimes\hat O)=\tfrac12\idon{\Bsys}\succeq c\,\idon{}$,
+so every squashed attack satisfies the scalar entry with $\succeq$; but
+$\tr_{\Qsys_f}[(\idon{}\otimes\hat D)\omega]
+=\tfrac14\dyad{0}-\tfrac14\dyad{1}$, which is not positive semidefinite.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) Let $\bowtie$ be $\succeq$. By Lemma~\ref{lem:sep}\,(ii), applied to the
+product $\idmap_{R'R}\otimes\Lambda_{f^c}\otimes\Lambda_f\otimes\idmap_{E''}$,
+\begin{equation*}
+  \big(\idmap_{R'R}\otimes\Lambda\otimes\idmap_{E''}\big)^{\dagger}
+  \big(X\otimes\hat D\otimes\idon{E''}\big)
+  =\big(\idmap_{R'R}\otimes\Lambda_{f^c}\big)^{\dagger}(X)\;\otimes\;
+   \Lambda_f^{\dagger}(\hat D)\;\otimes\;\idon{E''} .
+\end{equation*}
+The first factor is positive semidefinite: $X\succeq0$ and the adjoint of
+the channel $\idmap_{R'R}\otimes\Lambda_{f^c}$ is a positive map, the
+adjoint of a completely positive map being completely positive. The second
+is $\Lambda_f^{\dagger}(\hat O)-c\,\Lambda_f^{\dagger}(\idon{\Qsys_f})
+=\Lambda_f^{\dagger}(\hat O)-c\,\idon{\Bsys_f}\succeq0$ by unitality of
+$\Lambda_f^{\dagger}$ and \eqref{eq:partcert}. A tensor product of positive
+semidefinite operators is positive semidefinite. Finally
+$(\idmap_{R'}\otimes\Aev^{\sq})^{\dagger}
+=(\idmap_{R'}\otimes\Aev)^{\dagger}\circ
+(\idmap_{R'R}\otimes\Lambda\otimes\idmap_{E''})^{\dagger}$, and
+$(\idmap_{R'}\otimes\Aev)^{\dagger}$ is a positive map because
+$\idmap_{R'}\otimes\Aev$ is a channel; this gives
+\eqref{eq:partylocal-channel}. For $\preceq$ apply the argument to
+$-\hat D$, and for $=$ both hold, the left-hand side of
+\eqref{eq:partylocal-channel} then vanishing for every $X\succeq0$ and
+hence, by linearity, for every $X$.
+
+(ii) For $X\in\Pos{R'R\,\Qsys_{f^c}}$, by the definition of the adjoint,
+\begin{equation*}
+  \tr\!\Big[X\;\tr_{\Qsys_f}\!\big[(\idon{}\otimes\hat D)\,\omega\big]\Big]
+  =\tr\!\big[(X\otimes\hat D\otimes\idon{E''})\,
+     (\idmap_{R'}\otimes\Aev^{\sq})(\varrho)\big]
+  =\tr\!\Big[\big(\idmap_{R'}\otimes\Aev^{\sq}\big)^{\dagger}
+     \big(X\otimes\hat D\otimes\idon{E''}\big)\,\varrho\Big] ,
+\end{equation*}
+which by (i) and $\varrho\succeq0$ is $\ge0$ for $\succeq$, $\le0$ for
+$\preceq$ and $0$ for $=$. A Hermitian operator $Y$ with $\tr[XY]\ge0$ for
+every $X\succeq0$ is positive semidefinite, and
+$\tr_{\Qsys_f}[(\idon{}\otimes\hat D)\omega]$ is Hermitian because $\hat D$
+is and acts on the traced factor alone. The equivalent form is linearity:
+$\tr_{\Qsys_f}[(\idon{}\otimes c\,\idon{\Qsys_f})\omega]
+=c\,\tr_{\Qsys_f}\omega$.
+
+(iii) The trace is a positive functional, and
+$\tr\big[\tr_{\Qsys_f}[(\idon{}\otimes\hat O)\omega]\big]
+=\tr[(\idon{}\otimes\hat O)\omega]$. The special case is a substitution.
+
+(iv) $\Lambda^{\dagger}(Y)=\tr[Y\varsigma]\,\idon{\Bsys}$ for the prepared
+state $\varsigma=\tfrac12(\dyad{00}+\dyad{11})$, so
+$\Lambda^{\dagger}(\idon{}\otimes\dyad{0})=\tfrac12\idon{\Bsys}$. Every
+squashed attack outputs $\omega=\varsigma$ on $\Qsys$, and
+$\tr_{\Qsys_f}[(\idon{}\otimes(\dyad{0}-\tfrac12\idon{}))\varsigma]
+=\tfrac12\big(\tfrac12\dyad{0}\big)+\tfrac12\big(-\tfrac12\dyad{1}\big)$,
+with the traced qubit written second.
+\end{proof}

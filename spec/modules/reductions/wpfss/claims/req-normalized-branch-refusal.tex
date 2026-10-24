@@ -1,0 +1,33 @@
+% ---
+% id: reductions/wpfss/req:normalized-branch-refusal
+% kind: req
+% title: "A normalized receiver is not read as a branch of a branching instance"
+% summary: >-
+%   An artefact that embeds the flat instance as a branch of a branching
+%   instance, the register instance included, reads only a receiver artefact
+%   compiled without a factored loss, and refuses one compiled at a factor
+%   below one.
+% prominence: standard
+% status: implemented
+% uses: [cor:normalized-flat]
+% mentions: [reductions/thm:instrument-instance, reductions/cor:register-instance]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.wpfss.validation:rule_normalized_branch
+% lean:
+% ---
+
+Corollary~\ref{cor:normalized-flat} absorbs the factored loss for the flat
+instance on the channel system. A branching instance
+(Theorem~\ref{thm:instrument-instance}), of which the register instance of
+Corollary~\ref{cor:register-instance} is one, places the flat instance beside
+other branches, which need not be the pull-back of anything through a loss on
+the channel modes, so no claim here moves the loss in front of it.
+
+\begin{requirement}\label{req:normalized-branch-refusal}
+An artefact that embeds the flat instance as a branch of a branching
+instance, the register instance included, reads only a receiver artefact whose \iface{efficiency_record} carries the
+factored loss $t=1$, and refuses one with $t<1$ with
+\iface{normalized_receiver_in_branch}.
+\end{requirement}

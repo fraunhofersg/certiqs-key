@@ -1,0 +1,114 @@
+% ---
+% id: foundations/lem:domination
+% kind: lem
+% title: "Elementary properties of domination"
+% summary: >-
+%   Domination is upward closed in the weight, holds below one exactly when
+%   each support of F lies in that of G, is equality at weight zero, composes
+%   multiplicatively and survives classical post-processing. G is then a
+%   mixture of F and a complete residual family.
+% prominence: standard
+% status: accepted
+% uses: [def:domination, def:sector-map]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% notes: "No requirement uses this lemma; it serves the explanatory claims of domination (rem:noise-floor, lem:rational-obstruction) and the domination link of reductions/domination, kept for a declared device weight (spec/future-scope.md section 13)."
+% lean:
+% ---
+
+\begin{lemma}\label{lem:domination}
+Let $\mathfrak{m}$, $J$ and the families $G=\{G_j\}_{j\in J}$,
+$F=\{F_j\}_{j\in J}$ and $E=\{E_j\}_{j\in J}$ of block lists against
+$\mathfrak{m}$ with Hermitian positive semidefinite blocks be as in
+Definition~\ref{def:domination}, and let $s\in\mathsf{S}$ be a block.
+Say that $G$ dominates $F$ at $q_s$ on block $s$ when
+\eqref{eq:domination} holds at that block.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{(Upward closure.)} If $G$ dominates $F$ at $q_s$ on block $s$ and
+  $q_s\le q'_s<1$, then $G$ dominates $F$ at $q'_s$ on block $s$.
+\item \emph{(Support.)} If $G$ dominates $F$ at some $q_s\in[0,1)$ on block
+  $s$, then $\mathrm{supp}\,F^{(s)}_j\subseteq\mathrm{supp}\,G^{(s)}_j$ for
+  every $j\in J$. Conversely, if
+  $\mathrm{supp}\,F^{(s)}_j\subseteq\mathrm{supp}\,G^{(s)}_j$ for every
+  $j\in J$, then $G$ dominates $F$ on block $s$ at some weight in $[0,1)$.
+\item \emph{(Weight zero.)} If $G$ and $F$ are both complete at the same
+  $c$ on block $s$, then $G$ dominates $F$ at $0$ on block $s$ if and only
+  if $F^{(s)}_j=G^{(s)}_j$ for every $j\in J$.
+\item \emph{(Composition.)} If $G$ dominates $F$ at $q_s$ and $F$ dominates
+  $E$ at $q'_s$ on block $s$, then $G$ dominates $E$ on block $s$ at
+  $1-(1-q_s)(1-q'_s)$, which lies in $[0,1)$ and is at most $q_s+q'_s$.
+\item \emph{(Classical post-processing.)} Let $W$ be a finite non-empty
+  alphabet and let $P_{w|j}\ge0$ be real numbers for $w\in W$ and $j\in J$.
+  Put $G'_w\coloneqq\sum_{j\in J}P_{w|j}G_j$ and
+  $F'_w\coloneqq\sum_{j\in J}P_{w|j}F_j$, block by block. If $G$ dominates
+  $F$ at $q_s$ on block $s$, then $G'$ dominates $F'$ at the same $q_s$ on
+  block $s$. If moreover $\sum_{w\in W}P_{w|j}=1$ for every $j$ and $G$ and
+  $F$ are complete at $c$ on block $s$, then so are $G'$ and $F'$. In
+  particular, multiplying each $G_j$ and $F_j$ by the same number $p_j\ge0$
+  preserves domination at the same weight.
+\item \emph{(Residual family.)} If $G$ and $F$ are both complete at $c$ on
+  block $s$ and $G$ dominates $F$ at $q_s$ there, then the residual family
+  $R^{(s)}$ of Definition~\ref{def:domination} has positive semidefinite
+  elements, is complete at $c$, and satisfies
+  \begin{equation}\label{eq:residual-mixture}
+    G^{(s)}_j=(1-q_s)\,F^{(s)}_j+q_s\,R^{(s)}_j
+    \qquad\text{for every }j\in J.
+  \end{equation}
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Throughout, fix the block $s$ and drop the superscript $(s)$.
+
+(i) $G_j-(1-q'_s)F_j=\big(G_j-(1-q_s)F_j\big)+(q'_s-q_s)F_j$ is a sum of two
+positive semidefinite matrices, the second because $q'_s-q_s\ge0$ and
+$F_j\succeq0$.
+
+(ii) Let $x\in\ker G_j$. Then
+$0\le\langle x,(G_j-(1-q_s)F_j)x\rangle=-(1-q_s)\langle x,F_jx\rangle\le0$,
+since $1-q_s>0$ and $F_j\succeq0$; so $\langle x,F_jx\rangle=0$. For a
+positive semidefinite $F_j$ this gives $\|F_j^{1/2}x\|^2=0$, hence
+$F_jx=F_j^{1/2}F_j^{1/2}x=0$. So $\ker G_j\subseteq\ker F_j$, and taking
+orthogonal complements, $\mathrm{supp}\,F_j\subseteq\mathrm{supp}\,G_j$, both
+matrices being Hermitian.
+Conversely, suppose $\mathrm{supp}\,F_j\subseteq\mathrm{supp}\,G_j$ for every
+$j$. For each $j$ with $F_j\neq0$, $G_j\neq0$ too; let $\Pi_j$ be the
+orthogonal projector onto $\mathrm{supp}\,G_j$ and $\lambda_j>0$ the least
+non-zero eigenvalue of $G_j$, so that $G_j\succeq\lambda_j\Pi_j$ by the
+spectral decomposition. Since $F_j\preceq\opn{F_j}\,\idon{}$ and $F_j$ vanishes
+on $(\mathrm{supp}\,G_j)^{\perp}\subseteq\ker F_j$, we have
+$F_j=\Pi_jF_j\Pi_j\preceq\opn{F_j}\,\Pi_j\preceq t_jG_j$ with
+$t_j\coloneqq\opn{F_j}/\lambda_j>0$. Put
+$q_s\coloneqq\max\big(\{0\}\cup\{1-t_j^{-1}:F_j\neq0\}\big)$, which lies in
+$[0,1)$. For $F_j=0$, $G_j-(1-q_s)F_j=G_j\succeq0$; for $F_j\neq0$,
+$(1-q_s)t_j\le1$, so $(1-q_s)F_j\preceq(1-q_s)t_jG_j\preceq G_j$.
+
+(iii) If $F_j=G_j$ for every $j$, \eqref{eq:domination} holds at $q_s=0$ with
+equality. Conversely, if $G_j-F_j\succeq0$ for every $j$, then
+$\sum_j(G_j-F_j)=c\,\idon{}-c\,\idon{}=0$ is a sum of positive semidefinite
+matrices with trace $0$; each summand has non-negative trace, so each has
+trace $0$, and a positive semidefinite matrix of trace $0$ is $0$. So
+$F_j=G_j$ for every $j$.
+
+(iv) Multiply $F_j-(1-q'_s)E_j\succeq0$ by $1-q_s\ge0$ and add
+$G_j-(1-q_s)F_j\succeq0$: this gives $G_j-(1-q_s)(1-q'_s)E_j\succeq0$, which
+is \eqref{eq:domination} for $G$ and $E$ at $1-(1-q_s)(1-q'_s)$. That weight
+equals $q_s+q'_s-q_sq'_s$, which is at most $q_s+q'_s$ and at least $0$;
+and $(1-q_s)(1-q'_s)>0$, so it is below $1$.
+
+(v) Every $G'_w$ and $F'_w$ is Hermitian and positive semidefinite, being a
+non-negative combination of such matrices, and
+$G'_w-(1-q_s)F'_w=\sum_jP_{w|j}\big(G_j-(1-q_s)F_j\big)\succeq0$ for the same
+reason. If every $\sum_wP_{w|j}=1$, then
+$\sum_wG'_w=\sum_j\big(\sum_wP_{w|j}\big)G_j=\sum_jG_j=c\,\idon{}$, and the
+same for $F'$. The case $p_j$ is $W=J$ with $P_{w|j}=p_j$ for $w=j$ and $0$
+otherwise.
+
+(vi) If $q_s>0$, then
+$R_j=q_s^{-1}(G_j-(1-q_s)F_j)\succeq0$ by \eqref{eq:domination},
+$\sum_jR_j=q_s^{-1}\big(c\,\idon{}-(1-q_s)c\,\idon{}\big)=c\,\idon{}$, and
+$(1-q_s)F_j+q_sR_j=G_j$ by the definition of $R_j$. If $q_s=0$, then
+$R_j=G_j\succeq0$ is complete at $c$, and $F_j=G_j$ by (iii), so
+$(1-0)F_j+0\cdot R_j=G_j$.
+\end{proof}

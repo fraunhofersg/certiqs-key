@@ -1,0 +1,19 @@
+id: spec/closed-decision
+title: Already decided
+kind: decision
+status: closed
+severity: blocking
+priority: 1
+needs_human: true
+owner: maintainer
+module: null
+claims: []
+opened: 2026-08-30
+closes_when: Decided.
+decision: |
+  The maintainer, 2026-08-31: "yes".
+brief: |
+  Closed; must not appear on the dashboard.
+links: []
+history:
+  - 2026-08-31: closed.

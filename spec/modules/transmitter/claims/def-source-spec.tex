@@ -1,0 +1,135 @@
+% ---
+% id: transmitter/def:source-spec
+% kind: def
+% title: "Source specification"
+% summary: >-
+%   Alice's alphabet, retained system with sectors, measurement and signal
+%   ensemble are declared, with binary64 numbers and exact decisions, or
+%   defined from declared data or a source model. Trusted-source mode adds a
+%   marginal and, above dimension one, a certificate; untrusted-source mode
+%   has neither.
+% prominence: standard
+% status: implemented
+% uses: []
+% mentions: [def:source-segment, def:srcert, rem:source-mode, lem:matched-pinching, ass:ens, lem:ensemble-presentation, rem:certificate-forms, rem:da1]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.artifact:SourceSpecification
+% lean:
+% notes: "This definition and def:srcert define each other (trusted-source mode is defined by the certificate, the certificate by this definition's data), but the graph carries only the edge def:srcert -> def:source-spec: a change to def:srcert's conditions reaches this definition by hand. Also realised by certiqs_key.transmitter.artifact:emit_artifact, which decides the conditions."
+% ---
+
+Alice's side of a protocol is described by what she prepares and what she
+keeps. The definition lists the data a specification declares, the
+conditions on them, and the objects that are defined from declared data
+rather than declared themselves; its closing number model says how declared
+data are given and how every condition is decided. In trusted-source mode the specification asserts that Alice's retained system
+$A$ never reaches the adversary, and a \tref{source-replacement certificate}
+(Definition~\ref{def:srcert}) describes her preparation as her measurement
+$\{M_x\}$ of $A$. In untrusted-source mode no certificate ties $A$ or
+$\{M_x\}$ to the signal ensemble: $\{M_x\}$ is Alice's measurement of a system
+the adversary may have prepared, and the mode is the conservative
+relaxation of trusted-source mode (Remark~\ref{rem:source-mode}). The sector
+structure on $A$ is what lets a certificate be declared in \tref{block form}
+(Definition~\ref{def:srcert}), which a source that first draws a sector and
+then prepares a state in it needs (Remark~\ref{rem:certificate-forms}).
+At $d_A=1$ the two modes coincide (Remark~\ref{rem:da1}).
+
+\begin{definition}\label{def:source-spec}
+A \term[The declared description of Alice's side of a protocol: alphabet, retained system with sectors, measurement, signal ensemble and source mode.]{source specification} $\Spec_{\mathrm{src}}$ consists of the
+following data. A finite non-empty alphabet $\Xset$ with a declared order. A
+finite-dimensional system $A$ with a declared computational basis,
+$d_A\coloneqq\dim\Hs{A}$, and a declared \term[A decomposition of Alice's retained system into orthogonal sectors, each spanned by declared basis vectors.]{sector structure} on it: an
+ordered finite index set $\mathbb{T}$ and a decomposition
+$\Hs{A}=\bigoplus_{t\in\mathbb{T}}\Hs{A_t}$ into subspaces each spanned by
+vectors of the declared basis, $d_{A_t}\coloneqq\dim\Hs{A_t}\ge1$, with
+projectors $\Pi^{A}_t$; the \term[The default sector structure, whose single sector is the whole retained system.]{one-sector structure}, $\mathbb{T}$ a
+single index and $A_t=A$, is the default. A POVM $\{M_x\}_{x\in\Xset}$ on
+$A$ presented as a block list against that structure,
+$M_x=\bigoplus_{t}M^{(t)}_x$ with $M^{(t)}_x\in\Lin{A_t}$, each block
+Hermitian and positive semidefinite, and
+$\sum_{x\in\Xset}M^{(t)}_x=\idon{A_t}$ for every $t$ with the sum taken in
+the declared order. The \term[The weights and signal states, one per letter, that Alice's source is specified to emit.]{specified signal ensemble}
+$\{p_x,\rho_x\}_{x\in\Xset}$ on the \term[The system Alice sends into the channel, carrying the specified signal ensemble.]{transmitted system} $\Asig$, with
+$p_x\ge0$, $\sum_xp_x=1$ and $\rho_x$ a state on $\Asig$. With one sector
+the block list $M_x$ is the matrix $M_x$, and every condition on its blocks
+is the same condition on that matrix.
+
+\emph{How the specified ensemble is declared.} In one of two ways.
+(a) \emph{As matrices}, for a finite-dimensional $\Asig$: by its
+\term[The positive operators, weight times state, one per letter, through which an ensemble is declared and read.]{weighted members} $\sigma_x\in\Pos{\Asig}$, with
+$p_x\coloneqq\tr\sigma_x$, $\sum_xp_x=1$ in the declared order, and
+$\rho_x\coloneqq\sigma_x/p_x$ where $p_x>0$. A declaration by the pair
+$(p_x,\rho_x)$, $\rho_x\in\Seq{\Asig}$, is the declaration of the weighted
+member $\sigma_x=p_x\rho_x$ with the product formed exactly, and it requires
+$\rho_x\in\Seq{\Asig}$ of \emph{every} letter, a letter with $p_x=0$
+included. Every condition of this module that reads an admitted ensemble
+reads it through its weighted members only.
+(b) \emph{By a} \term[A submodule's named definition of the signal ensemble as mathematical objects, possibly infinite dimensional, rather than as matrices.]{source model}, for a transmitted system $\Asig$ whose
+Hilbert space is separable, possibly infinite dimensional: by a named
+definition of a submodule of this module that fixes the weights $p_x$ and the
+states $\rho_x$ as mathematical objects and not as matrices, together with
+the physical-source assumption which that submodule declares in the place of
+Assumption~\ref{ass:ens}. A specification declared by a source model is
+presented with a non-empty \tref{source segment}
+(Definition~\ref{def:source-segment}): what a consumer receives is never the
+model but the \tref{virtual ensemble}, which is finite dimensional.
+
+\emph{The two modes.} The specification is declared in one of two modes. In
+\term[The source mode in which Alice's retained system never reaches the adversary, with a declared marginal and, above dimension one, a certificate.]{trusted-source mode} it additionally carries a marginal
+$\tau_A\in\Seq{A}$, presented as a block list
+$\tau_A=\bigoplus_t\tau^{(t)}_A$ with $\tau^{(t)}_A\in\Pos{A_t}$ and
+$\sum_t\tr\tau^{(t)}_A=1$, and, at $d_A\ge2$, a source-replacement
+certificate in the sense of Definition~\ref{def:srcert}, written against the
+\emph{virtual} ensemble $\{p_x,\rvirt_x\}$ on the \tref{virtual transmitted system}
+$\Avirt$: the finite-dimensional ensemble the source segment starts from, whose
+channels produce the specified ensemble from it
+(Definition~\ref{def:source-segment}\,(S1), (S3)); when the source segment is
+empty, $\Avirt=\Asig$ and $\rvirt_x=\rho_x$. The certificate takes one of the
+three forms of Definition~\ref{def:srcert}: a rank-one projector (the \tref{pure
+form}), positive sector blocks (the block form), or an \tref{ensemble presentation},
+which declares only the weighted virtual ensemble, in blocks along a matched
+sector structure of $\Avirt$, and defines the certificate from it. A sector structure with more than one sector is declared only in
+trusted-source mode and only together with a certificate in block form or an
+ensemble presentation. \emph{With an ensemble presentation} the specification
+declares neither $A$, its basis and its sector structure, nor $\{M_x\}$, nor
+$\tau_A$: they are constituents of the specification that \eqref{eq:enspres}
+defines from the declared virtual ensemble, the conditions this definition
+places on them hold by Lemma~\ref{lem:ensemble-presentation}\,(i), and of
+them only $\tau_A$ is formed as numbers, that is, computed entry by entry from
+the declared blocks (Lemma~\ref{lem:ensemble-presentation}\,(iii));
+$\{M_x\}$ and the certificate are defined and never computed. At $d_A=1$ no
+certificate is demanded and $\tau_A=[1]$ is the only marginal, so that there
+the two modes impose the same condition. In
+\term[The source mode with no certificate and no marginal, in which the adversary may have prepared Alice's retained system.]{untrusted-source mode} the specification carries no certificate and no
+marginal, written
+$\tau_A=\nomarg$; the specification with
+$d_A=1$ and a one-letter $\Xset$ is its degenerate case, in which Alice
+prepares nothing that this module describes.
+
+\emph{What the sector structure is not.} It is a declaration about
+$\{M_x\}$ and $\tau_A$, which are block diagonal by their presentation. It
+is no statement about any operator on $A$ together with a further system,
+and no consumer may read it as one: that a joint state is block diagonal
+along $\mathbb{T}$ is either proved of the states a certificate reaches
+(Lemma~\ref{lem:matched-pinching}) or licensed by a theorem of the consuming
+module that restricts its own feasible set, under that module's own
+preconditions, and is never inferred from the presentation of $\tau_A$ or
+$\{M_x\}$.
+
+\emph{The number model.} Every declared entry is a binary64 number, hence a
+dyadic rational, and is admissible exactly as declared. A source model
+(case (b)) declares no entries: its weights and states are mathematical
+objects, and what is decided of such a specification is decided on the
+entries it does declare, those of its virtual ensemble among them. Every
+condition above is decided \emph{exactly} on the declared entries: a
+quantity that a condition compares --- a sum in the declared order, a
+product, a partial
+trace --- is \emph{formed} in exact arithmetic on the declared entries as
+well as compared exactly, so that the identity decided is the identity
+written and rounding enters nowhere. That the operands are binary64 is not
+what makes a decision exact; a product of two binary64 numbers need not be
+one. Positive semidefiniteness is decided by an exact decision on the
+declared entries and never by a floating-point eigenvalue.
+\end{definition}

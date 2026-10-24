@@ -1,0 +1,104 @@
+% ---
+% id: statistics/thm:geometry-validation
+% kind: thm
+% title: "Validity of the admissible geometries"
+% summary: >-
+%   An acceptance set whose data pass validation (a probability vector, or a
+%   feasible linear system) is a non-empty, compact, admissible acceptance
+%   set ([[meat-core/def:admissible-acceptance-set]]). For a box of
+%   per-outcome bounds, validation means the lower sum to at most one and the
+%   upper to at least one.
+% prominence: main
+% status: implemented
+% uses: [def:taxonomy, def:matched-alphabet]
+% mentions: [meat-core/def:admissible-acceptance-set]
+% assumes: [A-ALPHABET]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.taxonomy:validate_geometry
+% lean:
+% ---
+
+The consuming engine assumes that its acceptance set is a closed convex subset
+of the probability simplex. The alphabet is the finite, enumerated one of
+Definition~\ref{def:matched-alphabet}, so the simplex is compact; a polytope cuts it
+with finitely many closed half-spaces, and along the segment from the lower to
+the upper bound vector of a canonical box the coordinate sum moves
+continuously from the sum of the lower bounds to that of the upper bounds,
+which gives the predicate in closed form.
+
+\begin{theorem}\label{thm:geometry-validation}
+Let $\Chatset$ and $n$ be a \tref{matched alphabet and round count}
+(Definition~\ref{def:matched-alphabet}), and let $(\text{tag},\text{data})$
+be an admissible geometry with denotation $\Gamma$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item If the validation predicate holds, $\Gamma$ is a non-empty, closed,
+convex and compact subset of $\simplex{\Chatset}$. In particular
+\xref{meat-core/def:admissible-acceptance-set}, that $\acSet$ is a closed convex subset of the
+probability simplex on $\Chatset$, holds by construction for every admissible
+geometry whose validation predicate holds.
+\item For the tag $\mathrm{singleton}$, the validation predicate is necessary
+and sufficient for $\Gamma$ to be a non-empty subset of $\simplex{\Chatset}$.
+\item For the tag $\mathrm{polytope}$ in canonical box form with
+$0\le\qlo\le\qhi$, the validation predicate, the condition
+$\Gamma\neq\varnothing$ and the closed-form condition
+\begin{equation}\label{eq:boxfeas}
+  \sum_{\hat c\in\Chatset}q^{-}(\hat c)\ \le\ 1\ \le\
+  \sum_{\hat c\in\Chatset}q^{+}(\hat c)
+\end{equation}
+are equivalent.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{(i).} $\simplex{\Chatset}$ is the intersection of the closed half-spaces
+$\{q(\hat c)\ge0\}$ with the hyperplane $\{\sum_{\hat c}q(\hat c)=1\}$, hence
+closed and convex; it is bounded, since $0\le q(\hat c)\le1$ for every
+coordinate, hence compact ($\Chatset$ is finite, so
+$\mathbb{R}^{\Chatset}$ is finite-dimensional and Heine--Borel applies). For
+$\mathrm{polytope}$, $\{B\mathbf{q}\le\mathbf{b}\}$ is a finite intersection
+of closed half-spaces, so closed and convex, and $\Gamma$ is the intersection
+of two closed convex sets, hence closed and convex; being a closed subset of
+the compact $\simplex{\Chatset}$, it is compact. For $\mathrm{singleton}$, a
+one-point set is closed, convex and compact, and lies in $\simplex{\Chatset}$
+exactly when the validation predicate holds. Non-emptiness follows from the
+validation predicate in every case: for $\mathrm{singleton}$ by (ii); for a
+general $\mathrm{polytope}$ because the predicate is rational feasibility of
+$\{\mathbf{q}\ge0,\ \sum_{\hat c}q(\hat c)=1,\ B\mathbf{q}\le\mathbf{b}\}$ and
+a feasible point is by \eqref{eq:polytope} an element of $\Gamma$; and in
+canonical box form equivalently by the closed form (iii).
+
+\emph{(ii).} $\{\mathbf{q}^{\ast}\}\subseteq\simplex{\Chatset}$ and
+$\{\mathbf{q}^{\ast}\}\neq\varnothing$ hold if and only if
+$\mathbf{q}^{\ast}\in\simplex{\Chatset}$, which is the predicate verbatim.
+
+\emph{(iii).} We show that the predicate gives $\Gamma\neq\varnothing$, that
+$\Gamma\neq\varnothing$ gives \eqref{eq:boxfeas}, and that
+\eqref{eq:boxfeas} gives the predicate. By \eqref{eq:boxrows} the rows
+$B\mathbf{q}\le\mathbf{b}$ read $\qlo\le\mathbf{q}\le\qhi$ componentwise.
+
+\emph{Predicate $\Rightarrow$ non-emptiness.} A rational solution of the
+system of the predicate is by \eqref{eq:polytope} an element of $\Gamma$.
+
+\emph{Non-emptiness $\Rightarrow$ \eqref{eq:boxfeas}.} If
+$\mathbf{q}\in\Gamma$ then $\qlo\le\mathbf{q}\le\qhi$ componentwise and
+$\sum_{\hat c}q(\hat c)=1$; summing the two componentwise inequalities gives
+\eqref{eq:boxfeas}.
+
+\emph{\eqref{eq:boxfeas} $\Rightarrow$ predicate.} Put, for
+$\theta\in[0,1]$, $\mathbf{q}(\theta)\coloneqq\qlo+\theta(\qhi-\qlo)$. Since
+$\qlo\le\qhi$, every $\mathbf{q}(\theta)$ satisfies
+$\qlo\le\mathbf{q}(\theta)\le\qhi$ and, using $\qlo\ge0$, also
+$\mathbf{q}(\theta)\ge0$. Write $S^{-}\coloneqq\sum_{\hat c}q^{-}(\hat c)$ and
+$S^{+}\coloneqq\sum_{\hat c}q^{+}(\hat c)$, so that $S^{-}\le1\le S^{+}$ by
+\eqref{eq:boxfeas} and $\sum_{\hat c}q(\theta)(\hat c)=S^{-}+\theta(S^{+}-S^{-})$.
+Put $\theta^{\ast}\coloneqq(1-S^{-})/(S^{+}-S^{-})$ if $S^{+}>S^{-}$, and
+$\theta^{\ast}\coloneqq0$ if $S^{+}=S^{-}$, in which case $S^{-}=S^{+}=1$. In
+both cases $\theta^{\ast}\in[0,1]$ and
+$\sum_{\hat c}q(\theta^{\ast})(\hat c)=1$, and $\theta^{\ast}$ is rational
+because $\qlo$ and $\qhi$ are (Definition~\ref{def:taxonomy}). So
+$\mathbf{q}(\theta^{\ast})$ is a rational vector with
+$\mathbf{q}(\theta^{\ast})\ge0$, $\sum_{\hat c}q(\theta^{\ast})(\hat c)=1$ and
+$\qlo\le\mathbf{q}(\theta^{\ast})\le\qhi$, a rational solution of the system
+of the predicate.
+\end{proof}

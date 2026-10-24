@@ -1,0 +1,4219 @@
+{
+ "kind": "protocol_map",
+ "label_legend": {
+  "choices": [
+   {
+    "alphabet": [
+     {
+      "value": "gen",
+      "weight": "7/8"
+     },
+     {
+      "value": "test",
+      "weight": "1/8"
+     }
+    ],
+    "factor": "alice_station",
+    "letters": [
+     {
+      "choice": "gen",
+      "label": "(nc,gen)",
+      "letter": "nc"
+     },
+     {
+      "choice": "test",
+      "label": "(nc,test)",
+      "letter": "nc"
+     },
+     {
+      "choice": "gen",
+      "label": "(H,gen)",
+      "letter": "H"
+     },
+     {
+      "choice": "test",
+      "label": "(H,test)",
+      "letter": "H"
+     },
+     {
+      "choice": "gen",
+      "label": "(V,gen)",
+      "letter": "V"
+     },
+     {
+      "choice": "test",
+      "label": "(V,test)",
+      "letter": "V"
+     },
+     {
+      "choice": "gen",
+      "label": "(D,gen)",
+      "letter": "D"
+     },
+     {
+      "choice": "test",
+      "label": "(D,test)",
+      "letter": "D"
+     },
+     {
+      "choice": "gen",
+      "label": "(A,gen)",
+      "letter": "A"
+     },
+     {
+      "choice": "test",
+      "label": "(A,test)",
+      "letter": "A"
+     },
+     {
+      "choice": "gen",
+      "label": "(mc,gen)",
+      "letter": "mc"
+     },
+     {
+      "choice": "test",
+      "label": "(mc,test)",
+      "letter": "mc"
+     }
+    ],
+    "party": "A",
+    "party_title": "Alice",
+    "provenance": {
+     "claim": "protocol-compiler/def:weighted",
+     "engine_field": "preparation.compiled.public.choice_weightings[0]"
+    }
+   }
+  ],
+  "factors": [
+   {
+    "label": "alice_station",
+    "letters": 12,
+    "party": "A",
+    "party_title": "Alice",
+    "position": 0,
+    "provenance": {
+     "engine_field": "preparation.compiled.public.label_index_map.forward.V[alice_station]"
+    }
+   },
+   {
+    "label": "bob_station",
+    "letters": 6,
+    "party": "B",
+    "party_title": "Bob",
+    "position": 1,
+    "provenance": {
+     "engine_field": "preparation.compiled.public.label_index_map.forward.V[bob_station]"
+    }
+   }
+  ],
+  "join": "__",
+  "stations": [
+   {
+    "letters": [
+     {
+      "description": "no port fired",
+      "letter": "nc",
+      "preimage": [
+       []
+      ]
+     },
+     {
+      "description": "only port H fired",
+      "letter": "H",
+      "preimage": [
+       [
+        "H"
+       ]
+      ]
+     },
+     {
+      "description": "only port V fired",
+      "letter": "V",
+      "preimage": [
+       [
+        "V"
+       ]
+      ]
+     },
+     {
+      "description": "only port D fired",
+      "letter": "D",
+      "preimage": [
+       [
+        "D"
+       ]
+      ]
+     },
+     {
+      "description": "only port A fired",
+      "letter": "A",
+      "preimage": [
+       [
+        "A"
+       ]
+      ]
+     },
+     {
+      "description": "2 or more ports fired",
+      "letter": "mc",
+      "preimage": [
+       [
+        "H",
+        "V"
+       ],
+       [
+        "H",
+        "D"
+       ],
+       [
+        "H",
+        "A"
+       ],
+       [
+        "V",
+        "D"
+       ],
+       [
+        "V",
+        "A"
+       ],
+       [
+        "D",
+        "A"
+       ],
+       [
+        "H",
+        "V",
+        "D"
+       ],
+       [
+        "H",
+        "V",
+        "A"
+       ],
+       [
+        "H",
+        "D",
+        "A"
+       ],
+       [
+        "V",
+        "D",
+        "A"
+       ],
+       [
+        "H",
+        "V",
+        "D",
+        "A"
+       ]
+      ]
+     }
+    ],
+    "party": "A",
+    "party_title": "Alice",
+    "provenance": {
+     "claim": "receiver/def:coarse",
+     "engine_field": "preparation.stations[0].receiver.outcome_alphabet.coarse_graining"
+    }
+   },
+   {
+    "letters": [
+     {
+      "description": "no port fired",
+      "letter": "nc",
+      "preimage": [
+       []
+      ]
+     },
+     {
+      "description": "only port H fired",
+      "letter": "H",
+      "preimage": [
+       [
+        "H"
+       ]
+      ]
+     },
+     {
+      "description": "only port V fired",
+      "letter": "V",
+      "preimage": [
+       [
+        "V"
+       ]
+      ]
+     },
+     {
+      "description": "only port D fired",
+      "letter": "D",
+      "preimage": [
+       [
+        "D"
+       ]
+      ]
+     },
+     {
+      "description": "only port A fired",
+      "letter": "A",
+      "preimage": [
+       [
+        "A"
+       ]
+      ]
+     },
+     {
+      "description": "2 or more ports fired",
+      "letter": "mc",
+      "preimage": [
+       [
+        "H",
+        "V"
+       ],
+       [
+        "H",
+        "D"
+       ],
+       [
+        "H",
+        "A"
+       ],
+       [
+        "V",
+        "D"
+       ],
+       [
+        "V",
+        "A"
+       ],
+       [
+        "D",
+        "A"
+       ],
+       [
+        "H",
+        "V",
+        "D"
+       ],
+       [
+        "H",
+        "V",
+        "A"
+       ],
+       [
+        "H",
+        "D",
+        "A"
+       ],
+       [
+        "V",
+        "D",
+        "A"
+       ],
+       [
+        "H",
+        "V",
+        "D",
+        "A"
+       ]
+      ]
+     }
+    ],
+    "party": "B",
+    "party_title": "Bob",
+    "provenance": {
+     "claim": "receiver/def:coarse",
+     "engine_field": "preparation.stations[1].receiver.outcome_alphabet.coarse_graining"
+    }
+   }
+  ]
+ },
+ "lanes": [
+  {
+   "id": "alice",
+   "party": "A",
+   "title": "Alice"
+  },
+  {
+   "id": "public",
+   "party": null,
+   "title": "Public"
+  },
+  {
+   "id": "bob",
+   "party": "B",
+   "title": "Bob"
+  },
+  {
+   "id": "source",
+   "party": null,
+   "role": "source",
+   "title": "Source (untrusted)"
+  },
+  {
+   "id": "eve",
+   "party": null,
+   "title": "Eve"
+  }
+ ],
+ "provenance": {
+  "claim": "protocol-compiler/def:spec",
+  "engine_field": "preparation.compiled"
+ },
+ "refusal": null,
+ "refused": false,
+ "registers": [
+  {
+   "id": "q_channel_0",
+   "label": "Q_A",
+   "lane": "source",
+   "math": "\\text{Q\\_A}",
+   "provenance": {
+    "engine_field": "preparation.channel_interface.arms[0]"
+   },
+   "type": "quantum"
+  },
+  {
+   "id": "q_channel_1",
+   "label": "Q_B",
+   "lane": "source",
+   "math": "\\text{Q\\_B}",
+   "provenance": {
+    "engine_field": "preparation.channel_interface.arms[1]"
+   },
+   "type": "quantum"
+  },
+  {
+   "id": "q_received_0",
+   "label": "Q_A'",
+   "lane": "eve",
+   "math": "\\text{Q\\_A'}",
+   "provenance": {
+    "engine_field": "preparation.channel_interface.arms[0]"
+   },
+   "type": "quantum"
+  },
+  {
+   "id": "q_received_1",
+   "label": "Q_B'",
+   "lane": "eve",
+   "math": "\\text{Q\\_B'}",
+   "provenance": {
+    "engine_field": "preparation.channel_interface.arms[1]"
+   },
+   "type": "quantum"
+  },
+  {
+   "alphabet": [
+    "(nc,gen)",
+    "(nc,test)",
+    "(H,gen)",
+    "(H,test)",
+    "(V,gen)",
+    "(V,test)",
+    "(D,gen)",
+    "(D,test)",
+    "(A,gen)",
+    "(A,test)",
+    "(mc,gen)",
+    "(mc,test)"
+   ],
+   "id": "v_0",
+   "label": "V_A",
+   "lane": "alice",
+   "math": "\\text{V\\_A}",
+   "provenance": {
+    "engine_field": "preparation.compiled.public.label_index_map.forward.V[alice_station]"
+   },
+   "type": "classical"
+  },
+  {
+   "alphabet": [
+    "nc",
+    "H",
+    "V",
+    "D",
+    "A",
+    "mc"
+   ],
+   "id": "v_1",
+   "label": "V_B",
+   "lane": "bob",
+   "math": "\\text{V\\_B}",
+   "provenance": {
+    "engine_field": "preparation.compiled.public.label_index_map.forward.V[bob_station]"
+   },
+   "type": "classical"
+  },
+  {
+   "alphabet": [
+    "(nc,gen)",
+    "(nc,test)",
+    "(H,gen)",
+    "(H,test)",
+    "(V,gen)",
+    "(V,test)",
+    "(D,gen)",
+    "(D,test)",
+    "(A,gen)",
+    "(A,test)",
+    "(mc,gen)",
+    "(mc,test)"
+   ],
+   "id": "o_alice",
+   "label": "O_A",
+   "lane": "alice",
+   "math": "O_A",
+   "provenance": {
+    "claim": "protocol-compiler/def:spec",
+    "engine_field": "preparation.compiled.public.party_partition.alice_readout_alphabet"
+   },
+   "type": "classical"
+  },
+  {
+   "alphabet": [
+    "nc",
+    "H",
+    "V",
+    "D",
+    "A",
+    "mc"
+   ],
+   "id": "o_bob",
+   "label": "O_B",
+   "lane": "bob",
+   "math": "O_B",
+   "provenance": {
+    "claim": "protocol-compiler/def:spec",
+    "engine_field": "preparation.compiled.public.party_partition.bob_readout_alphabet"
+   },
+   "type": "classical"
+  },
+  {
+   "alphabet": [
+    "gen:Z",
+    "gen:X",
+    "gen:nc",
+    "gen:mc",
+    "test:nc",
+    "test:H",
+    "test:V",
+    "test:D",
+    "test:A",
+    "test:mc"
+   ],
+   "id": "c_alice",
+   "label": "C_A",
+   "lane": "public",
+   "math": "C_A",
+   "provenance": {
+    "engine_field": "preparation.compiled.public.transcript[0].alphabet"
+   },
+   "type": "classical"
+  },
+  {
+   "alphabet": [
+    "Z",
+    "X",
+    "nc",
+    "mc",
+    "H",
+    "V",
+    "D",
+    "A"
+   ],
+   "id": "c_bob",
+   "label": "C_B",
+   "lane": "public",
+   "math": "C_B",
+   "provenance": {
+    "engine_field": "preparation.compiled.public.transcript[1].alphabet"
+   },
+   "type": "classical"
+  },
+  {
+   "alphabet": [
+    "pass",
+    "fail"
+   ],
+   "id": "sift",
+   "label": "σ",
+   "lane": "public",
+   "math": "\\varsigma",
+   "provenance": {
+    "engine_field": "preparation.compiled.public.key_map"
+   },
+   "type": "classical"
+  },
+  {
+   "alphabet": [
+    0,
+    1,
+    "perp"
+   ],
+   "id": "key",
+   "label": "Z_perp",
+   "lane": "alice",
+   "math": "Z_{\\perp}",
+   "provenance": {
+    "engine_field": "preparation.compiled.public.key_alphabet"
+   },
+   "type": "classical"
+  },
+  {
+   "alphabet": [
+    "gen",
+    "gen:Z|X",
+    "gen:Z|nc",
+    "gen:Z|mc",
+    "gen:Z|H",
+    "gen:Z|V",
+    "gen:Z|D",
+    "gen:Z|A",
+    "gen:X|Z",
+    "gen:X|nc",
+    "gen:X|mc",
+    "gen:X|H",
+    "gen:X|V",
+    "gen:X|D",
+    "gen:X|A",
+    "gen:nc|Z",
+    "gen:nc|X",
+    "gen:nc|nc",
+    "gen:nc|mc",
+    "gen:nc|H",
+    "gen:nc|V",
+    "gen:nc|D",
+    "gen:nc|A",
+    "gen:mc|Z",
+    "gen:mc|X",
+    "gen:mc|nc",
+    "gen:mc|mc",
+    "gen:mc|H",
+    "gen:mc|V",
+    "gen:mc|D",
+    "gen:mc|A",
+    "test:nc|Z",
+    "test:nc|X",
+    "test:nc|nc",
+    "test:nc|mc",
+    "test:nc|H",
+    "test:nc|V",
+    "test:nc|D",
+    "test:nc|A",
+    "test:H|Z",
+    "test:H|X",
+    "test:H|nc",
+    "test:H|mc",
+    "test:H|H",
+    "test:H|V",
+    "test:H|D",
+    "test:H|A",
+    "test:V|Z",
+    "test:V|X",
+    "test:V|nc",
+    "test:V|mc",
+    "test:V|H",
+    "test:V|V",
+    "test:V|D",
+    "test:V|A",
+    "test:D|Z",
+    "test:D|X",
+    "test:D|nc",
+    "test:D|mc",
+    "test:D|H",
+    "test:D|V",
+    "test:D|D",
+    "test:D|A",
+    "test:A|Z",
+    "test:A|X",
+    "test:A|nc",
+    "test:A|mc",
+    "test:A|H",
+    "test:A|V",
+    "test:A|D",
+    "test:A|A",
+    "test:mc|Z",
+    "test:mc|X",
+    "test:mc|nc",
+    "test:mc|mc",
+    "test:mc|H",
+    "test:mc|V",
+    "test:mc|D",
+    "test:mc|A"
+   ],
+   "id": "chat",
+   "label": "Chat",
+   "lane": "public",
+   "math": "\\hat{C}",
+   "provenance": {
+    "engine_field": "preparation.acceptance_alphabet"
+   },
+   "type": "classical"
+  },
+  {
+   "id": "ell",
+   "label": "ℓ",
+   "lane": "public",
+   "math": "\\ell",
+   "provenance": {
+    "engine_field": "record.payload.stages.key_rate.key_length"
+   },
+   "type": "classical"
+  }
+ ],
+ "route": "declared_finite_povm",
+ "service_stages": [],
+ "steps": [
+  {
+   "id": "source",
+   "operations": [
+    {
+     "id": "source.ensemble",
+     "inputs": [],
+     "lane": "source",
+     "math": "\\rho_{AQ}",
+     "notes": [
+      "the source is untrusted: the security declaration does not rely on its model"
+     ],
+     "outputs": [
+      "q_channel_0",
+      "q_channel_1"
+     ],
+     "parameters": [
+      {
+       "exact": false,
+       "name": "source mode",
+       "provenance": {
+        "claim": "transmitter/rem:source-mode",
+        "engine_field": "preparation.compiled.source.source_mode"
+       },
+       "value": "untrusted"
+      },
+      {
+       "exact": true,
+       "name": "dim A",
+       "provenance": {
+        "engine_field": "preparation.compiled.source.alice_dim"
+       },
+       "value": 1
+      },
+      {
+       "exact": true,
+       "name": "dim Q",
+       "provenance": {
+        "engine_field": "preparation.compiled.source.virtual_transmitted_system"
+       },
+       "value": 1
+      },
+      {
+       "exact": false,
+       "meaning": "Model of the source that predicts the expected data; the security analysis never trusts the source",
+       "name": "source model",
+       "note": "Model of the source that predicts the expected data; the security analysis never trusts the source",
+       "parameter_index": 5,
+       "provenance": {
+        "engine_field": "preparation.channel_interface.source_model"
+       },
+       "value": "ideal_pair"
+      },
+      {
+       "exact": true,
+       "meaning": "Probability that Alice's photon of a pair reaches her station",
+       "name": "alice_transmittance",
+       "note": "honest model, not an assumption on Eve; Probability that Alice's photon of a pair reaches her station",
+       "parameter_index": 0,
+       "provenance": {
+        "engine_field": "preparation.config.model.alice_transmittance"
+       },
+       "value": "5696652996790543/18014398509481984"
+      },
+      {
+       "exact": true,
+       "meaning": "Probability that Bob's photon of a pair reaches his station",
+       "name": "bob_transmittance",
+       "note": "honest model, not an assumption on Eve; Probability that Bob's photon of a pair reaches his station",
+       "parameter_index": 1,
+       "provenance": {
+        "engine_field": "preparation.config.model.bob_transmittance"
+       },
+       "value": "5696652996790543/18014398509481984"
+      },
+      {
+       "exact": true,
+       "meaning": "Visibility v of the entangled pair: matched-basis bits disagree with probability (1 - v)/2",
+       "name": "visibility",
+       "note": "honest model, not an assumption on Eve; Visibility v of the entangled pair: matched-basis bits disagree with probability (1 - v)/2",
+       "parameter_index": 2,
+       "provenance": {
+        "engine_field": "preparation.config.model.visibility"
+       },
+       "value": "49/50"
+      },
+      {
+       "exact": true,
+       "meaning": "Mean number of photon pairs the SPDC source emits per round, summed over both polarizations",
+       "name": "mean_pairs",
+       "note": "honest model, not an assumption on Eve; Mean number of photon pairs the SPDC source emits per round, summed over both polarizations",
+       "parameter_index": 3,
+       "provenance": {
+        "engine_field": "preparation.config.model.mean_pairs"
+       },
+       "value": "1/32"
+      },
+      {
+       "exact": false,
+       "name": "assumption ledger",
+       "provenance": {
+        "engine_field": "preparation.transmitter_artifact.assumption_ledger"
+       },
+       "value": "sequential_round_model"
+      },
+      {
+       "exact": false,
+       "name": "spec version",
+       "provenance": {
+        "engine_field": "preparation.transmitter_artifact.mathematical_spec_version"
+       },
+       "value": "transmitter@0.11.0"
+      }
+     ],
+     "provenance": {
+      "claim": "transmitter/def:srcert",
+      "engine_field": "preparation.transmitter_artifact.virtual_ensemble"
+     },
+     "table": {
+      "columns": [
+       "signal",
+       "weight"
+      ],
+      "rows": [
+       [
+        "x0",
+        "1"
+       ]
+      ]
+     },
+     "title": "untrusted source"
+    }
+   ],
+   "title": "Source",
+   "type": "source"
+  },
+  {
+   "id": "transmission",
+   "operations": [
+    {
+     "id": "transmission.arm0",
+     "inputs": [
+      "q_channel_0"
+     ],
+     "lane": "eve",
+     "math": "\\mathcal{E}_{Q\\to Q'}",
+     "notes": [
+      "honest model, not an assumption on Eve"
+     ],
+     "outputs": [
+      "q_received_0"
+     ],
+     "parameters": [
+      {
+       "exact": true,
+       "name": "photon cutoff",
+       "provenance": {
+        "engine_field": "preparation.channel_interface.arms[0].photon_cutoff"
+       },
+       "value": 1
+      }
+     ],
+     "provenance": {
+      "engine_field": "preparation.channel_interface.arms[0]"
+     },
+     "table": {
+      "columns": [
+       "channel mode",
+       "path",
+       "polarization",
+       "tau"
+      ],
+      "rows": [
+       [
+        "Z_H",
+        "Z",
+        "H",
+        0
+       ],
+       [
+        "Z_V",
+        "Z",
+        "V",
+        0
+       ]
+      ]
+     },
+     "title": "channel, arm 0"
+    },
+    {
+     "id": "transmission.arm1",
+     "inputs": [
+      "q_channel_1"
+     ],
+     "lane": "eve",
+     "math": "\\mathcal{E}_{Q\\to Q'}",
+     "notes": [
+      "honest model, not an assumption on Eve"
+     ],
+     "outputs": [
+      "q_received_1"
+     ],
+     "parameters": [
+      {
+       "exact": true,
+       "name": "photon cutoff",
+       "provenance": {
+        "engine_field": "preparation.channel_interface.arms[1].photon_cutoff"
+       },
+       "value": 1
+      }
+     ],
+     "provenance": {
+      "engine_field": "preparation.channel_interface.arms[1]"
+     },
+     "table": {
+      "columns": [
+       "channel mode",
+       "path",
+       "polarization",
+       "tau"
+      ],
+      "rows": [
+       [
+        "Z_H",
+        "Z",
+        "H",
+        0
+       ],
+       [
+        "Z_V",
+        "Z",
+        "V",
+        0
+       ]
+      ]
+     },
+     "title": "channel, arm 1"
+    }
+   ],
+   "title": "Transmission",
+   "type": "transmission"
+  },
+  {
+   "id": "measurement",
+   "operations": [
+    {
+     "id": "measurement.station0.receiver_construction",
+     "inputs": [
+      "q_received_0"
+     ],
+     "lane": "alice",
+     "links": [
+      "optics"
+     ],
+     "math": "\\Gamma_G",
+     "outputs": [],
+     "parameters": [
+      {
+       "exact": false,
+       "name": "route",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.route"
+       },
+       "value": "element_graph"
+      },
+      {
+       "exact": true,
+       "name": "elements",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements"
+       },
+       "value": 4
+      },
+      {
+       "exact": true,
+       "name": "edges",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.edges"
+       },
+       "value": 3
+      },
+      {
+       "exact": false,
+       "name": "photon cutoff",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.photon_cutoff"
+       },
+       "value": null
+      }
+     ],
+     "provenance": {
+      "claim": "receiver/def:graph",
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements"
+     },
+     "table": {
+      "columns": [
+       "element",
+       "class",
+       "support"
+      ],
+      "rows": [
+       [
+        "bs",
+        "C1",
+        "Z_H, Z_V, X_H, X_V"
+       ],
+       [
+        "hwp",
+        "C3",
+        "X_H, X_V"
+       ],
+       [
+        "pbs_z",
+        "C2",
+        "Z_H, Z_V, Zr_H, Zr_V"
+       ],
+       [
+        "pbs_x",
+        "C2",
+        "X_H, X_V, Xr_H, Xr_V"
+       ]
+      ]
+     },
+     "title": "receiver construction"
+    },
+    {
+     "id": "measurement.station0.port_map",
+     "inputs": [],
+     "lane": "alice",
+     "links": [
+      "optics"
+     ],
+     "math": "\\{P_k\\}",
+     "outputs": [],
+     "parameters": [
+      {
+       "exact": true,
+       "name": "ports",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.port_map"
+       },
+       "value": 4
+      }
+     ],
+     "provenance": {
+      "claim": "receiver/def:instrument",
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.port_map"
+     },
+     "table": {
+      "columns": [
+       "port",
+       "modes"
+      ],
+      "rows": [
+       [
+        "H",
+        "Z_H, Z_V"
+       ],
+       [
+        "V",
+        "Zr_H, Zr_V"
+       ],
+       [
+        "D",
+        "X_H, X_V"
+       ],
+       [
+        "A",
+        "Xr_H, Xr_V"
+       ]
+      ]
+     },
+     "title": "port map"
+    },
+    {
+     "id": "measurement.station0.detector_layer",
+     "inputs": [],
+     "lane": "alice",
+     "links": [
+      "optics"
+     ],
+     "math": "D_\\eta,\\ R",
+     "outputs": [],
+     "parameters": [
+      {
+       "exact": false,
+       "name": "dark count route",
+       "provenance": {
+        "claim": "receiver/detector-imperfections/def:darkadm",
+        "engine_field": "preparation.stations[0].receiver.dark_count_channel.route"
+       },
+       "value": "per_port_product_form"
+      }
+     ],
+     "provenance": {
+      "claim": "receiver/detector-imperfections/thm:efficiency",
+      "engine_field": "preparation.stations[0].receiver.efficiency_record"
+     },
+     "table": {
+      "columns": [
+       "site",
+       "element",
+       "transmittance"
+      ],
+      "rows": [
+       [
+        "chain position 1",
+        "C1 bs, parameter x",
+        0.56
+       ],
+       [
+        "chain position 1",
+        "C1 bs, parameter y_1",
+        0.0
+       ],
+       [
+        "chain position 1",
+        "C1 bs, parameter y_2",
+        0.0
+       ],
+       [
+        "chain position 2",
+        "C3 hwp, parameter y",
+        0.0
+       ],
+       [
+        "chain position 3",
+        "C2 pbs_x, parameter t_H",
+        0.99
+       ],
+       [
+        "chain position 3",
+        "C2 pbs_x, parameter t_V",
+        0.001
+       ],
+       [
+        "chain position 3",
+        "C2 pbs_x, parameter y_1",
+        0.0
+       ],
+       [
+        "chain position 3",
+        "C2 pbs_x, parameter y_2",
+        0.0
+       ],
+       [
+        "chain position 4",
+        "C2 pbs_z, parameter t_H",
+        0.99
+       ],
+       [
+        "chain position 4",
+        "C2 pbs_z, parameter t_V",
+        0.001
+       ],
+       [
+        "chain position 4",
+        "C2 pbs_z, parameter y_1",
+        0.0
+       ],
+       [
+        "chain position 4",
+        "C2 pbs_z, parameter y_2",
+        0.0
+       ],
+       [
+        "terminal factor D_eta",
+        "L1 detector layer, parameter eta_H",
+        0.8
+       ],
+       [
+        "terminal factor D_eta",
+        "L1 detector layer, parameter eta_V",
+        0.7322033898305085
+       ],
+       [
+        "terminal factor D_eta",
+        "L1 detector layer, parameter eta_D",
+        0.8
+       ],
+       [
+        "terminal factor D_eta",
+        "L1 detector layer, parameter eta_A",
+        0.7322033898305085
+       ]
+      ]
+     },
+     "title": "detector layer"
+    },
+    {
+     "id": "measurement.station0.coarse_graining",
+     "inputs": [],
+     "lane": "alice",
+     "links": [
+      "povm"
+     ],
+     "math": "F_v=\\sum_{S\\in cg^{-1}(v)} M_S",
+     "outputs": [],
+     "parameters": [
+      {
+       "exact": true,
+       "name": "letters",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.outcome_alphabet.letters"
+       },
+       "value": 6
+      }
+     ],
+     "provenance": {
+      "claim": "receiver/def:coarse",
+      "engine_field": "preparation.stations[0].receiver.outcome_alphabet.coarse_graining"
+     },
+     "table": {
+      "columns": [
+       "click pattern",
+       "letter"
+      ],
+      "rows": [
+       [
+        "{}",
+        "nc"
+       ],
+       [
+        "{H}",
+        "H"
+       ],
+       [
+        "{V}",
+        "V"
+       ],
+       [
+        "{D}",
+        "D"
+       ],
+       [
+        "{A}",
+        "A"
+       ],
+       [
+        "{H, V}",
+        "mc"
+       ],
+       [
+        "{H, D}",
+        "mc"
+       ],
+       [
+        "{H, A}",
+        "mc"
+       ],
+       [
+        "{V, D}",
+        "mc"
+       ],
+       [
+        "{V, A}",
+        "mc"
+       ],
+       [
+        "{D, A}",
+        "mc"
+       ],
+       [
+        "{H, V, D}",
+        "mc"
+       ],
+       [
+        "{H, V, A}",
+        "mc"
+       ],
+       [
+        "{H, D, A}",
+        "mc"
+       ],
+       [
+        "{V, D, A}",
+        "mc"
+       ],
+       [
+        "{H, V, D, A}",
+        "mc"
+       ]
+      ]
+     },
+     "title": "coarse-graining"
+    },
+    {
+     "id": "measurement.station0.reduction",
+     "inputs": [],
+     "lane": "alice",
+     "links": [
+      "povm"
+     ],
+     "math": "L_1\\circ\\cdots",
+     "outputs": [],
+     "parameters": [
+      {
+       "exact": false,
+       "meaning": "Photon-number reduction applied to each station, mapping any number of incoming photons to a finite system",
+       "name": "route",
+       "note": "Photon-number reduction applied to each station, mapping any number of incoming photons to a finite system",
+       "parameter_index": 7,
+       "provenance": {
+        "engine_field": "preparation.stations[0].reduction.route"
+       },
+       "value": "encoded"
+      },
+      {
+       "exact": false,
+       "name": "status",
+       "provenance": {
+        "engine_field": "preparation.stations[0].reduction.status"
+       },
+       "value": "exact"
+      },
+      {
+       "exact": true,
+       "name": "target dimension",
+       "provenance": {
+        "engine_field": "preparation.stations[0].reduction.target_dimension"
+       },
+       "value": 9
+      },
+      {
+       "exact": false,
+       "name": "constraint entries",
+       "provenance": {
+        "engine_field": "preparation.stations[0].reduction.constraint_entries"
+       },
+       "value": null
+      }
+     ],
+     "provenance": {
+      "claim": "reductions/def:chain",
+      "engine_field": "preparation.stations[0].reduction.reduction_chain.links"
+     },
+     "table": {
+      "columns": [
+       "link",
+       "stage",
+       "kind",
+       "status"
+      ],
+      "rows": [
+       [
+        "L1-wpfss",
+        "receiver",
+        "wpfss",
+        "exact"
+       ]
+      ]
+     },
+     "title": "reduction chain"
+    },
+    {
+     "composite_labels": true,
+     "id": "measurement.station0.declared_povm",
+     "inputs": [],
+     "lane": "alice",
+     "links": [
+      "povm"
+     ],
+     "math": "\\{F_v\\}",
+     "outputs": [
+      "v_0"
+     ],
+     "parameters": [
+      {
+       "exact": false,
+       "name": "route",
+       "provenance": {
+        "engine_field": "preparation.receiver_construction.route"
+       },
+       "value": "declared_finite_povm"
+      },
+      {
+       "exact": false,
+       "name": "party",
+       "provenance": {
+        "engine_field": "preparation.receiver_construction.declared_povm.factors[0].party"
+       },
+       "value": "A"
+      },
+      {
+       "exact": true,
+       "name": "outcomes",
+       "provenance": {
+        "engine_field": "preparation.receiver_construction.declared_povm.factors[0].members"
+       },
+       "value": 12
+      }
+     ],
+     "provenance": {
+      "engine_field": "preparation.receiver_construction.declared_povm.factors[0]"
+     },
+     "table": {
+      "columns": [
+       "outcome",
+       "blocks per sector"
+      ],
+      "rows": [
+       [
+        "(nc,gen)",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ],
+       [
+        "(nc,test)",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ],
+       [
+        "(H,gen)",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ],
+       [
+        "(H,test)",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ],
+       [
+        "(V,gen)",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ],
+       [
+        "(V,test)",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ],
+       [
+        "(D,gen)",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ],
+       [
+        "(D,test)",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ],
+       [
+        "(A,gen)",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ],
+       [
+        "(A,test)",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ],
+       [
+        "(mc,gen)",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ],
+       [
+        "(mc,test)",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ]
+      ]
+     },
+     "title": "declared POVM, party A"
+    },
+    {
+     "id": "measurement.station1.receiver_construction",
+     "inputs": [
+      "q_received_1"
+     ],
+     "lane": "bob",
+     "links": [
+      "optics"
+     ],
+     "math": "\\Gamma_G",
+     "outputs": [],
+     "parameters": [
+      {
+       "exact": false,
+       "name": "route",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.route"
+       },
+       "value": "element_graph"
+      },
+      {
+       "exact": true,
+       "name": "elements",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements"
+       },
+       "value": 4
+      },
+      {
+       "exact": true,
+       "name": "edges",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.edges"
+       },
+       "value": 3
+      },
+      {
+       "exact": false,
+       "name": "photon cutoff",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.photon_cutoff"
+       },
+       "value": null
+      }
+     ],
+     "provenance": {
+      "claim": "receiver/def:graph",
+      "engine_field": "preparation.stations[1].receiver.receiver_construction.elements"
+     },
+     "table": {
+      "columns": [
+       "element",
+       "class",
+       "support"
+      ],
+      "rows": [
+       [
+        "bs",
+        "C1",
+        "Z_H, Z_V, X_H, X_V"
+       ],
+       [
+        "hwp",
+        "C3",
+        "X_H, X_V"
+       ],
+       [
+        "pbs_z",
+        "C2",
+        "Z_H, Z_V, Zr_H, Zr_V"
+       ],
+       [
+        "pbs_x",
+        "C2",
+        "X_H, X_V, Xr_H, Xr_V"
+       ]
+      ]
+     },
+     "title": "receiver construction"
+    },
+    {
+     "id": "measurement.station1.port_map",
+     "inputs": [],
+     "lane": "bob",
+     "links": [
+      "optics"
+     ],
+     "math": "\\{P_k\\}",
+     "outputs": [],
+     "parameters": [
+      {
+       "exact": true,
+       "name": "ports",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.port_map"
+       },
+       "value": 4
+      }
+     ],
+     "provenance": {
+      "claim": "receiver/def:instrument",
+      "engine_field": "preparation.stations[1].receiver.receiver_construction.port_map"
+     },
+     "table": {
+      "columns": [
+       "port",
+       "modes"
+      ],
+      "rows": [
+       [
+        "H",
+        "Z_H, Z_V"
+       ],
+       [
+        "V",
+        "Zr_H, Zr_V"
+       ],
+       [
+        "D",
+        "X_H, X_V"
+       ],
+       [
+        "A",
+        "Xr_H, Xr_V"
+       ]
+      ]
+     },
+     "title": "port map"
+    },
+    {
+     "id": "measurement.station1.detector_layer",
+     "inputs": [],
+     "lane": "bob",
+     "links": [
+      "optics"
+     ],
+     "math": "D_\\eta,\\ R",
+     "outputs": [],
+     "parameters": [
+      {
+       "exact": false,
+       "name": "dark count route",
+       "provenance": {
+        "claim": "receiver/detector-imperfections/def:darkadm",
+        "engine_field": "preparation.stations[1].receiver.dark_count_channel.route"
+       },
+       "value": "per_port_product_form"
+      }
+     ],
+     "provenance": {
+      "claim": "receiver/detector-imperfections/thm:efficiency",
+      "engine_field": "preparation.stations[1].receiver.efficiency_record"
+     },
+     "table": {
+      "columns": [
+       "site",
+       "element",
+       "transmittance"
+      ],
+      "rows": [
+       [
+        "chain position 1",
+        "C1 bs, parameter x",
+        0.56
+       ],
+       [
+        "chain position 1",
+        "C1 bs, parameter y_1",
+        0.0
+       ],
+       [
+        "chain position 1",
+        "C1 bs, parameter y_2",
+        0.0
+       ],
+       [
+        "chain position 2",
+        "C3 hwp, parameter y",
+        0.0
+       ],
+       [
+        "chain position 3",
+        "C2 pbs_x, parameter t_H",
+        0.99
+       ],
+       [
+        "chain position 3",
+        "C2 pbs_x, parameter t_V",
+        0.001
+       ],
+       [
+        "chain position 3",
+        "C2 pbs_x, parameter y_1",
+        0.0
+       ],
+       [
+        "chain position 3",
+        "C2 pbs_x, parameter y_2",
+        0.0
+       ],
+       [
+        "chain position 4",
+        "C2 pbs_z, parameter t_H",
+        0.99
+       ],
+       [
+        "chain position 4",
+        "C2 pbs_z, parameter t_V",
+        0.001
+       ],
+       [
+        "chain position 4",
+        "C2 pbs_z, parameter y_1",
+        0.0
+       ],
+       [
+        "chain position 4",
+        "C2 pbs_z, parameter y_2",
+        0.0
+       ],
+       [
+        "terminal factor D_eta",
+        "L1 detector layer, parameter eta_H",
+        0.8
+       ],
+       [
+        "terminal factor D_eta",
+        "L1 detector layer, parameter eta_V",
+        0.7322033898305085
+       ],
+       [
+        "terminal factor D_eta",
+        "L1 detector layer, parameter eta_D",
+        0.8
+       ],
+       [
+        "terminal factor D_eta",
+        "L1 detector layer, parameter eta_A",
+        0.7322033898305085
+       ]
+      ]
+     },
+     "title": "detector layer"
+    },
+    {
+     "id": "measurement.station1.coarse_graining",
+     "inputs": [],
+     "lane": "bob",
+     "links": [
+      "povm"
+     ],
+     "math": "F_v=\\sum_{S\\in cg^{-1}(v)} M_S",
+     "outputs": [],
+     "parameters": [
+      {
+       "exact": true,
+       "name": "letters",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.outcome_alphabet.letters"
+       },
+       "value": 6
+      }
+     ],
+     "provenance": {
+      "claim": "receiver/def:coarse",
+      "engine_field": "preparation.stations[1].receiver.outcome_alphabet.coarse_graining"
+     },
+     "table": {
+      "columns": [
+       "click pattern",
+       "letter"
+      ],
+      "rows": [
+       [
+        "{}",
+        "nc"
+       ],
+       [
+        "{H}",
+        "H"
+       ],
+       [
+        "{V}",
+        "V"
+       ],
+       [
+        "{D}",
+        "D"
+       ],
+       [
+        "{A}",
+        "A"
+       ],
+       [
+        "{H, V}",
+        "mc"
+       ],
+       [
+        "{H, D}",
+        "mc"
+       ],
+       [
+        "{H, A}",
+        "mc"
+       ],
+       [
+        "{V, D}",
+        "mc"
+       ],
+       [
+        "{V, A}",
+        "mc"
+       ],
+       [
+        "{D, A}",
+        "mc"
+       ],
+       [
+        "{H, V, D}",
+        "mc"
+       ],
+       [
+        "{H, V, A}",
+        "mc"
+       ],
+       [
+        "{H, D, A}",
+        "mc"
+       ],
+       [
+        "{V, D, A}",
+        "mc"
+       ],
+       [
+        "{H, V, D, A}",
+        "mc"
+       ]
+      ]
+     },
+     "title": "coarse-graining"
+    },
+    {
+     "id": "measurement.station1.reduction",
+     "inputs": [],
+     "lane": "bob",
+     "links": [
+      "povm"
+     ],
+     "math": "L_1\\circ\\cdots",
+     "outputs": [],
+     "parameters": [
+      {
+       "exact": false,
+       "meaning": "Photon-number reduction applied to each station, mapping any number of incoming photons to a finite system",
+       "name": "route",
+       "note": "Photon-number reduction applied to each station, mapping any number of incoming photons to a finite system",
+       "parameter_index": 7,
+       "provenance": {
+        "engine_field": "preparation.stations[1].reduction.route"
+       },
+       "value": "encoded"
+      },
+      {
+       "exact": false,
+       "name": "status",
+       "provenance": {
+        "engine_field": "preparation.stations[1].reduction.status"
+       },
+       "value": "exact"
+      },
+      {
+       "exact": true,
+       "name": "target dimension",
+       "provenance": {
+        "engine_field": "preparation.stations[1].reduction.target_dimension"
+       },
+       "value": 9
+      },
+      {
+       "exact": false,
+       "name": "constraint entries",
+       "provenance": {
+        "engine_field": "preparation.stations[1].reduction.constraint_entries"
+       },
+       "value": null
+      }
+     ],
+     "provenance": {
+      "claim": "reductions/def:chain",
+      "engine_field": "preparation.stations[1].reduction.reduction_chain.links"
+     },
+     "table": {
+      "columns": [
+       "link",
+       "stage",
+       "kind",
+       "status"
+      ],
+      "rows": [
+       [
+        "L1-wpfss",
+        "receiver",
+        "wpfss",
+        "exact"
+       ]
+      ]
+     },
+     "title": "reduction chain"
+    },
+    {
+     "id": "measurement.station1.declared_povm",
+     "inputs": [],
+     "lane": "bob",
+     "links": [
+      "povm"
+     ],
+     "math": "\\{F_v\\}",
+     "outputs": [
+      "v_1"
+     ],
+     "parameters": [
+      {
+       "exact": false,
+       "name": "route",
+       "provenance": {
+        "engine_field": "preparation.receiver_construction.route"
+       },
+       "value": "declared_finite_povm"
+      },
+      {
+       "exact": false,
+       "name": "party",
+       "provenance": {
+        "engine_field": "preparation.receiver_construction.declared_povm.factors[1].party"
+       },
+       "value": "B"
+      },
+      {
+       "exact": true,
+       "name": "outcomes",
+       "provenance": {
+        "engine_field": "preparation.receiver_construction.declared_povm.factors[1].members"
+       },
+       "value": 6
+      }
+     ],
+     "provenance": {
+      "engine_field": "preparation.receiver_construction.declared_povm.factors[1]"
+     },
+     "table": {
+      "columns": [
+       "outcome",
+       "blocks per sector"
+      ],
+      "rows": [
+       [
+        "nc",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ],
+       [
+        "H",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ],
+       [
+        "V",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ],
+       [
+        "D",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ],
+       [
+        "A",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ],
+       [
+        "mc",
+        "1x1, 2x2, 1x1, 1x1, 1x1, 1x1, 1x1, 1x1"
+       ]
+      ]
+     },
+     "title": "declared POVM, party B"
+    }
+   ],
+   "title": "Measurement",
+   "type": "measurement"
+  },
+  {
+   "id": "readout",
+   "operations": [
+    {
+     "composite_labels": true,
+     "id": "readout.alice",
+     "inputs": [
+      "v_0"
+     ],
+     "lane": "alice",
+     "math": "\\pi_{A}",
+     "notes": [
+      "the table is restricted to V_A: the readout depends on (x, v) only through it"
+     ],
+     "outputs": [
+      "o_alice"
+     ],
+     "parameters": [],
+     "provenance": {
+      "claim": "protocol-compiler/def:spec",
+      "engine_field": "preparation.compiled.public.party_partition.alice_readout"
+     },
+     "table": {
+      "columns": [
+       "V_A",
+       "readout"
+      ],
+      "domain": [
+       "v_0"
+      ],
+      "rows": [
+       [
+        "(nc,gen)",
+        "(nc,gen)"
+       ],
+       [
+        "(nc,test)",
+        "(nc,test)"
+       ],
+       [
+        "(H,gen)",
+        "(H,gen)"
+       ],
+       [
+        "(H,test)",
+        "(H,test)"
+       ],
+       [
+        "(V,gen)",
+        "(V,gen)"
+       ],
+       [
+        "(V,test)",
+        "(V,test)"
+       ],
+       [
+        "(D,gen)",
+        "(D,gen)"
+       ],
+       [
+        "(D,test)",
+        "(D,test)"
+       ],
+       [
+        "(A,gen)",
+        "(A,gen)"
+       ],
+       [
+        "(A,test)",
+        "(A,test)"
+       ],
+       [
+        "(mc,gen)",
+        "(mc,gen)"
+       ],
+       [
+        "(mc,test)",
+        "(mc,test)"
+       ]
+      ]
+     },
+     "title": "Alice's readout"
+    },
+    {
+     "id": "readout.bob",
+     "inputs": [
+      "v_1"
+     ],
+     "lane": "bob",
+     "math": "\\pi_{B}",
+     "notes": [
+      "the table is restricted to V_B: the readout depends on (x, v) only through it"
+     ],
+     "outputs": [
+      "o_bob"
+     ],
+     "parameters": [],
+     "provenance": {
+      "claim": "protocol-compiler/def:spec",
+      "engine_field": "preparation.compiled.public.party_partition.bob_readout"
+     },
+     "table": {
+      "columns": [
+       "V_B",
+       "readout"
+      ],
+      "domain": [
+       "v_1"
+      ],
+      "rows": [
+       [
+        "nc",
+        "nc"
+       ],
+       [
+        "H",
+        "H"
+       ],
+       [
+        "V",
+        "V"
+       ],
+       [
+        "D",
+        "D"
+       ],
+       [
+        "A",
+        "A"
+       ],
+       [
+        "mc",
+        "mc"
+       ]
+      ]
+     },
+     "title": "Bob's readout"
+    }
+   ],
+   "title": "Readout",
+   "type": "readout"
+  },
+  {
+   "id": "announcement",
+   "operations": [
+    {
+     "composite_labels": true,
+     "id": "announcement.0",
+     "inputs": [
+      "o_alice"
+     ],
+     "lane": "alice",
+     "math": "a_{1}",
+     "outputs": [
+      "c_alice"
+     ],
+     "parameters": [
+      {
+       "exact": true,
+       "name": "message",
+       "provenance": {
+        "engine_field": "preparation.compiled.public.transcript[0]"
+       },
+       "value": 1
+      },
+      {
+       "exact": false,
+       "name": "sender",
+       "provenance": {
+        "engine_field": "preparation.compiled.public.transcript[0].sender"
+       },
+       "value": "A"
+      },
+      {
+       "exact": true,
+       "name": "alphabet size",
+       "provenance": {
+        "engine_field": "preparation.compiled.public.transcript[0].alphabet"
+       },
+       "value": 10
+      }
+     ],
+     "provenance": {
+      "claim": "protocol-compiler/eq:transcript",
+      "engine_field": "preparation.compiled.public.transcript[0]"
+     },
+     "table": {
+      "columns": [
+       "readout",
+       "announcement"
+      ],
+      "rows": [
+       [
+        "(nc,gen)",
+        "gen:nc"
+       ],
+       [
+        "(nc,test)",
+        "test:nc"
+       ],
+       [
+        "(H,gen)",
+        "gen:Z"
+       ],
+       [
+        "(H,test)",
+        "test:H"
+       ],
+       [
+        "(V,gen)",
+        "gen:Z"
+       ],
+       [
+        "(V,test)",
+        "test:V"
+       ],
+       [
+        "(D,gen)",
+        "gen:X"
+       ],
+       [
+        "(D,test)",
+        "test:D"
+       ],
+       [
+        "(A,gen)",
+        "gen:X"
+       ],
+       [
+        "(A,test)",
+        "test:A"
+       ],
+       [
+        "(mc,gen)",
+        "gen:mc"
+       ],
+       [
+        "(mc,test)",
+        "test:mc"
+       ]
+      ]
+     },
+     "title": "Alice announces"
+    },
+    {
+     "id": "announcement.1",
+     "inputs": [
+      "o_bob",
+      "c_alice"
+     ],
+     "lane": "bob",
+     "math": "a_{2}",
+     "notes": [
+      "depends on the earlier messages of the transcript"
+     ],
+     "outputs": [
+      "c_bob"
+     ],
+     "parameters": [
+      {
+       "exact": true,
+       "name": "message",
+       "provenance": {
+        "engine_field": "preparation.compiled.public.transcript[1]"
+       },
+       "value": 2
+      },
+      {
+       "exact": false,
+       "name": "sender",
+       "provenance": {
+        "engine_field": "preparation.compiled.public.transcript[1].sender"
+       },
+       "value": "B"
+      },
+      {
+       "exact": true,
+       "name": "alphabet size",
+       "provenance": {
+        "engine_field": "preparation.compiled.public.transcript[1].alphabet"
+       },
+       "value": 8
+      }
+     ],
+     "provenance": {
+      "claim": "protocol-compiler/eq:transcript",
+      "engine_field": "preparation.compiled.public.transcript[1]"
+     },
+     "table": {
+      "columns": [
+       "readout",
+       "after",
+       "announcement"
+      ],
+      "rows": [
+       [
+        "nc",
+        "gen:Z",
+        "nc"
+       ],
+       [
+        "nc",
+        "gen:X",
+        "nc"
+       ],
+       [
+        "nc",
+        "gen:nc",
+        "nc"
+       ],
+       [
+        "nc",
+        "gen:mc",
+        "nc"
+       ],
+       [
+        "nc",
+        "test:nc",
+        "nc"
+       ],
+       [
+        "nc",
+        "test:H",
+        "nc"
+       ],
+       [
+        "nc",
+        "test:V",
+        "nc"
+       ],
+       [
+        "nc",
+        "test:D",
+        "nc"
+       ],
+       [
+        "nc",
+        "test:A",
+        "nc"
+       ],
+       [
+        "nc",
+        "test:mc",
+        "nc"
+       ],
+       [
+        "H",
+        "gen:Z",
+        "Z"
+       ],
+       [
+        "H",
+        "gen:X",
+        "Z"
+       ],
+       [
+        "H",
+        "gen:nc",
+        "Z"
+       ],
+       [
+        "H",
+        "gen:mc",
+        "Z"
+       ],
+       [
+        "H",
+        "test:nc",
+        "H"
+       ],
+       [
+        "H",
+        "test:H",
+        "H"
+       ],
+       [
+        "H",
+        "test:V",
+        "H"
+       ],
+       [
+        "H",
+        "test:D",
+        "H"
+       ],
+       [
+        "H",
+        "test:A",
+        "H"
+       ],
+       [
+        "H",
+        "test:mc",
+        "H"
+       ],
+       [
+        "V",
+        "gen:Z",
+        "Z"
+       ],
+       [
+        "V",
+        "gen:X",
+        "Z"
+       ],
+       [
+        "V",
+        "gen:nc",
+        "Z"
+       ],
+       [
+        "V",
+        "gen:mc",
+        "Z"
+       ],
+       [
+        "V",
+        "test:nc",
+        "V"
+       ],
+       [
+        "V",
+        "test:H",
+        "V"
+       ],
+       [
+        "V",
+        "test:V",
+        "V"
+       ],
+       [
+        "V",
+        "test:D",
+        "V"
+       ],
+       [
+        "V",
+        "test:A",
+        "V"
+       ],
+       [
+        "V",
+        "test:mc",
+        "V"
+       ],
+       [
+        "D",
+        "gen:Z",
+        "X"
+       ],
+       [
+        "D",
+        "gen:X",
+        "X"
+       ],
+       [
+        "D",
+        "gen:nc",
+        "X"
+       ],
+       [
+        "D",
+        "gen:mc",
+        "X"
+       ],
+       [
+        "D",
+        "test:nc",
+        "D"
+       ],
+       [
+        "D",
+        "test:H",
+        "D"
+       ],
+       [
+        "D",
+        "test:V",
+        "D"
+       ],
+       [
+        "D",
+        "test:D",
+        "D"
+       ],
+       [
+        "D",
+        "test:A",
+        "D"
+       ],
+       [
+        "D",
+        "test:mc",
+        "D"
+       ],
+       [
+        "A",
+        "gen:Z",
+        "X"
+       ],
+       [
+        "A",
+        "gen:X",
+        "X"
+       ],
+       [
+        "A",
+        "gen:nc",
+        "X"
+       ],
+       [
+        "A",
+        "gen:mc",
+        "X"
+       ],
+       [
+        "A",
+        "test:nc",
+        "A"
+       ],
+       [
+        "A",
+        "test:H",
+        "A"
+       ],
+       [
+        "A",
+        "test:V",
+        "A"
+       ],
+       [
+        "A",
+        "test:D",
+        "A"
+       ],
+       [
+        "A",
+        "test:A",
+        "A"
+       ],
+       [
+        "A",
+        "test:mc",
+        "A"
+       ],
+       [
+        "mc",
+        "gen:Z",
+        "mc"
+       ],
+       [
+        "mc",
+        "gen:X",
+        "mc"
+       ],
+       [
+        "mc",
+        "gen:nc",
+        "mc"
+       ],
+       [
+        "mc",
+        "gen:mc",
+        "mc"
+       ],
+       [
+        "mc",
+        "test:nc",
+        "mc"
+       ],
+       [
+        "mc",
+        "test:H",
+        "mc"
+       ],
+       [
+        "mc",
+        "test:V",
+        "mc"
+       ],
+       [
+        "mc",
+        "test:D",
+        "mc"
+       ],
+       [
+        "mc",
+        "test:A",
+        "mc"
+       ],
+       [
+        "mc",
+        "test:mc",
+        "mc"
+       ]
+      ]
+     },
+     "title": "Bob announces"
+    }
+   ],
+   "title": "Announcements",
+   "type": "announcement"
+  },
+  {
+   "id": "sifting",
+   "operations": [
+    {
+     "id": "sifting.classes",
+     "inputs": [
+      "c_alice",
+      "c_bob"
+     ],
+     "lane": "public",
+     "math": "\\varsigma: K=\\prod_m C_m\\to\\{\\mathrm{pass},\\mathrm{fail}\\}",
+     "notes": [
+      "a class fails when some raw pair announcing it has key value ⊥; a class no raw pair announces is unrealized, shown as “pass (no pairs)” and not counted as passing"
+     ],
+     "outputs": [
+      "sift"
+     ],
+     "parameters": [
+      {
+       "exact": true,
+       "name": "classes",
+       "provenance": {
+        "engine_field": "preparation.compiled.public.transcript"
+       },
+       "value": 80
+      },
+      {
+       "exact": true,
+       "name": "passing",
+       "provenance": {
+        "engine_field": "preparation.compiled.public.key_map"
+       },
+       "value": 2
+      },
+      {
+       "exact": true,
+       "name": "unrealized",
+       "provenance": {
+        "engine_field": "preparation.compiled.public.key_map"
+       },
+       "value": 28
+      }
+     ],
+     "provenance": {
+      "claim": "protocol-compiler/eq:rdef",
+      "engine_field": "preparation.compiled.public.key_map"
+     },
+     "table": {
+      "columns": [
+       "C_A",
+       "C_B",
+       "sifting",
+       "pairs (x, v)"
+      ],
+      "rows": [
+       [
+        "gen:Z",
+        "Z",
+        "pass",
+        4
+       ],
+       [
+        "gen:Z",
+        "X",
+        "fail",
+        4
+       ],
+       [
+        "gen:Z",
+        "nc",
+        "fail",
+        2
+       ],
+       [
+        "gen:Z",
+        "mc",
+        "fail",
+        2
+       ],
+       [
+        "gen:Z",
+        "H",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "gen:Z",
+        "V",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "gen:Z",
+        "D",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "gen:Z",
+        "A",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "gen:X",
+        "Z",
+        "fail",
+        4
+       ],
+       [
+        "gen:X",
+        "X",
+        "pass",
+        4
+       ],
+       [
+        "gen:X",
+        "nc",
+        "fail",
+        2
+       ],
+       [
+        "gen:X",
+        "mc",
+        "fail",
+        2
+       ],
+       [
+        "gen:X",
+        "H",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "gen:X",
+        "V",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "gen:X",
+        "D",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "gen:X",
+        "A",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "gen:nc",
+        "Z",
+        "fail",
+        2
+       ],
+       [
+        "gen:nc",
+        "X",
+        "fail",
+        2
+       ],
+       [
+        "gen:nc",
+        "nc",
+        "fail",
+        1
+       ],
+       [
+        "gen:nc",
+        "mc",
+        "fail",
+        1
+       ],
+       [
+        "gen:nc",
+        "H",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "gen:nc",
+        "V",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "gen:nc",
+        "D",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "gen:nc",
+        "A",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "gen:mc",
+        "Z",
+        "fail",
+        2
+       ],
+       [
+        "gen:mc",
+        "X",
+        "fail",
+        2
+       ],
+       [
+        "gen:mc",
+        "nc",
+        "fail",
+        1
+       ],
+       [
+        "gen:mc",
+        "mc",
+        "fail",
+        1
+       ],
+       [
+        "gen:mc",
+        "H",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "gen:mc",
+        "V",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "gen:mc",
+        "D",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "gen:mc",
+        "A",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "test:nc",
+        "Z",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "test:nc",
+        "X",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "test:nc",
+        "nc",
+        "fail",
+        1
+       ],
+       [
+        "test:nc",
+        "mc",
+        "fail",
+        1
+       ],
+       [
+        "test:nc",
+        "H",
+        "fail",
+        1
+       ],
+       [
+        "test:nc",
+        "V",
+        "fail",
+        1
+       ],
+       [
+        "test:nc",
+        "D",
+        "fail",
+        1
+       ],
+       [
+        "test:nc",
+        "A",
+        "fail",
+        1
+       ],
+       [
+        "test:H",
+        "Z",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "test:H",
+        "X",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "test:H",
+        "nc",
+        "fail",
+        1
+       ],
+       [
+        "test:H",
+        "mc",
+        "fail",
+        1
+       ],
+       [
+        "test:H",
+        "H",
+        "fail",
+        1
+       ],
+       [
+        "test:H",
+        "V",
+        "fail",
+        1
+       ],
+       [
+        "test:H",
+        "D",
+        "fail",
+        1
+       ],
+       [
+        "test:H",
+        "A",
+        "fail",
+        1
+       ],
+       [
+        "test:V",
+        "Z",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "test:V",
+        "X",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "test:V",
+        "nc",
+        "fail",
+        1
+       ],
+       [
+        "test:V",
+        "mc",
+        "fail",
+        1
+       ],
+       [
+        "test:V",
+        "H",
+        "fail",
+        1
+       ],
+       [
+        "test:V",
+        "V",
+        "fail",
+        1
+       ],
+       [
+        "test:V",
+        "D",
+        "fail",
+        1
+       ],
+       [
+        "test:V",
+        "A",
+        "fail",
+        1
+       ],
+       [
+        "test:D",
+        "Z",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "test:D",
+        "X",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "test:D",
+        "nc",
+        "fail",
+        1
+       ],
+       [
+        "test:D",
+        "mc",
+        "fail",
+        1
+       ],
+       [
+        "test:D",
+        "H",
+        "fail",
+        1
+       ],
+       [
+        "test:D",
+        "V",
+        "fail",
+        1
+       ],
+       [
+        "test:D",
+        "D",
+        "fail",
+        1
+       ],
+       [
+        "test:D",
+        "A",
+        "fail",
+        1
+       ],
+       [
+        "test:A",
+        "Z",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "test:A",
+        "X",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "test:A",
+        "nc",
+        "fail",
+        1
+       ],
+       [
+        "test:A",
+        "mc",
+        "fail",
+        1
+       ],
+       [
+        "test:A",
+        "H",
+        "fail",
+        1
+       ],
+       [
+        "test:A",
+        "V",
+        "fail",
+        1
+       ],
+       [
+        "test:A",
+        "D",
+        "fail",
+        1
+       ],
+       [
+        "test:A",
+        "A",
+        "fail",
+        1
+       ],
+       [
+        "test:mc",
+        "Z",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "test:mc",
+        "X",
+        "pass (no pairs)",
+        0
+       ],
+       [
+        "test:mc",
+        "nc",
+        "fail",
+        1
+       ],
+       [
+        "test:mc",
+        "mc",
+        "fail",
+        1
+       ],
+       [
+        "test:mc",
+        "H",
+        "fail",
+        1
+       ],
+       [
+        "test:mc",
+        "V",
+        "fail",
+        1
+       ],
+       [
+        "test:mc",
+        "D",
+        "fail",
+        1
+       ],
+       [
+        "test:mc",
+        "A",
+        "fail",
+        1
+       ]
+      ]
+     },
+     "title": "sifting per class"
+    }
+   ],
+   "title": "Sifting",
+   "type": "sifting"
+  },
+  {
+   "id": "key_rule",
+   "operations": [
+    {
+     "composite_labels": true,
+     "id": "key_rule.raw_key_map",
+     "inputs": [
+      "o_alice",
+      "c_alice",
+      "c_bob",
+      "sift"
+     ],
+     "lane": "alice",
+     "math": "r(x,v)=r^0_h(\\pi_h(x,v),a(x,v))",
+     "notes": [
+      "the bit is a function of Alice's readout and the announcement class; Bob's outcome enters only through Bob's announcement",
+      "the input is trivial: X has the one letter x0, so no x column"
+     ],
+     "outputs": [
+      "key"
+     ],
+     "parameters": [
+      {
+       "exact": false,
+       "name": "holder",
+       "note": "party A",
+       "provenance": {
+        "engine_field": "preparation.compiled.public.key_holder"
+       },
+       "value": "Alice"
+      },
+      {
+       "exact": false,
+       "name": "key alphabet",
+       "provenance": {
+        "engine_field": "preparation.compiled.public.key_alphabet"
+       },
+       "value": "0, 1"
+      },
+      {
+       "exact": true,
+       "name": "pairs with a key value",
+       "provenance": {
+        "engine_field": "preparation.compiled.public.key_map"
+       },
+       "value": 8
+      }
+     ],
+     "provenance": {
+      "claim": "protocol-compiler/eq:rdef",
+      "engine_field": "preparation.compiled.public.key_map"
+     },
+     "table": {
+      "columns": [
+       "v",
+       "O_A",
+       "C_A",
+       "C_B",
+       "key"
+      ],
+      "keyed_column": 4,
+      "rows": [
+       [
+        "(nc,gen)__nc",
+        "(nc,gen)",
+        "gen:nc",
+        "nc",
+        "perp"
+       ],
+       [
+        "(nc,gen)__H",
+        "(nc,gen)",
+        "gen:nc",
+        "Z",
+        "perp"
+       ],
+       [
+        "(nc,gen)__V",
+        "(nc,gen)",
+        "gen:nc",
+        "Z",
+        "perp"
+       ],
+       [
+        "(nc,gen)__D",
+        "(nc,gen)",
+        "gen:nc",
+        "X",
+        "perp"
+       ],
+       [
+        "(nc,gen)__A",
+        "(nc,gen)",
+        "gen:nc",
+        "X",
+        "perp"
+       ],
+       [
+        "(nc,gen)__mc",
+        "(nc,gen)",
+        "gen:nc",
+        "mc",
+        "perp"
+       ],
+       [
+        "(nc,test)__nc",
+        "(nc,test)",
+        "test:nc",
+        "nc",
+        "perp"
+       ],
+       [
+        "(nc,test)__H",
+        "(nc,test)",
+        "test:nc",
+        "H",
+        "perp"
+       ],
+       [
+        "(nc,test)__V",
+        "(nc,test)",
+        "test:nc",
+        "V",
+        "perp"
+       ],
+       [
+        "(nc,test)__D",
+        "(nc,test)",
+        "test:nc",
+        "D",
+        "perp"
+       ],
+       [
+        "(nc,test)__A",
+        "(nc,test)",
+        "test:nc",
+        "A",
+        "perp"
+       ],
+       [
+        "(nc,test)__mc",
+        "(nc,test)",
+        "test:nc",
+        "mc",
+        "perp"
+       ],
+       [
+        "(H,gen)__nc",
+        "(H,gen)",
+        "gen:Z",
+        "nc",
+        "perp"
+       ],
+       [
+        "(H,gen)__H",
+        "(H,gen)",
+        "gen:Z",
+        "Z",
+        0
+       ],
+       [
+        "(H,gen)__V",
+        "(H,gen)",
+        "gen:Z",
+        "Z",
+        0
+       ],
+       [
+        "(H,gen)__D",
+        "(H,gen)",
+        "gen:Z",
+        "X",
+        "perp"
+       ],
+       [
+        "(H,gen)__A",
+        "(H,gen)",
+        "gen:Z",
+        "X",
+        "perp"
+       ],
+       [
+        "(H,gen)__mc",
+        "(H,gen)",
+        "gen:Z",
+        "mc",
+        "perp"
+       ],
+       [
+        "(H,test)__nc",
+        "(H,test)",
+        "test:H",
+        "nc",
+        "perp"
+       ],
+       [
+        "(H,test)__H",
+        "(H,test)",
+        "test:H",
+        "H",
+        "perp"
+       ],
+       [
+        "(H,test)__V",
+        "(H,test)",
+        "test:H",
+        "V",
+        "perp"
+       ],
+       [
+        "(H,test)__D",
+        "(H,test)",
+        "test:H",
+        "D",
+        "perp"
+       ],
+       [
+        "(H,test)__A",
+        "(H,test)",
+        "test:H",
+        "A",
+        "perp"
+       ],
+       [
+        "(H,test)__mc",
+        "(H,test)",
+        "test:H",
+        "mc",
+        "perp"
+       ],
+       [
+        "(V,gen)__nc",
+        "(V,gen)",
+        "gen:Z",
+        "nc",
+        "perp"
+       ],
+       [
+        "(V,gen)__H",
+        "(V,gen)",
+        "gen:Z",
+        "Z",
+        1
+       ],
+       [
+        "(V,gen)__V",
+        "(V,gen)",
+        "gen:Z",
+        "Z",
+        1
+       ],
+       [
+        "(V,gen)__D",
+        "(V,gen)",
+        "gen:Z",
+        "X",
+        "perp"
+       ],
+       [
+        "(V,gen)__A",
+        "(V,gen)",
+        "gen:Z",
+        "X",
+        "perp"
+       ],
+       [
+        "(V,gen)__mc",
+        "(V,gen)",
+        "gen:Z",
+        "mc",
+        "perp"
+       ],
+       [
+        "(V,test)__nc",
+        "(V,test)",
+        "test:V",
+        "nc",
+        "perp"
+       ],
+       [
+        "(V,test)__H",
+        "(V,test)",
+        "test:V",
+        "H",
+        "perp"
+       ],
+       [
+        "(V,test)__V",
+        "(V,test)",
+        "test:V",
+        "V",
+        "perp"
+       ],
+       [
+        "(V,test)__D",
+        "(V,test)",
+        "test:V",
+        "D",
+        "perp"
+       ],
+       [
+        "(V,test)__A",
+        "(V,test)",
+        "test:V",
+        "A",
+        "perp"
+       ],
+       [
+        "(V,test)__mc",
+        "(V,test)",
+        "test:V",
+        "mc",
+        "perp"
+       ],
+       [
+        "(D,gen)__nc",
+        "(D,gen)",
+        "gen:X",
+        "nc",
+        "perp"
+       ],
+       [
+        "(D,gen)__H",
+        "(D,gen)",
+        "gen:X",
+        "Z",
+        "perp"
+       ],
+       [
+        "(D,gen)__V",
+        "(D,gen)",
+        "gen:X",
+        "Z",
+        "perp"
+       ],
+       [
+        "(D,gen)__D",
+        "(D,gen)",
+        "gen:X",
+        "X",
+        0
+       ],
+       [
+        "(D,gen)__A",
+        "(D,gen)",
+        "gen:X",
+        "X",
+        0
+       ],
+       [
+        "(D,gen)__mc",
+        "(D,gen)",
+        "gen:X",
+        "mc",
+        "perp"
+       ],
+       [
+        "(D,test)__nc",
+        "(D,test)",
+        "test:D",
+        "nc",
+        "perp"
+       ],
+       [
+        "(D,test)__H",
+        "(D,test)",
+        "test:D",
+        "H",
+        "perp"
+       ],
+       [
+        "(D,test)__V",
+        "(D,test)",
+        "test:D",
+        "V",
+        "perp"
+       ],
+       [
+        "(D,test)__D",
+        "(D,test)",
+        "test:D",
+        "D",
+        "perp"
+       ],
+       [
+        "(D,test)__A",
+        "(D,test)",
+        "test:D",
+        "A",
+        "perp"
+       ],
+       [
+        "(D,test)__mc",
+        "(D,test)",
+        "test:D",
+        "mc",
+        "perp"
+       ],
+       [
+        "(A,gen)__nc",
+        "(A,gen)",
+        "gen:X",
+        "nc",
+        "perp"
+       ],
+       [
+        "(A,gen)__H",
+        "(A,gen)",
+        "gen:X",
+        "Z",
+        "perp"
+       ],
+       [
+        "(A,gen)__V",
+        "(A,gen)",
+        "gen:X",
+        "Z",
+        "perp"
+       ],
+       [
+        "(A,gen)__D",
+        "(A,gen)",
+        "gen:X",
+        "X",
+        1
+       ],
+       [
+        "(A,gen)__A",
+        "(A,gen)",
+        "gen:X",
+        "X",
+        1
+       ],
+       [
+        "(A,gen)__mc",
+        "(A,gen)",
+        "gen:X",
+        "mc",
+        "perp"
+       ],
+       [
+        "(A,test)__nc",
+        "(A,test)",
+        "test:A",
+        "nc",
+        "perp"
+       ],
+       [
+        "(A,test)__H",
+        "(A,test)",
+        "test:A",
+        "H",
+        "perp"
+       ],
+       [
+        "(A,test)__V",
+        "(A,test)",
+        "test:A",
+        "V",
+        "perp"
+       ],
+       [
+        "(A,test)__D",
+        "(A,test)",
+        "test:A",
+        "D",
+        "perp"
+       ],
+       [
+        "(A,test)__A",
+        "(A,test)",
+        "test:A",
+        "A",
+        "perp"
+       ],
+       [
+        "(A,test)__mc",
+        "(A,test)",
+        "test:A",
+        "mc",
+        "perp"
+       ],
+       [
+        "(mc,gen)__nc",
+        "(mc,gen)",
+        "gen:mc",
+        "nc",
+        "perp"
+       ],
+       [
+        "(mc,gen)__H",
+        "(mc,gen)",
+        "gen:mc",
+        "Z",
+        "perp"
+       ],
+       [
+        "(mc,gen)__V",
+        "(mc,gen)",
+        "gen:mc",
+        "Z",
+        "perp"
+       ],
+       [
+        "(mc,gen)__D",
+        "(mc,gen)",
+        "gen:mc",
+        "X",
+        "perp"
+       ],
+       [
+        "(mc,gen)__A",
+        "(mc,gen)",
+        "gen:mc",
+        "X",
+        "perp"
+       ],
+       [
+        "(mc,gen)__mc",
+        "(mc,gen)",
+        "gen:mc",
+        "mc",
+        "perp"
+       ],
+       [
+        "(mc,test)__nc",
+        "(mc,test)",
+        "test:mc",
+        "nc",
+        "perp"
+       ],
+       [
+        "(mc,test)__H",
+        "(mc,test)",
+        "test:mc",
+        "H",
+        "perp"
+       ],
+       [
+        "(mc,test)__V",
+        "(mc,test)",
+        "test:mc",
+        "V",
+        "perp"
+       ],
+       [
+        "(mc,test)__D",
+        "(mc,test)",
+        "test:mc",
+        "D",
+        "perp"
+       ],
+       [
+        "(mc,test)__A",
+        "(mc,test)",
+        "test:mc",
+        "A",
+        "perp"
+       ],
+       [
+        "(mc,test)__mc",
+        "(mc,test)",
+        "test:mc",
+        "mc",
+        "perp"
+       ]
+      ]
+     },
+     "title": "raw key map"
+    }
+   ],
+   "title": "Key rule",
+   "type": "key_rule"
+  },
+  {
+   "id": "acceptance",
+   "operations": [
+    {
+     "id": "acceptance.statistic",
+     "inputs": [
+      "c_alice",
+      "c_bob"
+     ],
+     "lane": "public",
+     "math": "\\phi: K\\to\\hat{C}",
+     "outputs": [
+      "chat"
+     ],
+     "parameters": [
+      {
+       "exact": true,
+       "name": "n",
+       "provenance": {
+        "engine_field": "preparation.config.rounds"
+       },
+       "value": 17000000
+      },
+      {
+       "exact": true,
+       "name": "ε_comp",
+       "provenance": {
+        "engine_field": "preparation.config.completeness_budget"
+       },
+       "value": "1/1000000"
+      },
+      {
+       "exact": false,
+       "name": "endpoint rule",
+       "provenance": {
+        "engine_field": "preparation.config.endpoint_rule"
+       },
+       "value": "bernstein"
+      },
+      {
+       "exact": false,
+       "name": "tail evaluation",
+       "provenance": {
+        "engine_field": "preparation.config.tail_evaluation"
+       },
+       "value": "sweep"
+      }
+     ],
+     "provenance": {
+      "claim": "protocol-compiler/def:spec",
+      "engine_field": "preparation.compiled.public.accept_statistic"
+     },
+     "table": {
+      "columns": [
+       "C_A",
+       "C_B",
+       "acceptance label"
+      ],
+      "rows": [
+       [
+        "gen:Z",
+        "Z",
+        "gen"
+       ],
+       [
+        "gen:Z",
+        "X",
+        "gen:Z|X"
+       ],
+       [
+        "gen:Z",
+        "nc",
+        "gen:Z|nc"
+       ],
+       [
+        "gen:Z",
+        "mc",
+        "gen:Z|mc"
+       ],
+       [
+        "gen:Z",
+        "H",
+        "gen:Z|H"
+       ],
+       [
+        "gen:Z",
+        "V",
+        "gen:Z|V"
+       ],
+       [
+        "gen:Z",
+        "D",
+        "gen:Z|D"
+       ],
+       [
+        "gen:Z",
+        "A",
+        "gen:Z|A"
+       ],
+       [
+        "gen:X",
+        "Z",
+        "gen:X|Z"
+       ],
+       [
+        "gen:X",
+        "X",
+        "gen"
+       ],
+       [
+        "gen:X",
+        "nc",
+        "gen:X|nc"
+       ],
+       [
+        "gen:X",
+        "mc",
+        "gen:X|mc"
+       ],
+       [
+        "gen:X",
+        "H",
+        "gen:X|H"
+       ],
+       [
+        "gen:X",
+        "V",
+        "gen:X|V"
+       ],
+       [
+        "gen:X",
+        "D",
+        "gen:X|D"
+       ],
+       [
+        "gen:X",
+        "A",
+        "gen:X|A"
+       ],
+       [
+        "gen:nc",
+        "Z",
+        "gen:nc|Z"
+       ],
+       [
+        "gen:nc",
+        "X",
+        "gen:nc|X"
+       ],
+       [
+        "gen:nc",
+        "nc",
+        "gen:nc|nc"
+       ],
+       [
+        "gen:nc",
+        "mc",
+        "gen:nc|mc"
+       ],
+       [
+        "gen:nc",
+        "H",
+        "gen:nc|H"
+       ],
+       [
+        "gen:nc",
+        "V",
+        "gen:nc|V"
+       ],
+       [
+        "gen:nc",
+        "D",
+        "gen:nc|D"
+       ],
+       [
+        "gen:nc",
+        "A",
+        "gen:nc|A"
+       ],
+       [
+        "gen:mc",
+        "Z",
+        "gen:mc|Z"
+       ],
+       [
+        "gen:mc",
+        "X",
+        "gen:mc|X"
+       ],
+       [
+        "gen:mc",
+        "nc",
+        "gen:mc|nc"
+       ],
+       [
+        "gen:mc",
+        "mc",
+        "gen:mc|mc"
+       ],
+       [
+        "gen:mc",
+        "H",
+        "gen:mc|H"
+       ],
+       [
+        "gen:mc",
+        "V",
+        "gen:mc|V"
+       ],
+       [
+        "gen:mc",
+        "D",
+        "gen:mc|D"
+       ],
+       [
+        "gen:mc",
+        "A",
+        "gen:mc|A"
+       ],
+       [
+        "test:nc",
+        "Z",
+        "test:nc|Z"
+       ],
+       [
+        "test:nc",
+        "X",
+        "test:nc|X"
+       ],
+       [
+        "test:nc",
+        "nc",
+        "test:nc|nc"
+       ],
+       [
+        "test:nc",
+        "mc",
+        "test:nc|mc"
+       ],
+       [
+        "test:nc",
+        "H",
+        "test:nc|H"
+       ],
+       [
+        "test:nc",
+        "V",
+        "test:nc|V"
+       ],
+       [
+        "test:nc",
+        "D",
+        "test:nc|D"
+       ],
+       [
+        "test:nc",
+        "A",
+        "test:nc|A"
+       ],
+       [
+        "test:H",
+        "Z",
+        "test:H|Z"
+       ],
+       [
+        "test:H",
+        "X",
+        "test:H|X"
+       ],
+       [
+        "test:H",
+        "nc",
+        "test:H|nc"
+       ],
+       [
+        "test:H",
+        "mc",
+        "test:H|mc"
+       ],
+       [
+        "test:H",
+        "H",
+        "test:H|H"
+       ],
+       [
+        "test:H",
+        "V",
+        "test:H|V"
+       ],
+       [
+        "test:H",
+        "D",
+        "test:H|D"
+       ],
+       [
+        "test:H",
+        "A",
+        "test:H|A"
+       ],
+       [
+        "test:V",
+        "Z",
+        "test:V|Z"
+       ],
+       [
+        "test:V",
+        "X",
+        "test:V|X"
+       ],
+       [
+        "test:V",
+        "nc",
+        "test:V|nc"
+       ],
+       [
+        "test:V",
+        "mc",
+        "test:V|mc"
+       ],
+       [
+        "test:V",
+        "H",
+        "test:V|H"
+       ],
+       [
+        "test:V",
+        "V",
+        "test:V|V"
+       ],
+       [
+        "test:V",
+        "D",
+        "test:V|D"
+       ],
+       [
+        "test:V",
+        "A",
+        "test:V|A"
+       ],
+       [
+        "test:D",
+        "Z",
+        "test:D|Z"
+       ],
+       [
+        "test:D",
+        "X",
+        "test:D|X"
+       ],
+       [
+        "test:D",
+        "nc",
+        "test:D|nc"
+       ],
+       [
+        "test:D",
+        "mc",
+        "test:D|mc"
+       ],
+       [
+        "test:D",
+        "H",
+        "test:D|H"
+       ],
+       [
+        "test:D",
+        "V",
+        "test:D|V"
+       ],
+       [
+        "test:D",
+        "D",
+        "test:D|D"
+       ],
+       [
+        "test:D",
+        "A",
+        "test:D|A"
+       ],
+       [
+        "test:A",
+        "Z",
+        "test:A|Z"
+       ],
+       [
+        "test:A",
+        "X",
+        "test:A|X"
+       ],
+       [
+        "test:A",
+        "nc",
+        "test:A|nc"
+       ],
+       [
+        "test:A",
+        "mc",
+        "test:A|mc"
+       ],
+       [
+        "test:A",
+        "H",
+        "test:A|H"
+       ],
+       [
+        "test:A",
+        "V",
+        "test:A|V"
+       ],
+       [
+        "test:A",
+        "D",
+        "test:A|D"
+       ],
+       [
+        "test:A",
+        "A",
+        "test:A|A"
+       ],
+       [
+        "test:mc",
+        "Z",
+        "test:mc|Z"
+       ],
+       [
+        "test:mc",
+        "X",
+        "test:mc|X"
+       ],
+       [
+        "test:mc",
+        "nc",
+        "test:mc|nc"
+       ],
+       [
+        "test:mc",
+        "mc",
+        "test:mc|mc"
+       ],
+       [
+        "test:mc",
+        "H",
+        "test:mc|H"
+       ],
+       [
+        "test:mc",
+        "V",
+        "test:mc|V"
+       ],
+       [
+        "test:mc",
+        "D",
+        "test:mc|D"
+       ],
+       [
+        "test:mc",
+        "A",
+        "test:mc|A"
+       ]
+      ]
+     },
+     "title": "acceptance statistic"
+    }
+   ],
+   "title": "Acceptance statistic",
+   "type": "acceptance"
+  },
+  {
+   "id": "postprocessing",
+   "operations": [
+    {
+     "id": "postprocessing.acceptance_test",
+     "inputs": [
+      "chat"
+     ],
+     "lane": "public",
+     "math": "\\hat{C}^n\\in\\mathcal{Q}",
+     "outputs": [],
+     "parameters": [
+      {
+       "exact": true,
+       "name": "n",
+       "provenance": {
+        "engine_field": "preparation.config.rounds"
+       },
+       "value": 17000000
+      }
+     ],
+     "provenance": {
+      "engine_field": "preparation.config.rounds"
+     },
+     "title": "acceptance test"
+    },
+    {
+     "id": "postprocessing.error_correction",
+     "inputs": [
+      "key"
+     ],
+     "lane": "public",
+     "math": "\\lambda_{EC}",
+     "outputs": [],
+     "parameters": [
+      {
+       "exact": true,
+       "name": "λ_EC",
+       "provenance": {
+        "engine_field": "preparation.config.parameters.lambda_ec"
+       },
+       "value": 0
+      }
+     ],
+     "provenance": {
+      "engine_field": "preparation.config.parameters.lambda_ec"
+     },
+     "title": "error correction"
+    },
+    {
+     "id": "postprocessing.verification",
+     "inputs": [],
+     "lane": "public",
+     "math": "\\varepsilon_{EV}",
+     "outputs": [],
+     "parameters": [
+      {
+       "exact": false,
+       "name": "ε_EV",
+       "provenance": {
+        "engine_field": "preparation.config.parameters.eps_ev"
+       },
+       "value": 9.313225746154785e-10
+      }
+     ],
+     "provenance": {
+      "engine_field": "preparation.config.parameters.eps_ev"
+     },
+     "title": "verification"
+    },
+    {
+     "id": "postprocessing.privacy_amplification",
+     "inputs": [],
+     "lane": "public",
+     "math": "\\varepsilon_{PA}",
+     "outputs": [],
+     "parameters": [
+      {
+       "exact": false,
+       "name": "ε_PA",
+       "provenance": {
+        "engine_field": "preparation.config.parameters.eps_pa"
+       },
+       "value": 9.313225746154785e-10
+      }
+     ],
+     "provenance": {
+      "engine_field": "preparation.config.parameters.eps_pa"
+     },
+     "title": "privacy amplification"
+    },
+    {
+     "id": "postprocessing.key_length",
+     "inputs": [],
+     "lane": "public",
+     "math": "\\ell",
+     "notes": [
+      "filled on a run's page from its record"
+     ],
+     "outputs": [
+      "ell"
+     ],
+     "parameters": [
+      {
+       "exact": false,
+       "name": "α",
+       "provenance": {
+        "engine_field": "preparation.config.parameters.alpha"
+       },
+       "value": 1.05
+      }
+     ],
+     "provenance": {
+      "claim": "meat-core/thm:keylength",
+      "engine_field": "record.payload.stages.key_rate.key_length"
+     },
+     "title": "key length"
+    }
+   ],
+   "title": "Block post-processing",
+   "type": "postprocessing"
+  }
+ ],
+ "version": 1
+}

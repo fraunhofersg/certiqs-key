@@ -1,0 +1,28 @@
+% ---
+% id: receiver/rem:k-minus-1
+% kind: rem
+% title: "The coefficient $K-1$ of the all-dark element"
+% summary: >-
+%   The all-dark element (no port clicks) enters the multiclick element with
+%   coefficient K−1: each of the K single-click elements contributes one, and
+%   the no-click element, which is this same operator, takes one away. An
+%   error by one would show only where c > 0.
+% prominence: standard
+% status: accepted
+% uses: [thm:click-povm]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:k-minus-1}
+The multiclick element is the complement of the no-click and the $K$
+single-click elements, and each single-click element already contains one
+subtraction of the all-dark element \eqref{eq:Msc}. The $K$ subtractions and
+the one from $M_{\varnothing}$ combine into the coefficient $K-1$
+(Theorem~\ref{thm:click-povm}\,(iv)). An error by one in this coefficient changes
+the bound by $\gamma c^{n}$, a term that vanishes on every block $n\ge1$ when
+$c=0$ and survives when $c>0$: the error would be invisible in the first case
+and material in the second.
+\end{remark}

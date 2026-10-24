@@ -1,0 +1,41 @@
+% ---
+% id: statistics/def:freq
+% kind: def
+% title: "Frequency vector and counts"
+% summary: >-
+%   An outcome's count is the number of rounds in which it occurs, and the
+%   frequency vector of a run of n rounds is its counts divided by n. The
+%   acceptance test asks whether this vector lies in the acceptance set.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [meat-core/def:postprocessing-model]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The event $\OmAT=\{\operatorname{freq}_{\hat c_1^n}\in\acSet\}$ that a run
+of $n$ rounds passes the acceptance test, the acceptance event of the
+key-length post-processing (\xref{meat-core/def:postprocessing-model}; the symbols are listed in
+\repodoc{spec/notation.md#35-optimization-and-key-length-objects}), is defined
+on the frequency vector fixed here.
+
+\begin{definition}\label{def:freq}
+For an outcome string $\hat c_1^n=(\hat c_1,\dots,\hat c_n)\in\Chatset^{\,n}$
+and $\hat c\in\Chatset$ put
+\begin{equation}\label{eq:freq}
+  \Ncount{\hat c}(\hat c_1^n)\coloneqq
+  \big|\{\,j\in\{1,\dots,n\}:\hat c_j=\hat c\,\}\big|,
+  \qquad
+  \operatorname{freq}_{\hat c_1^n}(\hat c)\coloneqq
+  \tfrac{1}{n}\,\Ncount{\hat c}(\hat c_1^n):
+\end{equation}
+the \term[The number of rounds of an outcome string in which a given outcome
+occurs.]{count} of the outcome $\hat c$ and the
+\term[The counts of an outcome string divided by its length n, one
+coordinate per outcome.]{frequency vector} of the string. Then
+$\operatorname{freq}_{\hat c_1^n}\in\simplex{\Chatset}$ for every string, and
+its coordinates lie in $\tfrac1n\{0,1,\dots,n\}$.
+\end{definition}

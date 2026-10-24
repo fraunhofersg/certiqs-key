@@ -1,0 +1,65 @@
+% ---
+% id: meat-core/frank-wolfe/rem:fo-interface
+% kind: rem
+% title: "Two reported numbers and one first-order claim"
+% summary: >-
+%   A run reports its estimate always, and h_lb only where the hypotheses of
+%   [[thm:firstorder]] held, membership of the consumed point in the acceptance
+%   set times the relaxed set among them. No hypothesis is read of the solver,
+%   and withdrawal never weakens what h_lb means.
+% prominence: standard
+% status: accepted
+% uses: [thm:firstorder, def:first-order-setting, def:relaxed-feasible-set, rem:acc-side]
+% mentions: [foundations/req:tiers, req:first-order-withdrawal, rem:fo-iterate-checks, rem:fo-returned-point, rem:fo-one-ruler, rem:fo-reachability, rem:fo-check-exposures, rem:fo-oracle-repair, rem:fo-iterate-repair, rem:fo-negative-values, req:verified-feasible-side, rem:fo-arithmetic]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Every run reports its \tref{estimate}, and where the hypotheses of
+Theorem~\ref{thm:firstorder} held the \tref{first-order} bound $\hlb$ as
+well, naming the \tref{tier} that carries its claim
+(\xref{foundations/req:tiers}). The requirements of this submodule say when
+$\hlb$ is withdrawn and what a run checks, repairs and records; this remark and
+Remarks~\ref{rem:fo-iterate-checks}, \ref{rem:fo-returned-point},
+\ref{rem:fo-one-ruler}, \ref{rem:fo-reachability},
+\ref{rem:fo-check-exposures}, \ref{rem:fo-oracle-repair},
+\ref{rem:fo-iterate-repair} and~\ref{rem:fo-negative-values} give the
+mathematics behind them, one topic each.
+
+\begin{remark}\label{rem:fo-interface}
+The objective at the point a run returned is an upper estimate by
+Theorem~\ref{thm:firstorder}\,(i), respectively~(iiia), which is the part a
+run is in: its point is established, where it is established at all, only
+in the \tref{relaxed feasible set} (Remark~\ref{rem:fo-iterate-checks}), and
+Remark~\ref{rem:fo-returned-point} says what a run records of it, which is
+less than the whole premise. Where the hypotheses of that theorem held, the
+run reports $\hlb$ as well; Requirement~\ref{req:first-order-withdrawal} says
+when it does not.
+
+Among those hypotheses is the membership of the point consumed at an iterate
+in the \emph{product} $\acSet\times\Feas^{J}(\varepsilon)$: it is a
+hypothesis of Theorem~\ref{thm:firstorder}\,(iiib) as much as (H-POS),
+(H-SUPP) and (H-NOPERT). Its two factors are established by different
+means: the $J$ factor by the three checks of
+Remark~\ref{rem:fo-iterate-checks}, after any repair of
+Remark~\ref{rem:fo-iterate-repair}, and the acceptance factor by forming
+$\mathbf q_t$ on the \tref{exact island} under ($\alpha$) and ($\beta$) of
+Remark~\ref{rem:acc-side}. A failure of either leaves the membership not
+established.
+
+No hypothesis is read of the solver. A return that is merely near the
+minimum satisfies no inequality in the safe direction, which is why no
+bracket pairs the gradient with it: both sides of a bracket are lower
+bounds on the two minima over the exact sets, the feasible one verified
+from the solver's multipliers in exact arithmetic, the rounding of the
+frame its rows are built with deducted
+(Requirement~\ref{req:verified-feasible-side}). So a solve that stopped
+short of its optimum, or failed, can loosen a bracket but cannot raise
+either side above the exact minimum of the linear form at the gradient as
+computed, and neither its return nor its status withdraws one; what the
+gradient's own binary64 evaluation leaves is
+Remark~\ref{rem:fo-arithmetic}'s. Withdrawal is never a weakening of what
+$\hlb$ means; there is no reduced form of the claim.
+\end{remark}

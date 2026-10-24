@@ -1,0 +1,118 @@
+% ---
+% id: reductions/wpfss/rem:published
+% kind: rem
+% title: "Relation to the published flag-state squashers"
+% summary: >-
+%   The flag-state target is the flag-state squasher of Zhang et al., and the
+%   single-bound weight-preserving target that of Nahar et al. Their usual
+%   scalar flag-weight constraint is a carried-operator entry stronger than the
+%   default licensed one, and only its operator form is ever emitted.
+% prominence: standard
+% status: accepted
+% uses: [def:targets, prop:chain, reductions/cor:transported, reductions/cor:pullback]
+% mentions: [reductions/cor:entries, cor:two-sector-decided, cor:fssinstance, reductions/def:exactadm, reductions/req:declared-constants-only, reductions/req:licensed-entry-lattice]
+% assumes: [A-CONST]
+% refs:
+%   - "zhang2021security, Thm. 1, Eq. (8)"
+%   - "tupkary2026decoy, Eqs. (149)-(150)"
+%   - "nahar2024postselection, Lemma 7, Eqs. (28)-(29)"
+%   - "nahar2024postselection, Eq. (27)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:published}
+$\Ffss$ is the flag-state squasher of \cite[Thm.~1, Eq.~(8)]{zhang2021security},
+which states exactly \eqref{eq:FSS}: $\widetilde M_y=M_{y,n\le k}\oplus
+\dyad{y}$ for a POVM block diagonal at a photon-number cutoff. The adjoint
+form is stated there in part: \cite[Eqs.~(149)--(150)]{tupkary2026decoy}
+gives, for that map, the defining identity $\Lambda^{\dagger}(F_i)=M_i$ and the
+\emph{flag} half of \eqref{eq:transportproj},
+$\Lambda^{\dagger}(\Pflag)=\Pgt$, and states no second projector identity. The
+preserved half follows from it in one step and is written out here rather than
+attributed: $\Lambda$ is trace preserving, so $\Lambda^{\dagger}$ is unital, and
+$\Pleq+\Pflag=\idon{\Qsys}$ with $\Pleq+\Pgt=\idon{\Bsys}$ give
+$\Lambda^{\dagger}(\Pleq)=\idon{\Bsys}-\Lambda^{\dagger}(\Pflag)
+=\idon{\Bsys}-\Pgt=\Pleq$. This contract proves both halves at
+Proposition~\ref{prop:chain}\,(i) and the citation is corroboration, which is
+why the narrower attribution costs nothing. The \tref{single-bound case} of
+the \tref{weight-preserving target} $\Fwp$
+is the weight-preserving flag-state squasher of
+\cite[Lemma~7, Eqs.~(28)--(29)]{nahar2024postselection}, whose target places
+$f_N$ on the diagonal of the flag block of one distinguished element and
+$(1-f_N)$ on the others; the multi-bound form \eqref{eq:WPFSS} is the
+symmetric statement with one weight per outcome.
+
+The scalar flag-weight constraint these targets are usually paired with is
+\cite[Eq.~(27)]{nahar2024postselection}, and the comparison with what this
+module emits runs in the direction opposite to the naive one. Writing
+$a\coloneqq\lmin\big(\blk{M}{\leqN}_e\big)$ and
+$b\coloneqq\lmin\big(\blk{M}{\gtN}_e\big)$ for a designated event $e$
+(declared device constants, fixed before the run and never recomputed from
+the declaration, Assumption~\ref{ass:constdecl}), that
+equation reads, in full, $W\le1-p(m\le N)\le\big(p(e)-a\big)/(b-a)$ for the
+flag weight $W=\tr[\Pflag\sigma]$ and the observed
+$p(e)=\tr[\Ffss_e\sigma]$;
+the right-hand member is the operative one and the only one compared with
+below. It is
+\emph{a} member of the family Corollary~\ref{cor:transported} generates,
+namely the carried operator $\hat O$, which carries the certificate
+\begin{equation}\label{eq:two-sector-entry}
+\begin{split}
+  \hat O&=\Ffss_e-a\,\Pleq-b\,\Pflag,\\
+  \Lfss^{\dagger}\big(\hat O\big)&=M_e-a\,\Pleq-b\,\Pgt
+  =\big(\blk{M}{\leqN}_e-a\idon{}\big)
+    \dsum\big(\blk{M}{\gtN}_e-b\idon{}\big)
+  \;\succeq\;0
+\end{split}
+\end{equation}
+by the definitions of $a$ and $b$ and the transported projectors of
+\eqref{eq:transportproj}. The emitted constant is $0$, with no shift
+(Corollary~\ref{cor:entries}\,(iii)).
+Corollary~\ref{cor:pullback}\,(ii) gives
+$p(e)-a(1-W)-bW\ge0$, which rearranges to Eq.~(27) when $b>a$ (the published
+division is by $b-a$; at $b\le a$ it reverses or is undefined, and only the
+operator form above is used here). It is \emph{not} the member
+Proposition~\ref{prop:chain}\,(iii) supplies and not the one
+Corollary~\ref{cor:fssinstance} emits: those use $a=0$, where the same
+corollary gives only $p(e)-bW\ge0$.
+
+Which of the two is stronger is settled at the level of the \emph{constraint
+sets}, not by comparing the two caps on $W$: since
+$\hat O=\hat O\big|_{a=0}-a\,\Pleq$ with $a\ge0$ and $\Pleq\succeq0$, one has
+$\tr[\hat O|_{a=0}\,\sigma]\ge\tr[\hat O\,\sigma]$ for every $\sigma\succeq0$,
+so $\{\sigma:\tr[\hat O\sigma]\ge0\}\subseteq
+\{\sigma:\tr[\hat O|_{a=0}\sigma]\ge0\}$: the $a>0$ entry cuts a set no
+larger and is at least as strong a constraint, unconditionally. The implication
+therefore runs from Eq.~(27) to the $a=0$ form and not the other way. (The
+comparison of the two \emph{caps} $\big(p(e)-a\big)/(b-a)$ and $p(e)/b$ is not
+the right one and does not run in a fixed direction: the former is the smaller
+exactly when $p(e)<b$, because $p(e)$ is itself a function of $\sigma$ rather
+than a fixed number, so the two inequalities cut the state set differently.)
+
+Two consequences follow. \emph{(a)} The default licensed entry of
+Corollary~\ref{cor:fssinstance} is weaker than standard practice, not
+stronger; a declaration may request the entry \eqref{eq:two-sector-entry}
+as a carried operator with declared constants $a$ and $b$, which need not be
+the least eigenvalues above. Its certificate is then not taken from the
+request: it is decided on the emitted numbers, where every emitted block of
+$e$ below the cutoff clears $a$ and $b$ is at most the certified weight
+$p_e$ (Corollary~\ref{cor:two-sector-decided}), and the request is refused
+where either fails. Both constants must be declared on the lattice of
+\eqref{eq:latinv}, as every declared constant must: an $a$ or $b$ off the
+lattice puts the requested operator's entries off the lattice, and the
+request is refused (Requirement~\ref{req:licensed-entry-lattice}). Smaller
+lattice values of $a$ and $b$ keep both conditions. \emph{(b)} The \emph{cap} in
+the displayed form is never emitted: its right-hand side contains the run's
+observed $p(e)$, whereas Assumption~\ref{ass:constdecl} admits only constants
+declared before the run, and an entry with such a constant is refused
+(Requirement~\ref{req:declared-constants-only}). The admissible object is the
+operator entry \eqref{eq:two-sector-entry} with $\bowtie\,=\,\succeq$ and $c=0$, of
+which the cap is a run-time consequence and not a declaration. Every statement
+of this remark is proved in the claims it names
+(Definition~\ref{def:targets}, Proposition~\ref{prop:chain},
+Corollary~\ref{cor:fssinstance}, Corollary~\ref{cor:two-sector-decided} and
+Corollary~\ref{cor:entries}); the
+citations record where a reader finds the correspondence.
+\end{remark}

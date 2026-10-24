@@ -1,0 +1,33 @@
+% ---
+% id: receiver/rem:positivity
+% kind: rem
+% title: "Source of positivity of the click-pattern elements"
+% summary: >-
+%   The inclusion-exclusion formula is an alternating sum and nothing in its
+%   form makes it positive. Positivity comes first, from commuting projective
+%   measurements pulled back through an isometry, and the single-click case
+%   also follows from monotonicity of the lift.
+% prominence: standard
+% status: accepted
+% uses: [thm:click-povm, def:physmodel, lem:fock-monotone]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:positivity}
+Formula \eqref{eq:incexc} is an alternating sum of positive operators and
+nothing about its form makes it positive; the element of a non-empty outcome
+$S$ has $2^{|S|}$ terms, half of them with a minus sign. Positivity is established \emph{before} the expansion, in
+part~(i) of Theorem~\ref{thm:click-povm}, from the physical construction: $K$
+commuting binary projective measurements on disjoint output mode sets, pulled
+back through an isometry. Definition~\ref{def:physmodel} is set up for that
+order of argument. A derivation that started from \eqref{eq:incexc} would
+have to prove positivity of an alternating sum of Fock functors, which is both
+harder and unnecessary. For a small independent check,
+$\eqref{eq:Msc}\succeq0$ follows separately from
+Lemma~\ref{lem:fock-monotone}, since $A_{[K]\setminus\{k\}}\preceq A_\Sigma$ gives
+$\Fock(\id-A_{[K]\setminus\{k\}})\succeq\Fock(\id-A_\Sigma)$.
+\end{remark}

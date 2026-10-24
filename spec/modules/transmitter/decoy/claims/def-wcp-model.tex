@@ -1,0 +1,102 @@
+% ---
+% id: transmitter/decoy/def:wcp-model
+% kind: def
+% title: "Phase-randomised weak-coherent-pulse source model"
+% summary: >-
+%   A weak-coherent-pulse model declares polarisations, intensities, weighted
+%   labels and the phase-averaged coherent states on the two-mode Fock space,
+%   as mathematical objects rather than as matrices. It is the specified
+%   ensemble over which the tagged declaration is built.
+% prominence: standard
+% status: implemented
+% uses: [transmitter/def:source-spec]
+% mentions: [ass:wcp, def:tagged-source, transmitter/ass:ens]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Eq. (144)"
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.decoy.model:WcpModel
+% lean:
+% notes: "The cited equation is an ingredient and not the authority: the declaration format and every condition of this definition are this repository's. The polarisation set is declared and is not fixed to the four BB84 states; the claims of this submodule are generic in it. Its vectors are model objects, so a quantum sector above the vacuum is emitted only where its signal dyads can be formed exactly (req:signal-dyads)."
+% ---
+
+A phase-randomised weak-coherent-pulse source prepares, for a polarisation $a$
+and an intensity $\mu$, the coherent state of amplitude $\sqrt{\mu}$ in the
+mode $\ket{a}$ averaged over its global phase. That average is diagonal in the
+photon number, which is why full phase randomisation is one of the conditions
+Assumption~\ref{ass:wcp} attests; without it the emitted state is not the one
+below. The state is \cite[Eq.~(144)]{tupkary2026decoy}, whose
+$\sigma_{(a,\mu,z)}$, $\ket{N}_a$ and setting choice $(a,\mu,z)$ are $\rho_x$,
+$\ket{\mathsf{n},a}$ and the letter $x$ here. Its \tref{transmitted system} is
+an infinite-dimensional Fock space, so the model fixes the states as
+mathematical objects and not as matrices. It fixes only the
+\tref[specified signal ensemble]{specified ensemble} $\{p_x,\rho_x\}$, the
+weighted states the source is declared to prepare:
+Alice's retained system, her measurement, her marginal and the certificate come
+from the tagged declaration built over it (Definition~\ref{def:tagged-source}).
+We write $\mathsf{n}$ for a photon number, $n$ being the number of rounds.
+
+\begin{definition}\label{def:wcp-model}
+A \term[A source model that declares phase-randomised weak coherent states on a two-mode Fock space as mathematical objects, not as matrices]{weak-coherent-pulse model}
+is a \tref{source model}, the case (b) of
+Definition~\ref{def:source-spec} in which the specified ensemble
+$\{p_x,\rho_x\}$ is fixed as mathematical objects rather than as matrices, on
+a transmitted system whose Hilbert space is separable. It consists of the
+following declared data.
+\begin{enumerate}[label=(W\arabic*),leftmargin=3.0em]
+\item \emph{(modes and polarisations)} two declared optical modes with a fixed
+orthonormal basis of the one-photon space $\mathbb{C}^2$, and a finite
+non-empty set $\mathrm{Pol}$ of
+\term[The declared polarisation labels, each standing for a unit vector of the one-photon space that is an object of the model]{polarisations},
+declared labels each standing for a unit vector $\ket{a}\in\mathbb{C}^2$,
+$a\in\mathrm{Pol}$, with creation operator $c^{\dagger}_a$. The vector
+$\ket{a}$ is a mathematical object of the model, as the states of (W4) are,
+and not an array of declared numbers: a declaration names the vector a label
+stands for and carries none of its coordinates, which need not be binary64
+numbers ($(\ket{H}+\ket{V})/\sqrt2$ has the coordinates $1/\sqrt2$). The
+transmitted system $\Asig$ is the Fock space over the two modes, with vacuum
+$\ket{\vac}$; its Hilbert space is separable and infinite dimensional.
+\item \emph{(intensities and labels)} a finite non-empty set
+$\mathrm{Int}\subset[0,\infty)$ of
+\term[The declared mean photon numbers of the weak coherent pulses, non-negative reals]{intensities};
+the signal alphabet
+$\Xset\subseteq\mathrm{Pol}\times\mathrm{Int}\times\{\tst,\gen\}$ with its
+\tref{declared order}, an element of
+$\mathrm{Pol}\times\mathrm{Int}\times\{\tst,\gen\}$ being a label and a label in
+$\Xset$ a letter, written $x=(a_x,\mu_x,z_x)$, whose third component is the
+\term[The third component of a letter, marking a test round or a generation round]{round type};
+and weights $p_x>0$ for every $x\in\Xset$ with $\sum_{x\in\Xset}p_x=1$ in the
+declared order, \tref[rounds nowhere]{rounding nowhere}. A label
+of weight zero is not a letter of $\Xset$.
+\item \emph{(number states)} for $a\in\mathrm{Pol}$ and an integer
+$\mathsf{n}\ge0$, the unit vector
+\begin{equation}\label{eq:numberstate}
+  \ket{\mathsf{n},a}\;\coloneqq\;
+  \frac{(c^{\dagger}_a)^{\mathsf{n}}}{\sqrt{\mathsf{n}!}}\,\ket{\vac} ,
+\end{equation}
+and the subspace
+$S_{\mathsf{n}}\coloneqq\operatorname{span}\{\ket{\mathsf{n},a}:a\in\mathrm{Pol}\}$
+of the $\mathsf{n}$-photon subspace. Since the $\mathsf{n}$-photon subspace of
+a two-mode Fock space has dimension $\mathsf{n}+1$ and $S_{\mathsf{n}}$ is
+spanned by $|\mathrm{Pol}|$ vectors,
+$\dim S_{\mathsf{n}}\le\min(\mathsf{n}+1,|\mathrm{Pol}|)$; and
+$S_{\mathsf{n}}\perp S_{\mathsf{n}'}$ for $\mathsf{n}\ne\mathsf{n}'$, the two
+subspaces lying in different photon-number eigenspaces.
+$S_0=\mathbb{C}\ket{\vac}$ is one dimensional, every polarisation sharing the
+vacuum.
+\item \emph{(the specified states)} with the
+\term[The probability that a phase-randomised coherent pulse of a given intensity carries a given number of photons]{Poisson weight}
+$P_{\mu}(\mathsf{n})\coloneqq e^{-\mu}\mu^{\mathsf{n}}/\mathsf{n}!$, the state
+prepared at the letter $x=(a,\mu,z)$ is
+\begin{equation}\label{eq:wcpstate}
+  \rho_x\;=\;\sum_{\mathsf{n}\ge0}P_{\mu}(\mathsf{n})\,
+  \dyad{\mathsf{n},a} ,
+\end{equation}
+which does not depend on the round type $z$. It is a state:
+$\sum_{\mathsf{n}\ge0}P_{\mu}(\mathsf{n})=1$ and each $\dyad{\mathsf{n},a}$
+is a rank-one projector.
+\end{enumerate}
+The physical-source assumption of the model, which asserts that the device
+emits \eqref{eq:wcpstate}, is Assumption~\ref{ass:wcp}; the model declares it
+in the place of Assumption~\ref{ass:ens}.
+\end{definition}

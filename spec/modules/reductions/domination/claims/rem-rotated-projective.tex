@@ -1,0 +1,75 @@
+% ---
+% id: reductions/domination/rem:rotated-projective
+% kind: rem
+% title: "Rotated projective elements and the noise floor"
+% summary: >-
+%   A projective element on a direction with no Gaussian-rational vector
+%   dominates no non-zero lattice element, and completeness then forces a
+%   weight of one, so no domination link runs from that block. A noise floor
+%   in the model can remove it; after another channel it applies anew.
+% prominence: standard
+% status: accepted
+% uses: [def:domination-link, foundations/def:domination, foundations/lem:domination, foundations/lem:rational-obstruction, foundations/lem:absorbing-domination]
+% mentions: [foundations/rem:noise-floor, receiver/detector-imperfections/prop:noise-floor]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The remark follows foundations/lem:rational-obstruction's lead-in (after another channel the obstruction applies to the image of the reference in the new basis), foundations/rem:noise-floor (the factor of outcomes and dimension in the order of the weight) and receiver/detector-imperfections/prop:noise-floor (the conditions under which the noise-floor remedy works; loss alone or dark counts alone need not suffice). No requirement uses the remark: no run relates a snap to its model by domination."
+% ---
+
+The remark is about domination only, the relation the link of
+Definition~\ref{def:domination-link} carries, whose channel acts on each
+sector as the identity followed by a branching. A reduction that first
+applies another channel to the reference changes what is compared: the
+obstruction then applies to the image of the reference, compared with a
+lattice family written in the new basis, where the supports may have
+rational directions that they lacked. Such reductions are planned beyond
+these contracts (\repodoc{spec/future-scope.md}).
+
+\begin{remark}\label{rem:rotated-projective}
+Let a reference family $G$, complete at $1$ on a block, have an element
+$G_j=\dyad{\psi}$ that is a rank-one projector on a direction containing no
+non-zero vector of $\mathbb{Q}(i)^{d}$, as happens for an ideal analyser
+whose analysed polarisation $\cos\alpha\ket{H}+\sin\alpha\ket{V}$ has an
+irrational $\tan\alpha$ on its one-photon block, or for the
+two-photon block of a diagonal-basis analyser written in the orthonormal
+occupation basis. Any family $F$ with Gaussian-rational entries that $G$
+dominates at a weight below one has
+$\mathrm{supp}\,F_j\subseteq\mathrm{supp}\,G_j$ by
+\xref{foundations/lem:domination}\,(ii), so $F_j=\lambda\dyad{\psi}$ with
+$\lambda\ge0$, and a non-zero such $F_j$ would have a column that is a
+non-zero Gaussian-rational vector on the direction $\psi$; hence $F_j=0$:
+$G_j$ dominates no non-zero lattice element. Completeness then forces the
+weight up to one: \xref{foundations/lem:rational-obstruction}\,(v) gives
+$\vartheta\ge\lmax(G_j)/1=1$, so no weight below one exists, at any lattice
+exponent. No domination link runs from the reference on a block that holds
+such an element, and no lattice family is related to it by domination there;
+this is the obstruction \xref{foundations/rem:noise-floor} explains. The
+remedy within domination is in the model and not in the lattice. With the
+device's loss and dark counts composed into the reference, every element is
+positive definite on every block under the conditions that the receiver
+module states (\xref{receiver/detector-imperfections/prop:noise-floor}:
+loss in the receiver and a dark-count probability strictly between zero and
+one in every port); loss alone or dark counts alone need not suffice. Where
+those conditions hold, the obstruction disappears: a lattice family whose
+elements but one lie between zero and their reference elements, the last
+taking what completeness leaves, is dominated at a weight of at most
+$\delta/(\lambda+\delta)$, with $\delta$ the norm of the residue that last
+element absorbs and $\lambda$ the least eigenvalue of the reference's element
+at the same outcome, and not of the lattice element, which
+the residue raises above it
+(\xref{foundations/lem:absorbing-domination}\,(iv);
+\xref{foundations/rem:noise-floor}).
+After another channel the obstruction is to be read in the new basis, where
+it may not arise: an ideal analyser at an angle with irrational
+$\tan\alpha$ is the
+image, under one unitary applied before every outcome, of the same analyser
+at an angle where its elements are lattice values, and the isometry from the
+two-photon block into $\mathbb{C}^{2}\otimes\mathbb{C}^{2}$ carries the
+diagonal-basis element above to a projector on a rational vector; neither
+route is a claim of this contract. The \tref{emission normalizer} does not meet the
+obstruction in the form above: the datum it snaps has Gaussian-rational
+entries, so every support it meets is spanned by Gaussian-rational vectors
+(\xref{foundations/lem:rational-obstruction}\,(ii)).
+\end{remark}

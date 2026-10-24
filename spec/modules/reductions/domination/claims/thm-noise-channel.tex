@@ -1,0 +1,172 @@
+% ---
+% id: reductions/domination/thm:noise-channel
+% kind: thm
+% title: "The noise channel of a domination"
+% summary: >-
+%   If G dominates F sector by sector, G squashes exactly to F with added flag
+%   sectors, or to F itself where F has flag sectors, through a noise channel that keeps
+%   each sector with probability one minus its weight. The adjoint returns each
+%   sector projector scaled by that probability.
+% prominence: main
+% status: accepted
+% uses: [def:domination-link, foundations/def:domination, foundations/lem:domination, reductions/def:link, reductions/def:squashing, reductions/def:generalized-instrument, reductions/lem:master, reductions/prop:common, reductions/lem:top]
+% mentions: [reductions/rem:dominating]
+% assumes: []
+% refs:
+%   - "nahar2025imperfect, Thm. 3, Eqs. (20)-(24)"
+%   - "nahar2025imperfect, Technical aside 1"
+% provenance: newly-derived
+% lean:
+% notes: "The published theorem states case (a), flags in a flag space added for the purpose, on a block decomposition of the physical space, with q_m in [0,1]; here it is derived from the branching lemma and stated on a finite target system, with the shared-flag case (b) added and the weights restricted to [0,1), where the residual family of foundations/def:domination is defined. No requirement uses the theorem; it is kept for a declared device weight (A-DOM, spec/future-scope.md section 13)."
+% ---
+
+The channel is the one of \cite[Thm.~3, Eqs.~(20)--(24)]{nahar2025imperfect},
+derived here from the branching calculus of this contract: a \tref{generalized
+instrument} decides, sector by sector, whether to keep the input
+(probability $1-\vartheta_s$) or to flag it (probability $\vartheta_s$); the keep
+branch passes the input on unchanged, and the flag branch measures the
+residual family and prepares the flag of its outcome. The domination
+$G=(1-\vartheta)F+\vartheta R$ sector by sector is exactly the statement that the
+two branches together reproduce $G$. Remark~\ref{rem:dominating} reads the
+same split as a dominated detector. Part~(iii), in which the flags land in
+sectors the target already has, is the use of an existing flag space that
+\cite[Technical aside~1]{nahar2025imperfect} describes.
+
+\begin{theorem}\label{thm:noise-channel}
+In the setting of Definition~\ref{def:domination-link}, let $G$ dominate $F$
+at the \tref{domination weights} $\vartheta$ and let $R$ be the residual family.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $R=\{R_v\}_{v\in\Vset}$ is a POVM on $\Qsys$, block diagonal for
+  $\{\Pi_s\}$, and
+  $G^{(s)}_v=(1-\vartheta_s)F^{(s)}_v+\vartheta_sR^{(s)}_v$ for every $v$ and $s$.
+\item \emph{(added flag sectors)} $\Phi^{+}_{\vartheta}$ of \eqref{eq:noise-fresh} is a
+  channel $\Tcl{\Qsys}\to\Tcl{\Qsys^{+}}$, and
+  \begin{equation}\label{eq:noise-fresh-relation}
+    \big(G;\,(1-\vartheta_s)\Pi_s\,(s\in\SecSet),\,\textstyle\sum_s\vartheta_s\Pi_s\big)
+    \ \dsq_{\Phi^{+}_{\vartheta}}\
+    \big(F^{+};\,\Pi_s\dsum0\,(s\in\SecSet),\,0\dsum\idon{\Flag^{+}}\big).
+  \end{equation}
+\item \emph{(shared flag sectors)} If $F$ has \tref{indicator sectors} $(f)$ with
+  $\vartheta_{(f)}=0$ for every $f$, then
+  $\Phi_{\vartheta}$ of \eqref{eq:noise-shared} is a channel
+  $\Tcl{\Qsys}\to\Tcl{\Qsys}$ with $G\dsq_{\Phi_{\vartheta}}F$, and its adjoint
+  takes the sector projectors and the flag projector to
+  \begin{equation}\label{eq:noise-shared-pullbacks}
+  \begin{gathered}
+    \Phi_{\vartheta}^{\dagger}(\Pi_s)=(1-\vartheta_s)\Pi_s\quad
+    (s\text{ not an indicator sector}),\\
+    \Phi_{\vartheta}^{\dagger}(\Pi_{(f)})=\Pi_{(f)}+\sum_{s}\vartheta_s\,
+      \Pi_sR_f\Pi_s,\qquad
+    \Phi_{\vartheta}^{\dagger}(\Pflag)=\Pflag+\sum_{s}\vartheta_s\Pi_s .
+  \end{gathered}
+  \end{equation}
+\item \emph{(output)} The outputs of both channels are block diagonal for the
+  sectors of their target, so either channel is unchanged when the sector
+  pinching of its target is applied after it.
+\item \emph{(weight zero)} If $\vartheta_s=0$ for every $s$, then $F=G$, and
+  $\Phi_{\vartheta}$, where defined, is the sector pinching
+  $\sigma\mapsto\sum_s\Pi_s\sigma\Pi_s$.
+\end{enumerate}
+In particular the domination link of Definition~\ref{def:domination-link}, in
+either case, is a receiver-stage link of Definition~\ref{def:link}: its
+channel witness relates its source family and carried operators to its
+target and carried operators exactly, as \eqref{eq:link} requires with
+$\textsf{status}=\textsf{exact}$.
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} The two channels are the composite channels of
+Lemma~\ref{lem:master} and Proposition~\ref{prop:common} for one generalized
+instrument with a keep branch and a flag branch.
+
+\emph{(i)} On every sector $s$, $G^{(s)}$ and $F^{(s)}$ are Hermitian, positive
+semidefinite and complete at $1$, $G$ and $F$ being POVMs block diagonal for
+$\{\Pi_s\}$. \xref{foundations/lem:domination}\,(vi) gives that $R^{(s)}$ has
+positive semidefinite elements, is complete at $1$ and satisfies the stated
+split; so $R_v=\bigoplus_sR^{(s)}_v\succeq0$ and
+$\sum_vR_v=\bigoplus_s\idon{d_s}=\idon{\Qsys}$.
+
+\emph{The instrument.} Put
+$\Ins_{\mathrm{k}}(\sigma)\coloneqq\sum_s(1-\vartheta_s)\Pi_s\sigma\Pi_s$ and
+$\Ins_{\mathrm{f}}(\sigma)\coloneqq\sum_s\vartheta_s\Pi_s\sigma\Pi_s$, both maps
+$\Tcl{\Qsys}\to\Tcl{\Qsys}$. Each is completely positive, a sum of maps
+$\sigma\mapsto c\,\Pi_s\sigma\Pi_s$ with $c\ge0$, and
+$\tr\Ins_{\mathrm{k}}(\sigma)+\tr\Ins_{\mathrm{f}}(\sigma)
+=\sum_s\tr[\Pi_s\sigma\Pi_s]=\tr\sigma$, since $\sum_s\Pi_s=\idon{\Qsys}$.
+So $\{\Ins_{\mathrm{k}},\Ins_{\mathrm{f}}\}$ is a generalized instrument
+(Definition~\ref{def:generalized-instrument}). Its adjoints are
+$\Ins_{\mathrm{k}}^{\dagger}(X)=\sum_s(1-\vartheta_s)\Pi_sX\Pi_s$ and
+$\Ins_{\mathrm{f}}^{\dagger}(X)=\sum_s\vartheta_s\Pi_sX\Pi_s$. In the keep branch
+take the POVM $F$ on $\Qsys$ with the identity channel, so
+$F\dsq_{\idmap}F$; in the flag branch take the POVM $R$ on $\Qsys$ with the
+measure-and-prepare channel
+$\Lmp(\tau)=\sum_v\tr[R_v\tau]\dyad{v}_{\Flag^{+}}$, so $R\dsq_{\Lmp}\Ppvm$ by
+Lemma~\ref{lem:top}. By Lemma~\ref{lem:master}\,(i) the branch elements are
+$M_{v,\mathrm{k}}=\Ins_{\mathrm{k}}^{\dagger}(F_v)=\sum_s(1-\vartheta_s)\Pi_sF_v\Pi_s$
+and $M_{v,\mathrm{f}}=\Ins_{\mathrm{f}}^{\dagger}(R_v)=\sum_s\vartheta_s\Pi_sR_v\Pi_s$,
+and since $F_v$ and $R_v$ are block diagonal,
+$M_{v,\mathrm{k}}+M_{v,\mathrm{f}}
+=\bigoplus_s\big((1-\vartheta_s)F^{(s)}_v+\vartheta_sR^{(s)}_v\big)=G_v$ by (i).
+
+\emph{(ii)} Lemma~\ref{lem:master}\,(iii) gives
+$\{M_{v,\mathrm{k}}+M_{v,\mathrm{f}}\}_v\dsq_{\Lambda}\{F_v\dsum\dyad{v}\}_v$
+with $\Lambda(\sigma)=\Ins_{\mathrm{k}}(\sigma)\dsum\Lmp\big(\Ins_{\mathrm{f}}(\sigma)\big)$,
+a channel by Lemma~\ref{lem:master}\,(ii). The left side is $G$, the right side
+is $F^{+}$, and
+$\Lmp(\Ins_{\mathrm{f}}(\sigma))=\sum_v\sum_s\vartheta_s\tr[R_v\Pi_s\sigma\Pi_s]\dyad{v}$,
+so $\Lambda=\Phi^{+}_{\vartheta}$ of \eqref{eq:noise-fresh}. For the carried
+operators, \eqref{eq:masteradjoint} gives
+$(\Phi^{+}_{\vartheta})^{\dagger}(X\dsum Y)=\Ins_{\mathrm{k}}^{\dagger}(X)
++\Ins_{\mathrm{f}}^{\dagger}\big(\Lmp^{\dagger}(Y)\big)$, with
+$\Lmp^{\dagger}(Y)=\sum_v\bra{v}Y\ket{v}R_v$. At $X=\Pi_s$, $Y=0$ this is
+$(1-\vartheta_s)\Pi_s$; at $X=0$, $Y=\idon{\Flag^{+}}$ it is
+$\Ins_{\mathrm{f}}^{\dagger}(\sum_vR_v)=\Ins_{\mathrm{f}}^{\dagger}(\idon{\Qsys})
+=\sum_s\vartheta_s\Pi_s$, which is Lemma~\ref{lem:master}\,(iv) for the flag
+branch. That is \eqref{eq:noise-fresh-relation} in the notation of
+Definition~\ref{def:squashing}.
+
+\emph{(iii)} Let $W\colon\mathbb{C}^{|\Vset|}\to\Hs{\Qsys}$ be the isometry with
+$W\ket{f}$ the unit vector spanning the indicator sector $(f)$, and
+$\Psi(\tau)\coloneqq W\tau W^{\dagger}$, a channel
+$\Tcl{\Flag^{+}}\to\Tcl{\Qsys}$ with adjoint $\Psi^{\dagger}(X)=W^{\dagger}XW$.
+Because every $F_v$ is block diagonal and equals $\delta_{vf}$ on the sector
+$(f)$, $\Psi^{\dagger}(F_v)=\sum_f\delta_{vf}\dyad{f}=\dyad{v}$, so
+$\Ppvm\dsq_{\Psi}F$. With $F\dsq_{\idmap}F$ in the keep branch, $F$ is a
+common target of the two branch targets $F$ and $\Ppvm$, and
+Proposition~\ref{prop:common} gives
+$\{M_{v,\mathrm{k}}+M_{v,\mathrm{f}}\}_v\dsq_{\Lambda'}F$ with
+$\Lambda'=\idmap\circ\idmap\circ\Ins_{\mathrm{k}}+\Psi\circ\Lmp\circ\Ins_{\mathrm{f}}$,
+a channel by that proposition. The left side is $G$, and
+$\Psi(\Lmp(\Ins_{\mathrm{f}}(\sigma)))=\sum_f\sum_s\vartheta_s\tr[R_f\Pi_s\sigma\Pi_s]\,W\dyad{f}W^{\dagger}$
+with $W\dyad{f}W^{\dagger}=\Pi_{(f)}$, so $\Lambda'=\Phi_{\vartheta}$ of
+\eqref{eq:noise-shared}. Its adjoint is
+$\Phi_{\vartheta}^{\dagger}(X)=\Ins_{\mathrm{k}}^{\dagger}(X)
++\Ins_{\mathrm{f}}^{\dagger}\big(\sum_f\bra{f}W^{\dagger}XW\ket{f}R_f\big)$,
+by linearity and the adjoints of the three maps. For a sector $s$ that is not
+an indicator sector, $W^{\dagger}\Pi_sW=0$, so
+$\Phi_{\vartheta}^{\dagger}(\Pi_s)=(1-\vartheta_s)\Pi_s$. For an indicator sector,
+$\vartheta_{(f)}=0$ gives $\Ins_{\mathrm{k}}^{\dagger}(\Pi_{(f)})=\Pi_{(f)}$, and
+$W^{\dagger}\Pi_{(f)}W=\dyad{f}$ gives the second term
+$\Ins_{\mathrm{f}}^{\dagger}(R_f)=\sum_s\vartheta_s\Pi_sR_f\Pi_s$. Summing over
+$f$, with $\sum_fR_f=\idon{\Qsys}$ by (i),
+$\Phi_{\vartheta}^{\dagger}(\Pflag)=\Pflag+\sum_s\vartheta_s\Pi_s$.
+
+\emph{(iv)} Every term of \eqref{eq:noise-fresh} and \eqref{eq:noise-shared}
+is $\Pi_s\sigma\Pi_s$ for a sector $s$, a multiple of $\dyad{v}_{\Flag^{+}}$, the
+projector onto the added sector $(v)^{+}$ of $\Qsys^{+}$, or a multiple
+of $\Pi_{(f)}$; each is block diagonal for the sectors of the target, and the
+sector pinching fixes it.
+
+\emph{(v)} If every $\vartheta_s=0$, \eqref{eq:dom-link} reads
+$G^{(s)}_v-F^{(s)}_v\succeq0$ for all $v$ and $s$, and both families are
+complete at $1$ on every sector, so $F^{(s)}=G^{(s)}$ by
+\xref{foundations/lem:domination}\,(iii). The second sum of
+\eqref{eq:noise-shared} vanishes and the first is the sector pinching.
+
+\emph{The closing sentence.} The carried operators of the link in case (a)
+are those of \eqref{eq:noise-fresh-relation}, and in case (b) the
+projectors of the sectors that are not indicator sectors and $\Pflag$, whose
+pull-backs are \eqref{eq:noise-shared-pullbacks}; so (ii) and (iii) are the
+relation the channel-witness slot of \eqref{eq:link} asks for, with no error
+term.
+\end{proof}

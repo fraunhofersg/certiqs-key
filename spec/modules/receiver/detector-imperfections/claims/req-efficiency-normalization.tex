@@ -1,0 +1,76 @@
+% ---
+% id: receiver/detector-imperfections/req:efficiency-normalization
+% kind: req
+% title: "Compilation of a probe-free receiver at its normalized station"
+% summary: >-
+%   By default the engine compiles a probe-free receiver at the factor
+%   t = η_max/(99/100), or t = 1 where η_max ≥ 99/100, and emits that station's
+%   blocks, weights and dark-composed family. A declared factor in [η_max, 1]
+%   replaces it, and one outside is refused.
+% prominence: standard
+% status: implemented
+% uses: [prop:efficiency-normalization, def:normalized-station, rem:normalization-gain, rem:normalization-scope]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.efficiency:normalize_efficiencies
+% lean:
+% user_statement: >-
+%   Unless you declare otherwise, a receiver without a probe source is analysed
+%   with nearly all of its largest detector efficiency moved into the channel
+%   as loss: every efficiency is divided by t, the largest one divided by 99/100,
+%   so the best detector is analysed at 99/100; at a largest efficiency of
+%   99/100 or more none is divided. This leaves your observed statistics
+%   unchanged and typically raises the certified key rate at low efficiencies.
+%   You may declare the factor, between the largest efficiency and one;
+%   declaring one turns the normalization off. Declaring the largest
+%   efficiency itself is allowed and sound, but with dark counts at a photon
+%   cutoff of two or more the engine can then report no key where your model
+%   gives one, which is why, below 99/100, the default stops short of it; a
+%   receiver whose largest efficiency is one or close to it can meet the same
+%   limitation.
+% notes: >-
+%   Where eta_max < 99/100 the default stops short of the full normalization
+%   t = eta_max by the exact factor 99/100; where eta_max >= 99/100 it is
+%   t = 1, which at eta_max = 1 is the full normalization. At t = eta_max a station with dark counts at photon cutoff 2
+%   or more can have a singular two-photon block evaluated in floating point,
+%   which the snap lifts and whose lifted directions the support check counts,
+%   so a run can report key 0 where the model's rate is positive
+%   (the receiver's design.md, structural decision 14); the margin may
+%   change once the engine handles a singular block at the full
+%   normalization.
+%   The margin is tested at photon cutoffs 1 to 3 under the engine's snap and
+%   support threshold. It moves the rate, never the bound:
+%   prop:efficiency-normalization holds at every t in [eta_max, 1].
+% ---
+
+A receiver's measurement is uniform loss followed by its \tref{normalized station}
+(Proposition~\ref{prop:efficiency-normalization}), and the weight a
+consumer reads loses a factor of the squared efficiency without it
+(Remark~\ref{rem:normalization-gain}); the factor itself is a choice, of which
+Remark~\ref{rem:normalization-scope} gives the trade-off. The reason the
+default stops short of the full normalization where the largest efficiency
+is below $99/100$ is the engine's present handling of a singular block, not a
+property of the identity, and is stated in
+\repodoc{spec/modules/receiver/design.md}.
+
+\begin{requirement}\label{req:efficiency-normalization}
+For a request whose receiver declares no source modes and some efficiency
+$\eta_k>0$, the engine compiles, in place of the declared receiver, its
+normalized station at the \tref{factored loss} $t$, with the efficiency of port $k$
+equal to $\eta_k/t$, and emits that station's blocks, multiclick weights and
+\tref{dark-composed family}; $t$ is the value of \iface{efficiency_normalization}
+where the request declares one; otherwise, with $\eta_{\max}$ the largest
+declared efficiency, $t=\eta_{\max}/(99/100)$, formed exactly, where
+$\eta_{\max}<99/100$, and $t=1$ where $\eta_{\max}\ge 99/100$. On every route the station compiled is the one at
+the exact rational efficiencies $\eta_k/t$: its exact statements, its
+reference and its enclosures are formed from those rationals, its
+floating-point evaluation evaluates them as the \tref{evaluation model}
+evaluates every declared number, and no value rounded from $\eta_k/t$ is
+declared in their place; the quotient is exactly one at a port with
+$\eta_k=t$. A declared $t$ outside
+$[\eta_{\max},1]$ is refused with
+\iface{efficiency_normalization_out_of_range}. A request that declares source
+modes, or whose efficiencies are all zero, is compiled at $t=1$, and a
+declared $t<1$ in such a request is refused with the same reason.
+\end{requirement}

@@ -1,0 +1,38 @@
+% ---
+% id: reductions/rem:povmreg
+% kind: rem
+% title: "A general POVM on the register, and its price"
+% summary: >-
+%   Keeping the register intact in the target would need a projective
+%   measurement of it; filing each branch as a block of the squashed system
+%   removes that hypothesis. The price is bookkeeping only: a direct sum
+%   instead of a tensor product, the branch weight still transported as an
+%   operator.
+% prominence: standard
+% status: accepted
+% uses: [thm:mixture]
+% mentions: [def:reduction-instance, foundations/def:sector-map]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:povmreg}
+Theorem~\ref{thm:mixture} assumes only that $\{N_j\}$ is a POVM. A
+construction that keeps the register $D$ intact in the target, squashing
+$\sum_jM_{v|j}\otimes N_j$ to $\sum_jF_{v|j}\otimes N_j$ on $\Qsys_0D$, does
+need $\{N_j\}$ to be projective, because its proof turns on
+$\mathcal{P}_i(X\otimes N_j)=\delta_{ij}X\otimes N_j$ for the projections
+$\mathcal{P}_i=(\idon{}\otimes N_i)(\cdot)(\idon{}\otimes N_i)$, and that
+identity fails for a general POVM. Filing each branch as a \emph{block} of
+$\Qsys$ instead of a value of a retained register removes the hypothesis. The
+price is bookkeeping and nothing else: the target is a direct sum rather than
+a tensor product, which is the \tref[block list]{block-list} form of
+\xref{foundations/def:sector-map} and the form every reduction instance emits
+(Definition~\ref{def:reduction-instance}\,(I2)); and
+Theorem~\ref{thm:mixture}\,(iii) shows the branch weight is still
+transported, as the operator $\idon{\Bsys_0}\otimes N_j$ rather than as the
+number it is not.
+\end{remark}

@@ -1,0 +1,46 @@
+% ---
+% id: protocol-compiler/req:conditional-family-decision
+% kind: req
+% title: "Decision on each declared conditional family"
+% summary: >-
+%   Each conditional family of a choice-weighted presentation is decided exactly
+%   admissible, per choice value, before any product is formed or any chain
+%   condition decided. A failure is refused with its own reason, naming the
+%   first failure.
+% prominence: standard
+% status: implemented
+% uses: [def:weighted, def:compile]
+% mentions: [ex:condfamily, rem:condfamily, def:chaincond]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.weights:decide_conditional_families
+% lean:
+% ---
+
+A \tref{choice-weighted family} can satisfy every condition of exact
+admissibility while none of the conditional families it was built from is a
+measurement (Example~\ref{ex:condfamily}), so each conditional family is
+decided on its own, on the declared input (Remark~\ref{rem:condfamily}).
+
+\begin{requirement}\label{req:conditional-family-decision}
+Wherever a choice-weighted presentation is read, on either party's side, the
+engine decides, of each choice value $t\in\Tpub$ separately and on the
+declared numbers, the condition Definition~\ref{def:weighted} places on the
+conditional family $\{N_{u|t}\}_u$ --- in \tref{POVM form}, its exact
+admissibility in the reading of that definition; in \tref{ensemble form}, the
+condition that definition states in its place: (H) and (P) per block, the
+ensemble identity in place of (C), and (T) --- before it forms any product and
+before any condition of Definition~\ref{def:chaincond} is decided
+on the chain: wherever the presented physical family is the weighted one,
+that decision and the representability decision on the products it permits
+precede the consumption of the chain, so that
+no condition on the chain is decided on a product that was not decided
+first. A failure is refused with
+\iface{conditional_family_not_admissible}, naming the declaring party, and
+the choice value, the predicate, the block and the index of the \emph{first}
+failure --- for (S), the index of the first inexact addition; in ensemble
+form the predicate named is the ensemble identity where that is the one that
+failed. The decision stops at the first failure and does not enumerate the
+rest.
+\end{requirement}

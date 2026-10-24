@@ -1,0 +1,91 @@
+% ---
+% id: reductions/cor:flag-instance
+% kind: cor
+% title: "The flag instance of an uncharacterised branch"
+% summary: >-
+%   Any POVM on any separable system is a reduction instance with one
+%   classical flag per outcome, no data sector and no entry, so there is
+%   nothing to normalise. The class-marginal identity is discharged exactly
+%   where the branch's declaration supplies it.
+% prominence: standard
+% status: implemented
+% uses: [def:reduction-instance, def:joint-family, def:exactadm, lem:top, prop:pinching, def:emitnorm]
+% mentions: [rem:flagcost, thm:instrument-instance]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.sectors:flag_scalar_values
+% lean:
+% ---
+
+A branch about which nothing beyond its POVM is declared, such as one an
+adversary controls, still squashes, to the flag PVM of
+Lemma~\ref{lem:top}; Remark~\ref{rem:flagcost} names the resulting instance
+as the one for a branch whose device is unknown or adversarially chosen. The
+corollary shows that this squasher is a reduction instance, so that the
+branching instance of Theorem~\ref{thm:instrument-instance} can combine such
+a branch with characterised ones.
+
+\begin{corollary}
+\label{cor:flag-instance}
+Let $\big(\Vset,\{\Vset_t\},\{q_t\}\big)$ be a joint alphabet with classes
+and weights and let $\{M_v\}_{v\in\Vset}$ be any POVM on any system $\Bsys$
+with $\Hs{\Bsys}$ separable, about which nothing beyond that is declared.
+Then the \emph{flag instance} $\mathcal{J}_{\mathrm{flag}}[M]$, given by
+\begin{enumerate}[label=(I\arabic*),leftmargin=3.0em]
+\item $\Bsys$ as given; no data sector, $\SecSet_{\mathrm{dat}}=\varnothing$,
+  so that the datum is empty and $\mathcal{D}_{\mathrm{adm}}=\{\varnothing\}$;
+  (H) the single hypothesis that $\{M_v\}$ is a POVM on $\Bsys$; and the
+  constant model map $M[\varnothing]\coloneqq M$;
+\item one scalar sector $(f)$ of dimension $1$ for each $f\in\Vset$, in the
+  order of $\Vset$, with $\phi_f(v)\coloneqq\delta_{vf}$, so that
+  $\Hs{\Qsys}=\Hs{\Flag}=\mathbb{C}^{|\Vset|}$ and $F_v=\dyad{v}_{\Flag}$,
+  the flag PVM $\Ppvm$ of Lemma~\ref{lem:top};
+\item $\Lambda=\PinS\circ\Lmp=\Lmp$, the measure-and-prepare channel
+  \eqref{eq:mpsquasher} of $M$, with the transported set
+  $\{\Pi_f=\dyad{f}\}_{f\in\Vset}$ and pull-backs $M_f$;
+\item an empty entry list, and the class-marginal identity
+  discharged exactly when (H) is extended by the declared fact
+  $\sum_{v\in\Vset_t}M_v=q_t\idon{\Bsys}$ for every $t$, as it is when the
+  branch is declared to be a \tref{joint family}
+  (Definition~\ref{def:joint-family}\,(b)), and not otherwise,
+\end{enumerate}
+is a reduction instance. The normalizer of Definition~\ref{def:emitnorm} has
+nothing to act on: the declared datum is the handed one, no $\Delta_s$
+exists, and the \tref{declared model} is $M$ itself.
+\end{corollary}
+
+\begin{proof}
+(I1) There is one datum, the empty family, and it is admissible vacuously;
+$M[\varnothing]=M$ is a POVM by (H); the stability clause holds because (H)
+reads no datum entry, there being none.
+
+(I2) $\phi_f(v)=\delta_{vf}\in\{0,1\}$ satisfies \eqref{eq:latinv} for every
+$\kappa$, is formed with no rounding, and $\sum_v\delta_{vf}=1$;
+\eqref{eq:instance-target} gives $F_v=\bigoplus_f\delta_{vf}$, the diagonal
+operator $\dyad{v}$ in the basis $\{\ket{f}\}_{f\in\Vset}$ of $\Hs{\Flag}$,
+and $\dim\Hs{\Qsys}=|\Vset|$.
+
+(I3) Lemma~\ref{lem:top} gives $M\dsq_{\Lmp}\Ppvm$ with
+$\Lmp^{\dagger}(X)=\sum_v\bra{v}X\ket{v}M_v$, so
+$\Lmp^{\dagger}(\dyad{f})=M_f$, which is the pull-back of the sector
+projector $\Pi_f$; the output of $\Lmp$ is diagonal in the flag basis, so
+$\PinS\circ\Lmp=\Lmp$ (Proposition~\ref{prop:pinching}), and $\Lambda$ has
+the form (I3) requires with $\Lambda_0=\Lmp$. Since the datum is empty this
+holds for every admissible datum.
+
+(I4) The instance carries no entry of its own: the sector-projector
+certificate travels with the transported set, not in the entry list (the
+third consequence of Definition~\ref{def:reduction-instance}); here that
+certificate reads $M_f\succeq0$. The class-marginal identity
+\eqref{eq:instance-classmarginal} is a statement about
+$\sum_{v\in\Vset_t}M_v$, and (H) alone can supply it, nothing else about $M$
+being declared: where the branch is declared to be a joint family it is
+\eqref{eq:classmarginal}, and for an arbitrary POVM
+$\sum_{v\in\Vset_t}M_v$ is some operator with
+$0\preceq\sum_{v\in\Vset_t}M_v\preceq\idon{\Bsys}$ and nothing more. So the
+flag is set exactly where the declared fact is part of (H).
+
+The last sentence: Definition~\ref{def:emitnorm} acts on data sectors, of
+which there are none, so $A'=A=\varnothing$ and $\Mdec=M[\varnothing]=M$.
+\end{proof}

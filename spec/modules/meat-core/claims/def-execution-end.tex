@@ -1,0 +1,36 @@
+% ---
+% id: meat-core/def:execution-end
+% kind: def
+% title: "The end of an execution"
+% summary: >-
+%   A party has ended an execution once it has sent and received every
+%   message the post-processing prescribes to it and fixed its output, a key
+%   or an abort; the execution has ended once both parties have. Several
+%   executions are compared at that time.
+% prominence: technical
+% status: accepted
+% uses: [def:postprocessing-model, def:authenticated-channel]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Under the authentication post-processing the two parties do not finish at
+the same time: the key holder finishes when it sends its last decision, the
+partner when that decision is delivered, at a time the adversary chooses.
+
+\begin{definition}\label{def:execution-end}
+An \emph{execution} of the protocol is one run of its $n$ rounds, the
+\tref{fixed-length post-processing model}
+(Definition~\ref{def:postprocessing-model}) and the
+\tref{authentication post-processing}
+(Definition~\ref{def:authenticated-channel}\,(c)). A party has ended an
+execution once it has sent and received every message that these prescribe
+to it and has fixed its output, its key or $\perp$: the key holder once it
+has sent its final $\mathrm{accept}$ or $\mathrm{abort}$, the partner once
+that message, or $\mathrm{auth\text{-}abort}$ in its place, has been
+delivered to it. The
+\term[The time at which both parties of an execution have sent and received every message the post-processing prescribes to them and fixed their outputs.]{end of an execution}
+is the time at which both of its parties have ended it.
+\end{definition}

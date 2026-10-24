@@ -1,0 +1,101 @@
+% ---
+% id: foundations/def:snap
+% kind: def
+% title: "Snapping declared data onto a lattice"
+% summary: >-
+%   A snap replaces data by lattice data of the same shape that meet their
+%   conditions exactly, entries known to be zero fixing each element's
+%   structural support. A block of a measurement snap is kept where it is
+%   decided equal to the data it is made from, and moved otherwise.
+% prominence: standard
+% status: implemented
+% uses: [def:binary64, def:declared-data, def:exact-admissibility, def:tolerance, def:sector-map, def:declared-order, def:exact-reference]
+% mentions: [req:snap-reference, req:support-safe-snap, def:evaluated-off-snap]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.snap:snap_measurement_family
+% notes: "The two cases of structurally zero are exclusive, so that for a reference an entry is structurally zero only when its centre and radius are both zero; this makes support safety checkable from the enclosure. A kept block is decided against the data the snap is made from, which Requirement snap-reference fixes for an instance whose data are computed from a model."
+% lean:
+% ---
+
+One documented procedure produces the snaps an instance applies to what it
+declares; a producer that snaps its own emission does so by the procedure its
+own claims state. For an operator family read as a measurement the instance
+keeps a block whose \tref{reference} (Definition~\ref{def:exact-reference})
+is known exactly and already lies on the lattice, and snaps every other block
+by a procedure that stays as close to what it starts from as the rule allows
+that every element, row and column the data state to be zero stays zero,
+which is what the structural support below records
+(Requirement~\ref{req:support-safe-snap}); only where that procedure cannot
+restore the conditions of the snap does a flagged last resort mix a uniform
+family into the elements. The steps are Requirement~\ref{req:snap-reference}
+and the shared numerical code (\repodoc{spec/architecture.md}). A snap
+relates nothing to the model it replaced beyond its displacement; a run that
+holds a reference can read the snapped family only to find points,
+evaluating the numbers its key length rests on with the reference in its
+place (Definition~\ref{def:evaluated-off-snap}), and where it does not, it
+rests on the snap (Requirement~\ref{req:snap-reference}\,(iii)).
+
+\begin{definition}\label{def:snap}
+Let $D$ be data a declarer is about to declare, a producer's exact
+construction of what it emits (Definition~\ref{def:declared-data}), or a
+\tref{reference} of an operator family (Definition~\ref{def:exact-reference})
+--- a family of block lists against a sector map
+(Definition~\ref{def:sector-map}) over an alphabet with a declared order, a
+matrix or a vector --- read with the conditions its declaration states of it,
+and let $k$ be a \tref{lattice exponent}
+(Definition~\ref{def:binary64}\,(iv)). For a family read as a measurement,
+those conditions are exact admissibility with its declared constant
+(Definition~\ref{def:exact-admissibility}); every sum they read is read in its
+declared order (Definition~\ref{def:declared-order}). A \term[at a lattice
+exponent k, data of the same shape as the given data, over the same alphabet
+in the same order, with every entry a lattice value at k, that satisfy exactly
+the conditions the declaration of the given data states]{snap} of $D$ at
+$k$ is data $D'$ of the same shape, over the same alphabet in the same order,
+every entry of which is a \tref{lattice value} at $k$, and which satisfy those
+conditions exactly. Its \emph{displacement} is the largest entrywise modulus
+of $D'-D$, taken over every block of every element
+(Definition~\ref{def:tolerance}), with $D$ replaced by its centres where $D$
+is a reference.
+
+An entry of $D$ is
+\term[said of an entry of data known to be exactly zero: for data given as
+numbers, an entry that is the number zero; for a reference, an entry whose
+centre and radius are both zero; and no other entry]{structurally zero} when
+it is known to be exactly zero, which is the following and nothing else: where
+$D$ is given as numbers, an entry that is the number $0$; where $D$ is a
+reference, an entry whose centre and radius are both $0$. An entry of a
+reference whose centre is $0$ and whose radius is not is not structurally
+zero. The
+\term[of a block of an element: the set of indices whose row or column holds
+an entry that is not structurally zero]{structural support} of a block
+$D^{(s)}_j$ is the set of indices $i$ such that row $i$ or column $i$ of
+$D^{(s)}_j$ holds an entry that is not structurally zero. A row, a column or
+an element all of whose entries are structurally zero is structurally zero,
+and an index lies outside the structural support exactly when both its row
+and its column are. For a reference, whose centres are Hermitian and whose
+radii are symmetric (Definition~\ref{def:exact-reference}), row $i$ of a block
+is structurally zero exactly when column $i$ is.
+
+Where $D$ is an operator family read as a measurement against a sector map
+with blocks $s\in\mathsf{S}$, over an alphabet $J$, a block $s$ of a snap
+$F=D'$ of $D$ is
+\term[a block of a snap of an operator family read as a measurement on which
+the snap is decided exactly to equal the data it is made from]{kept} when
+$F^{(s)}_j=D^{(s)}_j$ is decided exactly for every $j\in J$, and
+\term[a block of a snap of an operator family read as a measurement that is
+not kept: the snap is not decided exactly to equal on it the data it is made
+from]{moved} otherwise. Here $D$ on block $s$ is the data the snap is made
+from: the centres of an \tref{exact reference} of the block where the snap
+runs on them, a producer's exact construction, or the data as they stand
+where the declarer states them with no model behind them. Where the
+declarer computes the data of the block from a model of it and the snap
+runs on that evaluation, the data the snap is made from are the model, of
+which the evaluation is no exact presentation, so no exact decision equates
+the snap with them and the block is moved, even where the snap leaves the
+evaluation unchanged. A snap with no moved block changes nothing.
+
+The definition fixes what a snap produces and not how. The displacement is a
+record of the move, and it is the whole of what relates $D'$ to $D$ here.
+\end{definition}

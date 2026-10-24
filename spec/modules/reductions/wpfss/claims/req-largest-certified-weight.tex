@@ -1,0 +1,27 @@
+% ---
+% id: reductions/wpfss/req:largest-certified-weight
+% kind: req
+% title: "Use and record of the largest certified weight"
+% summary: >-
+%   The engine uses the largest weight the artefact certifies for each outcome
+%   and records the weights it used. It never silently substitutes a larger
+%   one.
+% prominence: standard
+% status: accepted
+% uses: [prop:weight-monotone, rem:weightfree]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A smaller certified weight is valid but gives a cleaner target
+(Proposition~\ref{prop:weight-monotone}, Remark~\ref{rem:weightfree}), so the
+choice of weight is recorded rather than implied.
+
+\begin{requirement}
+\label{req:largest-certified-weight}
+The engine uses, for each outcome, the largest weight the artefact certifies
+and records the weights it used in \iface{wpfss_data}, and it never silently
+substitutes a larger one.
+\end{requirement}

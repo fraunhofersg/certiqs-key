@@ -1,0 +1,119 @@
+% ---
+% id: receiver/rem:ia
+% kind: rem
+% title: "Directions of rigorous enclosures of the bound inputs"
+% summary: >-
+%   A rigorous evaluation of the bound needs lower enclosures of c and γ and
+%   upper ones of the per-port d and β, each intersected with [0, 1], which
+%   excludes no exact value. In the window a rigorous lower bound on the block
+%   eigenvalue replaces the computed one, and [[A-EIG]] is not invoked.
+% prominence: standard
+% status: accepted
+% uses: [def:bounddata, thm:multiclick-bound, rem:collapsesharp, lem:windowtail, lem:collapse, def:tolmap, rem:cdirection, def:pmcex, lem:exactbasic]
+% mentions: [foundations/def:tiers, thm:exact-and-evaluated, def:setting-family, thm:enclosed-blocks, ass:eig, def:enclosed-weight, thm:enclosed-weight, req:rigorous-weight]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The floating-point evaluation of Theorem~\ref{thm:exact-and-evaluated} leaves a gap between
+the emitted and the exact bound. This remark records in which direction each
+input has to be enclosed to close it; Requirement~\ref{req:rigorous-weight}
+closes it in these directions, and Theorem~\ref{thm:enclosed-weight} proves
+that the result is a bound.
+
+\begin{remark}\label{rem:ia}
+Closing the gap means replacing the four inputs of \eqref{eq:beta} by
+rigorous \emph{outer} enclosures taken in the conservative direction, formed
+from enclosures of $B$, the $B_k$ and the prefactors rather than from their
+floating-point evaluation. This engine forms them in exact rational
+arithmetic, from the enclosures of the port Grams behind the reference of the
+blocks (Theorem~\ref{thm:enclosed-blocks}), which are proved and need no
+interval-arithmetic assumption, and from the least-eigenvalue bounds of the
+foundations contract (Requirement~\ref{req:rigorous-weight}). A weight so
+evaluated can carry a run to the \tref{certified} tier
+(\xref{foundations/def:tiers}) where the run's own certified evaluation
+succeeds; a weight evaluated in floating point cannot. There are four
+directions, not two. Reading
+the signs off $\Bnd(n)=1+(K-1)\gamma c^{\,n}-\sum_k\beta_kd_k^{\,n}$ with
+$n\ge1$ and $c,d_k\in[0,1]$:
+\begin{itemize}[leftmargin=1.6em]
+\item $c$: a \emph{lower} enclosure, i.e.\ an \emph{upper} enclosure of
+  $\lmax(B)$ in \eqref{eq:cd};
+\item $d_k$: an \emph{upper} enclosure, i.e.\ a \emph{lower} enclosure of
+  $\lmin(B_k)$, since the coefficient $-\beta_k$ is non-positive;
+\item $\gamma$: a \emph{lower} enclosure, since the coefficient
+  $(K-1)c^{\,n}$ is non-negative;
+\item each $\beta_k$: an \emph{upper} enclosure, since the coefficient
+  $-d_k^{\,n}$ is non-positive.
+\end{itemize}
+The last two also preserve the hypothesis $\gamma\le\beta_k$ of
+Theorem~\ref{thm:multiclick-bound}, which an enclosure in the opposite direction could
+break.
+
+\emph{Every one of the four is taken in $[0,1]$, and that is not optional.}
+Each of $c,d_k,\gamma,\beta_k\in[0,1]$ is a \emph{theorem}: the
+admissibility paragraph of Theorem~\ref{thm:multiclick-bound} derives
+\eqref{eq:bounddata} from $0\preceq B_k\preceq B\preceq\id$ and
+$\gamma\le\beta_k\le1$. So intersecting each rigorous enclosure with $[0,1]$
+excludes no exact value, keeps it a valid enclosure, and keeps it on the
+conservative side of \eqref{eq:beta}. Without the intersection a rigorous outer
+enclosure can leave the interval in each of the four cases, and it can do so
+at ordinary devices, not only at contrived ones: $\overline{\lmax(B)}>1$ where
+$\lmax(B)=1$ exactly puts $\underline c<0$; $\underline{\lmin(B_k)}<0$ at a
+singular $B_k$ (at a receiver without a probe, one with an input polarization
+that reaches no port other than $k$, the configuration
+Remark~\ref{rem:collapsesharp} discusses) puts $\overline{d_k}>1$; and
+$\overline{\beta_k}>1$ is possible wherever $\beta_k=1$ exactly, as at every
+probe-off setting. Data outside \eqref{eq:bounddata} is not
+\tref{admissible bound data}, and \emph{both} lemmas that read the bound data use the
+excluded part: Lemma~\ref{lem:windowtail}\,(i) obtains its tail step from
+$d_k\le1$, and Lemma~\ref{lem:collapse}'s chord argument is taken on
+$u_k\in[\beta_kc^{\,n},\beta_k]$, which is $d_k\in[c,1]$. Taken in $[0,1]$, the
+enclosed tuple is admissible bound data, both lemmas apply to it unchanged, and
+$\Bnd$ evaluated on it is a lower bound on $\Bnd$ evaluated on the exact
+tuple; these are the \tref{enclosed bound data} of
+Definition~\ref{def:enclosed-weight}, and Theorem~\ref{thm:enclosed-weight}
+states both facts.
+
+\emph{The domain on which the enclosure of $c$ is taken, and why this is not
+the clamping Definition~\ref{def:tolmap}\,(iv) forbids.} ``$\Bnd$ is
+non-decreasing in $c$'' holds on $c\ge0$ and \emph{fails} below zero at even
+$n$, which is exactly what Remark~\ref{rem:cdirection} states for the
+floating-point evaluation; and a rigorous outer enclosure at a receiver
+where $\lmax(B)=1$ exactly can put its lower end below zero. The
+enclosure of $c$ is therefore taken \emph{in $[0,1]$}: the evaluation uses
+$\underline c\coloneqq\max\{0,\,1-\overline{\lmax(B)}\}$. That is sound, and
+for a reason available inside this contract: $c_{\mathrm{ex}}\in[0,1]$ is a
+\emph{theorem} (the admissibility paragraph of Theorem~\ref{thm:multiclick-bound},
+from $0\preceq B\preceq\id$), so intersecting a rigorous enclosure with $[0,1]$
+loses no exact value, $\underline c\le c_{\mathrm{ex}}$ still holds, and on
+$[0,1]$ the monotonicity does hold, so
+$\Bnd(\underline c)\le\Bnd(c_{\mathrm{ex}})$ at every $n$. This is the
+opposite of the situation of Definition~\ref{def:tolmap}\,(iv): there, no
+enclosure exists, the computed $c$ is not known to bound $c_{\mathrm{ex}}$ on
+either side, and clamping it to $0$ would assert a relation to the exact value
+that nothing supports, so nothing is clamped and
+Remark~\ref{rem:cdirection} states the resulting two-sided direction. Here, the
+enclosure \emph{is} a rigorous bound and the intersection is with a domain the
+contract proves; nothing is asserted that is not already a theorem.
+
+\emph{A fifth direction, where an exact window is declared.} The four above
+are the four inputs of \eqref{eq:beta}. Definition~\ref{def:pmcex} adds one
+more computed quantity to the emitted bound, $\Bnd^{\ast}(n)$, and it takes a
+\emph{lower} enclosure: it enters \eqref{eq:elldef} as a lower bound on
+itself. As with the other four the enclosure is taken in $[0,1]$, which
+excludes no exact value because $\Bnd^{\ast}(n)\in[0,1]$ is a theorem
+(Lemma~\ref{lem:exactbasic} with Definition~\ref{def:setting-family}), and
+as with $c$ this is an intersection with a
+domain the contract proves rather than a clamp. A rigorous lower enclosure of
+$\Bnd^{\ast}(n)$ is a \tref[rigorous window bounds]{rigorous window bound} of
+Definition~\ref{def:enclosed-weight}: it takes the place of the computed
+eigenvalue less the slack, so $\varepsilon_{\mathrm{eig}}$ does not enter the
+weight and Assumption~\ref{ass:eig} is not invoked at that setting, the
+weight being a bound by Theorem~\ref{thm:enclosed-weight}. This is the only
+route in this remark that removes an assumption from the ledger rather than
+tightening a number; the declared $\varepsilon_{\mathrm{eig}}$ stays for a
+setting the engine evaluates in floating point.
+\end{remark}

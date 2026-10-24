@@ -1,0 +1,120 @@
+% ---
+% id: receiver/detector-imperfections/thm:efficiency
+% kind: thm
+% title: "Detector efficiency in the port Grams"
+% summary: >-
+%   Efficiency η_k uniform on detector port k scales that port's Gram by η_k,
+%   keeping its rank if η_k > 0; varying within a port, it is no scalar and can
+%   lower the rank. It enters only as the compiled instrument matrix's last
+%   layer, and the loss decomposition [[receiver/lem:deficiency]] checks that
+%   loss is counted once.
+% prominence: main
+% status: implemented
+% uses: [receiver/def:compile, receiver/thm:representation-independence, receiver/prop:mode-algebra, receiver/lem:deficiency]
+% mentions: [rem:effrank, receiver/thm:click-povm, receiver/thm:coarse-graining, receiver/thm:multiclick-bound, receiver/thm:emitted-bound, req:efficiency-schema, req:efficiency-record]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.efficiency:efficiency_record
+% lean:
+% notes: "The implements binding realises item (iv); req:efficiency-record states that item as the engine's obligation and carries the same binding. The single-mode efficiency substitution is corroborated by the registered locator of rem:sperlingeta, which backs no step."
+% ---
+
+``Apply the efficiency once'' is easy to state for a fixed device and does not
+survive verbatim once a receiver is compiled from components: a component graph
+has many legitimate loss sites, among them every beamsplitter's loss, every C7
+element, every polarizer's extinction, every mirror's reflectivity and the
+detector efficiency itself. The theorem fixes where the detector efficiency
+enters, what it does to the port Grams and what the emitted record of the loss
+sites lists. What the engine keeps apart in its input and records in its output
+is stated in Requirements~\ref{req:efficiency-schema}
+and~\ref{req:efficiency-record}.
+
+\begin{theorem}\label{thm:efficiency}
+Let $\Recv$ be a \tref{receiver instrument} with \tref[port Gram matrices]{port
+Grams} $\{A_k\}$ and an \tref{instrument matrix} $\Gmat$ that does not yet
+contain a detector-efficiency layer (for a \tref{declared element graph}, the
+product $\Gmat^{\sigma}_{\Grph}$ of Definition~\ref{def:compile}), let
+$\eta_1,\dots,\eta_K\in[0,1]$, and let
+$D_\eta=\sum_k\sqrt{\eta_k}\,\Emd{\{k\}}+\Emd{\Modes\setminus\bigcup_k\Port{k}}$
+be the \tref{terminal detector-efficiency layer} of
+Definition~\ref{def:compile}.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{Uniform within a port: a scalar on the Gram.} $D_\eta\Gmat$ is a
+  contraction, and its port Grams are
+  \begin{equation}\label{eq:etagram}
+    A_k\ \longmapsto\ \eta_k\,A_k .
+  \end{equation}
+  For $\eta_k>0$ this preserves $\rk A_k$, so it leaves the one-mode-per-port
+  criterion of Theorem~\ref{thm:representation-independence}\,(iv) untouched. Every formula of
+  Theorems~\ref{thm:click-povm}, \ref{thm:coarse-graining}, \ref{thm:multiclick-bound}
+  and~\ref{thm:emitted-bound} therefore covers inefficient detectors under the
+  single substitution \eqref{eq:etagram}; in particular
+  $A_\Sigma\mapsto\sum_k\eta_kA_k$, which is in general not a multiple of
+  $A_\Sigma$ unless the $\eta_k$ agree.
+\item \emph{Non-uniform within a port: not a scalar, and the rank can drop.} If
+  attenuation varies \emph{within} a port, that is, for a diagonal contraction
+  $D$ that is not constant on $\Port{k}$, the effective Gram is
+  \begin{equation}\label{eq:noneffgram}
+    A_k^{\mathrm{eff}}=\Gmat_{\Inp}^\dagger D^\dagger\Emd{\{k\}}D\,
+    \Gmat_{\Inp},
+  \end{equation}
+  which is in general \emph{not} a multiple of $A_k$ and satisfies only
+  $\rk A_k^{\mathrm{eff}}\le\rk A_k$, with strict inequality possible. All
+  formulas of the theorems named in (i) still apply, to $A_k^{\mathrm{eff}}$.
+\item \emph{One structural site.} Detector efficiency is a parameter of the
+  terminal layer L1 and enters the \tref{compiled instrument matrix}
+  $D_\eta\Gmat^{\sigma}_{\Grph}$ only through the single left factor
+  $D_\eta$ of Definition~\ref{def:compile}, which is applied after every chain
+  element. It is therefore not an audit but an invariant of the compiler: there
+  is exactly one site at which it can enter.
+\item \emph{The composition record.} The emitted efficiency record
+  lists every declared loss parameter $q_i$, under its name, with the element
+  that declares it and its position in the compiled product: the
+  transmittance $x$ of a beamsplitter (C1) and $t_H,t_V$ of a polarizing
+  beamsplitter (C2), which is also the entry of a
+  \tref{polarization-dependent beamsplitter}, its $x_H,x_V$ recorded as
+  $t_H,t_V$; the output losses $y_1,y_2$ of C1 and C2 and the loss $y$ of a
+  retarder (C3), whose transmittances are $1-y_1$, $1-y_2$ and $1-y$; the
+  reflectivities $R_H,R_V$ of a mirror (C5); the transmittances $\eta_m$ of a
+  loss element (C7); the pass and leak transmittances $t,t_\perp$ of a
+  polarizer (C8); and the detector efficiencies $\eta_k$. Two elements may
+  carry equal numerical values; they are still two losses and appear as two
+  rows.
+\item \emph{The deficiency identity.} The identity \eqref{eq:deficiencyid} of
+  Lemma~\ref{lem:deficiency} holds for every receiver instrument, before and
+  after the layer $D_\eta$, and is the correct check that loss was accounted
+  for exactly once: its two summands are the amplitude that left through the
+  dilation and the amplitude that reached an unmonitored declared mode, and
+  neither carries a separate efficiency term; after the layer, the efficiency
+  loss is part of the dilation summand.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) $D_\eta$ is diagonal with entries in $[0,1]$, hence a positive semidefinite
+contraction, and a product of contractions is a contraction
+(Proposition~\ref{prop:mode-algebra}\,(ii)). The ports are pairwise disjoint, so
+$\Emd{\{k\}}D_\eta=\sqrt{\eta_k}\,\Emd{\{k\}}$, whence
+\begin{equation}
+  (D_\eta\Gmat)^\dagger_{\Inp}\Emd{\{k\}}(D_\eta\Gmat)_{\Inp}
+  =\Gmat_{\Inp}^\dagger D_\eta\Emd{\{k\}}D_\eta\Gmat_{\Inp}
+  =\eta_k\,\Gmat_{\Inp}^\dagger\Emd{\{k\}}\Gmat_{\Inp}=\eta_kA_k .
+\end{equation}
+A strictly positive scalar multiple of a matrix has the same rank.
+
+(ii) The displayed formula is the definition of the port Gram for the
+instrument $D\Gmat$. For the rank, $\Emd{\{k\}}D\Gmat_{\Inp}
+=D_k\big(\Emd{\{k\}}\Gmat_{\Inp}\big)$ where $D_k$ is the diagonal
+restriction of $D$ to $\Port{k}$, and $\rk(D_kY)\le\rk Y$ for any $Y$; the
+Gram of a matrix has the rank of that matrix. Strictness is exhibited in
+Remark~\ref{rem:effrank}.
+
+(iii) is read off Definition~\ref{def:compile}, in which $D_\eta$ is the one
+factor that carries the detector efficiencies.
+
+(iv) is a statement about the emitted artifact.
+
+(v) is Lemma~\ref{lem:deficiency}, which uses only that the
+\tref{instrument matrix} is a contraction; $D_\eta\Gmat$ is one by (i).
+\end{proof}

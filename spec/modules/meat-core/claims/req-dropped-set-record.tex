@@ -1,0 +1,30 @@
+% ---
+% id: meat-core/req:dropped-set-record
+% kind: req
+% title: "Recording the dropped set"
+% summary: >-
+%   A run records its dropped set and reports the dropped value under its own
+%   name together with that set; for a non-empty set, never under the name of
+%   the undropped value.
+% prominence: standard
+% status: implemented
+% uses: [def:dropped, prop:drop-bound]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.general_keyrate:GeneralKeyRateResult
+% lean:
+% ---
+
+A \tref{dropped set} is a choice of the run and not \tref{declared data},
+and the value it gives lies at or below $\hlow$
+(Proposition~\ref{prop:drop-bound}); the number means something only
+beside the set it was computed for.
+
+\begin{requirement}\label{req:dropped-set-record}
+A run records its dropped set $\mathcal{D}$ (Definition~\ref{def:dropped})
+with the run, and reports the number it computes from \eqref{eq:hlowD} as
+$\underline{h}^{\mathcal{D}}_{\alpha}$ together with $\mathcal{D}$, never,
+when $\mathcal{D}\neq\varnothing$, under the name $\hlow$.
+\end{requirement}

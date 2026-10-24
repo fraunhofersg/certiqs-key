@@ -1,0 +1,55 @@
+% ---
+% id: reductions/rem:relation-symbols
+% kind: rem
+% title: "Relation symbols at the channel and declaration levels"
+% summary: >-
+%   The consuming contract writes the relations operator-valued at the channel
+%   level and as comparisons of real numbers at the untrusted declaration
+%   level; both spellings denote the same three relations. Every entry this
+%   module emits carries a real constant and is admitted under either.
+% prominence: standard
+% status: accepted
+% uses: [def:attset]
+% mentions: [def:licensed, thm:licence, cor:entries, req:caller-constant-rounding, meat-core/def:roundmodel, meat-core/def:admissible-declaration, protocol-compiler/def:homog, foundations/req:rounding-direction]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:relation-symbols}
+The consuming contract splits the relation symbols between two
+\emph{levels}, not between the two source modes. At the \emph{channel} level,
+the adjoint-form sets themselves, \xref{meat-core/def:roundmodel} writes
+$\bowtie_k$ operator-valued in \emph{both} modes, comparing
+$\Aev^{\dagger}(\cdot)$ against $c_k\idon{E'}$; that is the spelling the two
+displays of Definition~\ref{def:attset} reproduce, with
+$\bowtie_k\in\{\preceq,=,\succeq\}$. At the \emph{declaration and state}
+level, \xref{meat-core/def:admissible-declaration}\,(vi) gives $\bowtie_k\in\{\preceq,=,\succeq\}$
+with $\Theta_k$ Hermitian on $A$ in trusted-source mode, and
+$\bowtie_k\in\{\le,=,\ge\}$ with $\Theta_k=c_k\in\mathbb{R}$ in
+untrusted-source mode, where the entry is a comparison of real numbers;
+\xref{protocol-compiler/def:homog} is on the same side, with the clause letters
+\emph{(a) trusted-source} and \emph{(b) untrusted-source}. That definition
+also fixes what \emph{licensed} means there: a licensed trusted entry declares
+a real $c_k$ and the right-hand side $\Theta_k\coloneqq c_k\tau_A$ is
+\emph{constructed} from it, while an entry that declares a Hermitian
+$\Theta_k$ is a general entry, admissible \emph{input} but never licensed.
+Nothing this module emits is touched by that: every entry it emits carries a
+real scalar $c_k$ and is written $(\hat O_k,\bowtie_k,c_k)$
+(Definition~\ref{def:licensed}, Theorem~\ref{thm:licence}\,(iv)). The two
+spellings denote the same three relations at the two levels; this contract
+states operator conditions throughout and so uses the operator spelling, and
+everything it emits is admitted under either.
+
+The entries it emits are those of Corollary~\ref{cor:entries}:
+$\bowtie\,=\,\succeq$ with $c=0$ for every sector projector (its part~(i)),
+the single equality entry $(\hat O,=,q_t)$ for a class-marginal entry where
+the instance discharges it (part~(ii)), and the constant at which its
+certificate is discharged for an instance's own or a caller's entry
+(part~(iii)). Every one of those constants is exact as declared, and the only
+rounding that can touch one is a caller's own constant off the declared
+lattice, which is rounded in the direction that \emph{enlarges} the
+admissible set (Requirement~\ref{req:caller-constant-rounding},
+\xref{foundations/req:rounding-direction}).
+\end{remark}

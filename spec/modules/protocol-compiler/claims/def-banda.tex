@@ -1,0 +1,45 @@
+% ---
+% id: protocol-compiler/def:banda
+% kind: def
+% title: "Band-A specification"
+% summary: >-
+%   A Band-A specification declares a finite measurement directly on one
+%   sector, with an empty source segment and one identity receiver link, given
+%   as data, that carries no constraints and delivers the declared
+%   measurement. It is the direct route, with no optical characterisation or
+%   photon-number step.
+% prominence: standard
+% status: implemented
+% uses: [transmitter/def:source-segment]
+% mentions: [reductions/ex:identity]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.declared_premises:is_band_a
+% lean:
+% notes: "reductions/ex:identity is a mention, an example being never used; the definition fixes the link in its own words, its outcome correspondence and target POVM included, since a link record carries both as data of their own beside its channel. Also realised by certiqs_key.protocol_compiler.chain:band_a_chain. The bound is_band_a decides the shape only (the recognition of req:band-a-ideal-receiver); the rest of (b), the channel given as data, gamma the identity and the target POVM the declared one, is decided by decide_band_a_identity_link (req:band-a-identity-link) and the chain's (C4)."
+% ---
+
+The one receiver link of a Band-A chain is the identity link of
+\xref{reductions/ex:identity}; the definition fixes that link in its own
+words. A link record carries its channel, its outcome correspondence and its
+\tref[target povm]{target POVM} as three separate data, so all three are
+fixed here: that the channel is the identity says nothing of the measurement
+the link delivers.
+
+\begin{definition}\label{def:banda}
+A specification is
+\term[The direct route: a finite measurement declared on one sector, an empty source segment and one identity receiver link, given as data, with empty slots, that delivers the declared measurement.]{Band A}
+when (a) its receiver part declares a POVM $\{\Fph_w\}_{w\in\Vph}$ directly on a
+finite-dimensional system, with no characterization step and no photon-number
+structure, and the emitted \tref{sector set} is the singleton $\SecSet=\{s_0\}$ with
+$\Pi_{s_0}=\idon{\Qsys}$; and (b) its \tref{reduction chain} has an \emph{empty
+\tref{source segment}}, $L_{\mathrm s}=0$ --- the source segment of
+\xref{transmitter/def:source-segment} at length zero, required here of a
+Band-A chain and of no other --- and a \tref{receiver segment} of one link, $L=1$,
+$\Lambda_1=\idmap_{\Qsys}$ supplied as data, with status \emph{exact},
+empty constraint slot and empty licence slot, whose outcome correspondence is
+the identity map $\gamma=\idmap$ on $\Vset=\Vph$ and whose
+target POVM is the declared family itself:
+$F_v=\Fph_v$, entry for entry, for every $v\in\Vset$.
+\end{definition}

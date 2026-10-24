@@ -1,0 +1,25 @@
+% ---
+% id: meat-core/req:single-sector-deletion
+% kind: req
+% title: "At most one deleted sector without the composition check"
+% summary: >-
+%   An implementation that does not check the set hypothesis of
+%   [[prop:removal-compose]] deletes at most one sector per run. A single
+%   deleted sector meets that hypothesis automatically.
+% prominence: technical
+% status: accepted
+% uses: [prop:removal-compose, def:classes]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}\label{req:single-sector-deletion}
+An implementation that will not check the hypothesis of
+Proposition~\ref{prop:removal-compose} deletes at most one sector per run,
+which is the safe reading of that hypothesis: a singleton
+$\SecSet_{\mathrm{del}}$ satisfies it automatically, by (W2) of
+Definition~\ref{def:classes}.
+\end{requirement}

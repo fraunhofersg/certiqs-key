@@ -1,0 +1,27 @@
+% ---
+% id: core-a/thm:bound
+% kind: thm
+% title: Bound on the first coordinate
+% summary: >-
+%   The first coordinate of a base object ([[def:object]]) is at most one when
+%   the second is nonnegative, so x ≤ 1. Consumers read the bound as a cap.
+% prominence: main
+% status: accepted
+% uses: [def:object, ass:leaf]
+% assumes: [A-LEAF]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The bound is the reason the object is useful; it follows from the defining
+identity in one line.
+
+\begin{theorem}\label{thm:bound}
+Under Assumption~\ref{ass:leaf}, every base object of
+Definition~\ref{def:object} satisfies $x \le 1$.
+\end{theorem}
+
+\begin{proof}
+By \eqref{eq:object}, $x = 1 - y \le 1$.
+\end{proof}

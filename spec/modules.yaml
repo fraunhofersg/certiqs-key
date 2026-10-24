@@ -1,0 +1,275 @@
+# =============================================================================
+#  spec/modules.yaml -- the module registry of CERTIQS-KEY.
+#
+#  STATUS: the working basis. It answers
+#  "what is a core, what is a submodule, what is instance data" for every
+#  piece of mathematics that exists or is planned. An open question about
+#  this file is an open item, never a comment in it.
+#
+#  Fields. `code:` starts with the path of the package under src/certiqs_key/
+#  that carries a module's code. `core_claims` and `claims` account for a
+#  module's scope; some of their lines name claim codes (C1-C22, PC1-PC12,
+#  PR1-PR13, RC1-RC12, SA1-SA9), the codes the frozen oracle registries pin
+#  claims by, and tests/oracles/claim_codes.yaml maps each code to claim ids.
+#  A submodule with `status: planned` has no claim files yet; one with
+#  `status: retired` has none and its id is never reused.
+#
+#  Vocabulary (PRINCIPLES.md §5): a CORE module holds the general claims a
+#  protocol needs regardless of device or attack; a SUBMODULE is a small claim
+#  bundle inside a core whose claims `use` the core's and that a protocol may
+#  or may not need (one squasher, one source model, one detector imperfection,
+#  one statistics method); INSTANCE DATA is numbers a protocol declares and
+#  lives in instances/, never in spec/. Module ids are stable once accepted:
+#  a retracted or merged module keeps its id in this file with
+#  `status: retired`, and an id is never reused. The ids
+#  finite-key-assembly, protocol-profiles, numerics-certification and
+#  proof-assembler, ids whose content is
+#  meat-core's, are not listed here and are never reused either.
+# =============================================================================
+
+schema_version: "1.0.0"
+status: accepted
+
+# -----------------------------------------------------------------------------
+#  CORE MODULES (proof-critical: claim files, verifier round, human acceptance)
+# -----------------------------------------------------------------------------
+cores:
+
+  - id: foundations
+    title: Foundations
+    one_line: The quantum-information preliminaries the entropy optimisation is written in (operator conventions and pinching, the sandwiched Rényi and classical divergences, the divergence kernel, the pinching lemma and two published pinching results), the round model with its attack sets and the round homogeneity the round assumptions assert (in full, or its sameness clause alone), and the number model, exact admissibility, the declared tolerance and the emission rules that the other modules rely on; at the bottom of the module graph.
+    depends_on: []
+    code: src/certiqs_key/foundations (the exact substrate and admission, the sector-block form, the measuring kernel, the snapping table, the tier vocabulary, the two hard errors and the divergence kernel; the floor of the import graph, importing nothing else of the repository); the pinching and trace-power code of def:pinching, def:renyi and lem:pinchmono is in src/certiqs_key/meat_core/objective, which reads meat-core's declared thresholds
+
+  - id: meat-core
+    title: MEAT key-rate engine
+    one_line: Solves the MEAT program and turns its value into a fixed-length key length, over a declaration in the general format, with an optional dropped set as a formulation choice of a run.
+    depends_on: [protocol-compiler, transmitter, reductions, foundations]   # the compiler's declaration, the transmitter's source licence, reductions' round model and A-TSM; foundations: the round model and the quantum-information preliminaries, which frank-wolfe inherits
+    core_claims:
+      - C1, C2 declaration to protocol channel and statistics map (the declaration definition takes the compiler's, protocol-compiler/def:declaration, and adds what this module reads)
+      - C3, C17 accumulation (sequential form; under a licensed constraint list)
+      - C8 master reduction to the convex block-diagonal feasible set (its step 1 proves the compiler's protocol-compiler/rem:block-restriction)
+      - C9a, C9b convexity and support (cor:concavity and thm:convexity here; the concavity fact and the divergence kernel they read are foundations/fact:concavity and foundations/lem:kernel)
+      - C10 sector classification; C4-C7 supporting structure (C4, the pinching identity, is foundations/fact:pinch-id; C6 is foundations/lem:pinchmono with its corollary cor:f-nonpos here)
+      - C11 Choi reformulation, C12 gradients, C16 the alpha -> 1 limit (the formulation every solver reads)
+      - C14, C15 fixed-length key length by leftover hashing, with the two claims a solver submodule attaches to (lem:estimate, and cor:keylength-bound, the key length from any lower bound on h_low)
+      - from C21 only lem:cone-concavity, prop:optol-nobound and rem:optol-direction (why the engine takes no tolerance)
+      - the general declaration format (lem:ensemble-form, lem:choi-factor, def:joint-sectors, lem:joint-sectors), the dropped set (def:dropped, cor:drop-program, prop:drop-bound) and prop:a-neutral; thm:removal refuses a party-local entry and more than one measured factor
+    submodules:
+      - id: frank-wolfe
+        one_line: The Frank-Wolfe linearization lower bound that is the first-order tier, the relaxed iterate set, the acceptance-side exact linear minimisation, the feasible-side minimum bounded from any multipliers in exact arithmetic, the same bound for the dropped program, and its certified evaluation at a run's final points that is the certified tier.
+        claims:
+          - C22 (thm:firstorder, lem:fo-face, lem:fo-khyp, cor:fo-keylength as an instance of the core's cor:keylength-bound)
+          - cor:fo-dropped, the first-order bound of the dropped program
+          - rem:acc-side, and the verified feasible side (lem:feasible-side-dual, req:verified-feasible-side); A-LMO (ass:lmo) is superseded
+          - the relaxed feasible set (def:relaxed-feasible-set, prop:relaxed-set-properties, rem:feas-tol)
+          - the first-order setting (def:first-order-setting), the fo remarks and the module's other remarks, and its requirements on the bound, the estimate, the iterates and their repairs, the acceptance side and the feasible side
+          - the certified evaluation (lem:certified-bracket, lem:certified-bracket-enclosed, cor:certified-keylength, cor:certified-keylength-reference, rem:certified-scope, req:certified-evaluation), on the core's lem:objective-homogeneous and lem:kraus-freedom and foundations' enclosure and matrix-function bounds
+        code: src/certiqs_key/solvers (frank_wolfe, oracles, capabilities; removable)
+        notes: A conic solver would be a sibling submodule attaching to the same two core claims (spec/future-scope.md section 7).
+      - id: first-order-bound
+        one_line: A retired id whose scope is frank-wolfe's.
+        status: retired
+        notes: The id is kept here and never reused.
+      - id: acceptance-lmo
+        one_line: The acceptance-side linear minimisation oracle over the acceptance set.
+        status: retired
+        notes: Its scope is frank-wolfe's, which carries its one remark, rem:acc-side. The id is kept here and never reused.
+    instance_data: [alpha, eps_pa, eps_ev, lambda_ec, rounds n]
+    notes: >-
+      The declared tolerance tau_num is NOT an input of this module
+      (spec/architecture.md 2.8), and the certified tier is the frank-wolfe
+      submodule's certified evaluation of its bound, narrow as PRINCIPLES.md
+      section 10 states it. Assumption ledger: A-SRC, A-TSM and the
+      round homogeneity of the declaration are the transmitter's, reductions'
+      and the compiler's; the dimension of the purifying register is part of
+      def:hqkd-list and no assumption, and so is the finite dimension of the
+      adversary's registers in every analysed model, a run's adversary
+      having memory of any dimension by cor:composed-security (A-EVE-DIM is
+      superseded); and the
+      attack-set licence is one file, protocol-compiler/ass:atk. The
+      marginal-constraint objects are this module's program facts.
+
+  - id: protocol-compiler
+    title: Protocol compiler
+    one_line: Turns a protocol specification, a receiver POVM and a reduction chain into the typed declaration the engine consumes, or refuses; in the general format, with one receiver entry per measuring party, and a declared conditional family is admitted or refused on its own condition.
+    depends_on: [receiver, reductions, transmitter, foundations]   # foundations: the number model and the exact admissibility def:exact strengthens; the transmitter owns the source stage, reductions the chain, the receiver the declared coarse-graining
+    core_claims:
+      - the interface definitions (declaration, exact admissibility, target conditions, feasible set, licensed list, statistics functional) and the well-posedness remark (rem:wellposed)
+      - PC1-PC6 compilation map, typing, block-diagonality by construction, weights (with the outcome-conditioned public choice of route C), sifting and party computability, feasibility, and the validator, which refuses whatever it cannot establish
+      - PC7-PC9 reduction-chain consumption, Band A, and the emission gates with the outcome table ((G2) a consumption gate on the transmitter artefact's licence record; no untrusted-mode fallback, rem:notfallback)
+      - the general declaration format (factor list, Alice's block lists, the factorised family, the ensemble form, the transcript, party-scoped entries), carried through def:spec, def:compile, def:weighted, def:validator, def:chaincond and thm:sifting-and-key to thm:gates; there (G3)(a) admits the party-local form as a third licensed type, and (G2) demands no global purity of an ensemble presentation with several Alice sectors, resting on rank-one blocks by theorem, while a general block-form certificate stays refused (spec/future-scope.md section 7)
+      - the assumptions A-SPEC, A-RHOM (key round_homogeneity_declaration), A-COIN, A-LINK, A-ATK and A-IDEAL, and the remark rem:block-restriction; A-SEQ, A-ENS and A-SRC are the transmitter's and A-RECV is the reductions'
+    code: src/certiqs_key/protocol_compiler
+    submodules:
+      - id: source-replacement
+        one_line: Source replacement and its certificate (SR1)-(SR3).
+        claims: [PC10, PC11]
+        status: retired
+        notes: Its claims are the transmitter core's. The id is kept here and never reused.
+    instance_data: [the BB84 declaration (PC12) lives in instances/bb84 and is no claim, alpha, purifier_dim, the route-C choice distribution P(f | t)]
+    notes: >-
+      Route C, the outcome-conditioned public choice, is applied after the
+      chain through reductions/lem:linear (i). The fine-grained outcome
+      alphabet needs no compiler claim change (V, gamma, a_B and phi already
+      admit it; the raw click pattern is the receiver's). The parity target
+      is tests/oracles/data/slice2-n1to5/.
+
+  - id: reductions
+    title: Proof reductions (squashing)
+    one_line: Reduces the physical measurement to a finite target POVM plus typed constraints, with the attack-set licence the engine needs, over both stages of a chain, the source map and the squashing map being two instances of one exact operational reduction.
+    depends_on: [receiver, transmitter, foundations]   # foundations: the number model and the exact admissibility def:exactadm strengthens; transmitter: def:link's source stage is its source link, and lem:source-transfer and thm:two-sided read its source identity (S3), its certificate conditions (SR1)-(SR3) and thm:certificate-sufficiency (iii)
+    core_claims:
+      - PR1-PR3 squashing relation, security transfer, reachable states and sound constraints
+      - PR4-PR5 the calculus (pre-order, linearity, pinching, tensor), the branching rule and the master lemma; PR7 flags are enough (a calculus lemma)
+      - PR8 the register-conditioned mixture, lifted to the core's instance theorems (thm:instrument-instance at lem:master's generality, cor:register-instance)
+      - PR10 event-level bounds cannot be POVM-encoded (so the constraint slot is mandatory)
+      - PR11 the A-ATK attack-set licence, which the core's artifact and emission emit
+      - PR12-PR13 the reduction artifact, the number model and the emission obligation, stated over def:reduction-instance (data sectors, scalar sectors, an existence theorem with a stability clause, certified entries), with the identity and flag instances proved in the core
+      - rem:sound-and-atk, the soundness of the emitted constraint list as a conclusion of thm:chain, cor:entries and thm:licence (proved, not assumed as A-SOUND), and def:system-setting, the setting half of A-DIM
+      - the generic exact operational reduction, with lem:precomposition, lem:source-transfer and thm:two-sided; the source map and the squashing map are two of its instances, and the ordering rule is a theorem
+      - lem:precomposed-instance, a reduction instance precomposed with a channel on its physical system (a known loss in front of the device)
+      - the party wording, the party-local licensed form (the one place gate (G3)(a) is widened) and the factor emission of several measuring parties
+    submodules:
+      - id: wpfss
+        one_line: The flag-state squasher and the multi-bound weight-preserving chain, the receiver weight route, and the flat-instance emission (cor:emitted-flat).
+        claims: [PR6, def:weight-route (it reads the receiver's per-setting floors), prop:flat-instance, cor:emitted-flat, cor:normalized-flat (the flat instance of a normalized station), rem:receiver-imports]
+      - id: mixture
+        one_line: Register-conditioned classical mixture of squashers.
+        claims: [PR8]
+        status: retired
+        notes: PR8 is a core claim and its lift is the core's cor:register-instance. The id is kept here and never reused.
+      - id: attack-license
+        one_line: The A-ATK attack-set licence a reduction emits.
+        claims: [PR11]
+        status: retired
+        notes: The core's thm:chain and cor:entries emit the licence, so PR11 is core. The id is kept here and never reused.
+      - id: family-reduction
+        one_line: Squashing a certified family of receiver POVMs to one fixed target (common quantum core, composed target with a low/high tag).
+        claims: [new; it attaches at prop:common and thm:instrument-instance]
+        status: planned
+        notes: Needs receiver/characterization first. The domination submodule's family-dominating link and its reserved declared weight A-DOM are the first step toward it.
+      - id: domination
+        one_line: The domination link, a noise channel followed by a family with classical flags, and its chain rule; kept as mathematics for declared device ranges (A-DOM, future scope). No requirement emits a link; snaps are handled by the reference companion (meat-core/frank-wolfe/req:bracket-on-reference).
+        claims: [def:domination-link, thm:noise-channel (derived from lem:master and prop:common; nahar2025imperfect Thm. 3), cor:dom-chain, rem:rotated-projective]
+        assumptions_reserved: [A-DOM, a declared domination weight from device ranges (spec/future-scope.md)]
+        notes: Depends on wpfss. The link kind family-dominating is neither implemented nor reserved; a request that declares it is refused. General-channel reductions of idealised models (a common unitary, the tensor-basis isometry) are future scope.
+    instance_data: [photon cutoff N, lattice exponent kappa, weights, constants, Blmode]
+    notes: >-
+      A minimal generic core whose emission theorems are stated over an
+      abstract reduction instance, and submodules that extend it. The
+      round-type relabelling is the compiler's; reductions narrows only
+      rem:intertwining and post_processing_order, which leaves the compiler
+      free to relabel.
+
+  - id: receiver
+    title: Receiver POVM
+    one_line: Compiles declared passive optics and threshold detectors into photon-number-block POVMs with certified high-photon bounds.
+    depends_on: [foundations]   # the round homogeneity its A-ROUND asserts of the instrument, the probe declaration and the dark-count channel
+    core_claims:
+      - RC1-RC5 mode algebra, second quantisation, element-graph compilation, port Grams and dilation (with the deficiency identity, lem:deficiency, which carries part of RC10), representation independence
+      - RC6-RC7 click-pattern POVM and declared coarse-graining
+      - RC8-RC9 uniform high-photon multiclick bound and its floating-point evaluation with residuals, stated over the abstract setting family (def:setting-family) so that the core never uses a submodule claim; the unconditioned receiver is the core's instance, and a submodule that constructs another proves it there; the per-setting multi-click floors (def:slot, prop:slotvalid)
+    submodules:
+      - id: detector-imperfections
+        one_line: Efficiency applied exactly once, dark counts as a classical outcome channel, the within-port non-uniform-efficiency branch, and the efficiency normalization that hands part of a probe-free receiver's efficiency to the channel as pure loss, by default the transmittance eta_max/(99/100), or none where eta_max >= 99/100.
+        claims: [RC10, RC11, the dark-channel tolerance rule (def:darktol, item (iii) of the core's def:tolmap) and the cost of the widened admission (rem:d2slack), the within-port non-uniform-efficiency branch of thm:efficiency, the efficiency normalization (def:pure-loss, def:normalized-station, lem:pure-loss-lift, prop:efficiency-normalization, its remarks and requirements)]
+      - id: characterization
+        one_line: From calibration data (Protocols 1 and 2) to a certified family of port-Gram tuples with its uncertainty set.
+        claims: [new; spec/future-scope.md section 11]
+        status: planned
+        notes: Empty until a human opens it; its scope is spec/future-scope.md section 11.
+      - id: component-catalogue
+        one_line: "The admissible optical components and receiver families a declaration may compose (today: the passive polarisation BB84 receiver)."
+        claims: [RC3, the C10 tolerance rule (def:c10-tolerance), the three BB84 examples (ex:bb84, ex:bb84bound, ex:bb84exact)]
+        notes: Receiver families are entries here; geometry is instance data.
+    instance_data: [mode space, port map, eta_k, p_dc, probe states rho^(t), cutoffs, tolerances, HWP angles, fibre set]
+    notes: >-
+      Not modelled and not planned: afterpulsing, dead time, timing jitter,
+      crosstalk. A `wavelength-fibres` submodule for wavelength-dependent
+      fibres is a candidate only.
+
+  - id: transmitter
+    title: Transmitter (source model)
+    one_line: Alice's declared preparation and retained system, the source modes, the source-replacement certificate in its three declared forms and the source-link type with its soundness registry; the device leaf on Alice's side, symmetric with receiver.
+    depends_on: []
+    core_claims:
+      - the two source modes (trusted-source with a declared marginal, untrusted-source)
+      - one source attestation, A-SRC (ass:src), the retention of Alice's system in trusted-source mode
+      - the source-replacement certificate (SR1)-(SR3) and PC10/PC11, in three declared forms (pure, block and the ensemble presentation)
+      - Alice's declared sector structure, one sector by default, and the matched pinching a certificate reaches
+      - the source-link type with its declared descriptor family, obligation triple and emitted soundness registry, and its Alice-side descriptor discipline; the kind vocabulary is open to a submodule's kinds, the core's own source-map keeping its declaration and its refusal
+    submodules:
+      - id: decoy
+        one_line: The weak-coherent-pulse source model, the tagged virtual source with its two cutoffs and flags, and the tagging link kind; the link is composed in reductions.
+        claims: [def:wcp-model and its attestation A-WCP, def:tagged-source with the cutoffs, the flags and the matched sector map, prop:tagging (the source identity, rounded-down weights derived here), prop:decoy-cert, cor:emitted-decoy (an ensemble presentation that declares its weighted blocks and compresses nothing), rem:cutoffs, rem:no-intensity-split]
+        notes: The link is carried by the decoy_bb84 instance, through the compiler's consumer of an ensemble presentation.
+      - id: characterization
+        one_line: A certified or partially characterized source (state-preparation flaws, an uncertainty set on the ensemble), the counterpart of receiver/characterization.
+        claims: [new; spec/future-scope.md section 6]
+        status: planned
+        notes: Empty until a human opens it.
+    instance_data: ["the ensemble {p_x, rho_x}", the declared basis, d_A, "the certificate triple (tau_A, Psi, virtual ensemble)"]
+    notes: >-
+      Boundary: the module owns statements about Alice's preparation and her
+      retained system. The marginal-constraint objects (meat-core's def:homog,
+      the feasible set's omega_A = tau_A, the Choi parametrisation) are
+      meat-core's program facts, which read the source mode this module
+      defines. PC10 is carried as a `fact` (fact:sr). A-SEQ is carried here
+      because it is the hypothesis of the import.
+
+  - id: statistics
+    title: Acceptance statistics
+    one_line: Builds the acceptance set and its completeness certificate from the honest model (one law, or a per-outcome envelope of laws).
+    depends_on: [reductions]   # the claim-graph edge for A-TSM (reductions/ass:tsm) only; the code imports domain/ only
+    core_claims:
+      - SA1 geometry taxonomy, SA2 binomial tails, SA8 acceptance support and the exact box LMO with dual witness
+      - the honest envelope, a per-outcome range [p^-, p^+] (def:envelope) inside which, under A-HON-ENV (ass:hon-env), each round's conditional law given the past stays; one honest law is the degenerate envelope (lem:hon-degenerate)
+    submodules:
+      - id: binomial-box
+        one_line: The per-outcome box construction stated over an admissible endpoint rule and a per-outcome honest envelope, its completeness bound, and the rules as claim groups inside it; the exact binomial quantile (sweep and local-enclosure evaluation) and Bernstein.
+        claims:
+          - def:endpoint-rule and lem:guard; SA4, SA5, SA6, SA7 stated over the rule; SA3 as prop:rule-exact
+          - "the enclosure evaluation of the exact rule: lem:log-enclosure, lem:stirling-enclosure, lem:pmf-enclosure, lem:tail-majorant, prop:bracketed-endpoints, rem:local-evaluation (no exp-enclosure lemma is needed, the window sum being carried as exact multiples of one mass point)"
+          - "the Bernstein rule: lem:bernstein-tail, prop:rule-bernstein, rem:completeness-on-rules"
+          - "the box over the honest envelope: lem:envelope-dominance, rem:envelope"
+        notes: >-
+          The request carries endpoint_rule {exact, bernstein} and
+          tail_evaluation {sweep, enclosure}, default exact + sweep; the
+          Chernoff-KL rule is deferred to spec/future-scope.md section 12.
+      - id: singleton
+        one_line: The singleton acceptance set.
+        claims: [SA9]
+        depends_on: [binomial-box]   # rem:singleton-honest uses thm:completeness-bound and thm:monotonicity-limits
+    instance_data: [p_hon or an honest envelope (lower, upper), rounds n, eps_comp, constrained outcomes, budget allocation, endpoint rule]
+    notes: >-
+      Scaling: the running-sum sweep from zero is linear to quadratic in n per
+      constrained outcome, local tail enclosures make the exact rule O(log n)
+      per endpoint, and Bernstein is the closed-form, n-monotone alternative.
+      The enclosure lemmas are self-contained (no transcendental dependency;
+      dyadic directed rounding), and every lemma is newly-derived with a full
+      proof, the classical result named in prose and nothing registered in
+      refs/. The core is the taxonomy, the tail identity, the support/LMO and
+      the honest envelope, and holds no endpoint rule: the rules live in
+      binomial-box because the box is one statistics method and another
+      would be a sibling submodule.
+
+# -----------------------------------------------------------------------------
+#  SHARED TIERS (not proof-critical: ordinary review, no claim files)
+# -----------------------------------------------------------------------------
+shared:
+  - id: domain
+    one_line: "The shared format: the operator bundle manifest and HDF5 arrays, the factorised family, the reduction-chain records, the run manifest; it imports foundations (the sector-block operators, the measuring kernel and snap table and the tier enum) and no module package."
+    notes: >-
+      The sector-block-diagonality predicate is foundations' (the sector map
+      and the block operator, one implementation that the compiler and the
+      reductions package both import), and the assumption manifest every
+      result carries (PRINCIPLES.md §2.1) is written by runs. The assumption
+      registry itself is the set of `ass` claim files with short ids; domain
+      reads it, it does not define it.
+  - id: runs
+    one_line: "Composition root: run configuration, the ordered pipeline, the result record with its assumption manifest, sweeps."
+    notes: runs owns `rounds`, a datum no module owns.
+  - id: instances
+    one_line: "One directory per protocol instance: its declaration, parameters, channel model and honest distribution."
+    notes: Instances live at the repository top level (instances/), not under src/, so a user sees where to dock.

@@ -1,0 +1,100 @@
+% ---
+% id: receiver/lem:exactwindow
+% kind: lem
+% title: "Exact window with an analytic remainder"
+% summary: >-
+%   Lower estimates of the exact block bound on finitely many blocks above the
+%   cutoff, combined with an admissible remainder for the blocks beyond them,
+%   give a weight in [0,1] that bounds the multiclick element on every block
+%   above the cutoff. Three admissible choices are named.
+% prominence: standard
+% status: implemented
+% uses: [thm:multiclick-bound, lem:exactbasic, lem:windowtail, lem:collapse]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.bound:exact_composite
+% lean:
+% ---
+
+The lemma turns information about finitely many blocks into a bound uniform
+over all blocks above the cutoff: a lower estimate on each exact block in a
+window, and a remainder that covers every block beyond it. The three choices
+listed at its end are all this contract uses.
+
+\begin{lemma}\label{lem:exactwindow}
+Let the hypotheses of Theorem~\ref{thm:multiclick-bound} hold together with
+\eqref{eq:mcpos}, let $N\ge0$, and let
+$m^{\ast}>N$ be an integer. Let $\ell(n)$, $N<n\le m^{\ast}$, be reals with
+\begin{equation}\label{eq:ellhyp}
+  \ell(n)\ \le\ \Bnd^{\ast}(n)\qquad\text{for }N<n\le m^{\ast},
+\end{equation}
+and let $\tau$ be a real with
+\begin{equation}\label{eq:tailadm}
+  \tau\le0
+  \qquad\text{or}\qquad
+  \tau\le\inf_{n>m^{\ast}}\Bnd^{\ast}(n).
+\end{equation}
+Then
+\begin{equation}\label{eq:exactcomposite}
+  P\ \coloneqq\ \max\Big\{0,\ \min\Big\{\ \min_{N<n\le m^{\ast}}\ell(n),
+   \ \ \tau\ \Big\}\Big\}
+\end{equation}
+satisfies $0\le P\le1$ and
+\begin{equation}\label{eq:exactstatement}
+  \blk{M}{\gtN}_{\mc}\ \succeq\ P\,\id^{(>N)} .
+\end{equation}
+Three choices are admissible:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $\tau=T_{m^{\ast}}$ of \eqref{eq:windowtail}, formed from the bound
+  data $\big(\gamma,\{\beta_k\},c,\{d_k\}\big)$ that
+  Theorem~\ref{thm:multiclick-bound} forms by \eqref{eq:cd}, satisfies
+  \eqref{eq:tailadm} with no further hypothesis;
+\item if the bound data satisfy \eqref{eq:collapsehyp}, then
+  $\tau=\Bnd(m^{\ast}+1)$ satisfies \eqref{eq:tailadm};
+\item $\ell(n)=\Bnd(n)$ satisfies \eqref{eq:ellhyp}, and the pointwise maximum
+  of finitely many admissible choices of $\ell$ is admissible.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Step 1 (range of $P$).} $0\le P$ is the outer maximum. For $P\le1$:
+either $P=0$, or $P\le\ell(N+1)\le\Bnd^{\ast}(N+1)\le1$ by \eqref{eq:ellhyp}
+and \eqref{eq:exactbasic}, which needs no more than the hypotheses of
+Theorem~\ref{thm:multiclick-bound}, the window being non-empty because
+$m^{\ast}>N$.
+
+\emph{Step 2 (the bound \eqref{eq:exactstatement}).} If $P=0$ the assertion is
+$\blk{M}{\gtN}_{\mc}\succeq0$, and this is the one step that uses
+\eqref{eq:mcpos}: that hypothesis gives $\blk{M}{\eqn}_{\mc}\succeq0$ on every
+block (Lemma~\ref{lem:exactbasic}), hence on their direct sum. So let $P>0$.
+Then
+$P=\min\{\min_{N<n\le m^{\ast}}\ell(n),\ \tau\}$, and in particular
+$\tau\ge P>0$, so the first disjunct of \eqref{eq:tailadm} fails and the second
+holds. Take any $n>N$. If $n\le m^{\ast}$ then $\Bnd^{\ast}(n)\ge\ell(n)\ge P$
+by \eqref{eq:ellhyp}; if $n>m^{\ast}$ then
+$\Bnd^{\ast}(n)\ge\inf_{j>m^{\ast}}\Bnd^{\ast}(j)\ge\tau\ge P$. Either way
+$\lmin(\blk{M}{\eqn}_{\mc})\ge P$, that is
+$\blk{M}{\eqn}_{\mc}\succeq P\,\id^{(=n)}$; the blocks with $n>N$ are
+orthogonal direct summands, and a lower bound holding on each holds on the
+direct sum.
+
+\emph{Step 3 (choice (i)).} For $n>m^{\ast}$, $d_k\le1$ gives
+$d_k^{\,n}\le d_k^{\,m^{\ast}}$ and $\gamma c^{\,n}\ge0$, so
+$\Bnd(n)\ge1-\sum_k\beta_kd_k^{\,n}\ge
+1-\sum_k\beta_kd_k^{\,m^{\ast}}=T_{m^{\ast}}$, the tail step of
+Lemma~\ref{lem:windowtail}\,(i); and $\Bnd^{\ast}(n)\ge\Bnd(n)$ by
+Lemma~\ref{lem:exactbasic}. Hence
+$\inf_{n>m^{\ast}}\Bnd^{\ast}(n)\ge T_{m^{\ast}}$.
+
+\emph{Step 4 (choice (ii)).} If $\Bnd(m^{\ast}+1)\le0$, the first disjunct of
+\eqref{eq:tailadm} holds. Otherwise $\Bnd(m^{\ast}+1)>0$ and
+Lemma~\ref{lem:collapse}, applied with cutoff $m^{\ast}$ in place of $N$,
+gives $\inf_{n>m^{\ast}}\Bnd(n)=\Bnd(m^{\ast}+1)$; with
+$\Bnd^{\ast}\ge\Bnd$ pointwise this is
+$\inf_{n>m^{\ast}}\Bnd^{\ast}(n)\ge\Bnd(m^{\ast}+1)$, the second disjunct.
+
+\emph{Step 5 (choice (iii)).} The first statement is
+Lemma~\ref{lem:exactbasic}. For the second, a maximum of finitely many
+numbers each at most $\Bnd^{\ast}(n)$ is at most $\Bnd^{\ast}(n)$.
+\end{proof}

@@ -1,0 +1,117 @@
+% ---
+% id: meat-core/frank-wolfe/lem:fo-khyp
+% kind: lem
+% title: "Positivity needed only on the acceptance support"
+% summary: >-
+%   Every accepted distribution vanishes outside the acceptance support, so
+%   the terms of the objective indexed there vanish at every per-block positive
+%   point. The gradient's positivity hypotheses are therefore needed only on
+%   the acceptance support, and for the branch quantity only on its key-live part.
+% prominence: standard
+% status: implemented
+% uses: [meat-core/thm:accumulated-entropy, meat-core/prop:value-range, meat-core/cor:full-gradient, meat-core/thm:branch-formula, def:relaxed-feasible-set, foundations/def:kl, meat-core/thm:choi, def:first-order-setting, meat-core/def:admissible-acceptance-set]
+% mentions: [thm:firstorder, rem:acc-side, req:first-order-withdrawal, meat-core/rem:hlow-range]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.gradient:check_gradient_hypotheses
+% lean:
+% ---
+
+Hypothesis (H-POS) of Theorem~\ref{thm:firstorder} asks for positive
+probabilities only on the \tref{acceptance support} $\Chacc$, because that
+is where the lemma below shows it is consumed; on all of $\Chatset$ it
+would be unsatisfiable whenever $\Chacc\subsetneq\Chatset$, a case
+Definition~\ref{def:admissible-acceptance-set} admits and Remark~\ref{rem:acc-side} handles, so
+the \tref{first-order} tier would be unreachable for a whole class of
+declarations for no mathematical reason. Part~(i) names the non-emptiness
+of $\acSet$ because Definition~\ref{def:admissible-acceptance-set} admits $\varnothing$, where
+the first clause has no witness to name. That case is degenerate
+throughout and nothing rests on it: $\Chacc=\varnothing$ by
+\eqref{eq:chacc-def}, no $x_t\in\acSet\times\Feas^{J}$ exists, so $\Itset$
+is empty and no $\hlb$ is reported
+(Requirement~\ref{req:first-order-withdrawal}),
+$\hlow=+\infty$ as an infimum over an empty set, and the hypothesis
+$\Pr[\OmAT]>0$ of Theorem~\ref{thm:accumulated-entropy} fails, so no key
+length is claimed (Remark~\ref{rem:hlow-range}).
+
+\begin{lemma}\label{lem:fo-khyp}
+Let $\Chacc$ be the acceptance support \eqref{eq:chacc-def} of the
+acceptance set $\acSet$ of Definition~\ref{def:admissible-acceptance-set}.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item If $\acSet\neq\varnothing$, $\Chacc$ is the support of a single
+element of $\acSet$; and, whether or not $\acSet$ is empty, every
+$\mathbf q\in\acSet$ vanishes outside $\Chacc$.
+\item On $\acSet\times\Feas^{J}(\varepsilon)$, for every
+$\varepsilon\ge0$ and in particular on the exact
+$\acSet\times\Feas^{J}$, every term of $O^{J}_{\alpha}$ indexed by
+a $\hat c\notin\Chacc$ vanishes identically, so $O^{J}_{\alpha}$ restricted
+to that set is a function of $(\mathbf q|_{\Chacc},J)$ alone; and for
+$\mathbf q,\mathbf q'\in\acSet$ every feasible direction has
+$q'(\hat c)-q(\hat c)=0$ at every $\hat c\notin\Chacc$. The only property
+of the $J$ factor the first clause reads is per-block positive
+semidefiniteness, so the first clause holds at every per-block positive
+semidefinite point whatever, of which $\Feas^{J}(\varepsilon)$ is one
+family.
+\item Corollary~\ref{cor:full-gradient} holds on
+$\acSet\times\Feas^{J}(\varepsilon)$, for every $\varepsilon\ge0$,
+with its hypothesis ``$q(\hat c)>0$, $P^{J}_{\hat c}>0$ and
+$K^{J}_{\hat c}>0$ for all $\hat c$'' weakened to: $q(\hat c)>0$ and
+$P^{J}_{\hat c}>0$ for every $\hat c\in\Chacc$, and $K^{J}_{\hat c}>0$ for
+every $\hat c\in\Chkey\cap\Chacc$. Then \eqref{eq:grad-q} is read as a
+vector in $\mathbb{R}^{\Chacc}$ and the sums of \eqref{eq:grad-J} are
+restricted to $\Chacc$, respectively to $\Chkey\cap\Chacc$; both
+restrictions are identities on that set, not truncations.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) Suppose $\acSet\neq\varnothing$. Choose one
+$\mathbf q_{\hat c}\in\acSet$ witnessing each
+$\hat c\in\Chacc$ and average the finitely many of them with equal
+positive weights: the result lies in $\acSet$, which is convex by
+Definition~\ref{def:admissible-acceptance-set}, and the support of a positively weighted convex
+combination of non-negative vectors is the union of their supports, which
+is $\Chacc$. (If $\Chacc=\varnothing$ the average is over the empty index
+set and any element of the non-empty $\acSet$ serves, its support being
+empty by \eqref{eq:chacc-def}.) No element of $\acSet$ has support outside
+$\Chacc$, by \eqref{eq:chacc-def}, and that clause quantifies over a set
+that may be empty, so it needs no witness.
+
+(ii) Let $\hat c\notin\Chacc$, so $q(\hat c)=0$ for every
+$\mathbf q\in\acSet$ by (i), whence also $q'(\hat c)-q(\hat c)=0$. By
+the cone clause of Theorem~\ref{thm:branch-formula},
+$0\le K^{J}_{\hat c}\le P^{J}_{\hat c}$ at every per-block positive
+semidefinite point, hence at every point of $\Feas^{J}(\varepsilon)$ for
+every $\varepsilon\ge0$, per-block positive semidefiniteness being the
+one condition that set does not relax
+(Definition~\ref{def:relaxed-feasible-set}); and by the convention
+$0\log_2\frac0v=0$ of \xref{foundations/def:kl}, which is stated for every
+$v\ge0$, the case $v=0$ included, the term
+$\frac{\alpha}{\alpha-1}q(\hat c)\log_2\frac{q(\hat c)}{P^{J}_{\hat c}}$
+and, when $\hat c\in\Chkey$, the pair
+$q(\hat c)\log_2\frac{q(\hat c)}{P^{J}_{\hat c}}
++\frac{q(\hat c)}{\alpha-1}\log_2\frac{q(\hat c)}{K^{J}_{\hat c}}$
+are $0$ at \emph{every} point of $\acSet\times\Feas^{J}(\varepsilon)$,
+whatever $P^{J}_{\hat c}$ and $K^{J}_{\hat c}$ are there and in particular
+when one of them vanishes. Deleting those terms changes no value of
+$O^{J}_{\alpha}$ on that set. No normalisation, coupling condition or
+declared row is read in this argument, which is why the statement is on
+the relaxed sets and not on the exact set alone.
+
+(iii) By (ii), on $\acSet\times\Feas^{J}(\varepsilon)$ the corollary
+differentiates a sum from which the $\hat c\notin\Chacc$ terms have been
+deleted, so neither its statement nor its proof evaluates $q(\hat c)$,
+$P^{J}_{\hat c}$ or $K^{J}_{\hat c}$ at such a $\hat c$; and
+$K^{J}_{\hat c}$ occurs in \eqref{eq:choi-program} only inside the sum
+over $\hat c\in\Chkey$, so it is evaluated at no $\hat c\notin\Chkey$
+either: in \eqref{eq:grad-q} the $K$-bearing branch is the case
+$\hat c\in\Chkey$, and in \eqref{eq:grad-J} the $K$-bearing terms are the
+sum over $\hat c\in\Chkey$. A hypothesis with no consumer in either the
+statement or the proof may be dropped from both. That the surviving
+gradient is the right object for every use this submodule makes of it is
+the second half of (ii): a component of \eqref{eq:grad-q} indexed outside
+$\Chacc$ is, in every pairing of this submodule, multiplied by a component
+of a feasible direction that is $0$, so it contributes nothing and its
+value, finite, undefined or $-\infty$, is never read.
+\end{proof}

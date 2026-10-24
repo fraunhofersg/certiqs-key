@@ -1,0 +1,39 @@
+% ---
+% id: meat-core/req:structure-operations
+% kind: req
+% title: "Operations on the declared sectors"
+% summary: >-
+%   The engine never edits the declared sector list: it evaluates the objective
+%   over the key-active sectors and deletes from the variable list only a set
+%   of flagged sectors that meets the composition hypothesis. It never merges
+%   or averages sectors.
+% prominence: standard
+% status: implemented
+% uses: [prop:removal-compose, prop:no-averaging, def:keyactive]
+% mentions: [prop:retention, prop:exact-cancellation, def:classes, thm:removal, req:removal-checklist]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.declaration.sectors:delete_sectors
+% lean:
+% ---
+
+Dropping a constraint-active sector (Proposition~\ref{prop:retention}) and
+averaging sectors (Proposition~\ref{prop:no-averaging}) can both overstate
+the key, while the two operations below are identities.
+
+\begin{requirement}\label{req:structure-operations}
+The engine treats the declared sector list as input it never edits; sectors
+leave the variable list only by the deletion of~(ii). The operations
+it may perform on the declared sectors are exactly: (i) evaluate the
+objective over the key-active sectors only (Definition~\ref{def:keyactive};
+an identity, by Proposition~\ref{prop:exact-cancellation}); (ii) delete
+sectors carrying the flag \iface{removable} of
+Definition~\ref{def:classes}\,(d), set as
+Requirement~\ref{req:removal-checklist} states --- and only those, and among those only
+a set meeting the hypothesis of Proposition~\ref{prop:removal-compose},
+every deleted sector's witness naming targets outside the deleted set (an
+identity, by Theorem~\ref{thm:removal} and that proposition); (iii) nothing
+else. In particular no simplification step merges sectors, and the only
+structure-changing simplification is the deletion of~(ii).
+\end{requirement}

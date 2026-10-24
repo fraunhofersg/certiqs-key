@@ -1,0 +1,332 @@
+% ---
+% id: transmitter/decoy/cor:emitted-decoy
+% kind: cor
+% title: "The emitted decoy declaration"
+% summary: >-
+%   The emitted decoy declaration has an exact certificate against the tagged
+%   ensemble, its source identity by the tagging channel, and block-diagonal
+%   attacked states. Exactness is decided on products of declared weights and
+%   formed dyad entries; lowering a weight gives another tagged declaration.
+% prominence: main
+% status: implemented
+% uses: [def:wcp-model, def:tagged-source, prop:tagging, prop:decoy-cert, transmitter/def:source-spec, transmitter/def:source-link, transmitter/def:source-segment, transmitter/def:srcert, transmitter/lem:ensemble-presentation, transmitter/thm:certificate-sufficiency, transmitter/lem:matched-pinching]
+% mentions: [rem:decoy-consumers, lem:poisson-enclosure, req:sector-weight-bound, req:signal-dyads, req:exact-decoy-blocks, req:decoy-emission]
+% assumes: [A-WCP, A-SRC, A-SEQ]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.decoy.emit:emit_decoy_declaration
+% lean:
+% notes: "The corollary is a statement about a declaration and its mathematics; whether a consumer's code reads an ensemble presentation is an implementation fact, recorded in the interface and not here. Part (iv)(b) exhibits bases only for polarisations among the four of D, at one photon with at least two of them and at two photons with at least three, and asserts nothing at three or more photons, for fewer polarisations or for other polarisations; at one photon the exhibited dyads carry the entry 1. Part (ii)(b) states admission inside an artefact with A-WCP in its ledger because no hypothesis here fixes the ledger's contents; req:decoy-emission demands that artefact and cannot be used, since it uses this corollary."
+% ---
+
+The emission is the step of this submodule that outputs a
+\tref{tagged source declaration} as a decoy declaration; the emitted
+declaration is that output, a record and not a pulse. It declares the tagged
+virtual ensemble itself, sector by sector, and defines everything on Alice's
+side from it. The corollary collects what such a declaration satisfies: a
+certificate and a \tref{source specification} (i), the source identity at the emitted descriptors and the
+admission of its segment (ii), what the certificate reaches (iii), the entries
+on which exactness is decided for a particular declaration (iv), and the effect
+of lowering a weight (v), which gives a different declaration and not a
+perturbation of the first one. The inequality on the weights is decided by
+the emission against the rational lower bound on $P_\mu(\mathsf{n})$ of
+Lemma~\ref{lem:poisson-enclosure} (Requirement~\ref{req:sector-weight-bound}),
+and the entries of the signal dyads are formed by the construction of (iv)(b)
+(Requirement~\ref{req:signal-dyads}). A-SEQ and A-SRC enter through
+Theorem~\ref{thm:certificate-sufficiency} and Lemma~\ref{lem:matched-pinching}, in (i) and (iii).
+A-WCP is the physical-source assumption that a specification declared by this
+source model carries (Definition~\ref{def:source-spec}, case (b)) and that the
+\tref{obligation record} of (ii) names; it is no hypothesis of
+Proposition~\ref{prop:tagging}. The artefact the emission outputs lists A-WCP
+in its assumption ledger (Requirement~\ref{req:decoy-emission}), so the
+admission of its segment in (ii) applies there. Part (iv) matters because
+the emission requires every formed entry to be a binary64 number and refuses one that is not
+(Requirement~\ref{req:exact-decoy-blocks}). Remark~\ref{rem:decoy-consumers}
+says what the consuming modules do with the declaration.
+
+\begin{corollary}\label{cor:emitted-decoy}
+Let a \tref{weak-coherent-pulse model} (Definition~\ref{def:wcp-model}) and a tagged
+source declaration over it (Definition~\ref{def:tagged-source}) be presented,
+with the certified inequality \eqref{eq:weightineq},
+$0\le\tilde p(\mathsf{n}\mid\mu)\le P_\mu(\mathsf{n})$, discharged for every
+$\mathsf{n}\le N_{\mathrm{src}}$ and every intensity $\mu\in\mathrm{Int}$. Its
+\emph{decoy declaration} is the ensemble presentation, in the sense of
+Definition~\ref{def:srcert}, whose declared data are exactly
+\begin{itemize}[leftmargin=1.6em]
+\item the alphabet $\Xset$ with its declared order and the weights $p_x$;
+\item the matched sector structure, matched meaning that Alice's system and
+  $\Avirt$ carry one ordered index set: the sectors $S_t$ of
+  Definition~\ref{def:tagged-source}\,(T3) that some letter puts positive
+  weight on, in the declared order of $\mathbb{T}$, each with its orthonormal
+  basis of (T3);
+\item the weighted blocks $\sigma^{\mathrm v,(t)}_x=p_xw_{x,t}
+  \dyad{\varphi_{x,t}}$ of \eqref{eq:decoy-blocks}, as block lists;
+\item the specified ensemble $\{p_x,\rho_x\}$ of the model as the source model,
+  the \tref{source segment} with the one tagging link of
+  Definition~\ref{def:tagged-source}\,(T6) and its obligation record, and the
+  assumption ledger;
+\end{itemize}
+so that no retained system, no measurement, no marginal and no certificate is
+among them. Below, \emph{emitted} refers to this decoy declaration: the emitted
+\tref{source descriptor}, segment and assumption ledger are the ones it
+declares. Then
+the following hold.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(a certificate, and an admissible specification)} where (E1) to
+(E3) of Definition~\ref{def:srcert} hold of the declared blocks, the objects
+\eqref{eq:enspres} --- the retained system $A=\bigoplus_tA_t$ with $A_t$ a copy
+of $S_t$, the marginal $\tau_A$, the POVM $\{M_x\}$ and the blocks
+$(\Psi_t)_t$ --- are a source-replacement certificate in \tref{block form}
+with every non-zero block a multiple of a rank-one projector, satisfying (SR1)
+and (SR2) exactly against the tagged virtual ensemble of
+Definition~\ref{def:tagged-source}\,(T4); the data are a source specification
+in the sense of Definition~\ref{def:source-spec} in
+\tref{trusted-source mode}; and
+Theorem~\ref{thm:certificate-sufficiency} holds of it, its part (i) reading (E1) to (E3) as the
+decided conditions.
+\item \emph{(the segment, and the source identity at the emitted descriptors)}
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{(the source identity)} The emitted source descriptor is
+$(\Avirt,\{\sigma^{\mathrm v}_x\})$ with $\sigma^{\mathrm v}_x=p_x\rvirt_x$ for
+the tagged ensemble of Definition~\ref{def:tagged-source}\,(T4) with the
+declared weights, hence a member of the \tref{declared descriptor family} of
+Proposition~\ref{prop:tagging}, every tagged source declaration over every
+weak-coherent-pulse model; so the source identity \eqref{eq:srcmap}, here
+$\Xi_{\mathrm{tag}}(\rvirt_x)=\rho_x$, holds exactly at the emitted
+descriptors, as that proposition's conclusion.
+\item \emph{(the segment record)} The emitted segment satisfies the
+\tref{interface conditions} (S1) (descriptor match), (S2) (index preservation)
+and (S4) (slots) of Definition~\ref{def:source-segment}, and its (S3) (source
+identity) is the conclusion of (a). Its list of
+\tref{transported constraint entries} is empty and it carries no licence
+record. Its obligation record, the triple a consumer compares with the
+\tref{soundness registry} to admit the link, is
+$\big(\textsf{tagging},\ \text{the id of Proposition~\ref{prop:tagging}},\
+\{\mathrm{A\textnormal{-}WCP}\}\big)$, together with the member of the declared
+descriptor family that its descriptors are
+(Definition~\ref{def:source-link}\,(c2)). The third component is the union of
+the assumption closure of Proposition~\ref{prop:tagging}, which is empty, and
+the physical-source assumption A-WCP that this submodule declares for the model
+that proposition is stated over (Definition~\ref{def:source-segment}\,(A1)).
+Inside an artefact that this submodule emits and whose assumption ledger lists
+A-WCP, the segment meets the admission conditions (A1) to (A3) of
+Definition~\ref{def:source-segment}: the registry entry, the decided triple
+and the provenance.
+\end{enumerate}
+\item \emph{(what the certificate reaches)} every state reached from the
+certificate of (i) by an attack on the
+\tref[virtual transmitted system]{transmitted system} and the adversary's
+registers is block diagonal along $\mathbb{T}$ with $A$-marginal $\tau_A$, and
+pinching $A$ along $\mathbb{T}$ after the attack is the same operation as
+pinching the virtual signal before it (Lemma~\ref{lem:matched-pinching});
+Theorem~\ref{thm:certificate-sufficiency}\,(iii) holds against the tagged ensemble of
+Definition~\ref{def:tagged-source}\,(T4) itself;
+and a positive operator constrained only to have the marginal $\tau_A$ need not
+be block diagonal.
+\item \emph{(the entries of the declared blocks)} (E1) to (E3) are conditions on
+the declared blocks, and every entry of a block is a product
+$p_x\,w_{x,t}\,\big(\dyad{\varphi_{x,t}}\big)_{ij}$ of the declared weight
+$p_x$, the weight $w_{x,t}$, which is a declared sector weight or a
+\tref{tail weight} formed from them, and an entry of the dyad of $\ket{\varphi_{x,t}}$ in the
+orthonormal basis of $S_t$ of Definition~\ref{def:tagged-source}\,(T3), a
+number fixed by the model and that basis and not a declared number.
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{(the weights)} The products $p_xw_{x,t}$ are formed from the
+declared $p_x$, the declared $\tilde p(\mathsf{n}\mid\mu)$ and the
+\tref{tail weight} \eqref{eq:tailweight}, which is itself formed exactly and rounds nowhere.
+Choosing the $p_x$ and the $\tilde p(\mathsf{n}\mid\mu)$ with few enough
+significant bits makes every product exact, and lowering a $\tilde p$ to a
+value that is still non-negative is permitted by \eqref{eq:weightineq} and
+yields again a tagged source declaration by (v).
+\item \emph{(the signal dyads)} The entries of $\dyad{\varphi_{x,t}}$ are the
+number $1$ on every flag sector and on the vacuum, and on a quantum sector
+$\mathsf{n}\ge1$ the entries of $\dyad{\mathsf{n},a}$ in the basis of
+$S_{\mathsf{n}}$. For every unit vector $\ket{b}\in\mathbb{C}^2$, in
+$\mathrm{Pol}$ or not, write
+$\ket{\mathsf{n},b}\coloneqq(c^{\dagger}_b)^{\mathsf{n}}\ket{\vac}/
+\sqrt{\mathsf{n}!}$, which for $b\in\mathrm{Pol}$ is the vector of
+\eqref{eq:numberstate}; then
+$\big|\braket{\mathsf{n},a}{\mathsf{n},b}\big|^2=|\braket{a}{b}|^{2\mathsf{n}}$
+for all unit vectors $a,b$. Let every polarisation be one of the four
+vectors of $\Dset$, with $\ket{H},\ket{V}$ the fixed orthonormal basis of the
+one-photon space of Definition~\ref{def:wcp-model}\,(W1) and
+$\ket{\pm}=(\ket{H}\pm\ket{V})/\sqrt2$, distinct polarisations being distinct
+vectors, and put $v_H=(1,1,0)$, $v_V=(1,-1,0)$ and $v_{\pm}=(1,0,\pm1)$. If
+$|\mathrm{Pol}|\ge2$, then $S_1$ is the one-photon space,
+$\{\ket{1,H},\ket{1,V}\}$ is an orthonormal basis of it, and in that basis
+$\dyad{1,H}$, $\dyad{1,V}$ and $\dyad{1,\pm}$ are
+$\big(\begin{smallmatrix}1&0\\0&0\end{smallmatrix}\big)$,
+$\big(\begin{smallmatrix}0&0\\0&1\end{smallmatrix}\big)$ and
+$\tfrac12\big(\begin{smallmatrix}1&\pm1\\\pm1&1\end{smallmatrix}\big)$. If
+$|\mathrm{Pol}|\ge3$, then $S_2$ is the two-photon space, and it has an
+orthonormal basis in which $\dyad{2,a}=\tfrac12\,v_av_a^{\transpose}$ for every
+$a\in\Dset$. So every entry of these dyads is $0$, $1$ or $\pm\tfrac12$ at one
+photon and $0$ or $\pm\tfrac12$ at two.
+\item \emph{(the sector sums)} With the entries of (a) and (b) representable,
+(E3) is a condition on the sums $\sum_x\sigma^{\mathrm v,(t)}_x$, accumulated
+entry by entry in the declared order, and on nothing else.
+\end{enumerate}
+\item \emph{(lowered weights)} if
+$0\le\tilde p'(\mathsf{n}\mid\mu)\le\tilde p(\mathsf{n}\mid\mu)$ for every
+$\mathsf{n}\le N_{\mathrm{src}}$ and every $\mu$, then the weights $\tilde p'$
+are again a tagged source declaration over the same model and
+Proposition~\ref{prop:tagging} holds of it, the difference passing into the
+tail weight. Its weights, its virtual ensemble, its tail states and its sector
+list are those formed from $\tilde p'$: the sector list may gain a tail flag,
+where $\tilde w_{\mu}$ was zero and $\tilde w'_{\mu}$ is not, and it may lose a
+polarisation flag or a quantum sector, where a weight is lowered to zero at
+every letter that carried it, so that neither sector list need contain the
+other.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(i) Proposition~\ref{prop:decoy-cert}\,(i) is exactly this statement for the
+blocks \eqref{eq:decoy-blocks}: (E1) and (E2) hold as identities of real
+numbers, and Lemma~\ref{lem:ensemble-presentation} makes the objects
+\eqref{eq:enspres} a block-form certificate with pure blocks against the
+weighted members $\bigoplus_t\sigma^{\mathrm v,(t)}_x=p_x\rvirt_x$, which are
+those of Definition~\ref{def:tagged-source}\,(T4). (E3) is the one condition of the presentation that is not an
+identity of real numbers but a property of the declared numbers, and (iv) says
+what it is a condition on. That the data are a source specification is
+Definition~\ref{def:source-spec}: the alphabet and its order are declared, the
+specified ensemble is declared by a source model, which is that definition's
+case (b) and comes with a non-empty source segment, and in trusted-source mode
+with more than one sector an ensemble presentation is one of the two forms it
+admits, under which $A$, $\{M_x\}$ and $\tau_A$ are not declared but defined,
+the conditions on them holding by
+Lemma~\ref{lem:ensemble-presentation}\,(i). The dimension of Alice's system is
+$d_A=\sum_t\dim\Hs{S_t}\ge2$ whenever the structure carries two sectors, and
+Definition~\ref{def:source-spec} demands a certificate in trusted-source mode
+at $d_A\ge2$; so the certificate is demanded, and it is supplied. Theorem~\ref{thm:certificate-sufficiency} applies to a certificate in either form, and
+its part (i) says what an ensemble presentation decides.
+
+(ii)(a) By Definition~\ref{def:tagged-source}\,(T4) the emitted weighted
+members are $p_x\rvirt_x$ with the declared
+$\tilde p(\mathsf{n}\mid\mu)$ and $\tilde w_{\mu}$, which is a tagged source
+declaration over the given model: it is the one presented, no number having
+been changed. The declared descriptor family of the link is every tagged source
+declaration over every weak-coherent-pulse model
+(Definition~\ref{def:tagged-source}\,(T6)), so the emitted descriptor is a
+member of it and Proposition~\ref{prop:tagging}\,(ii) concludes
+$\Xi_{\mathrm{tag}}(\rvirt_x)=\rho_x$ for every letter, which is
+\eqref{eq:srcmap} for the one-link composite.
+
+(ii)(b) (S1) holds by Definition~\ref{def:tagged-source}\,(T6): the source
+descriptor is the virtual pair and the \tref{target descriptor} is the specified pair
+of the model. (S2) holds because both are indexed by $\Xset$ and
+$\tr\sigma^{\mathrm v}_x=p_x\sum_tw_{x,t}=p_x$ by
+Proposition~\ref{prop:decoy-cert}\,(i), the same $p_x$ the model declares. (S4)
+holds because the link carries its empty entry list, its empty licence slot,
+its status and its obligation record. The triple of that record is the registry
+entry of the kind \textsf{tagging} (Definition~\ref{def:source-segment}\,(A1)),
+which is what a consumer decides against. The third component is as that
+definition specifies it. Its first half, the assumption closure of
+Proposition~\ref{prop:tagging}, is empty by the criterion of (A1)(a), no claim
+of that closure listing an assumption among its dependencies: the proposition
+lists none and uses Definitions~\ref{def:wcp-model}, \ref{def:tagged-source}
+and~\ref{def:source-link}; what these use, directly or in turn, lies among
+them and Definitions~\ref{def:source-segment} and~\ref{def:source-spec}; and
+none of these definitions lists an assumption. Its second half is the
+physical-source assumption this submodule declares for the model, A-WCP; so
+the union is $\{\mathrm{A\textnormal{-}WCP}\}$. A-WCP is not a
+hypothesis of Proposition~\ref{prop:tagging}, and nothing here makes it one.
+For (A1) to (A3), let the segment be carried by an artefact that this
+submodule emits and whose assumption ledger lists A-WCP. The registry entry of
+the kind \textsf{tagging} is the triple above, which gives (A1) and the
+comparison of triples of (A2); the one assumption of that entry, A-WCP, is in
+the artefact's ledger by that hypothesis, which is the rest of (A2); and the
+artefact is emitted by this submodule, the module that admits the kind, which
+is (A3).
+
+(iii) The certificate of (i) is in block form against the matched pair of
+Definition~\ref{def:tagged-source}\,(T5), which is the hypothesis of
+Lemma~\ref{lem:matched-pinching}, and the attacks quantified over are those of
+Theorem~\ref{thm:certificate-sufficiency}\,(iii), whose conclusion is stated against the virtual
+ensemble the certificate is written against: the tagged one, by (i). The
+operator of the last clause is the one exhibited in the proof of that lemma.
+
+(iv) That every entry of a block is such a product is
+Proposition~\ref{prop:decoy-cert}\,(iv). (a) is the definition of $w_{x,t}$ in
+that proposition and \eqref{eq:tailweight}; that lowering a $\tilde p$ leaves a
+tagged declaration is (v). (b) On a flag sector and on the
+vacuum $S_t$ is one dimensional (Proposition~\ref{prop:decoy-cert}\,(ii)) and
+the entry is $\braket{\varphi_{x,t}}{\varphi_{x,t}}=1$.
+
+\emph{The overlaps.} For unit vectors $\ket{a},\ket{b}\in\mathbb{C}^2$, in
+$\mathrm{Pol}$ or not, write $\ket{a}=\sum_ia_i\ket{i}$ in the fixed basis of
+(W1) and $c^{\dagger}_a=\sum_ia_ic^{\dagger}_i$ for the mode operators $c_i$
+of that basis, so that $[c_a,c^{\dagger}_b]=\sum_i\bar a_ib_i
+=\braket{a}{b}$ and $c_a\ket{\vac}=0$. The commutator is a number, so
+$[c_a,(c^{\dagger}_b)^{\mathsf{n}}]=\mathsf{n}\braket{a}{b}
+(c^{\dagger}_b)^{\mathsf{n}-1}$ by induction on $\mathsf{n}$, and hence
+$c_a(c^{\dagger}_b)^{\mathsf{n}}\ket{\vac}=\mathsf{n}\braket{a}{b}
+(c^{\dagger}_b)^{\mathsf{n}-1}\ket{\vac}$. Applying this $\mathsf{n}$ times,
+$\bra{\vac}c_a^{\mathsf{n}}(c^{\dagger}_b)^{\mathsf{n}}\ket{\vac}
+=\mathsf{n}!\,\braket{a}{b}^{\mathsf{n}}$, and the definition of
+$\ket{\mathsf{n},b}$ in (b), which is \eqref{eq:numberstate} for
+$b\in\mathrm{Pol}$, gives
+$\braket{\mathsf{n},a}{\mathsf{n},b}=\braket{a}{b}^{\mathsf{n}}$, whence
+$\big|\braket{\mathsf{n},a}{\mathsf{n},b}\big|^2=|\braket{a}{b}|^{2\mathsf{n}}$.
+
+\emph{One photon.} The map $\ket{a}\mapsto c^{\dagger}_a\ket{\vac}=\ket{1,a}$
+is linear and isometric from $\mathbb{C}^2$ onto the one-photon space, by the
+overlaps at $\mathsf{n}=1$. If $|\mathrm{Pol}|\ge2$, $\mathrm{Pol}$ holds two
+distinct vectors of $\Dset$, and no vector of $\Dset$ is a multiple of another,
+their overlaps having modulus $0$ or $1/\sqrt2$; so two vectors of
+$\mathrm{Pol}$ span $\mathbb{C}^2$, and $S_1$, the span of the $\ket{1,a}$,
+$a\in\mathrm{Pol}$, is the whole one-photon space. $\ket{H}$ and $\ket{V}$ are
+the fixed basis of (W1), whether or not they lie in $\mathrm{Pol}$, so
+$\{\ket{1,H},\ket{1,V}\}$ is an orthonormal basis of it, and
+$\ket{1,\pm}=(\ket{1,H}\pm\ket{1,V})/\sqrt2$. The four dyads are therefore
+$\dyad{1,H}$, $\dyad{1,V}$ and $\tfrac12\big(\dyad{1,H}+\dyad{1,V}
+\pm\ketbra{1,H}{1,V}\pm\ketbra{1,V}{1,H}\big)$, which are the stated matrices.
+
+\emph{Two photons.} Write $\ket{2,H},\ket{1_H1_V},\ket{2,V}$ for the
+orthonormal number states of the two modes, which span the two-photon space,
+three dimensional. Expanding
+$(c^{\dagger}_{\pm})^2=\tfrac12\big((c^{\dagger}_H)^2
+\pm2c^{\dagger}_Hc^{\dagger}_V+(c^{\dagger}_V)^2\big)$ gives
+$\ket{2,\pm}=\tfrac12\ket{2,H}\pm\tfrac1{\sqrt2}\ket{1_H1_V}
++\tfrac12\ket{2,V}$, so the four vectors $\ket{2,a}$, $a\in\Dset$, have the
+Gram matrix with diagonal $1$, $\braket{2,H}{2,V}=0$, $\braket{2,+}{2,-}=0$
+and $\braket{2,H}{2,\pm}=\braket{2,V}{2,\pm}=\tfrac12$. The four vectors
+$r_a\coloneqq v_a/\sqrt2$,
+\begin{equation*}
+  r_H=\tfrac1{\sqrt2}(1,1,0),\quad r_V=\tfrac1{\sqrt2}(1,-1,0),\quad
+  r_+=\tfrac1{\sqrt2}(1,0,1),\quad r_-=\tfrac1{\sqrt2}(1,0,-1)
+\end{equation*}
+of $\mathbb{C}^3$ are unit vectors with the same Gram matrix --- each inner
+product is a sum of three products of coordinates, and
+$r_H^{\dagger}r_V=\tfrac12(1-1+0)=0$, $r_+^{\dagger}r_-=\tfrac12(1+0-1)=0$,
+$r_H^{\dagger}r_{\pm}=r_V^{\dagger}r_{\pm}=\tfrac12$ --- and any three of them
+are linearly independent, the determinant of any three of $v_H,v_V,v_+,v_-$
+being $\pm2$. Equal Gram matrices force the same linear relations, a vector
+$c$ of coefficients annihilating one family exactly when $c^{\dagger}Gc=0$ for
+the common Gram matrix $G$, so the map $\ket{2,a}\mapsto r_a$ extends to a
+well-defined linear map $U$ from the span of the $\ket{2,a}$, $a\in\Dset$,
+onto $\mathbb{C}^3$ that preserves inner products; by the same relations any
+three of the $\ket{2,a}$ are linearly independent, so that span is the whole
+two-photon space and $U$ is unitary. If $|\mathrm{Pol}|\ge3$, $S_2$ contains
+three of the $\ket{2,a}$ and is therefore the whole two-photon space. The
+inverse image under $U$ of the standard basis is then an orthonormal basis of
+$S_2$, in which $\dyad{2,a}$ has the entries
+$(r_a)_i\overline{(r_a)_j}=\tfrac12(v_a)_i(v_a)_j\in\{0,\pm\tfrac12\}$, the
+$v_a$ being real. (c) is (E3) read on the entries of (a) and (b).
+
+(v) Let $0\le\tilde p'\le\tilde p$ pointwise. Then
+$0\le\tilde p'(\mathsf{n}\mid\mu)\le\tilde p(\mathsf{n}\mid\mu)\le
+P_{\mu}(\mathsf{n})$, so \eqref{eq:weightineq} holds of $\tilde p'$, and
+$\tilde w'_{\mu}=1-\sum_{\mathsf{n}\le N_{\mathrm{src}}}
+\tilde p'(\mathsf{n}\mid\mu)\ge\tilde w_{\mu}\ge0$ by \eqref{eq:tailweight}.
+Every item of Definition~\ref{def:tagged-source} is then satisfied by the primed
+data, the sector structure (T3) included, which is formed from the weights: a
+tail flag exists exactly where $\tilde w'_{\mu}>0$, a polarisation flag or a
+quantum sector exactly where some letter puts positive weight on it, and both
+sets are read off $\tilde p'$. So the primed declaration is a tagged source
+declaration and Proposition~\ref{prop:tagging} holds of it. Neither inclusion
+between the two sector lists holds in general: raising a tail weight from zero
+adds a tail flag, and lowering $\tilde p(\mathsf{n}\mid\mu)$ to zero for every
+intensity that a polarisation $a$ occurs with removes the sector
+$(\mathsf{n},a)$.
+\end{proof}

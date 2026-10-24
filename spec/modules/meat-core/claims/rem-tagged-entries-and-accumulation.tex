@@ -1,0 +1,64 @@
+% ---
+% id: meat-core/rem:tagged-entries-and-accumulation
+% kind: rem
+% title: "Party-local entries and constrained accumulation"
+% summary: >-
+%   No statement of the constrained accumulation theorem becomes false for a
+%   list with a party-local entry: its hypotheses are satisfiable, its
+%   conclusion holds and its monotonicity survives. The tagged reading is not
+%   shown canonical, and the paragraph before the theorem describes only
+%   untagged forms.
+% prominence: standard
+% status: accepted
+% uses: [protocol-compiler/def:homog, thm:constrained-accumulation, def:roundmodel, lem:range, def:hqkd-list]
+% mentions: [rem:homog, protocol-compiler/rem:party-local-soundness]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:tagged-entries-and-accumulation}
+Theorem~\ref{thm:constrained-accumulation}, which turns a licensed list into a
+key-length licence, is stated for a list licensed for the declared mode and
+for an \tref{attack sequence} admissible for that list. Both readings carry
+the \tref{party-local form} of \xref{protocol-compiler/def:homog}, the
+licensed class being that definition's and the per-round admissibility format
+of Definition~\ref{def:roundmodel} carrying the party-local admissibility set
+beside the two of the untagged forms, with
+Lemma~\ref{lem:range}\,(i) transporting it to the state level in either
+mode. \emph{So no statement of that theorem becomes false of a list carrying
+a tagged entry}: its hypotheses are satisfiable, its conclusion holds by that
+transport, and its monotonicity $\hqkd(\CList)\ge\hqkd(\varnothing)$, where
+$\hqkd(\CList)$ is that theorem's single-round QKD rate at order $\alpha$
+under the constraints of $\CList$, holds because a tagged entry shrinks the
+\tref{feasible set} further than its untagged reading does.
+
+\emph{What it does not say} is that the tagged reading is canonical: the
+argument that the licensed class is not an arbitrary choice is stated for the
+two untagged forms (Remark~\ref{rem:homog}) and is not extended to the third
+here, and the third form's soundness rests on the certificate on the scoped
+factor's own channel (\xref{protocol-compiler/rem:party-local-soundness}) and
+on nothing this contract proves.
+
+\emph{The paragraph motivating the theorem describes the untagged forms.} That
+paragraph, before the theorem's statement, rests it on three points: the
+imported accumulation theorem is stated per sequence of attack channels;
+which attack channels the adversary is granted is a modelling input outside
+that theorem; and a constraint list licensed for the declared mode is
+``precisely the state-level shadow of an attack-set restriction in the
+published format'', the homogeneous entries of form (a) and the scalar
+entries of form (b) of \xref{protocol-compiler/def:homog} each being carried
+to the state level by a transport of its own. \emph{The third point is stated
+of the untagged forms in its main clause, not only in the two transports it
+lists}: the published format it cites is the single comparison of a channel
+adjoint against a multiple of the identity, whereas the admissibility set of
+a tagged entry is a \emph{family} of operator inequalities, one per reference
+system and per positive semidefinite operator on it
+(Definition~\ref{def:roundmodel}). \emph{What covers the third form is the
+second point}, which makes restricting attention to a declared subset of
+attack channels a modelling step and is stated for any declared subset, not
+for a shape of right-hand side. So the theorem's hypotheses, conclusion and
+proof are unaffected, and only the description in its motivating paragraph
+does not reach the third form.
+\end{remark}

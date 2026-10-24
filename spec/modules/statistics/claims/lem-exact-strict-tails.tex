@@ -1,0 +1,77 @@
+% ---
+% id: statistics/lem:exact-strict-tails
+% kind: lem
+% title: "Exact strict tails at a rational success probability"
+% summary: >-
+%   At a rational success probability both strict tails of a binomial count are
+%   finite sums of binomial probabilities, hence rational numbers, and each
+%   comparison of a tail with a rational budget is decided exactly. The endpoint
+%   rules can therefore be evaluated without rounding.
+% prominence: standard
+% status: accepted
+% uses: [thm:binomial-tails, cor:tail-forms]
+% mentions: [def:conservative-evaluation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Corollary~\ref{cor:tail-forms} writes the two strict tails as regularised
+incomplete beta integrals, the form a numerical evaluation of the incomplete
+beta function uses. At a rational success probability the finite sum of the
+binomial probabilities gives each tail exactly instead; which of the two
+routes an evaluation takes is constrained only by the requirement that it be
+a \tref{conservative evaluation}
+(Definition~\ref{def:conservative-evaluation}).
+
+\begin{lemma}\label{lem:exact-strict-tails}
+Let $n\ge1$, let $p\in[0,1]\cap\mathbb{Q}$ and let $\Ncount{}$ be binomial
+with parameters $(n,p)$, as in Theorem~\ref{thm:binomial-tails}. For
+$0\le k\le n$,
+\begin{equation}\label{eq:tails-sums}
+  \Pr[\Ncount{}<k]=\sum_{i=0}^{k-1}\binom{n}{i}p^{i}(1-p)^{n-i},
+  \qquad
+  \Pr[\Ncount{}>k]=\sum_{i=k+1}^{n}\binom{n}{i}p^{i}(1-p)^{n-i},
+\end{equation}
+an empty sum being $0$, and:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item both strict tails are rational numbers, obtained from $n$, $k$ and $p$
+by finitely many additions and multiplications of rationals, and they are
+equal to the closed forms \eqref{eq:tails-used} of
+Corollary~\ref{cor:tail-forms};
+\item for every rational $\varepsilon$, whether
+$\Pr[\Ncount{}<k]\le\varepsilon$ holds, and whether
+$\Pr[\Ncount{}>k]\le\varepsilon$ holds, is decided exactly by evaluating the
+rational number \eqref{eq:tails-sums} and comparing two rationals, which is a
+comparison of two integers.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{The sums.} $\Ncount{}$ takes values in $\{0,\dots,n\}$ with
+$\Pr[\Ncount{}=i]=\binom{n}{i}p^{i}(1-p)^{n-i}$ (Theorem~\ref{thm:binomial-tails},
+with $0^{0}=1$, the convention under which this law is a probability law at
+$p\in\{0,1\}$). For $0\le k\le n$ the event $\{\Ncount{}<k\}$ is the disjoint
+union of the events $\{\Ncount{}=i\}$ for the integers $0\le i\le k-1$, and
+$\{\Ncount{}>k\}$ is the disjoint union of the events $\{\Ncount{}=i\}$ for
+$k+1\le i\le n$; at $k=0$, respectively $k=n$, the union is empty and the
+event has probability $0$. Finite additivity of the probability gives
+\eqref{eq:tails-sums}.
+
+\emph{(i).} Since $p$ is rational, so is $1-p$; every $\binom{n}{i}$ is an
+integer; and $p^{i}(1-p)^{n-i}$ is a product of $n$ rational factors (the
+empty product being $1$). Each summand of \eqref{eq:tails-sums} is therefore
+a product of finitely many rationals, and each tail a sum of at most $n+1$
+such summands. The rationals are closed under addition and multiplication, so
+both tails are rational. They equal the forms \eqref{eq:tails-used} because
+Corollary~\ref{cor:tail-forms} states that the same two probabilities
+$\Pr[\Ncount{}<k]$ and $\Pr[\Ncount{}>k]$ equal those forms, for the same
+$n$, $p$ and $k$.
+
+\emph{(ii).} By (i) each tail is a rational number $a/b$ with integers $a$
+and $b>0$, computed in finitely many exact operations. Write the rational
+$\varepsilon$ as $c/d$ with integers $c$ and $d>0$. Then
+$a/b\le c/d$ holds if and only if $ad\le cb$, multiplying by $bd>0$, which is
+a comparison of two integers and is decided exactly.
+\end{proof}

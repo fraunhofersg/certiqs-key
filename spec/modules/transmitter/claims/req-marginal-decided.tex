@@ -1,0 +1,34 @@
+% ---
+% id: transmitter/req:marginal-decided
+% kind: req
+% title: "Direct decision of the declared marginal"
+% summary: >-
+%   A declared marginal is checked to be a state on the declared matrix itself,
+%   even where a certificate satisfies (SR1). An implication proved of the
+%   certificate's objects is no check of the datum, so it is never used.
+% prominence: standard
+% status: implemented
+% uses: [thm:certificate-sufficiency]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.artifact:emit_artifact
+% lean:
+% ---
+
+Theorem~\ref{thm:certificate-sufficiency}\,(i) shows that (SR1) implies that $\tau_A$ is a
+state. That implication is proved of the objects the declared data describe;
+a check of the declared matrix is a check of the datum itself, and it is the
+check the engine makes.
+
+\begin{requirement}\label{req:marginal-decided}
+Where $\tau_A$ is declared, the engine decides $\tau_A\in\Seq{A}$ on the
+declared matrix directly, also where a certificate is present and satisfies
+(SR1), and never infers it from the implication
+(SR1)\,$\Rightarrow\tau_A\in\Seq{A}$ of Theorem~\ref{thm:certificate-sufficiency}\,(i); it
+refuses a request whose declared $\tau_A$ is not a state
+(\iface{alice_marginal_not_admissible}). Consumers of the declared data
+decide it in the same way under their own rules; this requirement binds the
+engine.
+\end{requirement}

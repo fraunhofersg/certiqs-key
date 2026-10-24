@@ -1,0 +1,84 @@
+% ---
+% id: reductions/def:roundmodel
+% kind: def
+% title: "Round model and attack sequences, typed by source mode"
+% summary: >-
+%   An attack sequence is the round model's, at the measured system; its
+%   squashed sequence applies the squashing channel to the measured system
+%   alone, leaving Alice's system and Eve's memory untouched. Where several
+%   parties measure, that channel is a product of one channel per party.
+% prominence: standard
+% status: accepted
+% uses: [thm:factorization, def:criterion, def:protocol, foundations/def:round-model]
+% mentions: [prop:tensor]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The attack sequence is foundations/def:round-model at the per-round system B, and eq:attackchannel is that definition's eq:round-attack at B, kept here because this module's claims cite its label; the squashed sequence eq:composite and the several-parties paragraph are this module's own."
+% ---
+
+Equation~\eqref{eq:sameoutput} is stronger than it may look: the two protocols
+do not merely have close output states, they have the \emph{same} one. This is
+why the transfer costs nothing and holds simultaneously for every criterion of
+the form \eqref{eq:criterion}, with the same $\varepsilon$ on both sides. To
+state the equality against an adversary who acts round by round, we need the
+\tref[attack sequence]{attack sequences} of the \tref{round model} and their
+squashed counterparts.
+
+\begin{definition}
+\label{def:roundmodel}
+The \tref{round model} of the protocol \eqref{eq:protocol} is that of
+\xref{foundations/def:round-model} with per-round system $\Bsys$, Alice's
+system $A$ and the declared source mode. An \tref{attack sequence} for the
+protocol is thus a family $(\Aev_j)_{j=1}^{n}$ of channels whose output carries
+the systems the adversary supplies in the declared source mode, the display
+being that definition's at $S=\Bsys$:
+\begin{equation}\label{eq:attackchannel}
+  \Aev_j\in
+  \begin{cases}
+    \mathrm{CPTP}\big(E_{j-1},\ \Bsys_j\,E'_j\big),
+      & \text{trusted-source mode},\\[0.3ex]
+    \mathrm{CPTP}\big(E_{j-1},\ A_j\,\Bsys_j\,E'_j\big),
+      & \text{untrusted-source mode},
+  \end{cases}
+\end{equation}
+where $E_0$ is Eve's initial register, $E'_j$ her outgoing memory, and $E_j$
+collects $E'_j$ together with whatever public data of round $j$ she retains. In
+\tref{trusted-source mode} $A_j$ is \emph{not} an output of $\Aev_j$: it is
+supplied by Alice and carried into the round as a separate input. The
+protocol's output under the sequence is obtained from \eqref{eq:protocol} by
+supplying $\Bsys_j$ --- and, in \tref{untrusted-source mode}, $A_j$ as well
+--- as the output of $\Aev_j$ in round $j$. The corresponding
+\term[The attack sequence followed, in every round, by the squashing channel on
+the measured system and the identity on everything else.]{squashed sequence} is
+\begin{equation}\label{eq:composite}
+  \Aev^{\sq}_j\;\coloneqq\;
+  \begin{cases}
+    \big(\Lambda\otimes\idmap_{E'_j}\big)\circ\Aev_j
+      \in\mathrm{CPTP}\big(E_{j-1},\Qsys_jE'_j\big),
+      & \text{trusted-source mode},\\[0.3ex]
+    \big(\idmap_{A}\otimes\Lambda\otimes\idmap_{E'_j}\big)\circ\Aev_j
+      \in\mathrm{CPTP}\big(E_{j-1},A_j\Qsys_jE'_j\big),
+      & \text{untrusted-source mode},
+  \end{cases}
+\end{equation}
+the \tref{squashing channel} acting on the $\Bsys_j$ factor in both cases and
+on nothing else.
+
+\emph{Several \tref{measuring parties}.} Where the \tref{measured system} of a
+round is the product $\Bsys_j=\bigotimes_f\Bsys_{f,j}$ of party-scoped parts
+(Definition~\ref{def:protocol}), the squashing channel is the product
+$\Lambda=\bigotimes_f\Lambda_f$ of one channel per part,
+$\Qsys_j=\bigotimes_f\Qsys_{f,j}$, and the alphabet $\Vset$ of $M$ and $F$ is
+the product of the parts' alphabets. Neither line of \eqref{eq:attackchannel} changes:
+$\Bsys_j$ is one output system of $\Aev_j$ whatever its factorisation, so the
+adversary supplies all of its parts in one channel and is given the same
+freedom as with one measuring party; in particular the parts may be
+arbitrarily correlated, and the adversary is not required to act on them
+independently. Nor does \eqref{eq:composite} change: the product channel
+still acts on the $\Bsys_j$ factor alone, leaving $A_j$ and $E'_j$ untouched.
+That the product channel realizes a squashing relation for the product family
+is Proposition~\ref{prop:tensor}, which this definition does not assert. With
+one measuring party the product has one factor.
+\end{definition}

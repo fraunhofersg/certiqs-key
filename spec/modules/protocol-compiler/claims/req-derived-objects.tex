@@ -1,0 +1,37 @@
+% ---
+% id: protocol-compiler/req:derived-objects
+% kind: req
+% title: "Per-factor decisions on the declared blocks"
+% summary: >-
+%   The product family, the lifted operators and the family an ensemble form
+%   denotes are rules of the general format and never data: nothing forms,
+%   rounds or decides them. Every exact predicate is decided per measured
+%   factor and per Alice sector on declared blocks.
+% prominence: standard
+% status: accepted
+% uses: [def:declaration, def:exact]
+% mentions: [def:weighted]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+In the general format of Definition~\ref{def:declaration} the product
+family, the \tref[lifted operator]{lifted operators} and the POVM an
+\tref{ensemble form} denotes are defined by rules from declared data; what is
+declared, and decided, is the data the rules read.
+
+\begin{requirement}\label{req:derived-objects}
+For a declaration in the general format of
+Definition~\ref{def:declaration}: no entry of a product family
+\eqref{eq:productfamily} is formed as a datum, rounded or decided on, here or
+downstream; the \tref{lifted operator} of a scoped entry is never formed as a
+datum; and the family \eqref{eq:ensemblepovm} that an \tref{ensemble form}
+denotes is formed by no one and decided by nothing. Every exact predicate is
+decided per \tref{measured factor}, on that factor's blocks and in that
+factor's \tref{declared order}, and on Alice's data per Alice sector
+(Definition~\ref{def:exact}). The engine refuses by type a presentation of a
+\tref{choice-weighted family} indexed by a product alphabet
+(Definition~\ref{def:weighted}).
+\end{requirement}

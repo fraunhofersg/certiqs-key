@@ -1,0 +1,102 @@
+% ---
+% id: meat-core/lem:cone-concavity
+% kind: lem
+% title: "Concavity on the positive cone"
+% summary: >-
+%   The pinched trace-power functional T is positively homogeneous and concave
+%   on the whole positive cone. Hence the sector deficits are concave on the
+%   cone and the branch quantities K on its sector-block-diagonal part, for
+%   every block-diagonal positive measurement family, complete or not.
+% prominence: standard
+% status: accepted
+% uses: [thm:branch-formula, foundations/fact:concavity, cor:concavity, lem:branch-maps, def:maps, def:admissible-declaration]
+% mentions: [meat-core/frank-wolfe/thm:firstorder, meat-core/frank-wolfe/prop:relaxed-set-properties]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Parts (a) to (c) are cited by letter from other claims of this contract; keep the lettering."
+% ---
+
+Corollary~\ref{cor:concavity} gives concavity only on subnormalised
+operators $\Sleq{}$, a domain restriction it inherits from
+Lemma~\ref{lem:branch-maps}\,(i). Positive homogeneity makes the restriction
+dispensable: two positive operators, divided by the larger of their
+traces, lie in $\Sleq{}$, and $T$ scales back linearly. Dispensing with it
+is what part~(c) needs, and what every use of $T$ off the trace-one slice
+needs, the relaxed iterate set of the Frank--Wolfe submodule
+(Proposition~\ref{prop:relaxed-set-properties}\,(c)) among them. Part~(c) reads no
+completeness relation of $\{F_v\}$, which is what makes it available off
+that slice as well. This lemma is the only place where the positive
+homogeneity of $T$ is established, and every later use of it, the
+objective of Theorem~\ref{thm:firstorder} included, reads it from here.
+
+\begin{lemma}\label{lem:cone-concavity}
+Let $\alpha\in(1,\infty)$, put $p\coloneqq1/\alpha\in(0,1)$, and let $\cZ$
+be a pinching built from a complete family of mutually orthogonal
+projectors. On the cone $\Pos{}$ of the space $\cZ$ acts on, consider the
+functional
+\begin{equation}\label{eq:Tcone}
+  T(X)\coloneqq\tr\!\big[\big(\cZ(X^{p})\big)^{\alpha}\big].
+\end{equation}
+\begin{enumerate}[label=(\alph*),leftmargin=2.4em]
+\item $T$ is positively $1$-homogeneous: $T(tX)=t\,T(X)$ for every
+$t\ge0$.
+\item $T$ is concave on all of $\Pos{}$.
+\item Consider a declaration whose components other than $\{F_v\}$
+satisfy Definition~\ref{def:admissible-declaration} and whose $\{F_v\}$ is any family of
+sector-block-diagonal positive semidefinite operators, complete or not.
+Then each deficit $f_{\hat c,s}$ of \eqref{eq:f-def} is concave on all of
+$\Pos{A\Qsys_s}$, and $K_{\hat c}$ of \eqref{eq:fK} is concave on the
+sector-block-diagonal part of $\Pos{A\Qsys}$, in particular on $\Feas$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) Let $t>0$. First, $(tX)^{p}=t^{p}X^{p}$: the map $X\mapsto X^{p}$ is
+defined by the functional calculus of $x\mapsto x^{p}$, and
+$(t\lambda)^{p}=t^{p}\lambda^{p}$ on each eigenvalue, the eigenprojectors
+being unchanged by the scaling. Second, $\cZ$ is a pinching, hence
+linear, so $\cZ\big((tX)^{p}\big)=\cZ(t^{p}X^{p})=t^{p}\cZ(X^{p})$, and
+$\tr[(t^{p}Y)^{\alpha}]=t^{p\alpha}\tr[Y^{\alpha}]$ by the same functional
+calculus applied to $x\mapsto x^{\alpha}$. Together,
+$T(tX)=t^{p\alpha}T(X)=t\,T(X)$ because $p\alpha=1$. At $t=0$ both sides
+vanish.
+
+(b) Let $X,Y\in\Pos{}$ and $\lambda\in(0,1)$. If $\tr X=\tr Y=0$ then
+$X=Y=0$, a positive semidefinite operator of zero trace being zero, and
+the inequality reads $0\ge0$. Otherwise put
+$c\coloneqq\max\{\tr X,\tr Y\}>0$, so that $X/c$ and $Y/c$ lie in
+$\Sleq{}$ and so does their convex combination. \xref{foundations/fact:concavity}
+applies at $\alpha'=p\in(0,1]$, the substitution
+Corollary~\ref{cor:concavity} makes, and on the source's own stated
+domain $\Sleq{}$, so no hypothesis of the import is stretched; it gives
+\begin{equation*}
+  T\Big(\lambda\frac{X}{c}+(1-\lambda)\frac{Y}{c}\Big)
+  \;\ge\;\lambda\,T\Big(\frac{X}{c}\Big)
+  +(1-\lambda)\,T\Big(\frac{Y}{c}\Big).
+\end{equation*}
+Multiply by $c>0$ and apply (a) once to each of the three arguments:
+$T(\lambda X+(1-\lambda)Y)\ge\lambda T(X)+(1-\lambda)T(Y)$. No trace
+hypothesis on $X$ or $Y$ is used: the scaling is by their own traces.
+
+(c) $\cG_{\hat c,s}$ is completely positive by Lemma~\ref{lem:branch-maps}\,(i) in
+its Kraus-form clause, which needs $F^{(s)}_v\succeq0$ and no completeness
+relation; so it is linear and maps $\Pos{A\Qsys_s}$ into $\Pos{}$.
+Precomposition of the concave $T$ of (b) with a linear map preserves
+concavity wherever the image lies in $\Pos{}$, which is on all of
+$\Pos{A\Qsys_s}$, and subtracting the linear
+$\sigma\mapsto\tr\cG_{\hat c,s}(\sigma)$ preserves it; by
+\eqref{eq:f-def} that is concavity of $f_{\hat c,s}$. For $K_{\hat c}$:
+on sector-block-diagonal $\omega$, Lemma~\ref{lem:branch-maps}\,(iii) gives
+$\cG_{\hat c}(\omega)=\bigoplus_s\cG_{\hat c,s}(\omega_s)$ with mutually
+orthogonal summands, and powers and $\cZ$ act blockwise on that
+decomposition, so $T_{\hat c}(\omega)=\sum_sT_{\hat c,s}(\omega_s)$ and
+$\tr\cG_{\hat c}(\omega)=\sum_s\tr\cG_{\hat c,s}(\omega_s)$. Inserting
+both into \eqref{eq:fK} gives
+$K_{\hat c}(\omega)=P_{\hat c}(\omega)+\sum_sf_{\hat c,s}(\omega_s)$,
+which is \eqref{eq:c5-sector} obtained from the definitions and
+Lemma~\ref{lem:branch-maps}\,(iii) alone, without Theorem~\ref{thm:branch-formula}'s entropy
+statement. $P_{\hat c}$ is affine by \eqref{eq:Phimap}, and a sum of
+concave functions is concave.
+\end{proof}

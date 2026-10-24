@@ -1,0 +1,38 @@
+% ---
+% id: protocol-compiler/rem:wellposed
+% kind: rem
+% title: "Hermiticity as a declared condition"
+% summary: >-
+%   The left-hand sides of both constraint lines are Hermitian, respectively
+%   real, because the constraint operators and ω are Hermitian
+%   ([[lem:hermitian-constraint-values]]). Without Hermiticity the lines lose
+%   their meaning, which is why it is a condition of the declaration, decided
+%   exactly.
+% prominence: standard
+% status: accepted
+% uses: [def:feasible, def:declaration, lem:hermitian-constraint-values]
+% mentions: [def:validator]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:wellposed}
+By Lemma~\ref{lem:hermitian-constraint-values} both sides of the trusted line
+of \eqref{eq:feas-modes} are Hermitian, so that their L\"owner comparison is
+defined, and the left-hand side of the untrusted line is real, so that it can
+be compared with $c_k\in\mathbb{R}$. Drop Hermiticity and both lines lose
+their meaning rather than merely their soundness, which is why it is a
+condition of Definition~\ref{def:declaration} and of D(iii), and not only a
+check.
+
+\emph{Where each hypothesis of that lemma comes from.} $X=X^{\dagger}$, for
+$X=\idon{A}\otimes\hat O_k$, is D(iii)'s Hermiticity clause on $\hat O_k$,
+decided by check V3 of the validator, which decides the operators block by
+block (Definition~\ref{def:validator}). $\omega=\omega^{\dagger}$ is the
+Hermiticity half of the positivity condition of \eqref{eq:feas}, decided by
+the feasibility check V7 on the candidate it verifies: a condition on
+$\omega$ and not an assumption about it. Both are decided exactly.
+\end{remark}

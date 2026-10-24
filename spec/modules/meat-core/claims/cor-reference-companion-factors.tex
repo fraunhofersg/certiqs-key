@@ -1,0 +1,83 @@
+% ---
+% id: meat-core/cor:reference-companion-factors
+% kind: cor
+% title: "Factor enclosures of the compiled reference companion"
+% summary: >-
+%   Where a handed reference carries factor enclosures and the reduction forms
+%   its datum as a non-negative combination of blocks, each block of the
+%   compiled companion's measured families read with a factor enclosure is a
+%   member of it, which the certified bracket over the companion assumes.
+% prominence: standard
+% status: accepted
+% uses: [prop:reference-companion, protocol-compiler/def:compile, protocol-compiler/def:weighted, protocol-compiler/lem:weighted, protocol-compiler/lem:weighted-factor, reductions/cor:reference-companion, reductions/cor:companion-factor-enclosure, reductions/def:reduction-instance, foundations/def:factor-enclosure]
+% mentions: [meat-core/frank-wolfe/lem:certified-bracket-enclosed, foundations/req:snap-reference]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Kept apart from prop:reference-companion so that the claims resting on that proposition do not rest on the carriers of the factor enclosures. That a block of the handed reference is a member of the factor enclosure it carries is the hypothesis that the reference carries it; the module that constructs the reference establishes it, as it does its entrywise enclosures. Stated factor by factor over the set of replaced factors of prop:reference-companion."
+% ---
+
+Lemma~\ref{lem:certified-bracket-enclosed} reads some blocks of a compiled
+reference companion through \tref[factor enclosure]{factor enclosures} and assumes, as its (H-FAC),
+that the companion's own block is a member of each. The factor enclosures
+are formed by the module that constructs the reference, which establishes
+that its blocks are members of them, as it does for its
+\tref[entrywise enclosure]{entrywise enclosures}
+(\xref{foundations/req:snap-reference}\,(i)); the reduction and the compiler
+then carry them, each step keeping the block a member. This corollary
+composes those two steps for the compiled companion of
+Proposition~\ref{prop:reference-companion}, one replaced factor at a time,
+each replaced factor's family being formed from its own link alone.
+
+\begin{corollary}\label{cor:reference-companion-factors}
+Let $\Decl$, $\mathbb{F}^{\mathrm{ref}}$, the instances $\mathcal{J}_f$ and
+$\Decl^{\mathrm{ref}}$ be as in Proposition~\ref{prop:reference-companion},
+and for $f\in\mathbb{F}^{\mathrm{ref}}$ let $G_f$ be the family of
+\xref{reductions/cor:reference-companion} from which the datum
+$A^{\mathrm{ref}}_f$ of the reference companion of $\mathcal{J}_f$ is
+formed. Let $f\in\mathbb{F}^{\mathrm{ref}}$, and read the block on a
+\tref{data sector} $s$ of $\mathcal{J}_f$'s target of an element of the
+measured family of factor $f$ of $\Decl^{\mathrm{ref}}$ formed from the
+target element $F_v[A^{\mathrm{ref}}_f]$ with the triple that part (i) of
+\xref{reductions/cor:companion-factor-enclosure} forms for the element
+$A^{\mathrm{ref},(s)}_{f,v}$ of $A^{\mathrm{ref}}_f$ on $s$, where the rule
+of (I1) of $\mathcal{J}_f$ is a non-negative combination (that corollary)
+and that part forms one from \tref[factor enclosure]{factor enclosures}
+(\xref{foundations/def:factor-enclosure}) that blocks of $G_f$ carry, its
+core multiplied by $P_f(\varphi\,|\,t(v))$ where the family is weighted after
+the chain by factor $f$'s weighting $P_f$ and the element is
+$P_f(\varphi\,|\,t(v))\,F_v[A^{\mathrm{ref}}_f]$ with
+$(v,\varphi)\in\Vset_{P_f}$ (\xref{protocol-compiler/def:weighted}, with
+$P\coloneqq P_f$); and read every other block of the
+measured families of $\Decl^{\mathrm{ref}}$ with none. Then every block so
+read with a triple is a member of it, the triple being a factor enclosure of
+that block.
+\end{corollary}
+
+\begin{proof}
+By the definition of $\Decl^{\mathrm{ref}}$ in
+Proposition~\ref{prop:reference-companion}, the compilation map
+(\xref{protocol-compiler/def:compile}) forms the measured family of each
+factor $f\in\mathbb{F}^{\mathrm{ref}}$ from the companion's target
+$\{F_v[A^{\mathrm{ref}}_f]\}$ as it forms that of $\Decl$ from the snapped
+target of $f$'s last link: the target itself, or, where the family is
+weighted after the chain, the family
+$\{P_f(\varphi\,|\,t(v))\,F_v[A^{\mathrm{ref}}_f]\}_{(v,\varphi)\in\Vset_{P_f}}$ of
+\xref{protocol-compiler/def:weighted}, over the sector map of the target in
+either case; the families of other factors take no part in it. On a data
+sector $s$ the block of $F_v[A^{\mathrm{ref}}_f]$ is
+$A^{\mathrm{ref},(s)}_{f,v}$, by the target formula of
+\xref{reductions/def:reduction-instance}, and parts (i) and (ii) of
+\xref{reductions/cor:companion-factor-enclosure}, applied to $\mathcal{J}_f$,
+$G_f$ and $A^{\mathrm{ref}}_f$, make the triple formed there a factor
+enclosure of it. In the weighted case the block of
+$P_f(\varphi\,|\,t(v))\,F_v[A^{\mathrm{ref}}_f]$ on $s$ is
+$P_f(\varphi\,|\,t(v))\,A^{\mathrm{ref},(s)}_{f,v}$
+(\xref{protocol-compiler/lem:weighted}\,(ii)), and
+\xref{protocol-compiler/lem:weighted-factor} makes the same box with the core
+multiplied by the weight a factor enclosure of it. A factor enclosure of a
+matrix has that matrix among its members
+(\xref{foundations/def:factor-enclosure}), so each block read with a triple
+is a member of it.
+\end{proof}

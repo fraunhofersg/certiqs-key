@@ -1,0 +1,64 @@
+% ---
+% id: protocol-compiler/ass:atk
+% kind: ass
+% title: "Attack-set licence"
+% summary: >-
+%   For a licensed non-empty constraint list that backs a key-length claim,
+%   its producer's reduction represents every physical attack with finite
+%   registers and every signal at its first channel by an admissible attack
+%   sequence. It lets constraints restrict the attacks considered.
+% prominence: standard
+% status: accepted
+% uses: [def:homog]
+% mentions: [meat-core/def:roundmodel]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Lemma 9.3, Eqs. (146)-(147)"
+%   - "tupkary2026decoy, Rem. 9.2"
+% provenance: newly-derived
+% short_id: A-ATK
+% verification: never
+% category: supplied-artefact
+% affects: [secrecy]
+% user_statement: >-
+%   Applies only where constraints restrict the attacks the analysis
+%   considers, each in the form your declared source mode admits, which the
+%   engine checks. Whoever produced the reduction chain has proved that every
+%   attack on your physical system becomes, after the reduction, an attack that
+%   respects every listed constraint in every round. The proof is asked of
+%   attacks with a finite-dimensional memory, of any size, that receive every
+%   signal at the start; the engine extends the security statement to every
+%   other attack by a limit ([[meat-core/cor:composed-security]]). For constraints the
+%   reductions module produces and certifies, that proof is its licence
+%   theorem. A constraint you add yourself, or one supplied without such a
+%   certificate, needs that proof from you, or must be removed; the analysis
+%   without constraints stays valid.
+% lean:
+% ---
+
+The licence is the attack-set licence of the module that produces the chain,
+and it is that module's obligation. The published template for such a
+certificate is \cite[Lemma~9.3, Eqs.~(146)--(147)]{tupkary2026decoy}
+(squashing maps: the squashed POVM pulls back to the physical one and every
+composed physical attack lands in the restricted set), applied in the order of
+\cite[Rem.~9.2]{tupkary2026decoy} (source maps before squashing
+restrictions). No part of the condition is specific to \tref{trusted-source mode}:
+the licensed class and the admissibility format follow the declaration's
+source mode.
+
+\begin{assumption}\label{ass:atk}
+For a non-empty constraint list $\CList$ that is
+\tref{licensed for the declared source mode} (Definition~\ref{def:homog})
+and backs a key-length claim:
+(i) the reduction chain that produced the declaration certifies the
+\emph{licensed reduction}: security of the physical protocol reduces to
+security of the consuming engine's generated \tref{round model}
+(\xref{meat-core/def:roundmodel}) with \tref[attack sequence]{attack
+sequences} restricted to the $\CList$-admissible ones, that is, every attack
+available against the physical protocol whose registers are finite-dimensional
+and whose first channel receives every \tref{transmitted system} is
+represented, after the reduction, by a sequence whose per-round channel $A_j$ lies, for every round $j$, in the
+restricted set $\AttSet_{\CList}(E_{j-1},\Qsys E'_j)$ of that definition, with
+no $A$ output, in trusted-source mode, and in its untrusted-source-mode
+counterpart, with $A$ supplied by the adversary, in untrusted-source mode.
+\end{assumption}

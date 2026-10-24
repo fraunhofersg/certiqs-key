@@ -1,0 +1,54 @@
+% ---
+% id: foundations/def:sector-map
+% kind: def
+% title: "Sector maps and block-list operators"
+% summary: >-
+%   A sector map names the blocks of an operator by a block kind and an ordered
+%   list of identifiers with dimensions. An operator given as one array per
+%   block is block diagonal by construction, and its Hermiticity, positivity and
+%   completeness hold block by block.
+% prominence: standard
+% status: implemented
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.blocks:SectorStructure
+% lean:
+% ---
+
+\begin{definition}\label{def:sector-map}
+A \term[a block kind together with a non-empty, ordered list of block
+identifiers, each with a dimension]{sector map} $\mathfrak{m}$ consists of two
+components: a block kind,
+which is a label naming what its blocks are, and a finite non-empty set
+$\mathsf{S}$ of block identifiers listed in a fixed order, each identifier
+$s\in\mathsf{S}$ with a dimension $d_s\ge1$. Two sector maps \emph{agree} when
+they have the same block kind and the same identifiers, in the same order, with
+the same dimensions. A system of dimension $d$ without a declared sector
+decomposition carries the \term[the sector map of a system without a declared
+sector decomposition: one block of the system's dimension, with a block kind
+and an identifier common to every such system]{one-block map} of dimension
+$d$: one
+identifier, with dimension $d$, and a block kind and an identifier that are
+the same for every such system, so that two one-block maps agree if and only
+if their dimensions are equal.
+
+A \term[one square complex matrix per block of a sector map, of that block's
+dimension, identified with their direct sum]{block list} against
+$\mathfrak{m}$ is a list
+$X=(X^{(s)})_{s\in\mathsf{S}}$ of complex $d_s\times d_s$ matrices. It denotes
+the operator $\bigoplus_{s\in\mathsf{S}}X^{(s)}$ on
+$\bigoplus_{s\in\mathsf{S}}\mathbb{C}^{d_s}$, and we identify the two: the list
+is the operator, and no entry outside the blocks exists to be written, so a
+block list is block diagonal by construction. A family of block lists against
+$\mathfrak{m}$ is a family
+$\{X_j\}_{j\in J}$ of such lists, $X^{(s)}_j$ being the block $s$ of $X_j$.
+
+Because the direct sum acts block by block, $X=X^{\dagger}$ if and only if
+$X^{(s)}=X^{(s)\dagger}$ for every $s$; $X\succeq0$ if and only if
+$X^{(s)}\succeq0$ for every $s$, since
+$\langle v,Xv\rangle=\sum_s\langle v_s,X^{(s)}v_s\rangle$ for $v=(v_s)_s$; and
+$\sum_{j\in J}X_j=c\,\idon{}$ for a scalar $c$ if and only if
+$\sum_{j\in J}X^{(s)}_j=c\,\idon{d_s}$ for every $s$.
+\end{definition}

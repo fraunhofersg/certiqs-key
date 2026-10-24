@@ -1,0 +1,86 @@
+% ---
+% id: reductions/rem:why-exact
+% kind: rem
+% title: "Exactness of the reductions and generality of the transfer"
+% summary: >-
+%   Equality of full outputs lets one argument transfer every criterion with
+%   the same ε, while a distance bound would need a modulus of continuity no
+%   criterion is given. Every reduction and link of this contract, the
+%   domination link included, is exact.
+% prominence: standard
+% status: accepted
+% uses: [def:opreduction, lem:opreduction-transfer, thm:transfer, def:criterion, thm:factorization, thm:chain, thm:emit]
+% mentions: [rem:emitclaim, lem:source-transfer, meat-core/prop:optol-nobound, transmitter/def:source-segment, req:no-approximate-relations, req:mixed-status-chain, cor:reference-companion, reductions/domination/thm:noise-channel, reductions/domination/cor:dom-chain]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "meat-core/prop:optol-nobound bounds the gap it exhibits by its own representability condition (N at most 52); do not describe that gap as arbitrary."
+% ---
+
+\begin{remark}\label{rem:why-exact}
+Definition~\ref{def:opreduction} demands equality of the \emph{full} output
+state, and that demand is what pays for everything
+Lemma~\ref{lem:opreduction-transfer} delivers. A security criterion in the
+sense of Definition~\ref{def:criterion} is an arbitrary function of the output
+state: no linearity, no monotonicity and no continuity is assumed of it
+anywhere in this contract. Under exact equality that costs nothing, because
+part (i) of the lemma is $f$ applied to two equal states; under anything
+weaker it costs everything, because a hypothesis
+$\|\mathsf{out}(a)-\mathsf{out}'(r(a))\|_1\le\delta$ bounds
+$f(\mathsf{out}(a))$ in terms of $f(\mathsf{out}'(r(a)))$ only through a
+modulus of continuity for $f$, which the definition of a criterion does not
+give and which the consuming engine's criterion would have to supply case by
+case. So the generality of the transfer, one argument for every criterion with
+the same $\varepsilon$, and the exactness are one fact, not two.
+
+\emph{Both instances are exact, for a checkable reason.} On the receiver side
+the substitution rests on the channel identity \eqref{eq:factorization}, an
+identity of maps with no error term (Theorem~\ref{thm:factorization}). On the
+source side it rests on the source identity (S3) of
+\xref{transmitter/def:source-segment}, an exact matrix identity on declared
+numbers: it is decided entry by entry where every \tref{source link} supplies
+its channel as data, and concluded from a named claim where a link supplies
+its channel through a \tref{theorem constructor}
+(Lemma~\ref{lem:source-transfer}).
+
+\emph{What an approximate reduction would need.} It would need a theorem
+converting a distance between output states into a security penalty, and this
+contract has none. The security transfer, Theorem~\ref{thm:transfer}, rests on
+an equality and has no penalty slot, so there is no parameter for such a term
+to enter; accordingly a declared relation carrying an error term is refused
+(Requirement~\ref{req:no-approximate-relations}), and a \tref{reduction chain}
+mixing an exact link with one carrying an error term is refused rather than
+given a composite status, a status for the chain as a whole
+(Theorem~\ref{thm:chain}\,(iv), Requirement~\ref{req:mixed-status-chain}).
+The nearest thing to a continuity statement in these contracts is a refusal of
+one: \xref{meat-core/prop:optol-nobound} exhibits two
+\tref{exactly admissible} target families within a declared distance of each
+other whose rate bounds per round differ by an amount limited only by the
+number model. The limit is that proposition's own representability condition,
+which binary64 arithmetic imposes and which caps the integer $N$ measuring the
+gap at $N\le52$; so proximity of models licenses nothing about rates there
+either.
+
+\emph{The \tref{emission displacement} is not an error term of a reduction.}
+The displacement $\Delta_s$ of the \tref{emission normalizer}, the largest
+change it makes to an entry of an instance's datum in the \tref{data sector}
+$s$, does not make a reduction approximate. It moves the \tref{declared model}
+the reduction is stated about, and the reduction's identity then holds of that
+model with no error term at all (Theorem~\ref{thm:emit},
+Remark~\ref{rem:emitclaim}). Nor does the step back to the
+\tref{handed model}, the construction before the normalizer's \tref{snap},
+need an error term. No bound relates a key length computed from the declared
+model alone to one computed from the handed model, and the displacement is
+not what relates them (Theorem~\ref{thm:emit}\,(v)). The gap is not bridged
+at all where a run can avoid it: a run that forms the number its key length
+is formed from on the reference companion
+(Corollary~\ref{cor:reference-companion}), built with no normalizer from the
+\tref{handed reference}, or from the instance's own snapped blocks where none
+is handed, reads the declared model only to find points. Where a run does read it, the gap is closed by a disclosed
+premise about the device, never by an error term. The \tref{domination link},
+which no requirement emits, is exact as well: a noise channel followed by its
+target with classical flags (Theorem~\ref{thm:noise-channel}), so that a
+squashing link followed by it is exact as a whole
+(Corollary~\ref{cor:dom-chain}).
+\end{remark}

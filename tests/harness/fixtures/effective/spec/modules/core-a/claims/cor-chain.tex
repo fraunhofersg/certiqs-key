@@ -1,0 +1,22 @@
+% ---
+% id: core-a/cor:chain
+% kind: cor
+% title: The bound at the end of a chain
+% summary: The bound at the end of a chain, as the checker's tests need it.
+% prominence: standard
+% status: implemented
+% uses: [thm:cond]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: fixture.core_a.chain:bound
+% lean:
+% ---
+
+\begin{corollary}\label{cor:chain}
+Theorem~\ref{thm:cond} gives $x \le 2$ whenever $z \le 1$.
+\end{corollary}
+
+\begin{proof}
+Immediate from Theorem~\ref{thm:cond}.
+\end{proof}

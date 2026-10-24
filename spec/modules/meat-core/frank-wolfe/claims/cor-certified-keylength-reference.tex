@@ -1,0 +1,114 @@
+% ---
+% id: meat-core/frank-wolfe/cor:certified-keylength-reference
+% kind: cor
+% title: "Key length on a reference companion from the certified bracket"
+% summary: >-
+%   On a reference companion, the best certified bracket, formed over its
+%   enclosed measured family as [[lem:certified-bracket-enclosed]] allows,
+%   gives the key length of the protocol whose declaration is the companion,
+%   as the first-order bound on the companion does.
+% prominence: standard
+% status: accepted
+% uses: [cor:certified-keylength, thm:firstorder, cor:fo-reference, cor:fo-keylength, lem:certified-bracket, lem:certified-bracket-enclosed, cor:fo-dropped, meat-core/prop:reference-companion, meat-core/cor:reference-companion-factors, meat-core/def:admissible-declaration, meat-core/cor:keylength-bound]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Read for the companion of meat-core/prop:reference-companion, which may replace several measured factors, so that the hypotheses of cor:reference-companion-factors are named per replaced factor. Kept apart from cor:certified-keylength so that cor:fo-reference stays out of its closure on routes with no companion."
+% ---
+
+Corollary~\ref{cor:certified-keylength} applies to a reference companion as
+to any declaration; this corollary carries its conclusion over to the
+protocol whose declaration the companion is, as
+Corollary~\ref{cor:fo-reference} does for the first-order bound. Where the
+companion's measured family is known only through enclosures, the two lower
+bounds at a point are formed from enclosures that hold over every family the
+enclosures leave possible, and part~(c) of
+Lemma~\ref{lem:certified-bracket-enclosed}, or part~(d) under a dropped set,
+is what makes them bounds at the companion's own gradient.
+
+\begin{corollary}\label{cor:certified-keylength-reference}
+Let $\Decl^{\mathrm{ref}}$ be a compiled reference companion of
+Proposition~\ref{prop:reference-companion}, and let $\alpha$, $\acSet$ and
+$\Itset$, with its points $x_t$, be as in
+Corollary~\ref{cor:certified-keylength} with
+$\Decl\coloneqq\Decl^{\mathrm{ref}}$. At each $t\in\Itset$ let
+$b^{\mathrm A}_t$ and $b^{\mathrm F}_t$ be real numbers formed in one of two
+ways: as in that corollary, with \eqref{eq:lmo-bounds} at the gradient of
+$\Decl^{\mathrm{ref}}$ at $x_t$; or, where blocks of the measured family of
+$\Decl^{\mathrm{ref}}$ are known through enclosures, entrywise or by factor
+enclosures, as parts (ii) and (iii) of Lemma~\ref{lem:certified-bracket} form
+them from enclosures $(\hat g,\delta)$ and $(M_p,\rho_p)$ that hold at every
+pair of a set $\mathcal P$ as in
+Lemma~\ref{lem:certified-bracket-enclosed}\,(c), at a point $x_t$ at which
+the hypotheses of that lemma hold and (H-POS) holds for
+$\Decl^{\mathrm{ref}}$, the blocks it reads with factor enclosures being read
+with those of Corollary~\ref{cor:reference-companion-factors}, under that
+corollary's hypotheses (for each replaced factor whose blocks are so read,
+the rule of (I1) of the reduction instance of its last link a non-negative
+combination, and the blocks of its handed reference carrying those factor
+enclosures), so that its conclusion is (H-FAC). Put $\underline{h}^{\mathrm{cert}}_{\alpha}\coloneqq
+\max_{t\in\Itset}(b^{\mathrm A}_t+b^{\mathrm F}_t)$, as in \eqref{eq:hcert}.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item Where $\Decl^{\mathrm{ref}}$ satisfies
+  Definition~\ref{def:admissible-declaration} and the hypotheses of
+  Corollary~\ref{cor:fo-keylength} hold, the conclusions of
+  Corollary~\ref{cor:fo-reference}\,(iii) hold with
+  $\underline{h}^{\mathrm{cert}}_{\alpha}$ in place of
+  $\hlb[\Decl^{\mathrm{ref}}]$, for the protocol whose declaration is
+  $\Decl^{\mathrm{ref}}$.
+\item In the setting of Corollary~\ref{cor:fo-dropped}, with a dropped set
+  $\mathcal{D}$ and with the numbers formed at the gradient of the dropped
+  objective and, in the second way, with part (d) of
+  Lemma~\ref{lem:certified-bracket-enclosed} in place of its part (c):
+  $\max\{0,\underline{h}^{\mathrm{cert}}_{\alpha}\}\le
+  \underline{h}^{\mathcal{D}}_{\alpha}[\Decl^{\mathrm{ref}}]\le
+  \hlow[\Decl^{\mathrm{ref}}]$, and where $\Decl^{\mathrm{ref}}$ satisfies
+  Definition~\ref{def:admissible-declaration} and the hypotheses of
+  Corollary~\ref{cor:keylength-bound} other than \eqref{eq:lower-bound-h}
+  hold, the conclusions of
+  Corollary~\ref{cor:keylength-bound} hold at
+  $h=\underline{h}^{\mathrm{cert}}_{\alpha}$, for the protocol whose
+  declaration is $\Decl^{\mathrm{ref}}$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+\emph{The numbers are bounds at the companion's gradient.} At a point where
+$b^{\mathrm A}_t$ and $b^{\mathrm F}_t$ are formed in the second way,
+hypothesis (H-FAC) of Lemma~\ref{lem:certified-bracket-enclosed} holds by
+Corollary~\ref{cor:reference-companion-factors}, under the hypotheses on
+which the reduction and the compiler carry the factor enclosures, so part
+(c) of that lemma shows that the enclosures
+hold at the gradient of $\Decl^{\mathrm{ref}}$ at $x_t$, (H-POS) holding for
+$\Decl^{\mathrm{ref}}$ there, and parts (ii) and (iii) of
+Lemma~\ref{lem:certified-bracket}, which $\Decl^{\mathrm{ref}}$ is admitted
+to by Proposition~\ref{prop:reference-companion}\,(ii), turn them into
+$b^{\mathrm A}_t\le\min_{\mathbf q'\in\acSet}\langle\lmoq,\mathbf q'\rangle$
+and $b^{\mathrm F}_t\le\min_{J'\in\Feas^{J}}\langle\lmoJ,J'\rangle$, the
+gradient and the exact $\Feas^{J}$ being those of $\Decl^{\mathrm{ref}}$:
+that is \eqref{eq:lmo-bounds} at its gradient, as in the first way.
+
+\emph{(i).} Corollary~\ref{cor:fo-reference}\,(iii) holds for any bound
+formed as its statement admits, lower bounds on the minima over the
+companion's exact sets standing in for the pairings at points of its relaxed
+set at which (H-POS), (H-SUPP) and (H-NOPERT) hold for its objects. Each
+$x_t$ satisfies the hypotheses of Lemma~\ref{lem:certified-bracket} for
+$\Decl^{\mathrm{ref}}$, which gives that by Step~1 of its proof, and the
+numbers satisfy \eqref{eq:lmo-bounds} at the gradient of
+$\Decl^{\mathrm{ref}}$, so Corollary~\ref{cor:certified-keylength}\,(i)
+applied to $\Decl^{\mathrm{ref}}$ shows that
+$\underline{h}^{\mathrm{cert}}_{\alpha}$ is such a bound: the value of
+\eqref{eq:hlb} at the points of $\Itset$ with both pairings replaced.
+
+\emph{(ii).} The same argument with part (d) of
+Lemma~\ref{lem:certified-bracket-enclosed}, which runs part (c) for the
+dropped objective, and part (iv) of Lemma~\ref{lem:certified-bracket} gives
+the numbers as lower bounds on the two minima at the gradient of the dropped
+objective of $\Decl^{\mathrm{ref}}$, and
+Corollary~\ref{cor:certified-keylength}\,(iii) applied to
+$\Decl^{\mathrm{ref}}$ gives the two inequalities and, under the hypotheses
+that corollary's second clause and (ii) here assume, the conclusions of
+Corollary~\ref{cor:keylength-bound}.
+\end{proof}

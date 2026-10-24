@@ -1,0 +1,33 @@
+% ---
+% id: receiver/rem:edgemeaning
+% kind: rem
+% title: "Meaning of an edge"
+% summary: >-
+%   An edge fixes the order in which two elements act; moving light between
+%   modes is done by the elements' matrices. Components drawn on different arms
+%   carry no edge and have disjoint supports, so support comparability
+%   constrains only an ambiguous drawing.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [receiver/component-catalogue/def:catalogue-entries, prop:mode-algebra]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:edgemeaning}
+An edge $e\to f$ fixes the order in which $e$ and $f$ act: $e$ first. Moving
+light from one mode to another is done by the elements' matrices, for
+instance by a mode-permutation element (entry C9 of
+Table~\ref{tab:catalogue}), not by the edge; between elements with disjoint
+supports the order the edge fixes does not by itself change the compiled
+matrix, since they commute (Proposition~\ref{prop:mode-algebra}\,(iii)); such
+an edge matters only through the order it induces, by reachability, between
+elements whose supports intersect. A user who
+draws two components in series draws the edge; a user who draws them on
+different arms of a beamsplitter draws none, and (E3) then requires their mode
+supports to be disjoint, which, on different arms, they are. The condition
+therefore constrains exactly the drawings that were ambiguous.
+\end{remark}

@@ -1,0 +1,92 @@
+% ---
+% id: receiver/cor:compiled-instrument
+% kind: cor
+% title: "Receiver instrument from a well-formed graph declaration"
+% summary: >-
+%   A well-formed graph with a declared mode space, input split, port map and
+%   efficiencies yields a receiver instrument whose matrix does not depend on
+%   the sort. This joins the graph route to the object the measurement
+%   theorems are stated of.
+% prominence: standard
+% status: accepted
+% uses: [def:instrument, def:compile, thm:compilation-well-defined, def:graph]
+% assumes: [A-VAC]
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Deliberately used by no claim that states an emitted block, weight or slot: those hold of every receiver instrument, on every route, and resting them on this corollary would make them depend on a graph that a port-Gram or instrument-matrix declaration never supplies."
+% ---
+
+The three input routes converge on a receiver instrument. This corollary is
+the step for route (iii). Once it holds, a result this contract proves for
+every receiver instrument applies to a route-(iii) declaration by
+instantiation; a result proved of a receiver instrument carrying further
+hypotheses applies only where the declaration meets those too.
+
+\begin{corollary}
+\label{cor:compiled-instrument}
+Let a route-(iii) declaration supply a \tref{declared mode space} $\Modes$; a
+well-formed declared element graph $\Grph$ on $\Modes$
+(Definition~\ref{def:graph}), in particular acyclic
+(condition (E2) of Definition~\ref{def:graph}); a set
+$\Inp\subseteq\Modes$ of \tref{declared input modes} with a split
+$\Inp=\InpC\sqcup\InpS$, $\InpC\neq\varnothing$, every mode of $\Modes\setminus\Inp$ carrying vacuum
+at the input (Assumption~\ref{ass:vac}); and a port map
+$\Port{1},\dots,\Port{K}$, pairwise disjoint subsets of $\Modes$ with
+$K\ge1$, carrying detector efficiencies $\eta_k$ in the domain $[0,1]$
+declared for them in Definition~\ref{def:compile}. Let $\sigma$ be a linear
+extension of $\Grph$ and let
+$\Gmat\coloneqq D_\eta\,\Gmat^{\sigma}_{\Grph}$ be the compiled instrument
+matrix of Definition~\ref{def:compile}. Then
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $\Gmat$ does not depend on $\sigma$, so it is a function of the
+  declaration alone; and
+\item the tuple
+  $\Recv=\big(\Modes;\ \Inp=\InpC\sqcup\InpS;\ \{\Port{k}\}_{k=1}^{K};\
+  \Gmat\big)$ is a receiver instrument in the sense of
+  Definition~\ref{def:instrument}: it has the shape \eqref{eq:instrument} and
+  satisfies its four clauses.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+\emph{Clauses (i) to (iii) of Definition~\ref{def:instrument}.} Clause (i) is
+the declared mode space and clause (iii) is the declared port map; that the
+ports are pairwise disjoint and that $K\ge1$ are conditions on the
+declaration, decided by finite inspection of it, and nothing here derives
+them. Clause (ii) is the declared split $\Inp=\InpC\sqcup\InpS$ with
+$\InpC\neq\varnothing$, again a condition on the declaration, together with
+the condition that every mode of $\Modes\setminus\Inp$ carries vacuum at the
+input, which is Assumption~\ref{ass:vac}: it is a physical condition on the
+declaration that the tuple's data does not encode and nothing here derives,
+so this corollary declares it in its own right, as
+Definition~\ref{def:instrument}\,(ii) does. What remains is clause (iv) and
+item (i), and both are read off Theorem~\ref{thm:compilation-well-defined}.
+
+\emph{Item (i).} Because $\Grph$ is well formed it is acyclic (condition (E2)
+of Definition~\ref{def:graph}), so $\preceq_\Grph$
+is a partial order and a linear extension $\sigma$ of $\Grph$ exists at all.
+Hence the product \eqref{eq:compile} is defined and
+$\Gmat^\sigma_\Grph\in\mathbb{C}^{\Modes\times\Modes}$. By
+Theorem~\ref{thm:compilation-well-defined}\,(i) it is the same matrix for every linear extension of
+$\Grph$; write $\Gmat_\Grph$ for that common value. The terminal layer
+$D_\eta$ is built from the port map and the efficiencies alone and contains no
+element of $\Grph$ and no ordering, so $\Gmat=D_\eta\,\Gmat^\sigma_\Grph=
+D_\eta\,\Gmat_\Grph$ is independent of $\sigma$ as well and depends on $\Grph$
+and on the declared pairs $\{(\Port{k},\eta_k)\}_{k=1}^{K}$ alone.
+
+\emph{Clause (iv).} The terminal layer $D_\eta=\sum_k\sqrt{\eta_k}\,\Emd{\{k\}}+
+\Emd{\Modes\setminus\bigcup_k\Port{k}}$ of Definition~\ref{def:compile} is
+diagonal, with entry $\sqrt{\eta_k}$ on the modes of $\Port{k}$ (well
+defined as a diagonal because the ports are pairwise disjoint, so that no mode
+is given two entries) and with entries in $[0,1]$ because
+$\eta_k\in[0,1]$; it is therefore a contraction. The indexing of $\Gmat$ is
+that of \eqref{eq:compile}: each factor $\hat\Gmat_e$ acts on column vectors
+indexed by $\Modes$, so the product, and with it
+$\Gmat\in\mathbb{C}^{\Modes\times\Modes}$, is indexed rows by outputs and
+columns by inputs, which is what clause (iv) of
+Definition~\ref{def:instrument} requires of an \tref{instrument matrix}.
+Finally Theorem~\ref{thm:compilation-well-defined}\,(ii) states $\Gmat^\dagger\Gmat\preceq\id$ of
+exactly this compiled instrument matrix. So clause (iv) holds and $\Recv$ is a
+receiver instrument.
+\end{proof}

@@ -1,0 +1,60 @@
+% ---
+% id: meat-core/prop:no-averaging
+% kind: prop
+% title: "Unsoundness of averaging sectors"
+% summary: >-
+%   Replacing the sectors of a declaration by one sector with averaged
+%   measurement operators can raise the value even where the averaged
+%   declaration reproduces the statistics, in the example from 0 to 1 bit per
+%   round. Merging sectors is therefore no sound simplification.
+% prominence: standard
+% status: implemented
+% uses: [thm:removal, prop:retention]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.declaration.sectors:delete_sectors
+% lean:
+% ---
+
+Theorem~\ref{thm:removal} deletes a sector by moving its weight onto other
+sectors that reproduce its responses, and the sector index survives the
+move. Averaging sectors into one erases that index, and the following
+proposition shows that this is not sound.
+
+\begin{proposition}\label{prop:no-averaging}
+Coarse-graining the sector decomposition of a declaration --- replacing
+$\Qsys=\bigoplus_s\Qsys_s$ and $\{F^{(s)}_v\}$ by a single sector carrying
+averaged POVM elements --- is unsound: there exists a declaration
+$\Decl$ and an averaged declaration $\bar\Decl$ reproducing the same
+outcome statistics on the averaged state space for which
+$\hlow(\bar\Decl)>\hlow(\Decl)$.
+\end{proposition}
+
+\begin{proof}
+Take the declaration of Proposition~\ref{prop:retention} with the two
+sectors replaced by projective responses: sector $s$ responds
+deterministically with outcome $v=s-1$, i.e.
+\begin{equation*}
+  F^{(1)}_0=1,\quad F^{(1)}_1=0,\qquad
+  F^{(2)}_0=0,\quad F^{(2)}_1=1
+\end{equation*}
+(so $\sum_vF^{(s)}_v=1=\idon{\Qsys_s}$ in each sector; all other data
+unchanged, and the raw key $r(v)=v$ takes the value $s-1$ on sector
+$s$). Every pair
+$(\hat c_0,s)$ is key-inert (each sector's effective outcome set is the
+singleton $\{v=s-1\}$), so $f\equiv0$, $K=P=1$, and
+$\hlow(\Decl)=0$ --- correctly: the sector index determines the raw key,
+and the purifying register knows the sector. Now form $\bar\Decl$ on the
+one-dimensional $\bar\Qsys$ with
+$\bar F_v\coloneqq\tfrac12(F^{(1)}_v+F^{(2)}_v)=\tfrac12$ for both $v$
+(a valid POVM, and the statistics of $\bar\Decl$ on its feasible state
+$\bar\omega=1$ equal those of $\Decl$ at the uniform sector weights).
+The computation of Proposition~\ref{prop:retention} with $w_1=1$ applies
+verbatim to $\bar\Decl$ and gives $\hlow(\bar\Decl)=1$. An engine that
+averaged the sectors would thus certify one secret bit per round for a
+protocol whose key the adversary can know exactly. The obstruction is
+structural: averaging erases the sector index from the state space while
+the adversary retains it, so the averaged \tref{feasible set} no longer
+contains (an image of) every reachable attack.
+\end{proof}

@@ -1,0 +1,76 @@
+% ---
+% id: reductions/def:licensed
+% kind: def
+% title: "Licensed entries and the party-local form"
+% summary: >-
+%   A constraint list is licensed when every right-hand side is a real
+%   constant: untagged, as a multiple of Alice's declared marginal in trusted
+%   mode and a real number in untrusted mode, or party-local. A party-local
+%   entry acts on one factor of a product measured system, against the
+%   marginal present.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [lem:party-local, thm:licence, protocol-compiler/def:homog]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{definition}\label{def:licensed}
+The list $\CList$ is
+\term[Said of a constraint list every entry of which has a real constant as its right-hand side, either untagged in the form its source mode admits or in the party-local form.]{licensed}
+for the declared source mode when each of its entries either is untagged
+with its right-hand side in the form that mode admits, or is in the
+party-local form below. The untagged forms are $\Theta_k=c_k\,\tau_A$ with
+$c_k\in\mathbb{R}$ in trusted-source mode, the state-level entry reading
+$\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\,\omega]\bowtie_kc_k\,\tau_A$; and
+$\Theta_k=c_k\in\mathbb{R}$ in untrusted-source mode, the entry reading
+$\tr[(\idon{A}\otimes\hat O_k)\,\omega]\bowtie_kc_k$, a comparison of real
+numbers (\xref{protocol-compiler/def:homog}). In both cases the untagged
+entries are written $(\hat O_k,\bowtie_k,c_k)$.
+
+The
+\term[The form of a constraint entry scoped to one factor of a product measured system: tagged party-local and read as an operator inequality against the marginal actually present.]{party-local form}.
+Where the measured system is declared as a product
+$\Qsys=\bigotimes_{f}\Qsys_f$ of party-scoped factors, an entry may in
+addition be
+\term[Said of a constraint entry whose operator acts on one factor of a product measured system and which carries the party-local tag.]{scoped to a factor}
+$f$. It is written $(\hat O_k,\bowtie_k,c_k;f)$ with
+$\hat O_k\in\Lin{\Qsys_f}$ Hermitian and $c_k\in\mathbb{R}$, it carries the
+party-local tag, and its state-level reading, in either source mode, is
+\begin{equation}\label{eq:partylocal-entry}
+  \tr_{\Qsys_f}\!\Big[\big(\idon{}\otimes(\hat O_k-c_k\,\idon{\Qsys_f})\big)
+  \,\omega\Big]\;\bowtie_k\;0
+  \qquad\text{as an operator on the systems of }\omega\text{ other than }
+  \Qsys_f ,
+\end{equation}
+those systems being $A$, where the declaration carries one, and the factors
+$\Qsys_{f'}$, $f'\ne f$. Equivalently
+$\tr_{\Qsys_f}[(\idon{}\otimes\hat O_k)\omega]\bowtie_kc_k\tr_{\Qsys_f}\omega$:
+the entry is homogeneous with respect to the marginal that is actually
+there. The attack-set licence of Theorem~\ref{thm:licence} covers a
+party-local entry only through a certificate on the factor's own
+\tref{squashing channel} (its part (v)); the product structure that makes it
+sound is Lemma~\ref{lem:party-local}.
+
+\emph{What the tag does not change.} An entry without the tag is read in
+the form of its source mode, exactly as above. With one factor, the
+party-local reading in trusted-source mode is
+$\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\omega]\bowtie_kc_k\,\omega_A$, which
+under the consumer's marginal condition $\omega_A=\tau_A$ is the
+trusted-source form; with one factor and $d_A=1$ it is the untrusted-source
+comparison of real numbers. \emph{With one factor, in untrusted-source mode
+and $d_A>1$ it is neither}: it reads
+$\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\omega]\bowtie_kc_k\,\omega_A$, an
+operator inequality on $A$ against the marginal that is actually there, and
+the untrusted-source scalar entry is its trace
+(Lemma~\ref{lem:party-local}\,(iii)), implied by it and not equivalent to
+it. With more than one factor it implies the untagged reading of the same
+$(\hat O_k,\bowtie_k,c_k)$ for the lifted operator $\idon{}\otimes\hat O_k$,
+which is obtained from it by the partial trace over the other factors (and
+over $A$ in untrusted-source mode; in trusted-source mode under the
+consumer's marginal condition $\omega_A=\tau_A$), and in general it is not
+implied by it.
+\end{definition}

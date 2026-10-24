@@ -1,0 +1,25 @@
+{
+ "alpha": "search",
+ "device": {},
+ "f_ec": 1.1,
+ "id": "perfect-c1e6-L4",
+ "labels": {
+  "coincidences": 1000000,
+  "devices": "perfect",
+  "loss_db": 4.0,
+  "qber": 0.0,
+  "rounds": 2500000
+ },
+ "model": {
+  "alice_transmittance": "710394815371919/1125899906842624",
+  "bob_transmittance": "710394815371919/1125899906842624",
+  "visibility": "1"
+ },
+ "parameters": {},
+ "rounds": 2500000,
+ "solver": {
+  "budget_seconds": 600,
+  "max_iterations": null,
+  "method": "auto"
+ }
+}

@@ -1,0 +1,17 @@
+id: core-a
+kind: core
+version: 0.3.0
+title: Core A
+one_line: The core module of the effective-status fixture.
+depends_on: []
+notation_version: "0.4.0"
+order:
+  - def:base
+  - def:fresh
+  - def:old
+  - thm:cond
+  - cor:chain
+  - prop:assumed
+  - ass:shaky
+  - rem:talks
+  - rem:retired

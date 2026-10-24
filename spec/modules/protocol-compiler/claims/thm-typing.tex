@@ -1,0 +1,141 @@
+% ---
+% id: protocol-compiler/thm:typing
+% kind: thm
+% title: "Typing of an emitted declaration"
+% summary: >-
+%   A declaration the compilation map emits satisfies the typing conditions
+%   D(i), D(ii), D(iv) and D(vi), and its index map is a bijection on every
+%   alphabet it indexes. Each follows from the construction or from a check
+%   decided on the emitted data, never from a source certificate.
+% prominence: standard
+% status: accepted
+% uses: [def:compile, def:target, def:spec, def:well-formed-spec, def:homog, def:validator]
+% mentions: [req:gate-outcomes, foundations/req:exact-emission, foundations/req:boundary-admission]
+% assumes: [A-SPEC]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.compile:compile_specification
+% lean:
+% notes: "A-RHOM is not declared here: the theorem is a statement about one declaration and spends no round homogeneity. A-ALICE-MEAS and A-ENS are not declared either: no step reads the measurement Alice performs or the physical source ensemble. A-SPEC is kept for D(iv), whose step reads the key rule as valued in Zval (ass:spec (ii))."
+% ---
+
+A declaration is emitted only when no check refused it
+(Requirement~\ref{req:gate-outcomes}, row~1). The typing conditions then
+follow either from how the compilation map builds the declaration or from a
+check that decides them on the emitted data.
+
+\begin{theorem}\label{thm:typing}
+Let $\Spec$ be a \tref{well-formed specification}
+(Definition~\ref{def:well-formed-spec}) satisfying
+Assumption~\ref{ass:spec}, and
+let $\Decl$ be a declaration that the compilation map of Definition~\ref{def:compile}
+\emph{emits}, that is, one for which no check of
+Definition~\ref{def:validator} refused. Then $\Decl$, together with the index
+map $\idxm$ emitted alongside it, satisfies the target conditions D(i), D(ii),
+D(iv) and D(vi) of Definition~\ref{def:target}, and $\idxm$ is a bijection on
+each alphabet it indexes, so that every emitted operator list is totally
+ordered and its index is recoverable from its semantic label.
+\end{theorem}
+
+\begin{proof}
+D(i): each system of $\Spec$ is declared finite-dimensional and each alphabet
+finite and non-empty (Definition~\ref{def:well-formed-spec}\,(i), (ii)); $\Qsys$ is finite-dimensional
+because $d_{\Qsys}=\sum_{s\in\SecSet}d_s$ is a finite sum of finite terms. The
+emitted maps are $a_A$, $a_B$, $\phi$, $\rd{\mathsf A}$, $\rd{\mathsf B}$ ---
+total by Definition~\ref{def:spec}\,(d) --- and $r$, which is total because
+\eqref{eq:rdef} is defined by a case distinction on the value of the total map
+$\varsigma\circ a$, both branches of which are defined on all of
+$\Xset\times\Vset$. The sector-map clause: the emitted map $\Smap$ is the
+target descriptor of the last link of $\Chrec$
+(Definition~\ref{def:compile}), and it is emitted once; every emitted
+$\Qsys$-operator is a block list against \emph{that} object, because
+Definition~\ref{def:compile} fills $\{F_v\}$ from that same link's target POVM
+and $\CList$ from lists each carried against the map its \tref{declarer} wrote
+it against. What is not automatic, and is where the hypothesis of the theorem
+is used, is that each declarer's map \emph{is} $\Smap$: a family presented
+against a different block kind, a different identifier list, a different order
+or a different dimension is a well-typed object of the wrong type, and check
+V1 rejects exactly that, so a declaration that is emitted at all is one for
+which V1 did not refuse. $d_{\Qsys}=\sum_sd_s$ is then the identity that
+defines $d_{\Qsys}$ from the emitted map. The last clause of D(i), that the
+restriction of $\idxm$ to $\SecSet$ is the order $\Smap$ fixes, holds
+\emph{by construction}: Definition~\ref{def:compile} takes that component of
+$\idxm$ to be the sector map's own order and not a second order. Check V1 of
+Definition~\ref{def:validator} re-decides it on the emitted data, a condition
+on an emitted object being decided on that object and never inferred from how
+it was built, and a declaration that is emitted at all is one for which V1 did
+not refuse.
+
+D(ii): the marginal slot holds either a matrix or $\nomarg$, and no third value
+is emitted (Definition~\ref{def:compile}). The three numerical conjuncts are
+decided on the emitted matrix and on nothing else: check V2 of
+Definition~\ref{def:validator} decides $\tau_A=\tau_A^{\dagger}$,
+$\tau_A\succeq0$ and $\tr\tau_A=1$, each exactly, and decides that the trace
+sum \tref{rounds nowhere}; and a declaration that is emitted at all is one for
+which V2 did not refuse, so D(ii) holds of the declared numbers. This is the
+only route, a condition on the emitted matrix being decided exactly on that
+matrix and never inferred from the certificate
+(\xref{foundations/req:boundary-admission}\,(ii); for the trace sum
+\xref{foundations/req:exact-emission}\,(v)): an emitted declaration
+satisfies D(ii) even where a certificate is malformed. The certificate
+supplies a \emph{modelling} statement about the same matrix, not a substitute
+for that decision: in trusted-source mode $\tau_A$ is the certificate's first
+component, and (SR1), decided on the emitted data by gate (G2), relates it to
+$\tr_{\Avirt}\Psi$, which is positive semidefinite with trace $\tr\Psi=1$.
+That is what makes the emitted marginal \emph{the certificate's} marginal
+rather than an independently declared number; it is not what makes D(ii)
+hold.
+
+D(iv): the range of \eqref{eq:rdef} is contained in
+$\operatorname{ran}r^0_{\hold}\cup\{\perp\}\subseteq\Zval\sqcup\{\perp\}$,
+because $r^0_{\hold}$ maps into $\Zval$ by
+Definition~\ref{def:spec}\,(d).
+
+D(vi): the emitted list is the concatenation of the specification's entries
+with the entries transported by the links of both segments; each entry is
+emitted with its relation symbol and the datum its right-hand-side slot holds
+unchanged, and with the tag that datum's type fixes
+(Definition~\ref{def:homog}). Nothing in the hypotheses on $\Spec$ prevents a
+link from transporting an entry whose declared form does not match the
+emitted source mode --- an entry carrying a matrix where the mode admits only
+a scalar, or one whose datum is of neither admitted type --- and that is a
+property of the declared data, not of the compilation map; so this clause is where the hypothesis of
+the theorem is used: check V6 of Definition~\ref{def:validator} rejects
+exactly such an entry, and a declaration that is emitted at all is one for
+which V6 did not refuse.
+
+$\idxm$: each component is chosen as a bijection onto an initial segment of
+$\mathbb{Z}_{\ge0}$, which exists because the alphabet is finite and is
+injective and surjective by construction; the inverse table is emitted with it,
+so the semantic label of an index is recoverable.
+
+\emph{The general format.} For a declaration the general-format clauses of
+Definition~\ref{def:compile} emit, the four conditions are read as in the
+general-format paragraph of Definition~\ref{def:target}, and the argument is
+the one above with the checks read as in the general-format paragraph of
+Definition~\ref{def:validator}; a declaration that is emitted at all is one
+for which none of them refused. D(i): finiteness and totality as above, every
+table $a_m$ of the transcript included; the factor list with at most one factor
+tagged $A$ and then first, at least one tagged $\Qsys$ and one block kind, the
+dimension identities, the agreement of the map carried by each per-factor
+family, by each entry's operator and by Alice's declared data with the map of
+its factor, and the restriction of $\idxm$ to each factor's sectors and to
+$\mathbb{T}$ are exactly the clauses V1 decides in its general-format
+reading, the product orders being derived by (DX1) and (DX3) and not further
+conditions. D(ii): V2 in its general-format reading decides every Alice block
+of $\tau_A$ Hermitian and positive semidefinite and their total trace equal to
+$1$ with every addition rounding nowhere, and, where Alice's slot is in
+\tref{ensemble form}, every block non-zero. D(iv): as above, $r^{0}_{\hold}$
+being typed into $\Zval$ by Definition~\ref{def:spec}\,(d), read on the
+derived $\Kann$ by (d$'$). D(vi): each entry is emitted with its scope, its
+relation symbol and its datum, and with the tag that datum's type fixes or,
+for the \tref{party-local} form, the tag field it arrives with
+(Definition~\ref{def:homog}); V6 in its general-format reading decides the
+relation symbol by form, the datum against its tag, a general $\Theta_k$
+Hermitian block by block along $\mathbb{T}$, and that the scope names a
+measured factor of the map, and refuses an entry failing any of them. The
+index map: each component --- one per factor alphabet, one per factor
+\tref{sector set} and, where an $A$ factor is emitted, one on $\mathbb{T}$ ---
+is chosen as above, and its components on $\Vset$ and on $\SecSet$ are the
+product orders, bijections because each factor's component is.
+\end{proof}

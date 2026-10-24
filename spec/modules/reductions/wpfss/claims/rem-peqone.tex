@@ -1,0 +1,49 @@
+% ---
+% id: reductions/wpfss/rem:peqone
+% kind: rem
+% title: "The boundary case of total weight one"
+% summary: >-
+%   At total weight one the certified weights are exact and the relation still
+%   holds, through a map that keeps the block below the cutoff and replaces the
+%   block above it by a fixed flag state. Refusing the case is therefore
+%   conservative rather than forced by an obstruction.
+% prominence: standard
+% status: accepted
+% uses: [lem:ple1, def:targets]
+% mentions: [prop:chain, req:total-weight-refusal]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Lemma~\ref{lem:ple1} settles two of the failure conditions of a squashing
+request (\repodoc{spec/architecture.md#54-failure-policy}) to the extent it
+proves and no further: $p_v<0$ cannot be produced by a valid weight family,
+and neither can $\sum_vp_v>1$ \emph{whenever $\Hs{\Bsys_{\gtN}}\ne\{0\}$}, so
+on that hypothesis they are impossibilities rather than error paths. Where the
+block above the cutoff is trivial the second is possible, the certified-weight
+condition being vacuous there, and the construction of
+Proposition~\ref{prop:chain} divides by $1-p$; a \tref{total weight} of one
+or more is therefore refused (Requirement~\ref{req:total-weight-refusal}). The
+remark shows that the boundary case $p=1$ is no obstruction.
+
+\begin{remark}
+\label{rem:peqone}
+At $p=1$ the certified weights are forced to be exact: summing
+\eqref{eq:certweights} gives
+$\sum_v\big(\blk{M}{\gtN}_v-p_v\idon{}\big)=0$ with every summand positive
+semidefinite, so every summand vanishes and
+$\blk{M}{\gtN}_v=p_v\idon{}$ for each $v$. The relation then still holds, with
+the target $F_v=\blk{M}{\leqN}_v\dsum p_v\idon{\Flag}$ --- which is
+\eqref{eq:WPFSS} at $1-p=0$ --- realised by
+$\Lambda(\rho)=\Pleq\rho\Pleq\dsum\tr[\Pgt\rho\Pgt]\,\mu$ with
+$\mu=\sum_vp_v\dyad{v}$ a state: that map is a channel, its adjoint sends
+$X_{\leqN}\dsum X_{\Flag}$ to
+$X_{\leqN}\dsum\tr[\mu X_{\Flag}]\idon{\Bsys_{\gtN}}$, and evaluating at $F_v$
+returns $\blk{M}{\leqN}_v\dsum p_v\idon{}=M_v$. So $p=1$ is not an
+obstruction. Refusing it instead of constructing that map
+(Requirement~\ref{req:total-weight-refusal}) costs nothing that a declaration
+reaching $p=1$ could not also obtain by lowering one weight by the smallest
+step the declared lattice allows, $2^{-\kappa}$.
+\end{remark}

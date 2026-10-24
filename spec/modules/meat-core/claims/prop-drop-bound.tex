@@ -1,0 +1,94 @@
+% ---
+% id: meat-core/prop:drop-bound
+% kind: prop
+% title: "The dropped program bounds the value from below"
+% summary: >-
+%   Setting the deficits of a dropped set to zero can only lower the
+%   objective, so the dropped value lies between 0 and h_low, hence below the
+%   single-round rate, and never grows as the set grows. Dropping only
+%   key-inert pairs changes nothing.
+% prominence: standard
+% status: accepted
+% uses: [def:dropped, def:joint-sectors, lem:joint-sectors, def:feasible, foundations/lem:kernel, cor:reduction-constrained, foundations/def:kl, def:admissible-declaration]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Deleting summands that are all non-positive can only raise each $K$, and
+the objective falls as $K$ rises. The loss is in the rate and needs no
+hypothesis on the key map or the key holder, and it is a bound only because
+the dropped sectors stay in the program.
+
+\begin{proposition}\label{prop:drop-bound}
+Let $\Decl$ satisfy Definition~\ref{def:admissible-declaration} in the general format, in
+either source mode and with an arbitrary list $\CList$; let
+$\alpha\in(1,\infty)$ and let $\mathcal{D}\subseteq\mathcal{D}'$ be dropped
+sets (Definition~\ref{def:dropped}). For every $\omega$ block diagonal along
+the joint sectors, every $\hat c\in\Chkey$ and every distribution $\mathbf q$
+on $\Chatset$:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $0\le K_{\hat c}(\omega)\le K^{\mathcal{D}}_{\hat c}(\omega)
+\le K^{\mathcal{D}'}_{\hat c}(\omega)\le P_{\hat c}(\omega)$;
+\item $O^{\mathcal{D}'}_{\alpha}(\mathbf q,\omega)\le
+O^{\mathcal{D}}_{\alpha}(\mathbf q,\omega)\le O_{\alpha}(\mathbf q,\omega)$
+in the extended-real sense, and $O^{\mathcal{D}'}_{\alpha}(\mathbf
+q,\omega)\ge0$ whenever $\tr\omega=1$;
+\item consequently
+$0\le\underline{h}^{\mathcal{D}'}_{\alpha}\le
+\underline{h}^{\mathcal{D}}_{\alpha}\le\hlow\le\hqkd(\CList)$;
+\item if every pair of $\mathcal{D}$ is key-inert
+(Definition~\ref{def:joint-sectors}) then
+$K^{\mathcal{D}}_{\hat c}=K_{\hat c}$ and
+$O^{\mathcal{D}}_{\alpha}=O_{\alpha}$ identically.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) By \eqref{eq:K-joint} and \eqref{eq:KD}, the three quantities
+$K_{\hat c}$, $K^{\mathcal{D}}_{\hat c}$, $K^{\mathcal{D}'}_{\hat c}$ are
+$P_{\hat c}(\omega)$ plus the sum of $f_{\hat c,(t,s)}(\omega^{(t,s)})$ over
+all joint sectors, over those with $(\hat c,(t,s))\notin\mathcal{D}$, and
+over those with $(\hat c,(t,s))\notin\mathcal{D}'$ respectively: three
+nested index sets, the last the smallest. Every summand is $\le0$
+(Lemma~\ref{lem:joint-sectors}\,(ii)), so deleting summands does not
+decrease the sum, which gives the two middle inequalities, and the last
+holds because the remaining sum is $\le0$. $K_{\hat c}(\omega)\ge0$: by
+Lemma~\ref{lem:joint-sectors}\,(ii),
+$P_{\hat c,(t,s)}+f_{\hat c,(t,s)}\ge0$ on every joint sector, and
+$K_{\hat c}(\omega)$ is the sum of these over the joint sectors.
+
+(ii) In \eqref{eq:objective} the quantity $K$ enters only through the terms
+$\frac{1}{\alpha-1}d\big(q(\hat c),K\big)$, $\hat c\in\Chkey$, with $d$ the
+kernel of \xref{foundations/lem:kernel} --- whose conventions at vanishing arguments
+are those of \xref{foundations/def:kl} --- and the prefactor is positive. $d$
+is non-increasing in its second argument, so (i) gives the two inequalities
+termwise, in the extended-real sense. For the lower bound let $\tr\omega=1$,
+so that $\mathbf P\coloneqq\Phimap[\omega]$ is a probability distribution. If
+some $q(\hat c)>0$ has $P_{\hat c}=0$, or
+$K^{\mathcal{D}'}_{\hat c}=0$ with $\hat c\in\Chkey$, the objective is
+$+\infty$. Otherwise, by $K^{\mathcal{D}'}_{\hat c}\le P_{\hat c}$ and
+monotonicity of $d$,
+$d(q(\hat c),K^{\mathcal{D}'}_{\hat c})\ge d(q(\hat c),P_{\hat c})$, so
+\begin{equation*}
+  O^{\mathcal{D}'}_{\alpha}(\mathbf q,\omega)\;\ge\;
+  \frac{\alpha}{\alpha-1}\sum_{\hat c\in\Chatset}
+  q(\hat c)\log_2\frac{q(\hat c)}{P_{\hat c}}
+  =\frac{\alpha}{\alpha-1}\,\sfD(\mathbf q\,\|\,\mathbf P)\;\ge\;0 ,
+\end{equation*}
+the terms $\hat c\notin\Chkey$ carrying the prefactor
+$\frac{\alpha}{\alpha-1}$ already and the terms $\hat c\in\Chkey$ the sum
+$1+\frac{1}{\alpha-1}$ of their two prefactors; the last step is
+non-negativity of the divergence between probability distributions,
+Gibbs' inequality of \xref{foundations/def:kl}.
+
+(iii) Take infima over $\acSet\times\Feas$ in (ii); every $\omega\in\Feas$
+has $\tr\omega=1$. The last inequality is
+Corollary~\ref{cor:reduction-constrained}.
+
+(iv) For a key-inert pair $f_{\hat c,(t,s)}\equiv0$
+(Lemma~\ref{lem:joint-sectors}\,(iii)), so the summands deleted in
+\eqref{eq:KD} are identically zero.
+\end{proof}

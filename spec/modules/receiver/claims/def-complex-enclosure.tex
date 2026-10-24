@@ -1,0 +1,58 @@
+% ---
+% id: receiver/def:complex-enclosure
+% kind: def
+% title: "Complex enclosures, and enclosures of square roots and angles"
+% summary: >-
+%   A complex enclosure of a number is a Gaussian-rational centre with a
+%   rational radius that bounds its distance from the number; a matrix is
+%   enclosed entry by entry. Square roots, cosines and sines are enclosed by any
+%   such pair with a rational centre, exactly where the value is plainly rational.
+% prominence: standard
+% status: implemented
+% uses: [foundations/def:binary64]
+% mentions: [foundations/def:exact-reference, thm:enclosed-blocks]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.enclosure:Ball
+% lean:
+% ---
+
+A reference of a measurement family is read through rational boxes around its
+entries (\xref{foundations/def:exact-reference}). The receiver's
+photon-number blocks are built from the declared parameters by finitely many
+arithmetic operations, square roots, cosines and sines, so a box around each
+block follows from boxes around those square roots and trigonometric values,
+carried through the arithmetic (Theorem~\ref{thm:enclosed-blocks}). The
+definition fixes what such a box must satisfy and leaves open how it is
+computed; a series with a bounded remainder, or bisection on the squares for a
+square root, are ways to obtain one.
+
+\begin{definition}\label{def:complex-enclosure}
+Write $\mathbb{Q}(i)=\{x+iy:x,y\in\mathbb{Q}\}$ and, for $z\in\mathbb{Q}(i)$,
+$\lvert z\rvert_{1}\coloneqq\lvert\mathrm{Re}\,z\rvert+\lvert\mathrm{Im}\,z\rvert$,
+a rational with $\lvert z\rvert\le\lvert z\rvert_{1}$. A
+\term[a Gaussian-rational centre and a non-negative rational radius that bounds
+the distance of a complex number from the centre; a matrix is enclosed entry by
+entry]{complex enclosure} of a complex number $x$ is a pair $(x_c,r)$ of
+$x_c\in\mathbb{Q}(i)$, its \emph{centre}, and a rational $r\ge0$, its
+\emph{radius}, with $\lvert x-x_c\rvert\le r$. It is \emph{exact} when $r=0$,
+and then $x=x_c$. A complex enclosure of a complex matrix $X$ is a pair
+$(X_c,r)$ of a matrix $X_c$ of the same shape with entries in
+$\mathbb{Q}(i)$ and a matrix $r$ of non-negative rationals such that
+$\big((X_c)_{il},r_{il}\big)$ is a complex enclosure of $X_{il}$ for all
+$i,l$.
+
+A \term[a complex enclosure with a rational centre of the square root of a
+non-negative rational, exact where that rational is the square of a
+rational]{square-root enclosure} of a rational $p\ge0$ is a complex enclosure
+of $\sqrt p$ with a rational centre, exact where $p$ is the square of a
+rational. An
+\term[a pair of complex enclosures with rational centres of the cosine and the
+sine of an angle given as a rational or as a rational multiple of pi, exact at
+the multiples of pi/2]{angle enclosure} of a real number $\theta$ that is
+given either as a rational, such as a \tref{declared value}
+(\xref{foundations/def:binary64}\,(iii)), or as $c\pi$ with $c$ a rational,
+is a pair of complex enclosures with rational centres of $\cos\theta$ and of
+$\sin\theta$, both exact where $\theta=c\pi$ with $2c$ an integer.
+\end{definition}

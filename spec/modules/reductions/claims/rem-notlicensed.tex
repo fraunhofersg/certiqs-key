@@ -1,0 +1,60 @@
+% ---
+% id: reductions/rem:notlicensed
+% kind: rem
+% title: "Scope of the attack-set licence"
+% summary: >-
+%   The licence permits one thing, restricting the squashed attacks to the
+%   declared admissible set. It licenses no trusted marginal, no constraint on
+%   Eve's side information, no data-dependent or multi-round constraint, no
+%   reuse under another proof technique, and nothing about the device.
+% prominence: standard
+% status: accepted
+% uses: [thm:licence, def:attset]
+% mentions: [req:declared-constants-only, req:licence-record]
+% assumes: [A-CONST, A-RECV]
+% refs:
+%   - "tupkary2026decoy, Rem. 9.4"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:notlicensed}
+Theorem~\ref{thm:licence} licenses exactly one thing: restricting the squashed
+round model's attacks to the declared admissible set of
+Definition~\ref{def:attset}. It does \emph{not} license, and this contract
+asserts none of the following.
+\begin{enumerate}[label=(\alph*),leftmargin=2.4em]
+\item \emph{A trusted marginal.} Nothing here licenses declaring $\tau_A$. That
+  is a separate input with a separate attestation on the consumer's side, and a
+  licensed $\CList$ never substitutes for it: a constraint entry restricts what
+  \emph{Eve's channel} may do, whereas $\tau_A$ asserts that a register never
+  reached her at all.
+\item \emph{Constraints on the purifying register.} Every entry is an operator
+  on $\Qsys$ (resp.\ $A\Qsys$); no constraint on Eve's side information is
+  expressible in this format or admitted by it.
+\item \emph{Data-dependent constraints.} The constants $c_k$ are declared
+  before the run (Assumption~\ref{ass:constdecl}); an entry whose $c_k$ encoded
+  a statistic of the current run would be unsound here regardless of
+  provenance, and such an entry is refused
+  (Requirement~\ref{req:declared-constants-only}).
+\item \emph{Joint multi-round constraints.} Admissibility is per round
+  (Definition~\ref{def:attset}); Theorem~\ref{thm:licence} is proved per round,
+  and no constraint on the joint $n$-round state is licensed or expressible.
+\item \emph{Reuse under another proof technique.} The restriction is compatible
+  with the accumulation route the consuming contract imports. It is \emph{not}
+  automatically compatible with a postselection-based reduction: the published
+  framework records that the analogous restriction ``cannot be
+  straightforwardly used with the postselection technique''
+  (\cite[Rem.~9.4]{tupkary2026decoy}). A module importing $\CList$ into a
+  different technique must re-establish the licence there; the artefact names
+  the technique the licence was issued for
+  (Requirement~\ref{req:licence-record}).
+\item \emph{Anything about the device.} Whether the receiver actually satisfies
+  the hypothesis \eqref{eq:certificate} --- concretely, whether
+  $\blk{M}{\gtN}_o\succeq p_o\idon{}$ holds of the physical detector --- is
+  \emph{not} proved here and cannot be: it is
+  Assumption~\ref{ass:recv}, discharged by the accepted receiver contract for
+  the device that contract describes, under its own ledger.
+\end{enumerate}
+\end{remark}

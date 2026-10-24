@@ -1,0 +1,33 @@
+% ---
+% id: reductions/req:reserved-link-kinds
+% kind: req
+% title: "Refusal of the reserved receiver-stage link kind"
+% summary: >-
+%   The engine emits no link of the reserved label-space kind and refuses a
+%   request that declares one. The family-dominating kind is the domination
+%   submodule's, and no requirement emits it.
+% prominence: standard
+% status: implemented
+% uses: [prop:common]
+% mentions: [def:link, rem:dominating, reductions/domination/def:domination-link]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.validation:rule_link_kind
+% lean:
+% ---
+
+Proposition~\ref{prop:common} merges branches whose targets squash to one
+common target; with the device label read as a branch register, it reduces a
+family of devices to a single squashed model
+(Remark~\ref{rem:dominating}). The receiver-stage link kind
+(Definition~\ref{def:link}) for a general device-label space is reserved. The
+kind \texttt{family-dominating}, whose first instance is the \tref{domination link}
+of Definition~\ref{def:domination-link}, belongs to the domination submodule,
+and no requirement emits it.
+
+\begin{requirement}\label{req:reserved-link-kinds}
+The engine emits no receiver-stage link of the reserved kind
+\iface{label-space}, and refuses a request that declares a link of that kind
+with \iface{link_kind_deferred}.
+\end{requirement}

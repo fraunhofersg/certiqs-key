@@ -1,0 +1,27 @@
+% ---
+% id: meat-core/def:admissible-acceptance-set
+% kind: def
+% title: "Admissible acceptance set"
+% summary: >-
+%   An acceptance set is admissible when it is a closed convex subset of the
+%   probability simplex on the acceptance values. Accumulation, the attainment
+%   and limit results and the first-order bound all read that geometry.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [req:acceptance-set-admission]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The engine decides the condition (req:acceptance-set-admission), so it is a definition with a requirement and not an assumption."
+% ---
+
+The acceptance set is the set of acceptance-value distributions on which the
+acceptance test accepts. Which sets the engine admits, and how it decides
+that a declared one is admissible, is Requirement~\ref{req:acceptance-set-admission}.
+
+\begin{definition}\label{def:admissible-acceptance-set}
+An \term[A closed convex subset of the probability simplex on the acceptance values.]{admissible acceptance set}
+is a closed convex subset $\acSet$ of the probability simplex on $\Chatset$.
+\end{definition}

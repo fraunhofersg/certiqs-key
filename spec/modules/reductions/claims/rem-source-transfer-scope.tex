@@ -1,0 +1,36 @@
+% ---
+% id: reductions/rem:source-transfer-scope
+% kind: rem
+% title: "Scope of the source-map lemma"
+% summary: >-
+%   The source-map lemma gives the specified-source protocol no
+%   entanglement-based description, uses no purification and asserts no
+%   equality of marginals. With an empty source segment the two descriptions
+%   coincide, and parts (i) and (iii) of the lemma add nothing to the
+%   definition of one protocol.
+% prominence: standard
+% status: accepted
+% uses: [lem:source-transfer]
+% mentions: [def:protocol, transmitter/def:srcert]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:source-transfer-scope}
+Lemma~\ref{lem:source-transfer} never gives the specified-source protocol an
+entanglement-based description. So no purification of a mixed $\rho_x$ is a
+system of either presentation, nothing is asserted about its dimension, its
+marginal or its correlations, and no statement relating the purifications of
+the two preparations is used: where $\rho_x$ is mixed such a purification
+exists, and it is a system of neither protocol. Nor is any equality of
+marginals asserted: $\tau_A$ is the marginal of the \emph{virtual}
+description, which is the pair a certificate is written against at every
+length of the source segment (\xref{transmitter/def:srcert}, ``One reading at
+every $L_{\mathrm s}$''), and nothing in the lemma equates it with a marginal
+of the specified description. At $L_{\mathrm s}=0$ the two descriptions
+coincide, $\Xi$ is the identity, $\Avirt=\Asig$ and $\rvirt_x=\rho_x$, and
+Lemma~\ref{lem:source-transfer}\,(i) and (iii) say nothing beyond what
+Definition~\ref{def:protocol} already says of one protocol.
+\end{remark}

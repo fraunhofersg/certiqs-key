@@ -1,0 +1,94 @@
+% ---
+% id: foundations/ass:snapped-measurement
+% kind: ass
+% title: "The device measures the snapped family where the run reads the snap"
+% summary: >-
+%   On every moved block of a snap that the run does not evaluate off its snap,
+%   the device measures the snapped family; for a producer's snap of its own
+%   emission, what the run concludes from the emission holds of the snapped
+%   family there.
+% prominence: standard
+% status: accepted
+% uses: [def:snap, def:exact-reference, def:sector-map, def:declared-data, def:evaluated-off-snap]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-SNAP
+% verification: never
+% category: receiver
+% affects: [secrecy, completeness]
+% notes: "affects includes completeness because the honest statistics are computed from the snapped family. A block evaluated off its snap is outside B even where the acceptance data or the error-correction length were computed from the snapped family; those readings bear on completeness only, and the honest law a run declares is the honest-model premise of the statistics module (statistics/ass:hon-env), not this assumption. The last-resort case of the hypothesis is a moved block already; it is named so that a reader of the manifest sees it. The ledger row and machine key snapped_measurement are in spec/modules/foundations/interface.yaml."
+% user_statement: >-
+%   Applies only where the run record names blocks as resting on it, a
+%   premise about your device. The engine moves each measurement onto its
+%   numerical lattice. Where it holds a reference of your model, it computes
+%   the key rate on the model at the points the moved measurement found;
+%   where the reported rate was formed there, the blocks carrying the
+%   reference do not rest on this. On the named blocks, the key
+%   rate is computed as if the device performed the moved measurement. It
+%   may treat as possible an outcome your model treats as impossible, except
+%   in rows and columns the record states to be exactly zero; on a block
+%   flagged support_not_preserved, not even there. The engine cannot check
+%   this. The record names the cause and a fix: a model with a reference, a
+%   run that uses enclosed references, the reasons the reference's bound was
+%   not counted or certified, or your device's loss and dark counts.
+% lean:
+% ---
+
+A snap moves a measurement family onto a lattice
+(Definition~\ref{def:snap}), and nothing established relates a moved block
+to the model it replaced. A run that holds a \tref{reference} of the family
+and evaluates the numbers its key length rests on with that reference in
+place of the snap reads the snapped family only to find the points at which
+it evaluates them; on such a block, \tref{evaluated off its snap}, no premise
+about the snap is needed, and this assumption does not cover it. Where the
+run does read a moved block, because no reference reaches the evaluation, the
+evaluation on the reference does not count, or the key length is formed from
+a number certified on the snapped family in its place, the analysis of the
+run is
+there an analysis of the snapped family, a block whose data are an evaluation
+of a model not known exactly on it included, even where the snap leaves that
+evaluation as it stands. This assumption is the premise under which that
+analysis describes the device. Where the snap had to give an element support
+that the data deny, a block the record flags, the premise is stronger, since
+the snapped family may treat as possible an outcome that the model treats as
+impossible. On the blocks it covers it takes the place of the model as a
+description of the device, so that the two are never asserted of the same
+block; for a family that a producer snaps in its own emission, which is the
+target of a reduction and not the measurement of a device, it is the premise
+that what the run concludes from the emission holds of the snapped family. A
+run none of whose blocks it covers does not invoke it.
+
+\begin{assumption}\label{ass:snapped-measurement}
+Let $F$ be a snap (Definition~\ref{def:snap}) of an operator family $D$ read
+as a measurement, against a \tref{sector map} with blocks $s\in\mathsf{S}$
+(Definition~\ref{def:sector-map}), over an alphabet $J$, with $D$ the data the
+snap is made from: the data as an instance states them, or, where the
+instance computes those data from a model of the family, that model, a
+\tref{reference} of the family (Definition~\ref{def:exact-reference}), or a
+producer's exact construction of what it emits
+(Definition~\ref{def:declared-data}). Let $B\subseteq\mathsf{S}$ be the set of
+blocks that the record of the run names as resting on this assumption: the
+\tref{moved} blocks of $F$ (Definition~\ref{def:snap}), those on which the
+record does not show, by an exact decision, that $F^{(s)}_j=D^{(s)}_j$ for
+every $j\in J$, that are not \tref{evaluated off its snap}
+(Definition~\ref{def:evaluated-off-snap}). A \tref{kept} block and a block
+evaluated off its snap do not belong to $B$. Every other moved block belongs
+to $B$, whatever its cause; among them are the blocks on which the snap gives
+an element support outside the \tref{structural support} of $D^{(s)}_j$
+(Definition~\ref{def:snap}).
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item Where $D$ is the data an instance states as the measurement of a
+  device, the model it computes them from, or a reference of it, then on every block $s\in B$ the block on $s$
+  of the measurement the device performs, read against the sector map, is
+  the family $\{F^{(s)}_j\}_{j\in J}$ with the entries recorded for the snap.
+  On such a block, any statement of another assumption of the run that a
+  model describes that measurement is not asserted, and this clause holds in
+  its place.
+\item Where $D$ is a producer's exact construction of what it emits, every
+  conclusion about the device that the claims of the run draw from the
+  emitted family, under their hypothesis that it is the producer's exact
+  construction, holds when the emitted family is $F^{(s)}$ on every block
+  $s\in B$.
+\end{enumerate}
+\end{assumption}

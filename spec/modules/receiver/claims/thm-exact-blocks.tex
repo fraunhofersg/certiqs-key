@@ -1,0 +1,83 @@
+% ---
+% id: receiver/thm:exact-blocks
+% kind: thm
+% title: "Exact entries of the blocks on the exact route"
+% summary: >-
+%   With Gaussian-rational port Grams, every block entry whose two occupation
+%   vectors have factorial products forming a square, every entry of a block of
+%   at most one photon among them, is Gaussian-rational and enclosed exactly.
+%   Up to one photon the reference is then exact.
+% prominence: standard
+% status: accepted
+% uses: [def:exact-route, lem:fock-permanent, thm:click-povm, thm:coarse-graining, thm:enclosed-blocks, def:complex-enclosure, lem:enclosure-arithmetic, foundations/def:exact-reference]
+% mentions: [foundations/req:snap-reference]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% notes: "The theorem gives only the exactness that a kept block needs, for the entries known exactly; the reference at any cutoff is thm:enclosed-blocks."
+% lean:
+% ---
+
+A snap keeps a block only where its reference is exact on the block and
+every element is already a \tref{lattice value}
+(\xref{foundations/req:snap-reference}\,(ii)). The theorem says where the
+enclosures of Theorem~\ref{thm:enclosed-blocks} are exact: on every entry
+that the factorials of the occupation basis do not make irrational. Above one
+photon the off-diagonal entries generally carry a factor $1/\sqrt2$ or
+similar, so those blocks have non-zero radii even at Gaussian-rational
+Grams.
+
+\begin{theorem}\label{thm:exact-blocks}
+Let $\Recv$ be a \tref{receiver instrument} whose
+\tref[port Gram matrices]{port Grams} $\{A_k\}$ have entries in
+$\mathbb{Q}(i)$, as on the \tref{exact route}
+(Definition~\ref{def:exact-route}), with click-pattern POVM $\{M_S\}$, a
+\tref{declared coarse-graining} $\cg$ and emitted POVM $\{F_v\}$. Let $n\ge0$
+and let $\vec m,\vec m'$ be occupation vectors of weight $n$ such that
+$\vec m!\,\vec m'!$ is the square of an integer; this holds on the diagonal,
+$\vec m=\vec m'$, and for every $\vec m,\vec m'$ when $n\le1$.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item The entry $(\vec m,\vec m')$ of every block $\Pvac{J}^{(n)}$,
+  $\blk{M}{\eqn}_S$ and $\blk{F}{\eqn}_v$ lies in $\mathbb{Q}(i)$.
+\item If the enclosures of the $A_k$ in Theorem~\ref{thm:enclosed-blocks}\,(ii)
+  are exact, that is, each $A_k$ is enclosed by itself with radius zero,
+  then the enclosure of the entry $(\vec m,\vec m')$ of each of these blocks
+  in Theorem~\ref{thm:enclosed-blocks}\,(ii), and of the blocks
+  $\blk{F}{\eqn}_v$ in Theorem~\ref{thm:enclosed-blocks}\,(iii), is exact,
+  its centre being the entry.
+\item Under the hypothesis of (ii), every block $n\le1$ of the reference of
+  Theorem~\ref{thm:enclosed-blocks}\,(iii) has radius zero everywhere, and for
+  a cutoff $N\le1$ that reference is an \tref{exact reference}
+  (\xref{foundations/def:exact-reference}).
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) Every entry of $\id-A_J$ lies in $\mathbb{Q}(i)$, so
+Lemma~\ref{lem:fock-permanent}\,(ii) puts the entry $(\vec m,\vec m')$ of
+$\Pvac{J}^{(n)}=\Fock(\id-A_J)^{(n)}$ (Theorem~\ref{thm:click-povm}\,(ii)) in
+$\mathbb{Q}(i)$. By \eqref{eq:blockMS} and
+Theorem~\ref{thm:coarse-graining}\,(i), the entry $(\vec m,\vec m')$ of
+$\blk{M}{\eqn}_S$ and of $\blk{F}{\eqn}_v$ is an integer combination of the
+entries $(\vec m,\vec m')$ of blocks $\Pvac{J}^{(n)}$, and $\mathbb{Q}(i)$ is
+closed under such combinations.
+
+(ii) With exact enclosures of the $A_k$, every entry of $\id-A_J$ and every
+permanent formed from them has an exact enclosure
+(Lemma~\ref{lem:enclosure-arithmetic}\,(iv)). If
+$\vec m!\,\vec m'!=s^{2}$ with $s$ a positive integer, then
+$1/(\vec m!\,\vec m'!)=(1/s)^{2}$ is the square of a rational, so its
+\tref{square-root enclosure} is exact (Definition~\ref{def:complex-enclosure}),
+and the product of two exactly enclosed numbers is exactly enclosed. The
+entries $(\vec m,\vec m')$ of $\blk{M}{\eqn}_S$ and $\blk{F}{\eqn}_v$ are
+enclosed by integer combinations of these exact enclosures, hence exactly. The
+condition on $\vec m!\,\vec m'!$ is symmetric in $\vec m$ and $\vec m'$, so
+the entry $(\vec m',\vec m)$ is exact as well, and the Hermitian centre of
+Lemma~\ref{lem:enclosure-arithmetic}\,(v) keeps the entry exact. An exact
+enclosure has as its centre the number it encloses.
+
+(iii) For $n\le1$ every pair $\vec m,\vec m'$ satisfies the condition, so by
+(ii) every radius of the block is zero. For $N\le1$ every block of the
+reference is of this kind, and a reference all of whose radii are zero is
+exact.
+\end{proof}

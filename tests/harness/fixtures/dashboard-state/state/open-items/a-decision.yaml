@@ -1,0 +1,17 @@
+id: spec/a-decision
+title: Decide the thing. It matters.
+kind: decision
+status: open
+severity: minor
+priority: 1
+needs_human: true
+owner: maintainer
+module: null
+claims: []
+opened: 2026-09-01
+closes_when: The thing is decided.
+brief: |
+  A minor decision. Recommended: option A.
+links: [PRINCIPLES.md]
+history:
+  - 2026-09-01: opened.

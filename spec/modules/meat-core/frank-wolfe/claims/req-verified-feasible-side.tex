@@ -1,0 +1,134 @@
+% ---
+% id: meat-core/frank-wolfe/req:verified-feasible-side
+% kind: req
+% title: "The verified feasible side of every bracket"
+% summary: >-
+%   The feasible side of every bracket is the lower bound of
+%   [[lem:feasible-side-dual]] over the exact feasible set, formed exactly from
+%   the computed gradient and the backend's dual, less a deduction for the
+%   computed frame, or with zero row multipliers. The oracle's return, status
+%   and objective enter no number.
+% prominence: standard
+% status: implemented
+% uses: [thm:firstorder, lem:feasible-side-dual, meat-core/def:support-frame, foundations/lem:least-eigenvalue-bound, foundations/def:exact-island, foundations/req:exact-island]
+% mentions: [rem:fo-arithmetic, req:bracket-on-reference, cor:fo-reference, foundations/req:rounding-direction]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% supersedes: meat-core/frank-wolfe/req:primal-pairing
+% implements: certiqs_key.solvers.frank_wolfe.verified:verified_feasible_side
+% lean:
+% ---
+
+Part~(iv) of Theorem~\ref{thm:firstorder} accepts any real number below the
+feasible-side minimum over the exact $\Feas^{J}$ in place of the pairing
+with the oracle's return. Lemma~\ref{lem:feasible-side-dual} gives one from
+any multipliers, and its part~(iv) charges the rounding of the frame a run
+builds its rows with. Formed as below, $b^{\mathrm F}_t$ is at most the
+minimum, over the exact $\Feas^{J}$, of the linear form at the gradient as
+the run computed it, whatever the backend's status, its dual or the
+rounding of the frame: it rests on no property of the backend. A dual
+objective the backend reports is a different number, which an
+approximately dual-feasible return can put above the minimum, and it is
+never used. What this requirement does not reach is the gradient itself,
+computed in binary64 from maps and a frame computed in binary64; that is
+named in Remark~\ref{rem:fo-arithmetic} and bounded by no claim of this
+module. The same formation serves the bracket on a reference companion
+(Corollary~\ref{cor:fo-reference},
+Requirement~\ref{req:bracket-on-reference}).
+
+\begin{requirement}\label{req:verified-feasible-side}
+At every iterate $t$ at which the engine forms a bracket of \eqref{eq:hlb},
+on the declaration it searched and on an admitted reference companion alike,
+it uses in place of the pairing $\langle\lmoJ_t,S_t\rangle$ the number
+$b^{\mathrm F}_t$ of Theorem~\ref{thm:firstorder}\,(iv), formed as follows,
+and never the pairing with a point the backend returned, a dual objective
+the backend reported, or the backend's status.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{The groups and the data.} $b^{\mathrm F}_t$ is a sum over the
+  groups of the program, one per Alice sector in \tref{trusted-source mode}
+  and one in \tref{untrusted-source mode}, read as
+  Lemma~\ref{lem:feasible-side-dual}\,(ii) reads them. Its $G$ is the exact
+  Hermitian part of the gradient blocks as the engine computed them at
+  $x_t$, the same gradient whose acceptance-side part the bracket uses; its
+  coupling is the exact coupling condition of the group; its rows are the
+  maps of Lemma~\ref{lem:feasible-side-dual}\,(ii), in the conjugated or
+  frame-free form the engine imposes, built from the declared data taken
+  exactly: $\Theta^{(\mathsf t)}_k$ as the declared block or the exact
+  product $c_k\tau^{(\mathsf t)}_A$, the lifted operators, and
+  $D^{(s_f)}_k=\hat O^{(s_f)}_k-c_k\idon{}$ formed exactly, all Hermitian by
+  exact admissibility; and in trusted-source mode the frame in those maps is
+  the binary64 $\widetilde W_{\mathsf t}$ the engine constructed for
+  $W_{\mathsf t}$, read as the dyadic matrix it is. Every binary64 number is
+  read as the dyadic rational it is.
+\item \emph{The multipliers.} $Y$ and every $\Lambda_r$ are read off the
+  dual the backend returned for that same solve, as the operators that the
+  multipliers of the coupling condition and of row $r$ represent in the
+  encoding the oracle used, each replaced by its exact Hermitian part. On a
+  group with a one-dimensional coupling and no rows, and on any group whose
+  solve returned no finite dual, whatever its status, $Y=0$ and every
+  $\Lambda_r=0$; on an Alice sector for which (iv) forms no
+  $\varepsilon_{\mathsf t}$, every $\Lambda_r$ of its rows is $0$ and $Y$ is
+  kept. The multiplier of an inequality row is replaced by
+  $\Lambda_r+\mu_r\id$, with $\mu_r$ a dyadic rational at least
+  $\max\{0,-\ell_r\}$ and $\ell_r$ a lower bound on $\lmin(\Lambda_r)$ given
+  by \xref{foundations/lem:least-eigenvalue-bound}, so that
+  $\Lambda_r\succeq0$ holds exactly.
+\item \emph{The eigenvalue.} The group's $\lambda$ is the least, over the
+  blocks of the group, of the lower bounds on $\lmin(R_p)$ that
+  \xref{foundations/lem:least-eigenvalue-bound} gives at a matrix $V$ of the
+  engine's choosing, with $R_p$ formed from the rows of (i). The bound holds
+  at every $V$ that lemma admits, the identity ($\theta=0$) always among
+  them, and the choice bears only on how close $\lambda$ lies to
+  $\min_p\lmin(R_p)$.
+\item \emph{The frame.} For each Alice sector the engine forms a dyadic
+  $\varepsilon_{\mathsf t}\ge\opn{\widetilde W_{\mathsf t}-W_{\mathsf t}}$,
+  established in exact rational arithmetic, where it can: $0$ where
+  $\widetilde W_{\mathsf t}=W_{\mathsf t}$ is decided exactly; and where
+  $\tau^{(\mathsf t)}_A$ is diagonal, the frame is the \tref{full frame} or
+  the \tref{diagonal frame} (Definition~\ref{def:support-frame}), and
+  $\widetilde W_{\mathsf t}$ vanishes exactly wherever $W_{\mathsf t}$
+  does, so that both have at most one non-zero entry in each row and each
+  column and $\opn{\widetilde W_{\mathsf t}-W_{\mathsf t}}$ is the largest
+  modulus of their entrywise difference: a dyadic at least
+  $|\widetilde w-\sqrt{\tau_{ii}}|$ at every entry where $W_{\mathsf t}$
+  carries $\sqrt{\tau_{ii}}$, $\widetilde w$ being the entry of
+  $\widetilde W_{\mathsf t}$ there (for a real $\widetilde w>0$,
+  $|\widetilde w^{2}-\tau_{ii}|/\widetilde w$ is one, since
+  $|\widetilde w-\sqrt{\tau_{ii}}|=|\widetilde w^{2}-\tau_{ii}|/
+  (\widetilde w+\sqrt{\tau_{ii}})$). Where every row of the sector is
+  imposed in frame-free form, no deduction is formed: those rows read no
+  frame, every $\kappa_r$ is $0$, and the sector's bound is that of
+  Lemma~\ref{lem:feasible-side-dual}\,(i). In every other case no
+  $\varepsilon_{\mathsf t}$ is formed. Where it is formed, the sector's bound
+  is that of Lemma~\ref{lem:feasible-side-dual}\,(iv),
+  $b(G_{\mathsf t};Y,\Lambda,\widetilde\lambda)-\sum_r\kappa_r$, with each
+  $\kappa_r$ formed from dyadic upper bounds on
+  $\opn{\widetilde W_{\mathsf t}}$, $\opn{\Lambda_r}$ and $\opn{O_{r,s}}$
+  (for instance on their Frobenius norms, by an integer square root rounded
+  up). Where it is not, the row multipliers are zero by (ii) and the
+  sector's bound is that of Lemma~\ref{lem:feasible-side-dual}\,(i), which
+  then reads no row. In untrusted-source mode there is no frame and no
+  deduction.
+\item \emph{The arithmetic.} The residuals, the shifted multipliers, every
+  eigenvalue and norm bound, every deduction and $b^{\mathrm F}_t$ are
+  computed in exact rational arithmetic on those dyadic data, as a
+  certification of the \tref{exact island}
+  (\xref{foundations/def:exact-island}\,(iii)), the backend's dual entering
+  it only as a candidate (\xref{foundations/req:exact-island}).
+  $b^{\mathrm F}_t$ enters the binary64 bracket rounded toward $-\infty$, the
+  direction that weakens a lower bound, as
+  \xref{foundations/req:rounding-direction} rounds an emitted one.
+\item \emph{The record.} Per bracket the engine records $b^{\mathrm F}_t$
+  (\iface{feasible_side_bound}); the sum of the deductions $\kappa_r$
+  (\iface{frame_deduction}) and the sum of the bounds on
+  $\opn{\Lambda_r}$ it used (\iface{row_multiplier_norm}); where the backend
+  returned a point, the pairing $\langle\lmoJ_t,S_t\rangle$ with it
+  (\iface{oracle_pairing}) and the difference
+  $\langle\lmoJ_t,S_t\rangle-b^{\mathrm F}_t$ with its sign
+  (\iface{dual_gap}); and, per group, whether its multipliers were the
+  backend's, zero, or the backend's with the row multipliers set to zero
+  (\iface{feasible_side_multipliers}). None of these but
+  $b^{\mathrm F}_t$ enters any number.
+\end{enumerate}
+\end{requirement}

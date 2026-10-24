@@ -1,0 +1,62 @@
+% ---
+% id: statistics/lem:freq-in-simplex
+% kind: lem
+% title: "Frequency vectors in the probability simplex"
+% summary: >-
+%   Every frequency vector has non-negative coordinates summing to one, since
+%   each round contributes exactly one outcome. Intersecting a constraint set
+%   with the probability simplex therefore never changes the probability that a
+%   run passes the test, so simplex constraints cost no completeness.
+% prominence: standard
+% status: accepted
+% uses: [def:freq]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{lemma}\label{lem:freq-in-simplex}
+Let $n\ge1$, and write $\simplex{\Chatset}$ for the set of
+$\mathbf{q}\in\mathbb{R}^{\Chatset}$ with non-negative coordinates summing
+to one.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item For every outcome string $\hat c_1^n\in\Chatset^{\,n}$, every count
+$\Ncount{\hat c}(\hat c_1^n)$ of Definition~\ref{def:freq} is a non-negative
+integer, at most $n$ of them are non-zero, and
+$\sum_{\hat c\in\Chatset}\Ncount{\hat c}(\hat c_1^n)=n$. Hence
+$\operatorname{freq}_{\hat c_1^n}\in\simplex{\Chatset}$.
+\item For every set $S\subseteq\mathbb{R}^{\Chatset}$ and every random string
+$\Chat_1^n$ with values in $\Chatset^{\,n}$, the sets
+$\{\operatorname{freq}_{\Chat_1^n}\in S\cap\simplex{\Chatset}\}$ and
+$\{\operatorname{freq}_{\Chat_1^n}\in S\}$ of sample points are equal. In
+particular, whenever either is an event,
+\begin{equation}\label{eq:simplex-free}
+  \Pr\big[\operatorname{freq}_{\Chat_1^n}\in S\cap\simplex{\Chatset}\big]
+  =\Pr\big[\operatorname{freq}_{\Chat_1^n}\in S\big].
+\end{equation}
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{(i).} Fix $\hat c_1^n$. By \eqref{eq:freq},
+$\Ncount{\hat c}(\hat c_1^n)$ is the cardinality of the set
+$J_{\hat c}\coloneqq\{j\in\{1,\dots,n\}:\hat c_j=\hat c\}$, a non-negative
+integer. Each round $j\in\{1,\dots,n\}$ lies in $J_{\hat c}$ for exactly one
+$\hat c$, namely $\hat c=\hat c_j$, so the sets $J_{\hat c}$ for
+$\hat c\in\Chatset$ are pairwise disjoint with union $\{1,\dots,n\}$. Hence
+at most $n$ of them are non-empty, and summing their cardinalities gives
+$\sum_{\hat c\in\Chatset}\Ncount{\hat c}(\hat c_1^n)=n$. Dividing by $n\ge1$,
+the coordinates $\operatorname{freq}_{\hat c_1^n}(\hat c)
+=\tfrac1n\Ncount{\hat c}(\hat c_1^n)$ are non-negative and sum to one, which
+is $\operatorname{freq}_{\hat c_1^n}\in\simplex{\Chatset}$.
+
+\emph{(ii).} The inclusion
+$\{\operatorname{freq}_{\Chat_1^n}\in S\cap\simplex{\Chatset}\}
+\subseteq\{\operatorname{freq}_{\Chat_1^n}\in S\}$ holds because
+$S\cap\simplex{\Chatset}\subseteq S$. Conversely, at every sample point the
+value of $\Chat_1^n$ is a string in $\Chatset^{\,n}$, so by (i) the frequency
+vector there lies in $\simplex{\Chatset}$; if it also lies in $S$, it lies in
+$S\cap\simplex{\Chatset}$. The two sets are therefore equal, and equal events
+have equal probability, which is \eqref{eq:simplex-free}.
+\end{proof}

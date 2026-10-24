@@ -1,0 +1,46 @@
+% ---
+% id: meat-core/rem:inert
+% kind: rem
+% title: "Inert register components of a branch map"
+% summary: >-
+%   An isometry on registers other than the raw-key register leaves the pinched
+%   trace power unchanged, so no quantity of this module depends on a component
+%   of another register that is constant across a branch map's Kraus terms.
+%   Varying components and the raw-key register carry what the proofs use.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [lem:branch-maps, thm:branch-formula]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Theorem~\ref{thm:branch-formula} writes the entropy on an acceptance value
+through the pinched trace power
+$\tr[(\cZ(\cG_{\hat c}(\omega)^{1/\alpha}))^{\alpha}]$ of the pass map's
+output, the trace of that output and the probability of the value. The
+remark shows that such a trace power does not see an isometry on registers
+other than the raw-key register $R$.
+
+\begin{remark}\label{rem:inert}
+If $U$ is an isometry acting only on registers disjoint from $R$, then
+$(U\sigma U^{\dagger})^{p}=U\sigma^{p}U^{\dagger}$ and
+$\cZ(U\sigma^{p}U^{\dagger})=U\cZ(\sigma^{p})U^{\dagger}$, so
+$\tr[(\cZ((U\sigma U^{\dagger})^{1/\alpha}))^{\alpha}]
+=\tr[(\cZ(\sigma^{1/\alpha}))^{\alpha}]$. Consequently a register component
+on a register other than $R$ whose value is \emph{constant across all Kraus
+terms of a given branch map} --- for example the $C_AC_B$ factor when a
+branch has a single announcement class --- can be removed from that branch
+map without changing any quantity in this module: its constant ket
+$\ket{c}$ enters every Kraus operator through the isometry
+$\ket{\psi}\mapsto\ket{c}\otimes\ket{\psi}$, which acts only on registers
+disjoint from $R$. Components that vary across Kraus terms (the class label
+$\kappa$ across classes, the outcome labels within a class) are not of this
+kind: they carry the orthogonality that the derivations of this module use
+(Lemma~\ref{lem:branch-maps}). Nor is the raw-key register $R$ itself, even
+where its value is constant, as it is ($\perp$) across every Kraus term of
+a fail map (Lemma~\ref{lem:branch-maps}\,(ii)): the pinching $\cZ$ acts on
+$R$, and $R$ is what separates the pass branch from the fail branch.
+\end{remark}

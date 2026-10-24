@@ -1,0 +1,34 @@
+% ---
+% id: statistics/binomial-box/rem:selector
+% kind: rem
+% title: "The role of the constrained outcome set"
+% summary: >-
+%   Constraining fewer outcomes narrows each interval but leaves more
+%   coordinates bounded only by the simplex, so no choice of the constrained
+%   outcomes dominates. Completeness holds for every choice, and the
+%   unconstrained outcomes keep the bounds 0 and 1, so the box always has two
+%   rows per outcome.
+% prominence: standard
+% status: accepted
+% uses: [def:construction]
+% mentions: [thm:completeness-bound, req:request-defaults]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Which outcomes are constrained is part of the input; the default, all of
+them, is Requirement~\ref{req:request-defaults}.
+
+\begin{remark}\label{rem:selector}
+Constraining fewer outcomes concentrates the budget on those that are
+constrained, which narrows each interval; it also weakens the set, because the
+unconstrained coordinates are then bounded only by the simplex. Both effects
+are real and pull in opposite directions, so no choice of $\Chatcon$
+dominates. Completeness holds for whatever $\Chatcon$ is supplied
+(Theorem~\ref{thm:completeness-bound}), and the unconstrained coordinates receive the vacuous
+bounds $[0,1]$ of \eqref{eq:boxbounds} rather than being omitted from $B$ ---
+so the row count $m_{\mathrm{row}}=2|\Chatset|$ does not depend on $\Chatcon$
+and a consumer never has to infer a missing row.
+\end{remark}

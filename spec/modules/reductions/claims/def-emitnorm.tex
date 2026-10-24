@@ -1,0 +1,251 @@
+% ---
+% id: reductions/def:emitnorm
+% kind: def
+% title: "The emission normalizer, the declared datum and the declared model"
+% summary: >-
+%   The normalizer puts an exact datum back on the lattice class by class: it
+%   keeps the classes already there and snaps the others for fidelity, rounding
+%   to nearest and placing the residue only where support allows, or, failing
+%   that, by a flagged last resort.
+% prominence: standard
+% status: implemented
+% uses: [lem:exactpsd, def:exactadm, def:reduction-instance, def:joint-family, foundations/def:snap, foundations/def:exact-reference]
+% mentions: [thm:emit, thm:instrument-instance, cor:reference-companion, foundations/req:exact-emission, foundations/req:who-snaps, foundations/req:snap-reference, foundations/req:support-safe-snap, foundations/ass:snapped-measurement, req:emission-record, req:emission-refusal, meat-core/frank-wolfe/req:certified-evaluation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.normalizer:normalize
+% lean:
+% notes: "Two readings of foundations/req:support-safe-snap (iv) are used by the last resort (3): the family mixed is the class of the handed datum before any step (the exact reference), and the uniform family is a positive multiple of the identity on the elements in the sector's support only, the elements outside it staying exactly zero. Step (2) mixes the handed datum itself with its diagonal parts; that is an instance of foundations/req:support-safe-snap (ii) under its reading that admits the data D themselves where every entry is a Gaussian rational, which every entry of the handed datum is. The procedure aims at fidelity and at nothing else: no claim relates a snapped class to the handed datum, and a run evaluates off the snap through the reference companion (cor:reference-companion), which bypasses the normalizer."
+% ---
+
+A \tref{reduction instance} forms its \tref{handed datum} by exact
+arithmetic; every exact step multiplies, and a product of dyadics adds
+significand widths, so the datum can leave the declared lattice on which this
+module emits. The normalizer defined here puts it back by a snap of the
+module's own emission, never of anything it was handed. Every class of the
+handed datum is Hermitian, positive semidefinite and complete at its class
+weight with Gaussian-rational entries, so it is an \tref{exact reference} of
+itself (\xref{foundations/def:exact-reference}, every radius zero). The
+normalizer keeps the classes already on the lattice and snaps every other
+class by one procedure that stays as close to the handed datum as it can
+while keeping every row and column that the handed datum holds at zero
+(\xref{foundations/req:support-safe-snap}): it rounds to nearest, softens the
+off-diagonal entries where positivity needs it, and places what completeness
+leaves only on elements whose support holds it. Where no such placement
+exists, a last resort mixes the class with a multiple of the identity
+(\xref{foundations/req:support-safe-snap}\,(iv)); that may give an element a
+row the handed datum denies it, so the class is flagged. No claim relates a
+snapped class to the handed datum. A run that forms the number its key
+length is formed from on the reference companion
+(Corollary~\ref{cor:reference-companion}), which the reductions build with no
+normalizer from the \tref{handed reference}, or from the instance's own
+snapped blocks where none is handed, evaluates every class off its snap; a run that does not, such as one whose
+key length is formed from a number certified on the snapped declaration in
+the fallback of \xref{meat-core/frank-wolfe/req:certified-evaluation}\,(i),
+rests, on the classes the
+normalizer moved, on \xref{foundations/ass:snapped-measurement}, and a run
+that declares the strict option refuses there instead
+(\xref{foundations/req:snap-reference}\,(iv)). The emission theorem
+(Theorem~\ref{thm:emit}) is stated about what the normalizer produces. The
+six conditions its last step decides are those of
+\xref{foundations/req:exact-emission}; when a producer re-establishes its
+lattice at an emission, and on what it may snap at all, is
+\xref{foundations/req:who-snaps}. Everything the normalizer records is
+Requirement~\ref{req:emission-record}, and its refusals are
+Requirement~\ref{req:emission-refusal}.
+
+\begin{definition}
+\label{def:emitnorm}
+Let $\mathcal{J}$ be a \tref{reduction instance}
+(Definition~\ref{def:reduction-instance}) with \tref{handed datum}
+$A\in\mathcal{D}_{\mathrm{adm}}$, formed exactly. Those numbers \emph{are} the
+\tref[data sector]{data sectors} of the emitted target
+(Definition~\ref{def:reduction-instance}\,(I2)), so they are this module's own
+declaration to its \tref{consumer}. Where the exact arithmetic that formed
+them has left the declared lattice \eqref{eq:latinv}, they
+are re-established on it, per data sector $s$ and per class $t$, by the
+following steps, the
+\term[The deterministic procedure that puts a reduction instance's exactly formed datum back on the declared lattice: it keeps the classes already there, snaps every other class for fidelity without reviving a zero row or column or, failing that, by a flagged last resort, and decides the six emission conditions last.]{emission normalizer}.
+The steps act on the elements $A^{(s)}_v$ with
+$v\in\Vset_t\cap\Vset^{(s)}$, the elements of the class $t$ in the sector's
+support; the elements \tref{outside the sector support} are exactly zero,
+lie on the lattice, and are touched by no step. Every positive
+semidefiniteness below is decided exactly by \eqref{eq:psdtest}, on matrices
+with entries in $\Fldi$. The
+\tref{structural support} of a matrix is the set of indices $i$ whose row $i$
+or column $i$ holds a non-zero entry (\xref{foundations/def:snap}). The
+\emph{designation order} ranks the elements of a class in the sector's
+support by largest exact trace and, among equal traces, by the
+\tref{declared order} of the class. \emph{A tie is exact and ordinary here}:
+the traces compared are exact rationals, and a sector symmetric under a
+relabelling of the class ties every element of it, so ``largest trace''
+alone names no element; the declared order is the order in which this
+contract reads $\Vset$, the outcome varying fastest, and it is emitted with
+the artefact, so the order is a function of the declaration and of nothing
+else. \emph{Rounding to nearest} a matrix at $\kappa$ rounds every real and
+imaginary part of every entry to the nearest integer multiple of
+$2^{-\kappa}$, \emph{ties to even}: a part lying exactly halfway between two
+multiples goes to the one whose integer numerator is even. \emph{The tie is
+exact}: the rounding is carried out in the substrate of
+Lemma~\ref{lem:exactpsd} on exact rationals, so a halfway part is an exact
+equality rather than a floating-point near-miss. \emph{Ties to even is
+odd-symmetric}: negating a part negates both of the multiples nearest it and
+their numerators, which preserves evenness, so the rounding commutes with
+$X\mapsto X^{\dagger}$ --- mirror entries have equal real parts and opposite
+imaginary parts before it and therefore after it --- and a matrix rounded
+from a Hermitian one is Hermitian; a zero entry stays zero.
+\begin{enumerate}[label=(\arabic*),leftmargin=2.4em]
+\item \emph{Keep.} A class $t$ at a sector $s$ every element of which
+  satisfies \eqref{eq:latinv} entry by entry is \emph{kept}:
+  $A'^{(s)}_v\coloneqq A^{(s)}_v$ for every $v\in\Vset_t\cap\Vset^{(s)}$, and
+  no further step acts on it.
+\item \emph{Snap for fidelity.} At every other class and sector, for $w=0$
+  and then $w=2^{-\kappa},2^{-\kappa+1},\dots,2^{-1}$ in this order, let
+  $P^{w}_v$ be $A^{(s)}_v$ with every off-diagonal entry multiplied by
+  $1-w$, that is $(1-w)A^{(s)}_v+w\,T_v$ with $T_v$ the diagonal part of
+  $A^{(s)}_v$. Every element of the class in the sector's support receives
+  $P^{w}_v$ rounded to nearest at $\kappa$, and the \emph{class residue}
+  $E^{w}\coloneqq q_t\idon{d_s}-\sum_{v\in\Vset_t\cap\Vset^{(s)}}A'^{(s)}_v$,
+  a Hermitian matrix of \tref[lattice value]{lattice values}, is split by its \emph{components}:
+  the classes of the equivalence relation on the indices $i$ whose row $i$ of
+  $E^{w}$ is non-zero generated by $i\sim l$ whenever $E^{w}_{il}\ne0$. For a
+  component $C$ write $E_C$ for the matrix that agrees with $E^{w}$ on the
+  entries whose row and column both lie in $C$ and is zero elsewhere. Each
+  $E_C$ is added to the first element $A'^{(s)}_u$ in the designation order
+  whose structural support in the handed datum, that of $A^{(s)}_u$,
+  contains $C$, its \emph{host}. The first $w$ at which every component has
+  a host and every element so formed is decided positive semidefinite gives
+  the family, and $w$ is recorded. Where no $w$ does, the class is snapped
+  by step~(3).
+\item \emph{The last resort.} The support-safe steps of (2) produced no snap
+  of the class, and the class is snapped by a uniform lift, applied to the
+  class with constant $q_t$ and starting from the handed datum. Let $n$ be
+  the number of elements of the class in the sector's support, $v_1$ the
+  first of them in the designation order, and, for $w\in(0,1)$,
+  \begin{equation}\label{eq:lastresort}
+    B^{w}_v\;\coloneqq\;(1-w)\,A^{(s)}_v+w\,\frac{q_t}{n}\,\idon{d_s},
+    \qquad v\in\Vset_t\cap\Vset^{(s)},
+  \end{equation}
+  a family that is Hermitian, complete at $q_t$, with entries in $\Fldi$, and
+  positive definite in every element, since $q_t>0$ at a class that is not
+  kept (at $q_t=0$ completeness and positive semidefiniteness make every
+  element zero, which is on the lattice). Its designation order is that of
+  the class, $\tr B^{w}_v$ being an increasing affine function of
+  $\tr A^{(s)}_v$. For $w=2^{-\kappa},2^{-\kappa+1},\dots,2^{-1}$ in this
+  order, every element other than $v_1$ receives $B^{w}_v$ rounded to
+  nearest at $\kappa$, and $v_1$ receives $q_t\idon{d_s}$ minus their sum;
+  the first $w$ at which every element so formed is decided positive
+  semidefinite gives the family. Where no $w$ does, every element $v\ne v_1$
+  receives the first matrix $A'^{(s)}_v$ of the following list that is
+  Hermitian, satisfies \eqref{eq:latinv} entry by entry, and satisfies
+  \begin{equation}\label{eq:rounddown}
+    0\;\preceq\;A'^{(s)}_v\;\preceq\;B^{1/2}_v :
+  \end{equation}
+  $B^{1/2}_v$ itself; then, for $r=\kappa,\kappa-1,\dots,1$ in this order,
+  the shift $B^{1/2}_v-2^{-r}\idon{d_s}$ and the scaling
+  $(1-2^{-r})B^{1/2}_v$, each rounded to nearest at $\kappa$; finally the
+  zero matrix, which always qualifies, $B^{1/2}_v$ being positive
+  semidefinite; and $v_1$ receives $q_t\idon{d_s}$ minus their sum. The
+  weight $w$, or the fall-back, is recorded, and the class is flagged as one
+  whose support is not preserved: an element may then hold a non-zero entry
+  in a row or column in which the handed element holds none, that is,
+  outside its structural support (\xref{foundations/def:snap}).
+\item \emph{All six conditions are decided last}, after (2) or (3), each of
+  which changes partial sums from the touched element onward: (a)--(e) of
+  Definition~\ref{def:exactadm} together with the lattice invariant
+  \eqref{eq:latinv} of every entry, read on the \tref{target family}
+  \eqref{eq:instance-target} the datum enters. They are the six
+  Theorem~\ref{thm:emit}\,(ii) decides; a family for which one of them fails
+  is refused.
+\end{enumerate}
+A class at a sector that step~(1) does not keep is \emph{moved}, whichever
+of (2) and (3) snapped it. Write $A'$ for the resulting datum --- the
+\term[The datum the emission normalizer outputs: exactly admissible on the declared lattice, and carried entry by entry in the emitted target.]{declared datum},
+an element of $\mathcal{D}_{\kappa}$ by (1) or the step of (2) and (3) that
+snapped the class, each of which makes it Hermitian, on the lattice and
+\tref{class complete} exactly, positive semidefinite by an exact decision in
+(2) and in (3) at a weight of its ladder, and by construction in the fall-back of (3), and
+by (4), which decides all six --- and
+\begin{equation}\label{eq:declmodel}
+  \Mdec\;\coloneqq\;M[A'],
+  \qquad\text{that is}\qquad
+  \Mdec_v\;=\;M_v[A']\quad(v\in\Vset),
+\end{equation}
+for the
+\term[The handed model with its datum replaced by the declared datum, as the instance's model map defines it.]{declared model}:
+the \tref{handed model} with the datum replaced by $A'$, as the instance's
+\tref{model map} defines it. Per data sector $s$, those being the sectors the
+normalizer touches and the only ones both data have,
+\begin{equation}\label{eq:displacement}
+  \Delta_s\;\coloneqq\;\max_{v\in\Vset}\
+  \mxn{A'^{(s)}_v-A^{(s)}_v}
+\end{equation}
+is the
+\term[Per data sector, the largest entrywise modulus of the difference between the declared datum and the handed datum.]{emission displacement};
+it is recorded per data sector, together with the kept and the moved classes,
+for a moved class the step that snapped it, the weight $w$ of (2) or (3) or
+the fall-back of (3), the hosts of the components of (2), and the flag of a
+class snapped by (3).
+
+The normalizer has five properties, each of which Theorem~\ref{thm:emit}, or
+a claim that instantiates it, uses.
+\emph{First, $A'=A$ and every $\Delta_s=0$ whenever the exact construction
+already satisfies \eqref{eq:latinv}}: every class is then kept, the
+normalizer is the identity and nothing below has an antecedent. That is the
+ordinary case at a nominal declaration and is not the general one: every
+exact step of a construction multiplies, a product of dyadics adds
+significand widths, and a lattice established at the instance is closed
+under none of them; that is the case in which a producer re-establishes its
+lattice at an emission.
+\emph{Second, the normalizer reads data sectors and nothing else.} No object
+the \tref{hypotheses (H)} of the instance are about --- an operator without a finite
+presentation, a family on a part of $\Hs{\Bsys}$ the datum does not describe,
+a register POVM --- is read, and none is repaired; so (H) holds of $\Mdec$
+by the \tref{stability clause} of
+Definition~\ref{def:reduction-instance}\,(I1), $\Mdec$ is a POVM on $\Bsys$
+by (I1) at $A'$, and every statement the instance makes about its model under
+(H) holds of $\Mdec$. For an instance whose datum is a family of preserved
+blocks below a cutoff, this is the statement that the declared model agrees
+with the handed one above the cutoff and satisfies every above-cutoff fact the
+handed one does.
+\emph{Third, what the normalizer produces is a datum, and the family the
+emitted identity is about is the model the instance builds from it.} Two
+objects, two symbols, and every statement below names which it is on: $A'$ is
+the declared datum, a finite list of sector blocks carried entry by entry in
+the emitted target; $\Mdec$ is the declared model on $\Bsys$, the object an
+adjoint landing on $\Bsys$ can equal (Theorem~\ref{thm:emit}\,(iii)). Where
+the model map is the identity on a finite $\Bsys$ the two coincide; where the
+model has parts the datum does not describe --- an above-cutoff family,
+further branches --- they do not, and the instance's model map says how $A'$
+sits inside $\Mdec$. For a branching instance
+(Theorem~\ref{thm:instrument-instance}) the normalizer acts branch by branch,
+so the declared model is the branches' declared models composed.
+\emph{Fourth, this is a snap of what this module declares and never of what it
+was handed}, which is the condition under
+which a producer may snap at all.
+\emph{Fifth, no step revives a zero row or column, save the last resort
+(3)}: for every data sector $s$ and every $v\in\Vset$ whose class at $s$ is
+not snapped by (3) the structural support of $A'^{(s)}_v$ is contained in
+that of $A^{(s)}_v$. In (2) the family $\{T_v\}$ of diagonal parts is
+complete at $q_t$, the diagonal of $\sum_vA^{(s)}_v=q_t\idon{d_s}$ being
+$q_t$ in every place, and $T_v$ is diagonal, with non-negative entries,
+non-zero only at indices of the structural support of $A^{(s)}_v$, so
+$P^{w}$ is a mixture with a complete diagonal family that adds only on
+coordinates of each element's own structural support; $P^{w}_v$ has the
+structural support of $A^{(s)}_v$, and a rounding to nearest keeps a zero
+entry zero. Each $E_C$ has its non-zero rows and columns in $C$, which the
+host's structural support contains, and the entries of $E^{w}$ between two
+components are zero by their definition, so $E^{w}=\sum_CE_C$ and every
+non-zero entry of the residue goes to a host. In (2) the residue need not be
+positive semidefinite, and the family is taken only where every element is
+decided positive semidefinite. No element is mixed with a multiple of the
+identity outside (3). In (3) the elements of the class in the sector's
+support may gain rows and columns, which is what its flag discloses; the
+elements outside the support stay zero there too. And (3) always yields a
+family whose elements are positive semidefinite: at a weight of its ladder by decision, and
+in the fall-back because every element of $B^{1/2}$ is positive definite, the
+rounded elements satisfy \eqref{eq:rounddown}, and
+$A'^{(s)}_{v_1}=B^{1/2}_{v_1}+\sum_{v\ne v_1}\big(B^{1/2}_v-A'^{(s)}_v\big)
+\succeq B^{1/2}_{v_1}\succ0$ by the completeness of $B^{1/2}$.
+\end{definition}

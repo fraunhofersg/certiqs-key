@@ -1,0 +1,100 @@
+% ---
+% id: reductions/def:protocol
+% kind: def
+% title: "Measurement-factorizing $n$-round protocol"
+% summary: >-
+%   An n-round protocol passes each round's measured system, held by the
+%   measuring parties, through one measurement channel, the same in every
+%   round, and no later processing touches that system. The squashed protocol
+%   is the same channel with the target POVM in place of the physical one.
+% prominence: standard
+% status: accepted
+% uses: [def:msm]
+% mentions: [ass:meas, meat-core/rem:modes-da1, protocol-compiler/def:declaration, ass:round, transmitter/ass:seq]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "A-SEQ and A-ROUND-SQ are declared by the claims that rest on this definition (thm:factorization), not on it, since a definition assumes nothing, and not on ass:meas or ass:round, since an assumption declares no assumption of its own. A-SEQ is declared whatever the number of measuring parties, since that number is not a datum this definition reads."
+% ---
+
+The protocols this contract reduces touch each round's measured system only
+through a measurement; what follows reads its classical outcome and never the
+system itself. The definition fixes that structure. The declaration it speaks
+of is the protocol declaration that defines the consuming engine's protocol
+(\xref{protocol-compiler/def:declaration}); it names the parties that measure. The
+structure rests on a round order, every public message of a round sent after
+every measurement of that round, which is Assumption A-SEQ of the
+transmitter's contract. This definition places the
+\tref{measurement channel} before the round's remaining processing and fixes
+one POVM and one channel for all rounds; the claims that rest on that
+structure declare A-SEQ and A-ROUND-SQ (Assumption~\ref{ass:round}), a
+definition assuming nothing. Assumption~\ref{ass:meas} and
+Assumption~\ref{ass:round} leave the round order out. The embedding by which
+a declaration names Alice as a measuring party is that of
+\xref{meat-core/rem:modes-da1}\,(b).
+
+\begin{definition}
+\label{def:protocol}
+An
+\term[A channel that in each of n rounds applies one measurement channel to the round's measured system and then processing that touches no measured system, followed by end-of-protocol processing.]{$n$-round protocol}
+with receiver POVM $M$ is a channel
+\begin{equation}\label{eq:protocol}
+  \Eprot_M\;=\;\Kfin\circ\Grnd_n\circ\dots\circ\Grnd_1,
+  \qquad
+  \Grnd_j\;=\;\bar{\Grnd}_j\circ\big(\idmap\otimes\redNmsm_M\big),
+\end{equation}
+in which the \tref{measurement channel} $\redNmsm_M$ of
+Definition~\ref{def:msm} acts on the round-$j$
+\term[The quantum system the measuring parties receive in one round, and no other system; Bob's alone where he alone measures.]{measured system}
+$\Bsys_j$, the quantum system that the
+\term[The parties a declaration names as measuring; their measurements are the factors of the round's measurement channel.]{measuring parties},
+the parties the declaration names as measuring, receive in round $j$, and no
+other system, and the identity acts on everything else. $\bar{\Grnd}_j$ is the
+round's remaining processing (Alice's measurement on $A_j$, the round's
+announcements appended to the public record, and the retained per-round data),
+and $\Kfin$ is the end-of-protocol processing: sifting, parameter estimation
+and the accept/abort decision, error correction, verification, privacy
+amplification and the key maps. The
+\term[The protocol with the physical system and POVM of each round replaced by the squashed system and the target POVM, all other processing unchanged.]{squashed protocol}
+$\Eprot_F$ is \eqref{eq:protocol} with $\Bsys_j$ replaced by $\Qsys_j$, $M$ by
+$F$, and $\bar{\Grnd}_j$, $\Kfin$ unchanged. One POVM and one channel serve
+all $n$ rounds: the same $M$, and in the squashed protocol the same $F$ and
+the same \tref{squashing channel}, stands in every $\Grnd_j$, with no
+dependence on $j$. That the measuring devices measure by the same $M$ in
+every round, with no memory between rounds, is Assumption~\ref{ass:round};
+$F$ and the squashing channel are objects of the analysis, chosen once for all
+rounds. That is what makes the composite of the per-round channels a tensor
+power, such as $\Lambda^{\otimes n}$ for the squashing channel, rather than a
+product of $n$ different maps.
+
+\emph{One measuring party, or several.} $M$ is one POVM on the measured
+system, over the alphabet of the measuring parties' joint outcome. Where one
+party measures, which is the one-party case, $\Bsys_j$ is that party's
+system, Bob's in a prepare-and-measure declaration. Where several parties
+measure, $\Bsys_j=\bigotimes_f\Bsys_{f,j}$ is the product of their
+party-scoped parts, each factor $\Bsys_{f,j}$ belonging to one of them, and
+\eqref{eq:protocol} places \emph{all} of their measurements at the one step
+$\redNmsm_M$, before the round's remaining processing $\bar{\Grnd}_j$ and so
+before every public message of the round.
+The declaration says on which side Alice's measurement sits, and each reading
+is covered by exactly one clause of the first paragraph: the measurement on
+$A_j$ listed in $\bar{\Grnd}_j$ is that of a party the declaration does
+\emph{not} name as measuring (Alice's, in a prepare-and-measure declaration),
+while where she \emph{is} named as measuring, her system is a factor
+$\Bsys_{f,j}$ of the measured system and her measurement is a factor of
+$\redNmsm_M$, not a step of $\bar{\Grnd}_j$. Either way $\bar{\Grnd}_j$ and
+$\Kfin$ touch no $\Bsys_j$, which is all the theorems of this contract read.
+A declaration realizes the second reading by an embedding: it declares
+Alice's system $A$
+one-dimensional, $d_A=1$, folds her measured system into the sectors of
+$\Qsys$ and her outcome components into $v$, and names the components she
+holds in its party partition (\xref{protocol-compiler/def:declaration}). That the
+physical protocol has that order, every public message of round $j$ sent after
+every measurement of round $j$ whichever party sends it and whichever party
+measured, is Assumption~A-SEQ of the transmitter
+(\xref{transmitter/ass:seq}). The definition says nothing about which party
+sends which message or about a message's dependence on earlier messages of
+its own round, and a quantum operation of round $j$ that depended on a
+message of round $j$ is outside it, as it is outside A-SEQ.
+\end{definition}

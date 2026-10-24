@@ -1,0 +1,28 @@
+% ---
+% id: reductions/req:output-state-statistics
+% kind: req
+% title: "Output-state model of the test statistics"
+% summary: >-
+%   The engine declares the output-state model of the test statistics and
+%   emits no state-independent test fraction. Every public choice of known
+%   bias enters through the statistics of the emitted family, as [[A-TSM]]
+%   states.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [ass:tsm]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+No derivation of this contract assumes a state-independent test fraction:
+every per-round public choice of known bias enters only through the
+statistics of the emitted family (Assumption~\ref{ass:tsm}).
+
+\begin{requirement}\label{req:output-state-statistics}
+The engine emits no state-independent test fraction, and it declares the
+test-statistics model \iface{test_statistics_model} to be
+\iface{output_state}.
+\end{requirement}

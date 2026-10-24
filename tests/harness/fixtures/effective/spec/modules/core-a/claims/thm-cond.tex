@@ -1,0 +1,23 @@
+% ---
+% id: core-a/thm:cond
+% kind: thm
+% title: A conditionally accepted bound
+% summary: A conditionally accepted bound, as the checker's tests need it.
+% prominence: standard
+% status: accepted
+% uses: [def:base, def:fresh]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Accepted on its own statement and proof while def:fresh is still draft: its effective status is draft until that definition is settled."
+% ---
+
+\begin{theorem}\label{thm:cond}
+For a base object of Definition~\ref{def:base} and a fresh object $z$ of
+Definition~\ref{def:fresh}, $x \le 1 + z$.
+\end{theorem}
+
+\begin{proof}
+By \eqref{eq:base} and $z \ge 0$.
+\end{proof}

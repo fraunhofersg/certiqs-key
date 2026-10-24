@@ -1,0 +1,51 @@
+% ---
+% id: receiver/def:bounddata
+% kind: def
+% title: "Admissible bound data and the bound function"
+% summary: >-
+%   Ordered scalars between 0 and 1, one pair shared and one pair per port,
+%   define an exponential bound function of the photon number for the
+%   multiclick element. Admissibility is exact, and distinct from the
+%   tolerance rules that admit a floating-point evaluation.
+% prominence: standard
+% status: implemented
+% uses: [lem:fock-block-spectrum]
+% mentions: [def:tolmap, def:evaluation-model]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.bound:BoundData
+% lean:
+% ---
+
+What a squashing argument consumes is, for every declared probe setting, one
+number: a lower bound on the smallest eigenvalue of that setting's
+\tref{multiclick element}, valid on \emph{every} photon-number block above the
+declared cutoff. The bound itself is three lines from
+Lemma~\ref{lem:fock-block-spectrum}, which gives the spectrum of a lifted no-click
+operator on each block. Making the quantifier ``every block above the
+cutoff'' into a finite computation is the work of this section. The
+definition closes with how its one computed condition is decided in the
+floating-point \tref{evaluation model} of Definition~\ref{def:evaluation-model}.
+
+\begin{definition}\label{def:bounddata}
+A tuple $\big(\gamma,\{\beta_k\},c,\{d_k\}\big)$ with $K\ge1$ entries is
+\term[Scalars between 0 and 1, a shared γ and c and a β and d per port, with γ at most every β and c at most every d, from which the bound function is built.]{admissible bound data} when
+\begin{equation}\label{eq:bounddata}
+  0\le\gamma\le\beta_k\le1,\qquad 0\le c\le d_k\le1
+  \qquad(k=1,\dots,K),
+\end{equation}
+and the associated \term[The function 1 + (K-1)γcⁿ - Σₖ βₖdₖⁿ of the photon number n, built from admissible bound data.]{bound function} is
+\begin{equation}\label{eq:beta}
+  \Bnd(n)\coloneqq 1+(K-1)\,\gamma\,c^{\,n}-\sum_{k=1}^{K}\beta_k\,d_k^{\,n},
+  \qquad n\ge0 ,
+\end{equation}
+with the convention $0^0=1$. Admissibility \eqref{eq:bounddata} is exact. The
+one part of it that this contract decides on computed data is $0\le c$; the
+other parts are not separately tested (Definition~\ref{def:tolmap}\,(iv)).
+In floating point that part is decided by
+the widened test $c\ge-\varepsilon_2$ of Definition~\ref{def:tolmap}\,(iv),
+which decides it on \emph{every} input route and is not displaced by the
+route-(ii) admission of Definition~\ref{def:tolmap}\,(v); the computed $c$
+enters \eqref{eq:beta} unclamped.
+\end{definition}

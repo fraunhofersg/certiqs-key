@@ -1,0 +1,276 @@
+% ---
+% id: meat-core/lem:kraus-freedom
+% kind: lem
+% title: "Kraus freedom in the branch maps"
+% summary: >-
+%   Kraus factors with the same Gram matrices give branch operators related
+%   by a partial isometry commuting with the key pinching, so the trace power,
+%   deficit and pulled-back gradient agree. A subspace containing the support
+%   is the support once the compression to it is positive definite.
+% prominence: standard
+% status: implemented
+% uses: [def:branch, def:maps, def:joint-sectors, thm:branch-formula, lem:cone-concavity, thm:gradient, cor:full-gradient, thm:choi, def:support-frame, def:untrusted-choi, foundations/def:pinching, foundations/lem:matrix-function-perturbation]
+% mentions: [meat-core/frank-wolfe/req:certified-evaluation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.certified:_deficit
+% lean:
+% ---
+
+The Kraus operators of a \tref{branch map} carry the square roots
+$\sqrt{M_x}\otimes\sqrt{F_v}$ (Definition~\ref{def:branch}), and in the Choi
+form the frame $W_{\tau}$ as well. A square root of an exact positive
+semidefinite matrix is irrational in general, and is computed only
+approximately. The lemma shows that nothing the objective or its gradient
+reads depends on that choice: any factor with the same Gram matrix gives the
+same branch values and the same pulled-back gradient, through a partial
+isometry that the key pinching cannot see. The lemma is stated for one pair
+of factor families at a time, so it holds for every element an enclosure
+leaves possible, each with its own factors. A certified evaluation may
+therefore build the branch maps from factors whose rank is fixed: exact
+factors, or, for an element $LWL^{\dagger}$ known through an enclosed factor
+$L$ and an exact positive diagonal core $W$, the factor $W^{1/2}L^{\dagger}$,
+whose Gram matrix is that element for every $L$ the enclosure allows, though
+$L$ itself is not known (Requirement~\ref{req:certified-evaluation}).
+Part~(iv) then
+compresses a branch operator, or a pinched block of one, to its support,
+where it is positive definite and the divided-difference map of
+\xref{foundations/lem:matrix-function-perturbation} applies: a subspace known
+to contain the support, such as the range of the factors, is the support as
+soon as the compression to it is shown positive definite.
+
+\begin{lemma}\label{lem:kraus-freedom}
+Let $\alpha\in(1,\infty)$, $p\coloneqq1/\alpha$ and $\hat c\in\Chkey$, and let
+$\mathcal{H}_{\mathrm{in}}$ be a finite-dimensional Hilbert space. For every
+outcome pair $(x,v)$ of a \tref{pass class} of $\hat c$, that is
+$a(x,v)\in\Kann_{\mathrm{pass}}(\hat c)$, let $S_{xv}$ and $S'_{xv}$ be linear
+maps from $\mathcal{H}_{\mathrm{in}}$ into finite-dimensional Hilbert spaces
+$\mathcal{K}$ and $\mathcal{K}'$ with
+\begin{equation}\label{eq:kraus-gram}
+  S'^{\dagger}_{xv}S'_{xv}\;=\;S^{\dagger}_{xv}S_{xv} .
+\end{equation}
+For $\kappa\in\Kann_{\mathrm{pass}}(\hat c)$ put
+\begin{equation}\label{eq:kraus-factored}
+  K_{\kappa}\coloneqq\sum_{(x,v)\in a^{-1}(\kappa)}\ket{r(x,v)}_R\ket{x,v}_{XY}
+  \ket{\kappa}_{C_AC_B}\otimes S_{xv},
+\end{equation}
+a map into $\mathcal{B}\coloneqq\Hs{R\,XY\,C_AC_B}\otimes\mathcal{K}$, and
+$K'_{\kappa}$ likewise with $S'_{xv}$, into
+$\mathcal{B}'\coloneqq\Hs{R\,XY\,C_AC_B}\otimes\mathcal{K}'$. For every
+positive semidefinite operator $\omega$ on $\mathcal{H}_{\mathrm{in}}$ put
+$X(\omega)\coloneqq\sum_{\kappa}K_{\kappa}\omega K_{\kappa}^{\dagger}$ and
+$X'(\omega)\coloneqq\sum_{\kappa}K'_{\kappa}\omega K'^{\dagger}_{\kappa}$,
+the sums over $\Kann_{\mathrm{pass}}(\hat c)$. Let $\cZ$ and $\cZ'$ be the
+\tref[key pinching]{key pinchings} on $\mathcal{B}$ and $\mathcal{B}'$, by
+the projectors $Z_j=\dyad{j}_R\otimes\id$, $j\in\Zset$, and $T$ and $T'$ the
+functionals \eqref{eq:Tcone} with these pinchings. For $X\succeq0$ write
+$\nabla T(X)$ for the operator of \eqref{eq:gradT-kernel} with the sum over
+the strictly positive eigenvalues of $X$ only, $Y=\cZ(X^{p})$ and
+$0^{\alpha-1}\coloneqq0$, which is the split form of
+Theorem~\ref{thm:gradient}\,(i), and $\nabla T'$ likewise.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{(A partial isometry.)} Let $\mathcal{W}\subseteq\mathcal{B}$ be
+  the span of the subspaces
+  $\ket{r(x,v)}_R\ket{x,v}_{XY}\ket{a(x,v)}_{C_AC_B}\otimes
+  \operatorname{ran}S_{xv}$. There is a linear map
+  $\mathbf U:\mathcal{B}\to\mathcal{B}'$ that is isometric on $\mathcal{W}$
+  and vanishes on $\mathcal{W}^{\perp}$, with $\mathbf UK_{\kappa}=K'_{\kappa}$
+  for every $\kappa$ and $(Z_j\otimes\idon{\mathcal{K}'})\,\mathbf U
+  =\mathbf U\,(Z_j\otimes\idon{\mathcal{K}})$ for every $j$; and
+  $\mathcal{W}$ is invariant under every $Z_j\otimes\idon{\mathcal{K}}$.
+  Hence $X'(\omega)=\mathbf UX(\omega)\mathbf U^{\dagger}$, with
+  $\operatorname{supp}X(\omega)\subseteq\mathcal{W}$, for every
+  $\omega\succeq0$.
+\item \emph{(Values.)} For every $\omega\succeq0$:
+  $T'(X'(\omega))=T(X(\omega))$, $\tr X'(\omega)=\tr X(\omega)$,
+  $\operatorname{supp}X'(\omega)=\mathbf U\operatorname{supp}X(\omega)$ and
+  $\operatorname{rank}X'(\omega)=\operatorname{rank}X(\omega)$.
+\item \emph{(Gradients.)} For every $\omega\succeq0$, with $X\coloneqq
+  X(\omega)$ and $X'\coloneqq X'(\omega)$,
+  \begin{equation}\label{eq:kraus-gradient}
+    \nabla T'(X')=\mathbf U\,\nabla T(X)\,\mathbf U^{\dagger},
+    \qquad
+    \sum_{\kappa}K'^{\dagger}_{\kappa}\big(\nabla T'(X')-\id\big)K'_{\kappa}
+    =\sum_{\kappa}K^{\dagger}_{\kappa}\big(\nabla T(X)-\id\big)K_{\kappa}.
+  \end{equation}
+\item \emph{(Compression to the support.)} Let $A\succeq0$ be an operator
+  on $\mathcal{B}$.
+  \begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+  \item \emph{(Containment.)} For every $\omega\succeq0$,
+    $\operatorname{supp}X(\omega)\subseteq\sum_{\kappa}\operatorname{ran}K_{\kappa}$;
+    and $\operatorname{supp}\big((Z_j\otimes\idon{\mathcal{K}})A
+    (Z_j\otimes\idon{\mathcal{K}})\big)\subseteq(Z_j\otimes\idon{\mathcal{K}})
+    \operatorname{supp}A$ for every $j$; and
+    $\operatorname{supp}A^{q}=\operatorname{supp}A$ for every $q>0$.
+  \item \emph{(A floor proves equality.)} If $Q:\mathbb{C}^{m}\to\mathcal{B}$
+    is an isometry with $\operatorname{ran}Q\supseteq\operatorname{supp}A$
+    and $Q^{\dagger}AQ$ is positive definite, then
+    $\operatorname{ran}Q=\operatorname{supp}A$.
+  \item \emph{(The compression.)} If $Q:\mathbb{C}^{m}\to\mathcal{B}$ is an
+    isometry with $\operatorname{ran}Q=\operatorname{supp}A$ and $m\ge1$, then
+    $N\coloneqq Q^{\dagger}AQ$ is positive definite, $A=QNQ^{\dagger}$,
+    $A^{q}=QN^{q}Q^{\dagger}$ for every $q>0$, and for every operator $H$ on
+    $\mathcal{B}$ the divided-difference sum of \eqref{eq:face-dpow} at $A$,
+    over the strictly positive eigenvalues of $A$, equals
+    $Q\,\mathrm{D}_N[Q^{\dagger}HQ]\,Q^{\dagger}$, with $\mathrm{D}_N$ the
+    map of \xref{foundations/lem:matrix-function-perturbation}\,(iii) for
+    $f(x)=x^{p}$.
+  \end{enumerate}
+\item \emph{(The branch maps.)} With $\mathcal{H}_{\mathrm{in}}=\Hs{A\Qsys_s}$
+  and $S_{xv}=\sqrt{M_x}\otimes\sqrt{F^{(s)}_v}$, the $K_{\kappa}$ are the
+  $K^{(s)}_{\kappa}$ of Definition~\ref{def:branch} and
+  $X(\omega)=\cG_{\hat c,s}(\omega)$. In \tref{trusted-source mode}, with
+  $\mathcal{H}_{\mathrm{in}}=\Hs{A_0\Qsys_s}$, a support frame and
+  $S_{xv}=\sqrt{M_x}\,W_{\tau}\otimes\sqrt{F^{(s)}_v}$, the $K_{\kappa}$ are
+  the $K^{(s)}_{\kappa}(W_{\tau}\otimes\idon{\Qsys_s})$,
+  $X(J_s)=\cG^{J}_{\hat c,s}(J_s)$, and
+  $\sum_{\kappa}K^{\dagger}_{\kappa}(\nabla T(X)-\id)K_{\kappa}
+  =\chi^{\dagger}_{\Qsys_s}\big(\cG^{\dagger}_{\hat c,s}[\nabla T(X)-\id]\big)$,
+  the operator of \eqref{eq:grad-pieces}; the same holds on a
+  \tref{joint sector}
+  $(t,s)$ with $M^{(t)}_x$ and the frame of the Alice sector $t$
+  (Definition~\ref{def:joint-sectors}). In each case
+  $S^{\dagger}_{xv}S_{xv}$ is $M_x\otimes F^{(s)}_v$, respectively
+  $(W_{\tau}^{\dagger}M_xW_{\tau})\otimes F^{(s)}_v$. So for any $S'_{xv}$
+  with that Gram matrix, the deficit $f_{\hat c,s}$, the branch operator's
+  rank and the operator $\Delta^{(s)}_{\hat c}$ of \eqref{eq:grad-pieces}
+  are given, by (ii) and (iii), by $X'$ in place of $X$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Isometric conjugation.} Let $\mathbf V$ be isometric on a subspace
+$\mathcal{S}$ and vanish on $\mathcal{S}^{\perp}$, or be an isometry and
+$\mathcal{S}$ its whole domain. Then $\mathbf V^{\dagger}\mathbf V$ is the
+orthogonal projector onto $\mathcal{S}$: for $\phi$, $\psi$ with components
+$\phi_{\mathcal{S}}$, $\psi_{\mathcal{S}}$ in $\mathcal{S}$,
+$\langle\phi,\mathbf V^{\dagger}\mathbf V\psi\rangle
+=\langle\mathbf V\phi_{\mathcal{S}},\mathbf V\psi_{\mathcal{S}}\rangle
+=\langle\phi_{\mathcal{S}},\psi_{\mathcal{S}}\rangle$, an isometry preserving
+inner products by polarisation. If $A\succeq0$ has
+$\operatorname{supp}A\subseteq\mathcal{S}$,
+write $A=\sum_ka_ku_ku_k^{\dagger}$ with $a_k>0$ and orthonormal
+$u_k\in\mathcal{S}$; the $\mathbf Vu_k$ are orthonormal, so
+$\mathbf VA\mathbf V^{\dagger}=\sum_ka_k(\mathbf Vu_k)(\mathbf Vu_k)^{\dagger}$
+is a spectral decomposition with the same positive eigenvalues, its spectral
+projector for an eigenvalue $\lambda>0$ is $\mathbf VP\mathbf V^{\dagger}$
+with $P$ that of $A$, its support is $\mathbf V\operatorname{supp}A$, and
+$(\mathbf VA\mathbf V^{\dagger})^{q}=\mathbf VA^{q}\mathbf V^{\dagger}$ for
+every $q>0$, with $0^{q}\coloneqq0$ as in \xref{foundations/def:pinching};
+moreover $\tr[\mathbf VA\mathbf V^{\dagger}]=\tr[A\,\mathbf V^{\dagger}
+\mathbf V]=\tr A$, since $\mathbf V^{\dagger}\mathbf V$ is the identity
+on $\mathcal{S}\supseteq\operatorname{supp}A$.
+
+\emph{(i).} For each pair $(x,v)$ define $V_{xv}$ on
+$\operatorname{ran}S_{xv}$ by $V_{xv}(S_{xv}\phi)\coloneqq S'_{xv}\phi$.
+By \eqref{eq:kraus-gram},
+$\|S_{xv}\phi\|^{2}=\langle\phi,S^{\dagger}_{xv}S_{xv}\phi\rangle
+=\|S'_{xv}\phi\|^{2}$, so $S_{xv}\phi=S_{xv}\phi'$ forces
+$S'_{xv}(\phi-\phi')=0$: $V_{xv}$ is well defined, linear and isometric.
+Extend it by $0$ on $(\operatorname{ran}S_{xv})^{\perp}$. Write
+$e_{xv}\coloneqq\ket{r(x,v)}_R\ket{x,v}_{XY}\ket{a(x,v)}_{C_AC_B}$; these
+unit vectors are mutually orthogonal for distinct $(x,v)$, their $XY$
+components being. Put $\mathbf U\coloneqq\sum_{(x,v)}e_{xv}e_{xv}^{\dagger}
+\otimes V_{xv}$. On $\mathcal{W}=\bigoplus_{(x,v)}e_{xv}\otimes
+\operatorname{ran}S_{xv}$ it acts as $V_{xv}$ on each orthogonal summand,
+with orthogonal images, so it is isometric there, and it vanishes on
+$\mathcal{W}^{\perp}$. Then $\mathbf UK_{\kappa}
+=\sum_{(x,v)\in a^{-1}(\kappa)}e_{xv}\otimes V_{xv}S_{xv}=K'_{\kappa}$. Since
+$Z_je_{xv}e_{xv}^{\dagger}=e_{xv}e_{xv}^{\dagger}Z_j$, both being
+$e_{xv}e_{xv}^{\dagger}$ if $r(x,v)=j$ and $0$ otherwise, $\mathbf U$
+commutes with the pinching projectors as stated, and each $Z_j$ maps every
+summand of $\mathcal{W}$ to itself or to $0$. Finally
+$X'(\omega)=\sum_{\kappa}\mathbf UK_{\kappa}\omega K_{\kappa}^{\dagger}
+\mathbf U^{\dagger}=\mathbf UX(\omega)\mathbf U^{\dagger}$, and
+$\operatorname{supp}X(\omega)\subseteq\sum_{\kappa}\operatorname{ran}K_{\kappa}
+\subseteq\mathcal{W}$.
+
+\emph{(ii).} Put $X\coloneqq X(\omega)$. By isometric conjugation,
+$X'^{p}=\mathbf UX^{p}\mathbf U^{\dagger}$, $\tr X'=\tr X$, and the support
+and rank statements hold. By (i),
+$\cZ'(\mathbf UA\mathbf U^{\dagger})=\sum_j(Z_j\otimes\id)\mathbf UA
+\mathbf U^{\dagger}(Z_j\otimes\id)=\mathbf U\cZ(A)\mathbf U^{\dagger}$ for
+every $A$, the adjoint of the commutation relation giving
+$\mathbf U^{\dagger}(Z_j\otimes\id)=(Z_j\otimes\id)\mathbf U^{\dagger}$.
+So $Y'\coloneqq\cZ'(X'^{p})=\mathbf UY\mathbf U^{\dagger}$ with
+$Y\coloneqq\cZ(X^{p})\succeq0$, and $\operatorname{supp}Y\subseteq\mathcal{W}$,
+$\operatorname{supp}X^{p}$ lying in $\mathcal{W}$ and $\mathcal{W}$ being
+invariant under every $Z_j$. Isometric conjugation again gives
+$T'(X')=\tr[(\mathbf UY\mathbf U^{\dagger})^{\alpha}]
+=\tr[\mathbf UY^{\alpha}\mathbf U^{\dagger}]=\tr[Y^{\alpha}]=T(X)$.
+
+\emph{(iii).} With $Y$ as in (ii), $Y'^{\alpha-1}=\mathbf UY^{\alpha-1}
+\mathbf U^{\dagger}$ and so $\cZ'(Y'^{\alpha-1})=\mathbf U\cZ(Y^{\alpha-1})
+\mathbf U^{\dagger}$. Let $X=\sum_i\lambda_iP_i$ over the distinct strictly
+positive eigenvalues of $X$; the strictly positive eigenvalues of $X'$ are the
+same, with spectral projectors $\mathbf UP_i\mathbf U^{\dagger}$. As
+$\operatorname{ran}P_i\subseteq\mathcal{W}$, on which
+$\mathbf U^{\dagger}\mathbf U$ acts as the identity,
+$\mathbf UP_i\mathbf U^{\dagger}\,\mathbf U\cZ(Y^{\alpha-1})\mathbf U^{\dagger}
+\,\mathbf UP_j\mathbf U^{\dagger}=\mathbf UP_i\cZ(Y^{\alpha-1})P_j
+\mathbf U^{\dagger}$, and summing with the coefficients
+$\alpha\,(\lambda_i^{p}-\lambda_j^{p})/(\lambda_i-\lambda_j)$, respectively
+$\alpha p\lambda_i^{p-1}$, gives the first identity of
+\eqref{eq:kraus-gradient}. For the second,
+$K'^{\dagger}_{\kappa}AK'_{\kappa}=K_{\kappa}^{\dagger}\mathbf U^{\dagger}A
+\mathbf UK_{\kappa}$; with $A=\mathbf U\nabla T(X)\mathbf U^{\dagger}$ and
+with $A=\id$, and $\mathbf U^{\dagger}\mathbf U$ acting as the identity on
+$\mathcal{W}\supseteq\operatorname{ran}K_{\kappa}\cup\operatorname{supp}\nabla T(X)$
+(the latter inside $\operatorname{supp}X$), both terms reduce to those with
+$K_{\kappa}$ and $\nabla T(X)$.
+
+\emph{(iv)(a).} The support of a positive semidefinite operator is its
+range. $\operatorname{ran}X(\omega)\subseteq\sum_{\kappa}
+\operatorname{ran}(K_{\kappa}\omega K_{\kappa}^{\dagger})\subseteq
+\sum_{\kappa}\operatorname{ran}K_{\kappa}$. With
+$Z\coloneqq Z_j\otimes\idon{\mathcal{K}}$, $\operatorname{ran}(ZAZ)\subseteq
+Z\operatorname{ran}(A)$, since $ZAZw=Z(AZw)$. With
+$A=\sum_ka_ku_ku_k^{\dagger}$, $a_k>0$ and orthonormal $u_k$, both $A$ and
+$A^{q}=\sum_ka_k^{q}u_ku_k^{\dagger}$ have range the span of the $u_k$.
+
+\emph{(iv)(b).} For $y\ne0$,
+$(Qy)^{\dagger}A(Qy)=y^{\dagger}(Q^{\dagger}AQ)y>0$, so $Qy\notin\ker A$.
+Hence $\operatorname{ran}Q\cap\ker A=\{0\}$ and
+$m=\dim\operatorname{ran}Q\le\dim\mathcal{B}-\dim\ker A
+=\operatorname{rank}A$. The inclusion
+$\operatorname{supp}A\subseteq\operatorname{ran}Q$ gives
+$\operatorname{rank}A\le m$, so the two subspaces have the same dimension and
+are equal.
+
+\emph{(iv)(c).} $QQ^{\dagger}$ is the orthogonal projector onto
+$\operatorname{supp}A$, so $A=QQ^{\dagger}AQQ^{\dagger}=QNQ^{\dagger}$. For
+$y\ne0$, $Qy\ne0$ lies in $\operatorname{supp}A$, where $A$ is positive
+definite, so $y^{\dagger}Ny=(Qy)^{\dagger}A(Qy)>0$. Isometric conjugation
+with $\mathbf V=Q$ and $N$ in the role of $A$ there gives
+$A^{q}=QN^{q}Q^{\dagger}$ and shows that
+the strictly positive eigenvalues of $A$ are the eigenvalues $\mu_a$ of $N$,
+with spectral projectors $Q\Pi_aQ^{\dagger}$; so the sum of
+\eqref{eq:face-dpow} is $\sum_{a,b}f^{[1]}(\mu_a,\mu_b)\,Q\Pi_aQ^{\dagger}H
+Q\Pi_bQ^{\dagger}=Q\,\mathrm{D}_N[Q^{\dagger}HQ]\,Q^{\dagger}$ by the
+definition of $\mathrm{D}_N$ in
+\xref{foundations/lem:matrix-function-perturbation}\,(iii).
+
+\emph{(v).} Substituting $S_{xv}$ in the definition of $K_{\kappa}$ gives
+\eqref{eq:kraus} of Definition~\ref{def:branch}, and $X(\omega)$ is then
+\eqref{eq:GTheta} for the sector. In the Choi form,
+$(\sqrt{M_x}\otimes\sqrt{F^{(s)}_v})(W_{\tau}\otimes\id)
+=\sqrt{M_x}W_{\tau}\otimes\sqrt{F^{(s)}_v}$, so the $K_{\kappa}$ are the
+$K^{(s)}_{\kappa}(W_{\tau}\otimes\id)$, and $X(J_s)=\cG_{\hat c,s}
+(\chi_{\Qsys_s}(J_s))=\cG^{J}_{\hat c,s}(J_s)$ by the definition of
+$\chi_{\Qsys_s}$ in Theorem~\ref{thm:choi}. The Kraus adjoint
+$\cG^{\dagger}_{\hat c,s}(A)=\sum_{\kappa}K^{(s)\dagger}_{\kappa}AK^{(s)}_{\kappa}$
+and $\chi^{\dagger}_{\Qsys_s}(B)=(W_{\tau}^{\dagger}\otimes\id)B
+(W_{\tau}\otimes\id)$ (Corollary~\ref{cor:full-gradient}) compose to
+$\sum_{\kappa}K_{\kappa}^{\dagger}AK_{\kappa}$. On a joint sector the Kraus
+operators act through $\sqrt{M^{(t)}_x}\otimes\sqrt{F^{(s)}_v}$
+(\eqref{eq:joint-deficit}), and the same substitution applies. The Gram
+matrices are $(\sqrt{M_x}\otimes\sqrt{F^{(s)}_v})^{2}=M_x\otimes F^{(s)}_v$
+and $(\sqrt{M_x}W_{\tau}\otimes\sqrt{F^{(s)}_v})^{\dagger}
+(\sqrt{M_x}W_{\tau}\otimes\sqrt{F^{(s)}_v})
+=W_{\tau}^{\dagger}M_xW_{\tau}\otimes F^{(s)}_v$. The deficit
+$f_{\hat c,s}=T\circ\cG_{\hat c,s}-\tr\circ\,\cG_{\hat c,s}$
+(\eqref{eq:f-def}) is unchanged by (ii), and $\Delta^{(s)}_{\hat c}$, the
+pulled-back operator of \eqref{eq:grad-pieces} with $\nabla T$ read in the
+split form, is unchanged by (iii).
+\end{proof}

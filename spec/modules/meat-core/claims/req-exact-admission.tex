@@ -1,0 +1,53 @@
+% ---
+% id: meat-core/req:exact-admission
+% kind: req
+% title: "Exact admission of declared data"
+% summary: >-
+%   The engine admits a declaration only if it is exactly admissible and
+%   refuses every other, with no tolerance on declared data, save a reference
+%   companion, admitted on its own terms.
+%   [[prop:optol-nobound]] shows, for the measurement on Q, that closeness to
+%   admissible data could license no key-length claim.
+% prominence: standard
+% status: implemented
+% uses: [def:declaration, prop:optol-nobound]
+% mentions: [foundations/req:declared-tolerance, foundations/req:consumer-decides-exactly, req:companion-admission, meat-core/frank-wolfe/rem:fo-arithmetic]
+% implements: certiqs_key.meat_core.declaration.general_validation:validate_general_declaration
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Exact admissibility asks the conditions of
+Definition~\ref{def:declaration} of the declared
+\tref{binary64 numbers} themselves, not of reals they approximate. For a
+declaration with one Alice sector, one \tref{measured factor} and Alice's
+measurement in \tref{POVM form}, this means that, block by block, each
+declared operator is exactly Hermitian, each measurement operator and the
+declared $\tau_A$ are exactly positive semidefinite, and each completeness
+sum, formed in the \tref{declared order} \eqref{eq:declorder}, is exactly
+the identity with no addition rounding; the paragraph of that definition on
+exact admissibility in the general format says how the conditions read
+otherwise. How the rule meets an instance that moves its own data within
+its \tref{declared tolerance} $\tnum$ is
+\xref{foundations/req:declared-tolerance}, read with
+\xref{foundations/req:consumer-decides-exactly}.
+
+\begin{requirement}\label{req:exact-admission}
+The engine takes no tolerance on \tref{declared data} and decides no
+condition on it more loosely than exactly
+(\xref{foundations/req:consumer-decides-exactly}): it admits a declaration
+only if the declaration is \tref{exactly admissible} in the sense of
+Definition~\ref{def:declaration}, and refuses it otherwise. No
+perturbation of a declared family is licensed to carry the key length of
+the family it approximates. Proposition~\ref{prop:optol-nobound} is the
+reason: it shows, for the measurement on $\Qsys$, that no tolerance could
+license a key-length claim. A compiled reference companion is not admitted
+under this requirement but under Requirement~\ref{req:companion-admission},
+which decides exactly what it shares with the declaration and decides none
+of its family; the binary64 numbers it is evaluated at are no declared
+family whose key length is claimed, since the bound evaluated there is that
+of the reference, at the unbudgeted arithmetic of
+Remark~\ref{rem:fo-arithmetic}.
+\end{requirement}

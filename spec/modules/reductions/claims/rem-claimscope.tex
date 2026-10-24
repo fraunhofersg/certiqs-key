@@ -1,0 +1,56 @@
+% ---
+% id: reductions/rem:claimscope
+% kind: rem
+% title: "The claims that read a declared number"
+% summary: >-
+%   The squashing, transfer, calculus and core instance results read no
+%   declared number; a submodule's instance reads declared data decided
+%   exactly, the licence exactly Hermitian operators and declared constants.
+%   Where the normalizer acts, every statement is read on the declared model.
+% prominence: standard
+% status: accepted
+% uses: [thm:emit, def:emitnorm, rem:emitclaim, def:reduction-instance]
+% mentions: [cor:identity-instance, cor:flag-instance, thm:instrument-instance, cor:register-instance, thm:licence, thm:chain, req:emission-record]
+% assumes: [A-CONST]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:claimscope}
+\emph{The \tref{squashing relation} and its soundness, the factorization and
+transfer theorems, the calculus of the pre-order, the branching rule, the
+flags-enough corollary, register-conditioned squashing and the obstruction
+read no declared number} and assert nothing about the emitted artefact: each
+is a statement about an arbitrary squashing relation, an arbitrary
+instrument, an arbitrary register-conditioned mixture, or an explicit
+counterexample. \emph{The instance theorems of the core} --- the identity,
+flag, branching and register instances
+(Corollaries~\ref{cor:identity-instance}, \ref{cor:flag-instance}
+and~\ref{cor:register-instance}, Theorem~\ref{thm:instrument-instance}) ---
+are statements about arbitrary admissible data and arbitrary branch instances
+and read no declared number either. \emph{A submodule's instance} builds its
+datum out of declared blocks and declared classical data; its hypotheses are
+conditions on a POVM family and on declared scalars and matrices, and this
+module's refusal rules decide every one of those conditions \emph{exactly},
+so it applies to the declared data verbatim. \emph{The attack-set licence}
+(Theorem~\ref{thm:licence}) needs its emitted constraint operators exactly
+Hermitian and its constants declared: the first holds by construction and is
+decided by the refusal rule that says so, the second by
+Assumption~\ref{ass:constdecl}. \emph{The chain theorem}
+(Theorem~\ref{thm:chain}) asserts $\textsf{status}=\textsf{exact}$ of the
+artefact, which is true of the numbers emitted
+(Theorem~\ref{thm:emit}\,(iii)). \emph{The emission theorem}
+(Theorem~\ref{thm:emit}) is the claim about all of the above, stated once over
+the reduction instance (Definition~\ref{def:reduction-instance}).
+
+\emph{One conditioning survives and it is the only one}: where the emission
+normalizer acts, each of those statements is read on the declared model of
+Definition~\ref{def:emitnorm} --- on $\Bsys$, the declared model
+$\Mdec=M[A']$; in the data sectors, the declared datum $A'$ --- and not on
+the handed datum, and Remark~\ref{rem:emitclaim} is what that means.
+\emph{Every residual is recorded}: the displacement and the rounding
+directions are (Requirement~\ref{req:emission-record}), and the consumer's
+key length is Theorem~\ref{thm:emit}\,(v) --- not established, and no refusal
+rule can establish it.
+\end{remark}

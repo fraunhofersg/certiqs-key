@@ -1,0 +1,65 @@
+% ---
+% id: receiver/lem:fock-block-spectrum
+% kind: lem
+% title: "Spectrum of a lifted no-click operator on a photon-number block"
+% summary: >-
+%   On the n-photon block, the lift of 1 − A has as eigenvalues the products of
+%   n factors 1 − λ over the eigenvalues λ of A, so it lies between the n-th
+%   powers of 1 − λmax and 1 − λmin, both attained. The analytic high-photon
+%   bound of the receiver starts from these two extremes.
+% prominence: standard
+% status: implemented
+% uses: [lem:fock-functor]
+% mentions: [thm:port-grams]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.fock:block_spectrum_from_eigenvalues
+% lean:
+% ---
+
+For $A$ the sum of the \tref[port Gram matrices]{port Grams} of a set of ports,
+$\Fock(\id-A)$ is the operator for the event that no port of the set clicks,
+pulled back to the declared input modes (Theorem~\ref{thm:port-grams}\,(iii));
+hence the name lifted no-click operator.
+
+\begin{lemma}
+\label{lem:fock-block-spectrum}
+Let $A$ be Hermitian on $\mathcal{K}_0$ with $0\preceq A\preceq\id$ and
+eigenvalues $\lambda_1,\dots,\lambda_d$ ($d=\dim\mathcal{K}_0$). Then
+$\Fock(\id-A)$ is a positive semidefinite contraction, its $n$-photon block
+$\Fock(\id-A)^{(n)}=\big((\id-A)^{\otimes n}\big)\big|_{\Symn{n}}$ has spectrum
+\begin{equation}\label{eq:spectrum}
+  \Big\{\textstyle\prod_{j=1}^{d}(1-\lambda_j)^{m_j}\ :\
+  \vec m\in\mathbb{N}_0^{d},\ |\vec m|=n\Big\},
+\end{equation}
+and consequently
+\begin{equation}\label{eq:blockbounds}
+  \big(1-\lmax(A)\big)^{n}\,\id\ \preceq\ \Fock(\id-A)^{(n)}\ \preceq\
+  \big(1-\lmin(A)\big)^{n}\,\id ,
+\end{equation}
+both bounds being attained as eigenvalues.
+\end{lemma}
+
+\begin{proof}
+Diagonalize $A=U^\dagger\Lambda U$ with $U$ unitary and
+$\Lambda=\operatorname{diag}(\lambda_1,\dots,\lambda_d)$; then
+$\id-A=U^\dagger(\id-\Lambda)U$ and Lemma~\ref{lem:fock-functor}\,(ii),(iii) give
+$\Fock(\id-A)=\Fock(U)^\dagger\Fock(\id-\Lambda)\Fock(U)$ with $\Fock(U)$
+unitary and photon-number preserving, so the two operators have the same
+spectrum block by block. In the occupation basis built from the eigenbasis of
+$A$, the product vector $\ket{e_{j_1}}\otimes\cdots\otimes\ket{e_{j_n}}$ is an
+eigenvector of $(\id-\Lambda)^{\otimes n}$ with eigenvalue
+$\prod_r(1-\lambda_{j_r})$, and that eigenvalue is unchanged by permuting the
+factors; hence the symmetrized basis vector $\ket{\vec m}$ is an eigenvector of
+$(\id-\Lambda)^{\otimes n}|_{\Symn{n}}$ with eigenvalue
+$\prod_j(1-\lambda_j)^{m_j}$. These $\ket{\vec m}$, $|\vec m|=n$, form an
+orthonormal basis of $\Symn{n}$, so \eqref{eq:spectrum} is the full spectrum.
+Each factor satisfies $1-\lambda_j\in[1-\lmax(A),1-\lmin(A)]\subseteq[0,1]$,
+so a product of $n$ of them lies in
+$[(1-\lmax(A))^n,(1-\lmin(A))^n]$, which is \eqref{eq:blockbounds}; the
+endpoints are attained by the occupation vectors putting all $n$ photons on an
+eigenvector for $\lmax(A)$, respectively for $\lmin(A)$. Positivity and
+contractivity follow from \eqref{eq:blockbounds} and
+Lemma~\ref{lem:fock-functor}\,(iii).
+\end{proof}

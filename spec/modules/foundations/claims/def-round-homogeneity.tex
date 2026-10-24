@@ -1,0 +1,47 @@
+% ---
+% id: foundations/def:round-homogeneity
+% kind: def
+% title: "Round homogeneity of a per-round family"
+% summary: >-
+%   A per-round family is round-homogeneous when one fixed list of objects
+%   describes every round (sameness) and every round behaves as they describe
+%   whatever the other rounds do (no memory across rounds). An assumption may
+%   assert sameness alone, and must then say so.
+% prominence: standard
+% status: accepted
+% uses: [def:round-model]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The schema of the three round assumptions receiver/ass:round (A-ROUND), reductions/ass:round (A-ROUND-SQ) and protocol-compiler/ass:rhom (A-RHOM). Each asserts it, or its clause (i) alone, of its own family, and the families differ, so none of the three implies another; this definition asserts nothing about any family. Two levels, kept apart on purpose: (i) is a condition on the objects (one list, fixed before the run, so independent of the round index and of the run); (ii) is a condition on the rounds the objects describe (no memory across rounds) and is NOT implied by (i). Which clauses an assumption asserts is fixed by its own text, never by what its objects are: A-ROUND and A-ROUND-SQ assert both; A-RHOM asserts (i) alone and says so, although its family holds declared POVMs, channels and the signal ensemble. None of the three asserts (ii) of Alice's source."
+% ---
+
+\begin{definition}\label{def:round-homogeneity}
+Consider the $n$ rounds of a round model (Definition~\ref{def:round-model}),
+and a \term[a finite list of objects that a model of the run declares for a
+round]{per-round family}: a finite list of objects that a model of the
+run declares for a round, such as operators, channels or a declaration. The
+family is \term[one fixed list of objects describes every round, and every
+round behaves as they describe whatever the other rounds do]{round-homogeneous}
+if both of the following hold.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{Sameness.} One list of objects, fixed before the run, describes
+  every round: for every $j\in\{1,\dots,n\}$ round $j$ is described by the
+  same objects. No object of the family depends on the round index or on the
+  run.
+\item \emph{No memory.} Every round behaves physically as the objects
+  describe it, whatever the inputs and the outputs of the other rounds are.
+  This excludes memory across rounds, such as detector memory, afterpulsing
+  or correlations between a source's emissions in different rounds. It is a
+  condition on the rounds, not on the objects, and does not follow from (i).
+\end{enumerate}
+An assumption may assert (i) alone of its family, and must then say so; an
+assumption that calls its family round-homogeneous without saying so asserts
+(i) and (ii). Rounds are not averaged: a family that describes the rounds
+only on average over the rounds, or up to a per-round variation, does not
+satisfy (i), and
+per-round variation is not modelled. Round homogeneity constrains the family
+and the rounds it describes, not the adversary: an attack sequence of the
+round model remains arbitrary and may correlate the rounds.
+\end{definition}

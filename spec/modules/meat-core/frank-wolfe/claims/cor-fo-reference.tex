@@ -1,0 +1,107 @@
+% ---
+% id: meat-core/frank-wolfe/cor:fo-reference
+% kind: cor
+% title: "The first-order bound on the reference companion"
+% summary: >-
+%   At any points, such as those of a search on the snapped declaration or
+%   of one continued on the companion, the bracket formed with the reference
+%   companion's objective, gradient, entries and linear minima bounds the
+%   companion's value from below; its key length is the reference model's.
+% prominence: main
+% status: accepted
+% uses: [thm:firstorder, cor:fo-keylength, def:relaxed-feasible-set, def:first-order-setting, meat-core/prop:reference-companion, meat-core/def:admissible-declaration, meat-core/def:admissible-acceptance-set, meat-core/lem:branch-support, meat-core/def:joint-sectors]
+% mentions: [req:bracket-on-reference, rem:fo-arithmetic, meat-core/rem:declared-measurement]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Read for the companion of meat-core/prop:reference-companion, which may replace several measured factors, so that (ii) and its proof speak of the replaced links."
+% ---
+
+Theorem~\ref{thm:firstorder} asks nothing about where its points came from:
+they may be any finite set of points of the relaxed feasible set at which its
+hypotheses hold. A run may therefore search on the declaration $\Decl$
+compiled from the snapped measurement and form the bracket \eqref{eq:hlb} on
+the compiled reference companion $\Decl^{\mathrm{ref}}$ at the points the
+search produced. The snap then only steers the search, and its displacement
+plays no part in the bound
+(Remark~\ref{rem:declared-measurement}). The corollary is the theorem read
+for $\Decl^{\mathrm{ref}}$, with the hypotheses that carry over from $\Decl$
+named; what a run evaluates, and how, is
+Requirement~\ref{req:bracket-on-reference}, and the arithmetic of that
+evaluation is Remark~\ref{rem:fo-arithmetic}.
+
+\begin{corollary}\label{cor:fo-reference}
+Let $\Decl$ and $\Decl^{\mathrm{ref}}$ be as in
+Proposition~\ref{prop:reference-companion}, let $\alpha\in(1,\infty)$, and let
+$\acSet$ be an \tref{admissible acceptance set}
+(Definition~\ref{def:admissible-acceptance-set}), the one of the run, read
+for both. Let $\varepsilon\ge0$ and let $x_t=(\mathbf q_t,J_t)$,
+$t\in\Itset$, be a finite non-empty set of points, produced by any
+computation, a search on $\Decl$ among them, such that every $x_t$ lies in
+$\acSet\times\Feas^{J}(\varepsilon)$ of $\Decl^{\mathrm{ref}}$
+(Definition~\ref{def:relaxed-feasible-set}) and satisfies (H-POS), (H-SUPP)
+and (H-NOPERT) of Theorem~\ref{thm:firstorder} for the objective, the \tref[branch map]{branch
+maps} and the gradient of $\Decl^{\mathrm{ref}}$, and let $(v_t,S_t)$
+satisfy \eqref{eq:lmo} at the gradient of $\Decl^{\mathrm{ref}}$ at $x_t$,
+its feasible-side minimum over the exact $\Feas^{J}$ of $\Decl^{\mathrm{ref}}$
+(Definition~\ref{def:first-order-setting}), or let, at some or all $t$,
+lower bounds on one or both of those minima stand in for the pairings as
+Theorem~\ref{thm:firstorder}\,(iv) lets them, \eqref{eq:lmo-bounds} read
+at that gradient and over those sets. Write
+$\hlb[\Decl^{\mathrm{ref}}]$ for \eqref{eq:hlb} so formed. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item in exact real arithmetic,
+  $\max\{0,\hlb[\Decl^{\mathrm{ref}}]\}\le\hlow[\Decl^{\mathrm{ref}}]$, and
+  $\hlow[\Decl^{\mathrm{ref}}]\le\hlow[\Decl^{\mathrm{ref}}_{\mathrm{ex}}]$
+  for the companion with its unrelaxed entries;
+\item the Choi variables of $\Decl$ and $\Decl^{\mathrm{ref}}$ are lists over
+  the same \tref[joint sector]{joint sectors} with the same block dimensions,
+  so every point of the one program is a point of the other; where no link
+  the companion replaces carries entries, as on the encoded route,
+  $\acSet\times\Feas^{J}(\varepsilon)$ is the same set for both; and a point with $J_{t,s}\succ0$ for every sector
+  $s$ satisfies (H-SUPP) for $\Decl^{\mathrm{ref}}$, whatever its measured
+  family;
+\item where the hypotheses of Corollary~\ref{cor:fo-keylength} hold for
+  $\Decl^{\mathrm{ref}}$, its conclusions hold with
+  $\hlb[\Decl^{\mathrm{ref}}]$ in \eqref{eq:keylength-fo}: the key length so
+  formed is secret and correct for the protocol whose declaration is
+  $\Decl^{\mathrm{ref}}$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(i) By Proposition~\ref{prop:reference-companion}\,(ii),
+$\Decl^{\mathrm{ref}}$ is a tuple of the form of
+Definition~\ref{def:admissible-declaration} that satisfies its conditions
+(i)--(vi) and (viii). Where it satisfies (vii) as well it is an admissible
+declaration, and Theorem~\ref{thm:firstorder}\,(iiib) applies to it with
+the given points and pairs, with its part~(iv) where lower bounds stand in,
+whose hypotheses are exactly those listed: membership in the relaxed set of
+$\Decl^{\mathrm{ref}}$, (H-POS), (H-SUPP) and (H-NOPERT) for its objects,
+and \eqref{eq:lmo}, or \eqref{eq:lmo-bounds} where a lower bound stands in,
+over the exact sets of $\Decl^{\mathrm{ref}}$. The theorem reads of the
+points nothing but these hypotheses, so it holds whatever computation
+produced them. Where (vii) fails, Theorem~\ref{thm:firstorder}\,(v)
+gives the same conclusion, $\hlow[\Decl^{\mathrm{ref}}]=+\infty$. The second
+inequality is Proposition~\ref{prop:reference-companion}\,(iii).
+
+(ii) The Choi variable of a declaration in the general format is a list of
+positive semidefinite blocks over its joint sectors, of dimension the
+product of the Alice sector's and the measured sector's
+(Definition~\ref{def:joint-sectors}); these are shared by
+Proposition~\ref{prop:reference-companion}\,(i). The relaxed set of
+Definition~\ref{def:relaxed-feasible-set} is cut out by per-block positivity,
+the coupling condition and the declared entries; the first two are shared,
+and the entries differ only in those of the replaced links
+(Proposition~\ref{prop:reference-companion}\,(i)), so where none of those
+links has any the two sets coincide. By
+Lemma~\ref{lem:branch-support}\,(i), $J_{t,s}\succ0$ gives every
+key-active branch operator its maximal support, for any declaration, which
+is (H-SUPP).
+
+(iii) Corollary~\ref{cor:fo-keylength} holds for any $\hlb$ of
+Theorem~\ref{thm:firstorder}\,(ii) or (iiib), with the lower bounds of its
+part~(iv) where they stand in, under its hypotheses, and (i) gives one for
+$\Decl^{\mathrm{ref}}$.
+\end{proof}

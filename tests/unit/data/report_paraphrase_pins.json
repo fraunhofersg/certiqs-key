@@ -1,0 +1,571 @@
+{
+ "foundations/ass:snapped-measurement": {
+  "paraphrased_by": [
+   "explain.py at_a_glance",
+   "explain.py certified_basis",
+   "glossary.yaml 'resting blocks'"
+  ],
+  "statement_sha256": "07f488997301590ff05cd9762d530daadbd9ec30500e4f9d526e77fcc3cce053"
+ },
+ "foundations/def:evaluated-off-snap": {
+  "paraphrased_by": [
+   "explain.py at_a_glance",
+   "glossary.yaml 'evaluated off its snap'"
+  ],
+  "statement_sha256": "e5ce23118b8d8bc7c40a5fc728265da5b377b4b835098b48c0e3bb1d6a3ba47d"
+ },
+ "foundations/def:exact-reference": {
+  "paraphrased_by": [
+   "glossary.yaml 'reference (snap)'"
+  ],
+  "statement_sha256": "2378fdc843d1075c850505b5c7a235b8a1a51695af58b242869a43bdc00ebb3e"
+ },
+ "foundations/def:sector-map": {
+  "paraphrased_by": [
+   "glossary.yaml 'sector'"
+  ],
+  "statement_sha256": "9c249a9991953c6e3607a154feae8e3d30039c85224a5fed31b83db4127addc2"
+ },
+ "foundations/def:snap": {
+  "paraphrased_by": [
+   "glossary.yaml 'kept (snap block)'",
+   "glossary.yaml 'snap'"
+  ],
+  "statement_sha256": "4d180eba3a26f1c536071fb8fe050830ab334e83d49d392bbf1fde3b011c8067"
+ },
+ "foundations/def:tiers": {
+  "paraphrased_by": [
+   "glossary.yaml 'estimate'"
+  ],
+  "statement_sha256": "91653bbf247db0ab2658e931d372fa0945867c25d2338a5a5dbb43c145bc3f6a"
+ },
+ "foundations/def:tolerance": {
+  "paraphrased_by": [
+   "glossary.yaml 'declared tolerance \u03c4'"
+  ],
+  "statement_sha256": "b02045c78537d60728113ca1ac8486743f94dd368f8a8c99dea374f8d96f315b"
+ },
+ "foundations/req:declared-lattice": {
+  "paraphrased_by": [
+   "glossary.yaml 'lattice exponent'"
+  ],
+  "statement_sha256": "58396f56d2fbb0d82a1c8a15d72ca18215049f9bf198f6210095b5a894a21f34"
+ },
+ "foundations/req:snap-reference": {
+  "paraphrased_by": [
+   "glossary.yaml 'strict option'"
+  ],
+  "statement_sha256": "7e3620ab706f31ed9d152af3c3d09e9f7b9fd428353220b70228dc3f97a93c54"
+ },
+ "foundations/req:tiers": {
+  "paraphrased_by": [
+   "explain.py diagnostic.certified"
+  ],
+  "statement_sha256": "b064a089080a1823540d1eee2fcac5a0f8ce521647f7d2316cb7840b3ec4a6bd"
+ },
+ "foundations/req:who-snaps": {
+  "paraphrased_by": [
+   "glossary.yaml 'input radius'",
+   "glossary.yaml 'largest radius'"
+  ],
+  "statement_sha256": "53bd5b5d6a5f60ff3e65ae9c2af038827cc1914cf7e4fc0e96ce624994ad233d"
+ },
+ "meat-core/ass:auth": {
+  "paraphrased_by": [
+   "explain.py _page.COMPOSABLE_AUTH",
+   "glossary.yaml 'k_auth'",
+   "glossary.yaml '\u03b5_auth'"
+  ],
+  "statement_sha256": "1b6d206a2507fea0973ae93bf20926109d826d0cada1c9899e687b2d1da03370"
+ },
+ "meat-core/ass:conform": {
+  "paraphrased_by": [
+   "explain.py setup.acceptance_zero",
+   "explain.py setup.round_block"
+  ],
+  "statement_sha256": "ff9d4f06210660b4b3ec03b72d25df287d5619195f102f22b33270a84aabb3fb"
+ },
+ "meat-core/ass:fixed": {
+  "paraphrased_by": [
+   "explain.py setup.round_block"
+  ],
+  "statement_sha256": "474b36e83ce297add2e23d357e3a0643521eb7c8b8f24d8de34441c1488ddf01"
+ },
+ "meat-core/ass:keyreg": {
+  "paraphrased_by": [
+   "explain.py role_notes.key_register",
+   "glossary.yaml '\u03bb_EC'"
+  ],
+  "statement_sha256": "844e4baba0d2e8ff9769017e4d211994d4f44b2ded9a2d13b2e0f60821b82eb2"
+ },
+ "meat-core/ass:lab": {
+  "paraphrased_by": [
+   "explain.py role_notes.laboratory",
+   "explain.py roles_box.untrusted_source",
+   "explain.py setup.round_block",
+   "explain.py setup_brief.untrusted"
+  ],
+  "statement_sha256": "33c215cc0df8dd47a28376669deb84becaa73bad8654b0e780638cf0c03c0fd4"
+ },
+ "meat-core/ass:seed": {
+  "paraphrased_by": [
+   "explain.py role_notes.seed"
+  ],
+  "statement_sha256": "e591e4281b3d43efaebe3af6112703da6d0dea450c483c44c77e86008d90bca0"
+ },
+ "meat-core/cor:composed-security": {
+  "paraphrased_by": [
+   "explain.py at_a_glance",
+   "explain.py guarantee_terms",
+   "explain.py result_sentence",
+   "glossary.yaml 'budget'",
+   "glossary.yaml 'net key length'",
+   "glossary.yaml '\u03b5 (security parameter)'"
+  ],
+  "statement_sha256": "ef3d70394d676e417be8fd70db3bf059506e6a8bfdff893d3bccf9cc4deb3a4f"
+ },
+ "meat-core/cor:keylength-bound": {
+  "paraphrased_by": [
+   "explain.py diagnostic.h_lb",
+   "explain.py diagnostic.solver_status",
+   "explain.py zero_key_sentence"
+  ],
+  "statement_sha256": "d725c0ceabe0a08fdba75f2aec422b1c9dcde71d7d339f1113c36ce409113ce0"
+ },
+ "meat-core/def:declaration": {
+  "paraphrased_by": [
+   "explain.py roles_box",
+   "glossary.yaml 'A (the letter)'",
+   "glossary.yaml 'Alice'",
+   "glossary.yaml 'Bob'",
+   "glossary.yaml 'letter'"
+  ],
+  "statement_sha256": "144c860c5321e2aeb8c3f6a08b060ccc755bf0a66002842f0e8b7ec3f421f672"
+ },
+ "meat-core/def:feasible": {
+  "paraphrased_by": [
+   "glossary.yaml 'feasible state'",
+   "glossary.yaml 'h_low'"
+  ],
+  "statement_sha256": "bd57a436ffcef0d0c3349af8b57d46bff6c9ceec7d7ba49a0ee4927f239ea0e1"
+ },
+ "meat-core/def:postprocessing-model": {
+  "paraphrased_by": [
+   "explain.py role_notes.seed",
+   "explain.py setup.acceptance_zero"
+  ],
+  "statement_sha256": "6397b0bd1ef625777ab4eea3176f5c10acb3e3f4ca898d430f6c62d1d8b5ea72"
+ },
+ "meat-core/frank-wolfe/cor:certified-keylength": {
+  "paraphrased_by": [
+   "explain.py _page.TIER_CLAUSE",
+   "explain.py at_a_glance.certified",
+   "explain.py diagnostic.certified",
+   "explain.py result_sentence.certified",
+   "explain.py tier_note",
+   "glossary.yaml 'certified bound'"
+  ],
+  "statement_sha256": "59b52960752439dae767ed9beb56563034ff71964bf67d3bfbce8d65b5fc4187"
+ },
+ "meat-core/frank-wolfe/cor:fo-reference": {
+  "paraphrased_by": [
+   "explain.py at_a_glance"
+  ],
+  "statement_sha256": "5f80a8928aa6efe4794cde7f58d7de9440b33af987fbe8569c5fa6c15702d6a3"
+ },
+ "meat-core/frank-wolfe/lem:feasible-side-dual": {
+  "paraphrased_by": [
+   "glossary.yaml 'LMO'"
+  ],
+  "statement_sha256": "ee16be905a1638805a9e3f80f519ef19454d366dde83d534728405a750c18d8c"
+ },
+ "meat-core/frank-wolfe/rem:certified-scope": {
+  "paraphrased_by": [
+   "explain.py at_a_glance.certified",
+   "explain.py certified_basis",
+   "explain.py diagnostic.certified",
+   "explain.py result_sentence.certified",
+   "explain.py tier_note"
+  ],
+  "statement_sha256": "b7e7ed42fee07d04763fbad6be41acdeb7ec184f5aff0c13a908fd1cd33847d6"
+ },
+ "meat-core/frank-wolfe/rem:fo-arithmetic": {
+  "paraphrased_by": [
+   "explain.py _page.TIER_CLAUSE",
+   "explain.py at_a_glance",
+   "explain.py large_gap_sentence",
+   "explain.py not_counted.first_order",
+   "explain.py result_sentence",
+   "explain.py tier_note"
+  ],
+  "statement_sha256": "aaab6a9f0f17869d9fc627dc4d7fa93e379ad2c3cf3dfa44dd12f5c82784b6f9"
+ },
+ "meat-core/frank-wolfe/rem:fo-interface": {
+  "paraphrased_by": [
+   "glossary.yaml 'Frank-Wolfe gap'"
+  ],
+  "statement_sha256": "eb5e9fbe093543d08a2b2c8b08c8f3198f9748160d3a5eb6d08d976735d108e0"
+ },
+ "meat-core/frank-wolfe/req:bracket-on-reference": {
+  "paraphrased_by": [
+   "explain.py certified_basis"
+  ],
+  "statement_sha256": "eb1d910e0f7503c164689f1191b09119f171b39159bb79325ee7f99aba139c64"
+ },
+ "meat-core/frank-wolfe/req:certified-evaluation": {
+  "paraphrased_by": [
+   "explain.py certified_basis"
+  ],
+  "statement_sha256": "59eee205316ddc36a0b86aaa4c08e6fedbcb9e28c3af7141b3d77dd11cbaabb7"
+ },
+ "meat-core/frank-wolfe/req:first-order-withdrawal": {
+  "paraphrased_by": [
+   "glossary.yaml 'solver status'",
+   "glossary.yaml 'withdrawn step'"
+  ],
+  "statement_sha256": "5fca942ac0a881618302d639389ae608a2b6e65960a474c99f49c4c23ac253fe"
+ },
+ "meat-core/frank-wolfe/thm:firstorder": {
+  "paraphrased_by": [
+   "explain.py diagnostic.certified",
+   "explain.py diagnostic.first_order_minus_estimate",
+   "explain.py diagnostic.frank_wolfe_gap",
+   "explain.py diagnostic.h_lb",
+   "explain.py diagnostic.h_low",
+   "explain.py diagnostic.solver_status",
+   "explain.py diagnostic.withdrawals",
+   "explain.py large_gap_sentence",
+   "explain.py levers.step_limit",
+   "explain.py not_counted.first_order",
+   "explain.py result_sentence",
+   "explain.py zero_key_sentence",
+   "glossary.yaml 'Frank-Wolfe'",
+   "glossary.yaml 'first-order bound'",
+   "glossary.yaml 'h_lb'"
+  ],
+  "statement_sha256": "edb78f334c8a82356e6ea03322ca290fabc0e925da36b15368795c6bf6e34a2f"
+ },
+ "meat-core/lem:ev-correctness": {
+  "paraphrased_by": [
+   "glossary.yaml '\u03b5_EV'"
+  ],
+  "statement_sha256": "5a894b514950ea6f511b7b9aca99aa2feb1993c84ffe8c8248696a11ffda80b9"
+ },
+ "meat-core/prop:minimal-divergence": {
+  "paraphrased_by": [
+   "explain.py at_a_glance.unreachable",
+   "explain.py statistics_sentence"
+  ],
+  "statement_sha256": "3487f006466ec611d721ce3e967738b39990993e84d45d30b8dd63bda0cf8c62"
+ },
+ "meat-core/prop:model-pass-bound": {
+  "paraphrased_by": [
+   "explain.py at_a_glance.unreachable",
+   "explain.py statistics_sentence"
+  ],
+  "statement_sha256": "c4c0b6a9f509ab2381f4a9ea4a90f36e7d5d4f5543a1dd00e051d9200b47c567"
+ },
+ "meat-core/prop:value-range": {
+  "paraphrased_by": [
+   "explain.py at_a_glance.contradiction"
+  ],
+  "statement_sha256": "e0064411a7c046b55d67a4373ed0010c760de978a80ae564a523842132b266a4"
+ },
+ "meat-core/rem:completeness-scope": {
+  "paraphrased_by": [
+   "explain.py idealised",
+   "glossary.yaml 'completeness'"
+  ],
+  "statement_sha256": "395aba4691f7ba424aa150d927519c11695fbb4caaa6efa28affa7681a8ef101"
+ },
+ "meat-core/rem:plus2": {
+  "paraphrased_by": [
+   "explain.py costs"
+  ],
+  "statement_sha256": "5dbbe35a7871d54074bdb3326d1a1dcc82e396dee79f56370cf539515b7f6aff"
+ },
+ "meat-core/rem:repeated-executions": {
+  "paraphrased_by": [
+   "glossary.yaml 'composable'"
+  ],
+  "statement_sha256": "e964578ed60e98864a143826231d8d924412466305e9ddda2aaabb675a7436e8"
+ },
+ "meat-core/req:hash-penalty": {
+  "paraphrased_by": [
+   "explain.py costs"
+  ],
+  "statement_sha256": "a2f4e740fd08dd3b3e985baca2e770452fe1a198c8ad3afcc56aff28a5f23736"
+ },
+ "meat-core/req:unreachable-acceptance-set": {
+  "paraphrased_by": [
+   "explain.py at_a_glance.unreachable",
+   "explain.py statistics_sentence",
+   "glossary.yaml 'constraint entry'"
+  ],
+  "statement_sha256": "3f2c794d86fd00a60ad3403e4e92a1386a319177164814c0554117b9ba1c8eeb"
+ },
+ "meat-core/thm:accumulated-entropy": {
+  "paraphrased_by": [
+   "explain.py setup_brief.untrusted"
+  ],
+  "statement_sha256": "633a8a0f548eba3e8e15dddc8dd9fa1ff881f7fa834c2c44c81f66b687d5ca6e"
+ },
+ "meat-core/thm:keylength": {
+  "paraphrased_by": [
+   "explain.py costs",
+   "explain.py levers.alpha",
+   "explain.py levers.lambda_ec",
+   "explain.py levers.rounds",
+   "explain.py result_sentence",
+   "explain.py zero_key_sentence",
+   "glossary.yaml 'key length \u2113'",
+   "glossary.yaml '\u03b1 (R\u00e9nyi order)'",
+   "glossary.yaml '\u03b5_PA'"
+  ],
+  "statement_sha256": "fd426dc371d859c3e3ebdd95298e2c2e9120e0c6e0bffdce1627620453706312"
+ },
+ "protocol-compiler/ass:coin": {
+  "paraphrased_by": [
+   "explain.py roles_box"
+  ],
+  "statement_sha256": "e87da742913cbec45aab038d7b8f8fbd10a2a8cbdce985194b8bf3af40fdfb6b"
+ },
+ "protocol-compiler/ass:ideal": {
+  "paraphrased_by": [
+   "explain.py idealised",
+   "explain.py setup.round_block"
+  ],
+  "statement_sha256": "37b7663fd43a4be21bd86990ed1ecc65e8677cbdc94ea979d81a33a4370ed1fa"
+ },
+ "protocol-compiler/ass:rhom": {
+  "paraphrased_by": [
+   "explain.py setup.round_block"
+  ],
+  "statement_sha256": "6259201760311af5241ea5d0ed6adc74c6e4135cc67030bb206a59f6349fe84d"
+ },
+ "protocol-compiler/ass:spec": {
+  "paraphrased_by": [
+   "explain.py setup.round_block"
+  ],
+  "statement_sha256": "0c574305b6ab29fad19a7cd45447e9269ac228606ee157f9b9573066064b5ffb"
+ },
+ "protocol-compiler/def:banda": {
+  "paraphrased_by": [
+   "explain.py document_hints",
+   "glossary.yaml 'Band-A route'"
+  ],
+  "statement_sha256": "687b84756150c6fd9cd4ce3cda3b22f98dd2531fbce4f86a7566f44a13f92fc9"
+ },
+ "protocol-compiler/req:band-a-ideal-receiver": {
+  "paraphrased_by": [
+   "explain.py document_hints"
+  ],
+  "statement_sha256": "3d3b1bcb71f250bd94e6741c32c772571afa2a628ee280d943ee91ddb2a45899"
+ },
+ "protocol-compiler/req:physical-family-decision": {
+  "paraphrased_by": [
+   "explain.py document_hints"
+  ],
+  "statement_sha256": "52fb786afeec1161ae20a74a3f91615f97e7d68289209789439a03c7061f818b"
+ },
+ "protocol-compiler/req:weight-list": {
+  "paraphrased_by": [
+   "explain.py document_hints"
+  ],
+  "statement_sha256": "3fe85708ecd6f5982d0e02d60c0e92fb921f3864fe68394cc2c11fe1af12013d"
+ },
+ "protocol-compiler/thm:sifting-and-key": {
+  "paraphrased_by": [
+   "glossary.yaml 'key map and sifting'"
+  ],
+  "statement_sha256": "6e559a9a5b089ddf3dd858ddcd00871c7917b4ae6d0753a71e002a342cb37af4"
+ },
+ "receiver/ass:eig": {
+  "paraphrased_by": [
+   "explain.py binding_words.invoked_at",
+   "glossary.yaml 'eigenvalue bound used at'"
+  ],
+  "statement_sha256": "8136f0a1e71dd3ccff8d5605ca751604daee1695cf3b2752eb2f55818558e96f"
+ },
+ "receiver/ass:exact": {
+  "paraphrased_by": [
+   "explain.py _render.EXACT_LEAD",
+   "explain.py idealised",
+   "explain.py not_counted.exactness",
+   "explain.py setup.round_block"
+  ],
+  "statement_sha256": "401a489731a4fdb0e425bc997c54460d456b01f5a4805bf45e0f18ddf212c22e"
+ },
+ "receiver/ass:modes": {
+  "paraphrased_by": [
+   "explain.py setup.round_block",
+   "explain.py setup_brief.untrusted"
+  ],
+  "statement_sha256": "97bd3fae23974d496454dafa4d40a8156fbd383af9328af0b0d51bc61e0dee54"
+ },
+ "receiver/ass:port": {
+  "paraphrased_by": [
+   "explain.py setup.round_block"
+  ],
+  "statement_sha256": "c5759efba96c04783f4b01a2088918c19ea3bb257cbc866becfd4de019bf7b51"
+ },
+ "receiver/ass:round": {
+  "paraphrased_by": [
+   "explain.py setup.round_block"
+  ],
+  "statement_sha256": "c84ee1ff793a95a797f8278dd109d33d8bbfc318d0ce34d811358c27b18232d8"
+ },
+ "receiver/ass:thresh": {
+  "paraphrased_by": [
+   "explain.py setup.round_block"
+  ],
+  "statement_sha256": "b2676abdaab7108017dbbbc3c2ada3332fd075ef6f3020403dd17a60fed6b883"
+ },
+ "receiver/component-catalogue/def:catalogue-entries": {
+  "paraphrased_by": [
+   "glossary.yaml 'catalogue entries'"
+  ],
+  "statement_sha256": "d8d185df6939ab4328346a15735ef8432405c18202793f694035d302da022918"
+ },
+ "receiver/def:compile": {
+  "paraphrased_by": [
+   "glossary.yaml 'element graph'"
+  ],
+  "statement_sha256": "9104fb5f68d2b12f7e1b1781c5cd65ae88af7b941cec6b24aec98e6766bc4c3f"
+ },
+ "receiver/def:fock": {
+  "paraphrased_by": [
+   "glossary.yaml 'photon-number block'"
+  ],
+  "statement_sha256": "21cc51e367dbaef438977a8abfe8c59dbb5e56db5dc75a2531ad6e5cae6bfd47"
+ },
+ "receiver/def:modes": {
+  "paraphrased_by": [
+   "explain.py binding_words.tau",
+   "glossary.yaml 'temporal mode index'"
+  ],
+  "statement_sha256": "b445334330adc01871ec7fd33bdc9d9b7a54beee1238fabc080b01b22f96e918"
+ },
+ "receiver/def:pmcex": {
+  "paraphrased_by": [
+   "glossary.yaml 'exact window'"
+  ],
+  "statement_sha256": "defa8eeadac108891987fab1b75ab9ec928afbdd8c97a562d034d49d0b1757d3"
+ },
+ "receiver/def:probe": {
+  "paraphrased_by": [
+   "glossary.yaml 'setting'"
+  ],
+  "statement_sha256": "6b8ea2278da0d51c79d2a23b65a5485a1b4bfd30a965635068edf5570aa8ed86"
+ },
+ "reductions/cor:reference-companion": {
+  "paraphrased_by": [
+   "glossary.yaml 'reference companion'"
+  ],
+  "statement_sha256": "3a8efc5ea45ad1ae97d0644eb66624e3c0f5799d47f5d9ce3d1a45c5f00e6eba"
+ },
+ "reductions/def:emitnorm": {
+  "paraphrased_by": [
+   "glossary.yaml 'moved classes'"
+  ],
+  "statement_sha256": "99388da590484435875f17eaf53e26aaf9d3d03f1e20c832638a4c84246bf060"
+ },
+ "reductions/def:squashing": {
+  "paraphrased_by": [
+   "glossary.yaml 'squashed target POVM'"
+  ],
+  "statement_sha256": "63c6e4c76ed979d5dbdbd7bf30065ba1a3cd50d0a2da6c52953741a68c338622"
+ },
+ "reductions/wpfss/def:routes": {
+  "paraphrased_by": [
+   "glossary.yaml 'route (encoded, licensed)'"
+  ],
+  "statement_sha256": "785eae45ac580a70642319b2fa80af7c148d64def9fdfe3e15fbb4fa41ea30c0"
+ },
+ "reductions/wpfss/def:targets": {
+  "paraphrased_by": [
+   "glossary.yaml 'flag'",
+   "glossary.yaml 'wpfss'"
+  ],
+  "statement_sha256": "cd7dca9b57a4a982891f003492cff3b4bd1ba751d9c2e9afd242c3fcdafd3d4d"
+ },
+ "statistics/ass:alphabet": {
+  "paraphrased_by": [
+   "explain.py setup.round_block",
+   "glossary.yaml 'acceptance value label'"
+  ],
+  "statement_sha256": "41c466206f19c2456dbacca21da448e6d9822b3bf0f78330192bb061f7cbb809"
+ },
+ "statistics/ass:hon": {
+  "paraphrased_by": [
+   "glossary.yaml 'iid_honest_rounds'"
+  ],
+  "statement_sha256": "586e7f8cbf2c59a6a326053084ee2c4c6a37f5cd75dd8f457315f35be591a826"
+ },
+ "statistics/ass:hon-env": {
+  "paraphrased_by": [
+   "explain.py consequence_words",
+   "explain.py idealised",
+   "glossary.yaml 'honest envelope'"
+  ],
+  "statement_sha256": "dde5bd207a07e2a5c8937f33261adc4a5106cf8a760afcff6c49a68ca5021a86"
+ },
+ "statistics/ass:reach": {
+  "paraphrased_by": [
+   "explain.py statistics_sentence"
+  ],
+  "statement_sha256": "79f43d646ef98d6697fa339cffb6f45baecf6d148bab15b91cc40db78a08b14c"
+ },
+ "statistics/binomial-box/def:construction": {
+  "paraphrased_by": [
+   "explain.py setup.acceptance_zero",
+   "glossary.yaml 'acceptance test'"
+  ],
+  "statement_sha256": "ea03ea2e10a7051a3002daae8a9ae9415a80b42bc00fae150e1a2e908c47350f"
+ },
+ "statistics/binomial-box/thm:completeness-bound": {
+  "paraphrased_by": [
+   "glossary.yaml '\u03b5* (completeness)'"
+  ],
+  "statement_sha256": "9bf0ad9ef5035cb3ebc3c6c0d7e4530897041f76b8d85829b286d0b9a74b8bca"
+ },
+ "statistics/req:geometry-tag": {
+  "paraphrased_by": [
+   "glossary.yaml 'geometry (acceptance set)'"
+  ],
+  "statement_sha256": "7ac9e228d000312d59c535d2d7729220e98c75201caa4dade0a2e0a50a8e9d2e"
+ },
+ "transmitter/ass:ens": {
+  "paraphrased_by": [
+   "explain.py idealised",
+   "explain.py not_counted.exactness"
+  ],
+  "statement_sha256": "131358b7cdb29353809261153d432af6c0dd11d5f939efbc8354a7d7001dc86c"
+ },
+ "transmitter/ass:seq": {
+  "paraphrased_by": [
+   "explain.py setup.announcements_order",
+   "explain.py setup.round_block"
+  ],
+  "statement_sha256": "d2ef2bdb6d8b8f8fc8314388cfc9bd4c0cb355f563b9327fd8c9aa2a244a394e"
+ },
+ "transmitter/decoy/ass:wcp": {
+  "paraphrased_by": [
+   "explain.py idealised",
+   "explain.py not_counted.exactness"
+  ],
+  "statement_sha256": "049970a73e263b9b560952cfef7cefbe53ebc7a7765b02f876797f2cd47b3f56"
+ },
+ "transmitter/def:srcert": {
+  "paraphrased_by": [
+   "glossary.yaml 'SR3'"
+  ],
+  "statement_sha256": "54cfa5034cef670fd12b17a38b67156abb9b75900ca2ad205cdb182bc84fa79b"
+ },
+ "transmitter/rem:da1": {
+  "paraphrased_by": [
+   "glossary.yaml 'x0'"
+  ],
+  "statement_sha256": "ffceffb6ece83f61d3bfeb9e6b5ddb8cacfd3593251e076f62d5cccba7065a3d"
+ }
+}

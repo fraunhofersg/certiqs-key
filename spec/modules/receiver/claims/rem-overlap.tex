@@ -1,0 +1,28 @@
+% ---
+% id: receiver/rem:overlap
+% kind: rem
+% title: "Disjoint mode supports as the commutation hypothesis"
+% summary: >-
+%   The contract's only commutation result, [[prop:mode-algebra]] (iii), needs
+%   disjoint mode supports; being unrelated in a declared graph is not enough.
+%   Unrelated elements that share a mode can depend on their order, which is
+%   why a well-formed graph must order them.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [prop:mode-algebra, def:graph, thm:compilation-well-defined]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:overlap}
+Proposition~\ref{prop:mode-algebra}\,(iii) is the \emph{only} commutation this
+contract has, and it needs disjointness of the \emph{mode supports}, not
+disjointness in the wiring diagram. Two elements that are unrelated in a
+declared graph may still touch a common mode, and then their product can
+depend on the order. That is exactly why Definition~\ref{def:graph} carries
+condition~(E3) and why Theorem~\ref{thm:compilation-well-defined} is a theorem rather than a
+formality.
+\end{remark}

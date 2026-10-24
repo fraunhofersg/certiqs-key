@@ -1,0 +1,73 @@
+% ---
+% id: meat-core/def:authenticated-channel
+% kind: def
+% title: "Authenticated classical channel and authentication post-processing"
+% summary: >-
+%   The authenticated classical channel delivers each message unaltered or
+%   as an authentication failure, never before it was sent, and a scheme
+%   realises it within ε from a pre-shared key. The authentication
+%   post-processing makes both parties abort when either saw a failure.
+% prominence: standard
+% status: accepted
+% uses: [def:postprocessing-model]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Sec. 5, Eqs. (37)-(38)"
+%   - "tupkary2026decoy, Sec. 4.1, Protocol 1, step 6"
+%   - "tupkary2026decoy, Sec. 4.1, opening paragraphs"
+%   - "portmann2022security, Sec. II.E, Def. 1"
+%   - "portmann2022security, Sec. VII.A, Eq. (36)"
+% provenance: newly-derived
+% lean:
+% ---
+
+A real authentication scheme cannot deliver every message: an adversary who
+tampers with a message makes its recipient reject it. The channel below is
+the functionality such a scheme can approach
+\cite[Sec.~5, Eqs.~(37)--(38)]{tupkary2026decoy}, the approximation is
+measured by the distinguishing advantage of the composable framework
+\cite[Sec.~II.E, Def.~1; Sec.~VII.A, Eq.~(36)]{portmann2022security}, and
+the authentication post-processing is step~6 of
+\cite[Sec.~4.1, Protocol~1]{tupkary2026decoy} together with the rule of
+that section's opening paragraphs that a party receiving an authentication
+failure aborts.
+
+\begin{definition}
+\label{def:authenticated-channel}
+Label each classical message of a party by its position $i$ in that party's
+sequence of sent messages, and the messages a party receives by their
+position in its sequence of received messages; times are global times, which
+the parties need not know.
+\begin{enumerate}[label=(\alph*),leftmargin=2.4em]
+\item The
+  \term[The classical channel that delivers each message either exactly as sent or as an authentication failure, never before it was sent, the adversary reading every message and choosing when it is delivered.]{authenticated classical channel}
+  between the two parties gives the adversary a copy of every message sent
+  over it and lets her choose when each message is delivered, subject to:
+  (A1) if the $i$-th message a party receives arrives before the other
+  party sent its $i$-th message, the received symbol is
+  $\mathrm{auth\text{-}abort}$; (A2) otherwise the received symbol is either
+  the $i$-th sent message, unaltered, or $\mathrm{auth\text{-}abort}$.
+\item An \emph{authentication scheme} is a pair of procedures, one per party,
+  that use a pre-shared key and an unauthenticated classical channel, on
+  which the adversary may read, alter, inject, delay and suppress messages.
+  It \emph{$\varepsilon$-realises} the authenticated classical channel if
+  there is a simulator at the adversary's interface such that the
+  distinguishing advantage between the scheme run on the key and the
+  unauthenticated channel, and the authenticated classical channel with that
+  simulator, is at most $\varepsilon$
+  \cite[Sec.~II.E, Def.~1]{portmann2022security}. Its \emph{key consumption}
+  is the number of bits of the pre-shared key it uses in one run of the
+  protocol.
+\item The
+  \term[The closing exchange of accept or abort decisions after which a party that saw an authentication failure, or whose partner did, holds no key.]{authentication post-processing}
+  appended to the \tref{fixed-length post-processing model}
+  (Definition~\ref{def:postprocessing-model}) is: a party that receives
+  $\mathrm{auth\text{-}abort}$ for any message aborts, replaces its key by
+  $\perp$ and sends $\mathrm{abort}$ in place of each later message; after
+  privacy amplification the partner sends $\mathrm{accept}$ if it holds a key
+  and $\mathrm{abort}$ otherwise; the key holder sends $\mathrm{accept}$ if
+  it received $\mathrm{accept}$ and holds a key, and otherwise sends
+  $\mathrm{abort}$ and replaces its key by $\perp$; the partner keeps its key
+  if it receives $\mathrm{accept}$ and otherwise replaces it by $\perp$.
+\end{enumerate}
+\end{definition}

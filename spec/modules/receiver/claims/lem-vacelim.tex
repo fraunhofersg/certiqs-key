@@ -1,0 +1,68 @@
+% ---
+% id: receiver/lem:vacelim
+% kind: lem
+% title: "Exactness of vacuum elimination"
+% summary: >-
+%   Compressing the lift of any operator by vacuum on the modes outside a
+%   coordinate subspace gives exactly the lift of its block on that subspace,
+%   and the measurement isometry is an isometry. Dropping the undeclared input
+%   columns is therefore exact under the vacuum assumption.
+% prominence: standard
+% status: accepted
+% uses: [def:physmodel, lem:fock-functor, def:fock, lem:fock-maps]
+% assumes: [A-VAC, A-PORT]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Assumption~\ref{ass:vac} is what licenses restricting $\Gmat$ to the columns
+$\Inp$; the lemma shows that the restriction is exact.
+
+\begin{lemma}\label{lem:vacelim}
+Let $S\subseteq T$ be finite sets of modes and
+$\iota:\mathbb{C}^{S}\hookrightarrow\mathbb{C}^{T}$ the coordinate inclusion.
+Under the factorization
+$\mathcal{F}(\mathbb{C}^{T})\cong\mathcal{F}(\mathbb{C}^{S})\otimes
+\mathcal{F}(\mathbb{C}^{T\setminus S})$ of occupation bases, the occupation
+identification of Lemma~\ref{lem:fock-maps}\,(ii), $\Fock(\iota)$ is
+$\ket{\psi}\mapsto\ket{\psi}\otimes\ket{\vac}$; and for any operator $X$ on
+$\mathbb{C}^{T}$,
+\begin{equation}\label{eq:vacelim}
+  \Fock(\iota)^\dagger\,\Fock(X)\,\Fock(\iota)
+  \;=\;\Fock\big(\iota^\dagger X\iota\big),
+\end{equation}
+where $\iota^\dagger X\iota$ is the $S\times S$ block of $X$. In
+particular $\Fock(\iota)$ is an isometry. The inclusion $\iota$ of
+Definition~\ref{def:physmodel}, with $S=\Inp$ and $T=\Modes\sqcup\Env$, is
+one instance, and for it $V$ of \eqref{eq:measisometry} is an isometry as
+well.
+\end{lemma}
+
+\begin{proof}
+$\iota$ maps each basis vector $\ket{m}$, $m\in S$, to the basis vector
+$\ket{m}$ of $\mathbb{C}^{T}$, so $\iota^{\otimes n}$ maps the symmetrized
+and normalized $\ket{e_{m_1}}\otimes\cdots\otimes\ket{e_{m_n}}$ of
+Definition~\ref{def:fock} to the same symmetrized and normalized vector over
+$T$: the occupation vector $\ket{\vec m}$ of $S$ goes to the occupation
+vector of $T$ that agrees with $\vec m$ on $S$ and is $0$ on $T\setminus S$,
+which the factorization identifies with $\ket{\vec m}\otimes\ket{\vac}$, and
+by linearity $\Fock(\iota)\ket{\psi}=\ket{\psi}\otimes\ket{\vac}$ for every
+$\ket{\psi}$. Next, $\Fock(\iota)$ maps
+$\Symn{n}(\mathbb{C}^{S})$ into $\Symn{n}(\mathbb{C}^{T})$ by
+$\iota^{\otimes n}$, and distinct
+$n$ land in orthogonal summands, so both sides of \eqref{eq:vacelim} are block
+diagonal in $n$ and it suffices to compare blocks. For
+$\ket{\psi},\ket{\phi}\in\Symn{n}(\mathbb{C}^{S})$,
+\begin{equation}
+  \bra{\psi}\Fock(\iota)^\dagger\Fock(X)\Fock(\iota)\ket{\phi}
+  =\bra{\iota^{\otimes n}\psi}X^{\otimes n}\ket{\iota^{\otimes n}\phi}
+  =\bra{\psi}(\iota^\dagger X\iota)^{\otimes n}\ket{\phi},
+\end{equation}
+using $(\iota^\dagger)^{\otimes n}X^{\otimes n}\iota^{\otimes n}
+=(\iota^\dagger X\iota)^{\otimes n}$, which holds factor by factor. Taking
+$X=\id$ gives $\Fock(\iota)^\dagger\Fock(\iota)=\Fock(\id_{S})=\id$, so
+$\Fock(\iota)$ is an isometry; for the inclusion of
+Definition~\ref{def:physmodel}, $\Fock(U)$ is unitary by
+Lemma~\ref{lem:fock-functor}\,(iii), so $V$ is an isometry.
+\end{proof}

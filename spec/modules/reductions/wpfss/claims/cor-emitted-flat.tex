@@ -1,0 +1,145 @@
+% ---
+% id: reductions/wpfss/cor:emitted-flat
+% kind: cor
+% title: "Exact emission of the flat instance"
+% summary: >-
+%   The flat instance's emitted family is exactly admissible and
+%   pulls back exactly to the declared model on the channel system, its
+%   weights rounded down yet certified. Where the normalizer moved a block
+%   below the cutoff, nearness to the unrounded family bounds nothing.
+% prominence: main
+% status: implemented
+% uses: [reductions/thm:emit, prop:flat-instance, cor:two-sector-decided, reductions/def:reduction-instance, reductions/def:emitnorm, reductions/def:exactadm, reductions/cor:entries, def:weight-route, def:targets, prop:chain, prop:route, cor:fssinstance, lem:descent, reductions/lem:exactpsd, reductions/def:substrate]
+% mentions: [foundations/req:exact-emission, reductions/req:emission-refusal, reductions/req:emission-record]
+% assumes: [A-RECV, A-PROBE, A-TSM]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.wpfss.api:reduce_flat
+% lean:
+% notes: "The assumption closure includes the receiver's device assumptions through prop:route's uses edges into receiver."
+% ---
+
+The core's emission theorem, specialised to the flat instance: it adds the
+numbers of the weight route to the list of exact ones, names the rounding
+directions the emission record carries (Requirement~\ref{req:emission-record}),
+and says, route by route, which constraint entries the artefact carries.
+The six conditions of part~(ii) are those of
+\xref{foundations/req:exact-emission}, and a family that fails one of them is
+refused by Requirement~\ref{req:emission-refusal}.
+
+\begin{corollary}\label{cor:emitted-flat}
+Let the \tref{declared data} pass every refusal rule of this module's
+interface, let
+$\mathcal{J}_{\mathrm{flat}}$ be the flat instance of
+Proposition~\ref{prop:flat-instance} at the declared route with handed datum
+$A$, and let $A'$ be the datum the normaliser of
+Definition~\ref{def:emitnorm} declares. Then Theorem~\ref{thm:emit} holds of
+$\mathcal{J}_{\mathrm{flat}}$, and in particular:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item every number on the list of Theorem~\ref{thm:emit}\,(i) and, in
+  addition, the descended matrix $R^{\cg}$, the constants $r_{\min,i}$, the
+  exact weights $\hat p_v$ of \eqref{eq:weightroute}, the total $p$ and its
+  complement $1-p$ are formed from the declared entries and scalars by
+  finitely many operations in $\Fldi$, floors and comparisons; the
+  \tref{emission displacement} $\Delta_m$ per preserved block is the one
+  emitted number that is not;
+\item the emitted family, $\Fwp$ resp.\ $\Ffss$ of the declared model
+  \eqref{eq:flat-declared}, satisfies conditions (a)--(e) of
+  Definition~\ref{def:exactadm} together with \eqref{eq:latinv} of every
+  entry and is decided so before it is emitted;
+\item for every $v\in\Vset$,
+  \begin{equation}\label{eq:emitted-flat}
+    \Lambda^{\dagger}(F_v)\;=\;M'_v\;=\;\bigoplus_{m\le N}A'^{(m)}_v\ \dsum\ \blk{M}{\gtN}_v
+    \qquad\text{exactly, on }\Chan ,
+  \end{equation}
+  both sides operators on $\Chan$ itself: the physical system of this
+  instance is the channel system and the identity is on it, not on an
+  ampliation. $M'$ is a POVM on $\Chan$ block diagonal at the cutoff for which
+  $(p_v)$ are \tref{certified weights} in the sense of
+  Definition~\ref{def:targets}, and Proposition~\ref{prop:chain},
+  Proposition~\ref{prop:route} and Corollary~\ref{cor:fssinstance} hold
+  verbatim of it;
+\item the per-outcome weights are $p_v=\lat{\hat p_v}$, rounded \emph{down},
+  and \eqref{eq:certroute} holds for $M'$ at those values
+  (Proposition~\ref{prop:route}); the complement $1-p$ is \emph{recomputed}
+  from the rounded weights and is never rounded on its own; a caller's
+  constant off the lattice is rounded toward the enlarging side
+  (Corollary~\ref{cor:entries}\,(iii)); and there are no other rounding
+  directions;
+\item where some $\Delta_m>0$ no bound relates a key length computed from
+  $M'$ alone to one computed from the pre-snap post-processed family, or from
+  the receiver's own output, and nothing else relates them
+  (Theorem~\ref{thm:emit}\,(v)).
+\end{enumerate}
+The emitted constraint list is \emph{empty on the encoded route}; on the
+licensed route it carries the flag-sector entries
+$(\Ffss_o-p_o\Pflag,\succeq,0)$ of Corollary~\ref{cor:fssinstance} at $c=0$,
+unshifted, and, on request, the class-marginal entries
+$\big(\sum_{v\in\Vset_t}F_v,=,q_t\big)$, which the flat instance discharges,
+a default \tref[carried operators]{carried operator} as an entry
+(Corollary~\ref{cor:entries}\,(i)),
+and any further requested entry that Corollary~\ref{cor:entries}\,(iii)
+admits, which for this instance is the two-sector entry
+$(\Ffss_e-a\,\Pleq-b\,\Pflag,\succeq,0)$ where its decided certificate of
+Corollary~\ref{cor:two-sector-decided} holds, all under the licence of that
+route (Corollary~\ref{cor:entries}). The instance's default
+\tref{carried operators},
+the sector projectors and the two projectors $\Pleq$ and $\Pflag$ it
+transports besides, \emph{are emitted with the transported set at $c=0$ with
+$\succeq$ on either route} (Corollary~\ref{cor:entries}\,(i),
+Proposition~\ref{prop:flat-instance}\,(I3)). These statements are about the
+instance's link and its emitted family.
+\end{corollary}
+
+\begin{proof}
+Proposition~\ref{prop:flat-instance} makes $\mathcal{J}_{\mathrm{flat}}$ a
+reduction instance, so Theorem~\ref{thm:emit} applies to it with the data
+passing every refusal rule.
+
+(i) The theorem's list, and in addition: every entry of
+$R^{\cg}$ is a finite sum of declared entries of $R$ (Lemma~\ref{lem:descent});
+$r_{\min,i}$ is a minimum over finitely many of them, decided by comparisons;
+$\hat p_{(y_i,t)}$ is two products and two sums of lattice values;
+$p$ is a finite sum and $1-p$ a difference; and $\lat{\cdot}$ is a floor and
+a comparison in $\Fld$, all exact in the substrate
+(Lemma~\ref{lem:exactpsd}, Definition~\ref{def:substrate}). The displacement
+\eqref{eq:displacement} at the data sector $(m)$ is $\Delta_m$.
+
+(ii) is the theorem's part (ii), the emitted family being
+\eqref{eq:instance-target} at the flat instance, which
+Proposition~\ref{prop:flat-instance}\,(I2) identifies with $\Fwp$ resp.\
+$\Ffss$ of the declared model.
+
+(iii) is the theorem's part (iii) with the model map \eqref{eq:flat-model}:
+$\Mdec_v=M_v[A']=M'_v$ of \eqref{eq:flat-declared}, an operator on $\Bsys=\Chan$.
+That $(p_v)$ are certified weights for $M'$ is (H2) at $A'$, available by the
+\tref{stability clause} because \eqref{eq:certroute} is a statement about the
+above-cutoff blocks, which the normaliser does not touch; that $M'$ is a POVM
+block diagonal at the cutoff is (I1) at $A'$; and $p<1$ is (H3). Those are
+exactly the hypotheses Proposition~\ref{prop:chain} and
+Corollary~\ref{cor:fssinstance} place on their data, so each applies to $M'$
+word for word, and Proposition~\ref{prop:route} is a statement about the
+above-cutoff blocks and the declared scalars, which are common to the handed
+and the declared model.
+
+(iv) The weights are Proposition~\ref{prop:route}
+through Definition~\ref{def:weight-route}; the complement and the constant
+rule are the theorem's part (iv), the \tref[scalar value]{scalar values}
+\eqref{eq:flat-scalars}
+being the only rounded numbers of this instance's own.
+
+(v) is the theorem's part (v).
+
+The constraint list. The default carried operators, with the transported
+set and, where a caller requests one as an entry, in the list, and the
+entries are Corollary~\ref{cor:entries}\,(i), (ii), the
+flat instance discharging the class-marginal identity, and (iii) for the
+instance's own list, which on the licensed route is the flag-sector entry of
+Corollary~\ref{cor:fssinstance} at its constant $0$; on the encoded route
+that corollary emits nothing, the instance's own list being empty there
+(Proposition~\ref{prop:flat-instance}\,(I4)). A further requested entry is
+emitted by (iii) only on a decided certificate that a claim stated for the
+flat instance gives; the one such claim is
+Corollary~\ref{cor:two-sector-decided}, whose part (iii) is that decided
+certificate for the two-sector entry at the declared datum.
+\end{proof}

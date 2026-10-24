@@ -1,0 +1,6 @@
+id: n
+kind: core
+version: 0.1.0
+title: Second fixture module
+order:
+  - def:base

@@ -1,0 +1,28 @@
+% ---
+% id: transmitter/req:marginal-fill
+% kind: req
+% title: "The unique marginal served at $d_A=1$"
+% summary: >-
+%   With a one-dimensional retained system a trusted-source request may leave
+%   the marginal empty; the engine fills it with the only state there and
+%   records the fill. The record keeps a filled value distinguishable from a
+%   declared one, and no other slot is ever filled.
+% prominence: standard
+% status: accepted
+% uses: [rem:da1]
+% implements: certiqs_key.transmitter.artifact:emit_artifact
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}\label{req:marginal-fill}
+At $d_A=1$ a request in trusted-source mode may leave the marginal slot
+empty. The engine then fills the slot with $\tau_A=[1]$, the unique element
+of $\Seq{A}$ (Remark~\ref{rem:da1}); the emitted specification is in
+trusted-source mode, trusted-source and \tref{untrusted-source mode} imposing the
+same condition there; and the emitted artefact records that the slot was
+filled. This is the only slot the engine ever fills.
+\end{requirement}

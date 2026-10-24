@@ -1,0 +1,126 @@
+% ---
+% id: meat-core/def:classes
+% kind: def
+% title: "Sector classes and the removal checklist"
+% summary: >-
+%   Exact predicates on the declared data make a sector key-active,
+%   constraint-active, state-blind or removable; for a list without
+%   party-local entries, removability is certified by a witness meeting a
+%   six-condition checklist. Deleting several removable sectors needs a
+%   further condition on the set.
+% prominence: standard
+% status: implemented
+% uses: [def:keyinert, prop:exact-cancellation, def:feasible]
+% mentions: [thm:removal, prop:removal-compose, def:declaration, def:joint-sectors, rem:target-conditions, rem:witness-exactness, rem:removal-sets, foundations/def:binary64, def:admissible-declaration]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.declaration.sectors:classify_sector
+% lean:
+% notes: "The item letters (a)-(d) and the checklist labels (W1)-(W6) are cited by letter from other claims (prop:removal-compose, rem:removal-sets, the removal requirements); keep them."
+% ---
+
+Two operations on the declared sectors cost nothing: evaluating the
+objective over the sectors that carry a deficit, and deleting a sector whose
+weight other key-inert sectors can take over. The classes below name the
+sectors each operation applies to, and the checklist says when a sector may
+be deleted. Neither half of (W2) is redundant
+(Remark~\ref{rem:target-conditions}); why (W3) and (W4) must hold exactly,
+and why (W4) names one form, is Remark~\ref{rem:witness-exactness}; and
+Remark~\ref{rem:removal-sets} exhibits two removable sectors whose joint
+deletion overstates the value.
+
+\begin{definition}\label{def:classes}
+Let $\Decl$ satisfy Definition~\ref{def:admissible-declaration}. For $s\in\SecSet$:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item $s$ is \term[Said of a sector that fails to be key-inert for some key-live acceptance value, so that it carries entropy deficits in the objective.]{key-active} if $(\hat c,s)$ fails to be key-inert
+(Definition~\ref{def:keyinert}) for at least one $\hat c\in\Chkey$; these
+sectors carry the deficits $f_{\hat c,s}$ in the objective.
+\item $s$ is \term[Said of a sector that is key-inert for every key-live acceptance value: it adds no deficit but remains a variable of the program.]{constraint-active} if it is key-inert for every
+$\hat c\in\Chkey$; by Proposition~\ref{prop:exact-cancellation} it contributes nothing to
+any $K_{\hat c}$ but remains an optimization variable (it enters
+$\Phimap$, every $P_{\hat c}$, the marginal constraint, and $\CList$).
+\item $s$ is \term[Said of a sector on which every measurement operator of the measured system, and every constraint operator when constraints are declared, is a scalar multiple of the identity.]{state-blind} if $F^{(s)}_v=c_{v,s}\,\idon{\Qsys_s}$ for
+scalars $c_{v,s}\ge0$, for every $v\in\Vset$ (then
+$\sum_vc_{v,s}=1$ by POVM completeness restricted to the sector); if
+$\CList\neq\varnothing$ we additionally require each
+$\hat O_k^{(s)}=o_{k,s}\,\idon{\Qsys_s}$ for scalars $o_{k,s}$.
+\item $s$ is \term[Said of a sector for which the hypotheses of the sector-removal theorem hold, as certified by a witness meeting the removal checklist.]{removable} if the hypotheses of
+Theorem~\ref{thm:removal} hold for it.
+\end{enumerate}
+All four predicates are decided by finitely many linear-algebra checks on
+the declaration. Items (a) and (b) reduce to key-inertness
+(Definition~\ref{def:keyinert}), a finite combinatorial predicate on the
+declared function tables and on which of the $M_x$, $F^{(s)}_v$ are the zero
+operator, decided exactly, at no window. Items (c) and (d) are decided
+exactly as well: (c) is a condition on the
+\tref[declared value]{declared values} themselves
+(\xref{foundations/def:binary64}), so that a block that is only
+\emph{nearly} scalar fails it and $s$ is then not state-blind, and (d) is
+decided by the checklist below.
+
+\emph{The removal checklist.} A \emph{candidate witness} for a sector
+$s^{*}$ is a target list $s_1,\dots,s_L$ as index data, states $\chi_i$ as
+binary64 sector-block data, weights $\mu_i$ as binary64 data, and the
+evaluation order of (W6). It is a \emph{witness} for $s^{*}$ in the sense
+of~(d) when $\CList$ carries no entry declared \tref{party-local} and all six
+of the following hold:
+\begin{enumerate}[label=(W\arabic*),leftmargin=3.0em]
+\item \emph{$s^{*}$ is state-blind} in the sense of (c), the
+$\hat O^{(s^{*})}_k$ half included whenever $\CList\neq\varnothing$;
+\item \emph{the witness does not name $s^{*}$, and names no sector
+twice}: $L\ge1$, $s_i\in\SecSet\setminus\{s^{*}\}$ for every $i$, and the
+$s_i$ pairwise distinct, all compared as index data at
+no window. A candidate naming $s^{*}$ fails (W2), and so does one that
+repeats a target;
+\item \emph{weights}: $\mu_i\ge0$ for every $i$ --- a comparison of an
+exhibited binary64 datum against zero --- and $\sum_i\mu_i=1$, the sum
+formed in the evaluation order the witness exhibits and verified to
+\tref[rounds nowhere]{round nowhere}, exactly as (W6) requires of its
+residuals, so that the computed sum \emph{is} the real sum;
+\item \emph{states}: $\chi_i\succeq0$ and $\tr\chi_i=1$ for every $i$,
+decided on the \emph{exhibited form} and never on a computed spectrum:
+the witness presents each $\chi_i$ diagonal in the declared basis of
+$\Qsys_{s_i}$ --- every off-diagonal entry the datum $0$ in the sense of
+(c), every diagonal entry a datum $\ge0$, and their sum formed in the
+exhibited order, rounding nowhere, and equal to the datum $1$ --- so that
+both conditions hold of the declared numbers by construction. Any other
+presentation fails (W4), which can only \emph{refuse} a removal;
+\item \emph{key-inert targets}, which is (RM2): every pair
+$(\hat c,s_i)$ with $\hat c\in\Chkey$ and $i\in\{1,\dots,L\}$ is key-inert
+(Definition~\ref{def:keyinert});
+\item \emph{both equality families close at residual exactly zero}: (RM1)
+for every $v\in\Vset$, and (RM3) for every $k$ (vacuous when
+$\CList=\varnothing$).
+\end{enumerate}
+The condition on $\CList$ and (W1)--(W6) are the hypotheses of
+Theorem~\ref{thm:removal} transcribed, all of them and in the theorem's own
+words --- the condition on $\CList$ from its first hypothesis, (W1) and
+(W2) from its opening sentence, (W3) and (W4) from its quantifiers over
+$\mu_i$ and $\chi_i$, (W5) from (RM2), (W6) from (RM1) and (RM3) --- which
+is what (d) means by ``the hypotheses of Theorem~\ref{thm:removal}
+hold''.
+Condition (W6) is read on the residual itself: each residual is formed in
+an evaluation order that the witness exhibits alongside its data, every
+elementary operation of which rounds nothing, so that the computed residual
+\emph{is} the real residual and its comparison against zero decides the
+real identity.
+
+\emph{Deleting a set of removable sectors needs one condition more, and it is
+not part of this definition.} Removability is a property of one sector, and
+Theorem~\ref{thm:removal} licenses the deletion of one sector; that two
+sectors are each removable does not license deleting both.
+Proposition~\ref{prop:removal-compose} states the further hypothesis on the
+set $\SecSet_{\mathrm{del}}$ a run deletes.
+Nothing in (W1)--(W6) implies that hypothesis.
+
+\emph{In the general format} of Definition~\ref{def:declaration} the four
+classes remain predicates of the sectors $s\in\SecSet$ of $\Qsys$, decided
+as above, with $\hat O^{(s)}_k$ the block of the \tref{lifted operator} of an
+entry. The finer notion along Alice's sectors --- which joint
+pairs $(\hat c,(t,s))$ carry a deficit --- is
+Definition~\ref{def:joint-sectors}, and a sector that is key-active here may
+have key-inert joint pairs. Theorem~\ref{thm:removal} is stated for a list
+carrying no entry declared party-local, so for a list carrying one,
+clause~(d) is unsatisfiable and no sector carries a witness in its sense.
+\end{definition}

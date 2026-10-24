@@ -1,0 +1,33 @@
+% ---
+% id: meat-core/req:constrained-key-gate
+% kind: req
+% title: "Two-part gate on a key length with declared constraints"
+% summary: >-
+%   A key length is emitted with a non-empty constraint list only if the list
+%   is licensed for the declared source mode and the attack-set licence is
+%   present. Otherwise the request is refused, and the numbers serve only for
+%   exploration.
+% prominence: standard
+% status: implemented
+% uses: [def:homog, thm:keylength]
+% mentions: [rem:cgate, protocol-compiler/ass:atk]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.keylength:check_key_length_permitted
+% lean:
+% ---
+
+\begin{requirement}\label{req:constrained-key-gate}
+A key-length output may be combined with $\CList\neq\varnothing$
+\emph{only if} (i) the list lies in the licensed class of the declared
+source mode (Definition~\ref{def:homog}), a condition that is mechanically
+checkable and degenerate in the cases of Remark~\ref{rem:cgate}, and
+(ii) the declaration carries the attack-set licence
+\iface{attack_set_license} (Assumption~A-ATK,
+\xref{protocol-compiler/ass:atk}), an attestation no program can verify.
+The engine refuses any request that couples $\CList\neq\varnothing$ with a
+key-length output unless \emph{both} parts are present; without them the
+numerical machinery may be used on $\CList$ for exploration, but its output
+does not reach \eqref{eq:keylength}.
+\end{requirement}

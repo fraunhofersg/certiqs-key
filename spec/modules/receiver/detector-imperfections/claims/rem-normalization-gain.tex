@@ -1,0 +1,55 @@
+% ---
+% id: receiver/detector-imperfections/rem:normalization-gain
+% kind: rem
+% title: "The two-photon multiclick block scales with the squared efficiency"
+% summary: >-
+%   At a common efficiency η and no dark counts, the two-photon multiclick
+%   block of a receiver is η² times that of its normalized station, so every
+%   multiclick weight it can emit at a cutoff of one photon is at most η².
+%   Normalization removes that factor without enlarging the adversary's reach.
+% prominence: standard
+% status: accepted
+% uses: [prop:efficiency-normalization, def:pure-loss, def:normalized-station, prop:noise-floor, receiver/thm:click-povm, receiver/cor:emitted-unconditioned]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:normalization-gain}
+Let every port of a \tref[receiver instrument]{receiver} without
+\tref{declared source modes} have the same efficiency $\eta\in(0,1]$, and let
+$\Recv'$ be its \tref{normalized station} at the full normalization
+$t=\eta$, whose efficiencies are all one. Write $M_{\mc}$ and $M'_{\mc}$ for
+the \tref[multiclick element]{multiclick elements} \eqref{eq:Mmc} of the receiver and of $\Recv'$.
+Without dark counts, $M'_{\mc}$ vanishes on the photon-number blocks $n=0$ and
+$n=1$, a pattern of two or more clicks needing two photons
+(Proposition~\ref{prop:noise-floor}\,(v) with every port dark-free). For
+$\psi\in\Symn{2}(\mathbb{C}^{\InpC})$ the component of
+$\Fock(w_t)\psi=w_t^{\otimes2}\psi$ with no photon in the copy $\InpC'$
+(Definition~\ref{def:pure-loss}) is $t\,\psi\otimes\ket{\vac}$, and its other
+components carry one or two photons in the copy and so at most one in
+$\InpC$. The operator $M'_{\mc}\otimes\id$ acts as the identity on the copy,
+so it does not couple components with different photon numbers there, and it
+vanishes on the components with at most one photon in $\InpC$. By
+Proposition~\ref{prop:efficiency-normalization}\,(i) and
+\eqref{eq:purelossadj}, therefore,
+$\bra{\psi}M_{\mc}\ket{\psi}=t^{2}\bra{\psi}M'_{\mc}\ket{\psi}$ for every
+such $\psi$, and since both blocks are Hermitian,
+\begin{equation}\label{eq:twophotonscaling}
+  \blk{M}{(=2)}_{\mc}\;=\;\eta^{2}\,\blk{M'}{(=2)}_{\mc} .
+\end{equation}
+A multiclick weight $\pmc$ emitted for the receiver at the cutoff $N=1$
+satisfies $\blk{M}{(=2)}_{\mc}\succeq\pmc\,\id$, the block $n=2$ lying above
+the cutoff (\eqref{eq:emitted-unconditioned} of
+Corollary~\ref{cor:emitted-unconditioned}), so
+$\pmc\le\eta^{2}\lmin\big(\blk{M'}{(=2)}_{\mc}\big)\le\eta^{2}$, whatever
+window or enclosure produced it; the normalized station's own weight is
+computed at unit efficiency and carries no such factor. The normalization
+does not buy this by enlarging what the adversary can do: by
+Proposition~\ref{prop:efficiency-normalization}\,(i), every attack on the
+receiver followed by $\Lambda^{\mathrm{loss}}_t$ is an attack on $\Recv'$
+with the same statistics, so an exact analysis of the receiver over all
+attacks gives a rate at least that of $\Recv'$, and what the normalization
+improves is the multiclick weight a reduction to finitely many photons reads.
+\end{remark}

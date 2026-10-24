@@ -1,0 +1,27 @@
+% ---
+% id: reductions/wpfss/def:routes
+% kind: def
+% title: "The encoded and the licensed route"
+% summary: >-
+%   The encoded route uses the weight-preserving target and emits no
+%   constraint; the licensed route uses the flag-state target and emits the
+%   licensed entry.
+% prominence: standard
+% status: accepted
+% uses: [def:targets]
+% mentions: [reductions/thm:licence]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+An artefact carries the device knowledge above the cutoff either inside its
+target or as a constraint entry beside it; the two choices are named here.
+
+\begin{definition}\label{def:routes}
+The \emph{encoded} route uses the \tref{weight-preserving target} $\Fwp$ and
+emits $\CList=\varnothing$; the \emph{licensed} route uses the
+\tref{flag-state target} $\Ffss$ and emits the entry of
+Theorem~\ref{thm:licence}.
+\end{definition}

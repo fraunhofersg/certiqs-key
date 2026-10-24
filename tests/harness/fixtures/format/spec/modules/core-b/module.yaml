@@ -1,0 +1,13 @@
+id: core-b
+kind: core
+version: 0.1.0
+title: Core B
+abstract: A consumer of [[core-a/thm:bound]].
+depends_on: [core-a]
+notation_version: "0.4.0"
+reading_groups:
+  - title: The consumer
+    start: prop:cross
+    abstract: Reads the bound of the other contract.
+order:
+  - prop:cross

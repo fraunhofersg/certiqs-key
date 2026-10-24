@@ -1,0 +1,57 @@
+% ---
+% id: protocol-compiler/ass:alice-meas
+% kind: ass
+% title: "Alice's declared measurement where no source certificate is demanded"
+% summary: >-
+%   Where no source-replacement certificate is demanded, in untrusted-source
+%   mode or at d_A = 1, and at least two letters are declared, Alice's letter
+%   in every round is the outcome of her declared measurement on that round's
+%   system A alone, whatever happens in the other rounds.
+% prominence: standard
+% status: accepted
+% uses: [def:spec]
+% mentions: [ass:spec]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-ALICE-MEAS
+% verification: never
+% category: protocol-structure
+% presupposes: [letters]
+% affects: [secrecy]
+% refines: A-SPEC
+% user_statement: >-
+%   Applies where no source-replacement certificate is demanded and at least
+%   two letters are declared. Where the system A is one-dimensional, the
+%   declared measurement is only the probabilities of Alice's letter, which is
+%   then her local randomness; with a trusted source the engine refuses letter
+%   probabilities that differ from the source's and a sent state that depends
+%   on the letter. With an untrusted source and A of dimension two or more,
+%   Alice measures at her station the system A she receives. In every round
+%   she obtains her letter by the same declared measurement on that round's
+%   system alone, whatever happens in other rounds, their outcomes and the
+%   public messages included. Systems from an untrusted source, being the
+%   adversary's, may be correlated across rounds. A device of Alice's declared
+%   as a measured factor is a receiver measurement of the specification, not
+%   covered here.
+% lean:
+% notes: "The category is protocol-structure, that of the refined A-SPEC, because the component the premise is about depends on the run: at d_A = 1 the letter is the party's local randomness, and where the source is untrusted at d_A >= 2 the declared measurement is made at the station of the party holding A. The interface emits the premise only where at least two letters are declared; at one letter the measurement is the identity and the clause holds of every device."
+% ---
+
+The condition narrows Assumption~\ref{ass:spec} to Alice's measurement on
+$A$ where no \tref{source-replacement certificate} is demanded: clause~(i)
+there makes $\{M_x\}$ the measurement Alice performs on $A$, and this
+condition makes it so in every round separately. It constrains the
+measurement and not the systems measured: in \tref{untrusted-source mode} the
+systems $A$ of different rounds may be correlated, the adversary supplying
+them.
+
+\begin{assumption}\label{ass:alice-meas}
+(i) Where no source-replacement certificate is demanded of the
+\tref{protocol specification} (in untrusted-source mode, or at $d_A=1$), the
+letter $x\in\Xset$ Alice obtains in every round is the outcome of the
+declared measurement $\{M_x\}$ (Definition~\ref{def:spec}\,(a)) applied to
+that round's system $A$ alone, the measurement she performs on $A$ being
+$\{M_x\}$ whatever happens in the other rounds, their outcomes and public
+messages included.
+\end{assumption}

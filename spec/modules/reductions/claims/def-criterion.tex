@@ -1,0 +1,46 @@
+% ---
+% id: reductions/def:criterion
+% kind: def
+% title: "Security criterion"
+% summary: >-
+%   A security criterion is any family of functions, one per admissible
+%   adversary system, of the joint state of the protocol's output registers
+%   and that system. Equality of those states therefore transfers every
+%   criterion at once, with no proof for its particular formula.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [def:protocol, foundations/def:round-model, ass:meas]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The protocol $\Eprot_M$ of Definition~\ref{def:protocol} on which a criterion
+is evaluated factors in each round as
+$\Grnd_j=\bar{\Grnd}_j\circ(\idmap\otimes\redNmsm_M)$, and that factorization
+rests on Assumption~\ref{ass:meas}, together with the round order and the one
+POVM for all rounds that Definition~\ref{def:protocol} declares: each
+measuring party's interaction with the quantum system it receives is
+described by a single POVM, and $M$ is their product on the round's measured
+system, Bob's POVM where he alone measures. The measurement emits the
+classical outcome $v$ and nothing else; no post-measurement quantum system is
+retained or reused, and all later processing reads the measured system only
+through that outcome.
+
+\begin{definition}\label{def:criterion}
+A
+\term[A family of functions, one per admissible adversary system, of the state of the protocol's output registers together with that system.]{security criterion}
+is a family $f=(f_E)_E$ of functions, one for every admissible adversary
+system $E$, defined on states of the protocol's output registers together with
+$E$; an \emph{admissible adversary system} is a finite-dimensional system,
+the form the \tref{round model} of \xref{foundations/def:round-model} gives
+the adversary's registers. Its value
+on the protocol $\Eprot_M$ at an input $\rho$, a state of the systems the
+protocol acts on together with $E$, is
+\begin{equation}\label{eq:criterion}
+  \Crit(\Eprot_M,\rho)\coloneqq
+  f_E\big((\Eprot_M\otimes\idmap_E)(\rho)\big).
+\end{equation}
+\end{definition}

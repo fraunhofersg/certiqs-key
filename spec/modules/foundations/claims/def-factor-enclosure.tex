@@ -1,0 +1,70 @@
+% ---
+% id: foundations/def:factor-enclosure
+% kind: def
+% title: "Factor enclosure of a block"
+% summary: >-
+%   A factor enclosure knows a matrix as L W L*, with L* the adjoint of some L
+%   in a box of complex matrices around Gaussian-rational centres and W an
+%   exact positive diagonal core; its members are those products. A reference
+%   may carry one on a block beside the block's entrywise enclosure.
+% prominence: standard
+% status: implemented
+% uses: [def:exact-reference]
+% mentions: [cor:least-eigenvalue-over-enclosure, cor:rank-over-factor-enclosure]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.reference:FactorEnclosure
+% lean:
+% notes: "Kept apart from def:exact-reference so that the many claims resting on that definition keep their meaning and their review scope: a reference read without factor enclosures is exactly what def:exact-reference defines. A box carries no Hermitian or symmetry condition, its matrices being rectangular. The core is diagonal with positive rational entries; a column of weight zero is dropped by the module that forms the enclosure."
+% ---
+
+An entrywise enclosure with positive radii of an element whose rank is below
+its dimension, and whose support is spanned by no set of coordinate vectors,
+contains the element, whose block on the rows the enclosure does not fix at
+zero is singular, so no lower bound on a least eigenvalue over it is positive
+and it fixes no rank
+(Corollary~\ref{cor:least-eigenvalue-over-enclosure}\,(iv)). The projector of
+an ideal analyser at an angle whose projector has irrational entries is such
+an element. It is often known in another form: as a sum $\sum_m w_m
+c_mc_m^{\dagger}$ over columns $c_m$ computed in an enclosing arithmetic, with
+exact positive weights $w_m$, as an element is that compresses a projector
+through an isometry. Read through its columns, the element keeps the rank the
+columns fix (Corollary~\ref{cor:rank-over-factor-enclosure}). The definition
+names that reading; it is an addition to a reference, never a replacement of
+its entrywise enclosures.
+
+\begin{definition}\label{def:factor-enclosure}
+Let $d\ge1$ and $k\ge0$ be integers. A
+\term[a matrix of Gaussian-rational centres together with non-negative
+rational radii that bound, entry by entry, the modulus of the difference
+between a rectangular complex matrix and that centre]{matrix box} of complex
+$d\times k$ matrices is a pair $(L_c,t)$ of a $d\times k$ matrix $L_c$ with
+entries in $\mathbb{Q}(i)$, its \emph{centre}, and rationals $t_{im}\ge0$,
+its \emph{radii}; it \emph{contains} a complex $d\times k$ matrix $L$ when
+$|L_{im}-(L_c)_{im}|\le t_{im}$ for all $i,m$. For $k=0$ it contains the one
+$d\times0$ matrix.
+
+A
+\term[a matrix box of columns together with an exact positive diagonal core,
+such that the matrix is the product of a matrix L the box contains, the core
+and the adjoint of L]{factor enclosure} of a complex $d\times d$ matrix $X$ is a triple $(L_c,t,W)$ of a
+matrix box $(L_c,t)$ of complex $d\times k$ matrices and a diagonal
+$k\times k$ matrix $W$ with positive rational diagonal entries, its
+\emph{core}, such that
+\begin{equation}\label{eq:factor-enclosure}
+  X\;=\;LWL^{\dagger}\qquad\text{for some }L\text{ that }(L_c,t)\text{ contains}.
+\end{equation}
+The number $k$ is its \emph{number of columns}, a matrix $L$ that the box
+contains is a \emph{factor} of the triple, and the matrices $LWL^{\dagger}$
+with $L$ a factor are its \emph{members}, $X$ among them; for $k=0$ the one
+member is the zero $d\times d$ matrix. Every member is Hermitian and positive
+semidefinite, since $x^{\dagger}LWL^{\dagger}x=\|W^{1/2}L^{\dagger}x\|^{2}$
+for every $x\in\mathbb{C}^{d}$.
+
+A \tref{reference} $G$ (Definition~\ref{def:exact-reference}) \emph{carries} a
+factor enclosure on a block $G^{(s)}_j$ when it is read, besides the
+\tref{entrywise enclosure} $\big(C^{(s)}_j,r^{(s)}_j\big)$ of that block, with
+a factor enclosure of $G^{(s)}_j$; the block then satisfies both
+\eqref{eq:entrywise-enclosure} and \eqref{eq:factor-enclosure}.
+\end{definition}

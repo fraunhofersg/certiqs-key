@@ -1,0 +1,28 @@
+% ---
+% id: receiver/req:eig-ledger-row
+% kind: req
+% title: "Invoking settings on the eigenvalue-slack row of the ledger"
+% summary: >-
+%   The assumption ledger carries [[A-EIG]] beside the settings at which it
+%   was invoked: those whose emitted weight uses a computed block eigenvalue.
+%   A reader of the artifact sees which emitted weights rest on the declared
+%   eigenvalue slack.
+% prominence: technical
+% status: accepted
+% uses: [req:rigorous-weight]
+% mentions: [ass:eig, def:pmcex, def:enclosed-weight]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}\label{req:eig-ledger-row}
+The engine carries Assumption~\ref{ass:eig} in the artifact's assumption
+ledger \iface{assumption_ledger} beside the settings at which it was invoked.
+A setting is one at which it was invoked exactly when its emitted weight is
+that of Definition~\ref{def:pmcex}, evaluated in floating point; a setting
+whose weight is an \tref{enclosed weight} of Definition~\ref{def:enclosed-weight},
+formed by Requirement~\ref{req:rigorous-weight}, is not one, whatever depth it
+declares.
+\end{requirement}

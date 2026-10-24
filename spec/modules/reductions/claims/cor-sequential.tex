@@ -1,0 +1,90 @@
+% ---
+% id: reductions/cor:sequential
+% kind: cor
+% title: "Output-state equality against adaptive attack sequences"
+% summary: >-
+%   In either source mode, the physical protocol under an attack sequence and
+%   the squashed protocol under its squashed sequence have the same output
+%   state. Security against squashed attack families containing every squashed
+%   physical attack therefore transfers with the same ε.
+% prominence: standard
+% status: accepted
+% uses: [def:roundmodel, def:protocol, lem:msmfact, def:opreduction, lem:opreduction-transfer]
+% mentions: [thm:two-sided, thm:factorization]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Theorem~\ref{thm:factorization} fixes the adversary's input before the
+protocol runs; an adversary who acts round by round, with a memory, is an
+attack sequence of Definition~\ref{def:roundmodel}. The same substitution
+handles it, one squashing channel per round. The corollary is the
+receiver-side instance of an \tref{exact operational reduction}, which
+Theorem~\ref{thm:two-sided} composes with the source-side one in
+trusted-source mode.
+
+\begin{corollary}\label{cor:sequential}
+Let $M\dsq_{\Lambda}F$ and fix a source mode. For every attack sequence
+$(\Aev_j)_{j=1}^{n}$ of the corresponding type \eqref{eq:attackchannel}, the
+output state of the physical protocol $\Eprot_M$ under $(\Aev_j)_j$ equals the
+output state of the \tref{squashed protocol} $\Eprot_F$ under $(\Aev^{\sq}_j)_j$ of
+the same branch of \eqref{eq:composite}. Consequently every security criterion
+takes the same value on the two, and if $\Eprot_F$ is $\varepsilon$-secure
+against every sequence drawn from families $\AttSet^{\sq}_j$ with
+\begin{equation}\label{eq:seqcover}
+  \AttSet^{\sq}_j\;\supseteq\;
+  \begin{cases}
+    \big(\Lambda\otimes\idmap\big)\circ
+      \mathrm{CPTP}\big(E_{j-1},\Bsys_jE'_j\big),
+      & \text{trusted-source mode},\\[0.3ex]
+    \big(\idmap_{A}\otimes\Lambda\otimes\idmap\big)\circ
+      \mathrm{CPTP}\big(E_{j-1},A_j\Bsys_jE'_j\big),
+      & \text{untrusted-source mode},
+  \end{cases}
+\end{equation}
+then $\Eprot_M$ is $\varepsilon$-secure against \emph{all} attack sequences of
+that type.
+\end{corollary}
+
+\begin{proof}
+\emph{Step 1 (equal output states).} Both branches are the same computation;
+only the register the identity acts on differs. In either mode, each
+occurrence of $\redNmsm_M$ in \eqref{eq:protocol} acts on the $\Bsys_j$-output
+of $\Aev_j$ and on nothing else that $\Aev_j$ produces --- in untrusted-source
+mode it does not touch the $A_j$-output either, which is measured by Alice's
+POVM inside $\bar{\Grnd}_j$ (Definition~\ref{def:protocol}). Writing $\iota_j$
+for $\idmap_{E'_j}$ in trusted mode and for $\idmap_{A}\otimes\idmap_{E'_j}$
+in untrusted mode, Lemma~\ref{lem:msmfact} gives
+\begin{equation*}
+  \big(\idmap\otimes\redNmsm_M\otimes\idmap\big)\circ\Aev_j
+  =\big(\idmap\otimes\redNmsm_F\otimes\idmap\big)\circ
+   \big(\Lambda\ \text{on }\Bsys_j,\ \iota_j\ \text{elsewhere}\big)\circ\Aev_j
+  =\big(\idmap\otimes\redNmsm_F\otimes\idmap\big)\circ\Aev^{\sq}_j ,
+\end{equation*}
+the middle map being exactly the branch of \eqref{eq:composite} for that mode.
+Substituting round by round replaces every $(\redNmsm_M,\Aev_j)$ pair by
+$(\redNmsm_F,\Aev^{\sq}_j)$ and changes nothing else in \eqref{eq:protocol}, so
+the two output states are equal.
+
+\emph{Step 2 (security, as the transfer of an exact operational reduction).}
+Fix an admissible adversary system and let $\mathsf{P}$ be the
+\tref[protocol presentation]{presentation} whose strategies are the attack
+sequences of the declared type against $\Eprot_M$, with the output map of
+Step~1, and $\mathsf{P}'$ the presentation whose strategies are the sequences
+drawn from the families $\AttSet^{\sq}_j$ against $\Eprot_F$. The
+\tref{output registers} are the same in both --- those of
+$\Kfin$ together with the adversary's final register --- and the map
+$r_{\sq}\colon(\Aev_j)_j\mapsto(\Aev^{\sq}_j)_j$ of \eqref{eq:composite} takes
+its values in $\mathsf{P}'$'s strategy set precisely because
+\eqref{eq:seqcover} holds round by round. Step~1 is then
+\eqref{eq:opreduction} for $r_{\sq}$, so $r_{\sq}$ is an exact operational
+reduction (Definition~\ref{def:opreduction}), and the security statement is
+Lemma~\ref{lem:opreduction-transfer}\,(i): the supremum over the physical
+sequences equals the supremum over the image and is at most the supremum over
+the families $\AttSet^{\sq}_j$, which is where the slack of
+\eqref{eq:seqcover} is spent. That any larger families serve as well is part
+(ii) of the same lemma. No property of the criterion is used, which is why the
+conclusion holds for all of them at once.
+\end{proof}

@@ -1,0 +1,84 @@
+% ---
+% id: meat-core/rem:optol-direction
+% kind: rem
+% title: "Scope of the perturbation gap"
+% summary: >-
+%   The gap of [[prop:optol-nobound]] involves no defect, lives in the
+%   acceptance-test penalty and can point either way. Among families of finite
+%   value the instance leaves an allowance of 53·α/(α−1) bits per round or more
+%   unrefuted; at a key rate below one bit no key-length claim can rest on it.
+% prominence: standard
+% status: accepted
+% uses: [def:feasible, prop:value-range]
+% mentions: [prop:optol-nobound, def:max-key-length, rem:alpha-domain, rem:representability-ceiling, thm:keylength, thm:reduction, req:infinite-value]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Proposition~\ref{prop:optol-nobound} perturbs only the measurement
+$\{F_v\}$ on $\Qsys$, not $\tau_A$, $\{M_x\}$ or the constraint data, and
+it compares values of $\hlow$, the number Theorem~\ref{thm:keylength}
+turns into a key length and Theorem~\ref{thm:reduction} places below
+$\hqkd$, not values of $\hqkd$ itself. Its pair stops at
+$\frac{\alpha}{\alpha-1}\cdot52$, while the figure $53$ in the remark is
+the largest value of $\log_2\frac1{g_0}$ at an exactly admissible family
+of the instance with $g_0>0$, since such a family has $g_0\ge2^{-53}$
+(Remark~\ref{rem:representability-ceiling}); between the two scales the
+proposition decides nothing. Its part~(iii) applies when the smaller of
+the two key lengths is positive, which depends on $n$ and on the other
+terms of $\ell_{\max}$; the proposition does not say for which $n$ that
+happens on the instance.
+
+\begin{remark}\label{rem:optol-direction}
+Proposition~\ref{prop:optol-nobound} does not say that a small
+perturbation always matters: it says that no bound in the declared
+metadata alone can say that it does not. It does not locate the
+fragility in any defect (a failure of Hermiticity, positivity or
+completeness in the declared numbers): both families are exact POVMs, so the phenomenon belongs to the map
+$\{F_v\}\mapsto\hlow$ and would be there for a \tref{producer} that emitted
+perfect numbers for a slightly different device. It does not depend on
+the entropy term: the gap lives entirely in the acceptance-test penalty
+$\frac{\alpha}{\alpha-1}\sfD(\mathbf q\|\Phimap[\omega])$ of
+\eqref{eq:objective}, with $\mathbf q$ ranging over the acceptance set, a
+term every declaration carries, and it is the same unboundedness that
+Proposition~\ref{prop:value-range}\,(iii) records for $\hlow$ itself, there
+as a range statement and here as a stability statement.
+
+And it does not refute every allowance: an $\mathrm{err}$ whose value on
+the data of part~(i) is at least $\frac{\alpha}{\alpha-1}\cdot53$ is not
+refuted at any admissible $\epsilon$ by a pair of families of the instance
+of finite value, that is with $g_0>0$, and this module neither exhibits nor
+rules out one. The family $(0,1)$ is exactly admissible as well and lies
+within $2^{-53}\le\epsilon$ of $(2^{-53},1-2^{-53})$, but its value is
+$\hlow=+\infty$ (Proposition~\ref{prop:value-range}\,(iv)), which carries
+no key-length claim (Requirement~\ref{req:infinite-value}); it is set aside
+here, since a gap to an infinite value is not a gap between two rates. On those data such an $\mathrm{err}$
+would license a discrepancy of more than $53$ bits per round
+($\frac{\alpha}{\alpha-1}>1$ at every $\alpha>1$, and it diverges as
+$\alpha\downarrow1$) against a key rate whose entropy part is at most
+$\log_2|\Zset|=1$ bit per round there ($d_Z=1$), by the entropy-part
+ceiling of Proposition~\ref{prop:value-range}\,(ii) (the bound
+$\log_2|\Zset|=\log_2(d_Z+1)$ on each entropy term, the rest of $\hlow$
+being the acceptance-test penalty). For the protocols this module rates, a
+key rate lies below one bit per round in practice, and against such a rate
+a robustness allowance of tens of bits per round is not a statement any
+key-length claim can rest on. At
+a larger $d_Z$ the entropy-part ceiling grows, and the proposition
+constrains $\mathrm{err}$ on the data of part~(i) only.
+
+What the proposition does say is, first, that the direction is not
+controlled: the gap \eqref{eq:optol-gap} has a sign, and exchanging the
+roles of the two families reverses it, so a perturbation of a declared
+family may move $\hlow$ up (for a key-length claim, the unsafe direction)
+as easily as down. Second, that no threshold escapes the difficulty by
+being small: $\epsilon$ may be taken as small as the number model
+permits, the gap being bought by the second parameter of the instance,
+$N$, rather than by the size of the perturbation. Third, for
+$\alpha\in(1,2)$, that the gap reaches the output: by part~(iii) the key
+lengths themselves differ, by at least $nB-1$ bits whenever the smaller is
+positive, so the gap is not confined to an unused intermediate quantity. At $\alpha\ge2$ the same computation compares
+two values of the expression of Definition~\ref{def:max-key-length}, to which this
+module gives no key-length reading (Remark~\ref{rem:alpha-domain}).
+\end{remark}

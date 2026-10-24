@@ -1,0 +1,70 @@
+% ---
+% id: statistics/binomial-box/rem:envelope
+% kind: rem
+% title: "Benefit and cost of an honest envelope"
+% summary: >-
+%   An envelope certifies completeness for an honest channel that drifts
+%   within and between runs, and a finite family of honest laws enters through
+%   its entrywise minimum and maximum, which is already tight. The price is box
+%   width, which costs rate and never soundness.
+% prominence: standard
+% status: accepted
+% uses: [statistics/def:envelope, thm:box-construction, thm:completeness-bound, lem:guard]
+% mentions: [statistics/ass:hon-env, statistics/lem:hon-degenerate, rem:sound-indep]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:envelope}
+\emph{What it covers.} Under Assumption~\ref{ass:hon-env} the conditional law
+of each honest round, given the past, may be any law inside the envelope, and
+may change from round to round. The construction therefore certifies
+completeness for an honest channel that drifts within a run, that differs
+from run to run (each run's conditional laws lying in the envelope), and
+whose drift depends on past outcomes. A \emph{set} of candidate honest
+statistics
+$\{\mathbf{p}_1,\dots,\mathbf{p}_M\}\subseteq\simplex{\Chatset}\cap\mathbb{Q}^{\Chatset}$
+--- several calibrations, the members of a simulated channel family, a
+central value with a band around it --- enters through its entrywise minimum
+and maximum, ${\honest}^{-}(\hat c)\coloneqq\min_i p_i(\hat c)$ and
+${\honest}^{+}(\hat c)\coloneqq\max_i p_i(\hat c)$, which satisfy
+Definition~\ref{def:envelope} because each $\mathbf{p}_i$ does (for the sums,
+$\sum_{\hat c}{\honest}^{-}(\hat c)\le\sum_{\hat c}p_1(\hat c)=1\le
+\sum_{\hat c}{\honest}^{+}(\hat c)$). The box then certifies every law of the
+\tref{envelope set} $\mathsf{H}$ (Theorem~\ref{thm:box-construction}\,(iii)), which
+contains the convex hull of the family and in general strictly more; the
+convex hull itself, as the set of certified laws, would need a joint
+concentration argument over several coordinates at once, which this
+submodule's per-outcome construction does not make. With the degenerate
+envelope nothing changes (Lemma~\ref{lem:hon-degenerate}).
+
+\emph{What it costs.} The box is built from the lower endpoint at
+$p^{-}_{\hat c}$ and the upper endpoint at $p^{+}_{\hat c}$, so it widens by
+the envelope's width on each coordinate: by Lemma~\ref{lem:guard}\,(i) the
+interval $[k^{-}(\hat c),k^{+}(\hat c)]$ contains
+$[\lfloor np^{-}_{\hat c}\rfloor,\lceil np^{+}_{\hat c}\rceil]$, whatever the
+budget. A wider box lowers the consumer's $\hlow$, since an infimum over a
+superset is smaller; the price is paid in rate, never in soundness
+(Remark~\ref{rem:sound-indep}).
+
+\emph{No tightening step is needed.} An envelope formed as the entrywise
+minimum and maximum of a finite family is already tight in the sense that
+matters here: for every $\hat c$, ${\honest}^{-}(\hat c)=p_i(\hat c)$ for some
+member $i$, and then
+${\honest}^{-}(\hat c)=1-\sum_{\hat c'\neq\hat c}p_i(\hat c')\ge
+1-\sum_{\hat c'\neq\hat c}{\honest}^{+}(\hat c')$; symmetrically
+${\honest}^{+}(\hat c)\le1-\sum_{\hat c'\neq\hat c}{\honest}^{-}(\hat c')$.
+So no coordinate bound can be moved inwards using the simplex constraint
+alone; indeed each bound is attained by a member of the family, which lies in
+$\mathsf{H}$, so $\min_{\mathbf{p}\in\mathsf{H}}p(\hat c)={\honest}^{-}(\hat c)$
+and $\max_{\mathbf{p}\in\mathsf{H}}p(\hat c)={\honest}^{+}(\hat c)$, and the
+family's envelope is its own tightening. A declared envelope that is looser
+than it could be --- one whose bounds could be moved inwards without losing a
+law the channel may have --- is still valid; it is only conservative, costing
+box width and hence rate, and the reported $\varepsilon^{\star}$ remains a
+bound on the honest failure probability by Theorem~\ref{thm:completeness-bound}. If the true
+honest behaviour leaves the declared envelope, $\varepsilon^{\star}$ is void
+and soundness is unaffected (Remark~\ref{rem:sound-indep}).
+\end{remark}

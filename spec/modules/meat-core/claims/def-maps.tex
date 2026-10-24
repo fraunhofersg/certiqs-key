@@ -1,0 +1,72 @@
+% ---
+% id: meat-core/def:maps
+% kind: def
+% title: "Generated registers, isometries and maps"
+% summary: >-
+%   The declaration generates coherent measurement, announcement, statistic
+%   and key isometries, the single-round protocol map, the key pinching and the
+%   statistics map. They give the entropy proof a precise representation of the
+%   protocol's classical outputs.
+% prominence: standard
+% status: implemented
+% uses: []
+% mentions: [foundations/def:pinching]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.branch:generate_maps
+% lean:
+% ---
+
+\begin{definition}\label{def:maps}
+The classical registers are $X$ (alphabet $\Xset$), $Y$ (alphabet $\Vset$),
+the announcement register $C_AC_B$ and $I$ (alphabet $\Kann$ each), $\Chat$
+(alphabet $\Chatset$), $R$ and $Z$ (alphabet $\Zset$). The announcement
+register is one register, named after the two messages of the basic format;
+in the general format it holds the whole tuple $a(x,v)$ of messages. Define
+\begin{align}
+  \Vmsm &\coloneqq \sum_{x\in\Xset}\sum_{v\in\Vset}
+    \ket{x,v}_{XY}\otimes\big(\sqrt{M_x}\otimes\sqrt{F_v}\big),
+    &&\Hs{A\Qsys}\to\Hs{XY\,A\Qsys},\label{eq:Vmsm}\\
+  \Vann &\coloneqq \sum_{x,v}\ket{a(x,v)}_{C_AC_B}\otimes\dyad{x,v}_{XY},
+    &&\text{controlled on }XY,\label{eq:Vann}\\
+  \VI &\coloneqq \sum_{\kappa\in\Kann}\ket{\kappa}_{I}\otimes
+    \dyad{\kappa}_{C_AC_B},
+    &&\text{controlled on }C_AC_B,\label{eq:VI}\\
+  \VChat &\coloneqq \sum_{\kappa\in\Kann}\ket{\phi(\kappa)}_{\Chat}\otimes
+    \dyad{\kappa}_{C_AC_B},
+    &&\text{controlled on }C_AC_B,\label{eq:VChat}\\
+  \VR &\coloneqq \sum_{x,v}\ket{r(x,v)}_{R}\otimes\dyad{x,v}_{XY},
+    &&\text{controlled on }XY,\label{eq:VR}\\
+  \VZ &\coloneqq \sum_{j\in\Zset}\ket{j}_{Z}\otimes Z_j,
+    \qquad Z_j\coloneqq\dyad{j}_{R},
+    &&\text{controlled on }R,\label{eq:VZ}
+\end{align}
+each acting as the identity on all registers not named. The full protocol
+isometry and the
+\term[The map from Alice's and the measured system to the key, acceptance and announcement registers that the declaration generates for one round.]{single-round protocol map}
+are
+\begin{equation}\label{eq:Mprot}
+\begin{gathered}
+  \Wprot\coloneqq\VR\,\VChat\,\VI\,\Vann\,\Vmsm,\\
+  \Mprot(\omega)\coloneqq
+  \tr_{A\Qsys\,XY\,C_AC_B\,R}\!\left[\VZ\,\Wprot\,\omega\,\Wprot^{\dagger}
+  \VZ^{\dagger}\right],
+  \qquad \Mprot: A\Qsys\to Z\Chat I .
+\end{gathered}
+\end{equation}
+The
+\term[The pinching of the raw-key register onto its computational basis.]{key pinching}
+is $\cZ(\tau)\coloneqq\sum_{j\in\Zset}Z_j\,\tau\,Z_j$ on $R$, the pinching
+of \xref{foundations/def:pinching} by the projectors $Z_j$ (extended by the
+identity to any ambient system), and the
+\term[The map sending a state on Alice's and the measured system to the probabilities of the acceptance values.]{statistics map}
+is
+\begin{equation}\label{eq:Phimap}
+  \Phimap[\omega]\coloneqq\sum_{\hat c\in\Chatset}
+  \Bigg(\sum_{(x,v):\,\phi(a(x,v))=\hat c}
+  \tr\!\big[(M_x\otimes F_v)\,\omega\big]\Bigg)\,\hat e_{\hat c},
+  \qquad \Phimap:\Lin{A\Qsys}\to\mathbb{R}^{\Chatset},
+\end{equation}
+with $\hat e_{\hat c}$ the unit vector at position $\hat c$.
+\end{definition}

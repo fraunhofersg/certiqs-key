@@ -1,0 +1,67 @@
+% ---
+% id: meat-core/ex:fss
+% kind: ex
+% title: "The flag-state squasher as a licensed constraint list"
+% summary: >-
+%   The restricted attack set of the published flag-state squasher is exactly
+%   the attack set of one licensed entry, a designated outcome's element minus
+%   λ_min times the flag projector bounded below by 0, in either source mode.
+%   At least one published reduction thus delivers a licensed list.
+% prominence: standard
+% status: accepted
+% uses: [def:roundmodel, def:homog, def:admissible-declaration]
+% assumes: [A-ATK, A-SRC]
+% refs:
+%   - "tupkary2026decoy, Lemma 9.4, Eqs. (151)-(152)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{example}
+\label{ex:fss}
+\cite[Lemma~9.4, Eqs.~(151)--(152)]{tupkary2026decoy} constructs, for
+a receiver whose physical POVM is block-diagonal with respect to a
+photon-number cutoff, a squashed model whose receiver space carries a
+preserved subspace and a flag sector --- matching this module's
+$\SecSet$ with
+$\Hs{\Qsys}=\Hs{\Qsys_{\mathrm{pres}}}\oplus\Hs{\Qsys_{\mathrm{flag}}}$
+--- together with the restricted \tref{attack set}
+\begin{equation*}
+  \big\{\Aev:\ \Aev^{\dagger}(F_o\otimes\idon{E''})\;\succeq\;
+  \lambda_{\min}\,\Aev^{\dagger}(\Pi_{\mathrm{flag}}\otimes\idon{E''})
+  \big\},
+\end{equation*}
+its Eq.~(151). The source writes the flag projector $\Pi_{Sq}$, defined there
+as ``the projector onto the flag subspace''; here it is
+$\Pi_{\mathrm{flag}}$, the projector onto $\Hs{\Qsys_{\mathrm{flag}}}$, a
+renaming into this module's sector vocabulary. $F_o$ is the squashed POVM
+element of a designated outcome $o$ and $\lambda_{\min}>0$ a receiver
+constant. By linearity of the adjoint this is exactly
+$\AttSet_{\CList}$ of \eqref{eq:attset} for the single
+$\tau_A$-homogeneous entry
+\begin{equation*}
+  \hat O=F_o-\lambda_{\min}\,\Pi_{\mathrm{flag}},\qquad
+  \bowtie\ =\ \succeq,\qquad c=0,
+\end{equation*}
+whose operators are sector-block-diagonal as
+Definition~\ref{def:admissible-declaration}\,(iii) requires ($F_o$ by declaration,
+$\Pi_{\mathrm{flag}}$ a sector projector); the dimension-independent
+marginal form of the same set is the source's Eq.~(152).
+
+The instance carries over verbatim to \tref{untrusted-source mode}: the
+source's condition is on operators of $\Qsys$ only, so lifting it as
+\eqref{eq:attset-un} prescribes gives
+$\Aev^{\dagger}(\idon{A}\otimes F_o\otimes\idon{E''})\succeq
+\lambda_{\min}\Aev^{\dagger}(\idon{A}\otimes\Pi_{\mathrm{flag}}
+\otimes\idon{E''})$, i.e.\ the same single entry
+$\hat O=F_o-\lambda_{\min}\Pi_{\mathrm{flag}}$, $\bowtie\,=\,\succeq$,
+$c=0$, now read with the scalar right-hand side of
+Definition~\ref{def:homog}\,(b); and $c=0$ is a scalar in either
+reading, so no wording of the source is stretched.
+
+The instance shows that A-ATK (\xref{protocol-compiler/ass:atk})
+is not vacuous: at least one published reduction delivers a licensed pair
+$(\CList,\AttSet_{\CList})$. Determining $\lambda_{\min}$ for a given
+receiver, and certifying the reduction itself, are obligations of the
+receiver and reductions modules; nothing here depends on how they are met.
+\end{example}

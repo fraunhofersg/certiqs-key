@@ -1,0 +1,70 @@
+% ---
+% id: meat-core/lem:purifier-indep
+% kind: lem
+% title: "Independence of the purifier size"
+% summary: >-
+%   Once the adversary's register is at least as large as Alice's and the
+%   measured system together, enlarging it leaves the constrained single-round
+%   rate unchanged. The inner infimum may be restricted to pure states, which
+%   the branch formula uses.
+% prominence: standard
+% status: accepted
+% uses: [def:hqkd-list, foundations/def:renyi, lem:cond-more, def:admissible-declaration]
+% assumes: []
+% refs:
+%   - "tomamichel2016finite, Thm. 4.1, Eq. (4.82)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{lemma}\label{lem:purifier-indep}
+Fix $\CList$ (possibly empty) and write $h(\Etil')$ for the value of
+\eqref{eq:hqkd-list} computed with a register $\Etil'$ of
+$\dim\Hs{\Etil'}\ge\dim\Hs{A\Qsys}$ in place of $\Etil$. Then
+$h(\Etil')$ is the same for every such $\Etil'$, and the inner infimum
+is unchanged if restricted to pure $\sigma$.
+\end{lemma}
+
+\begin{proof}
+Let $\dim\Hs{\Etil_2}\ge\dim\Hs{\Etil_1}\ge\dim\Hs{A\Qsys}$.
+
+\emph{($h(\Etil_2)\le h(\Etil_1)$.)} An isometry
+$V:\Hs{\Etil_1}\to\Hs{\Etil_2}$ maps every feasible $\sigma$ for
+$\Etil_1$ to the feasible
+$(\idon{A\Qsys}\otimes V)\sigma(\idon{A\Qsys}\otimes V)^{\dagger}$ for
+$\Etil_2$ with the same $A\Qsys$-marginal, so the divergence term and
+the constraints are unchanged; and $\Hsandup(Z|I\Etil)$ is invariant
+under an isometry on the conditioning register: data processing
+(\cite[Thm.~4.1, Eq.~(4.82)]{tomamichel2016finite}) under the
+isometric channel $V(\cdot)V^{\dagger}$ on $\Etil_1$ and under a
+reversal channel $\mathcal{R}$ with $\mathcal{R}(V(\cdot)V^{\dagger})=\idmap$
+(e.g.\ $\mathcal{R}(X)=V^{\dagger}XV+\tr[(\idon{}-VV^{\dagger})X]\,\xi$ for a
+fixed state $\xi$), applied to the optimisation defining $\Hsandup$ in
+\xref{foundations/def:renyi}, gives both inequality directions.
+Hence every $\Etil_1$-bracket value is attained
+by an $\Etil_2$-feasible state.
+
+\emph{($h(\Etil_2)\ge h(\Etil_1)$; purifications suffice.)} Let
+$\sigma$ be feasible for $\Etil_2$ and let
+$\hat\sigma\in\Seq{A\Qsys\Etil_1}$ be a purification of
+$\sigma_{A\Qsys}$ (it exists: $\dim\Hs{\Etil_1}\ge\dim\Hs{A\Qsys}$).
+Every extension of $\sigma_{A\Qsys}$ arises from any fixed
+purification by a channel on the purifying register: purify $\sigma$
+itself by a further register, relate the two purifications of
+$\sigma_{A\Qsys}$ by an isometry on the purifier side, and trace ---
+so $\sigma=(\idmap_{A\Qsys}\otimes N)(\hat\sigma)$ for some channel
+$N:\Etil_1\to\Etil_2$. Then
+$\nu^{\sigma}=(\idmap_{ZI}\otimes N)(\nu^{\hat\sigma})$, and data
+processing on the conditioning register
+(\cite[Thm.~4.1, Eq.~(4.82)]{tomamichel2016finite}; the general-channel
+form of the argument in Lemma~\ref{lem:cond-more}) gives
+$\Hsandup(Z|I\Etil_2)_{\nu^{\sigma}_{|\hat c}}
+\ge\Hsandup(Z|I\Etil_1)_{\nu^{\hat\sigma}_{|\hat c}}$ for every
+$\hat c$ (conditioning is on a classical value of $\Chat$, which
+commutes with the channel on $\Etil$). The divergence term and the
+constraints agree (same $A\Qsys$-marginal). Hence the
+$\Etil_2$-bracket at $\sigma$ dominates the $\Etil_1$-bracket at the
+pure $\hat\sigma$, so $h(\Etil_2)\ge h(\Etil_1)$, and the infimum is
+attained along purifications. Combining the two directions, all values
+coincide.
+\end{proof}

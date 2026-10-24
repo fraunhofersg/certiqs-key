@@ -1,0 +1,29 @@
+id: core-a
+kind: core
+version: 0.1.0
+title: Core A
+abstract: >-
+  The core module of the format fixture. Its main result is [[thm:bound]],
+  which rests on [[A-LEAF]] and which the other contract consumes as
+  [[core-b/prop:cross]].
+depends_on: []
+notation_version: "0.4.0"
+submodules: [sub-x]
+reading_groups:
+  - title: Objects and the bound
+    start: def:object
+    abstract: >-
+      Defines the base object and bounds its first coordinate by one, which is
+      [[thm:bound]].
+  - title: Assumptions
+    start: ass:leaf
+    abstract: The one hypothesis of the bound.
+  - title: Requirements
+    start: req:refuse
+    abstract: What the implementation refuses.
+order:
+  - def:object
+  - thm:bound
+  - rem:tight
+  - ass:leaf
+  - req:refuse

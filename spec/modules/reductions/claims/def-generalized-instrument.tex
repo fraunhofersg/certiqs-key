@@ -1,0 +1,38 @@
+% ---
+% id: reductions/def:generalized-instrument
+% kind: def
+% title: "Generalized instrument"
+% summary: >-
+%   A generalized instrument is a finite family of completely positive maps on
+%   one input system whose traces add up to the trace. Each map is a branch,
+%   occurring with the probability its trace gives and leaving a subnormalized
+%   state on a system that may differ from branch to branch.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [lem:top, thm:licence]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+By Lemma~\ref{lem:top} every POVM squashes to a flag PVM, so a
+\tref{squashing relation} on its own is worth nothing: the target $\Ppvm$
+lets the adversary prepare a flag state and fix Bob's outcome outright. What
+buys a key rate is a target whose elements are not all rank-one projectors, or
+a \tref{sound} constraint that excludes the flag states an adversary would
+use; the squasher constructions of this module's submodules and the
+attack-set licence of
+Theorem~\ref{thm:licence} are the two ways of getting one. The squasher
+constructions describe a receiver branch by branch, and the branching step is
+the following object.
+
+\begin{definition}\label{def:generalized-instrument}
+A \term[A finite family of completely positive maps on one input system whose traces add up to the trace; each map is a branch, and its output system may depend on the branch.]{generalized instrument} on $\Bsys$ is a finite family
+$\{\Ins_j\}_{j\in J}$ of CP maps $\Ins_j\colon\Tcl{\Bsys}\to\Tcl{\Bsys'_j}$
+whose traces add up to the trace, $\sum_j\tr\circ\Ins_j=\tr$: branch $j$
+occurs with probability $\tr\Ins_j(\rho)$ and leaves the subnormalized state
+$\Ins_j(\rho)$ on the system $\Bsys'_j$, which may differ from branch to
+branch.
+\end{definition}

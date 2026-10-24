@@ -1,0 +1,40 @@
+% ---
+% id: transmitter/decoy/req:decoy-emission
+% kind: req
+% title: "Emission of the tagged ensemble as declared"
+% summary: >-
+%   What the engine emits from a tagged declaration is the decoy declaration of
+%   [[cor:emitted-decoy]] and nothing else, with every declared number
+%   unchanged. Its ledger carries A-WCP in the place of A-ENS.
+% prominence: standard
+% status: implemented
+% uses: [cor:emitted-decoy, def:tagged-source]
+% mentions: [ass:wcp]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.decoy.emit:emit_decoy_declaration
+% lean:
+% ---
+
+The source identity holds at the emitted descriptors because the emitted
+ensemble is the tagged one with the declared weights
+(Corollary~\ref{cor:emitted-decoy}\,(ii)).
+
+\begin{requirement}\label{req:decoy-emission}
+When the engine emits an artefact from a \tref{tagged source declaration} over
+a \tref{weak-coherent-pulse model}, the artefact is that declaration's decoy
+declaration (Corollary~\ref{cor:emitted-decoy}) and nothing else: the engine
+declares no retained system, no measurement, no marginal and no certificate,
+and it rounds or otherwise alters no declared number. The matched
+\tref{sector structure} among the declared data of that corollary is emitted as
+the \tref{retained-register sector map} of
+Definition~\ref{def:tagged-source}\,(T5), with
+the block kind \iface{proof_sector}, the tag that records a decomposition
+licensed by a proof, here source replacement, rather than by the device's own
+mode structure;
+it names Alice's sectors only as copies of the declared sectors $S_t$, so it
+declares no retained system. An artefact emitted from a tagged declaration
+carries A-WCP and not A-ENS in its assumption ledger
+(Assumption~\ref{ass:wcp}).
+\end{requirement}

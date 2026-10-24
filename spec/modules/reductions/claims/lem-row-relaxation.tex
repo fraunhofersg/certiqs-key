@@ -1,0 +1,127 @@
+% ---
+% id: reductions/lem:row-relaxation
+% kind: lem
+% title: "A rounded constraint entry with its constant relaxed"
+% summary: >-
+%   Rounding a certified entry's operator and moving its constant outward by
+%   a bound on the rounding's norm gives an entry that is again certified and
+%   that every attack and every state satisfying the exact entry satisfies.
+%   An equality becomes two inequalities.
+% prominence: standard
+% status: implemented
+% uses: [def:squashing, def:certificate, thm:licence, lem:sep, def:attset]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.companion:relaxed_entries
+% lean:
+% ---
+
+A constraint entry built in exact arithmetic from data off the binary64 grid
+has an operator that binary64 cannot carry. Rounding the operator moves the
+set the entry cuts out, in either direction. Moving the constant outward by a
+bound on the size of the rounding makes the rounded entry weaker than the
+exact one, so that whatever satisfies the exact entry satisfies the rounded
+one, and the rounded entry still carries a certificate of its own. The bound
+is read off the entries, since a Hermitian matrix has operator norm at most
+its largest absolute row sum.
+
+\begin{lemma}\label{lem:row-relaxation}
+Let $\Lambda\colon\Tcl{\Bsys}\to\Tcl{\Qsys}$ be a channel with
+$(M;O)\dsq_{\Lambda}(F;\hat O)$ (Definition~\ref{def:squashing}), and let
+$(\hat O_k,\bowtie_k,c_k)$ be an entry with $\hat O_k$ a carried operator,
+$\bowtie_k\in\{\preceq,=,\succeq\}$, $c_k\in\mathbb{R}$ and the certificate
+$\Lambda^{\dagger}(\hat O_k)\bowtie_kc_k\,\idon{\Bsys}$ of
+\eqref{eq:certificate}. Let $\hat O'_k$ be a Hermitian operator on $\Qsys$,
+let $E_k\coloneqq\hat O'_k-\hat O_k$, and let $\rho_{il}\ge0$ be numbers with
+$|(E_k)_{il}|\le\rho_{il}$ for every entry in a fixed orthonormal basis of
+$\Hs{\Qsys}$, and $\delta_k\ge\max_i\sum_l\rho_{il}$. Define the
+\emph{relaxed entries} of $(\hat O_k,\bowtie_k,c_k)$ as
+$(\hat O'_k,\succeq,c'_k)$ with $c'_k\le c_k-\delta_k$ where $\bowtie_k$ is
+$\succeq$; $(\hat O'_k,\preceq,c''_k)$ with $c''_k\ge c_k+\delta_k$ where
+$\bowtie_k$ is $\preceq$; and both of these where $\bowtie_k$ is $=$. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item $-\delta_k\idon{\Qsys}\preceq E_k\preceq\delta_k\idon{\Qsys}$;
+\item \emph{(certificate)} $(M;O,\Lambda^{\dagger}(\hat O'_k))\dsq_{\Lambda}
+  (F;\hat O,\hat O'_k)$, and every relaxed entry carries the spectral
+  certificate \eqref{eq:certificate} at its own constant:
+  $\Lambda^{\dagger}(\hat O'_k)\succeq c'_k\idon{\Bsys}$, respectively
+  $\Lambda^{\dagger}(\hat O'_k)\preceq c''_k\idon{\Bsys}$;
+\item \emph{(\tref[attack set]{attack sets})} for all finite-dimensional $E',E''$, every
+  $\Aev$ in the set \eqref{eq:attset}, \eqref{eq:attsetun} or, for an entry
+  tagged party-local with the factor $f$, \eqref{eq:attsetpl}, of the list
+  holding the exact entry lies in the set of the list in which the exact
+  entry is replaced by its relaxed entries, the other entries unchanged;
+\item \emph{(states)} for every finite-dimensional system $X$ and every
+  positive semidefinite $\omega$ on $\Hs{X}\otimes\Hs{\Qsys}$,
+  $\tr_{\Qsys}[(\idon{X}\otimes\hat O_k)\,\omega]\succeq c_k\tr_{\Qsys}\omega$
+  implies $\tr_{\Qsys}[(\idon{X}\otimes\hat O'_k)\,\omega]\succeq
+  c'_k\tr_{\Qsys}\omega$, and the same with $\preceq$, $c''_k$ in place of
+  $\succeq$, $c'_k$; with $X$ trivial these are the scalar readings
+  $\tr[\hat O_k\omega]\ge c_k\tr\omega$ and the like.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) $E_k$ is Hermitian, as a difference of Hermitian operators, so its
+operator norm is the largest modulus of an eigenvalue. Let $E_kx=\lambda x$
+with $x\neq0$ and let $i$ be an index with $|x_i|=\max_l|x_l|$. Then
+$|\lambda||x_i|=|\sum_l(E_k)_{il}x_l|\le\sum_l\rho_{il}|x_l|
+\le\big(\sum_l\rho_{il}\big)|x_i|$, so $|\lambda|\le\delta_k$, and the
+spectral theorem gives $-\delta_k\idon{}\preceq E_k\preceq\delta_k\idon{}$.
+
+(ii) $\Lambda^{\dagger}$ is linear, positive and unital (Lemma~\ref{lem:sep}),
+so (i) gives $-\delta_k\idon{\Bsys}\preceq\Lambda^{\dagger}(E_k)\preceq
+\delta_k\idon{\Bsys}$. Where $\bowtie_k$ is $\succeq$ or $=$,
+$\Lambda^{\dagger}(\hat O_k)\succeq c_k\idon{\Bsys}$, hence
+$\Lambda^{\dagger}(\hat O'_k)=\Lambda^{\dagger}(\hat O_k)+
+\Lambda^{\dagger}(E_k)\succeq(c_k-\delta_k)\idon{\Bsys}\succeq c'_k
+\idon{\Bsys}$; where it is $\preceq$ or $=$, symmetrically
+$\Lambda^{\dagger}(\hat O'_k)\preceq(c_k+\delta_k)\idon{\Bsys}\preceq
+c''_k\idon{\Bsys}$. The relation with $\hat O'_k$ carried is
+\eqref{eq:squashing} with the one further carried operator $\hat O'_k$ and
+its pull-back $\Lambda^{\dagger}(\hat O'_k)$, which holds by the definition
+of that pull-back; the conditions on $F$, $M$, $\hat O$ and $O$ are the given
+relation. Each relaxed entry's certificate is the operator inequality just
+shown, a case of \eqref{eq:certificate}.
+
+(iii) The adjoint of a channel, and of $\idmap_{R'}\otimes\Aev$, is unital and
+completely positive (Lemma~\ref{lem:sep}). For \eqref{eq:attset},
+$-\delta_k\idon{}\preceq E_k\otimes\idon{E''}\preceq\delta_k\idon{}$ by (i),
+so $\Aev^{\dagger}(\hat O'_k\otimes\idon{E''})=\Aev^{\dagger}(\hat O_k\otimes
+\idon{E''})+\Aev^{\dagger}(E_k\otimes\idon{E''})$ is $\succeq(c_k-\delta_k)
+\idon{E'}\succeq c'_k\idon{E'}$ where $\Aev^{\dagger}(\hat O_k\otimes
+\idon{E''})\succeq c_k\idon{E'}$, and $\preceq(c_k+\delta_k)\idon{E'}\preceq
+c''_k\idon{E'}$ where $\Aev^{\dagger}(\hat O_k\otimes\idon{E''})\preceq
+c_k\idon{E'}$; an equality gives both. The same with
+$\idon{A}\otimes\hat O_k\otimes\idon{E''}$ proves it for \eqref{eq:attsetun}.
+For \eqref{eq:attsetpl}, with $X\succeq0$ on $R'R\,\Qsys_{f^c}$,
+\begin{equation*}
+  X\otimes(\hat O'_k-c'_k\idon{})\otimes\idon{E''}
+  =X\otimes(\hat O_k-c_k\idon{})\otimes\idon{E''}
+  +X\otimes\big(E_k+(c_k-c'_k)\idon{}\big)\otimes\idon{E''},
+\end{equation*}
+and $E_k+(c_k-c'_k)\idon{}\succeq E_k+\delta_k\idon{}\succeq0$ by (i), so
+the last term is a tensor product of positive semidefinite operators and its
+image under the completely positive adjoint is positive semidefinite; the
+first term's image is $\succeq0$ where the exact entry holds. For
+$\preceq$ the second bracket is $E_k-(c''_k-c_k)\idon{}\preceq
+E_k-\delta_k\idon{}\preceq0$, and the images are $\preceq0$. An equality
+entry gives both. The other entries of the list are unchanged, so their
+conditions are the same in both sets.
+
+(iv) Put $P\coloneqq E_k+\delta_k\idon{\Qsys}\succeq0$ by (i). For
+$\omega\succeq0$,
+$\tr_{\Qsys}[(\idon{X}\otimes P)\omega]
+=\tr_{\Qsys}[(\idon{X}\otimes\sqrt P)\,\omega\,(\idon{X}\otimes\sqrt P)]
+\succeq0$, by cyclicity of the partial trace for an operator acting on
+$\Qsys$ alone and because a partial trace of a positive semidefinite operator
+is positive semidefinite. Hence
+$\tr_{\Qsys}[(\idon{X}\otimes\hat O'_k)\omega]\succeq
+\tr_{\Qsys}[(\idon{X}\otimes\hat O_k)\omega]-\delta_k\tr_{\Qsys}\omega
+\succeq(c_k-\delta_k)\tr_{\Qsys}\omega\succeq c'_k\tr_{\Qsys}\omega$, the
+last step because $\tr_{\Qsys}\omega\succeq0$ and $c_k-\delta_k\ge c'_k$. The
+case $\preceq$ uses $\delta_k\idon{}-E_k\succeq0$ in the same way. With $X$
+trivial the operators are numbers and the inequalities are the scalar ones.
+\end{proof}

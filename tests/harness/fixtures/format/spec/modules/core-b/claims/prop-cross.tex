@@ -1,0 +1,24 @@
+% ---
+% id: core-b/prop:cross
+% kind: prop
+% title: The consumer's cap
+% summary: A consumer's value is capped at one, by [[core-a/thm:bound]] under [[A-LEAF]].
+% prominence: standard
+% status: draft
+% uses: [core-a/thm:bound]
+% assumes: [A-LEAF]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The consumer reads one coordinate; the cap is imported, not rederived.
+
+\begin{proposition}\label{prop:cross}
+Every \tref{base object} satisfies $x \le 1$, by \xref{core-a/thm:bound}.
+\end{proposition}
+
+\begin{proof}
+Immediate from \xref{core-a/thm:bound}; the engine's handling is described in
+\repodoc{docs/guide.md#usage}.
+\end{proof}

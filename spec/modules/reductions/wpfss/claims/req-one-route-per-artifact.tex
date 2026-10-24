@@ -1,0 +1,31 @@
+% ---
+% id: reductions/wpfss/req:one-route-per-artifact
+% kind: req
+% title: "One route per artefact"
+% summary: >-
+%   Every artefact is emitted on exactly one route, encoded or licensed, and a
+%   request for both is refused. A caller wanting both issues two requests,
+%   since pairing one route's entries with the other's channel is unsound
+%   ([[rem:tworoutes]]).
+% prominence: standard
+% status: accepted
+% uses: [rem:tworoutes]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The two routes run on different channels, and the licensed entry paired with
+the encoded route's channel is not sound (Remark~\ref{rem:tworoutes},
+\eqref{eq:crosspairing}); an artefact that carried both would admit that
+pairing.
+
+\begin{requirement}
+\label{req:one-route-per-artifact}
+The engine emits every artefact on exactly one route: the request's
+\iface{route} is \iface{encoded} or \iface{licensed}, the emitted payload is
+single-valued, and a request asking for both is refused with
+\iface{route_not_single_valued}. A caller wanting both issues two requests and
+receives two artefacts.
+\end{requirement}

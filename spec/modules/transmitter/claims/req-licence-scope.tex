@@ -1,0 +1,29 @@
+% ---
+% id: transmitter/req:licence-scope
+% kind: req
+% title: 'Certificate and attestation demanded only at $d_A\ge2$'
+% summary: >-
+%   A trusted-source request must carry the certificate, and with it the
+%   retention attestation, only when Alice's retained system has dimension at
+%   least two. At dimension one the licensed marginal excludes no state, so
+%   demanding them there would refuse data for nothing.
+% prominence: standard
+% status: accepted
+% uses: [rem:da1, def:srcert]
+% implements: certiqs_key.transmitter.artifact:emit_artifact
+% mentions: [ass:src]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}\label{req:licence-scope}
+The engine demands the \tref{source-replacement certificate} of
+Definition~\ref{def:srcert} of a request in \tref{trusted-source mode} only at
+$d_A\ge2$, and there refuses such a request that carries none
+(\iface{trusted_mode_without_certificate}). At $d_A=1$, where the licensed
+condition $\omega_A=\tau_A$ excludes no state (Remark~\ref{rem:da1}),
+neither the engine nor a consumer of its artefact demands the certificate or
+the attestation of Assumption~\ref{ass:src}.
+\end{requirement}

@@ -1,0 +1,109 @@
+% ---
+% id: foundations/def:round-model
+% kind: def
+% title: "Round model, attack sequences and attack sets"
+% summary: >-
+%   Over n rounds of a per-round system S, an attack sequence is one channel per
+%   round from Eve's register to S and her new memory, with Alice's system too
+%   when the adversary supplies it. A list of operator constraints cuts out an
+%   attack set by adjoint conditions, and so the admissible attack sequences.
+% prominence: standard
+% status: accepted
+% uses: [def:pinching]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The generic statement of the round model that meat-core/def:roundmodel instantiates at the squashed system and reductions/def:roundmodel and reductions/def:attset at the physical and the squashed system. It holds exactly what the three share and nothing a module's own claims supply: no protocol channel, no announcement register, no squashing channel, no licence, and no dimension beyond the conventions it states. The instances keep their own displays because other claims cite their equation labels; each says that its displays are these at its system."
+% ---
+
+\begin{definition}\label{def:round-model}
+Fix a number $n\geq1$ of rounds, a per-round system $S$, Alice's system $A$,
+and the instantiating model's source mode: in \tref{trusted-source mode} Alice
+supplies $A$ in every round, and in \tref{untrusted-source mode} the adversary
+does. Systems, operators and channels follow the conventions of
+Definition~\ref{def:pinching}, except that $S$ may be separable of infinite
+dimension where the instantiating model declares it so; a channel whose input
+or output includes such a system is a normal CPTP map on trace-class
+operators. The dimensions are the instantiating model's to declare. We write
+$S_j$ and $A_j$ for the copies of $S$ and $A$ in round $j$, and drop the
+round index where one round is in view. This is the \term[n rounds of a per-round
+system S, with the attack sequences and attack sets below]{round model} with
+per-round system $S$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item An \term[one channel per round whose output is the per-round system, with
+  Alice's system where the adversary supplies it, and Eve's new memory]{attack
+  sequence} is a family $(\Aev_j)_{j=1}^{n}$ of channels whose output carries
+  the systems the adversary supplies in the source mode:
+  \begin{equation}\label{eq:round-attack}
+    \Aev_j\in
+    \begin{cases}
+      \mathrm{CPTP}\big(E_{j-1},\ S_j\,E'_j\big),
+        & \text{trusted-source mode},\\[0.3ex]
+      \mathrm{CPTP}\big(E_{j-1},\ A_j\,S_j\,E'_j\big),
+        & \text{untrusted-source mode},
+    \end{cases}
+  \end{equation}
+  where $E_0$ is Eve's initial register, $E'_j$ her outgoing memory, and
+  $E_j$ her register after round $j$, which holds $E'_j$ together with what
+  the instantiating model hands her in round $j$. In trusted-source mode $A_j$
+  is \emph{not} an output of $\Aev_j$: it is supplied by Alice and carried
+  into the round as a separate input.
+\item Let $S$ be finite-dimensional, and let
+  $\CList=\{(\hat O_k,\bowtie_k,c_k)\}_{k=1}^{m}$, $m\geq0$, be a
+  finite list of Hermitian operators $\hat O_k$ on $S$, relations
+  $\bowtie_k\in\{\preceq,=,\succeq\}$ between operators, and real numbers
+  $c_k$. For registers $E',E''$, the \term[the channels whose adjoint maps
+  every listed operator into the stated relation with its constant]{attack
+  set} of $\CList$ is
+  \begin{equation}\label{eq:round-attset}
+    \AttSet_{\CList}(E',\,S E'')\coloneqq
+    \Big\{\Aev\in\mathrm{CPTP}(E',S E''):\
+    \Aev^{\dagger}\big(\hat O_k\otimes\idon{E''}\big)
+    \bowtie_k c_k\,\idon{E'}\ \ \forall k\Big\}
+    \qquad\text{(trusted-source mode)},
+  \end{equation}
+  and, with the constraint operator lifted to the larger supplied system,
+  \begin{equation}\label{eq:round-attset-un}
+    \AttSet_{\CList}(E',\,A S E'')\coloneqq
+    \Big\{\Aev\in\mathrm{CPTP}(E',A S E''):\
+    \Aev^{\dagger}\big(\idon{A}\otimes\hat O_k\otimes\idon{E''}\big)
+    \bowtie_k c_k\,\idon{E'}\ \ \forall k\Big\}
+  \end{equation}
+  in untrusted-source mode; the two are distinguished by the output system
+  named in the argument. For $\CList=\varnothing$ the condition is empty and
+  $\AttSet_{\varnothing}=\mathrm{CPTP}$.
+\item Where $S$ is finite-dimensional and $S=\bigotimes_{f\in\mathbb{F}}S_f$
+  is a product of factors indexed by a finite ordered set $\mathbb{F}$ (with a
+  round index as well, a factor is written $S_{f,j}$), an entry of
+  $\CList$ may be \emph{tagged} with a factor $f$; its operator $\hat O_k$ is
+  then Hermitian on $S_f$, and the entry $(\hat O_k,\bowtie_k,c_k;f)$
+  contributes to the attack set, in place of the condition of
+  \eqref{eq:round-attset} or \eqref{eq:round-attset-un}, the condition
+  \begin{equation}\label{eq:round-attset-pl}
+    \big(\idmap_{R'}\otimes\Aev\big)^{\dagger}
+    \Big(X\otimes\big(\hat O_k-c_k\,\idon{S_f}\big)\otimes\idon{E''}\Big)
+    \;\bowtie_k\;0
+    \qquad\text{for every finite-dimensional }R'\text{ and every }
+    X\in\Pos{R'R\,S_{f^c}} ,
+  \end{equation}
+  as an operator on $R'E'$, where $S_{f^c}$ is the product of the factors
+  other than $f$, the tensor factors of the argument are written in the order
+  $R'R\,S_{f^c}$, $S_f$, $E''$, and $R$ is $A$ in untrusted-source mode and
+  trivial in trusted-source mode. Untagged entries keep their conditions. The
+  reference system $R'$ is what carries Alice's retained system in
+  trusted-source mode, where $A$ is no output of $\Aev$. With $R'$ trivial and
+  $X=\idon{}$, \eqref{eq:round-attset-pl} is the condition of
+  \eqref{eq:round-attset} or \eqref{eq:round-attset-un} for the lifted operator
+  $\idon{S_{f^c}}\otimes\hat O_k$, because $\Aev^{\dagger}$ is unital; so the
+  attack set with tagged entries is contained in the attack set with the same
+  entries untagged and their operators lifted.
+\item An attack sequence is an \term[an attack sequence whose every round lies
+  in the attack set of a given constraint list]{admissible attack sequence} for
+  $\CList$, or \emph{$\CList$-admissible}, if $\Aev_j$ lies in the attack set
+  of $\CList$ of the source mode, \eqref{eq:round-attset} or
+  \eqref{eq:round-attset-un} with the conditions of
+  \eqref{eq:round-attset-pl} for tagged entries, with $E'=E_{j-1}$ and
+  $E''=E'_j$, for every $j$.
+\end{enumerate}
+\end{definition}

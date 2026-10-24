@@ -1,0 +1,57 @@
+{
+ "alpha": "search",
+ "device": {
+  "alice_basis_split": "14/25",
+  "alice_dark_count": {
+   "A": "13/100000000",
+   "D": "13/100000000",
+   "H": "13/100000000",
+   "V": "13/100000000"
+  },
+  "alice_efficiency": {
+   "A": "216/295",
+   "D": "4/5",
+   "H": "4/5",
+   "V": "216/295"
+  },
+  "alice_pbs_leak_reflected": "1/100",
+  "alice_pbs_leak_transmitted": "1/1000",
+  "bob_basis_split": "14/25",
+  "bob_dark_count": {
+   "A": "13/100000000",
+   "D": "13/100000000",
+   "H": "13/100000000",
+   "V": "13/100000000"
+  },
+  "bob_efficiency": {
+   "A": "216/295",
+   "D": "4/5",
+   "H": "4/5",
+   "V": "216/295"
+  },
+  "bob_half_wave_angle": "15288567027608731/113187804032455040",
+  "bob_pbs_leak_reflected": "1/100",
+  "bob_pbs_leak_transmitted": "1/1000"
+ },
+ "f_ec": 1.1,
+ "id": "realistic-L30-c3e5",
+ "labels": {
+  "coincidences": 300000,
+  "devices": "realistic",
+  "loss_db": 30.0,
+  "qber": 0.01,
+  "rounds": 510000000
+ },
+ "model": {
+  "alice_transmittance": "2278661198716217/72057594037927936",
+  "bob_transmittance": "2278661198716217/72057594037927936",
+  "visibility": "49/50"
+ },
+ "parameters": {},
+ "rounds": 510000000,
+ "solver": {
+  "budget_seconds": 600,
+  "max_iterations": null,
+  "method": "auto"
+ }
+}

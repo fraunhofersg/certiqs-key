@@ -1,0 +1,198 @@
+% ---
+% id: receiver/thm:enclosed-weight
+% kind: thm
+% title: "The weight on enclosed bound data bounds the multiclick element"
+% summary: >-
+%   Bounds on the four inputs and on the window blocks, taken on the
+%   conservative side and clipped to [0, 1], give enclosed bound data, and the
+%   enclosed weight bounds its setting's multiclick element on every block above
+%   the cutoff. No premise about arithmetic enters, so no eigenvalue slack.
+% user_statement: >-
+%   Where the receiver's model is known exactly, its high-photon multiclick
+%   weight can be computed from numbers that are proven to lie on the safe side
+%   of the exact ones, and the weight so computed, or any smaller number, is a
+%   guaranteed lower bound on the multiclick probability of every block above
+%   the cutoff. It assumes nothing about the accuracy of floating-point
+%   arithmetic or of an eigenvalue routine, and it needs no eigenvalue slack.
+%   It still rests on the receiver's device assumptions, which say that the
+%   declared model is your receiver.
+% prominence: standard
+% status: implemented
+% uses: [def:enclosed-weight, def:setting-family, def:bounddata, thm:multiclick-bound, lem:collapse, lem:windowtail, def:exactbnd, lem:exactbasic, lem:exactwindow, def:pmc, def:pmcex]
+% mentions: [rem:ia, thm:emitted-bound]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.rigorous:rigorous_weights
+% lean:
+% ---
+
+Each formula of the weight is non-decreasing in $c$ and in $\gamma$ and
+non-increasing in each $d_k$ and $\beta_k$ on $[0,1]$, and each minimum and
+maximum in it is non-decreasing in its arguments, so the weight formed on
+enclosed bound data lies below the weight formed on the exact data, entry by
+entry; this is the argument of Remark~\ref{rem:ia}. In the exact window the
+lemma that combines the window with its remainder admits any lower bounds on
+the block eigenvalues and any lower remainder, so a rigorous lower bound
+serves where a computed eigenvalue needed an assumption. The theorem is the
+rigorous counterpart of Theorem~\ref{thm:emitted-bound} at one setting, and it
+has no assumption at all.
+
+\begin{theorem}\label{thm:enclosed-weight}
+Let a \tref{setting family} (Definition~\ref{def:setting-family}) be given, let
+$N\ge0$, and let $t\in\Tset$, with operators $B=B^{(t)}$ and $B_k=B^{(t)}_k$,
+\tref{bound data of the setting} $\big(\gamma,\{\beta_k\},c,\{d_k\}\big)$,
+\tref{bound function} $\Bnd=\Bnd^{(t)}$ and $T_m$ of \eqref{eq:windowtail}
+formed from those data. Write
+$\operatorname{clip}(x)\coloneqq\min\{1,\max\{0,x\}\}$ for real $x$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{Construction.} Let $u$, $\ell_1,\dots,\ell_K$, $g$ and
+  $b_1,\dots,b_K$ be reals with $u\ge\lmax(B)$, $\ell_k\le\lmin(B_k)$,
+  $g\le\gamma$ and $b_k\ge\beta_k$. Then
+  \begin{equation}\label{eq:enclosed-construction}
+    \big(\operatorname{clip}(g),\ \{\operatorname{clip}(b_k)\},\
+    \operatorname{clip}(1-u),\ \{\operatorname{clip}(1-\ell_k)\}\big)
+  \end{equation}
+  are \tref{enclosed bound data} of $t$. Where $t$ carries an
+  \tref{exact-window depth} $m^{\ast}_t$ and reals $\lambda_n$ satisfy
+  $\lambda_n\le\lmin\big(\blk{M}{\eqn}_{\mc|t}\big)$ for
+  $N<n\le m^{\ast}_t$, the reals $\max\{0,\lambda_n\}$ are
+  \tref{rigorous window bounds} of $t$.
+\item \emph{Comparison.} Enclosed bound data
+  $\big(\check\gamma,\{\check\beta_k\},\check c,\{\check d_k\}\big)$ of $t$
+  are \tref{admissible bound data} (Definition~\ref{def:bounddata}), and their
+  bound function $\check\Bnd$ and $\check T_m$ satisfy
+  \begin{equation}\label{eq:enclosed-comparison}
+    \check\Bnd(n)\ \le\ \Bnd(n)\quad(n\ge0),\qquad
+    \check T_m\ \le\ T_m\quad(m\ge0).
+  \end{equation}
+\item \emph{The bound.} For enclosed bound data of $t$ and, where $t$
+  carries an exact-window depth, rigorous window bounds of $t$, the
+  \tref{enclosed weight} $\check p^{(t)}_{\mc}$ formed from them
+  (Definition~\ref{def:enclosed-weight}) satisfies
+  $0\le\check p^{(t)}_{\mc}\le1$ and
+  \begin{equation}\label{eq:enclosed-bound}
+    \blk{M}{\gtN}_{\mc|t}\ \succeq\ \check p^{(t)}_{\mc}\,\id^{(>N)} ,
+  \end{equation}
+  and every real $p$ with $0\le p\le\check p^{(t)}_{\mc}$ satisfies
+  $0\le p\le1$ and $\blk{M}{\gtN}_{\mc|t}\succeq p\,\id^{(>N)}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Two facts about the setting are used throughout. By
+Definition~\ref{def:setting-family}\,(b) the hypotheses of
+Theorem~\ref{thm:multiclick-bound} hold at $t$, so its bound data are
+admissible bound data, $\gamma,\beta_k\in(0,1]$, and by \eqref{eq:family-mc}
+\begin{equation*}
+  \blk{M}{\eqn}_{\mc|t}\ \succeq\ \Bnd(n)\,\id^{(=n)}\qquad\text{for every }n\ge0
+  \tag{F1}
+\end{equation*}
+(Theorem~\ref{thm:multiclick-bound}, \eqref{eq:mcbound}). And
+$M_{\mc|t}\succeq0$, the consequence \eqref{eq:mcpos} recorded in
+Definition~\ref{def:setting-family}, so Lemma~\ref{lem:exactbasic} gives
+$\Bnd^{\ast(t)}(n)\in[0,1]$ for every $n$, that is,
+\begin{equation*}
+  \blk{M}{\eqn}_{\mc|t}\ \succeq\ 0\qquad\text{for every }n\ge0 .
+  \tag{F2}
+\end{equation*}
+The blocks $n>N$ are orthogonal direct summands of $\blk{M}{\gtN}_{\mc|t}$, so
+a lower bound $s\,\id^{(=n)}$ holding on each of them holds as
+$s\,\id^{(>N)}$ on their sum.
+
+(i) The map $\operatorname{clip}$ is non-decreasing, takes values in
+$[0,1]$, and is the identity on $[0,1]$. Since $\gamma\in[0,1]$ and
+$g\le\gamma$, $0\le\operatorname{clip}(g)\le\operatorname{clip}(\gamma)=\gamma$;
+since $\beta_k\in[0,1]$ and $b_k\ge\beta_k$,
+$\beta_k=\operatorname{clip}(\beta_k)\le\operatorname{clip}(b_k)\le1$. By
+\eqref{eq:cd}, $c=1-\lmax(B)\in[0,1]$ and $u\ge\lmax(B)$ give $1-u\le c$, so
+$0\le\operatorname{clip}(1-u)\le c$; and $d_k=1-\lmin(B_k)\in[0,1]$ and
+$\ell_k\le\lmin(B_k)$ give $1-\ell_k\ge d_k$, so
+$d_k\le\operatorname{clip}(1-\ell_k)\le1$. These are the four conditions of
+\eqref{eq:enclosed-directions}. For the window, $\lmin(\blk{M}{\eqn}_{\mc|t})$
+is $\Bnd^{\ast(t)}(n)$ by \eqref{eq:exactbnd}, which is at least $0$ by (F2),
+so $\max\{0,\lambda_n\}\le\Bnd^{\ast(t)}(n)$.
+
+(ii) By \eqref{eq:enclosed-directions} and the admissibility of the exact data,
+$0\le\check\gamma\le\gamma\le\beta_k\le\check\beta_k\le1$ and
+$0\le\check c\le c\le d_k\le\check d_k\le1$ for every $k$, which is
+\eqref{eq:bounddata} for the enclosed tuple. Fix $n\ge0$. With the convention
+$0^0=1$ the map $x\mapsto x^{\,n}$ is non-decreasing on $[0,\infty)$ (at $n=0$
+it is the constant $1$). From $0\le\check c\le c$ follows
+$0\le\check c^{\,n}\le c^{\,n}$, and with $0\le\check\gamma\le\gamma$,
+$\check\gamma\,\check c^{\,n}\le\gamma\,\check c^{\,n}\le\gamma\,c^{\,n}$; as
+$K-1\ge0$, $(K-1)\check\gamma\check c^{\,n}\le(K-1)\gamma c^{\,n}$. From
+$0\le d_k\le\check d_k$ follows $d_k^{\,n}\le\check d_k^{\,n}$, and with
+$0\le\beta_k\le\check\beta_k$,
+$\beta_kd_k^{\,n}\le\beta_k\check d_k^{\,n}\le\check\beta_k\check d_k^{\,n}$.
+Adding, $\check\Bnd(n)=1+(K-1)\check\gamma\check c^{\,n}
+-\sum_k\check\beta_k\check d_k^{\,n}\le1+(K-1)\gamma c^{\,n}
+-\sum_k\beta_kd_k^{\,n}=\Bnd(n)$. The second of these comparisons, with $m$ in
+place of $n$, gives $\check T_m=1-\sum_k\check\beta_k\check d_k^{\,m}
+\le1-\sum_k\beta_kd_k^{\,m}=T_m$.
+
+(iii) Write $\check p\coloneqq\check p^{(t)}_{\mc}$. Minima and maxima of
+finitely many reals are non-decreasing in each argument, which is all that is
+used of them below.
+
+\emph{Case 1: $t$ carries no exact-window depth.} If predicate~(X) holds at
+$t$, $\check p=\max\{0,\check\Bnd(N+1)\}\le\max\{0,\Bnd(N+1)\}$ by (ii); the
+flag gives $\gamma=\beta_k=1$ (Definition~\ref{def:setting-family}\,(c)), so
+\eqref{eq:collapsehyp} holds and \eqref{eq:collapseinf} of
+Lemma~\ref{lem:collapse} gives $\max\{0,\Bnd(N+1)\}=
+\max\{0,\inf_{n>N}\Bnd(n)\}$. Otherwise
+$\check p=\max\{0,\underline{\check\Bnd}_{N,m_t}\}$, and
+$\underline{\check\Bnd}_{N,m_t}=\min\{\min_{N<n\le m_t}\check\Bnd(n),\check
+T_{m_t}\}\le\min\{\min_{N<n\le m_t}\Bnd(n),T_{m_t}\}
+=\underline{\Bnd}_{N,m_t}\le\inf_{n>N}\Bnd(n)$ by (ii) and
+Lemma~\ref{lem:windowtail}\,(i). In both cases
+$\check p\le q\coloneqq\max\{0,\inf_{n>N}\Bnd(n)\}$. For every $n>N$, (F1)
+gives $\blk{M}{\eqn}_{\mc|t}\succeq\Bnd(n)\,\id^{(=n)}\succeq
+\big(\inf_{j>N}\Bnd(j)\big)\id^{(=n)}$ and (F2) gives
+$\blk{M}{\eqn}_{\mc|t}\succeq0$, so $\blk{M}{\eqn}_{\mc|t}\succeq q\,\id^{(=n)}
+\succeq\check p\,\id^{(=n)}$, and \eqref{eq:enclosed-bound} follows on the
+direct sum. $\check p\ge0$ by the outer maximum, and
+$\check p\le q\le\max\{0,\Bnd(N+1)\}\le1$, since $\Bnd\le1$
+(Theorem~\ref{thm:multiclick-bound}).
+
+\emph{Case 2: a depth $m^{\ast}_t$, and predicate~(X) holds at $t$.} Apply
+Lemma~\ref{lem:exactwindow} at $t$, whose hypotheses are those of
+Theorem~\ref{thm:multiclick-bound} and \eqref{eq:mcpos}, with
+$m^{\ast}=m^{\ast}_t$, $\ell=\check\ell$ of \eqref{eq:enclosed-ell} and
+$\tau=\check\Bnd(m^{\ast}_t+1)$. Hypothesis \eqref{eq:ellhyp}: for
+$N<n\le m^{\ast}_t$, $\check\Bnd(n)\le\Bnd(n)\le\Bnd^{\ast(t)}(n)$ by (ii) and
+\eqref{eq:exactbasic}, and $w(n)\le\Bnd^{\ast(t)}(n)$ by
+Definition~\ref{def:enclosed-weight}\,(ii), so their maximum $\check\ell(n)$
+is at most $\Bnd^{\ast(t)}(n)$. Hypothesis \eqref{eq:tailadm}: the flag makes
+\eqref{eq:collapsehyp} hold, as in Case~1, so
+$\tau_0\coloneqq\Bnd(m^{\ast}_t+1)$ satisfies \eqref{eq:tailadm} by
+Lemma~\ref{lem:exactwindow}\,(ii), and $\tau\le\tau_0$ by (ii). A real below
+one that satisfies \eqref{eq:tailadm} satisfies it too: $\tau_0\le0$ gives
+$\tau\le0$, and $\tau_0\le\inf_{n>m^{\ast}_t}\Bnd^{\ast(t)}(n)$ gives
+$\tau\le\inf_{n>m^{\ast}_t}\Bnd^{\ast(t)}(n)$. With these choices
+\eqref{eq:exactcomposite} is the first branch of \eqref{eq:pmcex} read as
+Definition~\ref{def:enclosed-weight}\,(iii) reads it, that is $P=\check p$,
+and the lemma gives $0\le\check p\le1$ and \eqref{eq:exactstatement}, which is
+\eqref{eq:enclosed-bound}.
+
+\emph{Case 3: a depth $m^{\ast}_t$, and predicate~(X) fails at $t$.} Then
+$m^{\ast}_t\le m_t$ (Definition~\ref{def:pmcex}). Apply
+Lemma~\ref{lem:exactwindow} at $t$ with $m^{\ast}=m_t$, with
+$\ell(n)=\check\ell(n)$ for $N<n\le m^{\ast}_t$ and $\ell(n)=\check\Bnd(n)$ for
+$m^{\ast}_t<n\le m_t$, and with $\tau=\check T_{m_t}$. Hypothesis
+\eqref{eq:ellhyp} holds on the first range as in Case~2 and on the second by
+$\check\Bnd(n)\le\Bnd(n)\le\Bnd^{\ast(t)}(n)$. Hypothesis \eqref{eq:tailadm}:
+$T_{m_t}$ satisfies it by Lemma~\ref{lem:exactwindow}\,(i), and
+$\check T_{m_t}\le T_{m_t}$ by (ii), lowered as in Case~2. With these choices
+\eqref{eq:exactcomposite} reads
+$\max\{0,\min\{\min_{N<n\le m^{\ast}_t}\check\ell(n),
+\min_{m^{\ast}_t<n\le m_t}\check\Bnd(n),\check T_{m_t}\}\}$, the middle minimum
+being over the empty set and inactive when $m^{\ast}_t=m_t$; this is the
+second branch of \eqref{eq:pmcex} read as
+Definition~\ref{def:enclosed-weight}\,(iii) reads it, so $P=\check p$, and the
+lemma concludes as in Case~2.
+
+\emph{Any smaller weight.} For $0\le p\le\check p$,
+$\blk{M}{\gtN}_{\mc|t}\succeq\check p\,\id^{(>N)}\succeq p\,\id^{(>N)}$, since
+$(\check p-p)\id^{(>N)}\succeq0$, and $0\le p\le\check p\le1$.
+\end{proof}

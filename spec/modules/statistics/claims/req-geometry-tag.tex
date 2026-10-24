@@ -1,0 +1,30 @@
+% ---
+% id: statistics/req:geometry-tag
+% kind: req
+% title: "Acceptance sets under exactly the two geometry tags"
+% summary: >-
+%   Every acceptance set is emitted under one of the two geometry tags with
+%   that tag's data. A consumer presented with any other tag refuses the set
+%   rather than guessing what it means.
+% prominence: standard
+% status: implemented
+% uses: [def:taxonomy]
+% mentions: [thm:geometry-validation, meat-core/frank-wolfe/rem:acc-side]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.taxonomy:GeometryTag
+% lean:
+% ---
+
+Definition~\ref{def:taxonomy} admits two tags and no third,
+Theorem~\ref{thm:geometry-validation} shows what a validated set under either tag is, and
+\xref{meat-core/frank-wolfe/rem:acc-side} certifies the minimum of a linear
+functional over the acceptance set for exactly these two forms.
+
+\begin{requirement}\label{req:geometry-tag}
+The engine emits every acceptance set under one of the two tags of
+Definition~\ref{def:taxonomy} (\iface{geometry_tag}) together with the data of
+that tag, and a \tref{consumer} presented with an acceptance set under any
+other tag refuses it rather than guessing.
+\end{requirement}

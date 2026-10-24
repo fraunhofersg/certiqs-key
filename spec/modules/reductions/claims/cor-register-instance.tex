@@ -1,0 +1,118 @@
+% ---
+% id: reductions/cor:register-instance
+% kind: cor
+% title: "The register instance: register-conditioned squashing of instances"
+% summary: >-
+%   When a register read by a POVM selects the branch, the branching instance
+%   is a reduction instance whose pull-backs are the branches' tensored with
+%   the register element. Branch entries hold at constant zero, and a
+%   branch-weight entry only where (H) makes that element a multiple of the
+%   identity.
+% prominence: standard
+% status: implemented
+% uses: [thm:instrument-instance, thm:mixture, def:reduction-instance, def:emitnorm, lem:master, def:generalized-instrument]
+% mentions: [rem:povmreg, cor:flag-instance]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.instance:combine_branches
+% lean:
+% notes: "The hypotheses that {N_j} is a POVM on D and, at a branch with a branch-weight entry, that N_j is the declared multiple of the identity are part of (H): decided on the declared register POVM where the submodule that declares the register declares it, and otherwise carried by that submodule's ledger; this corollary assumes nothing of its own."
+% ---
+
+A register $D$, read by a POVM that need not be projective
+(Remark~\ref{rem:povmreg}), selects which branch instance acts; a branch may
+be the flag instance of Corollary~\ref{cor:flag-instance}. The corollary is
+the branching instance at the instrument that reads the register.
+
+\begin{corollary}\label{cor:register-instance}
+Let $\Bsys=\Bsys_0D$, let $\{N_j\}_{j\in J}$ be a POVM on the register $D$
+with $J$ finite and ordered, and for each $j$ let $\mathcal{J}_j$ be a
+reduction instance on $\Bsys_0$ over one common joint alphabet with classes
+and weights, with handed model $\{M_{v|j}\}_{v\in\Vset}$, channel
+$\Lambda_j$, transported set $\hat O^{(j)}$ and entry list $\CList_j$. Let
+$\Ins_j$ be the instrument of Theorem~\ref{thm:mixture},
+$\Ins_j(\rho)=\tr_{D}\big[(\idon{\Bsys_0}\otimes N_j^{1/2})\rho
+(\idon{\Bsys_0}\otimes N_j^{1/2})\big]$. Then the branching instance of
+Theorem~\ref{thm:instrument-instance} for $\{\Ins_j\}$ and
+$\{\mathcal{J}_j\}$, the \emph{register instance}, is a reduction
+instance on $\Bsys$ in both forms, with the handed model
+\begin{equation}\label{eq:register-model}
+  M_v=\sum_{j\in J}M_{v|j}\otimes N_j
+  \quad\text{(coarse-grained)},
+  \qquad
+  M_{(v,j)}=M_{v|j}\otimes N_j
+  \quad\text{(joint-outcome)},
+\end{equation}
+the channel \eqref{eq:regchannel} pinched,
+$\Lambda=\PinS\circ\bigoplus_j\Lambda_j\circ\Ins_j$, the target
+$\bigoplus_jF^{(j)}_v$ resp.\ $F^{(j)}_v|_j$, the hypotheses
+$\bigcup_j$(H$_j$) together with ``$\{N_j\}$ is a POVM on $D$'' and, for every
+$j$ in a declared set $J_{\mathrm{w}}\subseteq J$ with declared lattice
+constants $q_j$, ``$N_j=q_j\idon{D}$'', and:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(transport)} for every branch $j$ and sector $s$ of
+  $\mathcal{J}_j$, and for every $\hat X\in\hat O^{(j)}$,
+  \begin{equation}\label{eq:register-transport}
+    \Lambda^{\dagger}\big(\Pi_{(j,s)}\big)=\Lambda_j^{\dagger}(\Pi_s)\otimes N_j,
+    \qquad
+    \Lambda^{\dagger}\big(\Pi_j\big)=\idon{\Bsys_0}\otimes N_j,
+    \qquad
+    \Lambda^{\dagger}\big(\hat X|_j\big)=\Lambda_j^{\dagger}(\hat X)\otimes N_j ;
+  \end{equation}
+\item \emph{(the entry clause)} every entry $(\hat O,\bowtie,c)$ of a branch
+  $j$ is carried as $\big(\hat O|_j-c\,\Pi_j,\bowtie,0\big)$, with pull-back
+  \begin{equation}\label{eq:register-entry}
+    \Lambda^{\dagger}\big(\hat O|_j-c\,\Pi_j\big)
+    =\big(\Lambda_j^{\dagger}(\hat O)-c\,\idon{\Bsys_0}\big)\otimes N_j ,
+  \end{equation}
+  a tensor product of the branch's certified operator with $N_j\succeq0$, so
+  that the certificate holds at $0$ with the branch's relation; the
+  branch-weight entry $(\Pi_j,=,q_j)$ is listed for every $j\in J_{\mathrm{w}}$;
+\item \emph{(the class-marginal identity)} it is discharged when every
+  branch discharges it, and the flag is set in exactly that case;
+\item \emph{(the declared model)} the normalizer acts branch by branch, and
+  the declared model is
+  \begin{equation}\label{eq:register-declared}
+    \Mdec_v=\sum_{j\in J}{\Mdec}^{(j)}_v\otimes N_j
+    \quad\text{resp.}\quad
+    \Mdec_{(v,j)}={\Mdec}^{(j)}_v\otimes N_j ,
+  \end{equation}
+  with ${\Mdec}^{(j)}$ the declared model of branch $j$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+The proof of Theorem~\ref{thm:mixture} shows that $\{\Ins_j\}$ is a
+\tref{generalized instrument} (Definition~\ref{def:generalized-instrument})
+with $\Ins_j^{\dagger}(X)=X\otimes N_j$ for $X\in\Lin{\Bsys_0}$, and $\Ins_j$
+is given by $N_j$ alone, independently of any datum; the hypothesis that it
+is an instrument is the hypothesis that $\{N_j\}$ is a POVM on $D$, the
+branch-weight hypothesis of the theorem at $j\in J_{\mathrm{w}}$ is
+$N_j=q_j\idon{D}$ (below), and that
+$\Hs{\Bsys}$ is separable is inherited from $\Bsys_0$ and $D$.
+Theorem~\ref{thm:instrument-instance} therefore applies. Its model maps are
+$M_{(v,j)}[A']=\Ins_j^{\dagger}(M^{(j)}_v[A'_j])=M^{(j)}_v[A'_j]\otimes N_j$
+and their sum over $j$, which at the handed data are the two models
+\eqref{eq:register-model}; its channel \eqref{eq:instrument-channel} is
+\eqref{eq:regchannel} composed with the sector pinching, as in
+Theorem~\ref{thm:mixture}\,(i) and (iv). (i) is
+\eqref{eq:instrument-transport} and the transport clause of the theorem with
+$\Ins_j^{\dagger}(X)=X\otimes N_j$ substituted, the second identity being
+Theorem~\ref{thm:mixture}\,(iii). (ii) is \eqref{eq:instrument-entry} with
+the same substitution:
+$\Ins_j^{\dagger}\big(\Lambda_j^{\dagger}(\hat O)-c\idon{\Bsys_0}\big)
+=\big(\Lambda_j^{\dagger}(\hat O)-c\idon{\Bsys_0}\big)\otimes N_j$; if
+$Y\succeq0$ on $\Bsys_0$ and $N_j\succeq0$ then $Y\otimes N_j\succeq0$, if
+$Y\preceq0$ then $Y\otimes N_j\preceq0$, and $Y=0$ gives $0$, so the branch's
+relation survives at the constant $0$. The branch weight
+$\Ins_j^{\dagger}(\idon{\Bsys_0})=\idon{\Bsys_0}\otimes N_j$ is a multiple
+$q_j\idon{\Bsys}$ exactly when $N_j=q_j\idon{D}$, so the theorem's
+branch-weight hypothesis at $j\in J_{\mathrm{w}}$ is the hypothesis
+$N_j=q_j\idon{D}$ stated here, and the entry is the theorem's (and that is
+the reason Theorem~\ref{thm:mixture}\,(iii) calls the general case an
+identity rather than a constraint). (iii) and (iv)
+are the theorem's two closing sentences at this instrument, the declared
+model \eqref{eq:register-declared} being the model map at
+$A'=(A'_j)_j$ by \eqref{eq:declmodel}.
+\end{proof}

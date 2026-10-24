@@ -1,0 +1,76 @@
+% ---
+% id: meat-core/def:hqkd-list
+% kind: def
+% title: "Constrained target set and single-round rate"
+% summary: >-
+%   The constrained single-round rate minimises a KL penalty plus the key's
+%   conditional entropy over acceptance distributions and states meeting the
+%   declared marginal and constraint list; at the empty list it is the
+%   unconstrained rate. Constraints only raise it, so using it needs a licence.
+% prominence: standard
+% status: implemented
+% uses: [def:homog]
+% mentions: [lem:purifier-indep, thm:accumulated-entropy]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.objective:objective_value
+% lean:
+% ---
+
+\begin{definition}
+\label{def:hqkd-list}
+For a register $\Etil'$ and a (possibly empty) declared list $\CList$,
+let
+\begin{equation}\label{eq:sigL}
+  \Sigma^{\CList}(\Etil')\coloneqq
+  \big\{(\Mprot\otimes\idmap_{\Etil'})(\sigma):\
+  \sigma\in\Seq{A\Qsys\Etil'},\ \sigma\models\Decl,\
+  \sigma_{A\Qsys}\models\CList\big\},
+\end{equation}
+where $\sigma\models\Decl$ abbreviates the declaration's marginal
+condition,
+\begin{equation}\label{eq:margcond}
+  \sigma\models\Decl
+  \quad:\Longleftrightarrow\quad
+  \begin{cases}
+    \sigma_A=\tau_A, & \text{trusted-source mode},\\
+    \text{no condition beyond }\tr\sigma=1,
+      & \text{untrusted-source mode},
+  \end{cases}
+\end{equation}
+and $\sigma_{A\Qsys}\models\CList$ abbreviates ``$\sigma_{A\Qsys}$
+satisfies every entry of $\CList$'' in the form
+Definition~\ref{def:homog} gives it for the declared mode, i.e.\
+$\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\,\sigma_{A\Qsys}]
+\bowtie_k\Theta_k$ in trusted-source mode and
+$\tr[(\idon{A}\otimes\hat O_k)\,\sigma_{A\Qsys}]\bowtie_k c_k$ in
+untrusted-source mode, for all $k$; an entry declared \tref{party-local}
+is read, in either mode, in the form \eqref{eq:partylocal-entry} of
+Definition~\ref{def:homog}, an affine semidefinite condition on
+$\sigma_{A\Qsys}$. $\Sigma^{\CList}(\Etil')$ is
+convex in either mode: the state set is the intersection of the convex
+$\Seq{A\Qsys\Etil'}$ with affine equalities and operator- or
+scalar-inequality conditions, each convex, and
+$\Mprot\otimes\idmap_{\Etil'}$ is affine.
+Define the
+\term[The infimum, over acceptance distributions and states meeting the declared marginal and constraint list, of the KL penalty plus the key's conditional entropy.]{constrained single-round rate}
+\begin{equation}\label{eq:hqkd-list}
+  \hqkd(\CList)\coloneqq\inf_{\mathbf q\in\acSet}\
+  \inf_{\substack{\sigma\in\Seq{A\Qsys\Etil}\\
+  \sigma\models\Decl,\ \sigma_{A\Qsys}\models\CList}}
+  \left(\frac{\alpha}{\alpha-1}\,
+  \sfD\!\left(\mathbf q\,\middle\|\,\Phimap[\sigma_{A\Qsys}]\right)
+  +\sum_{\hat c\in\Chkey}
+  q(\hat c)\,\Hsandup(Z|I\Etil)_{\nu^{\sigma}_{|\hat c}}\right),
+\end{equation}
+with $\nu^{\sigma}\coloneqq(\Mprot\otimes\idmap_{\Etil})(\sigma)$ and
+$\dim\Hs{\Etil}\ge\dim\Hs{A\Qsys}$; by
+Lemma~\ref{lem:purifier-indep} the value does not depend on that
+choice. For $\CList=\varnothing$ we write
+$\hqkd\coloneqq\hqkd(\varnothing)$, the unconstrained single-round rate,
+which Theorem~\ref{thm:accumulated-entropy} writes out as
+\eqref{eq:hqkd-def}. Since a nonempty
+$\CList$ shrinks the inner feasible set,
+$\hqkd(\CList)\ge\hqkd(\varnothing)$ always.
+\end{definition}

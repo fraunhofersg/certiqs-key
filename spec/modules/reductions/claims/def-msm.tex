@@ -1,0 +1,40 @@
+% ---
+% id: reductions/def:msm
+% kind: def
+% title: "Measurement channel"
+% summary: >-
+%   The measurement channel of a POVM takes a quantum input to the classical
+%   register holding its outcome. It separates Bob's measurement from the
+%   protocol's later processing.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [thm:transfer]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Replacing Bob's physical POVM $M$ by a squashed target $F$ can only
+overestimate the adversary, for a short reason. First, $M\dsq_{\Lambda}F$ says
+exactly that Bob's physical measurement \emph{channel} is the squashing channel
+followed by the squashed one. Second, Bob's device enters the protocol only
+through that channel. Third, therefore, the physical protocol and the
+\tref{squashed protocol} have the same output state, not merely close ones,
+which is why the transfer
+costs no penalty term, no correction factor, and the same $\varepsilon$ on both
+sides. What remains to check is that the squashed analysis runs over a set of
+inputs containing the images of the physical ones, and that is
+Theorem~\ref{thm:transfer}.
+
+\begin{definition}\label{def:msm}
+For a POVM $M=\{M_v\}_{v\in\Vset}$ on $\Bsys$ and a classical register $Y$ with
+alphabet $\Vset$, the
+\term[The channel that measures a POVM on a quantum input and writes the outcome into a classical register.]{measurement channel}
+of $M$ is
+\begin{equation}\label{eq:msm}
+  \redNmsm_M\colon\Tcl{\Bsys}\to\Tcl{Y},\qquad
+  \redNmsm_M(\rho)\coloneqq\sum_{v\in\Vset}\tr\big[M_v\rho\big]\,\dyad{v}_{Y}.
+\end{equation}
+\end{definition}

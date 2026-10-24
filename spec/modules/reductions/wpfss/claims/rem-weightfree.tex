@@ -1,0 +1,32 @@
+% ---
+% id: reductions/wpfss/rem:weightfree
+% kind: rem
+% title: "Why the largest certified weight is used"
+% summary: >-
+%   Every smaller non-negative weight is also certified, but it gives a cleaner
+%   target, which hands the adversary more ([[prop:weight-monotone]]). The
+%   largest weight the artefact certifies is therefore the one used, and a
+%   smaller one stays valid.
+% prominence: standard
+% status: accepted
+% uses: [def:targets, prop:chain, reductions/cor:monotone, prop:weight-monotone]
+% mentions: [req:largest-certified-weight]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:weightfree}
+Nothing in Definition~\ref{def:targets} or Proposition~\ref{prop:chain}
+requires $p_v$ to be the largest admissible value: every
+$p'_v\in[0,p_v]$ is again a certified weight, and the construction runs
+unchanged with $p'=\sum_vp'_v\le p$
+(Proposition~\ref{prop:weight-monotone}\,(i)). A smaller weight is not free,
+however: it gives a \emph{cleaner} target, which by
+Corollary~\ref{cor:monotone} hands the adversary more
+(Proposition~\ref{prop:weight-monotone}\,(ii)). The largest weight the
+artefact certifies is therefore the best choice, and any smaller one is valid
+but weaker (Requirement~\ref{req:largest-certified-weight}).
+\end{remark}

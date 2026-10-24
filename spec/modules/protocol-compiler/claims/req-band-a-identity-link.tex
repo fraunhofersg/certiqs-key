@@ -1,0 +1,71 @@
+% ---
+% id: protocol-compiler/req:band-a-identity-link
+% kind: req
+% title: "Band A only on an identity link that delivers the declared family"
+% summary: >-
+%   On the Band-A route the one receiver link must supply the identity
+%   channel as data and keep the outcomes as they are, and the pullback
+%   identity then decides that the measurement the link delivers is the
+%   declared one. A specification failing any of this is refused before a
+%   declaration exists.
+% prominence: standard
+% status: implemented
+% uses: [def:banda, def:chaincond, def:weighted, req:band-a-ideal-receiver, thm:band-a]
+% mentions: [req:link-row-provenance, ass:link, req:chain-refusals]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% user_statement: >-
+%   The idealised Band-A route is taken only when its one reduction step is
+%   the identity map given as numbers, keeps your outcomes as they are, and
+%   hands on exactly the measurement you declared. The engine checks all
+%   three on the record and refuses anything else, so on this route the key
+%   length is always computed for the measurement your declaration names,
+%   with any declared public choice applied to it, and
+%   the premise that the reduction step is sound is proved rather than left
+%   to you.
+% implements: certiqs_key.protocol_compiler.declared_premises:decide_band_a_identity_link
+% lean:
+% notes: "The target-POVM clause of def:banda (b) is decided through (C4) and not by a comparison of its own: once the channel is the identity as data and the outcome correspondence the identity, (C4) reads F_v = F^ph_v entry for entry, and it is decided on every chain whose links supply their channel as data. req:chain-refusals is a mention: it names the refusal of a failing (C4), and a uses edge would carry thm:chain-consumption's A-LINK into the closure of the requirement that makes the A-LINK row omissible. The provenance clause of def:banda (a) stays undecided, as req:band-a-ideal-receiver records."
+% ---
+
+Theorem~\ref{thm:band-a}\,(ii) and~(v) read the family the link delivers as the
+declared one and the outcome correspondence as the identity, and
+Requirement~\ref{req:link-row-provenance}\,(i) omits the link-soundness row of
+Assumption~\ref{ass:link} on that strength. A link record carries its
+channel, its outcome correspondence and its target POVM as separate data, and
+where the link only names its channel the pullback identity (C4) is not
+decidable (Definition~\ref{def:chaincond}); on such a record nothing would
+tie the measurement the key length is computed for to the one declared. So
+the route is taken only where all three are decided on the record.
+
+\begin{requirement}\label{req:band-a-identity-link}
+For a specification that Requirement~\ref{req:band-a-ideal-receiver}
+recognises on the \tref{Band A} route and does not refuse, the engine
+decides on the chain record of its one \tref{measured factor}, before a
+declaration is emitted, that
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item the one link of that factor's \tref{receiver segment} supplies its
+  channel as data, which that recognition has then decided to be exactly the
+  identity map on its system; and
+\item the outcome correspondence of that segment is the identity: the
+  physical receiver alphabet $\Vph$ and the alphabet $\Vset$ of the link's
+  \tref[target povm]{target POVM} are one set, and $\gamma(w)=w$ for every
+  $w\in\Vph$;
+\end{enumerate}
+and refuses a specification failing either, before a declaration is emitted,
+with \iface{band_a_link_not_identity}, naming the first clause that fails. On
+a specification passing both, condition (C4) of
+Definition~\ref{def:chaincond} is decided, as on every chain whose links
+supply their channel as data, and reads $F_v=\Fph_v$ for every $v\in\Vset$,
+entry for entry, $\{\Fph_w\}$ being the physical receiver family as presented
+and, for a \tref{choice-weighted family}, the family of products
+Definition~\ref{def:weighted} forms; a failure of it is refused as every
+failure of (C4) is (Requirement~\ref{req:chain-refusals}). A declaration
+emitted from a specification so recognised therefore satisfies
+Definition~\ref{def:banda}\,(b) on its record --- its one link the identity,
+supplied as data, its outcome correspondence the identity and its target
+POVM the declared family --- and the rules that read the route, the ledger's
+among them (Requirement~\ref{req:link-row-provenance}), read it of such a
+declaration alone.
+\end{requirement}

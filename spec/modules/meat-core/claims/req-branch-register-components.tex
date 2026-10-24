@@ -1,0 +1,34 @@
+% ---
+% id: meat-core/req:branch-register-components
+% kind: req
+% title: "Register components of an implemented branch map"
+% summary: >-
+%   An implementation of a branch map may drop a component of a register other
+%   than the raw-key register that is constant across its Kraus terms, and keeps
+%   the raw-key register and every varying component. By [[rem:inert]] the
+%   first changes no quantity; the others carry what the derivations use.
+% prominence: technical
+% status: accepted
+% uses: [rem:inert, def:branch]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+By Remark~\ref{rem:inert}, a component of a register other than the
+raw-key register $R$ that is constant across the Kraus terms of a
+\tref{branch map} can be removed from it without changing any quantity of
+this module, while a component that varies across them, and $R$ itself,
+carry what the derivations use.
+
+\begin{requirement}\label{req:branch-register-components}
+In implementing a branch map $\cG_{\hat c}$ or $\Theta_{\hat c}$ of
+Definition~\ref{def:branch}, or a sector version $\cG_{\hat c,s}$ or
+$\Theta_{\hat c,s}$ of either, the engine may drop a component of a register
+other than $R$ whose value is constant across all Kraus terms of that map,
+for example the $C_AC_B$ factor when the branch has a single announcement
+class, and it retains the register $R$ and every component that varies
+across the Kraus terms: the class label $\kappa$ across classes and the
+outcome labels within a class.
+\end{requirement}

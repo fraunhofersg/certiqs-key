@@ -1,0 +1,37 @@
+% ---
+% id: receiver/rem:notsharp
+% kind: rem
+% title: "Slack of the analytic bound against the block eigenvalue"
+% summary: >-
+%   The analytic bound bounds three operators separately and need not be
+%   tight, while the exact block eigenvalue covers one block at a time. The exact
+%   window combines them: computed block eigenvalues less the slack, floored at
+%   the analytic bound, on finitely many blocks, an analytic remainder above.
+% prominence: standard
+% status: accepted
+% uses: [thm:click-povm, def:exactbnd, lem:collapse, lem:exactwindow, def:pmcex, lem:windowtail]
+% mentions: [def:pmc, req:weight-provenance, receiver/component-catalogue/ex:bb84exact]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:notsharp}
+$\Bnd(n)$ bounds three operators separately and so need not be tight
+(Example~\ref{ex:bb84exact} exhibits a strict gap at $n=2$): on
+a given block, $\lmin(\blk{M}{\eqn}_{\mc})$ can be computed exactly from
+\eqref{eq:blockMS} by diagonalizing a matrix of dimension
+$\binom{|\InpC|+n-1}{n}$, which is what Definition~\ref{def:exactbnd} names
+$\Bnd^{\ast}(n)$. The analytic bound is what the module emits where no depth
+is declared, because it is uniform in $n$ --- by Lemma~\ref{lem:collapse}
+where predicate~(X) of Definition~\ref{def:pmc} holds and by
+Lemma~\ref{lem:windowtail}\,(i) where it does not --- while a per-block
+computation covers finitely many blocks. The exact window does not answer
+that by computing more blocks: on the finitely many blocks up to a declared
+depth it uses the computed block eigenvalues less the eigenvalue slack,
+floored at the analytic bound, and it keeps an analytic remainder above them
+(Lemma~\ref{lem:exactwindow}, Definition~\ref{def:pmcex}). Which of the two
+evaluations enters the artifact, and what it records beside each weight, is
+Requirement~\ref{req:weight-provenance}.
+\end{remark}

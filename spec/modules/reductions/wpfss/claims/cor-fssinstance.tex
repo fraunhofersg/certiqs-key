@@ -1,0 +1,62 @@
+% ---
+% id: reductions/wpfss/cor:fssinstance
+% kind: cor
+% title: "Licensed flag-sector entry of a certified weight"
+% summary: >-
+%   Under the flag-state target, the certified weight of an outcome becomes a
+%   constraint entry with constant 0 whose certificate holds, so the one-entry
+%   list is licensed. Read on the family the artefact carries, that constant
+%   is emitted unshifted.
+% prominence: standard
+% status: accepted
+% uses: [prop:chain, reductions/thm:licence, def:targets]
+% mentions: [reductions/def:emitnorm, reductions/thm:emit, reductions/cor:entries, cor:emitted-flat, prop:flat-instance, reductions/cor:register-instance, def:routes]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+On the licensed route a certified weight travels as a constraint entry rather
+than inside the target (Definition~\ref{def:routes}). The corollary is read on
+the family the artefact carries: its $c=0$ is the constant for the family the
+target is built from, and on the emission path that is the
+\tref{declared model} $M'$ of the flat instance (Proposition~\ref{prop:flat-instance},
+Corollary~\ref{cor:emitted-flat}\,(iii); Definition~\ref{def:emitnorm},
+Theorem~\ref{thm:emit}\,(iii)). So the constant emitted is $0$, unshifted
+(Corollary~\ref{cor:entries}\,(iii)), and nothing in the statement changes; a
+branching instance that files the flat instance as a branch carries this entry
+as the core's register instance says
+(Corollary~\ref{cor:register-instance}\,(ii)). The corollary is about the
+flag-state squasher alone, which no further link follows on any route the
+engine emits.
+
+\begin{corollary}\label{cor:fssinstance}
+In the situation of Proposition~\ref{prop:chain} with the
+\tref{flag-state target} $\Ffss$, fix an outcome $o\in\Vset$ with certified
+weight $p_o$ and put
+\begin{equation}\label{eq:fssentry}
+  \hat O\coloneqq\Ffss_o-p_o\,\Pflag,
+  \qquad \bowtie\;=\;\succeq,\qquad c=0 .
+\end{equation}
+Then \eqref{eq:certificate} holds, so Theorem~\ref{thm:licence} applies and the
+single-entry list $\CList=\{(\hat O,\succeq,0)\}$ is licensed with the
+admissible set
+\begin{equation}\label{eq:fssattset}
+  \AttSet_{\CList}(E',\Qsys E'')
+  =\Big\{\Aev:\ \Aev^{\dagger}\big(\Ffss_o\otimes\idon{E''}\big)
+  \;\succeq\;p_o\,\Aev^{\dagger}\big(\Pflag\otimes\idon{E''}\big)\Big\}.
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+By Proposition~\ref{prop:chain}\,(i),
+$\Lfss^{\dagger}(\Ffss_o)=M_o$ and $\Lfss^{\dagger}(\Pflag)=\Pgt$, so by
+linearity $\Lfss^{\dagger}(\hat O)=M_o-p_o\Pgt
+=\blk{M}{\leqN}_o\dsum\big(\blk{M}{\gtN}_o-p_o\idon{}\big)\succeq0$, the first
+block being positive because $M_o$ is and the second by
+\eqref{eq:certweights}. That is \eqref{eq:certificate} with $c=0$ and
+$\bowtie\,=\,\succeq$. The displayed form of the set is
+$\Aev^{\dagger}\big((\Ffss_o-p_o\Pflag)\otimes\idon{E''}\big)\succeq0$
+rearranged by linearity of $\Aev^{\dagger}$.
+\end{proof}

@@ -1,0 +1,39 @@
+% ---
+% id: reductions/ass:constdecl
+% kind: ass
+% title: "Declared constants of the constraint list"
+% summary: >-
+%   Every constant of an emitted constraint entry is fixed before the run by
+%   the device fact that certifies it and is no function of an observed
+%   statistic. Observed data reach the analysis only through the acceptance
+%   set, which belongs to another module.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-CONST
+% verification: never
+% category: supplied-artefact
+% affects: [secrecy]
+% user_statement: >-
+%   Applies only where the reduction emits constraints on the attacker; a run
+%   that emits none does not rest on it. Every number used as a constant in
+%   such a constraint (for example a bound on a detector's multi-photon
+%   response) is fixed before the run from the device characterisation that
+%   justifies it. It is never adjusted using data observed in the run;
+%   observed data enter only through the acceptance test.
+% lean:
+% ---
+
+The only sanctioned carrier of observed data in the analysis is the
+acceptance set, which belongs to a different module and appears nowhere in
+this contract.
+
+\begin{assumption}\label{ass:constdecl}
+Every constant $c_k$ in an emitted constraint entry
+(i) is fixed before the protocol run by the device fact that certifies it,
+and
+(ii) is not a function of any statistic observed during the run.
+\end{assumption}

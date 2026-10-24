@@ -1,0 +1,50 @@
+% ---
+% id: transmitter/rem:xreg
+% kind: rem
+% title: "Necessity and cost of the outcome-register hypothesis"
+% summary: >-
+%   Without the hypothesis that the attack leaves Alice's outcome register
+%   alone, part (iii) of [[thm:certificate-sufficiency]] is ill-typed and false. The restriction
+%   costs nothing, because A-SEQ places the announcements after both parties'
+%   measurements.
+% prominence: standard
+% status: accepted
+% uses: [thm:certificate-sufficiency]
+% assumes: [A-SEQ]
+% refs:
+%   - "tupkary2026decoy, Thm. 8.3"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:xreg}
+The hypothesis of Theorem~\ref{thm:certificate-sufficiency}\,(iii) that $\mathcal{E}$ acts
+trivially on the outcome register cannot be dropped: without it the
+statement is both ill-typed and false. \emph{Ill-typed}, because $X$ does
+not exist until $\pcNmsm$ creates it: in the right-hand composite of
+\eqref{eq:srmain} the channel $\mathcal{E}$ acts first, on an operator on
+$A\Avirt E$ carrying no such register. \emph{False}, because a channel
+that did act on $X$ could destroy exactly the information the equality is
+about: let $\mathcal{E}_{\mathrm{ow}}$ overwrite $X$ with a fixed $\dyad{x_0}$ and act
+as the identity elsewhere; then $\mathcal{E}_{\mathrm{ow}}\circ(\pcNmsm\otimes\idmap)$
+produces the point distribution at $x_0$, while any composition in which
+$\mathcal{E}_{\mathrm{ow}}$ precedes $\pcNmsm$ leaves the outcome distribution
+$(p_x)_x$ intact. One overwriting channel is enough to refute a
+commutation asserted for \emph{every} channel.
+
+What the restriction excludes is exactly the operations that read Alice's
+outcome --- in a QKD round, the public announcements. Nothing is lost,
+because Assumption~\ref{ass:seq} places those \emph{after} both parties'
+measurements: the round is preparation and transmission, then measurement
+by both parties, then announcements. So the channel that models ``the
+adversary's attack and the rest of the round up to the announcements'' is
+of the admitted form, and the delayed-measurement reading, in which Alice
+measures after the attack, survives in the form that is used --- Alice's
+measurement may be moved across the attack, not across the announcements. The same restriction, in the same place, is
+what the published framework this module imports from relies on: its
+security reduction postpones Alice's measurement on the ground that her
+measurements commute with all operations except the public announcements,
+which by design occur only after the receiver's measurement in each round
+\cite[Thm.~8.3]{tupkary2026decoy}. That corroboration is recorded, not
+used: no step of the proof of Theorem~\ref{thm:certificate-sufficiency} appeals to it.
+\end{remark}

@@ -1,0 +1,117 @@
+# Runs the repository's checks and a fast subset of the tests on every pull
+# request (and, where enabled, on every push), so that a contribution is
+# checked the way the maintainers check their own work before it is
+# reviewed; where enabled, the whole default test tier also runs nightly.
+#
+# Motivation: every check here (the claim graph, the symbols, the generated
+# views, the history rule, ruff, mypy) and the default test tier otherwise run
+# only where someone remembers to run them, and a pull request from outside is
+# the change least likely to have been through them. A red here is a defect
+# of the change, found before a reviewer reads it.
+#
+# What it runs and why:
+# - on pull requests and by hand everywhere; on every push and nightly only
+#   where the repository variable CERTIQS_CI_PUSH_AND_NIGHTLY is 'true' (set
+#   in the public repository's settings), so a private copy spends its
+#   minutes on pull requests alone while the public repository checks every
+#   push with the fast subset and runs the whole default tier (the golden,
+#   oracle, property and integration tests the subset leaves out) nightly;
+# - ruff, mypy (two import graphs: harness, and src with instances and runs),
+#   and every `--check` generator of AGENTS.md: check_claims, check_symbols,
+#   the claim-closure table, the dashboard, the bibliography, the history
+#   rule, and the contracts;
+# - `assemble_contract --all --check` needs neither LaTeX nor Graphviz: it
+#   regenerates the contract sources and graph sources and compares them,
+#   and judges a PDF or a graph render by the commit that last touched it.
+#   The checkout is shallow (the private repository's history is large), so
+#   every file then carries the same commit and the PDF comparison passes;
+#   the generated texts are still compared byte for byte. Building the PDFs
+#   (a TeX installation, minutes) stays with the maintainers;
+# - the default test tier (`slow` and `pins` deselected by tests/conftest.py)
+#   of tests/harness and tests/unit: the tools and the module-level unit
+#   tests, which fail first on most changes. The golden, oracle, property and
+#   integration tests are the expensive tiers and run where the maintainers
+#   run the full suite. Tests that need LaTeX or Graphviz skip without them.
+#
+# The workflow reads only paths a public tree ships (not the reports, the
+# pinned papers or the working notes, and the open items may be absent), so
+# it runs unchanged in the public repository.
+
+name: CI
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 2 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    if: >-
+      github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+      || (github.event_name == 'push' && vars.CERTIQS_CI_PUSH_AND_NIGHTLY == 'true')
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install the package with its checks and optional numerics
+        run: python -m pip install -e ".[dev,oracle-qics,certify,plots,mcp]"
+
+      - name: ruff
+        run: ruff check harness tests src instances runs
+      - name: mypy (harness)
+        run: mypy harness
+      - name: mypy (src, instances, runs)
+        run: mypy src instances runs
+
+      - name: Claim graph
+        run: python -m harness.check_claims
+      - name: Symbols
+        run: python -m harness.check_symbols
+      - name: Claim-closure table
+        run: python -m harness.generate_claim_closure --check
+      - name: Dashboard
+        run: python -m harness.dashboard --check
+      - name: Bibliography
+        run: python harness/generate_bibliography.py --check
+      - name: History in shipped files
+        run: python -m harness.check_history --check
+      - name: Contracts and graphs
+        run: python -m harness.assemble_contract --all --check
+
+      - name: Tests (default tier of tests/harness and tests/unit)
+        run: python -m pytest tests/harness tests/unit -q -p no:cacheprovider
+
+  nightly:
+    if: github.event_name == 'schedule' && vars.CERTIQS_CI_PUSH_AND_NIGHTLY == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install the package with its checks and optional numerics
+        run: python -m pip install -e ".[dev,oracle-qics,certify,plots,mcp]"
+
+      - name: Tests (the whole default tier)
+        run: python -m pytest -q -p no:cacheprovider

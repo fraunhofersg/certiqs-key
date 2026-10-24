@@ -1,0 +1,337 @@
+% ---
+% id: reductions/lem:sep
+% kind: lem
+% title: "Separation and tensor adjoints in the infinite-dimensional case"
+% summary: >-
+%   States separate bounded operators on a separable space; trace-preserving
+%   completely positive maps of any output dimension have unital completely
+%   positive adjoints; and tensor products of channels into finite targets, or
+%   from finite inputs, are channels. Transport arguments rest on this.
+% prominence: standard
+% status: accepted
+% uses: [def:system-setting]
+% mentions: [lem:statistics, cor:pullback, cor:transported, thm:licence, foundations/def:round-model]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Bob's physical receiver acts on a system whose Hilbert space may be infinite
+dimensional; in every optical application it is a \tref{Fock space}. Adjoints
+are therefore set up for a separable input and an output of any dimension;
+tensor products of channels are set up for separable inputs and
+finite-dimensional outputs, the case of the squashing channels, and for
+finite-dimensional inputs and separable outputs, the case of an attack on
+finite registers and of a source channel on a finite virtual system. The \tref{system setting} and the finite
+dimension of the adversary's registers are what make part (ii) available and
+what make the trace pairing on a side system separate points; the statistics
+equivalence of Lemma~\ref{lem:statistics},
+Corollaries~\ref{cor:pullback} and~\ref{cor:transported} and the licence,
+Theorem~\ref{thm:licence}, use them. Besides its hypotheses and notation, the
+Setting paragraph carries assertions of the lemma: that the adjoint it names
+exists, is unique and is completely positive, unital where the map is trace
+preserving and sub-unital where it is trace non-increasing. Steps 2 to 4 of
+the proof prove them, beside conclusions (i) to (iii).
+
+\begin{lemma}\label{lem:sep}
+\emph{Setting.} $\Bsys$ is the system Bob's physical receiver acts on and
+$\Qsys$ the system it is squashed to. $\Hs{\Bsys}$ is separable and may be
+infinite-dimensional, while $\Hs{\Qsys}$ and every side register are
+finite-dimensional (Definition~\ref{def:system-setting}, and, for the
+adversary's registers, the \tref{round model} of
+\xref{foundations/def:round-model}, every register of which is
+finite-dimensional). $\Tcl{\Bsys}$ denotes the
+trace-class operators on $\Hs{\Bsys}$; a \emph{channel}
+$\Lambda\colon\Tcl{\Bsys}\to\Tcl{\Qsys}$ is a completely positive
+trace-preserving map, and its \emph{adjoint}
+$\Lambda^{\dagger}\colon\Lin{\Qsys}\to\Lin{\Bsys}$ is the unital completely
+positive map fixed by
+\begin{equation}\label{eq:pairing}
+  \tr\big[X\,\Lambda(\rho)\big]=\tr\big[\Lambda^{\dagger}(X)\,\rho\big]
+  \qquad\text{for all }X\in\Lin{\Qsys},\ \rho\in\Tcl{\Bsys}.
+\end{equation}
+More generally, if $\Lambda\colon\Tcl{\Bsys}\to\Tcl{\Bsys'}$, for a Hilbert
+space $\Hs{\Bsys'}$ of any dimension, is only completely positive and trace
+non-increasing ($\tr\Lambda(\rho)\le\tr\rho$ for $\rho\succeq0$), then
+\eqref{eq:pairing} for all $X\in\Lin{\Bsys'}$ and $\rho\in\Tcl{\Bsys}$ fixes
+a completely positive map $\Lambda^{\dagger}\colon\Lin{\Bsys'}\to\Lin{\Bsys}$,
+again called its \emph{adjoint}, and $\Lambda^{\dagger}$ is sub-unital:
+$\idon{\Bsys}-\Lambda^{\dagger}(\idon{\Bsys'})\succeq0$. Where such a
+$\Lambda$ is moreover trace preserving, $\Lambda^{\dagger}$ is unital,
+$\Lambda^{\dagger}(\idon{\Bsys'})=\idon{\Bsys}$, whatever the dimension of
+$\Hs{\Bsys'}$.
+
+Let $\Hs{\Bsys_1},\dots,\Hs{\Bsys_n}$ be separable and
+$\Hs{\Qsys_1},\dots,\Hs{\Qsys_n}$ finite-dimensional.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(Separation.)} If $X\in\Lin{\Bsys_1}$ satisfies $\tr[X\rho]=0$ for
+  every $\rho\in\Seq{\Bsys_1}$, then $X=0$.
+\item \emph{(Tensor channels and their adjoints.)} If $\Lambda_i\colon
+  \Tcl{\Bsys_i}\to\Tcl{\Qsys_i}$ are channels, then exactly one trace-norm
+  continuous linear map $\Lambda_1\otimes\dots\otimes\Lambda_n$ from
+  $\Tcl{\Bsys_1\cdots\Bsys_n}$, the trace class of the completed tensor
+  product of the $\Hs{\Bsys_i}$, to $\Tcl{\Qsys_1\cdots\Qsys_n}$ takes every
+  $\rho_1\otimes\dots\otimes\rho_n$ with $\rho_i\in\Tcl{\Bsys_i}$ to
+  $\Lambda_1(\rho_1)\otimes\dots\otimes\Lambda_n(\rho_n)$; it is a channel,
+  and $(\Lambda_1\otimes\dots\otimes\Lambda_n)^{\dagger}
+  =\Lambda_1^{\dagger}\otimes\dots\otimes\Lambda_n^{\dagger}$ on all of
+  $\Lin{\Qsys_1\cdots\Qsys_n}$. The same holds with any of the $\Lambda_i$
+  replaced by $\idmap_{R_i}$ for a finite-dimensional $R_i$.
+\item \emph{(Tensor channels from finite inputs.)} Let
+  $\Hs{R_1},\dots,\Hs{R_n}$ be finite-dimensional,
+  $\Hs{\Bsys'_1},\dots,\Hs{\Bsys'_n}$ separable, of any dimension, and
+  $\Phi_i\colon\Lin{R_i}\to\Tcl{\Bsys'_i}$ completely positive and trace
+  preserving. Then exactly one linear map $\Phi_1\otimes\dots\otimes\Phi_n$
+  from $\Lin{R_1\cdots R_n}$ to $\Tcl{\Bsys'_1\cdots\Bsys'_n}$, the trace
+  class of the completed tensor product of the $\Hs{\Bsys'_i}$, takes every
+  $X_1\otimes\dots\otimes X_n$ with $X_i\in\Lin{R_i}$ to
+  $\Phi_1(X_1)\otimes\dots\otimes\Phi_n(X_n)$, and it is completely positive
+  and trace preserving. The identity map $\idmap_{R}$ of a finite-dimensional
+  $R$ is such a $\Phi_i$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Idea.} Separation is tested on rank-one operators. The adjoint is built
+on rank-one operators by the Riesz representation theorem and extended to the
+whole trace class because finite-rank operators are dense in trace norm. For
+(ii) the output is finite-dimensional, so the tensor map is defined from the
+tensor product of the adjoints on a basis of matrix units; it acts on products
+as required, and products are dense. For (iii) the input is
+finite-dimensional, so the tensor map is defined on a basis of matrix units
+of the input, and its complete positivity is read off its Choi operator, a
+tensor product of positive operators.
+
+\emph{Step 1 (separation, part (i)).} Every $\tau\in\Tcl{\Bsys_1}$ is a
+complex linear combination of at most four positive trace-class operators
+(split $\tau$ into Hermitian and anti-Hermitian parts, then each into positive
+and negative parts), and every non-zero positive trace-class operator is a
+positive multiple of a state. Hence $\tr[X\tau]=0$ for every
+$\tau\in\Tcl{\Bsys_1}$. If $X\ne0$ there are unit vectors
+$\ket{\psi},\ket{\varphi}$ with $\bra{\varphi}X\ket{\psi}\ne0$; take
+$\tau=\ketbra{\psi}{\varphi}$, which is trace class of rank one, and
+$\tr[X\tau]=\bra{\varphi}X\ket{\psi}\ne0$, a contradiction.
+
+\emph{Step 2 (the adjoint exists and is unique).} Let
+$\Lambda\colon\Tcl{\Bsys}\to\Tcl{\Bsys'}$ be completely positive and trace
+non-increasing; a channel is the case $\Bsys'=\Qsys$ with the trace preserved.
+It is bounded in trace norm. Write $\tau\in\Tcl{\Bsys}$ as $\tau=H_1+iH_2$ with
+the Hermitian $H_1=\tfrac12(\tau+\tau^{\dagger})$ and
+$H_2=\tfrac1{2i}(\tau-\tau^{\dagger})$, each of trace norm at most
+$\|\tau\|_1$ since $\|\tau^{\dagger}\|_1=\|\tau\|_1$, and each $H_l$ as
+$H_l^+-H_l^-$ with positive trace-class $H_l^{\pm}$ and
+$\|H_l^+\|_1+\|H_l^-\|_1=\|H_l\|_1$ (its spectral decomposition). A positive
+operator has trace norm equal to its trace, and $\Lambda$ is positive (as every
+completely positive map is) and trace non-increasing, so
+\begin{equation*}
+  \|\Lambda(\tau)\|_1\le\sum_{l,\pm}\tr\Lambda(H_l^{\pm})
+  \le\sum_{l,\pm}\tr H_l^{\pm}=\|H_1\|_1+\|H_2\|_1\le2\|\tau\|_1 .
+\end{equation*}
+Now fix $X\in\Lin{\Bsys'}$. For $\psi,\chi\in\Hs{\Bsys}$ the rank-one operator
+$\ketbra{\psi}{\chi}$ has trace norm $\|\psi\|\,\|\chi\|$, so
+$s(\chi,\psi)\coloneqq\tr[X\,\Lambda(\ketbra{\psi}{\chi})]$ is linear in
+$\psi$, conjugate-linear in $\chi$, and bounded:
+$|s(\chi,\psi)|\le\|X\|\,\|\Lambda(\ketbra{\psi}{\chi})\|_1
+\le2\|X\|\,\|\psi\|\,\|\chi\|$. For fixed $\psi$ the map
+$\chi\mapsto\overline{s(\chi,\psi)}$ is a bounded linear functional on
+$\Hs{\Bsys}$, so the Riesz representation theorem gives exactly one vector
+$\eta_\psi\in\Hs{\Bsys}$ with $s(\chi,\psi)=\innerp{\chi}{\eta_\psi}$ for
+every $\chi$. Set $Y\psi\coloneqq\eta_\psi$: uniqueness makes $Y$ linear, and
+$\chi=\eta_\psi$ gives $\|Y\psi\|\le2\|X\|\,\|\psi\|$, so $Y\in\Lin{\Bsys}$.
+Then $\tr[Y\ketbra{\psi}{\chi}]=\bra{\chi}Y\ket{\psi}
+=\tr[X\,\Lambda(\ketbra{\psi}{\chi})]$, which is \eqref{eq:pairing} for $Y$ at
+every rank-one $\rho$, hence by linearity at every finite-rank $\rho$.
+Finite-rank operators are trace-norm dense in $\Tcl{\Bsys}$ (truncate the
+singular value decomposition $\rho=\sum_js_j\ketbra{u_j}{w_j}$, whose tail
+beyond $J$ terms has trace norm at most $\sum_{j>J}s_j\to0$ since
+$\sum_js_j=\|\rho\|_1$), and both sides of \eqref{eq:pairing} are trace-norm
+continuous in $\rho$, bounded by $2\|X\|\,\|\rho\|_1$ and
+$\|Y\|\,\|\rho\|_1$; so \eqref{eq:pairing} holds for $Y$ at every
+$\rho\in\Tcl{\Bsys}$. Two operators satisfying \eqref{eq:pairing} for the same
+$X$ have a difference that (i), read on $\Hs{\Bsys}$, shows is zero, so
+$\Lambda^{\dagger}(X)\coloneqq Y$ defines the one map on $\Lin{\Bsys'}$ that
+satisfies \eqref{eq:pairing}. It is linear, since
+$c\Lambda^{\dagger}(X)+c'\Lambda^{\dagger}(X')$ satisfies \eqref{eq:pairing}
+for $cX+c'X'$.
+
+\emph{Step 3 (the adjoint is completely positive).} Let $k\ge1$, let
+$\{\ket{a}\}_{a=1}^{k}$ be the standard basis of $\mathbb{C}^k$, let
+$Z=\sum_{a,b=1}^{k}\ketbra{a}{b}\otimes Z_{ab}\succeq0$ on
+$\mathbb{C}^k\otimes\Hs{\Bsys'}$, so that
+$(\idmap_k\otimes\Lambda^{\dagger})(Z)=\sum_{a,b}\ketbra{a}{b}\otimes
+\Lambda^{\dagger}(Z_{ab})$, and let
+$\xi=\sum_{a=1}^{k}\ket{a}\otimes\xi_a\in\mathbb{C}^k\otimes\Hs{\Bsys}$, so
+that $\dyad{\xi}=\sum_{a,b}\ketbra{a}{b}\otimes\ketbra{\xi_a}{\xi_b}$. By
+\eqref{eq:pairing} at the rank-one operators $\ketbra{\xi_b}{\xi_a}$,
+\begin{equation*}
+  \bra{\xi}(\idmap_k\otimes\Lambda^{\dagger})(Z)\ket{\xi}
+  =\sum_{a,b}\bra{\xi_a}\Lambda^{\dagger}(Z_{ab})\ket{\xi_b}
+  =\sum_{a,b}\tr\big[Z_{ab}\,\Lambda(\ketbra{\xi_b}{\xi_a})\big]
+  =\tr\big[Z\,(\idmap_k\otimes\Lambda)(\dyad{\xi})\big],
+\end{equation*}
+which is non-negative: $T\coloneqq(\idmap_k\otimes\Lambda)(\dyad{\xi})$ is
+positive by complete positivity of $\Lambda$, and for its spectral
+decomposition $T=\sum_mt_m\dyad{e_m}$, with $t_m\ge0$ and $\{e_m\}$
+orthonormal, $\tr[ZT]=\sum_mt_m\bra{e_m}Z\ket{e_m}\ge0$, the trace being taken
+in an orthonormal basis that extends $\{e_m\}$ by vectors of the kernel of
+$T$. As $\xi$ is arbitrary, $(\idmap_k\otimes\Lambda^{\dagger})(Z)\succeq0$.
+
+\emph{Step 4 (sub-unitality, and unitality where the trace is preserved).}
+Sub-unitality is trace non-increase read through \eqref{eq:pairing}: for
+every $\psi\in\Hs{\Bsys}$,
+$\bra{\psi}\Lambda^{\dagger}(\idon{\Bsys'})\ket{\psi}
+=\tr[\Lambda(\dyad{\psi})]\le\tr\dyad{\psi}=\|\psi\|^2$, so
+$\idon{\Bsys}-\Lambda^{\dagger}(\idon{\Bsys'})\succeq0$. Where $\Lambda$ is
+trace preserving, unitality is trace preservation read the same way: we have
+$\tr[\Lambda^{\dagger}(\idon{\Bsys'})\rho]=\tr[\Lambda(\rho)]=\tr\rho$ for
+every $\rho\in\Tcl{\Bsys}$, so $\Lambda^{\dagger}(\idon{\Bsys'})=\idon{\Bsys}$
+by (i), read on $\Hs{\Bsys}$. Nothing in this step reads the dimension of
+$\Hs{\Bsys'}$; a channel is the case $\Bsys'=\Qsys$.
+
+\emph{Step 5 (the tensor map, part (ii)).} Fix orthonormal bases of the
+finite-dimensional $\Hs{\Qsys_i}$. The tensor products of their matrix units
+form a basis of $\Lin{\Qsys_1\cdots\Qsys_n}$, so there is exactly one linear
+map $\Psi\colon\Lin{\Qsys_1\cdots\Qsys_n}\to\Lin{\Bsys_1\cdots\Bsys_n}$ with
+$\Psi(X_1\otimes\dots\otimes X_n)=\Lambda_1^{\dagger}(X_1)\otimes\dots\otimes
+\Lambda_n^{\dagger}(X_n)$ for every product operator, both sides being
+multilinear in $(X_1,\dots,X_n)$; it is the map the statement writes
+$\Lambda_1^{\dagger}\otimes\dots\otimes\Lambda_n^{\dagger}$. For an
+orthonormal basis $\{e_r\}$ of $\Hs{\Qsys_1\cdots\Qsys_n}$ and
+$\rho\in\Tcl{\Bsys_1\cdots\Bsys_n}$ put
+\begin{equation*}
+  \Lambda(\rho)\coloneqq\sum_{r,s}\tr\big[\Psi(\ketbra{e_r}{e_s})\,\rho\big]\,
+  \ketbra{e_s}{e_r}.
+\end{equation*}
+Then $\tr[X\Lambda(\rho)]=\tr[\Psi(X)\rho]$ for all
+$X\in\Lin{\Qsys_1\cdots\Qsys_n}$: the identity holds at every
+$X=\ketbra{e_r}{e_s}$, and both sides are linear in $X$. $\Lambda$ is linear,
+and bounded in trace norm,
+$\|\Lambda(\rho)\|_1\le\sum_{r,s}\|\Psi(\ketbra{e_r}{e_s})\|\,\|\rho\|_1$.
+
+\emph{Step 6 (action on products, and uniqueness).} For
+$\rho=\rho_1\otimes\dots\otimes\rho_n$ and $X=X_1\otimes\dots\otimes X_n$ the
+traces below factor, and the pairing of Step~5 with \eqref{eq:pairing} for
+each $\Lambda_i$ gives
+\begin{equation*}
+\begin{split}
+  \tr\big[X\,\Lambda(\rho)\big]&=\tr\big[\Psi(X)\,\rho\big]
+  =\prod_{i}\tr\big[\Lambda_i^{\dagger}(X_i)\,\rho_i\big]\\
+  &=\prod_{i}\tr\big[X_i\,\Lambda_i(\rho_i)\big]
+  =\tr\big[X\,\big(\Lambda_1(\rho_1)\otimes\dots\otimes\Lambda_n(\rho_n)\big)\big].
+\end{split}
+\end{equation*}
+Product operators span $\Lin{\Qsys_1\cdots\Qsys_n}$, and an operator $\sigma$
+on this finite-dimensional space with $\tr[X\sigma]=0$ for every $X$ is zero
+(take $X=\sigma^{\dagger}$), so $\Lambda(\rho_1\otimes\dots\otimes\rho_n)
+=\Lambda_1(\rho_1)\otimes\dots\otimes\Lambda_n(\rho_n)$. Product trace-class
+operators span a trace-norm dense subspace of $\Tcl{\Bsys_1\cdots\Bsys_n}$:
+finite-rank operators are dense there (Step~2); a rank-one
+$\ketbra{\psi}{\chi}$ is the trace-norm limit of $\ketbra{\psi_m}{\chi_m}$ for
+finite sums of product vectors $\psi_m\to\psi$ and $\chi_m\to\chi$, which are
+dense in the completed tensor product, since
+$\|\ketbra{\psi}{\chi}-\ketbra{\psi_m}{\chi_m}\|_1
+\le\|\psi-\psi_m\|\,\|\chi\|+\|\psi_m\|\,\|\chi-\chi_m\|$; and each
+$\ketbra{\psi_m}{\chi_m}$ is a finite sum of products
+$\ketbra{\alpha_1}{\beta_1}\otimes\dots\otimes\ketbra{\alpha_n}{\beta_n}$. So
+$\Lambda$ is the only trace-norm continuous linear map that acts on products
+as the statement says, and $\Lambda_1\otimes\dots\otimes\Lambda_n\coloneqq
+\Lambda$.
+
+\emph{Step 7 (the tensor map is a channel).} Every $\Lambda_i^{\dagger}$ is
+unital, so $\Psi(\idon{})=\idon{}$ and
+$\tr\Lambda(\rho)=\tr[\Psi(\idon{})\rho]=\tr\rho$. For complete positivity let
+$k\ge1$, let $\omega=\sum_{a,b=1}^{k}\ketbra{a}{b}\otimes\omega_{ab}\succeq0$
+be trace class on $\mathbb{C}^k\otimes\Hs{\Bsys_1\cdots\Bsys_n}$, and let
+$z=\sum_{a=1}^{k}\ket{a}\otimes z_a\in\mathbb{C}^k\otimes
+\Hs{\Qsys_1\cdots\Qsys_n}$. With $P\coloneqq(\idmap_k\otimes\Psi)(\dyad{z})$
+the pairing of Step~5 gives
+\begin{equation*}
+  \bra{z}(\idmap_k\otimes\Lambda)(\omega)\ket{z}
+  =\sum_{a,b}\bra{z_a}\Lambda(\omega_{ab})\ket{z_b}
+  =\sum_{a,b}\tr\big[\Psi(\ketbra{z_b}{z_a})\,\omega_{ab}\big]
+  =\tr\big[P\,\omega\big],
+\end{equation*}
+and $\tr[P\omega]\ge0$ once $P\succeq0$, by the spectral decomposition of
+$\omega$ as in Step~3. $P$ is bounded, so $P\succeq0$ follows from
+$\bra{\xi}P\ket{\xi}\ge0$ for every $\xi$ in the dense subspace of finite sums
+of product vectors $\ket{a}\otimes\beta_1\otimes\dots\otimes\beta_n$. Such a
+$\xi$ lies in $\mathbb{C}^k\otimes S_1\otimes\dots\otimes S_n$ for
+finite-dimensional subspaces $S_i\subseteq\Hs{\Bsys_i}$. Let $J_i$ be the
+inclusion of $S_i$ into $\Hs{\Bsys_i}$ and
+$J\coloneqq\idon{}\otimes J_1\otimes\dots\otimes J_n$, with $\idon{}$ on
+$\mathbb{C}^k$. The map $\Psi_i(X)\coloneqq J_i^{\dagger}\Lambda_i^{\dagger}(X)J_i$
+from $\Lin{\Qsys_i}$ to $\Lin{S_i}$ is completely positive, since
+$(\idmap_m\otimes\Psi_i)(Z)=(\idon{}\otimes J_i)^{\dagger}
+(\idmap_m\otimes\Lambda_i^{\dagger})(Z)(\idon{}\otimes J_i)$ for every $m$,
+and expanding $\dyad{z}$ in product operators gives
+$J^{\dagger}PJ=(\idmap_k\otimes\Psi_1\otimes\dots\otimes\Psi_n)(\dyad{z})$.
+Between these finite-dimensional spaces,
+$\idmap_k\otimes\Psi_1\otimes\dots\otimes\Psi_n$ is the composite, over
+$i=1,\dots,n$, of the maps that apply $\Psi_i$ to the $i$-th of the last $n$
+tensor factors and the identity to the others; after a unitary reordering of
+the factors each of these is $\idmap_m\otimes\Psi_i$, for $m$ the finite
+dimension of the other factors, and so positive. Hence
+$\bra{\xi}P\ket{\xi}=\bra{\xi}J^{\dagger}PJ\ket{\xi}\ge0$, with $\xi$ read as a
+vector of $\mathbb{C}^k\otimes S_1\otimes\dots\otimes S_n$ on the right.
+
+\emph{Step 8 (its adjoint).} By the pairing of Step~5, $\Psi$ satisfies
+\eqref{eq:pairing} for the channel $\Lambda_1\otimes\dots\otimes\Lambda_n$,
+whose input space is separable and whose output space is finite-dimensional,
+so by Step~2 it is the one map that does, the adjoint, and it is unital and
+completely positive (Steps~3 and~4). The $\idmap_{R_i}$ case is the same
+computation with $\Lambda_i=\idmap$.
+
+\emph{Step 9 (tensor products of trace-class operators).} Let
+$T_i\in\Tcl{\Bsys'_i}$ have the singular value decompositions
+$T_i=\sum_ks_{ik}\ketbra{u_{ik}}{w_{ik}}$, with $s_{ik}\ge0$,
+$\sum_ks_{ik}=\|T_i\|_1$ and orthonormal families $\{u_{ik}\}_k$,
+$\{w_{ik}\}_k$. The series
+$\sum_{k_1,\dots,k_n}\big(\prod_is_{ik_i}\big)\,
+\ketbra{u_{1k_1}\otimes\dots\otimes u_{nk_n}}{w_{1k_1}\otimes\dots\otimes w_{nk_n}}$
+of rank-one operators on the completed tensor product, each of trace norm
+$\prod_is_{ik_i}$, converges absolutely in trace norm, its sum of norms being
+$\prod_i\|T_i\|_1$; its sum is the operator $T_1\otimes\dots\otimes T_n$,
+which is therefore trace class, with
+$\tr(T_1\otimes\dots\otimes T_n)=\sum_{k_1,\dots,k_n}\prod_is_{ik_i}
+\innerp{w_{ik_i}}{u_{ik_i}}=\prod_i\tr T_i$. Where every $T_i\succeq0$ its
+spectral decomposition is such an expansion with $u_{ik}=w_{ik}$, so the
+partial sums are positive and so is their trace-norm limit.
+
+\emph{Step 10 (the tensor map from finite inputs, part (iii)).} Fix
+orthonormal bases of the $\Hs{R_i}$ and write $E^{(i)}_{ab}$ for the matrix
+units. Their tensor products $E_{\mathbf{a}\mathbf{b}}\coloneqq
+E^{(1)}_{a_1b_1}\otimes\dots\otimes E^{(n)}_{a_nb_n}$ form a basis of
+$\Lin{R_1\cdots R_n}$, so exactly one linear map $\Phi$ takes each
+$E_{\mathbf{a}\mathbf{b}}$ to
+$\Phi_1(E^{(1)}_{a_1b_1})\otimes\dots\otimes\Phi_n(E^{(n)}_{a_nb_n})$, a
+trace-class operator by Step~9; both sides of the product rule being
+multilinear in $(X_1,\dots,X_n)$, $\Phi$ takes every product
+$X_1\otimes\dots\otimes X_n$ to $\Phi_1(X_1)\otimes\dots\otimes\Phi_n(X_n)$,
+and a linear map is fixed by its values on a basis, which gives uniqueness.
+It is trace preserving: by Step~9 and trace preservation of each $\Phi_i$,
+$\tr\Phi(E_{\mathbf{a}\mathbf{b}})=\prod_i\tr E^{(i)}_{a_ib_i}
+=\tr E_{\mathbf{a}\mathbf{b}}$, and both sides are linear. For complete
+positivity, let $\Omega_i\coloneqq\sum_a\ket{a}\otimes\ket{a}$ on two copies
+of $\Hs{R_i}$; complete positivity of $\Phi_i$ makes
+$J_i\coloneqq\sum_{a,b}E^{(i)}_{ab}\otimes\Phi_i(E^{(i)}_{ab})
+=(\idmap_{R_i}\otimes\Phi_i)(\dyad{\Omega_i})$ positive, and after a unitary
+reordering of the factors
+$J\coloneqq\sum_{\mathbf{a},\mathbf{b}}E_{\mathbf{a}\mathbf{b}}\otimes
+\Phi(E_{\mathbf{a}\mathbf{b}})$ is $J_1\otimes\dots\otimes J_n$, positive by
+Step~9. Let $k\ge1$ and let $x=\sum_{\mathbf{a}}\ket{y_{\mathbf{a}}}\otimes
+\ket{\mathbf{a}}$ be a vector of $\mathbb{C}^k\otimes\Hs{R_1\cdots R_n}$, with
+$y_{\mathbf{a}}\in\mathbb{C}^k$, and put
+$V\coloneqq\sum_{\mathbf{a}}\ketbra{y_{\mathbf{a}}}{\mathbf{a}}$. Then
+\begin{equation*}
+  (\idmap_k\otimes\Phi)(\dyad{x})
+  =\sum_{\mathbf{a},\mathbf{b}}\ketbra{y_{\mathbf{a}}}{y_{\mathbf{b}}}\otimes
+   \Phi(E_{\mathbf{a}\mathbf{b}})
+  =(V\otimes\idon{})\,J\,(V\otimes\idon{})^{\dagger}\;\succeq\;0 .
+\end{equation*}
+Every positive operator on the finite-dimensional
+$\mathbb{C}^k\otimes\Hs{R_1\cdots R_n}$ is a finite sum of such $\dyad{x}$, so
+$\idmap_k\otimes\Phi$ is positive for every $k$, and $\Phi$ is completely
+positive. The identity map $\idmap_R$ is linear, completely positive and
+trace preserving from $\Lin{R}$ to $\Tcl{R}=\Lin{R}$.
+\end{proof}

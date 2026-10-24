@@ -1,0 +1,45 @@
+% ---
+% id: receiver/detector-imperfections/rem:wrongcheck
+% kind: rem
+% title: "Failure of the path-product loss audit under interference"
+% summary: >-
+%   In a lossless balanced Mach–Zehnder interferometer at zero phase, a product of
+%   transmittances along paths reports a spurious loss of one half at the first
+%   port, as it cannot see the interference cross term. The deficiency identity
+%   is the audit that holds, and the artifact reports it as a residual.
+% prominence: standard
+% status: accepted
+% uses: [receiver/lem:deficiency, receiver/def:residuals]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:wrongcheck}
+The obvious audit, multiplying the declared transmittances along each path and
+comparing with the port throughput, is \emph{wrong} in any interferometric
+topology, and the failure is not small. Consider a balanced Mach--Zehnder
+interferometer built from the \tref{component catalogue}: C1 with
+$x=\tfrac12,\varphi=0$ and no loss, then C6 with phase $\phi$ on the second
+path, then C1 with $x=\tfrac12,\varphi=0$ again, with the two output paths
+monitored by two ports, one per path. Every declared loss parameter is $0$
+($y_1=y_2=0$ at both beamsplitters, and the phase shifter is unitary), and
+\eqref{eq:deficiencyid} correctly returns $\defic=0$. The compiled matrix is,
+on the two paths (each entry acting as that multiple of $\id_2$ on
+polarization),
+\begin{equation}\label{eq:mz}
+  \Gmat=\Bsp(\tfrac12,0)\operatorname{diag}(1,e^{i\phi})\Bsp(\tfrac12,0)
+  =\tfrac12\begin{pmatrix}1+e^{i\phi}&1-e^{i\phi}\\
+                          1-e^{i\phi}&1+e^{i\phi}\end{pmatrix},
+\end{equation}
+so at $\phi=0$ it is the identity and \emph{all} the light entering path $1$
+reaches port $1$. A path-product audit sees two paths from input $1$ to output
+$1$, transmit--transmit and reflect--reflect, each of power weight
+$\tfrac12\cdot\tfrac12=\tfrac14$, and concludes a throughput of $\tfrac12$,
+reporting a spurious $50\%$ loss that does not exist. The missing $\tfrac12$ is
+the interference cross term, which no product of transmittances can see. The
+checkable invariant is \eqref{eq:deficiencyid}, and it is what the artifact
+reports (residual $r_3$ of Definition~\ref{def:residuals}).
+\end{remark}

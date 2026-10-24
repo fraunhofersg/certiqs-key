@@ -1,0 +1,37 @@
+% ---
+% id: receiver/rem:unchecked-assumptions
+% kind: rem
+% title: Assumptions this module cannot check
+% summary: >-
+%   The assumptions on the physical receiver and the run, and [[A-EIG]] on the
+%   arithmetic, are never verified. The conditions decided on the declared data
+%   are definitions with requirements, and the floating-point evaluation is a
+%   restriction the contract places on itself.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [ass:eig, def:graph, req:graph-refusal, def:probe, req:probe-diagonal-admission, def:evaluation-model, req:eig-ledger-row]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:unchecked-assumptions}
+Every assumption of this contract that is a statement about the physical
+receiver or the run is one the engine never verifies, as the contract says
+of each: no function of the \tref{declared data} decides it, and validation
+decides only those of its clauses that constrain the declared data.
+Assumption~\ref{ass:eig} is a statement about the \emph{arithmetic}; it is
+likewise never verified, and it is invoked only at a setting where a caller
+declares an \tref{exact-window depth} and the weight is evaluated in floating
+point (Requirement~\ref{req:eig-ledger-row}), so a declaration that declares
+none, or whose weights are all evaluated rigorously, is unaffected by it. The conditions that constrain the declared data alone are not
+assumptions of this contract: the well-formedness of a declared element graph
+(Definition~\ref{def:graph}) and the occupation-diagonality of the declared
+probe states (Definition~\ref{def:probe}) are decided on the declared data
+(Requirements~\ref{req:graph-refusal} and~\ref{req:probe-diagonal-admission}).
+The floating-point evaluation of Definition~\ref{def:evaluation-model} is a
+restriction this contract places on itself and asserts nothing that a run
+could violate.
+\end{remark}

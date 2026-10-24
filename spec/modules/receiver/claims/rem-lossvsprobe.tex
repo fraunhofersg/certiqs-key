@@ -1,0 +1,30 @@
+% ---
+% id: receiver/rem:lossvsprobe
+% kind: rem
+% title: "Loss ancillas and probe inputs"
+% summary: >-
+%   Vacuum elimination removes an input mode only because it carries vacuum; a
+%   declared source mode carries the probe state and stays a column of the
+%   instrument matrix. Eliminating it would replace the probe by vacuum and
+%   describe a different device, a security-relevant mismatch.
+% prominence: standard
+% status: accepted
+% uses: [lem:vacelim, def:probe]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:lossvsprobe}
+Lemma~\ref{lem:vacelim} eliminates an input mode precisely because that mode
+carries \emph{vacuum}. A declared source mode does not: it carries
+$\rho^{(t)}$, it stays as a column of $\Gmat$, and its state is supplied
+(Definition~\ref{def:probe}). The difference between ``a loss ancilla'' and ``a
+probe input'' is exactly the difference between an undeclared vacuum input and
+a declared-state input, and the two must not be conflated: eliminating a
+probe mode would silently replace the probe by vacuum, so the derived POVM
+would describe a different device than the one deployed; since the probe is
+a countermeasure, that mismatch is security-relevant.
+\end{remark}

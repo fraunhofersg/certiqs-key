@@ -1,0 +1,108 @@
+% ---
+% id: receiver/thm:port-grams
+% kind: thm
+% title: "Port Grams and dilation independence"
+% summary: >-
+%   The port Grams form an admissible family, and every joint no-click element
+%   pulls back to the lift of the identity minus the sum of the Grams of the
+%   ports in its set. The measurement depends only on the declared input
+%   columns and on no choice of dilation.
+% prominence: standard
+% status: implemented
+% uses: [def:gram, lem:fock-functor, lem:vacelim, lem:dilation]
+% mentions: [thm:click-povm]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.grams:check_gram_family_admissible
+% lean:
+% ---
+
+The port Grams are the compact data the whole measurement is derived from.
+This theorem shows that they are admissible, that the \tref{joint no-click
+elements} are functions of them alone, and that the unitary dilation used to
+define the physical model leaves no trace in the result.
+
+\begin{theorem}\label{thm:port-grams}
+Let $\Recv$ be a \tref{receiver instrument} with
+\tref[port Gram matrices]{port Grams} $\{A_k\}$ of
+Definition~\ref{def:gram}.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{Admissibility.} $A_k\succeq0$ for every $k$;
+  $\sum_{k}A_k=\Gmat_{\Inp}^\dagger\Emd{[K]}\Gmat_{\Inp}\preceq
+  \Gmat_{\Inp}^\dagger\Gmat_{\Inp}\preceq\id_{\Inp}$, so
+  $\{A_k\}$ is admissible and the \tref{loss deficiency}
+  $\defic=\id_{\Inp}-A_\Sigma$ is positive semidefinite.
+\item \emph{Rank.} $\rk A_k\le\min\big(|\Inp|,|\Port{k}|\big)$.
+\item \emph{Pullback.} For every $J\subseteq[K]$,
+  \begin{equation}\label{eq:pullback}
+    V^\dagger\,\Pi^0_J\,V=\Fock\big(\id_{\Inp}-A_J\big).
+  \end{equation}
+\item \emph{Vacuum elimination is exact.} The right-hand side of
+  \eqref{eq:pullback} depends on the instrument only through
+  $\Gmat_{\Inp}$, the columns of $\Gmat$ indexed by the
+  \tref{declared input modes}. Dropping the other columns is therefore an identity, not an
+  approximation.
+\item \emph{Dilation independence.} \eqref{eq:pullback} holds for
+  \emph{every} unitary $U$ on $\mathbb{C}^{\Modes\sqcup\Env'}$, with any
+  finite mode set $\Env'$, whose block from the inputs $\Inp$ to the outputs
+  $\bigcup_k\Port{k}$ equals the corresponding block of $\Gmat$. In particular
+  the sub-unitary description (a contraction $\Gmat$ on the declared modes) and
+  the unitary-dilation description (a unitary on system plus environment, with
+  vacuum environment and the environment discarded) induce the \emph{same}
+  measurement on $\mathcal{F}(\mathbb{C}^{\Inp})$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) $A_k=(\Emd{\{k\}}\Gmat_{\Inp})^\dagger(\Emd{\{k\}}\Gmat_{\Inp})\succeq0$
+because $\Emd{\{k\}}$ is an orthogonal projector, hence idempotent and
+self-adjoint. The ports are pairwise disjoint, so
+$\sum_k\Emd{\{k\}}=\Emd{[K]}\preceq\id_{\Modes}$, and conjugating that
+inequality by $\Gmat_{\Inp}$ gives
+$\sum_kA_k\preceq\Gmat_{\Inp}^\dagger\Gmat_{\Inp}$, which is
+$\preceq\id_{\Inp}$ because $\Gmat^\dagger\Gmat\preceq\id_{\Modes}$ restricts
+to the principal submatrix on $\Inp$.
+
+(ii) $A_k$ is the Gram matrix of the rows of $\Gmat_{\Inp}$ indexed by
+$\Port{k}$, so $\rk A_k=\rk(\Emd{\{k\}}\Gmat_{\Inp})$, and that matrix has at
+most $|\Port{k}|$ nonzero rows and $|\Inp|$ columns.
+
+(iii) By Lemma~\ref{lem:fock-functor}\,(iv), $\Pi^0_k$ is the orthogonal projector
+onto the \tref{Fock space} over the modes outside $\Port{k}$, and since the
+$\Port{k}$ are pairwise disjoint the $\Pi^0_k$ are commuting projectors with
+$\Pi^0_J=\Fock(\id-\Emd{J})$: indeed
+$\prod_{k\in J}\Fock(\id-\Emd{\{k\}})=\Fock\big(\prod_{k\in
+J}(\id-\Emd{\{k\}})\big)=\Fock(\id-\Emd{J})$ by
+Lemma~\ref{lem:fock-functor}\,(ii) and disjointness. Then, using
+Lemma~\ref{lem:fock-functor}\,(ii) and Lemma~\ref{lem:vacelim},
+\begin{equation}
+  V^\dagger\Pi^0_JV
+  =\Fock(\iota)^\dagger\Fock\big(U^\dagger(\id-\Emd{J})U\big)\Fock(\iota)
+  =\Fock\Big(\iota^\dagger U^\dagger(\id-\Emd{J})U\iota\Big).
+\end{equation}
+Now $\iota^\dagger U^\dagger(\id-\Emd{J})U\iota
+=\id_{\Inp}-(\Emd{J}U\iota)^\dagger(\Emd{J}U\iota)$, and $\Emd{J}U\iota$ is the
+submatrix of $U$ with rows in $\bigcup_{k\in J}\Port{k}\subseteq\Modes$ and
+columns in $\Inp\subseteq\Modes$, which is $\Emd{J}\Gmat_{\Inp}$ because the
+$\Modes\times\Modes$ block of $U$ is $\Gmat$. Hence
+$\iota^\dagger U^\dagger(\id-\Emd{J})U\iota=\id_{\Inp}-\Gmat_{\Inp}^\dagger
+\Emd{J}\Gmat_{\Inp}=\id_{\Inp}-A_J$.
+
+(iv) Immediate from the closed form just obtained: $A_J$ is built from
+$\Gmat_{\Inp}$ alone.
+
+(v) The computation in (iii) used only two facts about $U$: that it is unitary,
+and that $\Emd{J}U\iota=\Emd{J}\Gmat_{\Inp}$ for every $J$, i.e.\ that its
+block from $\Inp$ to the port modes agrees with that of $\Gmat$. Any dilation
+with that property therefore yields the same $V^\dagger\Pi^0_JV$ for every
+$J$. It yields the same measurement too: the $\Pi^0_k$ commute, so expanding
+$\prod_{k\in S}(\id-\Pi^0_k)=\sum_{T\subseteq S}(-1)^{|T|}\prod_{k\in T}\Pi^0_k$
+gives
+$V^\dagger\big[\prod_{k\in S}(\id-\Pi^0_k)\prod_{k\notin S}\Pi^0_k\big]V
+=\sum_{T\subseteq S}(-1)^{|T|}\,V^\dagger\Pi^0_{([K]\setminus S)\cup T}V$,
+a combination of those operators, for every click pattern $S$ (the elements of
+the POVM of Theorem~\ref{thm:click-povm}). Conversely a contraction $\Gmat$ always
+admits such a dilation (Lemma~\ref{lem:dilation}), so the two descriptions are
+interchangeable.
+\end{proof}

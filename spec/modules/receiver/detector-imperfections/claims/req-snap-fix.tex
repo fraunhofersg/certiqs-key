@@ -1,0 +1,132 @@
+% ---
+% id: receiver/detector-imperfections/req:snap-fix
+% kind: req
+% title: "Cause and fix recorded for a receiver block resting on its snap"
+% summary: >-
+%   A moved block of the receiver's snap that rests on the snap premise
+%   records the reference kind, its cause, its group and the fix the cause
+%   details: exact data, an enclosed reference used, tighter enclosures, or
+%   loss and dark counts. Only a strict run refuses, or one whose last resort
+%   fails.
+% prominence: standard
+% status: implemented
+% uses: [prop:noise-floor, req:dark-composed-reference, cor:exact-dark-composed, receiver/thm:enclosed-blocks, receiver/def:exact-route, receiver/req:exact-route-decision, receiver/thm:exact-blocks, receiver/def:complex-enclosure, receiver/lem:enclosure-arithmetic, foundations/req:snap-reference, foundations/req:who-snaps, foundations/req:support-safe-snap, foundations/def:exact-reference, foundations/def:snap, def:darkadm]
+% mentions: [foundations/def:evaluated-off-snap, rem:noise-floor-receiver, foundations/ass:snapped-measurement, meat-core/frank-wolfe/req:certified-evaluation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% notes: "Reliance not expressible as a uses edge: for a setting family a sibling submodule constructs, cause (i)(c) and the closing sentence (a reference failing the decisions cannot arise) rest on that submodule's enclosure claim, and the exact-reference alternative of (ii) on its exactness claim; detector-imperfections cannot use a sibling submodule, so such a claim names this requirement among its own mentions, and a change to it puts this requirement back in review scope. The causes of the groups reference bracket withdrawn and reference bracket not evaluated are the run's, not the receiver's, and carry the fixes foundations/req:snap-reference (iii) names; the receiver states the fix of its own causes at the snap, and the run completes the fix of a handed block once its search has decided whether the block rests."
+% implements: certiqs_key.receiver.snapfix:receiver_fixes
+% lean:
+% ---
+
+Under \xref{foundations/req:snap-reference}, a moved block of the receiver's
+snap is not refused by default: unless the run evaluates it off its snap
+(\xref{foundations/def:evaluated-off-snap}), the run rests there on the
+premise that the device measures the snapped family
+(\xref{foundations/ass:snapped-measurement}), and the record names the block
+with its cause, its group and a fix. Where the support-safe rules cannot
+restore the conditions of a snap on a block, a last resort snaps it anyway
+and the record flags it (\xref{foundations/req:support-safe-snap}\,(iv)). A
+user can act on the record only if it says what to change in the receiver
+declaration, and for a receiver the cause of the group \emph{no usable
+reference} and the last resort each have a definite remedy, which details
+the fix of the group; Remark~\ref{rem:noise-floor-receiver} explains them.
+The record also names, block by block, whether the snap ran on the centres
+of an exact reference or on the floating-point blocks, and which reference
+the receiver hands, so that a reader sees where an enclosure entered the
+result. An angle at any value is no cause: every declaration with a model
+admissible exactly has an enclosed reference
+(Requirement~\ref{req:dark-composed-reference}).
+
+\begin{requirement}\label{req:snap-fix}
+When a moved block of a snap of the receiver's emitted dark-composed blocks
+(Requirement~\ref{req:dark-composed-reference}) rests on
+\xref{foundations/ass:snapped-measurement} under
+\xref{foundations/req:snap-reference}\,(iii), its record names, beside the
+setting, the block with its cause and the group that requirement names for
+it, the reference kind of the snap, as \xref{foundations/req:who-snaps}
+defines it (\emph{exact}, where the snap ran on the centres of an exact
+reference of the block, or \emph{none}), the kind of the reference handed on
+the block, if any (\emph{exact}, every radius of the block zero, or
+\emph{enclosed}, with the largest radius of the block and the largest radius
+of the enclosures of irrational inputs (square roots, trigonometric values)
+from which the centres were computed exactly), and the fix below for the
+cause, which details the fix of its group. A run that declares the strict
+option of \xref{foundations/req:snap-reference}\,(iv) refuses instead,
+naming the same; no other run refuses for these causes, save where the last
+resort of \xref{foundations/req:support-safe-snap}\,(iv) yields no snap.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{No reference.} The cause recorded by
+  Requirement~\ref{req:dark-composed-reference}\,(iv), in the group
+  \emph{no usable reference}, and the fix for it:
+  \begin{enumerate}[label=(\alph*),leftmargin=2.0em]
+  \item for declared port Grams that are not Hermitian, a declared family that
+    is not an \tref{admissible Gram family} exactly, or a \tref{generic block} that is not a
+    contraction exactly (Requirement~\ref{req:exact-route-decision}\,(i),
+    (ii)), declared data that are Hermitian and admissible exactly, in
+    rational arithmetic and not only at the receiver tolerances;
+  \item for a declared dark-count matrix that does not satisfy (D1) and (D2)
+    exactly, one that is exactly column-stochastic and monotone, or the
+    \tref{generated dark-count route};
+  \item for a reciprocal that the enclosure of a setting family a submodule
+    constructs forms and that receives no enclosure, square-root and angle
+    enclosures with smaller
+    radii (Definition~\ref{def:complex-enclosure}).
+  \end{enumerate}
+\item \emph{Enclosed references not used.} Where the run declares that
+  enclosed references are not used and the entry offers an enclosed one, the
+  block is handed no reference, in the group \emph{no usable reference}, and
+  the fix names the kind the entry offers for every block
+  (Requirement~\ref{req:dark-composed-reference}\,(iii)), with the largest
+  radius of every block offered as enclosed, and the alternative of an exact
+  reference, which the receiver offers for a declaration on the exact route
+  at a cutoff $N\le1$ when its port Grams are enclosed exactly
+  (Theorem~\ref{thm:exact-blocks}\,(iii),
+  Corollary~\ref{cor:exact-dark-composed}\,(ii)), or a run that uses
+  enclosed references.
+\end{enumerate}
+A block that the snap makes by the last resort of
+\xref{foundations/req:support-safe-snap}\,(iv) is flagged
+\iface{support_not_preserved} in the record, beside its cause and reference
+kind, and where it rests, in the group \emph{last resort}, the fix names the
+ports whose declared efficiency is $1$ where $\lmax(A_\Sigma)=1$, and the
+click patterns $S$ whose entry $R_{S|\varnothing}$ of the
+\tref{dark-count channel} is $0$, since Proposition~\ref{prop:noise-floor}\,(i)
+needs $R_{S|\varnothing}>0$ for every $S$: on the
+\tref{declared dark-count route} it asks for a declared $R$ with
+$R_{S|\varnothing}>0$ for every $S$, and on the
+\tref{generated dark-count route}, where every $R_{S|\varnothing}$ is positive
+exactly when $0<p_{\dc|k}<1$ for every $k$
+(Proposition~\ref{prop:noise-floor}\,(ii)), a dark-count probability in
+$(0,1)$ in every port; in either case a model with loss, at the smallest loss
+and dark-count rates the user is sure the device has
+(Proposition~\ref{prop:noise-floor}); and, where the entry offers no
+reference, the fix of (i) as well. Where every element of a block of the
+reference is positive definite (Proposition~\ref{prop:noise-floor}\,(i)), no
+row of it is structurally zero (\xref{foundations/def:snap}), so every index
+lies in the \tref{structural support} of every element and the uniform lift
+of that item meets the rules (i) to (iii) of
+\xref{foundations/req:support-safe-snap} on the block. For a block whose
+cause is the run's, a handed reference on which the companion's bound is
+withdrawn or not evaluated, or counts while the key length is formed from a
+number certified on the snapped declaration in its place, the cause
+\iface{companion_not_certified}
+(\xref{meat-core/frank-wolfe/req:certified-evaluation}\,(i)), the record of
+the run names the fix
+\xref{foundations/req:snap-reference}\,(iii) names for that cause, and, for
+such a block snapped by the last resort, which rests in the group
+\emph{last resort}, that fix beside the one above; the run decides that cause
+after its search, so the fix is completed there and not at the snap. A
+handed block that the run evaluates off its snap rests on nothing and is
+named with no fix, whether or not the last resort snapped it. A reference that fails
+the decisions of \xref{foundations/req:snap-reference}\,(i) cannot arise for
+the receiver: the centres are Hermitian with entries in $\mathbb{Q}(i)$ and
+the radii symmetric non-negative rationals by construction
+(Lemma~\ref{lem:enclosure-arithmetic}\,(v)), and the enclosure, positive
+semidefiniteness and completeness that the constructing module establishes
+are Corollary~\ref{cor:exact-dark-composed}\,(ii), whose hypothesis
+Theorem~\ref{thm:enclosed-blocks}\,(ii), through
+Corollary~\ref{cor:exact-dark-composed}\,(iii), and, for a setting family a
+submodule constructs, that submodule's enclosure of its blocks supply.
+\end{requirement}

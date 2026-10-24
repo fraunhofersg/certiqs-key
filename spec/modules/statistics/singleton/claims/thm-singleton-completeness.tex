@@ -1,0 +1,116 @@
+% ---
+% id: statistics/singleton/thm:singleton-completeness
+% kind: thm
+% title: "Completeness of a singleton acceptance set"
+% summary: >-
+%   Under i.i.d. honest rounds a singleton acceptance set accepts with its
+%   point's multinomial probability. That is 0, with no completeness budget
+%   below one, if n times a coordinate is no integer or the point leaves the
+%   law's support; else the least budget is one minus it, zero only for one
+%   point mass.
+% prominence: main
+% status: implemented
+% uses: [statistics/def:freq, statistics/def:matched-alphabet]
+% mentions: [req:singleton-budget-record]
+% assumes: [A-HON, A-ALPHABET]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.singleton:singleton_completeness
+% lean:
+% ---
+
+A test that accepts exactly one \tref{frequency vector} is far more
+restrictive than a box around the honest law. Under independent honest
+rounds with one law its accept probability is a single multinomial mass, so
+its completeness can be computed exactly; an \tref{instance} that declares such
+a set records the least budget of (ii), or that none exists
+(Requirement~\ref{req:singleton-budget-record}).
+
+\begin{theorem}\label{thm:singleton-completeness}
+Assume A-HON, let $\Chatset$ and $n$ be a
+\tref{matched alphabet and round count}
+(Definition~\ref{def:matched-alphabet}), and let
+$\acSet=\{\mathbf{q}^{\ast}\}$ be a singleton geometry with
+$\mathbf{q}^{\ast}\in\simplex{\Chatset}$. Call a completeness
+budget $\ecomp$ \emph{admissible for this geometry} when $\ecomp\in[0,1)$ and
+$\Pr[\operatorname{freq}_{\Chat_1^n}\notin\acSet]\le\ecomp$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(exact accept probability)} With the convention $0^{0}=1$,
+\begin{equation}\label{eq:singleton-acc}
+  \Pr\big[\operatorname{freq}_{\Chat_1^n}\in\acSet\big]
+  =\begin{dcases}
+     \frac{n!}{\prod_{\hat c\in\Chatset}\big(n\,q^{\ast}(\hat c)\big)!}
+     \prod_{\hat c\in\Chatset}\honest(\hat c)^{\,n\,q^{\ast}(\hat c)},
+     &\text{if }n\,q^{\ast}(\hat c)\in\mathbb{Z}_{\ge0}\ \forall\hat c,\\
+     0,&\text{otherwise;}
+   \end{dcases}
+\end{equation}
+\item \emph{(the least admissible budget, and when there is none)} the accept
+probability \eqref{eq:singleton-acc} is $0$ if and only if either
+$n\,q^{\ast}(\hat c)\notin\mathbb{Z}_{\ge0}$ for some $\hat c$, or
+$\mathbf{q}^{\ast}\not\ll\honest$, that is, some $\hat c$ has
+$q^{\ast}(\hat c)>0$ and $\honest(\hat c)=0$. In that case \emph{no}
+$\ecomp\in[0,1)$ is admissible for this geometry, and no completeness
+statement whatsoever can be made about it; a budget of $1$ lies outside
+$[0,1)$. Otherwise the accept probability is strictly positive and the least
+admissible completeness budget is
+\begin{equation}\label{eq:singleton-budget}
+  \ecomp=1-\Pr\big[\operatorname{freq}_{\Chat_1^n}\in\acSet\big]\ \in[0,1),
+\end{equation}
+which does lie in $[0,1)$;
+\item \emph{(when the budget is zero)} the budget \eqref{eq:singleton-budget}
+equals $0$ if and only if $\honest$ is a point mass $\delta_{\hat c_0}$ for
+some $\hat c_0\in\Chatset$ and $\mathbf{q}^{\ast}=\delta_{\hat c_0}$; in
+particular it equals $0$ whenever $|\Chatset|=1$, and it is strictly positive
+whenever $\honest$ gives positive mass to two distinct outcomes.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{(i).} By Definition~\ref{def:freq}, $\operatorname{freq}_{\Chat_1^n}=
+\mathbf{q}^{\ast}$ holds exactly when $\Ncount{\hat c}=n\,q^{\ast}(\hat c)$ for
+every $\hat c$, which is impossible unless every $n\,q^{\ast}(\hat c)$ is a
+non-negative integer; that gives the second branch. In the first branch write
+$n_{\hat c}\coloneqq n\,q^{\ast}(\hat c)$, so $\sum_{\hat c}n_{\hat c}=n$. Under
+A-HON each string $\hat c_1^n$ has probability
+$\prod_{\hat c}\honest(\hat c)^{\,n_{\hat c}}$ whenever its count vector is
+$(n_{\hat c})_{\hat c}$, and the number of such strings is the multinomial
+coefficient $n!/\prod_{\hat c}n_{\hat c}!$; summing over them gives
+\eqref{eq:singleton-acc}.
+
+\emph{(ii).} If some $n\,q^{\ast}(\hat c)$ is not a non-negative integer the
+second branch of \eqref{eq:singleton-acc} gives probability $0$. Otherwise the
+first branch applies; its multinomial coefficient is a positive integer, and
+under the convention $0^{0}=1$ each factor $\honest(\hat c)^{\,n_{\hat c}}$
+with $n_{\hat c}=0$ equals $1$. The product therefore vanishes if and only if
+some $\hat c$ has $n_{\hat c}\ge1$ and $\honest(\hat c)=0$; and $n_{\hat c}\ge1$
+is equivalent to $q^{\ast}(\hat c)>0$, so this says precisely that
+$\mathbf{q}^{\ast}\not\ll\honest$. That establishes the stated
+characterization of a zero accept probability.
+
+By the definition in the statement, a budget $\ecomp$ is admissible for this
+geometry exactly when it satisfies both the completeness requirement
+$\Pr[\operatorname{freq}_{\Chat_1^n}\notin\acSet]\le\ecomp$, that is,
+$\ecomp\ge1-\Pr[\operatorname{freq}_{\Chat_1^n}\in\acSet]$, and the domain
+$\ecomp\in[0,1)$ of the completeness budget. The admissible budgets
+are therefore the interval
+$[\,1-\Pr[\operatorname{freq}_{\Chat_1^n}\in\acSet],\,1)$, which is non-empty
+if and only if $\Pr[\operatorname{freq}_{\Chat_1^n}\in\acSet]>0$, and which
+then has least element \eqref{eq:singleton-budget}. When the accept
+probability is $0$ the interval is empty: there is no admissible budget, and
+in particular $\ecomp=1$ is not one.
+
+\emph{(iii).} The budget \eqref{eq:singleton-budget} is $0$ exactly when the
+accept probability is $1$. That probability equals $1$ if and only if
+$\operatorname{freq}_{\Chat_1^n}=\mathbf{q}^{\ast}$ almost surely. Suppose
+$\honest$ gives positive mass to two distinct outcomes $\hat c\neq\hat c'$.
+The string $(\hat c,\hat c,\dots,\hat c)$ and the string
+$(\hat c',\hat c,\dots,\hat c)$ both have positive probability under A-HON, and
+their frequency vectors differ (they differ by $1/n$ in coordinate $\hat c$),
+so $\operatorname{freq}_{\Chat_1^n}$ is not almost surely constant and the
+probability is strictly less than $1$. Hence $\honest$ must be a point mass
+$\delta_{\hat c_0}$; then $\operatorname{freq}_{\Chat_1^n}=\delta_{\hat c_0}$
+almost surely and the probability is $1$ exactly when
+$\mathbf{q}^{\ast}=\delta_{\hat c_0}$. If $|\Chatset|=1$ the only distribution
+on $\Chatset$ is that point mass, and $\mathbf{q}^{\ast}$ equals it.
+\end{proof}

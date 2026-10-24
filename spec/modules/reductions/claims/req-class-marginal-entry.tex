@@ -1,0 +1,35 @@
+% ---
+% id: reductions/req:class-marginal-entry
+% kind: req
+% title: "The class-marginal entry only where the instance discharges it"
+% summary: >-
+%   The engine emits the class-marginal entry only in expectation form, on
+%   request, and only where the instance discharges the class-marginal
+%   identity; a request for it anywhere else is refused. The entry is never
+%   emitted on the strength of a branch that does not establish it.
+% prominence: standard
+% status: implemented
+% uses: [cor:entries, rem:unsound]
+% mentions: [def:reduction-instance, req:class-marginal-operator-form]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.validation:rule_constraint_certificate
+% lean:
+% ---
+
+Emitting the entry where the identity is not discharged would impose it on
+reachable states for which it may be false, which is the security break of
+Remark~\ref{rem:unsound}; its operator form is refused outright
+(Requirement~\ref{req:class-marginal-operator-form}).
+
+\begin{requirement}\label{req:class-marginal-entry}
+The engine emits the class-marginal entry $\big(\sum_{v\in\Vset_t}F_v,=,q_t\big)$
+at a declared $t$, in the expectation form of
+Corollary~\ref{cor:entries}\,(ii), only on request and only where the
+instance discharges the \tref{class-marginal identity}
+\eqref{eq:instance-classmarginal}. A request for it of an instance that does
+not discharge the identity is refused with
+\iface{constraint_without_certificate}, and the entry is never emitted on the
+strength of a branch that does not establish it.
+\end{requirement}

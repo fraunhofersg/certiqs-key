@@ -1,0 +1,52 @@
+% ---
+% id: reductions/prop:common
+% kind: prop
+% title: "Common and dominating targets"
+% summary: >-
+%   If every branch target squashes to one POVM, the coarse-grained measurement
+%   of [[lem:master]] squashes to that POVM directly, through the sum of the
+%   composed branch channels. The branch blocks then disappear from the
+%   target.
+% prominence: standard
+% status: accepted
+% uses: [lem:master]
+% mentions: [thm:mixture, cor:register-instance, cor:instances]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Only in Corollary~\ref{cor:instances}\,(i) is the branch weight state
+independent, hence the constraint a fixed number. In its case~(ii) the weight
+is the projection onto the block the input fell in, and that operator-valued
+case is the one a flag-state squasher runs on. Its case~(iii) is stated for a
+general POVM $\{N_j\}$ rather than a PVM, and it is what the
+register-conditioned squashing of Theorem~\ref{thm:mixture} runs on: a
+\emph{classical branch register} read by a POVM rather than a PVM, which
+Corollary~\ref{cor:register-instance} lifts to \tref[reduction instance]{reduction instances}. The price
+of the generality is that each branch gets its own block of $\Qsys$ rather
+than sharing one register, which is exactly the block structure of $\Qsys$
+the consuming declaration wants anyway. Where every branch target squashes to
+one common target, the blocks can be merged again.
+
+\begin{proposition}\label{prop:common}
+In the setting of Lemma~\ref{lem:master}, suppose additionally
+$F^{(j)}\dsq_{\Psi_j}F$ for a single POVM $F$ on a space $\Qsys_{*}$ (a
+\emph{dominating target}; $\Psi_j=\idmap$ if all branch targets already
+coincide). Then
+\begin{equation*}
+  \Big\{\sum_{j}M_{v,j}\Big\}_v\;\dsq_{\Lambda'}\;F,
+  \qquad
+  \Lambda'\coloneqq\sum_{j\in J}\Psi_j\circ\Lambda_j\circ\Ins_j .
+\end{equation*}
+\end{proposition}
+
+\begin{proof}
+$\Lambda'$ is CP as a sum of compositions of CP maps and trace preserving by
+the computation in Lemma~\ref{lem:master}\,(ii). Then
+$\Lambda'^{\dagger}(F_v)=\sum_j\Ins_j^{\dagger}\Lambda_j^{\dagger}
+\Psi_j^{\dagger}(F_v)
+=\sum_j\Ins_j^{\dagger}\Lambda_j^{\dagger}\big(F^{(j)}_v\big)
+=\sum_j\Ins_j^{\dagger}\big(M^{(j)}_v\big)=\sum_jM_{v,j}$.
+\end{proof}

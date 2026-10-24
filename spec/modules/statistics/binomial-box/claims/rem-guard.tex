@@ -1,0 +1,69 @@
+% ---
+% id: statistics/binomial-box/rem:guard
+% kind: rem
+% title: "Benefit and cost of the honest-containment guard"
+% summary: >-
+%   The guard buys honest containment for every budget and every allocation,
+%   and never raises the failure probability. Its cost is not bounded by one
+%   count against the raw quantile interval, yet an endpoint it moves stays
+%   within 1/n of the honest value.
+% prominence: standard
+% status: accepted
+% uses: [prop:rule-exact, lem:guard, def:interval, def:endpoint-rule]
+% mentions: [thm:monotonicity-limits, thm:box-construction, thm:honest-containment]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:guard}
+This remark reads the \tref{honest-containment guard} on the exact rule of
+Definition~\ref{def:interval}, whose rule endpoints are the quantiles
+$\kappa^{\pm}$; Lemma~\ref{lem:guard} states what holds for every rule. It is
+written for a single honest value $p_{\hat c}=\honest(\hat c)$, the
+degenerate envelope; for a general envelope every statement below holds side
+by side, by the side-wise reading of Definition~\ref{def:endpoint-rule}: what
+it says of the lower endpoint with $p_{\hat c}=p^{-}_{\hat c}$, and what it
+says of the upper endpoint with $p_{\hat c}=p^{+}_{\hat c}$.
+
+\emph{What the guard buys} is unconditional: the whole envelope interval
+$[p^{-}_{\hat c},p^{+}_{\hat c}]$ --- for a single law, $\honest(\hat c)$ ---
+lies in $[k^{-}(\hat c)/n,\,k^{+}(\hat c)/n]$ for \emph{every} admissible
+budget and \emph{every} admissible allocation, including allocations so
+lopsided that the raw quantile interval
+$[\kappa^{-}(\hat c),\kappa^{+}(\hat c)]$ excludes the honest value.
+Theorem~\ref{thm:box-construction}\,(iii) and Theorem~\ref{thm:honest-containment} rest on exactly that,
+and without the guard both would carry a side condition on how large
+$\ecomp$ may be. By Proposition~\ref{prop:rule-exact}\,(iii) the widening is
+always admissible: it can only lower the failure probability.
+
+\emph{What the guard costs} has two different and equally correct answers,
+both stated in Lemma~\ref{lem:guard}\,(iii)--(iv) and
+Proposition~\ref{prop:rule-exact}\,(vi); the second alone would overstate how
+little the guard costs.
+
+\emph{Against the raw quantile interval} the cost is \eqref{eq:guard-cost},
+and it is \emph{not} bounded by one count. A concrete admissible input:
+$\Chatcon=\{\hat c\}$, $n=10$, $p_{\hat c}=\tfrac12$,
+$\varepsilon^{-}(\hat c)=\tfrac9{10}$ and $\varepsilon^{+}(\hat c)=\tfrac1{20}$,
+the allocation summing to $\tfrac{19}{20}$ and so admissible for any
+$\ecomp\in[\tfrac{19}{20},1)$. There
+$\Pr[\Ncount{\hat c}<7]=\tfrac{53}{64}\le\tfrac9{10}$ while
+$\Pr[\Ncount{\hat c}<8]=\tfrac{121}{128}>\tfrac9{10}$, so $\kappa^{-}=7$
+against $\lfloor np_{\hat c}\rfloor=5$: the guard widens the interval by two
+counts. Proposition~\ref{prop:rule-exact}\,(vi) shows the widening is
+unbounded in the same direction --- it is at least $1-p_{\hat c}$ in
+frequency, uniformly in $n$, once a single tail's allocation reaches
+$1-p_{\hat c}^{\,n}$.
+
+\emph{Against the honest value} the quantity bounded is the emitted
+endpoint's \emph{distance} from $\honest(\hat c)$, not the enlargement, and
+that distance is at most $1/n$, unconditionally: by \eqref{eq:guard-from-p},
+on the side where the guard acts the emitted endpoint sits within $1/n$ of
+$\honest(\hat c)$. This is the sense in which the guard is cheap, and it is
+the sense that survives the comparison with Theorem~\ref{thm:monotonicity-limits}\,(iv): the
+$O(n^{-1/2})$ half-width of \eqref{eq:width} is proved for the
+\emph{guarded} endpoints, with no side condition, so the guard never breaks
+that bound.
+\end{remark}

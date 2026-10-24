@@ -1,0 +1,53 @@
+% ---
+% id: receiver/cor:phases
+% kind: cor
+% title: "Unobservability of per-port phases"
+% summary: >-
+%   A unitary acting inside a single detector port after all interference
+%   changes no click statistic. A phase inserted earlier, on an element whose
+%   output paths are later recombined, is not covered by this invariance.
+% prominence: standard
+% status: accepted
+% uses: [thm:representation-independence]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+``Global phases do not matter'' holds here only with a stated hypothesis:
+the unitary acts inside one port after all interference. That is why every
+entry of the \tref{component catalogue} carries its phases, rather than dropping
+those that look global on the element they belong to
+(\repodoc{spec/modules/receiver/design.md}).
+
+\begin{corollary}
+\label{cor:phases}
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item Multiplying the output row of a port by a phase, or more generally
+  applying any unitary \emph{inside} a single port's mode set, changes no
+  click statistic (Theorem~\ref{thm:representation-independence}\,(iii)).
+\item \emph{The hypothesis matters}: the unitary must act inside one port's
+  modes and after all interference has taken place. A phase that is global
+  on an element in the \emph{middle} of the receiver can become relative once
+  that element's output paths are recombined with other paths, and it can
+  then change the Grams.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+Item (i) is Theorem~\ref{thm:representation-independence}\,(iii) applied to the unitary in question,
+which is port-local by hypothesis. For item (ii), a unitary that acts on an
+element in the middle of the receiver is not of the form
+$\bigoplus_kV_k\oplus V_{\mathrm{rest}}$ on the output modes once its paths
+are recombined, so part~(iii) does not apply to it; and it can change the
+Grams. Take two modes $a,b$ with $\Inp=\InpC=\{a\}$, $b$ in vacuum, and
+ports $\{a\}$ and $\{b\}$; apply the balanced beamsplitter
+$H=2^{-1/2}\big(\begin{smallmatrix}1&1\\1&-1\end{smallmatrix}\big)$ to
+$(a,b)$, then the phase $e^{i\theta}$ on $a$, a global phase on that
+one-mode element, then $H$ again. The instrument matrix is
+$\Gmat=H\operatorname{diag}(e^{i\theta},1)H$, whose input column is
+$\tfrac12\big(e^{i\theta}+1,\ e^{i\theta}-1\big)^{\transpose}$, so
+$A_1=\big|\tfrac12(e^{i\theta}+1)\big|^2=\cos^2(\theta/2)$ depends on
+$\theta$.
+\end{proof}

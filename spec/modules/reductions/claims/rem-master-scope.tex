@@ -1,0 +1,34 @@
+% ---
+% id: reductions/rem:master-scope
+% kind: rem
+% title: "Branch labels as information the adversary may hold"
+% summary: >-
+%   The branching rule files the branch label as a block index of the system
+%   handed to the adversary, so it models branches Eve may know. A setting the
+%   measuring party draws privately belongs to the common-channel rule of [[lem:linear]] (ii),
+%   which opens no block and produces no constraint.
+% prominence: standard
+% status: accepted
+% uses: [lem:master, lem:linear]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:master-scope}
+The branch label ends up as a block index of $\Qsys$, and $\Qsys$ is the system
+the squashed model hands to the adversary. Lemma~\ref{lem:master} therefore
+models a branch Eve may as well know: a detector-response mode she selected, a
+test on the light she sent, a register that arrived with it. A setting the measuring
+party draws \emph{privately} can be pushed through the rule, taking
+$\Ins_j=q_j\idmap$, but the resulting model files that setting in Eve's state,
+and only part~(iv) of Lemma~\ref{lem:master} in its operator form ties it
+back. Settings meant to stay on the measuring party's side belong to
+Lemma~\ref{lem:linear}\,(ii) instead: one common channel, no block opened, no
+constraint produced. The probe setting therefore enters this contract
+through Lemma~\ref{lem:linear}\,(ii), and a mode register that arrived with
+the light through Lemma~\ref{lem:master}; swapping the two would be a
+modelling error, giving Eve a register she does not have or withholding one
+she does.
+\end{remark}

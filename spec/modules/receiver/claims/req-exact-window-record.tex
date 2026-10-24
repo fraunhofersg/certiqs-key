@@ -1,0 +1,29 @@
+% ---
+% id: receiver/req:exact-window-record
+% kind: req
+% title: "Computed block eigenvalues carried as computed"
+% summary: >-
+%   The artifact carries every computed block eigenvalue of an exact window
+%   exactly as computed, and the eigenvalue slack enters only as the slack the
+%   window value subtracts. Nothing is clamped, so a reader can recompute each
+%   window value and see what the slack cost.
+% prominence: standard
+% status: accepted
+% uses: [rem:exacteig]
+% mentions: [def:pmcex]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}
+\label{req:exact-window-record}
+Nothing is clamped, and the computed value is emitted: at every setting
+carrying an \tref{exact-window depth}, the engine carries each
+$\widehat\Bnd^{\ast(t)}(n)$, $N<n\le m^{\ast}_t$, in the artifact exactly as
+computed, in \iface{bound_quantifier_domain}, and
+$\varepsilon_{\mathrm{eig}}$ enters only as the declared slack subtracted in
+\eqref{eq:elldef} (Definition~\ref{def:pmcex}), so that a reader can
+recompute \eqref{eq:elldef} and see what the slack cost.
+\end{requirement}

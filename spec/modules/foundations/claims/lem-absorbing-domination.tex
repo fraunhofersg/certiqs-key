@@ -1,0 +1,104 @@
+% ---
+% id: foundations/lem:absorbing-domination
+% kind: lem
+% title: "Domination of a family that absorbs its residue in one element"
+% summary: >-
+%   When every element but one is rounded down below the reference element and
+%   the remaining one takes the rest, only that designated element constrains
+%   the weight. A weight below one exists exactly when the absorbed residue lies
+%   in its support, and it is at most residue norm over least eigenvalue.
+% prominence: standard
+% status: accepted
+% uses: [def:domination, lem:domination]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% notes: "No requirement uses this lemma; rem:noise-floor reads its part (iv) for the weight a noise floor allows."
+% lean:
+% ---
+
+A family that keeps every element but one below its reference element and
+lets one designated element take the rest is the simplest family a model can
+dominate at a small weight. The lemma shows that the weight of the domination
+is then decided by the designated element alone, and how large it is.
+
+\begin{lemma}\label{lem:absorbing-domination}
+Let $s$ be a block of dimension $d_s$, $J$ a finite non-empty alphabet,
+$c>0$, and $j^{\star}\in J$. Let $\{G_j\}_{j\in J}$ be Hermitian positive
+semidefinite $d_s\times d_s$ matrices with $\sum_{j\in J}G_j=c\,\idon{d_s}$,
+and let $\{F_j\}_{j\in J}$ be Hermitian matrices with
+\begin{equation}\label{eq:absorbing}
+  0\preceq F_j\preceq G_j\quad(j\neq j^{\star}),
+  \qquad
+  F_{j^{\star}}=c\,\idon{d_s}-\sum_{j\neq j^{\star}}F_j .
+\end{equation}
+Put $\Delta\coloneqq\sum_{j\neq j^{\star}}(G_j-F_j)$, the \emph{absorbed
+residue}.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item $\Delta\succeq0$, $F_{j^{\star}}=G_{j^{\star}}+\Delta\succeq G_{j^{\star}}$,
+  every $F_j$ is positive semidefinite, and $\sum_jF_j=c\,\idon{d_s}$.
+\item For $q\in[0,1)$, $\{G_j\}$ dominates $\{F_j\}$ at $q$ on this block
+  (Definition~\ref{def:domination}) if and only if
+  \begin{equation}\label{eq:absorbing-condition}
+    q\,G_{j^{\star}}-(1-q)\,\Delta\;\succeq\;0 .
+  \end{equation}
+  For every $j\neq j^{\star}$ and every $q\in[0,1)$,
+  $G_j-(1-q)F_j\succeq0$ holds.
+\item Some $q\in[0,1)$ satisfies \eqref{eq:absorbing-condition} if and only if
+  $\mathrm{supp}\,\Delta\subseteq\mathrm{supp}\,G_{j^{\star}}$; this holds in
+  particular when $G_{j^{\star}}$ is positive definite.
+\item Suppose $\mathrm{supp}\,\Delta\subseteq\mathrm{supp}\,G_{j^{\star}}$,
+  let $\lambda>0$ be the least non-zero eigenvalue of $G_{j^{\star}}$ (its
+  least eigenvalue when it is positive definite) and let
+  $\delta\ge\opn{\Delta}$. If $G_{j^{\star}}\neq0$, then
+  \eqref{eq:absorbing-condition} holds for every $q$ with
+  $\delta/(\lambda+\delta)\le q<1$. If $\Delta=0$, it holds at $q=0$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) Each $G_j-F_j$ with $j\neq j^{\star}$ is positive semidefinite by
+\eqref{eq:absorbing}, so $\Delta\succeq0$. By completeness of $\{G_j\}$,
+$G_{j^{\star}}=c\,\idon{d_s}-\sum_{j\neq j^{\star}}G_j$, and subtracting this
+from the definition of $F_{j^{\star}}$ gives
+$F_{j^{\star}}-G_{j^{\star}}=\sum_{j\neq j^{\star}}(G_j-F_j)=\Delta$. So
+$F_{j^{\star}}=G_{j^{\star}}+\Delta\succeq G_{j^{\star}}\succeq0$; the other
+$F_j$ are positive semidefinite by \eqref{eq:absorbing}, and
+$\sum_jF_j=c\,\idon{d_s}$ by the definition of $F_{j^{\star}}$.
+
+(ii) For $j\neq j^{\star}$,
+$G_j-(1-q)F_j=(G_j-F_j)+qF_j$ is a sum of two positive semidefinite
+matrices, by \eqref{eq:absorbing} and $q\ge0$. For $j^{\star}$, by (i),
+$G_{j^{\star}}-(1-q)F_{j^{\star}}=G_{j^{\star}}-(1-q)(G_{j^{\star}}+\Delta)
+=qG_{j^{\star}}-(1-q)\Delta$. So \eqref{eq:domination} holds at every outcome
+if and only if it holds at $j^{\star}$, which is
+\eqref{eq:absorbing-condition}.
+
+(iii) If \eqref{eq:absorbing-condition} holds for some $q<1$, then, by (ii),
+$\{G_j\}$ dominates $\{F_j\}$ at $q$, and
+Lemma~\ref{lem:domination}\,(ii) gives
+$\mathrm{supp}\,F_{j^{\star}}\subseteq\mathrm{supp}\,G_{j^{\star}}$. Since
+$0\preceq\Delta\preceq\Delta+G_{j^{\star}}=F_{j^{\star}}$, every
+$x\in\ker F_{j^{\star}}$ satisfies $0\le\langle x,\Delta x\rangle\le
+\langle x,F_{j^{\star}}x\rangle=0$, so $\Delta x=0$ as in the proof of
+Lemma~\ref{lem:domination}\,(ii); hence
+$\mathrm{supp}\,\Delta\subseteq\mathrm{supp}\,F_{j^{\star}}\subseteq
+\mathrm{supp}\,G_{j^{\star}}$. The converse is (iv) when $G_{j^{\star}}\neq0$
+and $q=0$ when $\Delta=0$; if $G_{j^{\star}}=0$, the inclusion forces
+$\Delta=0$. A positive definite $G_{j^{\star}}$ has support the whole space.
+
+(iv) If $\Delta=0$, \eqref{eq:absorbing-condition} at $q=0$ reads $0\succeq0$.
+Now let $G_{j^{\star}}\neq0$, and let $\Pi$ be the orthogonal projector onto
+$\mathrm{supp}\,G_{j^{\star}}$. By the spectral decomposition
+$G_{j^{\star}}\succeq\lambda\Pi$. Since $\mathrm{supp}\,\Delta\subseteq
+\mathrm{supp}\,G_{j^{\star}}$ and $\Delta$ is Hermitian,
+$\Delta=\Pi\Delta\Pi\preceq\opn{\Delta}\,\Pi\preceq\delta\,\Pi$. For
+$q\ge\delta/(\lambda+\delta)$ we have $q\lambda\ge(1-q)\delta$, so
+\begin{equation*}
+  qG_{j^{\star}}-(1-q)\Delta\;\succeq\;q\lambda\,\Pi-(1-q)\delta\,\Pi
+  \;=\;\big(q\lambda-(1-q)\delta\big)\Pi\;\succeq\;0 .
+\end{equation*}
+Since $\lambda>0$, $\delta/(\lambda+\delta)<1$, so such $q$ exist in
+$[0,1)$.
+\end{proof}

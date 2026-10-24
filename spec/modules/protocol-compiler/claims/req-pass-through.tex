@@ -1,0 +1,42 @@
+% ---
+% id: protocol-compiler/req:pass-through
+% kind: req
+% title: "Declared data passed through unchanged"
+% summary: >-
+%   The engine passes the declared data it reads into a declaration through
+%   unchanged: the marginal slot, Alice's measurement slot in its declared form,
+%   the transcript, and each entry's scope and right-hand side. It fills no
+%   slot, constructs no right-hand side and converts no form.
+% prominence: standard
+% status: accepted
+% uses: [def:compile]
+% mentions: [def:declaration, def:weighted, foundations/req:consumer-decides-exactly, foundations/def:declared-data]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.compile:compile_specification
+% lean:
+% ---
+
+The \tref{compilation map} of Definition~\ref{def:compile} reads
+\tref{declared data} from the transmitter artefact, the chain and the
+specification, and constructs only the raw-key map, the \tref{index map} and
+the weighted families. Data passed on unchanged keep their \tref{declarer}
+(\xref{foundations/def:declared-data}\,(iii)), and a consumer repairs nothing
+it was handed (\xref{foundations/req:consumer-decides-exactly}).
+
+\begin{requirement}\label{req:pass-through}
+The engine passes through unchanged the declared data that the compilation map
+reads into a declaration: the transmitter artefact's \tref{marginal slot}, the
+value $[1]$ the transmitter filled it with at $d_A=1$ included; Alice's
+measurement slot, in the form the artefact declares, which it changes only by
+weighting it in that form (Definition~\ref{def:weighted}) where a choice
+family is presented; the \tref[transcript protocol]{transcript}; and each
+constraint entry's right-hand-side datum and, where the entry carries one, its
+\tref{scope}. It fills no slot and demands no certificate of its own.
+It constructs no right-hand side of an emitted constraint entry: it forms no
+$c_k\tau_A$ for one and reads no $c_k$ off any matrix. It converts neither
+form of Alice's measurement slot into the other: it forms neither
+\eqref{eq:ensemblepovm} from an ensemble slot nor
+$\tau_A^{1/2}M_x\tau_A^{1/2}$ from a POVM slot.
+\end{requirement}

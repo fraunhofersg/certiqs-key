@@ -1,0 +1,43 @@
+% ---
+% id: meat-core/req:state-blind-test
+% kind: req
+% title: "Bit-level test of state-blindness"
+% summary: >-
+%   The engine decides state-blindness by an exact identity of declared data:
+%   every off-diagonal entry of each block is the datum 0 and every diagonal
+%   entry the same datum. A block that is only nearly scalar is not
+%   state-blind.
+% prominence: standard
+% status: implemented
+% uses: [def:classes]
+% mentions: [foundations/def:binary64, def:declaration, req:exact-admission]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.declaration.general_sectors:is_state_blind
+% lean:
+% ---
+
+Classification runs only on a declaration already admitted, and admission
+is exact (Requirement~\ref{req:exact-admission}): every declared block is
+exactly Hermitian (Definition~\ref{def:declaration}, the
+exact-admissibility paragraph), so a diagonal entry is real and the sign
+condition of Definition~\ref{def:classes}\,(c) compares real numbers.
+
+\begin{requirement}\label{req:state-blind-test}
+The engine decides whether a sector $s$ is \tref{state-blind}
+(Definition~\ref{def:classes}\,(c)) by a bit-level identity of declared
+data. It reads $c_{v,s}$ off the declared block as its first diagonal
+entry, $c_{v,s}\coloneqq(F^{(s)}_v)_{11}$, and requires
+$F^{(s)}_v-c_{v,s}\idon{\Qsys_s}=0$ entrywise and exactly: every
+off-diagonal entry of the block is the datum $0$, and every diagonal entry
+is the same datum. Likewise, whenever $\CList\neq\varnothing$, it requires
+$\hat O^{(s)}_k-o_{k,s}\idon{\Qsys_s}=0$ with
+$o_{k,s}\coloneqq(\hat O^{(s)}_k)_{11}$. No subtraction, no norm and no
+window enters: two binary64 data are equal or they are not, equality being
+equality of the values they denote and not of their bit patterns
+(\xref{foundations/def:binary64}). The engine decides the sign condition
+$c_{v,s}\ge0$ by comparing that same datum with zero as a real number. A
+block that is only \emph{nearly} scalar fails, and $s$ is then not
+state-blind.
+\end{requirement}

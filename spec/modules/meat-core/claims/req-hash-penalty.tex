@@ -1,0 +1,29 @@
+% ---
+% id: meat-core/req:hash-penalty
+% kind: req
+% title: "Key-length penalty for a merely two-universal family"
+% summary: >-
+%   For a privacy-amplification family that is only two-universal, collision
+%   probability at most 2^−ℓ, the key-length bound is tightened by one further
+%   bit, ℓ → ℓ − 1.
+% prominence: standard
+% status: accepted
+% uses: [thm:keylength, rem:hash-penalty]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Rem. 6.1"
+% provenance: published
+% implements: certiqs_key.meat_core.finitekey.keylength:key_length
+% lean:
+% ---
+
+The leftover-hashing step of Theorem~\ref{thm:keylength} is taken under a
+reading that requires an ideal two-universal family; for a family that is only two-universal that
+requirement can be relaxed at the cost of one bit of key length
+\cite[Rem.~6.1]{tupkary2026decoy} (Remark~\ref{rem:hash-penalty}).
+
+\begin{requirement}\label{req:hash-penalty}
+For a privacy-amplification family that is only two-universal, collision
+probability at most $2^{-\ell}$, \eqref{eq:keylength} must be tightened by
+one further bit, $\ell\to\ell-1$.
+\end{requirement}

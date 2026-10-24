@@ -1,0 +1,53 @@
+% ---
+% id: receiver/def:exactbnd
+% kind: def
+% title: "The exact block bound function"
+% summary: >-
+%   The exact block bound β*(n) is the smallest eigenvalue of the n-photon
+%   block of the multiclick element. Computing it on finitely many blocks
+%   recovers the slack the analytic bound loses by bounding three operators
+%   separately.
+% prominence: standard
+% status: implemented
+% uses: [thm:multiclick-bound, lem:windowtail, thm:click-povm, def:fock]
+% mentions: [def:setting-family, lem:collapse, lem:exactbasic, lem:exactwindow]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.bound:exact_block_bound
+% lean:
+% ---
+
+Both evaluations of the uniform bound so far, the collapse of
+Lemma~\ref{lem:collapse} and the window and tail of
+Lemma~\ref{lem:windowtail}, bound $\lmin(\blk{M}{\eqn}_{\mc})$ by the
+analytic $\Bnd(n)$, and \eqref{eq:mcbound} is where all of the slack enters:
+Theorem~\ref{thm:multiclick-bound} bounds three operators separately. Widening the
+analytic window does not recover it: at $c=0$, for instance at a receiver
+with no probe whose instrument sends every input entirely into
+\tref{detector ports} ($A_\Sigma=\id$), Lemma~\ref{lem:windowtail}\,(iii) makes the residual
+gap exactly zero. What recovers it is computing the block itself, on finitely
+many indices. Lemma~\ref{lem:exactbasic} and Lemma~\ref{lem:exactwindow} say
+what may be computed, what must still be argued, and how the two compose.
+
+\begin{definition}\label{def:exactbnd}
+Under the hypotheses of Theorem~\ref{thm:multiclick-bound}, the
+\term[The smallest eigenvalue of the n-photon block of the multiclick element, a function of n.]{exact block bound}
+is
+\begin{equation}\label{eq:exactbnd}
+  \Bnd^{\ast}(n)\ \coloneqq\ \lmin\big(\blk{M}{\eqn}_{\mc}\big)
+  \ =\ \lmin\Big(\id^{(=n)}+(K-1)\gamma\,\Fock(\id-B)^{(n)}
+   -\sum_{k=1}^{K}\beta_k\,\Fock\big(\id-B_k\big)^{(n)}\Big),
+\end{equation}
+for $n\ge0$, the second equality being \eqref{eq:prefactorform} restricted to
+the $n$-photon block. The operator inside is a Hermitian matrix of dimension
+$\binom{D+n-1}{n}$, where $D$ is the dimension of the space $B$ acts on:
+the \tref{channel input space} of the \tref{setting family}
+(Definition~\ref{def:setting-family}), which is $|\InpC|$ at both instances
+this module constructs. No new object is introduced: each
+$\Fock(\cdot)^{(n)}=\big((\cdot)^{\otimes n}\big)\big|_{\Symn{n}}$ is the
+construction \eqref{eq:blockMS} already uses for the blocks the artifact
+emits at $n\le N$, in the occupation basis and order that
+Definition~\ref{def:fock} and the interface conventions of this module fix,
+evaluated at an index above the cutoff instead of below it.
+\end{definition}

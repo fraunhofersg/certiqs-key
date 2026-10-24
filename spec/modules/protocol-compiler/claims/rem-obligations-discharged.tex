@@ -1,0 +1,142 @@
+% ---
+% id: protocol-compiler/rem:obligations-discharged
+% kind: rem
+% title: "Discharge of the chain obligations by the reductions module"
+% summary: >-
+%   For a chain the reductions module emits, its licence theorem discharges
+%   [[A-ATK]] for the entries it certified and, at status exact, its chain,
+%   transfer and emission theorems discharge [[A-LINK]], also on a physical
+%   side presented by restriction or weighted after the link. Only
+%   [[req:link-row-provenance]] uses them.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [thm:chain-consumption, ass:link, ass:atk, thm:band-a, def:banda, def:chaincond, def:weighted, rem:relabel, req:link-row-provenance, reductions/lem:linear, reductions/thm:chain, reductions/thm:transfer, reductions/thm:emit, reductions/thm:licence, reductions/cor:entries, reductions/def:attset, reductions/def:roundmodel, reductions/def:squashing, reductions/thm:emitted-product, reductions/wpfss/prop:flat-instance, reductions/ass:meas, meat-core/def:roundmodel]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Theorem~\ref{thm:chain-consumption}\,(v) names the soundness of each link and the
+attack-set licence as obligations of the chain's producer and discharges
+neither. This remark records where they are discharged for the chains the
+reductions module emits, also where a factor's family is weighted after its
+link, and for the Band-A identity link.
+
+\begin{remark}\label{rem:obligations-discharged}
+\emph{Where the two obligations are discharged.} For a chain emitted by the
+reductions module with status \emph{exact}, Assumption~\ref{ass:link} is
+discharged by \xref{reductions/thm:chain}\,(i)--(iii),
+\xref{reductions/thm:transfer} and \xref{reductions/thm:emit}\,(iii), its
+link-soundness clause being \xref{reductions/thm:chain}\,(i)--(iii) and
+\xref{reductions/thm:emit}\,(iii). For a chain emitted by the reductions
+module, the attack-set licence of Assumption~\ref{ass:atk} is discharged by
+\xref{reductions/thm:licence}, the restricted \tref{attack set} being that of
+\xref{reductions/def:attset}, for the entries the chain transports, each
+carrying the spectral pull-back certificate that module discharged for it
+(\xref{reductions/cor:entries}); an entry of $\Spec_{\mathrm{con}}$ carrying
+no such certificate is covered by no theorem of that module, and for a list
+containing one the licence stays the obligation Assumption~\ref{ass:atk}
+names. For the identity link of \tref{Band A}, supplied as data, with the
+identity outcome correspondence and the declared family as its target POVM
+(Definition~\ref{def:banda}\,(b)), Assumption~\ref{ass:link} is discharged
+by exhibition (Theorem~\ref{thm:band-a}\,(v)).
+
+\emph{Several measured factors.} Where each \tref{measured factor}'s receiver
+segment is the chain of that factor's artefact, emitted by the reductions
+module with status \emph{exact}, and each such segment is that factor's
+instance link alone, Assumption~\ref{ass:link} is discharged factor by factor
+as above, and jointly: the product of the factors' channels squashes the
+product of their \tref[declared model]{declared models} to the product target exactly
+(\xref{reductions/thm:emitted-product}\,(ii)), and the physical protocol
+measures that product by A-MEAS (\xref{reductions/ass:meas})\,(iv), so
+\xref{reductions/thm:transfer} applies to the joint protocol, and every entry
+whose scope is a factor is sound for the joint reachable states
+(\xref{reductions/thm:emitted-product}\,(iii), with
+\xref{reductions/thm:licence}\,(v)). Where each factor's physical side is
+presented by restriction, as in the next paragraph, the product of the
+presented links is the presented link of the product, its inclusion being
+$\bigotimes_f\iota_f$ and its channel $\Lambda\circ\bigotimes_f\mathcal{I}_f$,
+since $\bigotimes_f(\Lambda_f\circ\mathcal{I}_f)
+=\big(\bigotimes_f\Lambda_f\big)\circ\bigotimes_f\mathcal{I}_f$; the next
+paragraph applies to it with $\iota=\bigotimes_f\iota_f$, $\iota_f$ being the
+identity on a factor that presents its declared model itself. Where a further
+link follows a factor's instance link, that theorem states nothing about the
+product, and the joint transfer stays the obligation
+Assumption~\ref{ass:link} names. The engine omits the row at several
+measured factors only where every factor's segment is discharged in this way
+(Requirement~\ref{req:link-row-provenance}).
+
+\emph{A physical side presented by restriction.} Where a receiver segment is
+its instance link alone, the link these theorems discharge has as its
+\tref{source family} the declared model $\Mdec$ on the physical system
+$\Bsys$, with channel $\Lambda$ and $\Lambda^{\dagger}(F_v)=\Mdec_v$
+(\xref{reductions/thm:emit}\,(iii)). The conclusion about the device is that
+link's: security transfers to the protocol on $\Bsys$ for every input there.
+Let a specification present in its place a subspace $V$ of $\Hs{\Bsys}$, with
+isometric inclusion $\iota$, as the physical receiver space, the compressions
+$\Fph_v=\iota^{\dagger}\Mdec_v\iota$ as the physical receiver family, and the
+identity as the outcome correspondence. The discharge carries over to the link
+so presented. Its channel is $\Lambda\circ\mathcal{I}$ with
+$\mathcal{I}(X)=\iota X\iota^{\dagger}$, a composition of channels since
+$\iota^{\dagger}\iota=\idon{V}$; its adjoint is
+$Y\mapsto\iota^{\dagger}\Lambda^{\dagger}(Y)\iota$, so
+$(\Lambda\circ\mathcal{I})^{\dagger}(F_v)=\Fph_v$, which is
+\eqref{eq:pullback} for it, and every carried operator's pull-back is the
+compression of its pull-back under $\Lambda$. The presented link is therefore
+again a \tref{squashing relation} (\xref{reductions/def:squashing}), to which
+\xref{reductions/thm:transfer} and \xref{reductions/thm:chain}\,(iii) apply as
+to any; and an entry certificate $\Lambda^{\dagger}(\hat O_k)\bowtie_k
+c_k\,\idon{\Bsys}$ compresses to $(\Lambda\circ\mathcal{I})^{\dagger}(\hat
+O_k)\bowtie_kc_k\,\idon{V}$, compression by $\iota$ being positive and
+unital. The presented link inherits its conclusions from the link on
+$\Bsys$ and adds none: read alone it would restrict the inputs to $V$, which
+the link on $\Bsys$ does not. That the presented family is this compression
+is a fact of the instance and not of this paragraph. For the flat instance
+with $V=\Hs{\Chan_{\leqN}}$ it holds because its declared model is block
+diagonal at the cutoff with the \tref{declared datum} below it, and the target's
+\tref[data sector]{data sectors} carry that datum
+(\xref{reductions/wpfss/prop:flat-instance}, (I1)--(I2) and its declared
+model), so the block of $F_v$ on the data sectors is
+$\iota^{\dagger}\Mdec_v\iota$. No other instance has a claim stating that its
+docked block is such a compression, so on the routes of every other instance
+the row stays (Requirement~\ref{req:link-row-provenance}).
+
+\emph{A factor weighted after its link.} Where a setting-dependent weighting
+$P(f\,|\,t)$ is applied after a factor's segment
+(Definition~\ref{def:weighted}), the chain record is the unweighted one
+(Remark~\ref{rem:relabel}), and the discharge above carries over to the
+weighted protocol. With $\Pi\big((v',f)\,|\,v\big)\coloneqq
+\delta_{vv'}P(f\,|\,t(v'))$, a stochastic matrix from $\Vset$ to
+$\Vset\times\mathcal{F}$, \xref{reductions/lem:linear}\,(i) turns the
+squashing relation of the source family and $\{F_v\}$ into the squashing
+relation, under the same channel, of $\{P(f\,|\,t(v))\,\Mdec_v\}$,
+respectively of the identically weighted presented family, and the emitted
+$\{P(f\,|\,t(v))\,F_v\}$, so
+\xref{reductions/thm:transfer} applies to the weighted protocol as to the
+unweighted one, the transported entries being untouched by a weighting. On
+the identity link of \tref{Band A} the same holds at the identity channel:
+the delivered family is the declared one entry for entry
+(Definition~\ref{def:banda}\,(b)), so the emitted weighted family is the
+identically weighted declared family, the same matrices, and
+Theorem~\ref{thm:band-a}\,(v) covers the weighted protocol.
+
+\emph{The producer's statement of the same model.} The reductions module
+states the same \tref{round model}, typed by source mode, and the same
+restricted set as the round model of \xref{meat-core/def:roundmodel}, in
+\xref{reductions/def:roundmodel} and \xref{reductions/def:attset}: the latter
+reproduces the attack sets of \xref{meat-core/def:roundmodel} in both source
+modes, and the former types the physical \tref{attack sequence}, its \tref[squashed sequence]{squashed
+sequence} being the one on $\Qsys$.
+
+\emph{Used by a requirement only.} These theorems are used by no theorem,
+definition or remark of this contract, so they are in the closure of none of
+its results; Requirement~\ref{req:link-row-provenance} uses the ones on which
+the omission of the row of Assumption~\ref{ass:link} rests, so that what the
+omission rests on is computed. What a run inherits from the reductions module
+reaches its assumption manifest as the ledger rows of each reductions artefact
+it consumed, and not through this module's graph; the manifest's claim
+closure is that of the root claims the run's key-rate result names, read from
+the generated claim-closure table.
+\end{remark}

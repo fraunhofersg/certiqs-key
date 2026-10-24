@@ -1,0 +1,179 @@
+% ---
+% id: reductions/req:reference-companion
+% kind: req
+% title: "Emitting the reference companion beside the artefact"
+% summary: >-
+%   Where a reference is handed or the normalizer moved a class, the engine
+%   runs the same construction exactly on the reference, or on the snapped
+%   blocks, with no normalizer, and emits the companion's enclosures, factor
+%   ones where carried, and its entries, requested ones where certified there.
+% prominence: standard
+% status: implemented
+% uses: [cor:reference-companion, cor:companion-factor-enclosure, lem:row-relaxation, def:reduction-instance, def:emitnorm, cor:entries, foundations/def:evaluated-off-snap, foundations/lem:recentred-enclosure, foundations/def:exact-island, foundations/req:snap-reference, foundations/def:factor-enclosure]
+% mentions: [reductions/wpfss/cor:flat-companion, reductions/wpfss/rem:published, req:licensed-entry-lattice, req:emission-record, meat-core/req:companion-admission, meat-core/frank-wolfe/req:bracket-on-reference, receiver/detector-imperfections/req:dark-composed-reference]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.companion:reference_companion
+% lean:
+% notes: "A requested entry not formed on the companion is named in the record with its reason; the run then evaluates a companion with fewer entries than the artefact, a larger feasible set, which is sound and may lower the bound. Item (vii) carries a factor enclosure only through a rule a claim of this module shows to be a non-negative combination; an instance whose rule maps a data block otherwise carries none, and its elements are read through their entrywise enclosures."
+% ---
+
+The companion is what a run evaluates its first-order bound on
+(\xref{meat-core/frank-wolfe/req:bracket-on-reference}). It is the same
+chain run on other data, so it is built where the artefact is built, by the
+same code path, and carries the same shape by construction. It keeps the
+reference's exact data where the reference has them, as Gaussian-rational
+centres and rational radii, and is rounded to binary64 only by whoever
+evaluates it; its entries, which a solver's oracle reads as constraints, are
+the one part emitted in binary64 here, and Lemma~\ref{lem:row-relaxation}
+says how they are rounded without enlarging what they assert. Where the
+instance is one whose (H-REF) a claim establishes, Corollary~\ref{cor:reference-companion}\,(iv)
+or Corollary~\ref{cor:flat-companion}, the companion is emitted. It is
+emitted also where the declaring instance hands no reference but the
+normalizer moved a class: the companion is then the instance at its handed
+datum, the module's exact construction, which no step of the normalizer has
+touched, so that the classes the normalizer moved are evaluated off their
+snap while the instance's own blocks stay snapped. An entry a caller
+requested beside the instance's own is carried to the companion in its
+companion form where its certificate is established at the companion's
+datum, and is left out where it is not: leaving an entry out removes one
+constraint and so only enlarges the companion's feasible set, and no bound
+formed on the companion is raised by it. Where the reference also carries
+\tref[factor enclosure]{factor enclosures} and the instance's rule combines blocks with non-negative
+weights, the companion carries them to its datum and target
+(Corollary~\ref{cor:companion-factor-enclosure}), unaltered but for the
+weights.
+
+\begin{requirement}\label{req:reference-companion}
+Where a claim of this module establishes (H-REF) of
+Corollary~\ref{cor:reference-companion} for the \tref{reduction instance} the
+artefact is emitted from, and either the declaring instance hands the
+reference beside its snap of the measurement it states
+(\xref{foundations/def:evaluated-off-snap}\,(i)) on at least one block or
+the \tref{emission normalizer} moves at least one class
+(Definition~\ref{def:emitnorm}), the engine emits beside the artefact, in
+\iface{reference_companion}, the reference companion of that instance at the
+family $G$ that carries the \tref{handed reference} on every handed block and the
+snapped block the instance declares on every other block, so that, where no
+block is handed, $G$ is the instance's snapped family and the companion's
+datum is the \tref{handed datum}
+(Corollary~\ref{cor:reference-companion}\,(i)):
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{The datum.} Every enclosure of a handed block is first
+  recentred by \xref{foundations/lem:recentred-enclosure}, so that every
+  entry whose enclosure contains $0$ has centre $0$. The engine then forms,
+  in exact arithmetic on the \tref{exact island}
+  (\xref{foundations/def:exact-island}), the enclosure of the companion's
+  datum that Corollary~\ref{cor:reference-companion}\,(iii) gives, from these
+  enclosures and from the snapped blocks with radius zero, by the
+  construction it applies to the snapped family: the same rule of (I1), the
+  same \tref{weight route}, scalar values, sectors and supports. It then
+  recentres that enclosure again, element by element and block by block,
+  by \xref{foundations/lem:recentred-enclosure}, after making its centre
+  Hermitian and its radii symmetric by part (iv) of that lemma where they
+  are not, every block of the datum being Hermitian
+  (Corollary~\ref{cor:reference-companion}\,(i)); where the rule of (I1)
+  combines entries of several blocks, a sum that is exactly zero may so
+  have a centre that is not, and this second recentring sets it to zero
+  wherever its enclosure contains zero. The entries of (iii) are formed
+  from the datum's enclosure so recentred. It applies no
+  normalizer (Definition~\ref{def:emitnorm}), decides no lattice condition,
+  rounds nothing, and decides nothing of the companion's admissibility,
+  which is Corollary~\ref{cor:reference-companion}\,(i) on the claims the
+  handed reference names (\xref{foundations/req:snap-reference}\,(i)). It
+  emits the centres, entries of $\mathbb{Q}(i)$, and the radii, rationals,
+  entry by entry, so that an entry the reference knows exactly is emitted
+  exactly, with radius zero.
+\item \emph{The shape.} The companion is emitted with the \tref{sector map}, the
+  alphabet with its classes and weights, the scalar values and the party
+  partition of the artefact's target, which are equal by
+  Corollary~\ref{cor:reference-companion}\,(i), and with the artefact's
+  \tref{channel witness} and \tref{transported set} read at the companion's datum.
+\item \emph{The entries.} On a route whose request carries entries
+  (Corollary~\ref{cor:entries}), the companion's entry list holds the
+  instance's own entries at the companion's datum and, for every entry
+  requested beside them that the artefact carries, its companion form
+  (Corollary~\ref{cor:reference-companion}\,(vi)) at the writing by which
+  the engine recognised it, where its certificate at the companion's datum
+  is established: for a sum of sector projectors and for the class-marginal
+  entry, by Corollary~\ref{cor:reference-companion}\,(vi), the operator
+  being the artefact's, enclosed with radius zero; for another entry, where
+  a claim of this module states for the instance a condition on an
+  enclosure of the companion's datum under which its certificate holds,
+  by deciding that condition exactly on the datum's enclosure recentred as
+  (i) states (for the operator \eqref{eq:two-sector-entry} on the flat instance's
+  licensed route, \eqref{eq:companion-two-sector} of
+  Corollary~\ref{cor:flat-companion}). A requested entry whose certificate
+  at the companion's datum is not so established is not formed on the
+  companion and has no entry there in its place. For each entry
+  $(\hat O_k,\bowtie_k,c_k)$ of that list, with the enclosure $(C_k,R_k)$
+  of its operator that Corollary~\ref{cor:reference-companion}\,(iii)
+  gives, or radius zero where the operator is the artefact's: the operator
+  $\hat O'_k$ whose every real and imaginary part is the binary64 number
+  nearest to that of $C_k$, ties to even, which is Hermitian and has the
+  blocks of $\hat O_k$; the rationals
+  $\rho_{il}\coloneqq|\operatorname{Re}(\hat O'_k-C_k)_{il}|
+  +|\operatorname{Im}(\hat O'_k-C_k)_{il}|+(R_k)_{il}$ and
+  $\delta_k\coloneqq\max_i\sum_l\rho_{il}$, computed exactly; and the
+  relaxed entries of Lemma~\ref{lem:row-relaxation} at $\delta_k$, with
+  $c'_k$ the largest binary64 number at most $c_k-\delta_k$ and $c''_k$ the
+  smallest at least $c_k+\delta_k$. Where $\delta_k=0$ the entry is
+  $\hat O_k$ itself and is emitted as it is, an equality included. Each
+  emitted entry carries the certificate case of the entry it relaxes, its
+  $\delta_k$, and the mark that it is relaxed, its certificate being
+  Lemma~\ref{lem:row-relaxation}\,(ii); its operator is added to the
+  companion's transported set with its pull-back. The lattice condition of
+  Requirement~\ref{req:licensed-entry-lattice} binds the artefact's own
+  entries and not these.
+\item \emph{No normalizer.} No step of the \tref{emission normalizer}
+  (Definition~\ref{def:emitnorm}) acts on the companion's datum: the
+  companion carries the reference, not a snap of it.
+\item \emph{The record.} The companion carries, per block of $G$, whether
+  it is the handed reference or the snapped block, the kind of every handed
+  block (\emph{exact}, every radius zero, or \emph{enclosed}, with the
+  largest radius of the block after recentring), the entries recentred in
+  the handed blocks and in the datum, the largest radius of the datum's
+  enclosure after its recentring, each $\delta_k$, every requested entry
+  formed on the companion with what established its certificate there, and
+  every requested entry not formed with the reason; and it is
+  marked evaluation-only: it has no run of its own, no consumer admitting
+  it as the declaration of a run, and what a consumer decides or computes
+  of it beside the declaration it accompanies is the consumer's
+  (\xref{meat-core/req:companion-admission}). The artefact
+  itself, its target, normalizer, emission record
+  (Requirement~\ref{req:emission-record}) and entries, is emitted as it is
+  without a companion.
+\item \emph{No companion.} Where no block is handed and the normalizer
+  moves no class, or no claim of this module establishes (H-REF) for the
+  instance, or a reciprocal node of the rule of (I1) receives no enclosure,
+  so that Corollary~\ref{cor:reference-companion}\,(iii) gives none, no
+  companion is emitted, and the record says which of the three holds.
+\item \emph{Factor enclosures.} Where the handed reference carries
+  \tref[factor enclosure]{factor enclosures}
+  (\xref{foundations/def:factor-enclosure}) on some of its blocks
+  $G^{(b)}_j$, $b$ a handed block, as the receiver's does
+  (\xref{receiver/detector-imperfections/req:dark-composed-reference}), and a
+  claim of this module establishes that the rule of (I1) of the instance is a
+  non-negative combination (Corollary~\ref{cor:companion-factor-enclosure},
+  part (iii) for the identity instance and
+  Corollary~\ref{cor:flat-companion} for the flat instance), the engine
+  forms, for every element of every data sector of the companion's datum
+  every combining block of which carries one, the factor enclosure of
+  Corollary~\ref{cor:companion-factor-enclosure}\,(i): the boxes of the
+  combining blocks side by side in a fixed order, their centres and radii
+  unaltered, and their cores multiplied by the coefficients in exact rational
+  arithmetic. It emits each beside the \tref{entrywise enclosure} of the
+  datum of (i), which it does not alter, as the factor enclosure of the target's block
+  on that data sector (part (ii) of that corollary). It forms none on any other
+  element: none where a combining block carries none, and none for an
+  instance no claim of this module shows to have such a rule, in particular
+  none through a rule that maps the blocks of a data sector by a conjugation
+  before it combines them, whose factor enclosure this module does not form.
+  The record of (v) carries, per element of the datum, whether a factor
+  enclosure is carried, with its number of columns, or why none is, and it
+  names the claim that shows the rule of (I1) to be a non-negative
+  combination, Corollary~\ref{cor:companion-factor-enclosure}\,(iii) or
+  Corollary~\ref{cor:flat-companion}.
+\end{enumerate}
+\end{requirement}

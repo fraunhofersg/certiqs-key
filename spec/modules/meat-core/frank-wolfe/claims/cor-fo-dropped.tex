@@ -1,0 +1,470 @@
+% ---
+% id: meat-core/frank-wolfe/cor:fo-dropped
+% kind: cor
+% title: "First-order bound for the dropped program"
+% summary: >-
+%   In either source mode the first-order bound holds for the dropped program
+%   ([[def:dropped]]), with maximal support asked only of key-active pairs
+%   (acceptance value, joint sector) whose entropy is kept. It bounds h_low
+%   from below, also at iterates feasible only up to windows.
+% prominence: main
+% status: implemented
+% uses: [thm:firstorder, lem:fo-face, lem:fo-khyp, def:relaxed-feasible-set, prop:relaxed-set-properties, def:first-order-setting, meat-core/def:dropped, meat-core/prop:drop-bound, meat-core/cor:drop-program, meat-core/def:joint-sectors, meat-core/lem:joint-sectors, meat-core/lem:choi-factor, meat-core/thm:choi, meat-core/thm:gradient, meat-core/cor:full-gradient, meat-core/def:branch-support, meat-core/lem:branch-support, foundations/def:kl, meat-core/def:admissible-declaration, meat-core/def:admissible-acceptance-set, meat-core/def:feasible, meat-core/def:untrusted-choi]
+% mentions: [meat-core/thm:convexity, meat-core/thm:branch-formula, meat-core/def:declaration]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.joint_driver:run_joint_frank_wolfe
+% lean:
+% notes: "The lower bounds of thm:firstorder (iv) are read here at the gradient of the dropped objective, a different linear form over the same sets; on the feasible side lem:feasible-side-dual supplies one for any linear form."
+% ---
+
+A run that gives up the deficits of a \tref{dropped set} takes its
+first-order bound from the \tref{dropped program}. The corollary is to that
+program what Theorem~\ref{thm:firstorder}\,(ii) and~(iiib) are to the
+undropped one, with the support hypothesis asked of each kept key-active
+joint pair and positivity asked of the dropped branch quantity, which is
+never smaller than the undropped one. A \tref{fully dropped} joint sector
+needs no maximal support, no rank decision and no matrix function. In the
+relaxed reading the three hypotheses are conditions on the iterate alone
+and name no set, and no quantity relaxed at $\varepsilon>0$ appears in the
+conclusion: the chain
+\eqref{eq:hlb-dropped} compares
+$\underline{h}^{\mathrm{FO},\mathcal{D}}_{\alpha}$ against the exact
+$\underline{h}^{\mathcal{D}}_{\alpha}$ directly, and no non-negativity of
+a relaxed infimum is claimed. On an empty feasible set both values are
+$+\infty$, so the bound needs the non-empty feasible set of an admissible
+declaration only to be informative. The corollary holds in either source
+mode: in \tref{untrusted-source mode} the Choi step is the identity, so the
+frame and the operator coupling of the trusted-source proof become the
+state blocks and the normalisation.
+
+\begin{corollary}
+\label{cor:fo-dropped}
+Let $\alpha\in(1,\infty)$, let $\Decl$ satisfy Definition~\ref{def:admissible-declaration} in
+the general format of Definition~\ref{def:declaration}, in either source
+mode, in \tref{trusted-source mode} with a frame per Alice sector as in
+Theorem~\ref{thm:choi}, let $\acSet$ satisfy
+Definition~\ref{def:admissible-acceptance-set}, and let $\mathcal{D}$ be a dropped set
+(Definition~\ref{def:dropped}). Write an Alice sector as
+$\mathsf t\in\mathbb{T}$ in this claim, the letter $t$ indexing iterates as
+in Theorem~\ref{thm:firstorder}. Put
+$O^{J,\mathcal{D}}_{\alpha}(\mathbf q,J)\coloneqq
+O^{\mathcal{D}}_{\alpha}(\mathbf q,\chi(J))$ and
+$K^{J,\mathcal{D}}_{\hat c}\coloneqq K^{\mathcal{D}}_{\hat c}\circ\chi$, with
+$\chi$ the assignment of that theorem in trusted-source mode. In
+untrusted-source mode the program is read as
+Definition~\ref{def:untrusted-choi} reads it, with no frame: $\chi$ is the
+identity, $J=\omega$ is the list of the blocks
+$J_{(\mathsf t,s)}=\omega^{(\mathsf t,s)}$ over the joint sectors,
+$A_{0,\mathsf t}$ and $A_0$ stand for $A_{\mathsf t}$ and $A$, and
+$\Feas^{J}$ is $\Feas$ of
+Definition~\ref{def:feasible} in the general format, whose condition
+coupling the blocks is the normalisation $\sum_{(\mathsf t,s)}
+\tr\omega^{(\mathsf t,s)}=1$; so $O^{J,\mathcal{D}}_{\alpha}$ and
+$K^{J,\mathcal{D}}_{\hat c}$ are $O^{\mathcal{D}}_{\alpha}$ and
+$K^{\mathcal{D}}_{\hat c}$. Let
+$x_t=(\mathbf q_t,J_t)\in\acSet\times\Feas^{J}$, $t\in\Itset$, satisfy
+\begin{itemize}[leftmargin=3.4em]
+\item[(H-POS$^{\mathcal{D}}$)] (H-POS) of Theorem~\ref{thm:firstorder} with
+  $K^{J,\mathcal{D}}_{\hat c}$ in place of $K^{J}_{\hat c}$;
+\item[(H-SUPP$^{\mathcal{D}}$)] for every $\hat c\in\Chkey$ and every joint
+  pair $(\mathsf t,s)\in\mathbb{J}_K(\hat c)$ with
+  $(\hat c,(\mathsf t,s))\notin\mathcal{D}$, the branch operator
+  $\cG^{J}_{\hat c,s}(J_{t,(\mathsf t,s)})$ of the block
+  $J_{t,(\mathsf t,s)}\in\Pos{A_{0,\mathsf t}\Qsys_s}$ attains the maximal
+  support of that joint pair, the support it has at
+  $J_{t,(\mathsf t,s)}\succ0$; nothing is asked of a pair that is key-inert
+  or dropped;
+\item[(H-NOPERT$^{\mathcal{D}}$)] $(\lmoq_t,\lmoJ_t)$ is the gradient of
+  $O^{J,\mathcal{D}}_{\alpha}$ at $x_t$ itself, assembled as in (H-NOPERT)
+  with the kept summands only and with $K^{J,\mathcal{D}}_{\hat c}$ in the
+  scalar prefactors, its blocks on fully dropped joint sectors being
+  \eqref{eq:drop-gradient} in Choi coordinates;
+\end{itemize}
+and let $(v_t,S_t)$ satisfy \eqref{eq:lmo} for these linear forms, or let,
+at some or all $t$, lower bounds $b^{\mathrm A}_t$, $b^{\mathrm F}_t$ on
+one or both of its minima, as in \eqref{eq:lmo-bounds} for these linear
+forms, stand in for the pairings as Theorem~\ref{thm:firstorder}\,(iv)
+lets them. Then, in
+exact real arithmetic, with $\underline{h}^{\mathrm{FO},\mathcal{D}}_{\alpha}$
+the expression \eqref{eq:hlb} for $O^{J,\mathcal{D}}_{\alpha}$, with those
+replacements where they are made,
+\begin{equation}\label{eq:hlb-dropped}
+  \max\{0,\underline{h}^{\mathrm{FO},\mathcal{D}}_{\alpha}\}\;\le\;\underline{h}^{\mathcal{D}}_{\alpha}
+  \;\le\;\hlow\;\le\;\hqkd(\CList).
+\end{equation}
+(H-POS$^{\mathcal{D}}$) is implied by (H-POS), and
+(H-SUPP$^{\mathcal{D}}$) by (H-SUPP) read on joint blocks. For
+$\mathcal{D}=\varnothing$ and $|\mathbb{T}|=1$ the statement is
+Theorem~\ref{thm:firstorder}\,(ii), with its part~(iv) where lower bounds
+stand in.
+
+\emph{The relaxed reading.} Let $\varepsilon\ge0$ and let
+$\Feas^{J}(\varepsilon)$ be the \tref{relaxed feasible set} of
+Definition~\ref{def:relaxed-feasible-set}, read in the general format, with
+one coupling clause per Alice sector in trusted-source mode and its
+normalisation clause in untrusted-source mode. Let
+$x_t\in\acSet\times\Feas^{J}(\varepsilon)$, $t\in\Itset$, satisfy
+(H-POS$^{\mathcal{D}}$), (H-SUPP$^{\mathcal{D}}$) and
+(H-NOPERT$^{\mathcal{D}}$) as stated, and let $(v_t,S_t)$ satisfy
+\eqref{eq:lmo} \emph{as written}, or the lower bounds standing in for its
+pairings satisfy \eqref{eq:lmo-bounds}, with the two minima over $\acSet$
+and over the \emph{exact} $\Feas^{J}$. Then \eqref{eq:hlb-dropped} holds in
+full, and the case $\varepsilon=0$ is the statement above.
+
+\emph{An empty feasible set.} In place of the hypothesis on $\Decl$ above,
+let $\Decl$ be a tuple of the form of Definition~\ref{def:declaration}, in
+the general format and in either source mode, that satisfies conditions
+(i)--(vi) and (viii) of Definition~\ref{def:admissible-declaration}, and form
+$\Feas$, $O_{\alpha}$, $\hlow$ and $\underline{h}^{\mathcal{D}}_{\alpha}$ from
+it by the formulas of Definitions~\ref{def:feasible} and~\ref{def:dropped}.
+Let $\Feas=\varnothing$. Then
+$\underline{h}^{\mathcal{D}}_{\alpha}=\hlow=+\infty$, so every real number is
+a lower bound on both, the value of \eqref{eq:hlb} for
+$O^{J,\mathcal{D}}_{\alpha}$ that a run forms at its iterates included.
+Consequently the first two inequalities of \eqref{eq:hlb-dropped}, for a real
+$\underline{h}^{\mathrm{FO},\mathcal{D}}_{\alpha}$, hold of every such
+tuple, whether or not it satisfies condition~(vii): under the hypotheses above where it does,
+and by the preceding sentence where it does not.
+\end{corollary}
+
+\begin{proof}
+\emph{Idea.} The first inequality of \eqref{eq:hlb-dropped} follows the
+four steps of the proof of Theorem~\ref{thm:firstorder}\,(ii) with the
+changes below, preceded by the two things the dropped program needs that
+that theorem's proof does not state: the support geometry of a joint pair
+(Step~0) and the acceptance-support bookkeeping for $K^{J,\mathcal{D}}$
+(Step~0$'$). The relaxed reading changes Step~2 only. The proof is
+written once for both source modes, with the reading of untrusted-source
+mode fixed in the paragraph on notation.
+
+\emph{The last two inequalities} of \eqref{eq:hlb-dropped} are
+Proposition~\ref{prop:drop-bound}\,(iii).
+
+\emph{Notation.} Write $p=(\mathsf t,s)$ for a joint pair. In
+trusted-source mode put
+$W_{\mathsf t}\coloneqq(\tau^{(\mathsf t)}_A)^{1/2}\iota_{\mathsf t}$ and
+$\chi_p(\cdot)\coloneqq(W_{\mathsf t}\otimes\idon{\Qsys_s})(\cdot)
+(W_{\mathsf t}^{\dagger}\otimes\idon{\Qsys_s})$ for the assignment of
+Theorem~\ref{thm:choi} in the general format, so that
+$\chi=\bigoplus_p\chi_p$ and $W\coloneqq\bigoplus_{\mathsf t}W_{\mathsf t}$
+satisfies $WW^{\dagger}=\tau_A$
+(Lemma~\ref{lem:choi-factor}\,(ii)), and
+$S_{\mathsf t}\coloneqq\operatorname{supp}\tau^{(\mathsf t)}_A
+=\operatorname{ran}W_{\mathsf t}$
+(Lemma~\ref{lem:choi-factor}\,(i)). In untrusted-source mode
+(Definition~\ref{def:untrusted-choi}\,(a)) let $W_{\mathsf t}$ be the
+inclusion of $\Hs{A_{\mathsf t}}$ into $\Hs{A}$ and $\chi_p$ the conjugation
+by $W_{\mathsf t}\otimes\idon{\Qsys_s}$, that is, the inclusion of
+$\Pos{A_{\mathsf t}\Qsys_s}$ into $\Pos{A\Qsys_s}$ as the subcone of
+Definition~\ref{def:joint-sectors}; then $\chi=\bigoplus_p\chi_p$ is the
+identity on lists over the joint sectors, and
+$S_{\mathsf t}\coloneqq\Hs{A_{\mathsf t}}=\operatorname{ran}W_{\mathsf t}$.
+In both modes $\chi_p$ is linear and preserves positive semidefiniteness, and
+$\operatorname{ran}W_{\mathsf t}=S_{\mathsf t}\subseteq\Hs{A_{\mathsf t}}$.
+Write
+$\cG^{J}_{\hat c,p}\coloneqq\cG_{\hat c,p}\circ\chi_p$, which is the
+restriction of $\cG^{J}_{\hat c,s}$ to the blocks supported on
+$\Hs{A_{0,\mathsf t}\Qsys_s}$, the reading (H-SUPP$^{\mathcal{D}}$) writes,
+and $X_{\hat c,p}\coloneqq\cG^{J}_{\hat c,p}(J_{t,p})$. Let
+$\widetilde\Pi_{\mathsf t}$ be $\Pi^{A}_{\mathsf t}$ acting on the $A$ factor
+of the branch space $\Hs{R\,XY\,C_AC_B\,A\Qsys_s}$, and put
+\begin{equation}\label{eq:Wcs-joint}
+  W_{\hat c,p}\coloneqq\widetilde\Pi_{\mathsf t}\,W_{\hat c,s}
+  \qquad\text{with }W_{\hat c,s}\text{ of }\eqref{eq:Wcs}.
+\end{equation}
+
+\emph{Step 0 (the support geometry of a joint pair).} \emph{(a)} By
+\eqref{eq:Wcs}, $W_{\hat c,s}=\sum_{\kappa\in\Kann_{\mathrm{pass}}(\hat c)}
+K^{(s)}_{\kappa}(\Sadm\otimes\Hs{\Qsys_s})$, and
+$\Sadm=\bigoplus_{\mathsf t}S_{\mathsf t}$. In trusted-source mode
+$\Sadm=\operatorname{supp}\tau_A$, and
+$\tau_A=\bigoplus_{\mathsf t}\tau^{(\mathsf t)}_A$ is block
+diagonal along $\mathbb{T}$ by Definition~\ref{def:admissible-declaration}\,(iii) in the general
+format, so $\Sadm=\bigoplus_{\mathsf t}\operatorname{supp}
+\tau^{(\mathsf t)}_A$; in untrusted-source mode $\Sadm=\Hs{A}$
+(Definition~\ref{def:branch-support}), which is
+$\bigoplus_{\mathsf t}\Hs{A_{\mathsf t}}$ by the general format of
+Definition~\ref{def:declaration}. By the computation in the proof of
+Lemma~\ref{lem:joint-sectors}\,(i),
+$K^{(s)}_{\kappa}(\Pi^{A}_{\mathsf t}\otimes\idon{})
+=\widetilde\Pi_{\mathsf t}K^{(s)}_{\kappa}$, so each
+$K^{(s)}_{\kappa}(S_{\mathsf t}\otimes
+\Hs{\Qsys_s})$ lies in the range of $\widetilde\Pi_{\mathsf t}$; summing over
+$\mathsf t$ and $\kappa$ exhibits $W_{\hat c,s}$ as a sum of subspaces of
+\emph{mutually orthogonal} summands, hence
+\begin{equation}\label{eq:Wcs-joint-split}
+  W_{\hat c,s}=\bigoplus_{\mathsf t\in\mathbb{T}}W_{\hat c,(\mathsf t,s)},
+  \qquad
+  W_{\hat c,(\mathsf t,s)}=\sum_{\kappa\in\Kann_{\mathrm{pass}}(\hat c)}
+  K^{(s)}_{\kappa}\big(S_{\mathsf t}\otimes
+  \Hs{\Qsys_s}\big).
+\end{equation}
+\emph{(b)} For every Hermitian $\Delta$ on $\Hs{A_{0,\mathsf t}\Qsys_s}$,
+$\operatorname{supp}\cG^{J}_{\hat c,p}(\Delta)\subseteq W_{\hat c,p}$. Indeed
+$\Delta\oplus0$ is Hermitian on $\Hs{A_0\Qsys_s}$, so
+Lemma~\ref{lem:fo-face}, \eqref{eq:fo-face} gives
+$\operatorname{supp}\cG^{J}_{\hat c,s}(\Delta\oplus0)\subseteq W_{\hat c,s}$;
+and $\chi_p(\Delta_{\pm})$ is supported on
+$\Hs{A_{\mathsf t}\Qsys_s}$, $\operatorname{ran}W_{\mathsf t}$ lying in
+$\Hs{A_{\mathsf t}}$, so by
+Lemma~\ref{lem:joint-sectors}\,(i) the image of each lies in the
+range of $\widetilde\Pi_{\mathsf t}$ and so does their difference. Intersecting
+the two inclusions gives the claim by \eqref{eq:Wcs-joint}. \emph{(c)} For
+$\varrho\succeq0$ the support of $\sum_{\kappa}K_{\kappa}\varrho
+K_{\kappa}^{\dagger}$ is $\sum_{\kappa}K_{\kappa}(\operatorname{supp}\varrho)$
+(the support of a sum, in the proof of Lemma~\ref{lem:branch-support}). At
+$J_{t,p}\succ0$, $\operatorname{supp}\chi_p(J_{t,p})
+=\operatorname{ran}(W_{\mathsf t}\otimes\idon{})
+=S_{\mathsf t}\otimes\Hs{\Qsys_s}$, so
+$\operatorname{supp}X_{\hat c,p}=W_{\hat c,p}$ by
+\eqref{eq:Wcs-joint-split}, while for any $J_{t,p}\succeq0$ the inclusion
+$\subseteq$ holds. So the ``maximal support of that joint pair'' of
+(H-SUPP$^{\mathcal{D}}$) is $W_{\hat c,p}$, and that hypothesis reads
+$\operatorname{supp}X_{\hat c,p}=W_{\hat c,p}$ for every kept key-active pair.
+
+\emph{Step 0$'$ (the bookkeeping, which is Lemma~\ref{lem:fo-khyp} for
+$K^{J,\mathcal{D}}$).} Part~(i) of that lemma is a statement about $\acSet$
+alone and is unchanged: every $\mathbf q\in\acSet$ vanishes outside the
+\tref{acceptance support} $\Chacc$ of \eqref{eq:chacc-def}, and for
+$\mathbf q,\mathbf q'\in\acSet$ every feasible direction has
+$q'(\hat c)-q(\hat c)=0$ at every $\hat c\notin\Chacc$. Part~(ii) holds for
+$O^{J,\mathcal{D}}_{\alpha}$ on $\acSet\times\Feas^{J}(\varepsilon)$, for
+every $\varepsilon\ge0$, with the cone clause of
+Theorem~\ref{thm:branch-formula} replaced by
+Proposition~\ref{prop:drop-bound}\,(i), which states
+$0\le K^{\mathcal{D}}_{\hat c}\le P_{\hat c}$ for every $\omega$ block diagonal
+along the joint sectors with positive semidefinite blocks; every point of
+$\Feas^{J}(\varepsilon)$ is per-block positive semidefinite, the one
+condition that set does not relax (Definition~\ref{def:relaxed-feasible-set}),
+while $\chi$ preserves the joint-sector block structure and positivity
+(Lemma~\ref{lem:choi-factor}\,(ii); in untrusted-source mode $\chi$ is the
+identity). So for
+$\hat c\notin\Chacc$, where $q(\hat c)=0$, the convention
+$0\log_2\frac0v=0$ of \xref{foundations/def:kl}, stated for every
+$v\ge0$ and the case $v=0$ included, makes the term
+$\frac{\alpha}{\alpha-1}q(\hat c)\log_2\frac{q(\hat c)}{P^{J}_{\hat c}}$ and,
+for $\hat c\in\Chkey$, the pair
+$q(\hat c)\log_2\frac{q(\hat c)}{P^{J}_{\hat c}}
++\frac{q(\hat c)}{\alpha-1}\log_2\frac{q(\hat c)}{K^{J,\mathcal{D}}_{\hat c}}$
+vanish at \emph{every} point of that set, whatever $P^{J}_{\hat c}$ and
+$K^{J,\mathcal{D}}_{\hat c}$ are there and in particular when one of them
+vanishes. Deleting those terms changes no value, so
+$O^{J,\mathcal{D}}_{\alpha}$ is on that set a function of
+$(\mathbf q|_{\Chacc},J)$ alone, (H-POS$^{\mathcal{D}}$) is stated on
+$\Chacc$, and on $\Chkey\cap\Chacc$ for the $K$-part, exactly where it is
+consumed, and a component of the acceptance-side gradient indexed outside
+$\Chacc$ is paired against a direction component that is $0$ in every pairing
+below, so its value is never read. No normalisation, coupling condition
+or declared row is read in this step, which is why it holds on the
+relaxed sets and not on the exact set alone.
+
+\emph{Step 1 (the gradient exists and is a directional derivative in every
+feasible direction).} Fix $t$, write $x\coloneqq x_t=(\mathbf q,J)$ and
+$\nabla O\coloneqq(\lmoq_t,\lmoJ_t)$, let
+$y=(\mathbf q',J')\in\acSet\times\Feas^{J}$ and $h\coloneqq y-x$, and put
+$\Delta_p\coloneqq J'_p-J_{t,p}$, Hermitian as a difference of positive
+semidefinite operators. By Step~0$'$ the objective along the segment is the
+finite sum over $\hat c\in\Chacc$ of
+$\frac{\alpha}{\alpha-1}q(\hat c)\log_2\frac{q(\hat c)}{P^{J}_{\hat c}}$ for
+$\hat c\notin\Chkey$ and of the pair of Step~0$'$ for
+$\hat c\in\Chkey\cap\Chacc$. In it $q(\hat c)$ and $P^{J}_{\hat c}$ are affine
+and strictly positive at $x$ by (H-POS$^{\mathcal{D}}$), and
+\begin{equation}\label{eq:KD-choi}
+  K^{J,\mathcal{D}}_{\hat c}(J)=P^{J}_{\hat c}(J)
+  +\sum_{p:\,(\hat c,p)\notin\mathcal{D}}
+  f_{\hat c,p}\big(\chi_p(J_p)\big)
+\end{equation}
+by \eqref{eq:KD}, with $f_{\hat c,p}=T\circ\cG_{\hat c,p}
+-\tr\circ\,\cG_{\hat c,p}$ and the second summand linear in $J_p$. Each kept
+summand of \eqref{eq:KD-choi} falls into one of two cases. If $p$ is key-inert
+for $\hat c$ then $f_{\hat c,p}\equiv0$ on the whole subcone
+(Lemma~\ref{lem:joint-sectors}\,(iii)), hence identically along
+the segment: the summand is constant, contributes $0$ to the derivative, and
+no support hypothesis on it is consumed, which is why
+(H-SUPP$^{\mathcal{D}}$) asks nothing of it. If $p\in\mathbb{J}_K(\hat c)$ and
+$(\hat c,p)\notin\mathcal{D}$ then, by (H-SUPP$^{\mathcal{D}}$) with Step~0(c),
+$\operatorname{supp}X_{\hat c,p}=W_{\hat c,p}$, and by Step~0(b)
+$\operatorname{supp}\cG^{J}_{\hat c,p}(\Delta_p)\subseteq W_{\hat c,p}
+=\operatorname{supp}X_{\hat c,p}$; so
+Theorem~\ref{thm:gradient}\,(i) applies to the pair
+$(X_{\hat c,p},\cG^{J}_{\hat c,p}(\Delta_p))$ and
+$t'\mapsto T(X_{\hat c,p}+t'\cG^{J}_{\hat c,p}(\Delta_p))$ is differentiable at
+$t'=0$, two-sidedly, the hypothesis being symmetric under
+$\Delta_p\mapsto-\Delta_p$. And the $+\infty$ case of
+Theorem~\ref{thm:gradient}\,(ii) is unreachable: that case sits
+at directions strictly enlarging the support, Step~0(b) says no image of a
+Hermitian direction leaves $W_{\hat c,p}$, and the directions this proof pairs
+against are admissible for it because
+$X_{\hat c,p}+t'\cG^{J}_{\hat c,p}(\Delta_p)
+=\cG^{J}_{\hat c,p}\big((1-t')J_{t,p}+t'J'_p\big)\succeq0$ for $t'\in[0,1]$.
+This is Lemma~\ref{lem:fo-face}\,(a), (b) read on the joint pair, with
+Step~0(b) in place of \eqref{eq:fo-face}. A pair with
+$(\hat c,p)\in\mathcal{D}$ is absent from \eqref{eq:KD-choi} altogether, so no
+matrix power, no eigendecomposition and no support condition of a fully dropped
+joint sector enters
+(Corollary~\ref{cor:drop-program}\,(iii)). The remaining
+dependence is through finitely many compositions of $\log_2$ with quantities
+(H-POS$^{\mathcal{D}}$) keeps strictly positive, all differentiable there.
+Hence $t'\mapsto O^{J,\mathcal{D}}_{\alpha}(x+t'h)$ is differentiable at
+$t'=0$ with derivative $\langle\nabla O,h\rangle$, where, by the chain and sum
+rules exactly as in the proof of
+Corollary~\ref{cor:full-gradient}, whose maximal-support step is
+Step~0(b) here, the acceptance-side component is \eqref{eq:grad-q} with
+$K^{J,\mathcal{D}}_{\hat c}$ in place of $K^{J}_{\hat c}$, read as a vector in
+$\mathbb{R}^{\Chacc}$, and the block of the feasible-side component at the
+joint pair $p$ is \eqref{eq:grad-J} with the sums restricted to $\Chacc$,
+respectively $\Chkey\cap\Chacc$, with $K^{J,\mathcal{D}}_{\hat c}$ in the
+scalar prefactors, with $\Gamma^{(p)}_{\hat c}$ of
+\eqref{eq:grad-pieces} read on the joint pair (the operators
+$W_{\mathsf t}^{\dagger}M^{(\mathsf t)}_xW_{\mathsf t}\otimes F^{(s)}_v$), and
+with the deficit piece $\Delta^{(p)}_{\hat c}$ carrying, in place of
+$\mathbb 1[s\in\SecSet_K(\hat c)]$, the indicator
+$\mathbb 1[p\in\mathbb{J}_K(\hat c)\text{ and }(\hat c,p)\notin\mathcal{D}]$.
+That is the object (H-NOPERT$^{\mathcal{D}}$) names, and on a fully
+dropped joint sector every deficit piece is absent, so the block is
+$\chi_p^{\dagger}$ applied to \eqref{eq:drop-gradient}, which is what that
+hypothesis says of such a sector.
+
+\emph{Step 2 (convexity turns the derivative into an inequality).}
+$O^{\mathcal{D}}_{\alpha}$ is jointly convex on $\Delta(\Chatset)\times\Feas$
+with values in $[0,+\infty]$
+(Corollary~\ref{cor:drop-program}\,(ii)), and
+$O^{J,\mathcal{D}}_{\alpha}=O^{\mathcal{D}}_{\alpha}\circ(\idmap\times\chi)$
+with $\chi$ \emph{linear}, so it is convex on the convex preimage
+$\acSet\times\Feas^{J}$, a pullback along a linear map that needs no
+injectivity, and $\Feas^{J}$ is convex and compact by
+Theorem~\ref{thm:choi} in its general format, in untrusted-source mode
+because it is $\Feas$ (Definition~\ref{def:feasible}). $x$ and $y$ lie in
+that convex set and $O^{J,\mathcal{D}}_{\alpha}(x)$ is finite by
+(H-POS$^{\mathcal{D}}$), so the three-chord inequality for a convex
+extended-real function gives, exactly as in Step~2 of the proof of
+Theorem~\ref{thm:firstorder}\,(ii),
+\begin{equation}\label{eq:fo-subgrad-dropped}
+  O^{J,\mathcal{D}}_{\alpha}(y)\;\ge\;O^{J,\mathcal{D}}_{\alpha}(x)
+  +\langle\nabla O,\,y-x\rangle
+  \qquad\text{for every }y\in\acSet\times\Feas^{J},
+\end{equation}
+the case $O^{J,\mathcal{D}}_{\alpha}(y)=+\infty$ included. Taking the infimum
+over $y$: by Theorem~\ref{thm:choi} in its general format
+$\chi(\Feas^{J})=\Feas$, in untrusted-source mode because $\chi$ is the
+identity and $\Feas^{J}=\Feas$, and surjectivity is all a value needs, so
+$\inf_{\acSet\times\Feas^{J}}O^{J,\mathcal{D}}_{\alpha}
+=\inf_{\acSet\times\Feas}O^{\mathcal{D}}_{\alpha}
+=\underline{h}^{\mathcal{D}}_{\alpha}$ by \eqref{eq:hlowD}; hence
+$\underline{h}^{\mathcal{D}}_{\alpha}\ge O^{J,\mathcal{D}}_{\alpha}(x)
++\min_{y\in\acSet\times\Feas^{J}}\langle\nabla O,y-x\rangle$, the minimum
+attained because $\acSet\times\Feas^{J}$ is compact and the map linear.
+
+\emph{Steps 3 and 4.} The map $y\mapsto\langle\nabla O,y\rangle$ is a sum of
+one term in each factor and $\acSet\times\Feas^{J}$ is a product set, so the
+minimum separates over the product and \eqref{eq:lmo}, at the linear forms
+$(\lmoq_t,\lmoJ_t)$ of this corollary, bounds each part below by the oracle
+return; substituting gives
+$\underline{h}^{\mathcal{D}}_{\alpha}\ge O^{J,\mathcal{D}}_{\alpha}(x_t)
++\langle\lmoq_t,v_t-\mathbf q_t\rangle+\langle\lmoJ_t,S_t-J_t\rangle$ for each
+$t\in\Itset$. Where $b^{\mathrm A}_t$ or $b^{\mathrm F}_t$ stands in for a
+pairing, \eqref{eq:lmo-bounds} bounds that part below by it instead, and
+the same substitution gives the bracket with the replacement made, exactly
+as in the proof of Theorem~\ref{thm:firstorder}\,(iv); where both stand in,
+no oracle return enters. $\Itset$ is finite and non-empty, so the largest of those
+right-hand sides, which is \eqref{eq:hlb} for
+$O^{J,\mathcal{D}}_{\alpha}$, that is
+$\underline{h}^{\mathrm{FO},\mathcal{D}}_{\alpha}$, is a lower bound too.
+Finally $\underline{h}^{\mathcal{D}}_{\alpha}\ge0$ by
+Proposition~\ref{prop:drop-bound}\,(iii), a statement about
+the exact set, so $\max\{0,
+\underline{h}^{\mathrm{FO},\mathcal{D}}_{\alpha}\}$ is the maximum of two lower
+bounds on $\underline{h}^{\mathcal{D}}_{\alpha}$ and is one. This is the first
+inequality of \eqref{eq:hlb-dropped}.
+
+\emph{The implications, and the degenerate case.} (H-POS)
+$\Rightarrow$ (H-POS$^{\mathcal{D}}$): $K^{J,\mathcal{D}}_{\hat c}\ge
+K^{J}_{\hat c}$ by
+Proposition~\ref{prop:drop-bound}\,(i), so
+$K^{J}_{\hat c}>0$ gives $K^{J,\mathcal{D}}_{\hat c}>0$, and the other clauses
+are identical. (H-SUPP) on joint blocks $\Rightarrow$
+(H-SUPP$^{\mathcal{D}}$): with $J_s=\bigoplus_{\mathsf t}J_{t,(\mathsf t,s)}$,
+Lemma~\ref{lem:joint-sectors}\,(i) gives
+$X_{\hat c,s}=\bigoplus_{\mathsf t}X_{\hat c,(\mathsf t,s)}$ along mutually
+orthogonal subspaces, so $\operatorname{supp}X_{\hat c,s}
+=\bigoplus_{\mathsf t}\operatorname{supp}X_{\hat c,(\mathsf t,s)}$, while
+$W_{\hat c,s}=\bigoplus_{\mathsf t}W_{\hat c,(\mathsf t,s)}$ by
+\eqref{eq:Wcs-joint-split} with
+$\operatorname{supp}X_{\hat c,(\mathsf t,s)}\subseteq
+W_{\hat c,(\mathsf t,s)}$ by Step~0(c); two direct sums over the same
+orthogonal summands that are equal with term-wise inclusions are equal term by
+term, so maximal support of the sector gives maximal support of each of its
+joint pairs. At $\mathcal{D}=\varnothing$ and $|\mathbb{T}|=1$:
+$K^{\mathcal{D}}_{\hat c}=K_{\hat c}$ and
+$O^{\mathcal{D}}_{\alpha}=O_{\alpha}$ by
+Definition~\ref{def:dropped},
+$\mathbb{J}_K(\hat c)=\{t_0\}\times\SecSet_K(\hat c)$ and
+$W_{\hat c,(t_0,s)}=W_{\hat c,s}$ by
+Definition~\ref{def:joint-sectors} and
+\eqref{eq:Wcs-joint-split}, so the three hypotheses are (H-POS), (H-SUPP),
+(H-NOPERT) and \eqref{eq:hlb-dropped} is \eqref{eq:hlb} together with
+$\hlow\le\hqkd(\CList)$: Theorem~\ref{thm:firstorder}\,(ii).
+
+\emph{The relaxed reading.} The proof is the one above with a single change,
+made in Step~2: $x$ ranges over $\acSet\times\Feas^{J}(\varepsilon)$ while the
+comparison point $y$ ranges over the \emph{exact} $\acSet\times\Feas^{J}$.
+Steps~0, 0$'$ and~1 are unchanged and read only per-block positive
+semidefiniteness of $x$: Step~0(b), (c) ask that of $J_{t,p}$, Step~0$'$
+asks it through
+Proposition~\ref{prop:drop-bound}\,(i), and $\Delta_p$ is
+Hermitian as a difference of a positive semidefinite $J'_p$ from $\Feas^{J}$
+and a positive semidefinite $J_{t,p}$ from $\Feas^{J}(\varepsilon)$, per-block
+positive semidefiniteness being the one condition that set does not relax
+(Definition~\ref{def:relaxed-feasible-set}). In Step~2 both endpoints lie in
+$\acSet\times\Feas^{J}(\varepsilon)$, which is convex
+(Proposition~\ref{prop:relaxed-set-properties}\,(b); $\acSet$ by
+Definition~\ref{def:admissible-acceptance-set}), and
+$O^{J,\mathcal{D}}_{\alpha}$ is convex on it. The transfer is the one
+Proposition~\ref{prop:relaxed-set-properties}\,(c) performs for
+Theorem~\ref{thm:convexity}, and it goes through for the dropped
+objective for the same reason: the convexity argument of
+Corollary~\ref{cor:drop-program}\,(ii) reads of its domain only
+that it is a convex set on which $P_{\hat c}$ is affine and
+$K^{\mathcal{D}}_{\hat c}$ is non-negative, concave and continuous;
+Corollary~\ref{cor:drop-program}\,(i) states that concavity and
+continuity on the whole \emph{cone} of operators block diagonal along the joint
+sectors, while
+Proposition~\ref{prop:drop-bound}\,(i) states
+$0\le K^{\mathcal{D}}_{\hat c}\le P_{\hat c}$ there; and
+$\chi(\Feas^{J}(\varepsilon))$ is a convex subset of that cone, so
+$O^{\mathcal{D}}_{\alpha}$ is convex on
+$\acSet\times\chi(\Feas^{J}(\varepsilon))$ and pulls back along the linear
+$\chi$. So the three-chord inequality gives
+\eqref{eq:fo-subgrad-dropped} for every $y\in\acSet\times\Feas^{J}$, and the
+infimum is taken over \emph{that} set, not over the relaxed one; Steps~3
+and~4 are then as above, and the clamp reads
+Proposition~\ref{prop:drop-bound}\,(iii) at $\varepsilon=0$,
+where it holds. What this uses of the relaxed set, in full: that
+$\Feas^{J}\subseteq\Feas^{J}(\varepsilon)$
+(Proposition~\ref{prop:relaxed-set-properties}\,(a)); that
+$\acSet\times\Feas^{J}(\varepsilon)$ is convex (\emph{ibid.}\,(b)); that every
+member is per-block positive semidefinite; and the convexity transfer just
+made, whose own derivation consumes the compactness of (b) through the
+continuity of $K^{\mathcal{D}}_{\hat c}$, so compactness is used one level down
+and never in the minimisation. Of the \emph{exact} set it uses compactness,
+non-emptiness, and that the infimum of $O^{J,\mathcal{D}}_{\alpha}$ over it is
+$\underline{h}^{\mathcal{D}}_{\alpha}$. No statement is made about the
+infimum of $O^{J,\mathcal{D}}_{\alpha}$ over the relaxed set, and none is
+used.
+
+\emph{An empty feasible set.} No claim is used for the two values being
+$+\infty$. By
+\eqref{eq:hlowD} and \eqref{eq:hlow-def}, $\underline{h}^{\mathcal{D}}_{\alpha}$
+and $\hlow$ are infima over $\mathbf q\in\acSet$ and $\omega\in\Feas$; with
+$\Feas=\varnothing$ each inner infimum is over the empty set and is $+\infty$
+for every $\mathbf q$, and so is the outer one, whether $\acSet$ is empty or
+not. Every real number is below $+\infty$. For the consequence: where the
+tuple satisfies condition~(vii) as well, it satisfies
+Definition~\ref{def:admissible-declaration} in full, and with it the two
+conditions Definition~\ref{def:declaration} places on its raw-key map, which
+are conditions (v) and (viii); it is then a protocol declaration satisfying
+the hypothesis of the statement above; where it does not, $\Feas=\varnothing$, both values
+are $+\infty$, and a real number is below them.
+\end{proof}

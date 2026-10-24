@@ -1,0 +1,47 @@
+% ---
+% id: meat-core/frank-wolfe/req:iterate-repair
+% kind: req
+% title: "Repair of a formed iterate"
+% summary: >-
+%   A block of a formed iterate that fails the positivity check is rejected,
+%   or projected within a declared window of its own. The repaired point is
+%   the iterate, its residuals are measured again, and every repair is
+%   recorded apart from oracle repairs.
+% prominence: standard
+% status: implemented
+% uses: [thm:firstorder, rem:fo-iterate-repair]
+% mentions: [req:iterate-checks, req:oracle-repair]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.joint_driver:_check_point
+% lean:
+% ---
+
+The repair belongs to the formation of the iterate, upstream of the point
+Theorem~\ref{thm:firstorder} is applied at, so it is not the perturbation
+that (H-NOPERT) excludes; it establishes a hypothesis of that theorem on an
+object the engine chose and says nothing about the backend
+(Remark~\ref{rem:fo-iterate-repair}). Re-measuring the residuals is the one
+place this repair can cost a run.
+
+\begin{requirement}\label{req:iterate-repair}
+When a block of the point consumed at iterate $t$ fails the positivity check
+of Requirement~\ref{req:iterate-checks}, the engine either rejects it, in
+which case $t$ contributes no bracket and is not a member of $\Itset$, or
+projects it onto the positive semidefinite cone, provided its measured depth
+is within the declared window \iface{iterate_repair_window}, a number of its
+own, declared beside $\tnum$ and never as an instance of it. No other repair
+is made on an iterate. A projection is governed by three rules:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item the repaired point is $x_t$, the point at which the objective, the
+  gradient and the pairings with $x_t$ of \eqref{eq:hlb} are evaluated;
+\item the coupling and $\bowtie_k$ residuals of
+  Requirement~\ref{req:iterate-checks} are measured again on the repaired
+  point and never carried over from the point before it, and a residual that
+  then fails its window refuses the iterate;
+\item every repair is recorded, with the block, the iterate and the measured
+  depth, in \iface{optimizer_certificate}, beside the oracle-return repairs
+  of Requirement~\ref{req:oracle-repair} and distinguished from them.
+\end{enumerate}
+\end{requirement}

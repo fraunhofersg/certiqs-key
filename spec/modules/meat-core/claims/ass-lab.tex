@@ -1,0 +1,95 @@
+% ---
+% id: meat-core/ass:lab
+% kind: ass
+% title: "Each party's laboratory is sealed"
+% summary: >-
+%   Nothing about a party's records leaves its laboratory but its key, the
+%   public messages and, in trusted-source mode at the party of A, the emitted
+%   systems; the adversary acts on it only through what its declared
+%   measurements receive and the messages. It excludes side channels at both parties.
+% prominence: standard
+% status: accepted
+% uses: [def:declaration, def:roundmodel, def:postprocessing-model, def:authenticated-channel]
+% assumes: []
+% refs:
+%   - "portmann2022security, Sec. I.B"
+%   - "portmann2022security, Sec. IV.A"
+% provenance: newly-derived
+% short_id: A-LAB
+% verification: never
+% category: laboratory
+% affects: [secrecy]
+% user_statement: >-
+%   Whatever a party's role, nothing about its letters, settings, choices,
+%   detection results, keys or random numbers leaves its laboratory but the
+%   final key, the public messages and, where the party sends with a trusted
+%   source, the signals that source emits; timing and auxiliary signals reveal
+%   no more. An untrusted source counts as outside every laboratory, even one
+%   it is in. The attacker reaches a laboratory only via the systems its
+%   declared measurements receive and the public messages. Light sent in to
+%   read out a letter, a setting, a choice or a detector state (a Trojan-horse
+%   attack, at a receiver as at a modulator), emanations from any device,
+%   detector back-flash and anything but the declared input modes influencing
+%   a measurement violate this, a clock or trigger line from an untrusted
+%   source included; where it sends with a trusted source, so does light
+%   seeding or recalibrating its laser.
+% notes: "Reads part (b) of the party partition (the label of A and the labels of the tensor factors of each sector of the measured system) as naming the parties' laboratories, so the realisability obligation of def:declaration is part of what a run attests here. The consumers read it at one party (lem:product-marginal, thm:accumulated-entropy: the party of A in trusted-source mode) or at both (thm:keylength)."
+% lean:
+% ---
+
+An information carrier of an implementation that the model omits is a side
+channel that no security proof accounts for, and sources and photon detectors
+are known places for one \cite[Sec.~I.B]{portmann2022security}; that the
+devices do exactly what they are instructed to do is one of the standard
+premises of QKD \cite[Sec.~IV.A]{portmann2022security}. The premise is stated
+for each party of the declaration, whatever that party does in the protocol:
+what crosses the boundary of its laboratory is read off the
+\tref{round model} and the \tref{party partition}, in both directions.
+
+\begin{assumption}\label{ass:lab}
+Let $\mathsf P\in\{\mathsf A,\mathsf B\}$ be a party of the
+\tref{protocol declaration} (Definition~\ref{def:declaration}). Its
+\emph{records} are its letters, where the \tref{party partition} assigns
+Alice's system $A$ to $\mathsf P$; the private settings and the outcomes of
+the measurements made in its laboratory, the public choices it draws before
+they are announced, and its readout $\rd{\mathsf P}$; the inputs of its
+announcements; its raw or final key; and its local randomness. The \emph{systems handed out of its laboratory} are, in
+\tref{trusted-source mode} and where the party partition assigns $A$ to
+$\mathsf P$, the systems its source emits into the quantum channel, which the
+\tref{round model} (Definition~\ref{def:roundmodel}) gives to the adversary,
+$A$ being no output of the attack in that mode \eqref{eq:attackchannel} and
+staying with $\mathsf P$; in every other case there are none. In particular,
+in \tref{untrusted-source mode}, where the attack supplies $A$ and $\Qsys$
+\eqref{eq:attackchannel}, no laboratory hands out any system, and a source the declaration treats as untrusted lies
+outside every laboratory wherever it physically stands. The \emph{systems
+delivered into its laboratory} are, in untrusted-source mode and where the
+party partition assigns $A$ to $\mathsf P$, the system $A$; and, in either
+mode and in each sector $s$, the tensor factors $\Qsys_{s,i}$ of the declared
+factorisation of $\Hs{\Qsys_s}$ that the party partition labels $\mathsf P$
+(in the general format, every \tref{measured factor} labelled $\mathsf P$),
+physically the input modes those factors model.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item During the protocol, no information about $\mathsf P$'s records leaves
+its laboratory, other than its key as the protocol's output, except through
+the systems handed out of its laboratory and through the public messages of
+the protocol (the announcements of the
+\tref[round channel]{round channels} of Definition~\ref{def:roundmodel}, the
+messages of Definition~\ref{def:postprocessing-model} and of the
+\tref{authentication post-processing}
+(Definition~\ref{def:authenticated-channel}\,(c)), and, where an
+authentication scheme carries them, the scheme's own transmissions over the
+unauthenticated classical channel): no light emitted by its devices other
+than those systems, no electromagnetic, acoustic, power or timing emanation
+and no side channel of its classical processing carries such information, and
+neither the timing of its messages nor any auxiliary or synchronisation
+signal does;
+\item the adversary acts on $\mathsf P$'s laboratory only through the systems
+delivered into its laboratory, as the declared measurements receive them, and
+through the public messages the protocol delivers to $\mathsf P$ and, where a
+scheme carries them, the transmissions it receives over the unauthenticated
+channel: no light or signal sent into the laboratory, through the systems
+handed out of it or otherwise, reads out any of its records, and nothing else
+influences the state, configuration or calibration of its devices (its source
+included, where it has one), its measurements or its classical processing.
+\end{enumerate}
+\end{assumption}

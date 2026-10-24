@@ -1,0 +1,36 @@
+% ---
+% id: meat-core/rem:alpha-domain
+% kind: rem
+% title: "The Rényi order of the key-length statements"
+% summary: >-
+%   Every key-length statement takes the Rényi order in (1, 2), the domain of
+%   the Rényi leftover-hashing lemma, while the entropy, program and gradient
+%   results hold on (1, ∞). On (1, 2) the key-length statements and the
+%   results they consume apply together.
+% prominence: standard
+% status: accepted
+% uses: [foundations/def:renyi]
+% mentions: [thm:keylength, cor:keylength-bound, meat-core/frank-wolfe/cor:fo-keylength, fact:meat]
+% assumes: []
+% refs:
+%   - "kamin2025renyi, Thm. 4, Eq. (13)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:alpha-domain}
+Every key-length statement of this contract, among them
+Theorem~\ref{thm:keylength}, Corollary~\ref{cor:keylength-bound} and the
+key-length corollary of the first-order results
+(Corollary~\ref{cor:fo-keylength}), takes $\alpha\in(1,2)$, because the
+R\'enyi leftover-hashing lemma their secrecy argument applies is stated
+there \cite[Thm.~4, Eq.~(13)]{kamin2025renyi}. The results on entropy
+accumulation, the program, its reduction and its gradients are stated on
+$(1,\infty)$, where \xref{foundations/def:renyi} defines the sandwiched
+entropies, so the intersection of the two domains, on which the key-length
+statements and the results they consume apply together, is $(1,2)$; a
+result stated on a narrower range of $\alpha$ holds on that range only. The
+accumulation import itself extends to $\alpha=\infty$, an endpoint that
+\xref{foundations/def:renyi} does not define and no claim uses
+(Fact~\ref{fact:meat}, locator note~(vi)).
+\end{remark}

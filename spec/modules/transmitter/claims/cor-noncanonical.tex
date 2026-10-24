@@ -1,0 +1,77 @@
+% ---
+% id: transmitter/cor:noncanonical
+% kind: cor
+% title: "Certificates beyond the canonical form"
+% summary: >-
+%   The canonical source replacement satisfies the pure-form certificate
+%   conditions, but it is not the only data that do. Four-state BB84 admits a
+%   pure certificate with a two-dimensional retained system, where the
+%   canonical form needs four dimensions.
+% prominence: standard
+% status: accepted
+% uses: [fact:sr, def:srcert, thm:certificate-sufficiency, def:source-spec]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The qubit witness is the certificate the shipped qubit BB84 instance declares (Psi = |Phi+><Phi+| as an operator); keep the two in step."
+% ---
+
+The imported construction fixes Alice's label register $\Abar$ at dimension
+$|\Xset|$. The corollary shows that the certificate is strictly more
+permissive already in its pure form, the form in which both the canonical data
+and the witness below are declared.
+
+\begin{corollary}
+\label{cor:noncanonical}
+Throughout, the certificate is in the \emph{pure} form of
+Definition~\ref{def:srcert}, against the \tref{one-sector structure} on $A$ that
+Definition~\ref{def:source-spec} makes the default.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item Fact~\ref{fact:sr}'s canonical data --- $A=\Abar\Ahat$ with
+$\dim\Hs{\Abar}=|\Xset|$, $M_x=\dyad{x}_{\Abar}\otimes\idon{\Ahat}$, and
+$\Psi=\dyad{\psi}$ with
+$\ket{\psi}=\sum_x\sqrt{p_x}\ket{x}_{\Abar}\ket{\psi_x}_{\Ahat\Avirt}$ and
+$\ket{\psi_x}$ a purification of $\rvirt_x$ --- satisfy (SR1) and (SR2).
+\item They are not the only such data: Theorem~\ref{thm:certificate-sufficiency}\,(iii)
+applies to every triple $(\Psi,\tau_A,\{M_x\})$ satisfying (SR1)--(SR3), and
+there are source
+specifications with $d_A<|\Xset|$ carrying a certificate. In particular the
+four-state BB84 ensemble on a qubit, $\Xset=\{(b,k):b,k\in\{0,1\}\}$ with
+$p_{(b,k)}=\tfrac14$ and $\rvirt_{(b,k)}=\dyad{k_b}$ for the computational
+basis ($b=0$) and the Hadamard basis ($b=1$), admits the certificate
+$A=\Avirt=\mathbb{C}^2$, $M_{(b,k)}=\tfrac12\dyad{k_b}$,
+$\tau_A=\tfrac12\idon{A}$, $\Psi=\dyad{\Phip}$ with
+$\ket{\Phip}=\tfrac1{\sqrt2}(\ket{00}+\ket{11})$: $d_A=2$ where the
+canonical form has $d_A=4$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(i) \emph{The canonical data.} $\Psi$ is a rank-one projector of unit
+trace, $\ket{\psi}$ being a unit vector --- the $\ket{\psi_x}$ being unit
+vectors and the $p_x$ summing to one. (SR1) is the definition of $\tau_A$
+for the canonical data. For (SR2),
+$(M_x\otimes\idon{\Avirt})\ket{\psi}
+=\sqrt{p_x}\ket{x}_{\Abar}\ket{\psi_x}_{\Ahat\Avirt}$, since
+$\dyad{x}\ket{x'}=\delta_{xx'}\ket{x}$ and $\idon{\Ahat}$ acts trivially;
+$M_x$ is a projector, so
+$\tr_A[(M_x\otimes\idon{})\,\Psi]
+=\tr_A[(M_x\otimes\idon{})\,\Psi\,(M_x\otimes\idon{})]
+=p_x\tr_{\Ahat}\dyad{\psi_x}=p_x\rvirt_x$, the last step because
+$\ket{\psi_x}$ purifies $\rvirt_x$.
+
+(ii) \emph{The qubit witness.} $\{M_{(b,k)}\}$ is a POVM on $\mathbb{C}^2$:
+each element is positive semidefinite and
+$\sum_{b,k}\tfrac12\dyad{k_b}=\tfrac12\idon{}+\tfrac12\idon{}=\idon{}$,
+each basis resolving the identity; so the data are a source specification
+(Definition~\ref{def:source-spec}). $\dyad{\Phip}$ is a rank-one projector
+of unit trace with every entry in $\{0,\tfrac12\}$. (SR1):
+$\tr_{\Avirt}\dyad{\Phip}=\tfrac12\idon{A}=\tau_A$. (SR2): both bases are
+real, so $(\bra{k_b}\otimes\idon{})\ket{\Phip}=\tfrac1{\sqrt2}\ket{k_b}$,
+whence $\tr_A[(M_{(b,k)}\otimes\idon{})\dyad{\Phip}]
+=\tfrac12\cdot\tfrac12\dyad{k_b}=p_{(b,k)}\rvirt_{(b,k)}$. Four vectors
+in a two-dimensional space are not linearly independent, so the canonical
+form has $\dim\Hs{\Abar}=|\Xset|=4$ with a $\tau_{\Abar}$ of rank two; the
+witness has $d_A=2$.
+\end{proof}

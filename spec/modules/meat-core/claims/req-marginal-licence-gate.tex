@@ -1,0 +1,27 @@
+% ---
+% id: meat-core/req:marginal-licence-gate
+% kind: req
+% title: "Source licence for a declared marginal"
+% summary: >-
+%   A declared trusted marginal without the source-replacement licence is
+%   refused before any key-length output. At a one-dimensional Alice system
+%   the licence is vacuous and is not demanded.
+% prominence: standard
+% status: implemented
+% uses: [prop:trivial-alice-system]
+% mentions: [transmitter/ass:src, req:constrained-key-gate]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.keylength:check_source_license
+% lean:
+% ---
+
+\begin{requirement}\label{req:marginal-licence-gate}
+The refusal discipline of the two-part gate of
+Requirement~\ref{req:constrained-key-gate} governs the marginal as well: the engine refuses a declared $\tau_A$
+without \iface{source_replacement_license} (Assumption~A-SRC,
+\xref{transmitter/ass:src}) before any key-length output, and at $d_A=1$,
+where the licence is vacuous, it does not demand it
+(Proposition~\ref{prop:trivial-alice-system}\,(iv)).
+\end{requirement}

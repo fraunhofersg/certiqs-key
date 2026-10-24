@@ -1,0 +1,75 @@
+% ---
+% id: transmitter/decoy/ass:wcp
+% kind: ass
+% title: "Emission of the declared weak-coherent-pulse states"
+% summary: >-
+%   The physical source emits exactly the declared phase-randomised weak
+%   coherent state of each round's letter, drawn with its declared weight, in
+%   the declared modes only and independently across rounds. It ties the tagged
+%   declaration to the device, in the place of [[A-ENS]].
+% prominence: standard
+% status: accepted
+% uses: [def:wcp-model, def:tagged-source]
+% mentions: [transmitter/ass:ens]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-WCP
+% verification: never
+% category: source
+% presupposes: [trusted-source]
+% affects: [secrecy]
+% refines: A-ENS
+% user_statement: >-
+%   Your weak-coherent-pulse source emits, in every round, a fully
+%   phase-randomised coherent pulse at exactly the declared intensity μ and
+%   polarisation, in the two declared optical modes only, and nothing else; the
+%   numbers are those of your tagged declaration, exactly as declared. No other
+%   property of the pulse (timing, spectrum, spatial shape) depends on the
+%   chosen bit, basis, intensity or round type, and the round type (test or
+%   generation) changes nothing emitted. Intensities do not fluctuate. Each
+%   round's letter is drawn independently with the declared probabilities, and
+%   no round's letter or emitted pulse depends on another round, its detection
+%   results or its public messages. Intensity fluctuations, imperfect phase
+%   randomisation or pattern effects violate this.
+% lean:
+% notes: "The assumption asserts no arithmetic identity on purpose: an attestation cannot carry an arithmetic identity, and every identity of the emitted declaration is a theorem about its declared and formed numbers (rem:wcp-virtual-model)."
+% ---
+
+The model declares its states as mathematical objects, and this assumption
+ties the device to them. It refines Assumption~\ref{ass:ens}: for a
+specification whose specified ensemble is declared by this \tref{source
+model}, A-WCP is declared in the place of A-ENS; it asserts the emission A-ENS
+asserts and adds the conditions this model needs, so it is never the weaker of
+the two. Full phase randomisation makes the emitted state diagonal in the
+photon number. That no degree of freedom outside the two declared modes
+depends on the letter excludes side channels: no timing, spectral or spatial
+correlation with the label and no leakage of the label beyond the declared
+modes.
+
+\begin{assumption}\label{ass:wcp}
+For the \tref{tagged source declaration} of Definition~\ref{def:tagged-source},
+with the cutoffs, the weights and the polarisations it declares, the physical
+source satisfies:
+(i) in every round it emits the specified state $\rho_x$ of
+Definition~\ref{def:wcp-model} of the letter $x=(a,\mu,z)$ drawn in that
+round, and nothing else;
+(ii) the intensity is the declared $\mu$ exactly, with no fluctuation and no
+uncertainty interval;
+(iii) the phase randomisation is full, so that the emitted state is the phase
+average \eqref{eq:wcpstate};
+(iv) the emission is in the two optical modes declared in
+Definition~\ref{def:wcp-model}\,(W1), and the polarisation is the declared
+$\ket{a}$;
+(v) no degree of freedom other than those two modes carries any dependence on
+$x$;
+(vi) the \tref{round type} $z$ changes nothing the source emits;
+(vii) the letters $x_1,\dots,x_n$ of the $n$ rounds are drawn independently,
+each with the weights $p_x$ of Definition~\ref{def:wcp-model}\,(W2);
+(viii) given those letters, the systems the source emits in the $n$ rounds
+are in the product state $\rho_{x_1}\otimes\dots\otimes\rho_{x_n}$ of the
+per-round states;
+(ix) neither the letter of a round nor the state emitted in it depends on
+what happens in the other rounds, their outcomes and public messages
+included.
+\end{assumption}

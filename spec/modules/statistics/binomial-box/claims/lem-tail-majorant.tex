@@ -1,0 +1,112 @@
+% ---
+% id: statistics/binomial-box/lem:tail-majorant
+% kind: lem
+% title: "The binomial tail from a window and a geometric majorant"
+% summary: >-
+%   A binomial upper tail lies between a window of exact mass points and that
+%   window plus a geometric majorant of the rest, because consecutive mass
+%   ratios decrease. The same ratios give log-space bounds in units of one
+%   mass point, a per-count decay of the tail and, by reflection, the lower
+%   tail.
+% prominence: technical
+% status: implemented
+% uses: [statistics/thm:binomial-tails]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.enclosure:upper_tail_log_bounds
+% lean:
+% ---
+
+The lemma is the classical geometric bound on a binomial tail through the
+decreasing ratio of consecutive mass points, Feller's tail estimate for the
+binomial law, derived in full here from the ratio identity, a telescoping
+product and a geometric series.
+
+\begin{lemma}\label{lem:tail-majorant}
+Let $n\ge1$, let $p\in(0,1)$ be rational, let $\Ncount{}$ be binomial with
+parameters $(n,p)$, and write $\mathrm{pmf}(j)\coloneqq\Pr[\Ncount{}=j]$ for
+$0\le j\le n$ (Theorem~\ref{thm:binomial-tails}) and $\mathrm{pmf}(j)\coloneqq0$ for
+$j>n$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(ratios)} For $0\le j\le n-1$,
+\begin{equation}\label{eq:pmf-ratio}
+  r_j\ \coloneqq\ \frac{\mathrm{pmf}(j+1)}{\mathrm{pmf}(j)}
+  \ =\ \frac{(n-j)\,p}{(j+1)\,(1-p)},
+\end{equation}
+a positive rational, strictly decreasing in $j$; put $r_n\coloneqq0$.
+\item \emph{(window plus majorant)} Let $0\le k\le n-1$ and let $T\ge0$ be
+an integer with $k+T+1\le n$ and $r_{k+T+1}<1$ (which holds in particular
+when $k+T+1=n$). Then, with $S_T\coloneqq\sum_{i=0}^{T-1}\mathrm{pmf}(k+1+i)$,
+\begin{equation}\label{eq:tail-window}
+  S_T\ \le\ \Pr[\Ncount{}>k]\ \le\
+  S_T+\frac{\mathrm{pmf}(k+T+1)}{1-r_{k+T+1}} .
+\end{equation}
+If instead $k+T+1>n$, then $\Pr[\Ncount{}>k]=S_T$ exactly.
+\item \emph{(in units of one mass point)} In the setting of (ii) with
+$T\ge1$, put
+\begin{equation}\label{eq:window-rationals}
+  A_T\coloneqq\sum_{i=0}^{T-1}\ \prod_{l=k+1}^{k+i}r_l,
+  \qquad
+  B_T\coloneqq\frac{\prod_{l=k+1}^{k+T}r_l}{1-r_{k+T+1}}
+\end{equation}
+(the empty product is $1$), positive rationals computable from $n$, $p$, $k$
+and $T$ alone. Then
+\begin{equation}\label{eq:tail-log}
+  \ln\mathrm{pmf}(k+1)+\ln A_T
+  \ \le\ \ln\Pr[\Ncount{}>k]\ \le\
+  \ln\mathrm{pmf}(k+1)+\ln(A_T+B_T).
+\end{equation}
+\item \emph{(per-count decay)} For $1\le k\le n$ with $r_k<1$,
+\begin{equation}\label{eq:tail-decay}
+  \Pr[\Ncount{}>k]\ \le\ r_k\,\Pr[\Ncount{}>k-1].
+\end{equation}
+\item \emph{(the lower tail)} $\Ncount{}'\coloneqq n-\Ncount{}$ is binomial
+with parameters $(n,1-p)$, and $\Pr[\Ncount{}<k]=\Pr[\Ncount{}'>n-k]$ for
+every integer $k$; so (i)--(iv) applied to $\Ncount{}'$ enclose the lower
+tail of $\Ncount{}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{(i).} From the law,
+$\frac{\mathrm{pmf}(j+1)}{\mathrm{pmf}(j)}
+=\frac{\binom{n}{j+1}}{\binom{n}{j}}\cdot\frac{p}{1-p}
+=\frac{n-j}{j+1}\cdot\frac{p}{1-p}$, using
+$\binom{n}{j+1}=\binom{n}{j}\frac{n-j}{j+1}$. The factor $\frac{n-j}{j+1}$
+is strictly decreasing in $j$ (numerator decreasing, denominator
+increasing, both positive for $0\le j\le n-1$), and $\frac{p}{1-p}>0$.
+
+\emph{(ii).} $\Pr[\Ncount{}>k]=\sum_{j=k+1}^{n}\mathrm{pmf}(j)
+=S_T+\sum_{j=k+T+1}^{n}\mathrm{pmf}(j)$, and every term is non-negative, so
+$S_T\le\Pr[\Ncount{}>k]$; if $k+T+1>n$ the second sum is empty and equality
+holds. For the upper bound let $k+T+1\le n$ and $j\ge k+T+1$. Telescoping,
+$\mathrm{pmf}(j)=\mathrm{pmf}(k+T+1)\prod_{l=k+T+1}^{j-1}r_l$, and each
+factor satisfies $r_l\le r_{k+T+1}$ by (i) (for $l\le n-1$; and if the
+product reaches $l=n$ the mass point is $0$ anyway), so
+$\mathrm{pmf}(j)\le\mathrm{pmf}(k+T+1)\,r_{k+T+1}^{\,j-k-T-1}$. Summing over
+$j\ge k+T+1$ and bounding the finite geometric sum by the full series with
+ratio $r_{k+T+1}<1$,
+$\sum_{j\ge k+T+1}\mathrm{pmf}(j)\le\mathrm{pmf}(k+T+1)/(1-r_{k+T+1})$.
+
+\emph{(iii).} Telescoping again,
+$\mathrm{pmf}(k+1+i)=\mathrm{pmf}(k+1)\prod_{l=k+1}^{k+i}r_l$ for
+$0\le i\le T$, so $S_T=\mathrm{pmf}(k+1)\,A_T$ and
+$\mathrm{pmf}(k+T+1)/(1-r_{k+T+1})=\mathrm{pmf}(k+1)\,B_T$. Substituting
+into \eqref{eq:tail-window} and taking logarithms (all quantities positive:
+$A_T\ge1$ since its first term is $1$, and $B_T>0$) gives
+\eqref{eq:tail-log}. The rationals $A_T$, $B_T$ are finite sums and
+products of the rationals \eqref{eq:pmf-ratio}.
+
+\emph{(iv).} For every $j\ge k$ with $j\le n-1$, (i) gives
+$\mathrm{pmf}(j+1)=r_j\,\mathrm{pmf}(j)\le r_k\,\mathrm{pmf}(j)$, and the
+same inequality holds trivially for $j\ge n$ (both sides $0$). Summing over
+$j\ge k$: $\Pr[\Ncount{}>k]=\sum_{j\ge k}\mathrm{pmf}(j+1)\le
+r_k\sum_{j\ge k}\mathrm{pmf}(j)=r_k\Pr[\Ncount{}\ge k]
+=r_k\Pr[\Ncount{}>k-1]$.
+
+\emph{(v).} $\Pr[n-\Ncount{}=i]=\Pr[\Ncount{}=n-i]
+=\binom{n}{n-i}p^{n-i}(1-p)^{i}=\binom{n}{i}(1-p)^{i}p^{n-i}$, the law of a
+binomial with parameters $(n,1-p)$; and $\Ncount{}<k$ if and only if
+$n-\Ncount{}>n-k$.
+\end{proof}

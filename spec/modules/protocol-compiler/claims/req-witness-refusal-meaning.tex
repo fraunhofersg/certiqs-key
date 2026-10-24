@@ -1,0 +1,25 @@
+% ---
+% id: protocol-compiler/req:witness-refusal-meaning
+% kind: req
+% title: "Reporting a refusal for want of a feasibility witness"
+% summary: >-
+%   A refusal at the feasibility check is never reported to a user as a defect
+%   of the protocol: it means only that no feasible state was shown, and a
+%   well-formed declaration can be refused there.
+% prominence: standard
+% status: accepted
+% uses: [rem:completeness, thm:validator-soundness]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Check V7 is the one check that can refuse a \tref{well-formed declaration}
+(Theorem~\ref{thm:validator-soundness}\,(iii)): its refusal means that no feasible state was
+shown, not that none exists (Remark~\ref{rem:completeness}).
+
+\begin{requirement}\label{req:witness-refusal-meaning}
+The engine never reports a refusal with \iface{no_feasibility_witness} to a
+user as a defect in the protocol.
+\end{requirement}

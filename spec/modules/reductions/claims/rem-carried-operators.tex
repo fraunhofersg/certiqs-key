@@ -1,0 +1,32 @@
+% ---
+% id: reductions/rem:carried-operators
+% kind: rem
+% title: "Carried operators and the image of the squashing channel"
+% summary: >-
+%   The pull-back identity of the POVM alone does not confine a squashed
+%   analysis to the image of the physical inputs. Operators with a prescribed
+%   pull-back carry device facts across, which is why the squashing relation
+%   carries a tuple of them from the start.
+% prominence: standard
+% status: accepted
+% uses: [def:squashing]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:carried-operators}
+The relation of Definition~\ref{def:squashing} carries more than the POVM.
+Once $\Lambda$ is handed to the adversary, that is, counted as part of her
+attack, nothing in the identity
+$\Lambda^{\dagger}(F_v)=M_v$ confines the squashed analysis to states a
+physical input can produce, and optimizing over all of $\Seq{\Qsys}$ instead
+of over the image is where a squashed analysis loses. What recovers the loss
+is that the identity keeps its meaning for operators that are \emph{not} POVM
+elements: if $\Lambda^{\dagger}(\hat O)=O$, the expectation of $\hat O$ on a
+squashed state equals that of $O$ on its physical preimage, so a device fact
+about $O$ transfers to a statement about $\hat O$. The relation therefore
+carries a designated tuple of such operators, its carried operators, from the
+start.
+\end{remark}

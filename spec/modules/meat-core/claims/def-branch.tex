@@ -1,0 +1,56 @@
+% ---
+% id: meat-core/def:branch
+% kind: def
+% title: "Branch maps"
+% summary: >-
+%   Each acceptance value splits its announcement classes into pass and fail
+%   classes, and the two branch maps sum the Kraus terms of each, sector by
+%   sector as well. They keep the coherence the entropy calculation needs while
+%   separating key-bearing rounds from discarded ones.
+% prominence: standard
+% status: implemented
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.branch:ClassBranch
+% lean:
+% ---
+
+\begin{definition}\label{def:branch}
+For $\hat c\in\Chatset$, a class $\kappa\in\phi^{-1}(\hat c)$ with
+$\varsigma(\kappa)=\mathrm{pass}$ is a
+\term[An announcement class of an acceptance value that the sifting predicate passes.]{pass class}
+of $\hat c$, and one with $\varsigma(\kappa)=\mathrm{fail}$ a
+\term[An announcement class of an acceptance value that the sifting predicate fails.]{fail class};
+let
+$\Kann_{\mathrm{pass}}(\hat c)\coloneqq
+\{\kappa\in\phi^{-1}(\hat c):\varsigma(\kappa)=\mathrm{pass}\}$ and
+$\Kann_{\mathrm{fail}}(\hat c)\coloneqq
+\{\kappa\in\phi^{-1}(\hat c):\varsigma(\kappa)=\mathrm{fail}\}$. For each
+class $\kappa$ define the operator
+\begin{equation}\label{eq:kraus}
+\begin{split}
+  K_{\kappa}\coloneqq{}&\sum_{(x,v)\in a^{-1}(\kappa)}
+  \ket{r(x,v)}_{R}\otimes\ket{x,v}_{XY}\otimes\ket{\kappa}_{C_AC_B}
+  \otimes\big(\sqrt{M_x}\otimes\sqrt{F_v}\big)\\
+  &\;:\;\Hs{A\Qsys}\to\Hs{R\,XY\,C_AC_B\,A\Qsys},
+\end{split}
+\end{equation}
+and the CP
+\term[The pass map and the fail map of an acceptance value: the sums of the Kraus terms of its pass classes and of its fail classes.]{branch map}s,
+the pass map $\cG_{\hat c}$ and the fail map $\Theta_{\hat c}$,
+\begin{equation}\label{eq:GTheta}
+  \cG_{\hat c}(\omega)\coloneqq
+  \sum_{\kappa\in\Kann_{\mathrm{pass}}(\hat c)}K_{\kappa}\,\omega\,
+  K_{\kappa}^{\dagger},
+  \qquad
+  \Theta_{\hat c}(\omega)\coloneqq
+  \sum_{\kappa\in\Kann_{\mathrm{fail}}(\hat c)}K_{\kappa}\,\omega\,
+  K_{\kappa}^{\dagger}.
+\end{equation}
+For $s\in\SecSet$, the sector versions $K_{\kappa}^{(s)}$, $\cG_{\hat c,s}$,
+$\Theta_{\hat c,s}$ are \eqref{eq:kraus}--\eqref{eq:GTheta} with
+$\sqrt{F_v}$ replaced by $\sqrt{F_v^{(s)}}$, acting
+$\Hs{A\Qsys_s}\to\Hs{R\,XY\,C_AC_B\,A\Qsys_s}$.
+\end{definition}

@@ -1,0 +1,58 @@
+% ---
+% id: reductions/req:assumption-ledger
+% kind: req
+% title: "Rows of the emitted assumption ledger"
+% summary: >-
+%   Every artefact carries the assumption ledger: a row per assumption of
+%   this contract or taken from another module, under its presence rule. The rows cover every such key of the producing claims'
+%   closure but those that hold vacuously and [[A-RECV]] for an exact,
+%   rigorous receiver artefact the run attests.
+% prominence: standard
+% status: implemented
+% uses: []
+% mentions: [ass:recv, ass:constdecl, ass:probe, ass:tsm, req:supplier-ledger-pass-through, req:recv-row-provenance, transmitter/ass:src]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.emit:emitted_assumption_rows
+% lean:
+% ---
+
+A consumer inherits from this module the assumptions its artefact names, and
+it can match an assumption against its own ledger only by machine key.
+
+\begin{requirement}\label{req:assumption-ledger}
+The engine emits with every artefact the assumption ledger
+\iface{assumption_ledger}: one row, carrying its machine key, for each
+assumption of this contract and for each assumption the interface lists as
+taken from another module, each under its declared presence rule. The row
+of A-SRC (\xref{transmitter/ass:src}) is present only where the emitted chain's
+\tref{source segment} is non-empty, and there under the presence rule the
+interface declares for it, the row of Assumption~\ref{ass:constdecl} only
+where the emitted constraint list is non-empty, the row of
+Assumption~\ref{ass:probe} only where the declared setting set $\Tset$ has
+at least two values, the row of Assumption~\ref{ass:tsm} only where $\Tset$
+has at least two values or a public choice is applied at the measurement the
+emitted family describes (and also where the emission is not told whether
+one is), a submodule's own assumption
+where that submodule's instance is emitted and any narrower presence rule the
+submodule declares for it holds, the row of Assumption~\ref{ass:recv} on
+every emission save where Requirement~\ref{req:recv-row-provenance} omits
+it, and every other row on every emission.
+These rows include every key
+of the core's own assumptions, and every key the interface lists as taken
+from another module, that the closure of the claims producing the artefact
+contains, save the row of Assumption~\ref{ass:constdecl} where the emitted
+constraint list is empty, a condition on the constants of emitted entries
+holding vacuously of an empty list, the row of Assumption~\ref{ass:probe}
+where $\Tset=\{\ast\}$, whose clauses hold of the one setting drawn with
+weight one, and the row of Assumption~\ref{ass:tsm} where in addition no
+public choice is applied at that measurement, whose clauses then concern no
+choice, and the row of Assumption~\ref{ass:recv} where
+Requirement~\ref{req:recv-row-provenance} omits it, whose clauses that
+requirement shows to hold there (the supplier's keys ride the row of
+Assumption~\ref{ass:recv}
+instead, under the supplier's own presence rules,
+Requirement~\ref{req:supplier-ledger-pass-through}); a row may be present that
+no such closure contains.
+\end{requirement}

@@ -1,0 +1,10 @@
+{
+ "conditional_entropy_bits_per_round": 0.006492329501915516,
+ "f_ec": 1.1,
+ "f_ec_source": "kamin2025renyi, Sec. VII, Eq. (123)",
+ "formula": "lambda_EC = ceil(f_EC * n * H(R | O_nonholder, K)) over the honest raw joint",
+ "key_holder": "A",
+ "lambda_ec": 121407,
+ "p_pass": 0.026073212787177214,
+ "rounds": 17000000
+}

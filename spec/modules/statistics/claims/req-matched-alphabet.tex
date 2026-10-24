@@ -1,0 +1,46 @@
+% ---
+% id: statistics/req:matched-alphabet
+% kind: req
+% title: "Alphabet and round count taken from the consuming declaration"
+% summary: >-
+%   An acceptance set is docked only on the alphabet, in its declared
+%   enumeration, and the round count of the declaration its consumer solves:
+%   a built set is compared with the declaration first, a set the declaration
+%   carries is read in that enumeration. A disagreement produces no result.
+% prominence: standard
+% status: accepted
+% uses: [def:matched-alphabet]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.runs.pipeline:_require_matched_alphabet
+% lean:
+% notes: "Clause (ii) is realised by the consumer's declaration reader and validation (certiqs_key.meat_core.declaration.bundle, the polytope's column count; certiqs_key.meat_core.declaration.validation:validate_acceptance_set, the singleton's length), not by the implements symbol, which realises clause (i)."
+% ---
+
+Every result of this module that reads an alphabet and a round count reads
+them as a \tref{matched alphabet and round count}
+(Definition~\ref{def:matched-alphabet}); the match is a relation between
+artefacts and not a property of an input, so it is decided where both
+artefacts are available.
+
+\begin{requirement}\label{req:matched-alphabet}
+The engine docks an acceptance set into the declaration a \tref{consumer}
+solves only on a \tref{matched alphabet and round count}
+(Definition~\ref{def:matched-alphabet}).
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item A set it builds, it builds on the acceptance alphabet, in its declared
+  enumeration, of the declaration the consumer solves and on the round count
+  of the one run parameter the consumer reads, and before the set is docked
+  it compares the set's alphabet and enumeration with the declaration's. A
+  disagreement is a hard error of the consumer's input validation: it is a
+  refusal code of neither module, nothing is repaired, and no result is
+  produced.
+\item A set that the declaration itself carries, with no alphabet of its
+  own, it reads positionally: its $k$-th coordinate is the $k$-th acceptance
+  value in the declaration's declared enumeration, and its round count is
+  the one run parameter the consumer reads, as in (i). A set whose number of coordinates differs
+  from the size of the acceptance alphabet is refused as ill formed, and no
+  result is produced.
+\end{enumerate}
+\end{requirement}

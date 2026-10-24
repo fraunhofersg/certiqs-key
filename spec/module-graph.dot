@@ -1,0 +1,26 @@
+digraph modules {
+  rankdir=LR;
+  graph [fontname="Arial", fontsize=14, labelloc=t, pad=0.3, label="Core module map\nArrow: module -> declared dependency (allowed imports, not execution order or individual proof edges).\nDashed boxes: no local claim bundle. Submodules: see each module graph index."];
+  node [shape=box, style="rounded,filled", fillcolor="#edf3f8", fontname="Arial", fontsize=12, margin=0.2];
+  edge [color="#526777"];
+  "foundations" [label="foundations\nFoundations", URL="modules/foundations/graphs/README.md", target="_top"];
+  "meat-core" [label="meat-core\nMEAT key-rate engine", URL="modules/meat-core/graphs/README.md", target="_top"];
+  "meat-core" -> "protocol-compiler";
+  "meat-core" -> "transmitter";
+  "meat-core" -> "reductions";
+  "meat-core" -> "foundations";
+  "protocol-compiler" [label="protocol-compiler\nProtocol compiler", URL="modules/protocol-compiler/graphs/README.md", target="_top"];
+  "protocol-compiler" -> "receiver";
+  "protocol-compiler" -> "reductions";
+  "protocol-compiler" -> "transmitter";
+  "protocol-compiler" -> "foundations";
+  "reductions" [label="reductions\nProof reductions (squashing)", URL="modules/reductions/graphs/README.md", target="_top"];
+  "reductions" -> "receiver";
+  "reductions" -> "transmitter";
+  "reductions" -> "foundations";
+  "receiver" [label="receiver\nReceiver POVM", URL="modules/receiver/graphs/README.md", target="_top"];
+  "receiver" -> "foundations";
+  "transmitter" [label="transmitter\nTransmitter (source model)", URL="modules/transmitter/graphs/README.md", target="_top"];
+  "statistics" [label="statistics\nAcceptance statistics", URL="modules/statistics/graphs/README.md", target="_top"];
+  "statistics" -> "reductions";
+}

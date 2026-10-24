@@ -1,0 +1,51 @@
+% ---
+% id: foundations/def:kl
+% kind: def
+% title: "Classical divergences and the quantum relative entropy"
+% summary: >-
+%   The base-2 Kullback–Leibler and Rényi divergences of probability vectors
+%   and the quantum relative entropy, with their conventions at zero. The
+%   Kullback–Leibler divergence, the statistics penalty of the MEAT objective,
+%   is non-negative and vanishes only at equal vectors.
+% prominence: standard
+% status: implemented
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.kernel:divergence_kernel
+% lean:
+% ---
+
+\begin{definition}\label{def:kl}
+For probability vectors $\mathbf q,\mathbf p$ on a finite alphabet,
+$\sfD(\mathbf q\|\mathbf p)\coloneqq\sum_c q(c)\log_2\frac{q(c)}{p(c)}$ with
+the conventions $0\log_2\frac{0}{p}=0$ and $q\log_2\frac{q}{0}=+\infty$ for
+$q>0$. For $\alpha\in(1,\infty)$ the classical R\'enyi divergence is
+$D_{\alpha}(\mathbf q\|\mathbf p)\coloneqq
+\frac{1}{\alpha-1}\log_2\sum_{c}q(c)^{\alpha}p(c)^{1-\alpha}$ (with
+$+\infty$ if $\mathbf q\not\ll\mathbf p$), and
+$D_{\infty}(\mathbf q\|\mathbf p)\coloneqq\log_2\max_c\frac{q(c)}{p(c)}$.
+For $X,Y\in\Pos{}$ the quantum relative entropy is
+$\Dtwo(X\|Y)=\tr[X(\log_2X-\log_2Y)]$ when
+$\operatorname{supp}X\subseteq\operatorname{supp}Y$, else $+\infty$.
+
+The Kullback--Leibler divergence of probability vectors is non-negative,
+$\sfD(\mathbf q\|\mathbf p)\ge0$, with equality if and only if
+$\mathbf q=\mathbf p$ (Gibbs' inequality). If $q(c)>0=p(c)$ for some $c$,
+then $\sfD(\mathbf q\|\mathbf p)=+\infty$. Otherwise, with
+$S\coloneqq\{c:q(c)>0\}$, the terms outside $S$ vanish by the first
+convention and $\log_2$ is strictly concave, so Jensen's inequality with the
+weights $q(c)$, $c\in S$, which sum to one, gives
+$-\sfD(\mathbf q\|\mathbf p)=\sum_{c\in S}q(c)\log_2\frac{p(c)}{q(c)}
+\le\log_2\sum_{c\in S}p(c)\le\log_21=0$. Equality in the first step
+forces $p(c)/q(c)$ to be one constant $\gamma$ on $S$, and in the second
+$\sum_{c\in S}p(c)=1$; then $\gamma=\gamma\sum_{c\in S}q(c)
+=\sum_{c\in S}p(c)=1$, so $\mathbf p=\mathbf q$ on $S$, and $\mathbf p$
+vanishes off $S$, its mass on $S$ being one. Conversely
+$\sfD(\mathbf q\|\mathbf q)=0$ term by term.
+\end{definition}
+
+% (The classical Renyi divergence D_alpha is defined above for completeness
+% of the divergence family. No claim uses it: the MEAT penalty term is the
+% KL divergence sfD.)

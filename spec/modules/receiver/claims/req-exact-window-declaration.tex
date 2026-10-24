@@ -1,0 +1,33 @@
+% ---
+% id: receiver/req:exact-window-declaration
+% kind: req
+% title: "Declaration of an exact-window depth and its tolerances"
+% summary: >-
+%   A declaration carrying an exact-window depth must also declare the
+%   eigenvalue slack and the window-consistency threshold, and a missing one is
+%   refused, never defaulted. A depth at or below the cutoff, or above the
+%   declared window where predicate (X) fails, is refused.
+% prominence: standard
+% status: implemented
+% uses: [def:pmcex, def:pmc]
+% mentions: [def:residuals, req:window-declaration]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.validation:check_exact_window
+% lean:
+% notes: "Also realised by certiqs_key.receiver.numerics:tolerances_from_declaration, which decides the conditional presence of eps_eig and eps_6."
+% ---
+
+\begin{requirement}
+\label{req:exact-window-declaration}
+Declaring an \tref{exact-window depth} (Definition~\ref{def:pmcex}) at any
+setting requires $\varepsilon_{\mathrm{eig}}$ and $\varepsilon_6$ (the bound
+on $r_6$ of Definition~\ref{def:residuals}); the engine refuses a
+declaration missing either, rather than defaulting it, exactly as a missing
+window $m_t$ is refused (Requirement~\ref{req:window-declaration}), with
+\iface{exact_window_declared_without_required_tolerance}. The engine refuses
+a depth violating $m^{\ast}_t>N$, or violating $m^{\ast}_t\le m_t$ at a
+setting where \tref{predicate (X)} of Definition~\ref{def:pmc} fails, with
+\iface{exact_window_depth_outside_declared_range}.
+\end{requirement}

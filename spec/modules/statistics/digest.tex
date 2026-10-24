@@ -1,0 +1,1915 @@
+% GENERATED FILE -- DO NOT EDIT.
+%
+% Produced by harness/assemble_contract.py from module.yaml and claims/*.tex.
+% Edit the claim files and regenerate; `--check` fails if this file is stale.
+\documentclass[11pt,a4paper]{article}
+\pdftrailerid{79f65317c18e8b5896fb4bab363d91c2}
+%% --- 1. Mathematics (order matters: physics after braket wins \ket, \tr) ---
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{dsfont}
+\usepackage{braket}
+\usepackage{physics}
+%% --- 2. Page furniture ------------------------------------------------------
+\usepackage{xcolor}
+\usepackage{array}    % >{...} column prefixes in the wide tables of some claims
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xltabular}              % front- and back-matter tables across pages
+\usepackage{needspace}
+\usepackage{xurl}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+%% --- 3. Links and navigation (hyperref late; bookmark, refcount after it) ---
+\usepackage{xr-hyper}   % before hyperref: the contract's labels
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{refcount}
+%% --- 4. Colours: every distinction also has a shape (rule, caps, size, weight)
+\definecolor{nnGrey}{gray}{0.40}      % non-normative text
+\definecolor{metaGrey}{gray}{0.30}    % the generated meta line
+\definecolor{techGrey}{gray}{0.45}    % heading of a technical claim
+\definecolor{mainRule}{RGB}{0,110,140}
+\definecolor{reqAccent}{RGB}{165,70,0}
+\definecolor{linkBlue}{RGB}{0,62,150}
+\definecolor{extLink}{RGB}{120,40,140}  % links into another PDF
+\hypersetup{colorlinks=true, linkcolor=linkBlue, citecolor=linkBlue,
+  urlcolor=linkBlue, filecolor=extLink, bookmarksnumbered=true,
+  bookmarksopen=true, bookmarksopenlevel=1, pdfdisplaydoctitle=true}
+% A link into another PDF (\href to a .pdf, \hyperref{file}..., xr-hyper) is a
+% relative URI, <file>#nameddest=<destination>, in the file-link colour:
+% browser viewers (Edge, Chrome) ignore hyperref's default GoToR action.
+\makeatletter
+\renewcommand*{\hyper@linkfile}[3]{% anchor text, file name, destination
+  \begingroup
+    \ifx\\#3\\\def\CQ@target{#2}\else\def\CQ@target{#2\hyper@hash nameddest=#3}\fi
+    \let\@urlcolor\@filecolor
+    \hyper@linkurl{#1}{\CQ@target}%
+  \endgroup}
+\makeatother
+%% --- 5. The mapped Unicode set (harness/contract_navigation.py, UNICODE_TEX)
+\DeclareUnicodeCharacter{03B1}{\ensuremath{\alpha}}
+\DeclareUnicodeCharacter{03B2}{\ensuremath{\beta}}
+\DeclareUnicodeCharacter{03B3}{\ensuremath{\gamma}}
+\DeclareUnicodeCharacter{03B4}{\ensuremath{\delta}}
+\DeclareUnicodeCharacter{03B5}{\ensuremath{\varepsilon}}
+\DeclareUnicodeCharacter{03F5}{\ensuremath{\epsilon}}
+\DeclareUnicodeCharacter{03B6}{\ensuremath{\zeta}}
+\DeclareUnicodeCharacter{03B7}{\ensuremath{\eta}}
+\DeclareUnicodeCharacter{03B8}{\ensuremath{\theta}}
+\DeclareUnicodeCharacter{03D1}{\ensuremath{\vartheta}}
+\DeclareUnicodeCharacter{03B9}{\ensuremath{\iota}}
+\DeclareUnicodeCharacter{03BA}{\ensuremath{\kappa}}
+\DeclareUnicodeCharacter{03BB}{\ensuremath{\lambda}}
+\DeclareUnicodeCharacter{03BC}{\ensuremath{\mu}}
+\DeclareUnicodeCharacter{03BD}{\ensuremath{\nu}}
+\DeclareUnicodeCharacter{03BE}{\ensuremath{\xi}}
+\DeclareUnicodeCharacter{03C0}{\ensuremath{\pi}}
+\DeclareUnicodeCharacter{03C1}{\ensuremath{\rho}}
+\DeclareUnicodeCharacter{03F1}{\ensuremath{\varrho}}
+\DeclareUnicodeCharacter{03C3}{\ensuremath{\sigma}}
+\DeclareUnicodeCharacter{03C2}{\ensuremath{\varsigma}}
+\DeclareUnicodeCharacter{03C4}{\ensuremath{\tau}}
+\DeclareUnicodeCharacter{03C5}{\ensuremath{\upsilon}}
+\DeclareUnicodeCharacter{03C6}{\ensuremath{\varphi}}
+\DeclareUnicodeCharacter{03D5}{\ensuremath{\phi}}
+\DeclareUnicodeCharacter{03C7}{\ensuremath{\chi}}
+\DeclareUnicodeCharacter{03C8}{\ensuremath{\psi}}
+\DeclareUnicodeCharacter{03C9}{\ensuremath{\omega}}
+\DeclareUnicodeCharacter{0393}{\ensuremath{\Gamma}}
+\DeclareUnicodeCharacter{0394}{\ensuremath{\Delta}}
+\DeclareUnicodeCharacter{0398}{\ensuremath{\Theta}}
+\DeclareUnicodeCharacter{039B}{\ensuremath{\Lambda}}
+\DeclareUnicodeCharacter{039E}{\ensuremath{\Xi}}
+\DeclareUnicodeCharacter{03A0}{\ensuremath{\Pi}}
+\DeclareUnicodeCharacter{03A3}{\ensuremath{\Sigma}}
+\DeclareUnicodeCharacter{03A5}{\ensuremath{\Upsilon}}
+\DeclareUnicodeCharacter{03A6}{\ensuremath{\Phi}}
+\DeclareUnicodeCharacter{03A8}{\ensuremath{\Psi}}
+\DeclareUnicodeCharacter{03A9}{\ensuremath{\Omega}}
+\DeclareUnicodeCharacter{00E1}{\'a}
+\DeclareUnicodeCharacter{00E0}{\`a}
+\DeclareUnicodeCharacter{00E2}{\^a}
+\DeclareUnicodeCharacter{00E4}{\"a}
+\DeclareUnicodeCharacter{00E5}{\aa{}}
+\DeclareUnicodeCharacter{00E9}{\'e}
+\DeclareUnicodeCharacter{00E8}{\`e}
+\DeclareUnicodeCharacter{00EA}{\^e}
+\DeclareUnicodeCharacter{00EB}{\"e}
+\DeclareUnicodeCharacter{00ED}{\'{\i}}
+\DeclareUnicodeCharacter{00EF}{\"{\i}}
+\DeclareUnicodeCharacter{00F3}{\'o}
+\DeclareUnicodeCharacter{00F2}{\`o}
+\DeclareUnicodeCharacter{00F4}{\^o}
+\DeclareUnicodeCharacter{00F6}{\"o}
+\DeclareUnicodeCharacter{00F8}{\o{}}
+\DeclareUnicodeCharacter{00FA}{\'u}
+\DeclareUnicodeCharacter{00F9}{\`u}
+\DeclareUnicodeCharacter{00FB}{\^u}
+\DeclareUnicodeCharacter{00FC}{\"u}
+\DeclareUnicodeCharacter{00F1}{\~n}
+\DeclareUnicodeCharacter{00E7}{\c{c}}
+\DeclareUnicodeCharacter{00DF}{\ss{}}
+\DeclareUnicodeCharacter{00C4}{\"A}
+\DeclareUnicodeCharacter{00C5}{\AA{}}
+\DeclareUnicodeCharacter{00C9}{\'E}
+\DeclareUnicodeCharacter{00D6}{\"O}
+\DeclareUnicodeCharacter{00DC}{\"U}
+\DeclareUnicodeCharacter{2013}{\textendash{}}
+\DeclareUnicodeCharacter{2014}{\textemdash{}}
+\DeclareUnicodeCharacter{2018}{`}
+\DeclareUnicodeCharacter{2019}{'}
+\DeclareUnicodeCharacter{201C}{``}
+\DeclareUnicodeCharacter{201D}{''}
+\DeclareUnicodeCharacter{2026}{\ldots{}}
+\DeclareUnicodeCharacter{00A0}{~}
+\DeclareUnicodeCharacter{00A7}{\S{}}
+\DeclareUnicodeCharacter{2264}{\ensuremath{\le}}
+\DeclareUnicodeCharacter{2265}{\ensuremath{\ge}}
+\DeclareUnicodeCharacter{2260}{\ensuremath{\neq}}
+\DeclareUnicodeCharacter{2248}{\ensuremath{\approx}}
+\DeclareUnicodeCharacter{2261}{\ensuremath{\equiv}}
+\DeclareUnicodeCharacter{223C}{\ensuremath{\sim}}
+\DeclareUnicodeCharacter{2243}{\ensuremath{\simeq}}
+\DeclareUnicodeCharacter{2245}{\ensuremath{\cong}}
+\DeclareUnicodeCharacter{221D}{\ensuremath{\propto}}
+\DeclareUnicodeCharacter{226A}{\ensuremath{\ll}}
+\DeclareUnicodeCharacter{226B}{\ensuremath{\gg}}
+\DeclareUnicodeCharacter{2192}{\ensuremath{\to}}
+\DeclareUnicodeCharacter{2190}{\ensuremath{\leftarrow}}
+\DeclareUnicodeCharacter{2194}{\ensuremath{\leftrightarrow}}
+\DeclareUnicodeCharacter{21D2}{\ensuremath{\Rightarrow}}
+\DeclareUnicodeCharacter{21D0}{\ensuremath{\Leftarrow}}
+\DeclareUnicodeCharacter{21D4}{\ensuremath{\Leftrightarrow}}
+\DeclareUnicodeCharacter{21A6}{\ensuremath{\mapsto}}
+\DeclareUnicodeCharacter{2208}{\ensuremath{\in}}
+\DeclareUnicodeCharacter{2209}{\ensuremath{\notin}}
+\DeclareUnicodeCharacter{2286}{\ensuremath{\subseteq}}
+\DeclareUnicodeCharacter{2282}{\ensuremath{\subset}}
+\DeclareUnicodeCharacter{2287}{\ensuremath{\supseteq}}
+\DeclareUnicodeCharacter{2283}{\ensuremath{\supset}}
+\DeclareUnicodeCharacter{2229}{\ensuremath{\cap}}
+\DeclareUnicodeCharacter{222A}{\ensuremath{\cup}}
+\DeclareUnicodeCharacter{2216}{\ensuremath{\setminus}}
+\DeclareUnicodeCharacter{2205}{\ensuremath{\emptyset}}
+\DeclareUnicodeCharacter{2200}{\ensuremath{\forall}}
+\DeclareUnicodeCharacter{2203}{\ensuremath{\exists}}
+\DeclareUnicodeCharacter{2115}{\ensuremath{\mathbb{N}}}
+\DeclareUnicodeCharacter{2124}{\ensuremath{\mathbb{Z}}}
+\DeclareUnicodeCharacter{211A}{\ensuremath{\mathbb{Q}}}
+\DeclareUnicodeCharacter{211D}{\ensuremath{\mathbb{R}}}
+\DeclareUnicodeCharacter{2102}{\ensuremath{\mathbb{C}}}
+\DeclareUnicodeCharacter{00B7}{\ensuremath{\cdot}}
+\DeclareUnicodeCharacter{00D7}{\ensuremath{\times}}
+\DeclareUnicodeCharacter{2212}{\ensuremath{-}}
+\DeclareUnicodeCharacter{00B1}{\ensuremath{\pm}}
+\DeclareUnicodeCharacter{2213}{\ensuremath{\mp}}
+\DeclareUnicodeCharacter{221A}{\ensuremath{\surd}}
+\DeclareUnicodeCharacter{2211}{\ensuremath{\sum}}
+\DeclareUnicodeCharacter{220F}{\ensuremath{\prod}}
+\DeclareUnicodeCharacter{222B}{\ensuremath{\int}}
+\DeclareUnicodeCharacter{221E}{\ensuremath{\infty}}
+\DeclareUnicodeCharacter{2202}{\ensuremath{\partial}}
+\DeclareUnicodeCharacter{2207}{\ensuremath{\nabla}}
+\DeclareUnicodeCharacter{2297}{\ensuremath{\otimes}}
+\DeclareUnicodeCharacter{2295}{\ensuremath{\oplus}}
+\DeclareUnicodeCharacter{2218}{\ensuremath{\circ}}
+\DeclareUnicodeCharacter{2308}{\ensuremath{\lceil}}
+\DeclareUnicodeCharacter{2309}{\ensuremath{\rceil}}
+\DeclareUnicodeCharacter{230A}{\ensuremath{\lfloor}}
+\DeclareUnicodeCharacter{230B}{\ensuremath{\rfloor}}
+\DeclareUnicodeCharacter{27E8}{\ensuremath{\langle}}
+\DeclareUnicodeCharacter{27E9}{\ensuremath{\rangle}}
+\DeclareUnicodeCharacter{2016}{\ensuremath{\|}}
+\DeclareUnicodeCharacter{2113}{\ensuremath{\ell}}
+\DeclareUnicodeCharacter{00B0}{\ensuremath{^{\circ}}}
+\DeclareUnicodeCharacter{00B2}{\ensuremath{^{2}}}
+\DeclareUnicodeCharacter{00B3}{\ensuremath{^{3}}}
+\DeclareUnicodeCharacter{00B9}{\ensuremath{^{1}}}
+\DeclareUnicodeCharacter{2080}{\ensuremath{_{0}}}
+\DeclareUnicodeCharacter{2081}{\ensuremath{_{1}}}
+\DeclareUnicodeCharacter{2082}{\ensuremath{_{2}}}
+\DeclareUnicodeCharacter{207F}{\ensuremath{^{n}}}
+\DeclareUnicodeCharacter{2096}{\ensuremath{_{k}}}
+%% --- 6. Numbering: one counter per section -----------------------
+\numberwithin{equation}{section}
+\setcounter{tocdepth}{1}
+%% --- 7. The project macro set, then the claim environments -----------------
+% spec/macros.tex, read relative to this module's directory (latexmk -cd).
+\input{../../macros}
+\makeatletter
+\newcommand*{\ClaimHeadFont}{\bfseries}   % switched by prominence
+\newcommand*{\ClaimNoteFont}{\mdseries}
+\newcommand*{\ClaimShortId}{}
+\newcommand*{\SetShortId}[1]{\renewcommand*{\ClaimShortId}{#1}}
+\newcommand*{\RestatedName}{}
+% Upright bodies throughout: italic is reserved for non-normative text.
+% \@endparpenalty\@M keeps the meta line on the statement's page.
+\newtheoremstyle{claim}{\topsep}{\topsep}{\normalfont\@endparpenalty\@M}{}%
+  {\ClaimHeadFont}{.}{.5em}{\thmname{#1}\thmnumber{ #2}\thmnote{ {\ClaimNoteFont(#3)}}}
+\newtheoremstyle{claimass}{\topsep}{\topsep}{\normalfont\@endparpenalty\@M}{}%
+  {\ClaimHeadFont}{.}{.5em}{\thmname{#1}\thmnumber{ #2}%
+  \ifx\ClaimShortId\@empty\else\ [\textsf{\ClaimShortId}]\fi%
+  \thmnote{ {\ClaimNoteFont(#3)}}}
+\newtheoremstyle{claimremark}{.5\topsep}{.5\topsep}{\small\@endparpenalty\@M}{}%
+  {\itshape}{.}{.5em}{\thmname{#1}\thmnumber{ #2}\thmnote{ {\upshape(#3)}}}
+\newtheoremstyle{claimreq}{\topsep}{\topsep}{\normalfont\@endparpenalty\@M}{}%
+  {\color{reqAccent}\scshape}{.}{.5em}%
+  {\thmname{#1}\thmnumber{ #2}\thmnote{ {\upshape(#3)}}}
+\makeatother
+\theoremstyle{claim}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{fact}[theorem]{Fact}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem*{restatedclaim}{\RestatedName}
+\theoremstyle{claimass}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem*{restatedassumption}{\RestatedName}
+\theoremstyle{claimremark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{claimreq}
+\newtheorem{requirement}[theorem]{Requirement}
+\newtheorem*{restatedrequirement}{\RestatedName}
+%% --- 8. Prominence: main results a margin rule and a bold heading ----------
+\newtcolorbox{mainclaim}{enhanced jigsaw, breakable, blanker,
+  borderline west={1.5pt}{-8pt}{mainRule}, left=0pt, right=0pt, top=0pt, bottom=0pt,
+  boxsep=0pt, before skip=\topsep, after skip=\topsep, parbox=false,
+  before upper={\renewcommand*{\ClaimNoteFont}{\bfseries}}}
+\newenvironment{technicalclaim}{\renewcommand*{\ClaimHeadFont}{\mdseries\color{techGrey}}%
+  \renewcommand*{\ClaimNoteFont}{}}{}
+%% --- 9. Non-normative text, the meta line, navigation ------------------------
+\makeatletter
+% Tie what follows to this paragraph: no page break, no list penalty before
+% the next theorem head (the \@nobreak route a section heading uses).
+\newcommand{\keepwithnext}{\par\nobreak\vspace{3pt}\@nobreaktrue
+  \everypar{\if@nobreak\@nobreakfalse\clubpenalty\@M\else\clubpenalty\@clubpenalty\everypar{}\fi}}
+\newcommand{\claimsummary}[2]{% #1 claim id (named destination), #2 summary
+  \par\addvspace{\bigskipamount}\Needspace{6\baselineskip}%
+  {\small\itshape\color{nnGrey}\noindent\hypertarget{claim-#1}{}#2\par}\keepwithnext}
+\newcommand{\claimanchor}[1]{% a claim without a summary: the destination alone
+  \par\addvspace{\bigskipamount}\Needspace{6\baselineskip}%
+  \phantomsection\hypertarget{claim-#1}{}\keepwithnext}
+\newcommand{\claimleadin}[1]{{\color{nnGrey}\noindent#1\par}\keepwithnext}
+\newcommand{\claimmeta}[1]{\par\nobreak\vspace{2pt}%
+  {\footnotesize\color{metaGrey}\raggedright\interlinepenalty\@M\noindent#1\par}%
+  \addvspace{\medskipamount}}
+% After an assumption: the sentence generated from its verification field; after
+% any claim with one: its plain-text reading (user_statement). Both
+% non-normative, both grey.
+\newcommand{\claimverification}[1]{\par\nobreak\vspace{2pt}%
+  {\footnotesize\color{metaGrey}\noindent#1\par}\nobreak}
+\newcommand{\claimreading}[1]{\par\nobreak\vspace{2pt}%
+  {\footnotesize\color{nnGrey}\noindent\emph{Reading:}\enspace#1\par}\nobreak}
+\makeatother
+\newcommand{\claimbookmark}[4]{% #1 id, #2 kind word, #3 label, #4 plain title
+  \bookmark[dest=claim-#1,level=2]{#2 \getrefnumber{#3} #4}}
+\newcommand{\metasep}{\unskip\enspace\textperiodcentered\enspace\ignorespaces}
+\newcommand{\metalabel}[1]{\emph{#1}\enspace}
+\newcommand{\sectionintro}[1]{{\color{nnGrey}\noindent#1\par}\smallskip}
+\newcommand{\sectionimports}[1]{{\footnotesize\color{metaGrey}\raggedright\noindent\metalabel{Imports}#1\par}\smallskip}
+\newenvironment{overview}{\par\color{nnGrey}\itshape\noindent\ignorespaces}{\par}
+% References: the whole "Def. 2.1" is the link; ids are the fallback text of
+% every link into another PDF (a relative URI to a named destination).
+\newcommand{\mref}[2]{\hyperref[#2]{#1~\ref*{#2}}}
+\newcommand{\aref}[2]{\hyperref[#2]{\textsf{#1}}}
+\DeclareUrlCommand{\claimid}{\urlstyle{sf}\def\UrlBreaks{\do\/\do\:\do\-\do\.\do\_}%
+  \def\UrlBigBreaks{}\def\UrlNoBreaks{}}
+\newcommand{\extref}[2]{\hyperref{#1}{}{claim-#2}{\claimid{#2}}}
+\newcommand{\extaref}[3]{\hyperref{#1}{}{claim-#2}{\textsf{#3}}}
+\newcommand{\coderef}[2]{\href{#1}{\claimid{#2}}}
+% Claim-body commands (spec/claim-format.md section 4): \xref{<full id>} prints
+% the kind, title and id of a claim of another contract, linked to its stable
+% destination in that contract's PDF (one \DeclareXref per cited claim below);
+% \term[gloss]{phrase} marks a defined phrase for the index (the gloss feeds
+% the Terms table); \tref[phrase]{text} is a use of a defined term. The
+% assembler rewrites both in the body into \termdef (the definition's named
+% destination term-<slug>) and \termref / \exttermref (a link to it, in this
+% or another contract's PDF); the fallbacks below serve text it copies
+% elsewhere, such as the digest. \iface is an interface key.
+\makeatletter
+\newcommand{\DeclareXref}[4]{% id, kind word, title, contract PDF
+  \@namedef{xref@#1}{\hyperref{#4}{}{claim-#1}{#2 ``#3'' ({\small\claimid{#1}})}}}
+\newcommand{\xref}[1]{\@ifundefined{xref@#1}%
+  {\textbf{[unresolved \nolinkurl{#1}]}\@latex@warning{Unresolved xref #1}}%
+  {\@nameuse{xref@#1}}}
+\makeatother
+\DeclareUrlCommand{\iface}{\urlstyle{tt}}
+\newcommand{\term}[2][]{\emph{#2}\index{#2}}
+\newcommand{\tref}[2][]{#2}
+\newcommand{\termdef}[2]{\hypertarget{#1}{}\emph{#2}\index{#2}}
+\newcommand{\termref}[2]{\hyperlink{#1}{#2}}
+\newcommand{\exttermref}[3]{\hyperref{#1}{}{#2}{#3}}
+\hypersetup{pdftitle={Acceptance statistics (statistics) -- statements digest 0.10.0}}
+
+% The digest: the contract's labels under the prefix C-, its numbers checked.
+\externaldocument[C-]{contract}
+\theoremstyle{claim}\newtheorem*{digestclaim}{\RestatedName}
+\theoremstyle{claimass}\newtheorem*{digestassumption}{\RestatedName}
+\theoremstyle{claimreq}\newtheorem*{digestrequirement}{\RestatedName}
+\makeatletter
+% #1 label, #2 the number the assembler computed: a local label carrying it, so
+% that a reference between two digest items stays in the digest; the build
+% stops when the contract's own number differs.
+\newcommand{\digestlabel}[2]{\phantomsection
+  \edef\digest@theirs{\getrefnumber{C-#1}}\def\digest@ours{#2}%
+  \ifx\digest@theirs\digest@ours\else
+    \PackageError{digest}{#1 is #2 here but \digest@theirs\space in the contract}{}\fi
+  \def\@currentlabel{#2}\label{#1}}
+\makeatother
+% A display's local label (amsmath records the \tag, i.e. the contract's number).
+\newcommand{\digesteqlabel}[1]{\label{#1}}
+
+% Claims of other contracts cited here (\xref, [[...]]).
+\DeclareXref{foundations/def:exact-island}{Definition}{The exact island}{../foundations/contract.pdf}
+\DeclareXref{foundations/req:consumer-decides-exactly}{Requirement}{Exact decision by every consumer}{../foundations/contract.pdf}
+\DeclareXref{foundations/req:rounding-direction}{Requirement}{Rounding direction of emitted bounds}{../foundations/contract.pdf}
+\DeclareXref{meat-core/def:admissible-acceptance-set}{Definition}{Admissible acceptance set}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/def:feasible}{Definition}{Feasible set and computable objective}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/def:postprocessing-model}{Definition}{Fixed-length post-processing model}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/def:first-order-setting}{Definition}{Ambient program, pairings, acceptance support and linear minimisation}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/frank-wolfe/rem:acc-side}{Remark}{Exact minimisation on the acceptance side}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/prop:minimal-divergence}{Proposition}{The minimal divergence as the value with every pair dropped}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/rem:hlow-range}{Remark}{Reading an infinite value}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/req:infinite-value}{Requirement}{Propagation of an infinite value}{../meat-core/contract.pdf}
+\DeclareXref{meat-core/req:unreachable-acceptance-set}{Requirement}{The check of the acceptance set against the feasible statistics}{../meat-core/contract.pdf}
+\DeclareXref{protocol-compiler/ass:coin}{Assumption}{Public choices as private coins of declared bias}{../protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/def:declaration}{Definition}{Protocol declaration}{../protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/def:feasible}{Definition}{Feasible set}{../protocol-compiler/contract.pdf}
+\DeclareXref{protocol-compiler/def:spec}{Definition}{Protocol specification}{../protocol-compiler/contract.pdf}
+\DeclareXref{reductions/ass:tsm}{Assumption}{Output-state test statistics}{../reductions/contract.pdf}
+
+\begin{document}
+\begin{center}
+{\LARGE\bfseries Acceptance statistics (statistics)}\\[4pt]
+{\large Statements digest, version 0.10.0}
+\end{center}
+\noindent{\small Every definition, fact, assumption, result and requirement of the \href{contract.pdf}{contract}, with the contract's numbers; remarks, examples, technical steps and all proofs are left out. Each heading opens its statement in the contract.}
+
+\part*{Mathematics}\pdfbookmark[0]{Mathematics}{digest-part-1}
+
+\section*{1\quad Frequencies and acceptance geometries}\pdfbookmark[1]{1 Frequencies and acceptance geometries}{digest-group-statistics/def:freq}
+
+% claim statistics/def:freq
+\digestlabel{def:freq}{1.1}\pdfbookmark[2]{Definition 1.1 Frequency vector and counts}{digest-statistics/def:freq}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/def:freq}{Definition~1.1}}%
+\begin{digestclaim}[Frequency vector and counts]
+For an outcome string $\hat c_1^n=(\hat c_1,\dots,\hat c_n)\in\Chatset^{\,n}$
+and $\hat c\in\Chatset$ put
+\begin{equation*}\tag{\getrefnumber{C-eq:freq}}\digesteqlabel{eq:freq}
+  \Ncount{\hat c}(\hat c_1^n)\coloneqq
+  \big|\{\,j\in\{1,\dots,n\}:\hat c_j=\hat c\,\}\big|,
+  \qquad
+  \operatorname{freq}_{\hat c_1^n}(\hat c)\coloneqq
+  \tfrac{1}{n}\,\Ncount{\hat c}(\hat c_1^n):
+\end{equation*}
+the \emph{count} of the outcome $\hat c$ and the
+\emph{frequency vector} of the string. Then
+$\operatorname{freq}_{\hat c_1^n}\in\simplex{\Chatset}$ for every string, and
+its coordinates lie in $\tfrac1n\{0,1,\dots,n\}$.
+\end{digestclaim}
+
+% claim statistics/lem:freq-in-simplex
+\digestlabel{lem:freq-in-simplex}{1.2}\pdfbookmark[2]{Lemma 1.2 Frequency vectors in the probability simplex}{digest-statistics/lem:freq-in-simplex}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/lem:freq-in-simplex}{Lemma~1.2}}%
+\begin{digestclaim}[Frequency vectors in the probability simplex]
+Let $n\ge1$, and write $\simplex{\Chatset}$ for the set of
+$\mathbf{q}\in\mathbb{R}^{\Chatset}$ with non-negative coordinates summing
+to one.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item For every outcome string $\hat c_1^n\in\Chatset^{\,n}$, every count
+$\Ncount{\hat c}(\hat c_1^n)$ of Definition~\ref{def:freq} is a non-negative
+integer, at most $n$ of them are non-zero, and
+$\sum_{\hat c\in\Chatset}\Ncount{\hat c}(\hat c_1^n)=n$. Hence
+$\operatorname{freq}_{\hat c_1^n}\in\simplex{\Chatset}$.
+\item For every set $S\subseteq\mathbb{R}^{\Chatset}$ and every random string
+$\Chat_1^n$ with values in $\Chatset^{\,n}$, the sets
+$\{\operatorname{freq}_{\Chat_1^n}\in S\cap\simplex{\Chatset}\}$ and
+$\{\operatorname{freq}_{\Chat_1^n}\in S\}$ of sample points are equal. In
+particular, whenever either is an event,
+\begin{equation*}\tag{\getrefnumber{C-eq:simplex-free}}\digesteqlabel{eq:simplex-free}
+  \Pr\big[\operatorname{freq}_{\Chat_1^n}\in S\cap\simplex{\Chatset}\big]
+  =\Pr\big[\operatorname{freq}_{\Chat_1^n}\in S\big].
+\end{equation*}
+\end{enumerate}
+\end{digestclaim}
+
+% claim statistics/def:matched-alphabet
+\digestlabel{def:matched-alphabet}{1.3}\pdfbookmark[2]{Definition 1.3 Alphabet and round count matched to the consuming declaration}{digest-statistics/def:matched-alphabet}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/def:matched-alphabet}{Definition~1.3}}%
+\begin{digestclaim}[Alphabet and round count matched to the consuming declaration]
+An acceptance alphabet $\Chatset$ and a round count $n$ are a
+\emph{matched alphabet and
+round count} when $\Chatset$ is the finite, non-empty acceptance alphabet of
+the same declaration $\Decl$ (\xref{protocol-compiler/def:declaration}) the
+consumer solves, the codomain of $\phi$, with a fixed enumeration, and
+$n$ is the same total round count.
+\end{digestclaim}
+
+% claim statistics/def:taxonomy
+\digestlabel{def:taxonomy}{1.4}\pdfbookmark[2]{Definition 1.4 Admissible geometries and the canonical box form}{digest-statistics/def:taxonomy}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/def:taxonomy}{Definition~1.4}}%
+\begin{digestclaim}[Admissible geometries and the canonical box form]
+An \emph{admissible geometry} is a pair consisting of a \emph{tag}
+and its \emph{data}, drawn from exactly the following two cases, each with
+its data, the set $\Gamma$ the data denote and its
+\emph{validation predicate}. There is no third tag.
+\begin{description}[leftmargin=1.9em]
+\item[$\mathrm{singleton}$.] Data: a vector
+$\mathbf{q}^{\ast}\in\mathbb{Q}^{\Chatset}$. Denotation
+$\Gamma\coloneqq\{\mathbf{q}^{\ast}\}$. \emph{Validation predicate:}
+$q^{\ast}(\hat c)\ge0$ for every $\hat c$ and $\sum_{\hat c}q^{\ast}(\hat
+c)=1$.
+\item[$\mathrm{polytope}$.] Data: an integer row count $m_{\mathrm{row}}\ge0$,
+a matrix $B\in\mathbb{Q}^{\,m_{\mathrm{row}}\times\Chatset}$ and a vector
+$\mathbf{b}\in\mathbb{Q}^{\,m_{\mathrm{row}}}$. Denotation
+\begin{equation*}\tag{\getrefnumber{C-eq:polytope}}\digesteqlabel{eq:polytope}
+  \Gamma\coloneqq\{\mathbf{q}\in\simplex{\Chatset}:\ B\mathbf{q}\le\mathbf{b}\},
+\end{equation*}
+the inequality componentwise. \emph{Validation predicate:} feasibility of the
+linear system $\{\mathbf{q}\ge0,\ \sum_{\hat c}q(\hat c)=1,\
+B\mathbf{q}\le\mathbf{b}\}$ over the rationals.
+\end{description}
+A $\mathrm{polytope}$ geometry is in \emph{canonical box form} when it carries, in addition, a
+pair $\qlo,\qhi\in\mathbb{Q}^{\Chatset}$ with $0\le\qlo\le\qhi$
+componentwise, and its $(B,\mathbf{b})$ are exactly
+\begin{equation*}\tag{\getrefnumber{C-eq:boxrows}}\digesteqlabel{eq:boxrows}
+  m_{\mathrm{row}}=2m,\qquad
+  \begin{aligned}
+    &\text{row }i:\ \ \delta_{\hat c^{(i)}}^{\transpose},
+      &&\text{right-hand side } q^{+}(\hat c^{(i)}),\\
+    &\text{row }m+i:\ \ -\delta_{\hat c^{(i)}}^{\transpose},
+      &&\text{right-hand side } -q^{-}(\hat c^{(i)}),
+  \end{aligned}
+  \qquad i=1,\dots,m,
+\end{equation*}
+where $m\coloneqq|\Chatset|$, $\hat c^{(1)},\dots,\hat c^{(m)}$ is the
+declaration's enumeration of $\Chatset$ and $\delta_{\hat c}$ is the standard
+basis vector of $\mathbb{R}^{\Chatset}$ at $\hat c$. Row indices are integers,
+never alphabet elements; equivalently
+\begin{equation*}\tag{\getrefnumber{C-eq:boxset}}\digesteqlabel{eq:boxset}
+  \Gamma=\{\mathbf{q}\in\simplex{\Chatset}:\
+  q^{-}(\hat c)\le q(\hat c)\le q^{+}(\hat c)\ \ \forall\hat c\in\Chatset\}.
+\end{equation*}
+\end{digestclaim}
+
+% claim statistics/thm:geometry-validation
+\digestlabel{thm:geometry-validation}{1.5}\pdfbookmark[2]{Theorem 1.5 Validity of the admissible geometries}{digest-statistics/thm:geometry-validation}
+\begin{mainclaim}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/thm:geometry-validation}{Theorem~1.5}}%
+\begin{digestclaim}[Validity of the admissible geometries]
+Let $\Chatset$ and $n$ be a matched alphabet and round count
+(Definition~\ref{def:matched-alphabet}), and let $(\text{tag},\text{data})$
+be an admissible geometry with denotation $\Gamma$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item If the validation predicate holds, $\Gamma$ is a non-empty, closed,
+convex and compact subset of $\simplex{\Chatset}$. In particular
+\xref{meat-core/def:admissible-acceptance-set}, that $\acSet$ is a closed convex subset of the
+probability simplex on $\Chatset$, holds by construction for every admissible
+geometry whose validation predicate holds.
+\item For the tag $\mathrm{singleton}$, the validation predicate is necessary
+and sufficient for $\Gamma$ to be a non-empty subset of $\simplex{\Chatset}$.
+\item For the tag $\mathrm{polytope}$ in canonical box form with
+$0\le\qlo\le\qhi$, the validation predicate, the condition
+$\Gamma\neq\varnothing$ and the closed-form condition
+\begin{equation*}\tag{\getrefnumber{C-eq:boxfeas}}\digesteqlabel{eq:boxfeas}
+  \sum_{\hat c\in\Chatset}q^{-}(\hat c)\ \le\ 1\ \le\
+  \sum_{\hat c\in\Chatset}q^{+}(\hat c)
+\end{equation*}
+are equivalent.
+\end{enumerate}
+\end{digestclaim}
+\end{mainclaim}
+
+\section*{2\quad Binomial tails}\pdfbookmark[1]{2 Binomial tails}{digest-group-statistics/thm:binomial-tails}
+
+% claim statistics/thm:binomial-tails
+\digestlabel{thm:binomial-tails}{2.1}\pdfbookmark[2]{Theorem 2.1 Binomial tails in closed form}{digest-statistics/thm:binomial-tails}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/thm:binomial-tails}{Theorem~2.1}}%
+\begin{digestclaim}[Binomial tails in closed form]
+Let $n\ge1$, $p\in[0,1]$, and let $\Ncount{}$ be a binomial random variable
+with parameters $(n,p)$, i.e.\
+$\Pr[\Ncount{}=i]=\binom{n}{i}p^{i}(1-p)^{n-i}$ for $0\le i\le n$. Write
+\begin{equation*}\tag{\getrefnumber{C-eq:ireg}}\digesteqlabel{eq:ireg}
+  \Ireg{x}{a}{b}\coloneqq
+  \frac{\int_0^{x}t^{a-1}(1-t)^{b-1}\,\mathrm{d}t}
+       {\int_0^{1}t^{a-1}(1-t)^{b-1}\,\mathrm{d}t},
+  \qquad x\in[0,1],\ a,b\ge1 .
+\end{equation*}
+Then
+\begin{align*}
+  \Pr[\Ncount{}\ge k]&=\frac{n!}{(k-1)!\,(n-k)!}
+    \int_0^{p}t^{k-1}(1-t)^{n-k}\,\mathrm{d}t
+    =\Ireg{p}{k}{n-k+1}, &&1\le k\le n,
+    \tag{\getrefnumber{C-eq:uppertail}}\digesteqlabel{eq:uppertail}\\
+  \Pr[\Ncount{}\le k]&=1-\Pr[\Ncount{}\ge k+1]
+    =\Ireg{1-p}{n-k}{k+1}, &&0\le k\le n-1,
+    \tag{\getrefnumber{C-eq:lowertail}}\digesteqlabel{eq:lowertail}
+\end{align*}
+together with the boundary values $\Pr[\Ncount{}\ge k]=1$ for $k\le0$,
+$\Pr[\Ncount{}\ge k]=0$ for $k>n$, $\Pr[\Ncount{}\le k]=0$ for $k<0$ and
+$\Pr[\Ncount{}\le k]=1$ for $k\ge n$. Moreover $p\mapsto\Pr[\Ncount{}\ge k]$
+is non-decreasing on $[0,1]$ for every $k\ge1$.
+\end{digestclaim}
+
+% claim statistics/cor:tail-forms
+\digestlabel{cor:tail-forms}{2.2}\pdfbookmark[2]{Corollary 2.2 The two strict binomial tails}{digest-statistics/cor:tail-forms}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/cor:tail-forms}{Corollary~2.2}}%
+\begin{digestclaim}[The two strict binomial tails]
+Let $n\ge1$, $p\in[0,1]$ and let $\Ncount{}$ be binomial with parameters
+$(n,p)$, as in Theorem~\ref{thm:binomial-tails}. Then, for $0\le k\le n$,
+\begin{equation*}\tag{\getrefnumber{C-eq:tails-used}}\digesteqlabel{eq:tails-used}
+\begin{aligned}
+  \Pr[\Ncount{}<k]&=\Pr[\Ncount{}\le k-1]
+  =\begin{cases}0,&k=0,\\[2pt] \Ireg{1-p}{n-k+1}{k},&1\le k\le n,\end{cases}\\[4pt]
+  \Pr[\Ncount{}>k]&=\Pr[\Ncount{}\ge k+1]
+  =\begin{cases}\Ireg{p}{k+1}{n-k},&0\le k\le n-1,\\[2pt] 0,&k=n.\end{cases}
+\end{aligned}
+\end{equation*}
+\end{digestclaim}
+
+% claim statistics/lem:exact-strict-tails
+\digestlabel{lem:exact-strict-tails}{2.3}\pdfbookmark[2]{Lemma 2.3 Exact strict tails at a rational success probability}{digest-statistics/lem:exact-strict-tails}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/lem:exact-strict-tails}{Lemma~2.3}}%
+\begin{digestclaim}[Exact strict tails at a rational success probability]
+Let $n\ge1$, let $p\in[0,1]\cap\mathbb{Q}$ and let $\Ncount{}$ be binomial
+with parameters $(n,p)$, as in Theorem~\ref{thm:binomial-tails}. For
+$0\le k\le n$,
+\begin{equation*}\tag{\getrefnumber{C-eq:tails-sums}}\digesteqlabel{eq:tails-sums}
+  \Pr[\Ncount{}<k]=\sum_{i=0}^{k-1}\binom{n}{i}p^{i}(1-p)^{n-i},
+  \qquad
+  \Pr[\Ncount{}>k]=\sum_{i=k+1}^{n}\binom{n}{i}p^{i}(1-p)^{n-i},
+\end{equation*}
+an empty sum being $0$, and:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item both strict tails are rational numbers, obtained from $n$, $k$ and $p$
+by finitely many additions and multiplications of rationals, and they are
+equal to the closed forms \eqref{eq:tails-used} of
+Corollary~\ref{cor:tail-forms};
+\item for every rational $\varepsilon$, whether
+$\Pr[\Ncount{}<k]\le\varepsilon$ holds, and whether
+$\Pr[\Ncount{}>k]\le\varepsilon$ holds, is decided exactly by evaluating the
+rational number \eqref{eq:tails-sums} and comparing two rationals, which is a
+comparison of two integers.
+\end{enumerate}
+\end{digestclaim}
+
+\section*{3\quad The exact box oracle}\pdfbookmark[1]{3 The exact box oracle}{digest-group-statistics/thm:box-oracle}
+
+% claim statistics/thm:box-oracle
+\digestlabel{thm:box-oracle}{3.1}\pdfbookmark[2]{Theorem 3.1 Acceptance support and the exact box oracle}{digest-statistics/thm:box-oracle}
+\begin{mainclaim}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/thm:box-oracle}{Theorem~3.1}}%
+\begin{digestclaim}[Acceptance support and the exact box oracle]
+Let $\Chatset$ and $n$ be a matched alphabet and round count
+(Definition~\ref{def:matched-alphabet}), let $\acSet$ be a non-empty
+canonical box, \eqref{eq:boxset}, with
+$0\le\qlo\le\qhi$, and let $g\in\mathbb{Q}^{\Chatset}$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(acceptance support)} The set
+$\Chatset^{+}\coloneqq\{\hat c\in\Chatset: q^{+}(\hat c)>0\}$ contains
+$\operatorname{supp}\mathbf{q}$ for every $\mathbf{q}\in\acSet$; hence it
+contains the acceptance support
+$\Chacc=\bigcup_{\mathbf{q}\in\acSet}\operatorname{supp}\mathbf{q}$ of
+\xref{meat-core/frank-wolfe/def:first-order-setting}, which it need not equal: the box
+constraints together with the simplex constraint can force $q(\hat c)=0$ at an
+outcome with $q^{+}(\hat c)>0$. For a $\mathrm{singleton}$ geometry, which
+declares no box, the union of the supports is
+$\operatorname{supp}\mathbf{q}^{\ast}$, the acceptance support itself.
+\item \emph{(exact minimum in closed form)} Enumerate
+$\Chatset=\{c_1,\dots,c_m\}$ so that $g(c_1)\le\dots\le g(c_m)$. Put
+$r\coloneqq1-\sum_{\hat c}q^{-}(\hat c)$ and
+$D_i\coloneqq q^{+}(c_i)-q^{-}(c_i)\ge0$, let $j^{\ast}$ be the least index
+with $\sum_{i\le j^{\ast}}D_i\ge r$, and define
+\begin{equation*}\tag{\getrefnumber{C-eq:greedy}}\digesteqlabel{eq:greedy}
+  q^{\mathrm{opt}}(c_i)\coloneqq
+  \begin{cases}
+    q^{+}(c_i), & i<j^{\ast},\\[2pt]
+    q^{-}(c_i)+\big(r-\sum_{i'<j^{\ast}}D_{i'}\big), & i=j^{\ast},\\[2pt]
+    q^{-}(c_i), & i>j^{\ast}.
+  \end{cases}
+\end{equation*}
+Then $j^{\ast}$ exists, $\mathbf{q}^{\mathrm{opt}}\in\acSet$, and
+\begin{equation*}\tag{\getrefnumber{C-eq:exactmin}}\digesteqlabel{eq:exactmin}
+  \langle g,\mathbf{q}^{\mathrm{opt}}\rangle
+  \;=\;\min_{\mathbf{q}\in\acSet}\ \langle g,\mathbf{q}\rangle ,
+\end{equation*}
+the minimum being attained. All quantities are exact rationals when
+$g,\qlo,\qhi$ are.
+\item \emph{(dual witness)} With $B,\mathbf{b}$ as in
+\eqref{eq:boxrows}, $\lambda\coloneqq g(c_{j^{\ast}})$, $v\coloneqq-\lambda$ and
+$\mathbf{u}\coloneqq(\mathbf{u}^{+},\mathbf{u}^{-})$ given by
+$u^{+}(\hat c)\coloneqq\max\{\lambda-g(\hat c),0\}$ and
+$u^{-}(\hat c)\coloneqq\max\{g(\hat c)-\lambda,0\}$, one has
+$\mathbf{u}\ge0$,
+\begin{equation*}\tag{\getrefnumber{C-eq:dualfeas}}\digesteqlabel{eq:dualfeas}
+  g(\hat c)+(B^{\transpose}\mathbf{u})(\hat c)+v=0
+  \qquad\text{for every }\hat c\in\Chatset,
+\end{equation*}
+in particular the left-hand side is $\ge0$, and
+\begin{equation*}\tag{\getrefnumber{C-eq:dualvalue}}\digesteqlabel{eq:dualvalue}
+  -\langle\mathbf{b},\mathbf{u}\rangle-v
+  \;=\;\langle g,\mathbf{q}^{\mathrm{opt}}\rangle
+  \;=\;\min_{\mathbf{q}\in\acSet}\langle g,\mathbf{q}\rangle .
+\end{equation*}
+The lower bound $-\langle\mathbf{b},\mathbf{u}\rangle-v$ on the minimum that
+this witness gives is therefore \emph{tight} for the canonical box, and every
+downward-rounded evaluation of $\langle g,\mathbf{q}^{\mathrm{opt}}\rangle$ is
+a lower bound on $\min_{\mathbf{q}\in\acSet}\langle g,\mathbf{q}\rangle$.
+\end{enumerate}
+\end{digestclaim}
+\end{mainclaim}
+
+\section*{4\quad The honest envelope}\pdfbookmark[1]{4 The honest envelope}{digest-group-statistics/def:envelope}
+
+% claim statistics/def:envelope
+\digestlabel{def:envelope}{4.1}\pdfbookmark[2]{Definition 4.1 Honest envelope and its envelope set}{digest-statistics/def:envelope}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/def:envelope}{Definition~4.1}}%
+\begin{digestclaim}[Honest envelope and its envelope set]
+An \emph{honest envelope} on $\Chatset$ is a pair
+${\honest}^{-},{\honest}^{+}\in\mathbb{Q}^{\Chatset}$ of exact rational
+vectors with
+\begin{equation*}\tag{\getrefnumber{C-eq:envelope}}\digesteqlabel{eq:envelope}
+  0\ \le\ {\honest}^{-}(\hat c)\ \le\ {\honest}^{+}(\hat c)\ \le\ 1
+  \quad\forall\hat c\in\Chatset,
+  \qquad
+  \sum_{\hat c\in\Chatset}{\honest}^{-}(\hat c)\ \le\ 1\ \le\
+  \sum_{\hat c\in\Chatset}{\honest}^{+}(\hat c).
+\end{equation*}
+Its \emph{envelope set} is
+\begin{equation*}\tag{\getrefnumber{C-eq:envelope-set}}\digesteqlabel{eq:envelope-set}
+  \mathsf{H}\ \coloneqq\ \big\{\mathbf{p}\in\simplex{\Chatset}:\
+  {\honest}^{-}(\hat c)\le p(\hat c)\le{\honest}^{+}(\hat c)\ \
+  \forall\hat c\in\Chatset\big\},
+\end{equation*}
+the set of honest laws the envelope admits. An honest envelope with
+${\honest}^{-}={\honest}^{+}$ is a \emph{degenerate envelope}; then
+\eqref{eq:envelope} forces the common value to be a law
+$\honest\in\simplex{\Chatset}\cap\mathbb{Q}^{\Chatset}$ and
+$\mathsf{H}=\{\honest\}$. A single honest law $\honest$ (the
+\emph{point form}) is read as the degenerate envelope
+$(\honest,\honest)$. The pair $({\honest}^{-},{\honest}^{+})$ is a
+canonical box form in the sense of Definition~\ref{def:taxonomy}
+(rational, $0\le{\honest}^{-}\le{\honest}^{+}$), $\mathsf{H}$ is its
+denotation \eqref{eq:boxset}, and the second condition of
+\eqref{eq:envelope} is its closed-form feasibility condition
+\eqref{eq:boxfeas}.
+\end{digestclaim}
+
+% claim statistics/lem:hon-degenerate
+\digestlabel{lem:hon-degenerate}{4.2}\pdfbookmark[2]{Lemma 4.2 The envelope assumption at a degenerate envelope}{digest-statistics/lem:hon-degenerate}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/lem:hon-degenerate}{Lemma~4.2}}%
+\begin{digestclaim}[The envelope assumption at a degenerate envelope]
+Let $\honest\in\simplex{\Chatset}\cap\mathbb{Q}^{\Chatset}$ and let
+$\Chat_1,\dots,\Chat_n$ be $\Chatset$-valued random variables on one
+probability space. The following are equivalent:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item the statement of Assumption~\ref{ass:hon-env} holds for the degenerate
+envelope $(\honest,\honest)$ of Definition~\ref{def:envelope}: there is a
+filtration $\mathcal{F}_0\subseteq\dots\subseteq\mathcal{F}_n$ with $\Chat_j$
+$\mathcal{F}_j$-measurable and
+$\Pr[\Chat_j=\hat c\,|\,\mathcal{F}_{j-1}]=\honest(\hat c)$ almost surely,
+for every $j$ and $\hat c$;
+\item the statement of Assumption~\ref{ass:hon} holds: $\Chat_1,\dots,\Chat_n$
+are independent and identically distributed with law $\honest$.
+\end{enumerate}
+\end{digestclaim}
+
+% claim statistics/def:conservative-evaluation
+\digestlabel{def:conservative-evaluation}{4.3}\pdfbookmark[2]{Definition 4.3 Exact data and conservative evaluation}{digest-statistics/def:conservative-evaluation}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/def:conservative-evaluation}{Definition~4.3}}%
+\begin{digestclaim}[Exact data and conservative evaluation]
+An evaluation of the acceptance-set construction is a
+\emph{conservative evaluation} when the honest envelope's vectors
+${\honest}^{-},{\honest}^{+}$ (Definition~\ref{def:envelope}; for a single
+declared law, $\honest$ itself), $\ecomp$ and the allocation are exact
+rationals, and every tail comparison an endpoint rule makes
+(Definition~\ref{def:endpoint-rule}; for the exact rule, those of
+Definition~\ref{def:interval}) is decided either exactly or against a bound
+that rounds the tail \emph{upward}.
+\end{digestclaim}
+
+\section*{5\quad Assumptions}\pdfbookmark[1]{5 Assumptions}{digest-group-statistics/ass:hon}
+
+% claim statistics/ass:hon
+\digestlabel{ass:hon}{5.1}\pdfbookmark[2]{Assumption 5.1 Honest i.i.d. rounds}{digest-statistics/ass:hon}
+\SetShortId{A-HON}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/ass:hon}{Assumption~5.1}}%
+\begin{digestassumption}[Honest i.i.d. rounds]
+(i) On an honest run the acceptance statistics $\Chat_1,\dots,\Chat_n$ are
+independent and identically distributed with law $\honest$ on $\Chatset$.
+\end{digestassumption}
+
+% claim statistics/ass:hon-env
+\digestlabel{ass:hon-env}{5.2}\pdfbookmark[2]{Assumption 5.2 Honest rounds inside a declared envelope}{digest-statistics/ass:hon-env}
+\SetShortId{A-HON-ENV}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/ass:hon-env}{Assumption~5.2}}%
+\begin{digestassumption}[Honest rounds inside a declared envelope]
+Let $({\honest}^{-},{\honest}^{+})$ be the declared honest envelope
+(Definition~\ref{def:envelope}). On an honest run there is a filtration
+$\mathcal{F}_0\subseteq\mathcal{F}_1\subseteq\dots\subseteq\mathcal{F}_n$ on
+the underlying probability space such that
+(i) $\Chat_j$ is $\mathcal{F}_j$-measurable for every $j\in\{1,\dots,n\}$;
+(ii) for every such $j$ and every $\hat c\in\Chatset$, almost surely,
+\begin{equation*}\tag{\getrefnumber{C-eq:hon-env}}\digesteqlabel{eq:hon-env}
+  {\honest}^{-}(\hat c)\ \le\
+  \Pr\big[\Chat_j=\hat c\ \big|\ \mathcal{F}_{j-1}\big]\ \le\
+  {\honest}^{+}(\hat c).
+\end{equation*}
+\end{digestassumption}
+
+% claim statistics/ass:alphabet
+\digestlabel{ass:alphabet}{5.3}\pdfbookmark[2]{Assumption 5.3 An acceptance value recorded in every round}{digest-statistics/ass:alphabet}
+\SetShortId{A-ALPHABET}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/ass:alphabet}{Assumption~5.3}}%
+\begin{digestassumption}[An acceptance value recorded in every round]
+(i) In every one of the $n$ rounds of the run, an acceptance value in
+$\Chatset$ is recorded.
+\end{digestassumption}
+
+% claim statistics/ass:reach
+\digestlabel{ass:reach}{5.4}\pdfbookmark[2]{Assumption 5.4 An honest law produced by a feasible state}{digest-statistics/ass:reach}
+\SetShortId{A-REACH}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/ass:reach}{Assumption~5.4}}%
+\begin{digestassumption}[An honest law produced by a feasible state]
+(i) There exists $\omega^{\mathrm{hon}}\in\Feas$, the feasible set of the
+consuming declaration (\xref{protocol-compiler/def:feasible}), with
+$\Phimap[\omega^{\mathrm{hon}}]\in\mathsf{H}$, the envelope set of the
+declared honest envelope (Definition~\ref{def:envelope}); for a single
+declared law $\honest$ (the degenerate envelope, $\mathsf{H}=\{\honest\}$)
+this reads $\Phimap[\omega^{\mathrm{hon}}]=\honest$.
+\end{digestassumption}
+
+\part*{Engine requirements}\pdfbookmark[0]{Engine requirements}{digest-part-2}
+
+\section*{6\quad Requirements: the emitted geometry}\pdfbookmark[1]{6 Requirements: the emitted geometry}{digest-group-statistics/req:geometry-tag}
+
+% claim statistics/req:geometry-tag
+\digestlabel{req:geometry-tag}{6.1}\pdfbookmark[2]{Requirement 6.1 Acceptance sets under exactly the two geometry tags}{digest-statistics/req:geometry-tag}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/req:geometry-tag}{Requirement~6.1}}%
+\begin{digestrequirement}[Acceptance sets under exactly the two geometry tags]
+The engine emits every acceptance set under one of the two tags of
+Definition~\ref{def:taxonomy} (\iface{geometry_tag}) together with the data of
+that tag, and a consumer presented with an acceptance set under any
+other tag refuses it rather than guessing.
+\end{digestrequirement}
+
+% claim statistics/req:box-bounds-key
+\digestlabel{req:box-bounds-key}{6.2}\pdfbookmark[2]{Requirement 6.2 Recorded bounds of a canonical box}{digest-statistics/req:box-bounds-key}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/req:box-bounds-key}{Requirement~6.2}}%
+\begin{digestrequirement}[Recorded bounds of a canonical box]
+The engine emits a geometry in canonical box form with its pair
+$(\qlo,\qhi)$ recorded under \iface{box_bounds}, beside the rows
+\eqref{eq:boxrows} that the pair determines.
+\end{digestrequirement}
+
+% claim statistics/req:acceptance-support
+\digestlabel{req:acceptance-support}{6.3}\pdfbookmark[2]{Requirement 6.3 The emitted acceptance support}{digest-statistics/req:acceptance-support}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/req:acceptance-support}{Requirement~6.3}}%
+\begin{digestrequirement}[The emitted acceptance support]
+The engine emits under \iface{acceptance_support} the set
+$\Chatset^{+}=\{\hat c\in\Chatset:q^{+}(\hat c)>0\}$ of
+Theorem~\ref{thm:box-oracle}\,(i) for a geometry in canonical box form, and
+the set $\operatorname{supp}\mathbf{q}^{\ast}$ for a $\mathrm{singleton}$
+geometry. For a box the emitted set is a superset of the acceptance support
+$\Chacc$ of \xref{meat-core/frank-wolfe/def:first-order-setting} and is never to be
+substituted for it; for a singleton the emitted set and $\Chacc$ coincide.
+\end{digestrequirement}
+
+% claim statistics/req:matched-alphabet
+\digestlabel{req:matched-alphabet}{6.4}\pdfbookmark[2]{Requirement 6.4 Alphabet and round count taken from the consuming declaration}{digest-statistics/req:matched-alphabet}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/req:matched-alphabet}{Requirement~6.4}}%
+\begin{digestrequirement}[Alphabet and round count taken from the consuming declaration]
+The engine docks an acceptance set into the declaration a consumer
+solves only on a matched alphabet and round count
+(Definition~\ref{def:matched-alphabet}).
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item A set it builds, it builds on the acceptance alphabet, in its declared
+  enumeration, of the declaration the consumer solves and on the round count
+  of the one run parameter the consumer reads, and before the set is docked
+  it compares the set's alphabet and enumeration with the declaration's. A
+  disagreement is a hard error of the consumer's input validation: it is a
+  refusal code of neither module, nothing is repaired, and no result is
+  produced.
+\item A set that the declaration itself carries, with no alphabet of its
+  own, it reads positionally: its $k$-th coordinate is the $k$-th acceptance
+  value in the declaration's declared enumeration, and its round count is
+  the one run parameter the consumer reads, as in (i). A set whose number of coordinates differs
+  from the size of the acceptance alphabet is refused as ill formed, and no
+  result is produced.
+\end{enumerate}
+\end{digestrequirement}
+
+\part*{Binomial box construction}\pdfbookmark[0]{Binomial box construction}{digest-part-3}
+
+\section*{7\quad Admissible inputs, endpoint rules and the guard}\pdfbookmark[1]{7 Admissible inputs, endpoint rules and the guard}{digest-group-statistics/binomial-box/def:endpoint-rule}
+
+% claim statistics/binomial-box/def:endpoint-rule
+\digestlabel{def:endpoint-rule}{7.1}\pdfbookmark[2]{Definition 7.1 Admissible inputs, endpoint rules and guarded endpoints}{digest-statistics/binomial-box/def:endpoint-rule}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/def:endpoint-rule}{Definition~7.1}}%
+\begin{digestclaim}[Admissible inputs, endpoint rules and guarded endpoints]
+Fix $n\ge1$ and let $\Ncount{}$ be binomial with parameters $(n,p)$, where
+$p\in[0,1]$ is rational. An \emph{admissible endpoint rule} $R$ assigns to every
+$(n,p,\varepsilon^{-},\varepsilon^{+})$ with rational
+$\varepsilon^{-},\varepsilon^{+}\in[0,1)$ two integers
+$R^{-}=R^{-}(n,p,\varepsilon^{-})$ and $R^{+}=R^{+}(n,p,\varepsilon^{+})$
+such that
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{(admissibility)} $R^{-},R^{+}\in\{0,\dots,n\}$ and
+\begin{equation*}\tag{\getrefnumber{C-eq:rule-admissible}}\digesteqlabel{eq:rule-admissible}
+  \Pr\big[\Ncount{}<R^{-}\big]\le\varepsilon^{-},
+  \qquad
+  \Pr\big[\Ncount{}>R^{+}\big]\le\varepsilon^{+};
+\end{equation*}
+\item \emph{(zero budget)} if $0<p<1$, then $R^{-}=0$ at $\varepsilon^{-}=0$
+and $R^{+}=n$ at $\varepsilon^{+}=0$;
+\item \emph{(degenerate mass)} $R^{-}=R^{+}=0$ at $p=0$ and $R^{-}=R^{+}=n$
+at $p=1$, for every $\varepsilon^{\pm}$.
+\end{enumerate}
+The rule is \emph{monotone in the allocation} when, the other arguments fixed,
+$\varepsilon^{-}\mapsto R^{-}$ is non-decreasing and
+$\varepsilon^{+}\mapsto R^{+}$ is non-increasing.
+
+An \emph{admissible input} consists of
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item a finite, non-empty acceptance alphabet $\Chatset$ with a fixed
+enumeration;
+\item a round count, an integer $n\ge1$;
+\item an honest input on $\Chatset$: exactly one of a law
+$\honest\in\simplex{\Chatset}$, the point form, and an honest envelope
+$({\honest}^{-},{\honest}^{+})$ (Definition~\ref{def:envelope}); a law in the
+point form is read as the degenerate envelope $(\honest,\honest)$;
+\item a completeness budget $\ecomp\in[0,1)$;
+\item a set $\Chatcon\subseteq\Chatset$ of constrained outcomes;
+\item an allocation
+$\varepsilon^{-},\varepsilon^{+}:\Chatcon\to\mathbb{Q}_{\ge0}$ with
+$\sum_{\hat c\in\Chatcon}(\varepsilon^{-}(\hat c)+\varepsilon^{+}(\hat
+c))\le\ecomp$;
+\item exactness: every coordinate of the honest input, $\ecomp$ and every
+value of the allocation is an exact rational;
+\item a choice of rule, the exact binomial quantile rule of
+Definition~\ref{def:interval} or the Bernstein rule of
+Proposition~\ref{prop:rule-bernstein}, and a choice of one of two
+evaluations, by the closed forms or by the enclosures of
+Proposition~\ref{prop:bracketed-endpoints}, which on the exact rule decides
+its tail comparisons: by the enclosures, it gives the rule
+$R_{\mathrm{encl}}$ of that proposition in place of the exact rule;
+\item consistency with the consumer: $\Chatset$, its enumeration and
+$n$ are those of the declaration the consumer solves, a
+matched alphabet and round count (Definition~\ref{def:matched-alphabet}).
+\end{enumerate}
+The clauses fix the form of the data --- an enumerated set $\Chatset$, an
+integer $n$, one honest input that is a vector (the point form) or a pair of
+vectors (the envelope form), a number $\ecomp$, a set $\Chatcon$ with a pair
+of vectors indexed by it, and a named rule and evaluation --- and conditions
+on data of that form.
+
+Fix an admissible input, with its honest envelope
+$({\honest}^{-},{\honest}^{+})$. For $\hat c\in\Chatcon$ write
+$p^{-}_{\hat c}\coloneqq{\honest}^{-}(\hat c)$ and
+$p^{+}_{\hat c}\coloneqq{\honest}^{+}(\hat c)$, let $\Ncount{\hat c}^{-}$ and
+$\Ncount{\hat c}^{+}$ be binomial with parameters $(n,p^{-}_{\hat c})$ and
+$(n,p^{+}_{\hat c})$ respectively, and abbreviate
+$R^{-}\coloneqq R^{-}(n,p^{-}_{\hat c},\varepsilon^{-}(\hat c))$ and
+$R^{+}\coloneqq R^{+}(n,p^{+}_{\hat c},\varepsilon^{+}(\hat c))$: the lower
+endpoint is the rule's at the envelope's lower value, the upper endpoint the
+rule's at its upper value. The \emph{guarded endpoints} of $R$ at $\hat c$, after the
+\emph{honest-containment guard}, are
+\begin{equation*}\tag{\getrefnumber{C-eq:guard}}\digesteqlabel{eq:guard}
+  k^{-}(\hat c)\coloneqq\min\big\{R^{-},\ \lfloor n\,p^{-}_{\hat c}\rfloor\big\},
+  \qquad
+  k^{+}(\hat c)\coloneqq\max\big\{R^{+},\ \lceil n\,p^{+}_{\hat c}\rceil\big\}.
+\end{equation*}
+With the degenerate envelope, $p^{-}_{\hat c}=p^{+}_{\hat c}=\honest(\hat c)
+\eqqcolon p_{\hat c}$, $\Ncount{\hat c}^{-}$ and $\Ncount{\hat c}^{+}$ have
+the one law of $\Ncount{\hat c}$, binomial $(n,p_{\hat c})$, and
+\eqref{eq:guard} reads $k^{-}(\hat c)=\min\{R^{-},\lfloor np_{\hat
+c}\rfloor\}$, $k^{+}(\hat c)=\max\{R^{+},\lceil np_{\hat c}\rceil\}$ with both
+rule endpoints at $p_{\hat c}$.
+
+The \emph{side-wise reading} is the following. By
+\eqref{eq:guard}, $k^{-}(\hat c)$ depends on the envelope only through
+$p^{-}_{\hat c}$ and $k^{+}(\hat c)$ only through $p^{+}_{\hat c}$. A claim of
+this submodule that fixes one value $p_{\hat c}$ and one count
+$\Ncount{\hat c}$ binomial $(n,p_{\hat c})$ and speaks of the guarded
+endpoints --- Definition~\ref{def:interval} and
+Propositions~\ref{prop:rule-exact}, \ref{prop:rule-bernstein} and
+\ref{prop:bracketed-endpoints} do --- states each assertion about the lower
+endpoint (one naming $k^{-}$, $R^{-}$, $\varepsilon^{-}$ and the lower tail)
+with $p_{\hat c}\coloneqq p^{-}_{\hat c}$ and
+$\Ncount{\hat c}\coloneqq\Ncount{\hat c}^{-}$, and each assertion about the
+upper endpoint with $p_{\hat c}\coloneqq p^{+}_{\hat c}$ and
+$\Ncount{\hat c}\coloneqq\Ncount{\hat c}^{+}$; with the degenerate envelope
+the two readings coincide and are the claim as written.
+\end{digestclaim}
+
+% claim statistics/binomial-box/lem:guard
+\digestlabel{lem:guard}{7.2}\pdfbookmark[2]{Lemma 7.2 The honest-containment guard for every rule}{digest-statistics/binomial-box/lem:guard}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/lem:guard}{Lemma~7.2}}%
+\begin{digestclaim}[The honest-containment guard for every rule]
+Let $R$ be an admissible endpoint rule (Definition~\ref{def:endpoint-rule})
+and $\hat c\in\Chatcon$; write $p^{\mp}\coloneqq p^{\mp}_{\hat c}$ for the
+envelope's values at $\hat c$,
+$R^{-}\coloneqq R^{-}(n,p^{-},\varepsilon^{-}(\hat c))$,
+$R^{+}\coloneqq R^{+}(n,p^{+},\varepsilon^{+}(\hat c))$, and let
+$k^{\mp}(\hat c)$ be the guarded endpoints \eqref{eq:guard}. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(ordering)}
+\begin{equation*}\tag{\getrefnumber{C-eq:ordering}}\digesteqlabel{eq:ordering}
+  0\ \le\ k^{-}(\hat c)\ \le\ \lfloor n p^{-}\rfloor
+  \ \le\ \lceil n p^{+}\rceil\ \le\ k^{+}(\hat c)\ \le\ n ;
+\end{equation*}
+\item \emph{(the budgets are met)} the maps $k\mapsto\Pr[\Ncount{\hat c}^{-}<k]$
+and $k\mapsto\Pr[\Ncount{\hat c}^{+}>k]$ are non-decreasing and non-increasing
+respectively on the integers; consequently
+\begin{equation*}\tag{\getrefnumber{C-eq:budget-met}}\digesteqlabel{eq:budget-met}
+  \Pr\big[\Ncount{\hat c}^{-}<k^{-}(\hat c)\big]\le\varepsilon^{-}(\hat c),
+  \qquad
+  \Pr\big[\Ncount{\hat c}^{+}>k^{+}(\hat c)\big]\le\varepsilon^{+}(\hat c),
+\end{equation*}
+and more generally \emph{every} pair $(\tilde k^{-},\tilde k^{+})$ with
+$0\le\tilde k^{-}\le R^{-}$ and $R^{+}\le\tilde k^{+}\le n$ satisfies
+\eqref{eq:budget-met} in place of $k^{\mp}(\hat c)$: enlarging the rule's
+interval is always admissible;
+\item \emph{(exact cost of the guard)} relative to the rule's own interval
+$[R^{-},R^{+}]$, the guard \eqref{eq:guard} enlarges the interval by exactly
+\begin{equation*}\tag{\getrefnumber{C-eq:guard-cost}}\digesteqlabel{eq:guard-cost}
+  R^{-}-k^{-}(\hat c)
+    =\max\big\{0,\ R^{-}-\lfloor np^{-}\rfloor\big\},
+  \qquad
+  k^{+}(\hat c)-R^{+}
+    =\max\big\{0,\ \lceil np^{+}\rceil-R^{+}\big\}
+\end{equation*}
+counts on the lower and the upper side respectively;
+\item \emph{(distance from the honest value)} measured from the envelope's
+value on each side, the guard costs at most $1/n$ \emph{unconditionally}:
+\begin{equation*}\tag{\getrefnumber{C-eq:guard-from-p}}\digesteqlabel{eq:guard-from-p}
+  0\le p^{-}-\frac{k^{-}(\hat c)}{n}
+    \le\max\Big\{p^{-}-\frac{R^{-}}{n},\ \frac1n\Big\},
+  \qquad
+  0\le \frac{k^{+}(\hat c)}{n}-p^{+}
+    \le\max\Big\{\frac{R^{+}}{n}-p^{+},\ \frac1n\Big\},
+\end{equation*}
+so on whichever side the guard is active, the emitted endpoint lies within
+$1/n$ of that side's envelope value.
+\end{enumerate}
+With the degenerate envelope, $p^{-}=p^{+}=p_{\hat c}$, both
+$\Ncount{\hat c}^{\mp}$ are binomial $(n,p_{\hat c})$, and (i)--(iv) are
+statements about that single law.
+\end{digestclaim}
+
+\section*{8\quad The exact rule}\pdfbookmark[1]{8 The exact rule}{digest-group-statistics/binomial-box/def:interval}
+
+% claim statistics/binomial-box/def:interval
+\digestlabel{def:interval}{8.1}\pdfbookmark[2]{Definition 8.1 The exact binomial quantile rule}{digest-statistics/binomial-box/def:interval}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/def:interval}{Definition~8.1}}%
+\begin{digestclaim}[The exact binomial quantile rule]
+Fix an admissible input (Definition~\ref{def:endpoint-rule}), with its
+round count $n\ge1$, its honest envelope $({\honest}^{-},{\honest}^{+})$
+(Definition~\ref{def:envelope}; a single law $\honest$ is the
+degenerate envelope), its constrained outcomes
+$\Chatcon\subseteq\Chatset$, its completeness budget $\ecomp\in[0,1)$ and its
+budget allocation $\varepsilon^{-},\varepsilon^{+}:\Chatcon\to\mathbb{Q}_{\ge0}$
+with $\sum_{\hat c\in\Chatcon}(\varepsilon^{-}(\hat c)+\varepsilon^{+}(\hat
+c))\le\ecomp$; in particular $0\le\varepsilon^{\pm}(\hat c)\le\ecomp<1$ for
+every $\hat c\in\Chatcon$. For $\hat c\in\Chatcon$ let $p_{\hat c}$ be the
+rule's argument --- by the side-wise reading of
+Definition~\ref{def:endpoint-rule}, $p_{\hat c}=p^{-}_{\hat c}$ in
+\eqref{eq:kappaminus} and $p_{\hat c}=p^{+}_{\hat c}$ in \eqref{eq:kappaplus},
+both equal to $\honest(\hat c)$ for the degenerate envelope --- and let
+$\Ncount{\hat c}$ be binomial with parameters $(n,p_{\hat c})$. Define the
+\emph{extremal endpoints}
+\begin{align*}
+  \kappa^{-}(\hat c)&\coloneqq\max\big\{k\in\{0,\dots,n\}:\
+    \Pr[\Ncount{\hat c}<k]\le\varepsilon^{-}(\hat c)\big\},
+    \tag{\getrefnumber{C-eq:kappaminus}}\digesteqlabel{eq:kappaminus}\\
+  \kappa^{+}(\hat c)&\coloneqq\min\big\{k\in\{0,\dots,n\}:\
+    \Pr[\Ncount{\hat c}>k]\le\varepsilon^{+}(\hat c)\big\}.
+    \tag{\getrefnumber{C-eq:kappaplus}}\digesteqlabel{eq:kappaplus}
+\end{align*}
+The \emph{exact binomial quantile
+rule} is the endpoint rule
+$R^{\mp}_{\mathrm{ex}}(n,p_{\hat c},\varepsilon^{\mp}(\hat c))
+\coloneqq\kappa^{\mp}(\hat c)$. Its guarded endpoints are those of
+\eqref{eq:guard} with $R^{\mp}=\kappa^{\mp}(\hat c)$, $\kappa^{-}(\hat c)$
+taken at $p^{-}_{\hat c}$ and $\kappa^{+}(\hat c)$ at $p^{+}_{\hat c}$, i.e.\
+\begin{equation*}
+  k^{-}(\hat c)=\min\big\{\kappa^{-}(\hat c),\ \lfloor n\,p^{-}_{\hat c}\rfloor\big\},
+  \qquad
+  k^{+}(\hat c)=\max\big\{\kappa^{+}(\hat c),\ \lceil n\,p^{+}_{\hat c}\rceil\big\}.
+\end{equation*}
+\end{digestclaim}
+
+% claim statistics/binomial-box/prop:rule-exact
+\digestlabel{prop:rule-exact}{8.2}\pdfbookmark[2]{Proposition 8.2 Properties of the exact binomial quantile rule}{digest-statistics/binomial-box/prop:rule-exact}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/prop:rule-exact}{Proposition~8.2}}%
+\begin{digestclaim}[Properties of the exact binomial quantile rule]
+Assume a conservative evaluation
+(Definition~\ref{def:conservative-evaluation}). With the notation of
+Definition~\ref{def:interval}, for every $\hat c\in\Chatcon$:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item the two sets in \eqref{eq:kappaminus}--\eqref{eq:kappaplus} are non-empty
+subsets of the finite set $\{0,\dots,n\}$, so $\kappa^{\pm}(\hat c)$ exist and
+are unique;
+\item \emph{(the exact rule is an admissible endpoint rule)} the pair
+$R^{\mp}_{\mathrm{ex}}=\kappa^{\mp}(\hat c)$ satisfies
+Definition~\ref{def:endpoint-rule}\,(a)--(c): $\kappa^{\pm}(\hat c)\in
+\{0,\dots,n\}$ and
+\begin{equation*}\tag{\getrefnumber{C-eq:exact-admissible}}\digesteqlabel{eq:exact-admissible}
+  \Pr\big[\Ncount{\hat c}<\kappa^{-}(\hat c)\big]\le\varepsilon^{-}(\hat c),
+  \qquad
+  \Pr\big[\Ncount{\hat c}>\kappa^{+}(\hat c)\big]\le\varepsilon^{+}(\hat c);
+\end{equation*}
+if $0<p_{\hat c}<1$ then $\kappa^{-}(\hat c)=0$ at $\varepsilon^{-}(\hat c)=0$
+and $\kappa^{+}(\hat c)=n$ at $\varepsilon^{+}(\hat c)=0$; and
+$\kappa^{-}(\hat c)=\kappa^{+}(\hat c)=0$ at $p_{\hat c}=0$,
+$\kappa^{-}(\hat c)=\kappa^{+}(\hat c)=n$ at $p_{\hat c}=1$. Moreover the
+rule is monotone in the allocation: $\kappa^{-}(\hat c)$ is non-decreasing in
+$\varepsilon^{-}(\hat c)$ and $\kappa^{+}(\hat c)$ is non-increasing in
+$\varepsilon^{+}(\hat c)$. Consequently Lemma~\ref{lem:guard} applies to the
+exact rule, and its guarded endpoints $k^{\mp}(\hat c)$ satisfy
+\eqref{eq:ordering} and \eqref{eq:budget-met};
+\item \emph{(extremality and admissible relaxation)} $\kappa^{-}(\hat c)$ is
+the largest and $\kappa^{+}(\hat c)$ the smallest integer in $\{0,\dots,n\}$
+satisfying the respective inequality of \eqref{eq:exact-admissible}, and
+\emph{every} pair $(\tilde k^{-},\tilde k^{+})$ with
+$0\le\tilde k^{-}\le\kappa^{-}(\hat c)$ and
+$\kappa^{+}(\hat c)\le\tilde k^{+}\le n$ satisfies \eqref{eq:budget-met} in
+place of $k^{\mp}(\hat c)$. Enlarging the interval is therefore always
+admissible; shrinking it beyond $[\kappa^{-},\kappa^{+}]$ is not;
+\item the defining inequalities are the closed forms
+\eqref{eq:tails-used} of Corollary~\ref{cor:tail-forms}, so $\kappa^{\pm}(\hat c)$
+are computable from $n$, $p_{\hat c}$ and the allocation alone
+(Lemma~\ref{lem:exact-strict-tails});
+\item \emph{(degenerate honest mass)} if $p_{\hat c}=0$ then
+$k^{-}(\hat c)=k^{+}(\hat c)=0$, and if $p_{\hat c}=1$ then
+$k^{-}(\hat c)=k^{+}(\hat c)=n$; in both cases $\varepsilon^{-}(\hat c)$ and
+$\varepsilon^{+}(\hat c)$ are unspent, both tails in \eqref{eq:budget-met}
+being exactly zero;
+\item \emph{(exact cost of the guard for this rule)} write $p=p_{\hat c}$.
+Relative to the raw quantile interval
+$[\kappa^{-}(\hat c),\kappa^{+}(\hat c)]$, the guard \eqref{eq:guard}
+enlarges the interval by exactly \eqref{eq:guard-cost} with
+$R^{\mp}=\kappa^{\mp}(\hat c)$, and neither enlargement is bounded by one
+count: for every $n\ge1$ and every $p\in(0,1)$, an allocation with
+$\varepsilon^{-}(\hat c)\ge1-p^{\,n}$ --- admissible whenever $\ecomp$
+permits, since $1-p^{\,n}<1$ --- gives $\kappa^{-}(\hat c)=n$ and a lower
+enlargement of $n-\lfloor np\rfloor$ counts, that is, at least $1-p$ in
+frequency \emph{uniformly in $n$}; symmetrically
+$\varepsilon^{+}(\hat c)\ge1-(1-p)^{n}$ gives $\kappa^{+}(\hat c)=0$ and an
+upper enlargement of $\lceil np\rceil$ counts. The exact conditions are
+\begin{align*}
+  \kappa^{-}(\hat c)-k^{-}(\hat c)=0
+    &\iff \varepsilon^{-}(\hat c)
+      <\Pr\big[\Ncount{\hat c}\le\lfloor np\rfloor\big],
+    \tag{\getrefnumber{C-eq:guard-lo0}}\digesteqlabel{eq:guard-lo0}\\
+  \kappa^{-}(\hat c)-k^{-}(\hat c)\le1
+    &\iff \varepsilon^{-}(\hat c)
+      <\Pr\big[\Ncount{\hat c}\le\lfloor np\rfloor+1\big],
+    \tag{\getrefnumber{C-eq:guard-lo1}}\digesteqlabel{eq:guard-lo1}\\
+  k^{+}(\hat c)-\kappa^{+}(\hat c)=0
+    &\iff \varepsilon^{+}(\hat c)
+      <\Pr\big[\Ncount{\hat c}\ge\lceil np\rceil\big],
+    \tag{\getrefnumber{C-eq:guard-up0}}\digesteqlabel{eq:guard-up0}\\
+  k^{+}(\hat c)-\kappa^{+}(\hat c)\le1
+    &\iff \varepsilon^{+}(\hat c)
+      <\Pr\big[\Ncount{\hat c}\ge\lceil np\rceil-1\big].
+    \tag{\getrefnumber{C-eq:guard-up1}}\digesteqlabel{eq:guard-up1}
+\end{align*}
+Measured instead from the honest value, the guard costs at most $1/n$
+unconditionally, \eqref{eq:guard-from-p} of Lemma~\ref{lem:guard}\,(iv);
+\item \emph{(evaluation against upper bounds)} let $U^{-}_k$ and $U^{+}_k$,
+for $k\in\{0,\dots,n\}$, be rationals determined by $n$, $p_{\hat c}$ and
+$k$ alone, with
+$U^{-}_k\ge\Pr[\Ncount{\hat c}<k]$, $U^{+}_k\ge\Pr[\Ncount{\hat c}>k]$,
+$U^{-}_0=0$ and $U^{+}_n=0$, and with every $U^{\mp}_k$ equal to its tail
+when $p_{\hat c}\in\{0,1\}$. Put
+\begin{equation*}
+  \tilde\kappa^{-}(\hat c)\coloneqq\max\big\{k\in\{0,\dots,n\}:\
+    U^{-}_{j}\le\varepsilon^{-}(\hat c)\text{ for }1\le j\le k\big\},
+  \qquad
+  \tilde\kappa^{+}(\hat c)\coloneqq\min\big\{k\in\{0,\dots,n\}:\
+    U^{+}_{k}\le\varepsilon^{+}(\hat c)\big\}.
+\end{equation*}
+Then $\tilde R^{\mp}=\tilde\kappa^{\mp}(\hat c)$ is an admissible endpoint
+rule (Definition~\ref{def:endpoint-rule}\,(a)--(c)), monotone in the
+allocation, with $\tilde\kappa^{-}(\hat c)\le\kappa^{-}(\hat c)$ and
+$\tilde\kappa^{+}(\hat c)\ge\kappa^{+}(\hat c)$, and it is the exact rule
+when every $U^{\mp}_k$ equals its tail. Consequently Lemma~\ref{lem:guard}
+applies to it.
+\end{enumerate}
+\end{digestclaim}
+
+\section*{9\quad The construction map}\pdfbookmark[1]{9 The construction map}{digest-group-statistics/binomial-box/def:construction}
+
+% claim statistics/binomial-box/def:construction
+\digestlabel{def:construction}{9.1}\pdfbookmark[2]{Definition 9.1 The construction map}{digest-statistics/binomial-box/def:construction}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/def:construction}{Definition~9.1}}%
+\begin{digestclaim}[The construction map]
+Let
+$(\Chatset,{\honest}^{-},{\honest}^{+},n,\ecomp,\Chatcon,\varepsilon^{-},\varepsilon^{+})$
+be the data of an admissible input (Definition~\ref{def:endpoint-rule}),
+where $({\honest}^{-},{\honest}^{+})$ is its honest envelope
+(Definition~\ref{def:envelope}) --- an input $\honest$ in the
+point form being read as the degenerate envelope
+$(\honest,\honest)$ --- and let $R$ be an admissible endpoint rule
+(Definition~\ref{def:endpoint-rule}). With the guarded endpoints
+$k^{\pm}$ of $R$, \eqref{eq:guard}, define
+\begin{equation*}\tag{\getrefnumber{C-eq:boxbounds}}\digesteqlabel{eq:boxbounds}
+  q^{-}(\hat c)\coloneqq
+  \begin{cases}k^{-}(\hat c)/n,&\hat c\in\Chatcon,\\[2pt] 0,&\hat c\notin\Chatcon,\end{cases}
+  \qquad
+  q^{+}(\hat c)\coloneqq
+  \begin{cases}k^{+}(\hat c)/n,&\hat c\in\Chatcon,\\[2pt] 1,&\hat c\notin\Chatcon.\end{cases}
+\end{equation*}
+The \emph{construction map} $\mathsf{Acc}_R$ --- written $\mathsf{Acc}$
+where the rule is clear or is the default --- returns the
+$\mathrm{polytope}$ geometry in canonical box form with these
+$(\qlo,\qhi)$, i.e.\ the data \eqref{eq:boxrows}, and
+\begin{equation*}\tag{\getrefnumber{C-eq:accset}}\digesteqlabel{eq:accset}
+  \acSet\ \coloneqq\ \{\mathbf{q}\in\simplex{\Chatset}:\
+  q^{-}(\hat c)\le q(\hat c)\le q^{+}(\hat c)\ \ \forall\hat c\in\Chatset\}.
+\end{equation*}
+\end{digestclaim}
+
+% claim statistics/binomial-box/thm:box-construction
+\digestlabel{thm:box-construction}{9.2}\pdfbookmark[2]{Theorem 9.2 Properties of the constructed box}{digest-statistics/binomial-box/thm:box-construction}
+\begin{mainclaim}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/thm:box-construction}{Theorem~9.2}}%
+\begin{digestclaim}[Properties of the constructed box]
+On every admissible input (Definition~\ref{def:endpoint-rule}) and for every
+admissible endpoint rule $R$, under a conservative evaluation
+(Definition~\ref{def:conservative-evaluation}):
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $\mathsf{Acc}_R$ is well defined, and all of its output data are exact
+rationals: each $q^{\pm}(\hat c)$ is either an integer multiple of $1/n$ or one
+of $0,1$, and the entries of $B$ lie in $\{0,\pm1\}$;
+\item $0\le\qlo\le\qhi\le\mathbf{1}$ componentwise, so the pair
+$(\qlo,\qhi)$ meets the conditions of the canonical box form of
+Definition~\ref{def:taxonomy};
+\item $\mathsf{H}\subseteq\acSet$, where $\mathsf{H}$ is the
+envelope set \eqref{eq:envelope-set} of the input envelope: every
+honest law the envelope admits is accepted, and for the degenerate envelope
+this reads $\honest\in\acSet$. The envelope set is non-empty; consequently
+$\acSet\neq\varnothing$ and, by Theorem~\ref{thm:geometry-validation}\,(iii),
+$\sum_{\hat c}q^{-}(\hat c)\le1\le\sum_{\hat c}q^{+}(\hat c)$;
+\item $\acSet$ is a non-empty, closed, convex, compact subset of
+$\simplex{\Chatset}$; \xref{meat-core/def:admissible-acceptance-set} holds for the output of
+$\mathsf{Acc}_R$ by construction, for every admissible input and every
+admissible rule.
+\end{enumerate}
+\end{digestclaim}
+\end{mainclaim}
+
+\section*{10\quad Completeness}\pdfbookmark[1]{10 Completeness}{digest-group-statistics/binomial-box/lem:envelope-dominance}
+
+% claim statistics/binomial-box/lem:envelope-dominance
+\digestlabel{lem:envelope-dominance}{10.1}\pdfbookmark[2]{Lemma 10.1 Binomial dominance under bounded conditional success probabilities}{digest-statistics/binomial-box/lem:envelope-dominance}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/lem:envelope-dominance}{Lemma~10.1}}%
+\begin{digestclaim}[Binomial dominance under bounded conditional success probabilities]
+Let $\mathcal{F}_0\subseteq\mathcal{F}_1\subseteq\dots\subseteq\mathcal{F}_n$
+be a filtration on a probability space, $n\ge1$, and let
+$\chi_1,\dots,\chi_n$ be $\{0,1\}$-valued random variables with $\chi_j$
+$\mathcal{F}_j$-measurable. Let $0\le a\le b\le1$ and suppose that, for every
+$j\in\{1,\dots,n\}$, almost surely
+\begin{equation*}\tag{\getrefnumber{C-eq:dominance-hyp}}\digesteqlabel{eq:dominance-hyp}
+  a\ \le\ P_j\ \coloneqq\ \Pr\big[\chi_j=1\ \big|\ \mathcal{F}_{j-1}\big]\ \le\ b .
+\end{equation*}
+Put $S\coloneqq\sum_{j=1}^{n}\chi_j$, and for $m\in\{0,\dots,n\}$,
+$r\in[0,1]$ and an integer $k$ write
+$G^{r}_{m}(k)\coloneqq\Pr[\mathrm{B}^{r}_{m}\ge k]$, where
+$\mathrm{B}^{r}_{m}$ is binomial with parameters $(m,r)$ ($\mathrm{B}^{r}_{0}=0$).
+Then for every integer $k$
+\begin{equation*}\tag{\getrefnumber{C-eq:dominance}}\digesteqlabel{eq:dominance}
+  \Pr[S\ge k]\ \le\ \Pr\big[\mathrm{B}^{b}_{n}\ge k\big],
+  \qquad
+  \Pr[S\le k]\ \le\ \Pr\big[\mathrm{B}^{a}_{n}\le k\big],
+\end{equation*}
+and equivalently
+\begin{equation*}\tag{\getrefnumber{C-eq:dominance-strict}}\digesteqlabel{eq:dominance-strict}
+  \Pr[S>k]\ \le\ \Pr\big[\mathrm{B}^{b}_{n}>k\big],
+  \qquad
+  \Pr[S<k]\ \le\ \Pr\big[\mathrm{B}^{a}_{n}<k\big].
+\end{equation*}
+\end{digestclaim}
+
+% claim statistics/binomial-box/thm:completeness-bound
+\digestlabel{thm:completeness-bound}{10.2}\pdfbookmark[2]{Theorem 10.2 The completeness bound}{digest-statistics/binomial-box/thm:completeness-bound}
+\begin{mainclaim}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/thm:completeness-bound}{Theorem~10.2}}%
+\begin{digestclaim}[The completeness bound]
+Assume a conservative evaluation
+(Definition~\ref{def:conservative-evaluation}), and assume A-HON-ENV
+(Assumption~\ref{ass:hon-env}) for the
+honest envelope $({\honest}^{-},{\honest}^{+})$ of the input: on an
+honest run there is a filtration
+$\mathcal{F}_0\subseteq\dots\subseteq\mathcal{F}_n$ with $\Chat_j$
+$\mathcal{F}_j$-measurable and
+${\honest}^{-}(\hat c)\le\Pr[\Chat_j=\hat c\,|\,\mathcal{F}_{j-1}]\le
+{\honest}^{+}(\hat c)$ almost surely, for every $j$ and $\hat c$. Let
+$\acSet$ be the output of $\mathsf{Acc}_R$
+(Definition~\ref{def:construction}) for an admissible endpoint rule
+$R$ (Definition~\ref{def:endpoint-rule}). Then
+\begin{equation*}\tag{\getrefnumber{C-eq:completeness}}\digesteqlabel{eq:completeness}
+  \Pr\big[\operatorname{freq}_{\Chat_1^n}\notin\acSet\big]
+  \ \le\ \varepsilon^{\star}
+  \ \coloneqq\ \sum_{\hat c\in\Chatcon}
+  \Big(\Pr\big[\Ncount{\hat c}^{-}<k^{-}(\hat c)\big]
+      +\Pr\big[\Ncount{\hat c}^{+}>k^{+}(\hat c)\big]\Big)
+  \ \le\ \ecomp ,
+\end{equation*}
+where $\Ncount{\hat c}^{-}$ and $\Ncount{\hat c}^{+}$ are binomial with
+parameters $(n,{\honest}^{-}(\hat c))$ and $(n,{\honest}^{+}(\hat c))$
+respectively (Definition~\ref{def:endpoint-rule}). Equivalently, the honest
+run passes the acceptance test, the event $\OmAT$ of
+\xref{meat-core/def:postprocessing-model}, with probability
+$\Pr[\OmAT]=\Pr[\operatorname{freq}_{\Chat_1^n}\in\acSet]
+\ge1-\varepsilon^{\star}\ge1-\ecomp$. For the degenerate envelope both
+$\Ncount{\hat c}^{\mp}$ are binomial $(n,\honest(\hat c))$.
+\end{digestclaim}
+\end{mainclaim}
+
+\section*{11\quad Honest containment and infeasibility}\pdfbookmark[1]{11 Honest containment and infeasibility}{digest-group-statistics/binomial-box/thm:honest-containment}
+
+% claim statistics/binomial-box/thm:honest-containment
+\digestlabel{thm:honest-containment}{11.1}\pdfbookmark[2]{Theorem 11.1 Honest containment and infeasibility}{digest-statistics/binomial-box/thm:honest-containment}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/thm:honest-containment}{Theorem~11.1}}%
+\begin{digestclaim}[Honest containment and infeasibility]
+Let $\acSet$ be the output of $\mathsf{Acc}_R$ on an admissible input
+(Definition~\ref{def:endpoint-rule}), for any
+admissible endpoint rule $R$, under a conservative evaluation
+(Definition~\ref{def:conservative-evaluation}).
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $\mathsf{H}\subseteq\acSet$, where $\mathsf{H}$ is the
+envelope set \eqref{eq:envelope-set} of the input envelope, for every
+admissible $\ecomp\in[0,1)$, every $\Chatcon$ and every admissible
+allocation; for the degenerate envelope, $\honest\in\acSet$.
+\item Assume A-REACH (Assumption~\ref{ass:reach}): there exists
+$\omega^{\mathrm{hon}}\in\Feas$, the feasible set of the consuming
+declaration $\Decl$ (\xref{protocol-compiler/def:feasible}), with
+$\mathbf{p}^{\mathrm{hon}}\coloneqq\Phimap[\omega^{\mathrm{hon}}]\in\mathsf{H}$
+(for the degenerate envelope, $\Phimap[\omega^{\mathrm{hon}}]=\honest$). Then
+the pair $(\mathbf{p}^{\mathrm{hon}},\omega^{\mathrm{hon}})$ satisfies
+$\mathbf{p}^{\mathrm{hon}}\in\acSet$, $\omega^{\mathrm{hon}}\in\Feas$ and
+$\mathbf{p}^{\mathrm{hon}}\ll\Phimap[\omega^{\mathrm{hon}}]$. Consequently the
+condition
+\begin{equation*}\tag{\getrefnumber{C-eq:infeasible}}\digesteqlabel{eq:infeasible}
+  \text{\emph{no} }\mathbf{q}\in\acSet\text{ is absolutely continuous with
+  respect to }\Phimap[\omega]\text{ for any }\omega\in\Feas
+\end{equation*}
+is \emph{false} for this $\acSet$.
+\item \emph{(refusals come from the input)} The validation predicate
+of Theorem~\ref{thm:geometry-validation}\,(iii) is decidable in closed form, and on every
+admissible input it is satisfied by the output of $\mathsf{Acc}_R$
+unconditionally, for every admissible rule. Hence the construction never
+fails on an admissible input, and a refusal can arise only from an input that
+is not admissible. On data of the form of an admissible input
+(Definition~\ref{def:endpoint-rule}), the violations of its conditions that
+are decidable from this module's own inputs are exactly:
+\begin{enumerate}[label=(\arabic*),leftmargin=2.2em]
+\item $|\Chatset|=0$;
+\item $|\Chatset|$ not finite;
+\item $n<1$;
+\item an honest input in the point form with
+$\honest\notin\simplex{\Chatset}$, including a coordinate outside
+$\Chatset$;
+\item an honest input in the envelope form violating \eqref{eq:envelope}:
+some entry of ${\honest}^{-}$ or ${\honest}^{+}$ outside $[0,1]$, some
+${\honest}^{-}(\hat c)>{\honest}^{+}(\hat c)$,
+$\sum_{\hat c}{\honest}^{-}(\hat c)>1$, $\sum_{\hat c}{\honest}^{+}(\hat
+c)<1$, or a coordinate outside $\Chatset$;
+\item $\ecomp\notin[0,1)$;
+\item some $\varepsilon^{\pm}(\hat c)<0$;
+\item $\sum_{\hat c\in\Chatcon}(\varepsilon^{-}(\hat c)+\varepsilon^{+}(\hat
+c))>\ecomp$;
+\item $\Chatcon\not\subseteq\Chatset$;
+\item some coordinate of $\honest$ or of ${\honest}^{\mp}$, or $\ecomp$, or
+some $\varepsilon^{\pm}(\hat c)$ is not an exact rational, violating
+Definition~\ref{def:conservative-evaluation};
+\item the requested endpoint rule, or the requested evaluation, is none of
+those of clause (viii) of Definition~\ref{def:endpoint-rule}.
+\end{enumerate}
+Exactly one clause of an admissible input is \emph{not} decidable from this
+module's inputs: clause (ix) of Definition~\ref{def:endpoint-rule}, the
+condition of Definition~\ref{def:matched-alphabet} that $\Chatset$, its
+enumeration and $n$ are those of the same declaration $\Decl$ the
+consumer solves. That clause
+is a relation between artefacts, not a property of an input.
+\end{enumerate}
+\end{digestclaim}
+
+\section*{12\quad Monotonicity and limiting cases}\pdfbookmark[1]{12 Monotonicity and limiting cases}{digest-group-statistics/binomial-box/def:monotone-rule}
+
+% claim statistics/binomial-box/def:monotone-rule
+\digestlabel{def:monotone-rule}{12.1}\pdfbookmark[2]{Definition 12.1 Monotone allocation rule}{digest-statistics/binomial-box/def:monotone-rule}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/def:monotone-rule}{Definition~12.1}}%
+\begin{digestclaim}[Monotone allocation rule]
+A \emph{monotone allocation rule}
+assigns to each budget $e\in[0,1)$ an allocation
+$\varepsilon^{\pm}_{(e)}$ on $\Chatcon$ such that
+$\sum_{\hat c}(\varepsilon^{-}_{(e)}(\hat c)+\varepsilon^{+}_{(e)}(\hat c))\le
+e$ and each $e\mapsto\varepsilon^{\pm}_{(e)}(\hat c)$ is non-decreasing. The
+\emph{uniform rule}
+$\varepsilon^{\pm}_{(e)}(\hat c)=e/(2|\Chatcon|)$ is monotone.
+\end{digestclaim}
+
+% claim statistics/binomial-box/lem:widening
+\digestlabel{lem:widening}{12.2}\pdfbookmark[2]{Lemma 12.2 Widening the box keeps its guarantees}{digest-statistics/binomial-box/lem:widening}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/lem:widening}{Lemma~12.2}}%
+\begin{digestclaim}[Widening the box keeps its guarantees]
+Let $\acSet$ be the output of $\mathsf{Acc}_R$
+(Definition~\ref{def:construction}) on an admissible input
+(Definition~\ref{def:endpoint-rule}) for an admissible endpoint rule
+$R$, with box bounds $\qlo,\qhi$ \eqref{eq:boxbounds} and
+guarded endpoints $k^{\mp}$ \eqref{eq:guard}. Let
+$\tilde{\mathbf{q}}^{-},\tilde{\mathbf{q}}^{+}\in\mathbb{R}^{\Chatset}$
+satisfy $\tilde q^{-}(\hat c)\le q^{-}(\hat c)$ and
+$\tilde q^{+}(\hat c)\ge q^{+}(\hat c)$ for every $\hat c\in\Chatset$, and put
+\begin{equation*}\tag{\getrefnumber{C-eq:widened-set}}\digesteqlabel{eq:widened-set}
+  \acSet'\ \coloneqq\ \{\mathbf{q}\in\simplex{\Chatset}:\
+  \tilde q^{-}(\hat c)\le q(\hat c)\le\tilde q^{+}(\hat c)\ \
+  \forall\hat c\in\Chatset\}.
+\end{equation*}
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(containment)} $\acSet\subseteq\acSet'$.
+\item \emph{(failure probability)} For all $\Chatset$-valued random
+variables $\Chat_1,\dots,\Chat_n$ on one probability space,
+\begin{equation*}
+  \Pr\big[\operatorname{freq}_{\Chat_1^n}\notin\acSet'\big]
+  \ \le\ \Pr\big[\operatorname{freq}_{\Chat_1^n}\notin\acSet\big].
+\end{equation*}
+\item \emph{(infima)} For every function
+$\Psi:\simplex{\Chatset}\to[-\infty,+\infty]$,
+\begin{equation*}\tag{\getrefnumber{C-eq:widened-inf}}\digesteqlabel{eq:widened-inf}
+  \inf_{\mathbf{q}\in\acSet'}\Psi(\mathbf{q})
+  \ \le\ \inf_{\mathbf{q}\in\acSet}\Psi(\mathbf{q}).
+\end{equation*}
+\item \emph{(integer endpoints)} Let
+$\tilde k^{-},\tilde k^{+}:\Chatcon\to\mathbb{Z}$ satisfy
+$0\le\tilde k^{-}(\hat c)\le k^{-}(\hat c)$ and
+$k^{+}(\hat c)\le\tilde k^{+}(\hat c)\le n$ for every $\hat c\in\Chatcon$,
+and let $\tilde{\mathbf{q}}^{\mp}$ be given by \eqref{eq:boxbounds} with
+$\tilde k^{\mp}$ in place of $k^{\mp}$. Then $\tilde{\mathbf{q}}^{\mp}$
+satisfy the hypothesis above, so (i)--(iii) hold; the pair
+$(\tilde{\mathbf{q}}^{-},\tilde{\mathbf{q}}^{+})$ meets the conditions of the
+canonical box form of Definition~\ref{def:taxonomy}, and its
+denotation \eqref{eq:boxset} is $\acSet'$; and for every $\hat c\in\Chatcon$,
+with $\Ncount{\hat c}^{\mp}$ as in Definition~\ref{def:endpoint-rule},
+\begin{equation*}\tag{\getrefnumber{C-eq:widened-tails}}\digesteqlabel{eq:widened-tails}
+  \Pr\big[\Ncount{\hat c}^{-}<\tilde k^{-}(\hat c)\big]
+  \le\Pr\big[\Ncount{\hat c}^{-}<k^{-}(\hat c)\big]
+  \le\varepsilon^{-}(\hat c),
+  \qquad
+  \Pr\big[\Ncount{\hat c}^{+}>\tilde k^{+}(\hat c)\big]
+  \le\Pr\big[\Ncount{\hat c}^{+}>k^{+}(\hat c)\big]
+  \le\varepsilon^{+}(\hat c).
+\end{equation*}
+Summed over $\Chatcon$, the tails at $\tilde k^{\mp}$ therefore total at most
+the tails at $k^{\mp}$, and at most $\ecomp$.
+\item \emph{(not the reverse)} Replacing $k^{-}(\hat c)$ by a larger integer
+or $k^{+}(\hat c)$ by a smaller one keeps, in general, neither the budgets of
+\eqref{eq:widened-tails} nor the tail sum at $k^{\mp}$ as a bound on the
+probability that the frequency vector leaves the set. Take
+$\Chatset=\{\hat c_0,\hat c_1\}$, the degenerate envelope at
+$\honest=(\tfrac12,\tfrac12)$ (Definition~\ref{def:envelope}), $n=3$,
+$\Chatcon=\{\hat c_0\}$,
+$\varepsilon^{-}(\hat c_0)=\varepsilon^{+}(\hat c_0)=\tfrac25$,
+$\ecomp=\tfrac45$ and the exact binomial quantile rule of
+Definition~\ref{def:interval}. Then $k^{-}(\hat c_0)=1$, $k^{+}(\hat c_0)=2$,
+and the tails at these endpoints sum to $\tfrac14$. Replacing
+$k^{-}(\hat c_0)$ by $2$, or $k^{+}(\hat c_0)$ by $1$, gives a tail of
+$\tfrac12>\tfrac25$ on the replaced side; and for $\Chat_1,\Chat_2,\Chat_3$
+independent with law $\honest$, the frequency vector lies outside the set
+\eqref{eq:accset} built from the replaced endpoints with probability
+$\tfrac58>\tfrac14$, while it lies outside $\acSet$ with probability
+$\tfrac14$.
+\end{enumerate}
+\end{digestclaim}
+
+% claim statistics/binomial-box/thm:monotonicity-limits
+\digestlabel{thm:monotonicity-limits}{12.4}\pdfbookmark[2]{Theorem 12.4 Monotonicity in the budget and limiting cases}{digest-statistics/binomial-box/thm:monotonicity-limits}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/thm:monotonicity-limits}{Theorem~12.4}}%
+\begin{digestclaim}[Monotonicity in the budget and limiting cases]
+Fix $\Chatset$, an honest envelope $({\honest}^{-},{\honest}^{+})$
+with envelope set $\mathsf{H}$ (Definition~\ref{def:envelope}; a single
+law $\honest$ is the degenerate envelope, $\mathsf{H}=\{\honest\}$),
+$n$, $\Chatcon$ and an admissible endpoint rule $R$
+(Definition~\ref{def:endpoint-rule}) under a conservative evaluation
+(Definition~\ref{def:conservative-evaluation}), write $p^{\mp}_{\hat c}$ for the
+envelope's values as there, and write $\acSet(e)$ for the output of
+$\mathsf{Acc}_R$ at budget $e$ under a fixed monotone allocation rule
+(Definition~\ref{def:monotone-rule}).
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(budget monotonicity: the set shrinks as the budget grows)} If
+$R$ is monotone in the allocation and $0\le e_1\le e_2<1$, then
+$\acSet(e_2)\subseteq\acSet(e_1)$.
+\item \emph{(consequence for any consumer infimum)} Under the hypothesis of
+(i), for every function $\Psi:\simplex{\Chatset}\to[-\infty,+\infty]$ and
+$e_1\le e_2$,
+\begin{equation*}\tag{\getrefnumber{C-eq:inf-mono}}\digesteqlabel{eq:inf-mono}
+  \inf_{\mathbf{q}\in\acSet(e_1)}\Psi(\mathbf{q})
+  \ \le\ \inf_{\mathbf{q}\in\acSet(e_2)}\Psi(\mathbf{q}) .
+\end{equation*}
+In particular, taking
+$\Psi(\mathbf{q})=\inf_{\omega\in\Feas}O_{\alpha}(\mathbf{q},\omega)$, the
+quantity $\hlow$, which \xref{meat-core/def:feasible} defines as
+$\inf_{\mathbf{q}\in\acSet}\inf_{\omega\in\Feas}O_{\alpha}$, is
+\emph{non-decreasing} in $\ecomp$: a weaker completeness guarantee buys a
+larger or equal entropy bound.
+\item \emph{(limit $\ecomp=0$, every rule)} At $e=0$ every
+$\varepsilon^{\pm}(\hat c)=0$ and
+\begin{equation*}
+\begin{aligned}
+  \acSet(0)=\big\{\mathbf{q}\in\simplex{\Chatset}:\
+  &q(\hat c)=0\ \text{for }\hat c\in\Chatcon\text{ with }p^{+}_{\hat c}=0,\\
+  &q(\hat c)=1\ \text{for }\hat c\in\Chatcon\text{ with }p^{-}_{\hat
+  c}=1\big\},
+\end{aligned}
+\end{equation*}
+with $\varepsilon^{\star}=0$. If $p^{+}_{\hat c}>0$ and $p^{-}_{\hat c}<1$ for
+every $\hat c\in\Chatcon$ (for the degenerate envelope: if
+$0<\honest(\hat c)<1$ for every $\hat c\in\Chatcon$), then
+$\acSet(0)=\simplex{\Chatset}$: a zero completeness budget buys the whole
+simplex and no constraint at all.
+\item \emph{(limit $n\to\infty$, the exact rule)} Let $R$ be the exact rule
+of Definition~\ref{def:interval}, let $\hat c\in\Chatcon$ and write
+$p^{\mp}=p^{\mp}_{\hat c}$. Then
+\begin{equation*}\tag{\getrefnumber{C-eq:width}}\digesteqlabel{eq:width}
+  0\ \le\ q^{+}(\hat c)-p^{+}\ \le\
+  \sqrt{\frac{p^{+}(1-p^{+})}{n\,\varepsilon^{+}(\hat c)}}+\frac1n,
+  \qquad
+  0\ \le\ p^{-}-q^{-}(\hat c)\ \le\
+  \sqrt{\frac{p^{-}(1-p^{-})}{n\,\varepsilon^{-}(\hat c)}}+\frac1n ,
+\end{equation*}
+the first whenever $0<p^{+}<1$ and $\varepsilon^{+}(\hat c)>0$, the second
+whenever $0<p^{-}<1$ and $\varepsilon^{-}(\hat c)>0$.
+Consequently, if $\Chatcon=\Chatset$, $0<p^{\mp}_{\hat c}<1$ and
+$\varepsilon^{\pm}(\hat c)>0$ for all $\hat c$, and the allocation is held
+fixed as $n$ grows (for instance the uniform rule at a fixed $e>0$), then
+every $\mathbf{q}\in\acSet$ satisfies
+$p^{-}_{\hat c}-O(n^{-1/2})\le q(\hat c)\le p^{+}_{\hat c}+O(n^{-1/2})$
+uniformly in $\hat c$: $\acSet$ lies coordinatewise within $O(n^{-1/2})$ of
+the box $\prod_{\hat c}[p^{-}_{\hat c},p^{+}_{\hat c}]$, and it contains
+$\mathsf{H}$ by Theorem~\ref{thm:box-construction}\,(iii). For the degenerate envelope,
+$\sup_{\mathbf{q}\in\acSet}\|\mathbf{q}-\honest\|_{\infty}=O(n^{-1/2})$ and
+$\acSet$ converges to $\{\honest\}$ in Hausdorff distance.
+\item \emph{(no monotonicity in $n$, with a counterexample; the exact rule)}
+For the exact rule, $\acSet$ is \emph{not} monotone in $n$, already for a
+degenerate envelope. Take $\Chatset=\{\hat c_0,\hat c_1\}$, the degenerate
+envelope at $\honest=(\tfrac12,\tfrac12)$, $\Chatcon=\{\hat c_0\}$ and
+$\varepsilon^{-}(\hat c_0)=\varepsilon^{+}(\hat c_0)=\tfrac25$ (so
+$\ecomp=\tfrac45$). Then
+\begin{equation*}
+\begin{aligned}
+  n&=2:\quad [k^{-},k^{+}]=[1,1],\quad
+   \acSet=\{(\tfrac12,\tfrac12)\};\\
+  n&=3:\quad [k^{-},k^{+}]=[1,2],\quad
+   \acSet=\{\mathbf{q}\in\simplex{\Chatset}:\tfrac13\le q(\hat
+   c_0)\le\tfrac23\},
+\end{aligned}
+\end{equation*}
+so $\acSet(n{=}2)\subsetneq\acSet(n{=}3)$: the set is strictly larger at the
+larger round count.
+\item \emph{(degenerate alphabet $|\Chatset|=1$, every rule)} If
+$\Chatset=\{\hat c_0\}$ then, for every $n\ge1$, every $\ecomp\in[0,1)$,
+every $\Chatcon\subseteq\Chatset$ and every admissible allocation,
+\begin{equation*}
+  {\honest}^{+}(\hat c_0)=1,
+  \qquad
+  \mathsf{H}=\acSet=\simplex{\Chatset}=\{\delta_{\hat c_0}\},
+\end{equation*}
+and $\varepsilon^{\star}=0$ whenever ${\honest}^{-}(\hat c_0)=1$, in
+particular for the degenerate envelope, which is then
+$\honest=\delta_{\hat c_0}$. The emitted set is therefore constant in all of
+the construction's parameters on a one-letter alphabet, being at once the
+whole simplex and a single point; for the degenerate envelope so are its box
+data, and completeness is perfect. For a non-degenerate envelope
+(${\honest}^{-}(\hat c_0)<1$, which \eqref{eq:envelope} permits here) the
+lower box bound $q^{-}(\hat c_0)$ and the reported $\varepsilon^{\star}$ may be
+positive and may vary with the parameters; the reported figure is still a
+valid bound (by Theorem~\ref{thm:completeness-bound}), merely a loose one, the true honest
+failure probability being $0$.
+\end{enumerate}
+\end{digestclaim}
+
+\section*{13\quad Elementary enclosures}\pdfbookmark[1]{13 Elementary enclosures}{digest-group-statistics/binomial-box/lem:log-enclosure}
+
+% claim statistics/binomial-box/lem:log-enclosure
+\digestlabel{lem:log-enclosure}{13.1}\pdfbookmark[2]{Lemma 13.1 Rational bounds on the logarithm from integer square roots}{digest-statistics/binomial-box/lem:log-enclosure}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/lem:log-enclosure}{Lemma~13.1}}%
+\begin{digestclaim}[Rational bounds on the logarithm from integer square roots]
+Let $x>0$ be real and $m\ge1$ an integer. Then
+\begin{equation*}\tag{\getrefnumber{C-eq:log-root-bounds}}\digesteqlabel{eq:log-root-bounds}
+  m\big(1-x^{-1/m}\big)\ \le\ \ln x\ \le\ m\big(x^{1/m}-1\big),
+\end{equation*}
+with equality on either side if and only if $x=1$, and both slacks are bounded
+by
+\begin{equation*}\tag{\getrefnumber{C-eq:log-root-slack}}\digesteqlabel{eq:log-root-slack}
+  \max\Big\{m\big(x^{1/m}-1\big)-\ln x,\ \ \ln x-m\big(1-x^{-1/m}\big)\Big\}
+  \ \le\ \frac{(\ln x)^{2}}{2m}\,e^{|\ln x|/m}.
+\end{equation*}
+Consequently, if $l,u$ are rationals with $0<l\le x^{1/m}\le u$, then
+\begin{equation*}\tag{\getrefnumber{C-eq:log-rational-bounds}}\digesteqlabel{eq:log-rational-bounds}
+  m\Big(1-\frac1l\Big)\ \le\ \ln x\ \le\ m\,(u-1),
+\end{equation*}
+and for rational $x=a/b$ ($a,b$ positive integers) and $m=2^{j}$, such
+$l,u$ of any prescribed positive width are computed by $j$ integer square
+roots: with $\operatorname{isqrt}(N)\coloneqq\lfloor\sqrt N\rfloor$
+for an integer $N\ge0$, one has for every rational $y=c/d>0$
+\begin{equation*}\tag{\getrefnumber{C-eq:isqrt-bounds}}\digesteqlabel{eq:isqrt-bounds}
+  \frac{\operatorname{isqrt}(c\,d\,4^{s})}{d\,2^{s}}
+  \ \le\ \sqrt{y}\ <\
+  \frac{\operatorname{isqrt}(c\,d\,4^{s})+1}{d\,2^{s}},
+\end{equation*}
+the two bounds differing by $1/(d\,2^{s})\le2^{-s}$, and iterating
+\eqref{eq:isqrt-bounds} $j$ times, the lower bound always taken from the
+previous lower bound and the upper from the previous upper, gives
+$l\le x^{1/2^{j}}\le u$ whose width $u-l$ is an explicit rational the
+caller reads off and drives below any prescribed bound by the precisions
+$s$ of the steps.
+\end{digestclaim}
+
+\section*{14\quad The Bernstein rule}\pdfbookmark[1]{14 The Bernstein rule}{digest-group-statistics/binomial-box/lem:bernstein-tail}
+
+% claim statistics/binomial-box/prop:rule-bernstein
+\digestlabel{prop:rule-bernstein}{14.2}\pdfbookmark[2]{Proposition 14.2 The Bernstein endpoint rule}{digest-statistics/binomial-box/prop:rule-bernstein}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/prop:rule-bernstein}{Proposition~14.2}}%
+\begin{digestclaim}[The Bernstein endpoint rule]
+Assume a conservative evaluation
+(Definition~\ref{def:conservative-evaluation}). Fix an integer $j\ge1$ and a
+precision $s\ge0$ (parameters of the evaluation). The \emph{Bernstein rule}
+$R_{\mathrm{B}}$ assigns to
+$(n,p,\varepsilon^{-},\varepsilon^{+})$, with $v\coloneqq np(1-p)$:
+\begin{itemize}[leftmargin=1.9em]
+\item if $p=0$: $R^{-}_{\mathrm{B}}=R^{+}_{\mathrm{B}}=0$; if $p=1$:
+$R^{-}_{\mathrm{B}}=R^{+}_{\mathrm{B}}=n$;
+\item otherwise, for each sign separately: if $\varepsilon^{-}=0$ then
+$R^{-}_{\mathrm{B}}=0$, and if $\varepsilon^{+}=0$ then
+$R^{+}_{\mathrm{B}}=n$; if $\varepsilon^{\mp}>0$, let $L^{\mp}$ be the
+rational upper bound $m(u-1)$ of \eqref{eq:log-rational-bounds} on
+$\ln(1/\varepsilon^{\mp})$ with $m=2^{j}$ and $u$ the upper root enclosure
+of \eqref{eq:isqrt-bounds} at precision $s$, let
+\begin{equation*}\tag{\getrefnumber{C-eq:bernstein-endpoint-t}}\digesteqlabel{eq:bernstein-endpoint-t}
+  t^{\mp}\ \coloneqq\ \text{a rational }\ \ge\
+  \frac{L^{\mp}}{3}+\sqrt{\Big(\frac{L^{\mp}}{3}\Big)^{2}+2vL^{\mp}}
+\end{equation*}
+obtained by rounding the square root upward with \eqref{eq:isqrt-bounds},
+and put
+\begin{equation*}\tag{\getrefnumber{C-eq:bernstein-endpoints}}\digesteqlabel{eq:bernstein-endpoints}
+  R^{-}_{\mathrm{B}}\ \coloneqq\ \max\big\{0,\ \lfloor np-t^{-}\rfloor\big\},
+  \qquad
+  R^{+}_{\mathrm{B}}\ \coloneqq\ \min\big\{n,\ \lceil np+t^{+}\rceil\big\}.
+\end{equation*}
+\end{itemize}
+Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $R_{\mathrm{B}}$ is an admissible endpoint rule in the sense of
+Definition~\ref{def:endpoint-rule}\,(a)--(c), computed from $n$, $p$ and the
+allocation by finitely many operations on integers and rationals (integer
+square roots included) and no others; Lemma~\ref{lem:guard} therefore
+applies to it;
+\item $R_{\mathrm{B}}$ is monotone in the allocation, provided every
+rounding in $L^{\mp}$ and $t^{\mp}$ is a non-decreasing function of its
+real argument. The integer-square-root rounding of \eqref{eq:isqrt-bounds}
+is \emph{not} such a function of a rational argument as written (its excess over the
+root depends on the denominator), but it becomes one when the argument is
+first rounded up to the fixed dyadic grid $2^{-s}\mathbb{Z}$, i.e.\ replaced
+by $\lceil y\,2^{s}\rceil/2^{s}$ before the root is taken; the evaluation
+takes $u$ from \eqref{eq:isqrt-bounds} applied to that grid point (with
+$d=2^{s}$ fixed) at every step of Lemma~\ref{lem:log-enclosure}'s
+iteration, rounds the square root in \eqref{eq:bernstein-endpoint-t} the
+same way, and takes $L^{\mp}$ and $t^{\mp}$ themselves as the least
+multiples of $2^{-s}$ at or above the values so obtained. Every such step
+is a composition of non-decreasing maps, and every rounding is upward, so
+(i) is unaffected;
+\item \emph{(half-width)} for $0<p<1$ and $\varepsilon^{\mp}>0$, the
+guarded endpoints of $R_{\mathrm{B}}$ satisfy
+\begin{equation*}\tag{\getrefnumber{C-eq:bernstein-width}}\digesteqlabel{eq:bernstein-width}
+  0\ \le\ q^{+}(\hat c)-p\ \le\ \frac{t^{+}}{n}+\frac1n,
+  \qquad
+  0\ \le\ p-q^{-}(\hat c)\ \le\ \frac{t^{-}}{n}+\frac1n,
+\end{equation*}
+where, for the unrounded value of \eqref{eq:bernstein-endpoint-t},
+\begin{equation*}\tag{\getrefnumber{C-eq:bernstein-halfwidth}}\digesteqlabel{eq:bernstein-halfwidth}
+  \frac{t^{\mp}}{n}
+  \ =\ \frac{L^{\mp}}{3n}+\sqrt{\Big(\frac{L^{\mp}}{3n}\Big)^{2}
+        +\frac{2p(1-p)L^{\mp}}{n}}
+\end{equation*}
+is strictly decreasing in $n$ and is $O(n^{-1/2})$ at fixed $p$ and
+$\varepsilon^{\mp}$. The rule never emits an interval narrower than the raw
+quantile interval of the exact rule of Definition~\ref{def:interval}
+(Proposition~\ref{prop:rule-exact}\,(iii)).
+\end{enumerate}
+\end{digestclaim}
+
+\section*{15\quad The exact rule's local evaluation}\pdfbookmark[1]{15 The exact rule's local evaluation}{digest-group-statistics/binomial-box/lem:pmf-enclosure}
+
+% claim statistics/binomial-box/prop:bracketed-endpoints
+\digestlabel{prop:bracketed-endpoints}{15.3}\pdfbookmark[2]{Proposition 15.3 The enclosure evaluation of the exact rule}{digest-statistics/binomial-box/prop:bracketed-endpoints}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/prop:bracketed-endpoints}{Proposition~15.3}}%
+\begin{digestclaim}[The enclosure evaluation of the exact rule]
+Assume a conservative evaluation
+(Definition~\ref{def:conservative-evaluation}). Let $n\ge1$, let
+$p\in(0,1)$ and $\varepsilon^{+}\in(0,1)$ be rational, let
+$\Ncount{}$ be binomial with parameters $(n,p)$, and let $\kappa^{+}$ be the
+exact upper quantile of Definition~\ref{def:interval} at
+$(n,p,\varepsilon^{+})$. Let
+\begin{equation*}\tag{\getrefnumber{C-eq:tail-enclosure}}\digesteqlabel{eq:tail-enclosure}
+  \tau^{-}(k)\ \le\ \Pr[\Ncount{}>k]\ \le\ \tau^{+}(k),\qquad k=0,\dots,n,
+\end{equation*}
+be an enclosure with $\tau^{-}(n)=\tau^{+}(n)=0$, each bound either a
+rational or given through a rational bound on its logarithm, such as the
+one Lemma~\ref{C-lem:tail-majorant}\,(ii)--(iii) yields with the mass point
+enclosed by Lemma~\ref{C-lem:pmf-enclosure} and the logarithms by
+Lemma~\ref{lem:log-enclosure}. Call $k$ \emph{certified admissible},
+$\mathsf{C}^{+}(k)$, when the available upper bound proves
+$\Pr[\Ncount{}>k]\le\varepsilon^{+}$: $\tau^{+}(k)\le\varepsilon^{+}$, or in
+log space $U(k)\le\lambda^{-}$ for rationals $U(k)\ge\ln\Pr[\Ncount{}>k]$
+and $\lambda^{-}\le\ln\varepsilon^{+}$; and \emph{certified inadmissible},
+$\mathsf{D}^{+}(k)$, when the lower bound proves
+$\Pr[\Ncount{}>k]>\varepsilon^{+}$: $\tau^{-}(k)>\varepsilon^{+}$, or in log
+space $\Lambda(k)>\lambda^{+}$ for rationals
+$\Lambda(k)\le\ln\Pr[\Ncount{}>k]$ and $\lambda^{+}\ge\ln\varepsilon^{+}$.
+An index that is neither is \emph{undecided}. The predicate
+$\mathsf{C}^{+}(n)$ always holds.
+
+A \emph{bracketed upper endpoint} is an integer $\tilde k^{+}\in\{0,\dots,n\}$
+with $\mathsf{C}^{+}(\tilde k^{+})$ and, if $\tilde k^{+}\ge1$,
+$\lnot\mathsf{C}^{+}(\tilde k^{+}-1)$. The \emph{enclosure evaluation of the
+exact rule} is the endpoint rule
+$R_{\mathrm{encl}}$ whose $R^{+}_{\mathrm{encl}}$ is the bracketed upper
+endpoint returned by a fixed deterministic search procedure that returns such
+an endpoint for every input, whose $R^{-}_{\mathrm{encl}}$
+is obtained in the same way for the lower tail through the mirror
+$\Ncount{}'=n-\Ncount{}$ of Lemma~\ref{C-lem:tail-majorant}\,(v), and which
+returns the values of Definition~\ref{def:endpoint-rule}\,(b) and (c) at a
+zero budget and at $p\in\{0,1\}$. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(admissible relaxation)} Every bracketed upper endpoint satisfies
+$\Pr[\Ncount{}>\tilde k^{+}]\le\varepsilon^{+}$ and
+$\kappa^{+}\le\tilde k^{+}$; mirror-wise every bracketed lower endpoint
+$\tilde k^{-}$ satisfies $\Pr[\Ncount{}<\tilde k^{-}]\le\varepsilon^{-}$ and
+$\tilde k^{-}\le\kappa^{-}$. Hence $R_{\mathrm{encl}}$ is an
+admissible endpoint rule, Lemma~\ref{lem:guard} applies to it, and the
+box
+$\mathsf{Acc}_{R_{\mathrm{encl}}}$ emits (Definition~\ref{def:construction})
+contains the box the exact rule emits: every $q^{-}$ is at most and every
+$q^{+}$ at least the exact rule's.
+\item \emph{(the bracket decided)} If $\tilde k^{+}\ge1$ and
+$\mathsf{D}^{+}(\tilde k^{+}-1)$ holds, then $\tilde k^{+}=\kappa^{+}$; if
+$\tilde k^{+}=0$ then $\tilde k^{+}=\kappa^{+}$. The mirror statement holds
+for the lower side.
+\item \emph{(conservatism in counts)} Suppose $\tilde k^{+}>\kappa^{+}$,
+$\kappa^{+}\le n-2$ and $r_{\kappa^{+}+1}<1$, with $r_j$ the ratios
+\eqref{C-eq:pmf-ratio}. Let $w\ge0$
+be the slack of the failed certificate at $\tilde k^{+}-1$:
+$w\coloneqq\ln\tau^{+}(\tilde k^{+}-1)-\ln\Pr[\Ncount{}>\tilde k^{+}-1]$, or
+in log space
+$w\coloneqq U(\tilde k^{+}-1)-\ln\Pr[\Ncount{}>\tilde k^{+}-1]
++(\ln\varepsilon^{+}-\lambda^{-})$. Then
+\begin{equation*}\tag{\getrefnumber{C-eq:bracket-conservatism}}\digesteqlabel{eq:bracket-conservatism}
+  \tilde k^{+}-\kappa^{+}\ <\ 1+\frac{w}{-\ln r_{\kappa^{+}+1}} .
+\end{equation*}
+The emitted endpoint is therefore the exact quantile up to a number of
+counts bounded by the enclosure's slack divided by the per-count decay of
+the tail at the quantile. The mirror statement holds for the lower side,
+through $\Ncount{}'$ (Lemma~\ref{C-lem:tail-majorant}\,(v)): with
+$\kappa^{-}=n-\kappa'^{+}$ and $\tilde k^{-}=n-\tilde k'^{+}$, where the
+primed quantities are those of $\Ncount{}'$ at level $\varepsilon^{-}$,
+$\kappa^{-}-\tilde k^{-}<1+w'/(-\ln r'_{\kappa'^{+}+1})$ under the mirrored
+hypotheses. Consequently, wherever the bracket is decided the emitted
+endpoint is the exact rule's, and so are its guarded endpoint and its box
+bound; wherever it is undecided the guarded endpoint exceeds the exact rule's
+by at most $\tilde k^{+}-\kappa^{+}$ counts and the box bound $q^{+}$ the
+exact rule's by at most $(\tilde k^{+}-\kappa^{+})/n$, which
+\eqref{eq:bracket-conservatism} bounds under the hypotheses above;
+mirror-wise for $k^{-}$ and $q^{-}$. Where the hypothesis $r_{\kappa^{+}+1}<1$ fails (the
+exact quantile at or below the mean, reachable at a near-unit tail budget,
+Proposition~\ref{prop:rule-exact}\,(vi)) the endpoint is still admissible by
+(i) and only this bound is unavailable; at $\kappa^{+}=n-1$ the excess
+$\tilde k^{+}-\kappa^{+}$ is at most one count.
+\end{enumerate}
+\end{digestclaim}
+
+\section*{16\quad Requirements: the request, its refusal and the reports}\pdfbookmark[1]{16 Requirements: the request, its refusal and the reports}{digest-group-statistics/binomial-box/req:rule-in-force}
+
+% claim statistics/binomial-box/req:rule-in-force
+\digestlabel{req:rule-in-force}{16.1}\pdfbookmark[2]{Requirement 16.1 The rule the request selects}{digest-statistics/binomial-box/req:rule-in-force}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/req:rule-in-force}{Requirement~16.1}}%
+\begin{digestrequirement}[The rule the request selects]
+The engine builds the box of Definition~\ref{def:construction} with the rule
+that the request's \iface{endpoint_rule} and \iface{tail_evaluation} select,
+and with no other: \iface{endpoint_rule: exact} with
+\iface{tail_evaluation: sweep}, the exact binomial quantile rule of
+Definition~\ref{def:interval} with its tail comparisons decided on the
+closed forms, exactly or against upper bounds on the tails as
+Proposition~\ref{prop:rule-exact}\,(vii) admits, which is the default; \iface{endpoint_rule: exact} with
+\iface{tail_evaluation: enclosure}, the enclosure evaluation
+$R_{\mathrm{encl}}$ of the exact rule
+(Proposition~\ref{prop:bracketed-endpoints}), an admissible relaxation of it;
+and \iface{endpoint_rule: bernstein}, the Bernstein rule of
+Proposition~\ref{prop:rule-bernstein}, on which \iface{tail_evaluation}
+selects only how the completeness figure is computed
+(Requirement~\ref{req:completeness-report}).
+\end{digestrequirement}
+
+% claim statistics/binomial-box/req:request-defaults
+\digestlabel{req:request-defaults}{16.2}\pdfbookmark[2]{Requirement 16.2 Defaults for the constrained outcomes and the allocation}{digest-statistics/binomial-box/req:request-defaults}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/req:request-defaults}{Requirement~16.2}}%
+\begin{digestrequirement}[Defaults for the constrained outcomes and the allocation]
+Where a request omits the constrained outcomes, the engine takes
+$\Chatcon=\Chatset$ (\iface{constrained_outcomes}); where it omits the
+allocation, the engine takes the uniform rule of
+Definition~\ref{def:monotone-rule} at the request's budget,
+$\varepsilon^{\pm}(\hat c)=\ecomp/(2|\Chatcon|)$ for every
+$\hat c\in\Chatcon$ (\iface{budget_allocation}).
+\end{digestrequirement}
+
+% claim statistics/binomial-box/req:input-refusal
+\digestlabel{req:input-refusal}{16.3}\pdfbookmark[2]{Requirement 16.3 Refusal of an input that violates a decidable clause}{digest-statistics/binomial-box/req:input-refusal}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/req:input-refusal}{Requirement~16.3}}%
+\begin{digestrequirement}[Refusal of an input that violates a decidable clause]
+Before it constructs anything, the engine decides exactly every condition of
+an admissible input (Definition~\ref{def:endpoint-rule}) that its own inputs
+determine on data of the form that definition fixes. On a violation it emits
+\iface{infeasibility_report} naming the violated condition by its code, the
+first violation in the order the interface fixes, and it emits no
+\iface{acceptance_set}; it repairs no input and puts no default in place of a
+violating value. The codes of the violations (1)--(11) of
+Theorem~\ref{thm:honest-containment}\,(iii) are, in that order,
+\iface{alphabet_empty}, \iface{alphabet_not_finite},
+\iface{rounds_out_of_range}, \iface{honest_not_a_distribution},
+\iface{honest_envelope_not_admissible}, \iface{budget_out_of_range},
+\iface{allocation_negative}, \iface{allocation_exceeds_budget},
+\iface{selector_not_a_subset}, \iface{inputs_not_rational} and
+\iface{endpoint_rule_unknown}. Data that, with the defaults of
+Requirements~\ref{req:request-defaults} and~\ref{req:rule-in-force} in place,
+do not have that form are refused as well: the engine emits no
+\iface{acceptance_set} for them and substitutes nothing for them.
+\end{digestrequirement}
+
+% claim statistics/binomial-box/req:completeness-report
+\digestlabel{req:completeness-report}{16.4}\pdfbookmark[2]{Requirement 16.4 The reported completeness figure}{digest-statistics/binomial-box/req:completeness-report}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/req:completeness-report}{Requirement~16.4}}%
+\begin{digestrequirement}[The reported completeness figure]
+The engine reports under \iface{completeness_certified} the following figure.
+On \iface{endpoint_rule: exact} with \iface{tail_evaluation: sweep} it
+reports $\varepsilon^{\star}$ of Theorem~\ref{thm:completeness-bound} itself, and where it
+cannot evaluate a tail exactly it rounds the tail upward and reports
+$\min\{\ecomp,\tilde\varepsilon\}$ for the resulting
+$\tilde\varepsilon\ge\varepsilon^{\star}$ (Remark~\ref{C-rem:epsstar}). On
+every other route it reports the admissible figure of
+Remark~\ref{C-rem:completeness-on-rules} that the route's row of
+\iface{completeness_report} names: the allocation sum, or
+$\min\{\ecomp,\tilde\varepsilon\}$ for an upward-rounded evaluation
+$\tilde\varepsilon\ge\varepsilon^{\star}$ of the tails at the emitted
+endpoints. It never reports a downward-rounded figure.
+\end{digestrequirement}
+
+% claim statistics/binomial-box/req:honest-model-record
+\digestlabel{req:honest-model-record}{16.5}\pdfbookmark[2]{Requirement 16.5 The honest-model record beside every completeness figure}{digest-statistics/binomial-box/req:honest-model-record}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/req:honest-model-record}{Requirement~16.5}}%
+\begin{digestrequirement}[The honest-model record beside every completeness figure]
+With every completeness figure it reports, the engine records, in the record
+\iface{honest_model}, the input and the evaluation under which the figure was
+computed: the honest model (the law in the point form, or the
+honest envelope), the round count $n$, the constrained outcomes
+$\Chatcon$ and the allocation; the endpoint rule and the tail evaluation; and
+the parameters in force, for the Bernstein rule its $j$ and $s$
+(Proposition~\ref{prop:rule-bernstein}) and, wherever the tails are
+evaluated by enclosures, the parameters of those enclosures
+(Proposition~\ref{prop:bracketed-endpoints}). A completeness figure is
+meaningful only relative to that record.
+\end{digestrequirement}
+
+\section*{17\quad Requirements: the enclosure evaluation}\pdfbookmark[1]{17 Requirements: the enclosure evaluation}{digest-group-statistics/binomial-box/req:search-procedure}
+
+% claim statistics/binomial-box/req:search-procedure
+\digestlabel{req:search-procedure}{17.1}\pdfbookmark[2]{Requirement 17.1 One fixed search for the enclosure evaluation}{digest-statistics/binomial-box/req:search-procedure}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/req:search-procedure}{Requirement~17.1}}%
+\begin{digestrequirement}[One fixed search for the enclosure evaluation]
+On the enclosure evaluation of the exact rule, the engine finds every
+bracketed endpoint of Proposition~\ref{prop:bracketed-endpoints}, upper and
+lower, by one fixed search procedure, total and deterministic, with fixed
+parameters: the procedure \iface{search_procedure} records.
+\end{digestrequirement}
+
+% claim statistics/binomial-box/req:enclosure-substrate
+\digestlabel{req:enclosure-substrate}{17.2}\pdfbookmark[2]{Requirement 17.2 Log-space arithmetic with directed rounding}{digest-statistics/binomial-box/req:enclosure-substrate}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/req:enclosure-substrate}{Requirement~17.2}}%
+\begin{digestrequirement}[Log-space arithmetic with directed rounding]
+On the enclosure evaluation the engine computes everything in log space with
+directed rounding: the mass point through \eqref{C-eq:pmf-enclosure}, the window
+through the rationals $A_T$ and $B_T$ of \eqref{C-eq:window-rationals}, whose
+logarithms Lemma~\ref{lem:log-enclosure} encloses, and the budget through the
+same lemma. It holds the products $\prod r_l$ inside $A_T$ and $B_T$ as
+dyadic numbers with an explicit binary exponent, rounded in the direction
+each bound requires (down for $A_T$ in the lower bound, up for $A_T+B_T$ in
+the upper), not as exact rationals, and the Stirling remainders and the root
+bounds as rationals of the size of a logarithm; the only numbers it ever
+forms have the magnitude of logarithms.
+\end{digestrequirement}
+
+% claim statistics/binomial-box/req:endpoint-exact-record
+\digestlabel{req:endpoint-exact-record}{17.3}\pdfbookmark[2]{Requirement 17.3 The bracket verdict per outcome and side}{digest-statistics/binomial-box/req:endpoint-exact-record}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/binomial-box/req:endpoint-exact-record}{Requirement~17.3}}%
+\begin{digestrequirement}[The bracket verdict per outcome and side]
+On the enclosure evaluation of the exact rule the engine records in the
+diagnostic \iface{endpoint_exact}, per constrained outcome and per side,
+whether the bracket was decided, that is whether the emitted endpoint is
+proved equal to the exact quantile by
+Proposition~\ref{prop:bracketed-endpoints}\,(ii). When it holds a
+certified-inadmissible index $k_{\mathsf{D}}$ below the bracket with
+$0<r_{k_{\mathsf{D}}+2}<1$, it may also report the bound
+\eqref{eq:bracket-conservatism} in counts with $-\ln r_{k_{\mathsf{D}}+2}$ in
+place of $-\ln r_{\kappa^{+}+1}$ and the computable upper bound
+$U(\tilde k^{+}-1)-\Lambda(\tilde k^{+}-1)+(\lambda^{+}-\lambda^{-})$ on $w$
+in place of $w$ (Remark~\ref{C-rem:local-evaluation}).
+\end{digestrequirement}
+
+\part*{Singleton acceptance set}\pdfbookmark[0]{Singleton acceptance set}{digest-part-4}
+
+\section*{18\quad Completeness of a singleton acceptance set}\pdfbookmark[1]{18 Completeness of a singleton acceptance set}{digest-group-statistics/singleton/thm:singleton-completeness}
+
+% claim statistics/singleton/thm:singleton-completeness
+\digestlabel{thm:singleton-completeness}{18.1}\pdfbookmark[2]{Theorem 18.1 Completeness of a singleton acceptance set}{digest-statistics/singleton/thm:singleton-completeness}
+\begin{mainclaim}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/singleton/thm:singleton-completeness}{Theorem~18.1}}%
+\begin{digestclaim}[Completeness of a singleton acceptance set]
+Assume A-HON, let $\Chatset$ and $n$ be a
+matched alphabet and round count
+(Definition~\ref{def:matched-alphabet}), and let
+$\acSet=\{\mathbf{q}^{\ast}\}$ be a singleton geometry with
+$\mathbf{q}^{\ast}\in\simplex{\Chatset}$. Call a completeness
+budget $\ecomp$ \emph{admissible for this geometry} when $\ecomp\in[0,1)$ and
+$\Pr[\operatorname{freq}_{\Chat_1^n}\notin\acSet]\le\ecomp$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(exact accept probability)} With the convention $0^{0}=1$,
+\begin{equation*}\tag{\getrefnumber{C-eq:singleton-acc}}\digesteqlabel{eq:singleton-acc}
+  \Pr\big[\operatorname{freq}_{\Chat_1^n}\in\acSet\big]
+  =\begin{dcases}
+     \frac{n!}{\prod_{\hat c\in\Chatset}\big(n\,q^{\ast}(\hat c)\big)!}
+     \prod_{\hat c\in\Chatset}\honest(\hat c)^{\,n\,q^{\ast}(\hat c)},
+     &\text{if }n\,q^{\ast}(\hat c)\in\mathbb{Z}_{\ge0}\ \forall\hat c,\\
+     0,&\text{otherwise;}
+   \end{dcases}
+\end{equation*}
+\item \emph{(the least admissible budget, and when there is none)} the accept
+probability \eqref{eq:singleton-acc} is $0$ if and only if either
+$n\,q^{\ast}(\hat c)\notin\mathbb{Z}_{\ge0}$ for some $\hat c$, or
+$\mathbf{q}^{\ast}\not\ll\honest$, that is, some $\hat c$ has
+$q^{\ast}(\hat c)>0$ and $\honest(\hat c)=0$. In that case \emph{no}
+$\ecomp\in[0,1)$ is admissible for this geometry, and no completeness
+statement whatsoever can be made about it; a budget of $1$ lies outside
+$[0,1)$. Otherwise the accept probability is strictly positive and the least
+admissible completeness budget is
+\begin{equation*}\tag{\getrefnumber{C-eq:singleton-budget}}\digesteqlabel{eq:singleton-budget}
+  \ecomp=1-\Pr\big[\operatorname{freq}_{\Chat_1^n}\in\acSet\big]\ \in[0,1),
+\end{equation*}
+which does lie in $[0,1)$;
+\item \emph{(when the budget is zero)} the budget \eqref{eq:singleton-budget}
+equals $0$ if and only if $\honest$ is a point mass $\delta_{\hat c_0}$ for
+some $\hat c_0\in\Chatset$ and $\mathbf{q}^{\ast}=\delta_{\hat c_0}$; in
+particular it equals $0$ whenever $|\Chatset|=1$, and it is strictly positive
+whenever $\honest$ gives positive mass to two distinct outcomes.
+\end{enumerate}
+\end{digestclaim}
+\end{mainclaim}
+
+\section*{19\quad Requirements}\pdfbookmark[1]{19 Requirements}{digest-group-statistics/singleton/req:singleton-budget-record}
+
+% claim statistics/singleton/req:singleton-budget-record
+\digestlabel{req:singleton-budget-record}{19.1}\pdfbookmark[2]{Requirement 19.1 The completeness budget of a declared singleton}{digest-statistics/singleton/req:singleton-budget-record}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/singleton/req:singleton-budget-record}{Requirement~19.1}}%
+\begin{digestrequirement}[The completeness budget of a declared singleton]
+An instance that declares a singleton acceptance set $\{\mathbf{q}^{\ast}\}$
+records the completeness budget $\ecomp$ of \eqref{eq:singleton-budget}, or,
+in the degenerate case of Theorem~\ref{thm:singleton-completeness}\,(ii) where the accept
+probability is exactly $0$, records that \emph{no} admissible completeness
+budget exists rather than a budget of $1$, which is the honest reading of a
+geometry the honest run can never satisfy. In either case it claims no
+completeness the set does not have.
+\end{digestrequirement}
+
+% claim statistics/singleton/req:singleton-point-form
+\digestlabel{req:singleton-point-form}{19.2}\pdfbookmark[2]{Requirement 19.2 Point-form honest input for the singleton}{digest-statistics/singleton/req:singleton-point-form}
+\renewcommand*{\RestatedName}{\hyperref{contract.pdf}{}{claim-statistics/singleton/req:singleton-point-form}{Requirement~19.2}}%
+\begin{digestrequirement}[Point-form honest input for the singleton]
+The singleton takes its honest input in the point form only: the
+engine reads a degenerate envelope as its law, and refuses a
+non-degenerate envelope with \iface{honest_envelope_not_degenerate} rather
+than reducing it to one of its laws.
+\end{digestrequirement}
+
+\bibliographystyle{plain}
+\bibliography{../../../refs/references}
+
+\end{document}

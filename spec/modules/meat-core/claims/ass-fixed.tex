@@ -1,0 +1,62 @@
+% ---
+% id: meat-core/ass:fixed
+% kind: ass
+% title: "Protocol parameters fixed before the run"
+% summary: >-
+%   The acceptance set, the round count, the key length, the transcript
+%   length, the error budgets, the authentication parameters and the Rényi
+%   order are fixed before the run and applied unchanged. The key length is
+%   that of a fixed-length protocol, not one chosen from the run's data.
+% prominence: standard
+% status: accepted
+% uses: [def:postprocessing-model, def:authenticated-channel]
+% assumes: []
+% refs:
+%   - "tupkary2025survey, Sec. 2.2"
+% provenance: newly-derived
+% short_id: A-FIXED
+% verification: never
+% category: protocol-structure
+% affects: [secrecy, correctness]
+% user_statement: >-
+%   Every parameter the key length rests on is fixed before the run starts:
+%   the acceptance test, the number of rounds, the key length, the
+%   error-correction budget λ_EC, the error budgets ε_PA and ε_EV, and the
+%   authentication parameters ε_auth and k_auth. The Rényi order α at which
+%   the key length is computed is fixed before the run too; choosing it by
+%   comparing the key lengths your declared model gives at several orders,
+%   as the run tier's outer search over α does, reads no data of the run and is such
+%   a choice. None of them may be chosen or adjusted after looking at the
+%   run's data, for example by relaxing the acceptance threshold or picking
+%   the key length from the observed error rate. That would be a
+%   variable-length protocol, which this analysis does not cover.
+% lean:
+% ---
+
+A fixed-length protocol outputs a key of a length determined before the
+protocol begins, or aborts \cite[Sec.~2.2]{tupkary2025survey}; choosing the
+length or the test from the observed data makes it a variable-length
+protocol, which needs a different analysis. The R\'enyi order $\alpha$ is a
+parameter of the proof, not of the protocol: the run never reads it, and it
+enters only the computation of $\ell$. Clause (iii) fixes it before the run
+all the same, so that the order, and with it the length computed at it, is
+never a function of the run's data; an order chosen by comparing the
+lengths that the \tref{declared model} gives at several orders satisfies it.
+No proof consumes clause (iii): the key-length theorem holds at each
+$\alpha\in(1,2)$, and the clause is stated so that the attestation names
+every input of $\ell$.
+
+\begin{assumption}\label{ass:fixed}
+(i) The acceptance set $\acSet$, the round count $n$, the output length
+$\ell$, the transcript length $\lEC$, the error budgets $\epa$ and $\eev$ of
+Definition~\ref{def:postprocessing-model}, and the authentication parameters
+$\varepsilon_{\mathrm{auth}}$ and $k_{\mathrm{auth}}$, the declared
+authentication error bound and key consumption
+(Definition~\ref{def:authenticated-channel}\,(b)), are fixed before the
+first round of the run;
+(ii) the run applies them unchanged: none of them is chosen, adjusted or
+recomputed from data observed in the run;
+(iii) the R\'enyi order $\alpha\in(1,2)$ at which $\ell$ is computed is
+fixed before the first round of the run, from data available before it, and
+is not chosen, adjusted or recomputed from data observed in the run.
+\end{assumption}

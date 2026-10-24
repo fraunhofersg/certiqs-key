@@ -1,0 +1,250 @@
+% ---
+% id: protocol-compiler/thm:feasibility
+% kind: thm
+% title: "Feasibility by an explicit or a verified candidate"
+% summary: >-
+%   An empty constraint list has an explicit product state in the feasible set.
+%   Otherwise the compiler verifies, exactly and block by block, the default
+%   candidate and, if it fails, a supplied witness, and refuses when neither
+%   verifies.
+% prominence: standard
+% status: implemented
+% uses: [def:feasible, def:compile, def:exact, def:homog, def:declaration]
+% mentions: [thm:validator-soundness, thm:band-a, foundations/def:exact-island, req:feasibility-witness]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.feasibility:check_feasibility
+% lean:
+% notes: "The pointer to thm:band-a (i) at the one-block case is explanatory and is a mention. D(vi) is a hypothesis of (ii) alone: the constraint legs read each entry's relation symbol and right-hand side, which D(vi) types; (i) has no constraint leg."
+% ---
+
+D(vii) is the one target condition that is not a typing or a finite syntactic
+check: whether $\Feas\ne\varnothing$ depends on the interaction of the marginal
+with the constraint entries. It is therefore treated in two cases, and the
+second one ends in a refusal rule rather than a theorem; the engine's order of
+the two candidates and its refusal are Requirement~\ref{req:feasibility-witness}.
+
+\begin{theorem}\label{thm:feasibility}
+Let $\Decl$ be a candidate declaration satisfying D(i)--D(iii), and let
+$\Feas$ be as in Definition~\ref{def:feasible}. (The hypothesis
+is on the conditions alone: nothing below uses that $\Decl$ was emitted by
+Definition~\ref{def:compile}, and Theorem~\ref{thm:validator-soundness} applies this theorem to
+candidates.)
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item If $\CList=\varnothing$ then $\Feas\ne\varnothing$. Explicitly, the
+\tref{block list}
+\begin{equation}\label{eq:witness-empty}
+  \omega^{\star(s)}=
+  \begin{cases}
+    \tau_A\otimes\dfrac{\idon{\Qsys_s}}{d_{\Qsys}},
+      & \text{trusted-source mode},\\[1.2ex]
+    \dfrac{\idon{A}}{d_A}\otimes\dfrac{\idon{\Qsys_s}}{d_{\Qsys}},
+      & \text{untrusted-source mode},
+  \end{cases}
+  \qquad s\in\SecSet ,
+\end{equation}
+which denotes $\tau_A\otimes\idon{\Qsys}/d_{\Qsys}$, respectively
+$\idon{A}/d_A\otimes\idon{\Qsys}/d_{\Qsys}$, lies in $\Feas$.
+\item If $\CList\ne\varnothing$ and $\Decl$ satisfies D(vi) as well, which
+makes each constraint leg of \eqref{eq:feas} a well-posed comparison, then
+$\Feas\ne\varnothing$ holds if and only
+if some block list $\omega$ satisfies the conditions of \eqref{eq:feas}. The
+compiler decides those conditions \emph{exactly}, by finitely many arithmetic
+operations and per block, on at most two candidates and in a fixed order:
+first the \emph{default candidate} \eqref{eq:witness-empty}, which satisfies
+every conjunct of \eqref{eq:feas} except possibly the constraint legs
+(by the proof of (i)) and which the compiler forms in order to test and never
+emits; and, if that candidate fails a constraint leg, a \emph{supplied}
+witness $\omega^{\star}$, consumed and verified and never emitted. It refuses
+exactly when the default candidate fails and either no witness is supplied or
+the supplied one fails.
+\end{enumerate}
+\emph{The general format.} For a candidate declaration in the general format
+of Definition~\ref{def:declaration}\,(DX1)--(DX6) satisfying D(i)--D(iii),
+and D(vi) for part (ii), with $\Feas$ the set of \eqref{eq:feas-general},
+both parts hold with the
+\tref[joint sector]{joint sectors} in place of the sectors. In (i) the default candidate is
+the block list over the joint sectors
+\begin{equation}\label{eq:witness-general}
+  \omega^{\star(t,s)}=
+  \begin{cases}
+    \tau^{(t)}_A\otimes\dfrac{\idon{\Qsys_s}}{d_{\Qsys}},
+      & \text{trusted-source mode},\\[1.2ex]
+    \dfrac{\idon{A_t}}{d_A}\otimes\dfrac{\idon{\Qsys_s}}{d_{\Qsys}},
+      & \text{untrusted-source mode},
+  \end{cases}
+  \qquad (t,s)\in\mathbb{T}\times\SecSet ,
+\end{equation}
+and in (ii) the verification is the per-joint-block one listed in the proof,
+which forms no array larger than one joint block. At $|\mathbb{T}|=1$ and one
+\tref{measured factor} \eqref{eq:witness-general} is \eqref{eq:witness-empty}
+and the two lists of decisions coincide item for item.
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} The default candidate is $\tau_A\otimes\idon{\Qsys}/d_{\Qsys}$,
+or $\idon{A}/d_A\otimes\idon{\Qsys}/d_{\Qsys}$ where there is no marginal,
+presented block by block; every conjunct of the \tref{feasible set} except
+the constraint legs holds of it by direct computation, and at an empty list
+there are no constraint legs. It is formed and decided in
+exact rational arithmetic and never emitted, so its entries need not be
+binary64. Verifying any candidate is a finite list of exact decisions, each on
+one block or on one $d_A\times d_A$ matrix. The general format repeats both
+arguments over the joint sectors.
+
+\emph{Step 1 (the default candidate lies in $\Feas$ at an empty list, (i)).}
+Write $\chi_s\coloneqq\idon{\Qsys_s}/d_{\Qsys}$, so that
+$\sum_s\tr\chi_s=\sum_sd_s/d_{\Qsys}=1$. The sector decomposition is not a
+condition here: $\omega^{\star}$ is presented as a list, one array on
+$A\Qsys_s$ per $s$, so the off-block conjunct holds by the presentation and
+there is nothing to verify.
+
+\emph{Positivity, per block.} In \tref{trusted-source mode}
+$\omega^{\star(s)}=\tau_A\otimes\chi_s$ is Hermitian, $\tau_A$ being Hermitian
+by D(ii) and $\chi_s$ a positive real multiple of an identity; and it is
+positive semidefinite, being the tensor product of the positive semidefinite
+$\tau_A$ (D(ii)) with the positive semidefinite $\chi_s$. In
+\tref{untrusted-source mode} $\omega^{\star(s)}=\idon{A}/d_A\otimes\chi_s\succ0$ outright.
+\emph{Trace.} $\tr\omega^{\star}=\sum_s\tr\omega^{\star(s)}
+=\tr\tau_A\sum_s\tr\chi_s=\tr\tau_A=1$ in trusted-source mode, by D(ii); in
+untrusted-source mode $\tr\omega^{\star}=1$ directly.
+\emph{Marginal.} In trusted-source mode
+$\omega^{\star}_A=\sum_s\tr_{\Qsys_s}\omega^{\star(s)}
+=\tau_A\sum_s\tr\chi_s=\tau_A$; in untrusted-source mode there is no marginal
+condition beyond the trace, already checked. \emph{Constraints.} With
+$\CList=\varnothing$ the conjunction of \eqref{eq:feas-modes} is empty and
+holds vacuously. Hence $\omega^{\star}\in\Feas$.
+
+\emph{Step 2 (the number model of Step 1).} Two points of that argument
+concern the number model. First, every step used D(ii) \emph{as an identity of
+the declared numbers}, which is what Definition~\ref{def:exact} delivers ---
+$\tr\tau_A=1$ with its sum rounding nowhere, in particular. Second,
+\emph{the entries of $\omega^{\star}$ need not be \tref{binary64 numbers}, and
+nothing requires them to be}: $1/d_{\Qsys}$ is a rational, dyadic only when
+$d_{\Qsys}$ is a power of two, and $\omega^{\star}$ is \emph{never emitted}.
+It is formed and decided in exact rational arithmetic on the declared dyadic
+entries --- the exact arithmetic in which the \tref{exact island}
+(\xref{foundations/def:exact-island}\,(i)) takes its decisions on
+\tref{declared data}, applied here to a candidate the compiler forms itself
+and never emits --- so every predicate above is decided, not approximated,
+and no representability question arises for an
+object no consumer ever sees. A \emph{supplied} witness is a different
+matter: it is \tref{declared data}, hence dyadic, and its predicates are
+decided exactly on those dyadic numbers.
+
+\emph{Step 3 (the verification of a candidate, (ii)).} The stated equivalence
+is Definition~\ref{def:feasible} read literally. The verification of a
+candidate is finite and \emph{per block}. Writing $n_s\coloneqq d_Ad_s$ for
+the size of the $s$-block, no array larger than one $n_s\times n_s$ block is
+formed at any point; where $|\SecSet|=1$ that one block is $d_Ad_{\Qsys}$
+square, and is a block and not an exception (Theorem~\ref{thm:band-a}\,(i)). It
+consists of
+\begin{itemize}[leftmargin=1.6em]
+\item $|\SecSet|$ positivity decisions, each on an $n_s\times n_s$ matrix ---
+  the Hermiticity decision $\omega^{(s)}=\omega^{(s)\dagger}$, entry by entry,
+  and the semidefiniteness of the resulting Hermitian matrix by exact
+  symmetric elimination, of which the largest is on $\max_sn_s$ and not on
+  $d_Ad_{\Qsys}$;
+\item one trace decision, $\tr\omega=1$ on the scalar
+  $\sum_s\tr\omega^{(s)}$, a sum of $|\SecSet|$ block traces accumulated in the
+  \tref{declared order};
+\item in trusted-source mode one marginal decision: form
+  $\omega_A=\sum_s\tr_{\Qsys_s}\omega^{(s)}$, which is
+  $|\SecSet|$ partial traces onto $A$ and $|\SecSet|-1$ additions of $d_A^2$
+  entries, then $\omega_A=\tau_A$ over $d_A^2$ entries;
+\item and, per entry $k$, one constraint leg: in trusted-source mode
+  $\sum_s\tr_{\Qsys_s}[(\idon{A}\otimes\hat O_k^{(s)})\omega^{(s)}]$, a
+  matrix of size $d_A$ assembled from $|\SecSet|$ block terms, compared with
+  $\Theta_k$ in the ordering $\bowtie_k$ --- an exact L\"owner comparison,
+  i.e.\ the semidefiniteness of one $d_A\times d_A$ difference for an
+  inequality, or one exact entrywise equality when $\bowtie_k$ is $=$; in
+  untrusted-source mode the scalar
+  $\sum_s\tr[(\idon{A}\otimes\hat O_k^{(s)})\omega^{(s)}]$ compared with
+  $c_k$ as real numbers, according to the emitted source mode (D(vi)). The
+  right-hand side of a trusted-source-mode leg is $c_k\tau_A$ for an entry
+  tagged homogeneous and the declared $\Theta_k$ for one tagged general
+  (Definition~\ref{def:homog}); the compiler forms $c_k\tau_A$ here in order
+  to \emph{test} the candidate, and does not emit it --- the consuming engine
+  constructs its own from the same declared $c_k$ and $\tau_A$, so the two
+  form the same matrix.
+\end{itemize}
+
+\emph{Step 4 (one decision for an equality).} The equality decision is
+equivalent to the two inequality conditions. For Hermitian operands $X,Y$, set
+$D=X-Y$. If $D\succeq0$ and $-D\succeq0$, each real eigenvalue of $D$ is both
+nonnegative and nonpositive, hence zero; Hermitian diagonalization gives
+$D=0$. Conversely $D=0$ implies both inequalities. Thus entrywise $X=Y$
+decides their conjunction exactly, in one predicate. The argument applies to
+every operator row of the general format below as well.
+
+All of these are finitely many arithmetic operations on the declared data, and
+the largest object any of them forms is one $n_s\times n_s$ block or one
+$d_A\times d_A$ matrix.
+
+\emph{Step 5 (the general format, (i)).} Write
+$\chi_s\coloneqq\idon{\Qsys_s}/d_{\Qsys}$ as above, so
+$\sum_s\tr\chi_s=1$. The sector decomposition, now along the joint sectors,
+is again the presentation and not a condition: \eqref{eq:witness-general} is
+one array per joint sector. \emph{Positivity, per joint block}: in
+trusted-source mode $\tau^{(t)}_A\otimes\chi_s$ is Hermitian and positive
+semidefinite, each $\tau^{(t)}_A$ being so by D(ii) in its general-format
+reading; in untrusted-source mode the block is positive definite outright.
+\emph{Trace}: $\sum_{(t,s)}\tr\omega^{\star(t,s)}
+=\big(\sum_t\tr\tau^{(t)}_A\big)\big(\sum_s\tr\chi_s\big)=1$ in
+trusted-source mode by D(ii), and $\sum_t(d_{A_t}/d_A)\sum_s\tr\chi_s=1$ in
+untrusted-source mode by $d_A=\sum_td_{A_t}$ (D(i)). \emph{Marginal}, per
+Alice sector and in trusted-source mode:
+$\sum_s\tr_{\Qsys_s}\omega^{\star(t,s)}
+=\tau^{(t)}_A\sum_s\tr\chi_s=\tau^{(t)}_A$, which is the second line of
+\eqref{eq:feas-general}; in untrusted-source mode there is no marginal
+condition beyond the trace. \emph{Constraints}: with $\CList=\varnothing$ the
+three constraint lines of \eqref{eq:feas-general} are empty conjunctions. So
+$\omega^{\star}\in\Feas$, and the two points of Step 2 apply unchanged: every
+step reads D(ii) as an identity of the declared numbers, and the entries of
+\eqref{eq:witness-general} need not be binary64 because the candidate is
+formed and decided in exact rational arithmetic and is never emitted.
+
+\emph{Step 6 (the general format, (ii)).} The equivalence is
+Definition~\ref{def:feasible} in its general-format reading, read literally.
+Writing $n_{t,s}\coloneqq d_{A_t}d_s$ for the size of the joint block, the
+verification of a candidate consists of
+\begin{itemize}[leftmargin=1.6em]
+\item $|\mathbb{T}|\,|\SecSet|$ positivity decisions, one Hermiticity and one
+  exact symmetric elimination per joint block, the largest on
+  $\max_{(t,s)}n_{t,s}$;
+\item one trace decision on $\sum_{(t,s)}\tr\omega^{(t,s)}$, accumulated in
+  the declared order of the joint sectors;
+\item in trusted-source mode $|\mathbb{T}|$ marginal decisions, one per Alice
+  sector: $|\SecSet|$ partial traces onto $A_t$, $|\SecSet|-1$ additions and
+  one comparison, each over $d_{A_t}^2$ entries;
+\item and, per entry $k$, its own leg. For an entry read through its
+  \tref{lifted operator}, in trusted-source mode one exact L\"owner
+  comparison per Alice sector on a $d_{A_t}\times d_{A_t}$ difference for an
+  inequality, or one exact entrywise equality when $\bowtie_k$ is $=$, the
+  right-hand side $c_k\tau^{(t)}_A$ for a homogeneous entry and the declared
+  $\Theta^{(t)}_k$ for a general one; in untrusted-source mode one comparison
+  of real numbers against $c_k$. For an entry declared party-local and scoped
+  to $f$, one exact L\"owner comparison per pair $(t,s_{f^c})$ for an
+  inequality, or one exact entrywise equality per pair when $\bowtie_k$ is
+  $=$, on a difference of size
+  $d_{A_t}\,d_{f^c,s_{f^c}}=n_{t,s}/d_{f,s_f}$, assembled from the
+  $|\SecSet^{f}|$ joint blocks of that row by partial traces over
+  $\Qsys_{f,s_f}$ --- which is the last line of \eqref{eq:feas-general}, and
+  is \emph{never larger than one joint block}. The same decision rule applies
+  in either source mode; a $1\times1$ row uses one real-number comparison as
+  its scalar specialization.
+\end{itemize}
+\emph{No lifted operator is formed at any of these steps.} The value
+$\tr_{\Qsys_s}[(\idon{A_t}\otimes\hat O^{\uparrow(s)}_k)\,\omega^{(t,s)}]$ is
+computed by contracting the joint block against the declared block
+$\hat O^{(s_{f_k})}_k$ on the tensor factor $\Qsys_{f_k,s_{f_k}}$ of that
+block and tracing out the others, which reads one joint block and one block of
+the scope and forms no array on $\Qsys$; the identity of that contraction with
+the displayed trace is the definition of the lifted operator in (DX6).
+\emph{So the largest object any decision of this verification forms is one
+$n_{t,s}\times n_{t,s}$ joint block, one $d_{A_t}\times d_{A_t}$ matrix, or one
+party-local difference, and each of the last two is at most one joint block};
+at $|\mathbb{T}|=1$ and one measured factor the list is the list of Step 3,
+item for item, with $n_{t_0,s}=n_s$.
+\end{proof}

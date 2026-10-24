@@ -1,0 +1,81 @@
+% ---
+% id: foundations/req:declared-tolerance
+% kind: req
+% title: "One declared tolerance per instance"
+% summary: >-
+%   One tolerance in [0, 1) per instance, with no default, caps the defect,
+%   measured in binary64, that an instance may repair in what it declares. A
+%   family snapped on an exact reference has no defect, supplier output is
+%   decided by its consumer, a prepared probability vector by its own rule.
+% prominence: standard
+% status: accepted
+% uses: [def:tolerance, def:snap, def:declared-data, def:exact-reference]
+% mentions: [req:who-snaps, def:exact-island, req:boundary-admission, req:snap-reference]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% notes: "A family whose snap runs on the data as they stand, an evaluation of a model with an enclosed reference among them, falls under the first paragraph, measured against tau like data without a reference; the second paragraph covers a snap that runs on the centres of an exact reference."
+% lean:
+% ---
+
+The domain stops below one because at a tolerance of one or more a
+completeness test would admit the all-zero family, whose completeness residue
+against the identity is exactly one on every block. How an instance turns
+ordinary numerical inputs into \tref[declared value]{declared values}, the
+representation policy by which a binary64 input denotes a rounding cell
+included, is documented with the run tier
+(\repodoc{runs/input-preparation.md}).
+
+\begin{requirement}\label{req:declared-tolerance}
+Each instance declares exactly one \tref{declared tolerance} $\tnum$
+(Definition~\ref{def:tolerance}) in its run configuration, and $\tnum$ has no
+default: a run whose configuration does not declare it, or declares a value
+that is not a binary64 number in $[0,1)$, is refused before anything is
+constructed. $\tnum$ is the ceiling on the defect an instance may repair in
+what it declares. It binds the data an instance is about to declare other than
+numbers of a supplier's output that it passes on unchanged
+(Definition~\ref{def:declared-data}\,(ii)); those it neither measures nor
+repairs, and their consumer decides their conditions exactly on entry
+(Requirement~\ref{req:boundary-admission}). Of the data it binds that have no
+\tref{exact reference} on whose centres the snap runs (for those, see the
+next paragraph), the instance
+measures in binary64 the defects (Definition~\ref{def:tolerance}) and, for each
+block read as positive semidefinite, the least eigenvalue of its Hermitian
+part, each on the data as they stand before any step of the snap, and records
+those measured numbers. Data with a measured defect above $\tnum$ or a
+measured least eigenvalue below $-\tnum$ are refused as a modelling error; the
+others may be snapped (Definition~\ref{def:snap}), the snap being recorded
+with the measured defects it corrected (Requirement~\ref{req:who-snaps}). Near
+$\tnum$ this decision on measured numbers may differ from the predicate
+\emph{\tref{within the declared tolerance}} of Definition~\ref{def:tolerance},
+whose sums are exact, and no bound on that difference is kept. This decision
+is not on the \tref{exact island}; the exact decisions are those by which the
+snap establishes the conditions of its output
+(Definition~\ref{def:exact-island}\,(i)).
+
+An operator family that an instance snaps on the centres of an
+\tref{exact reference} (Definition~\ref{def:exact-reference}), as
+Requirement~\ref{req:snap-reference}\,(ii) states, stands before the snap as
+that reference, which is Hermitian, positive semidefinite and complete by the
+exact decision on its entries, and never by a binary64 evaluation. Its defects are
+therefore zero and no block of it falls below the \tref{positivity floor}:
+$\tnum$ decides nothing for it, and the instance records the defects as zero
+on that ground rather than on a binary64 measurement. $\tnum$ keeps its role
+for the data it binds on which the snap runs as they stand, an evaluation of
+a model whose reference has a radius that is not zero included, since the
+snap does not run on such a reference.
+
+A probability vector that an instance prepares from ordinary numerical inputs
+before declaring it is decided instead by the rule of the input preparation.
+It is refused unless its normalisation defect, computed exactly on the inputs
+as given, is at most $\tnum$, or the sum of the rounding cells of its inputs
+contains $1$: a binary64 input contributes the rounding cell it denotes under
+the preparation's documented representation policy, and an input given
+exactly, as a decimal or a fraction, contributes the one point that is its
+value. A value below $0$ or above $1$ is refused. The preparation records the
+defect, the cells and which of the two grounds admitted the vector. Its snap
+then runs at a \emph{guard}, the larger of $\tnum$ and the completeness
+residue the snap measures on the binary64 conversion of the inputs, which may
+exceed $\tnum$; the guard is recorded, and it admits no vector the rule has
+refused.
+\end{requirement}

@@ -1,0 +1,99 @@
+{
+ "kind": "bbm92-study-preparation-extract",
+ "origin": {
+  "prepared": "prepare.json"
+ },
+ "config_digest": "b0f16a90bb97dea27090d6495a867cd7e0f58bbf80f9cf1f41d9b939cd894d72",
+ "rounds": 10000000,
+ "test_fraction": "1/8",
+ "device": {
+  "A": {
+   "efficiency": {
+    "A": "1",
+    "D": "1",
+    "H": "1",
+    "V": "1"
+   },
+   "dark_count": {
+    "A": "0",
+    "D": "0",
+    "H": "0",
+    "V": "0"
+   }
+  },
+  "B": {
+   "efficiency": {
+    "A": "1",
+    "D": "1",
+    "H": "1",
+    "V": "1"
+   },
+   "dark_count": {
+    "A": "0",
+    "D": "0",
+    "H": "0",
+    "V": "0"
+   }
+  }
+ },
+ "normalization": [
+  {
+   "station": 0,
+   "party": "A",
+   "factored_loss": "1",
+   "factor_declared": false,
+   "applied": false,
+   "ports": [
+    {
+     "port": "H",
+     "declared": "1",
+     "compiled": "1"
+    },
+    {
+     "port": "V",
+     "declared": "1",
+     "compiled": "1"
+    },
+    {
+     "port": "D",
+     "declared": "1",
+     "compiled": "1"
+    },
+    {
+     "port": "A",
+     "declared": "1",
+     "compiled": "1"
+    }
+   ]
+  },
+  {
+   "station": 1,
+   "party": "B",
+   "factored_loss": "1",
+   "factor_declared": false,
+   "applied": false,
+   "ports": [
+    {
+     "port": "H",
+     "declared": "1",
+     "compiled": "1"
+    },
+    {
+     "port": "V",
+     "declared": "1",
+     "compiled": "1"
+    },
+    {
+     "port": "D",
+     "declared": "1",
+     "compiled": "1"
+    },
+    {
+     "port": "A",
+     "declared": "1",
+     "compiled": "1"
+    }
+   ]
+  }
+ ]
+}

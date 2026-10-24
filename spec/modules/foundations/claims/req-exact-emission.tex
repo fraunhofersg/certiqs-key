@@ -1,0 +1,61 @@
+% ---
+% id: foundations/req:exact-emission
+% kind: req
+% title: "Exact verification before emission"
+% summary: >-
+%   A producer emits a measurement family only after establishing exactly, on
+%   the numbers it will emit, the sector map, Hermiticity, positivity,
+%   completeness, a declared-order sum that rounds nowhere and, where it
+%   declares a lattice, the lattice condition. Otherwise it refuses or emits a
+%   disclosed snap.
+% prominence: standard
+% status: accepted
+% uses: [def:exact-admissibility, def:declared-data, def:snap, def:sector-map, def:declared-order, req:declared-lattice, req:snap-reference]
+% mentions: [req:support-safe-snap]
+% assumes: [A-SNAP]
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The claim assumes A-SNAP because that assumption's clause (ii) covers a producer's snap of its own emission. The producer's procedure is reductions/def:emitnorm, and the reference companion that bypasses it is reductions/cor:reference-companion."
+% ---
+
+\begin{requirement}\label{req:exact-emission}
+(D-EMIT) Every producer (Definition~\ref{def:declared-data}) emits an operator
+family as a measurement only after establishing, of the
+numbers it will emit and by exact arithmetic on them: (i) the
+\tref{sector map} is the
+consumer's, decided and never measured; (ii) exact Hermiticity; (iii) exact
+positive semidefiniteness, by a rational $LDL^{*}$ with the zero-pivot rule or
+an equivalent exact decision, never by a floating-point eigenvalue; (iv) exact
+completeness per sector block, as an identity of the emitted numbers; (v) the
+completeness \tref{sum in the declared order} \tref{rounds nowhere} in
+binary64, and, where
+it emits Alice's measurement $\{M_x\}$ and her marginal $\tau_A$ of a protocol
+declaration, so do the completeness sum of the one and the trace of the other;
+(vi) where it declares a lattice exponent $k$, Requirement~\ref{req:declared-lattice}
+of every entry at $k$. Conditions (i)--(v) of a family are its exact
+admissibility with constant $1$ for the sector map the consumer holds
+(Definition~\ref{def:exact-admissibility}), and the clause of (v) on
+$\{M_x\}$ and $\tau_A$ binds only a producer that emits them.
+
+A producer that cannot establish the conditions that bind it \emph{refuses,
+naming the predicate}, save in the one case below; it repairs nothing it was
+handed. A producer that declares a lattice exponent $k$ may, where the family it
+constructed fails any of (ii)--(iv) or (vi), instead \emph{declare} a nearby
+family established under all six: a snap at $k$ of its own emission
+(Definition~\ref{def:snap}), made as Requirement~\ref{req:snap-reference}
+states. Its \tref{moved} blocks are related to its exact construction by no
+claim; a run that consumes the emission evaluates the numbers its key length
+rests on with the exact construction in their place where it can, and
+otherwise rests, on the blocks that Requirement~\ref{req:snap-reference}\,(iii)
+names, on Assumption~\ref{ass:snapped-measurement}\,(ii): what it concludes
+from the emitted family holds of the snapped family. A run that declares the
+strict option of Requirement~\ref{req:snap-reference}\,(iv) refuses there
+instead. The producer must disclose that the emitted numbers are a
+declaration and not the constructed ones, the measured per-block
+displacement, the rounding direction of every weight that it rounds in
+constructing the emission, and, separately, the status of every block, kept
+or moved, and the flag of every block snapped by the last resort of
+Requirement~\ref{req:support-safe-snap}\,(iv). A producer that
+declares no lattice exponent declares no nearby family.
+\end{requirement}

@@ -1,0 +1,205 @@
+% ---
+% id: reductions/wpfss/def:weight-route
+% kind: def
+% title: "The weight route"
+% summary: >-
+%   The receiver's blocks pass through the descended dark-count channel,
+%   unless supplied already composed, and join the private setting. Each
+%   joint outcome
+%   at a bounded letter gets its class weight times its setting's certified
+%   weight, sharpened by the dark counts and rounded down onto the lattice.
+% prominence: standard
+% status: accepted
+% uses: [lem:descent, reductions/lem:linear, reductions/def:joint-family, reductions/def:exactadm, reductions/lem:exactpsd, reductions/def:substrate]
+% mentions: [prop:route, cor:oneabsorbing, rem:absorbneeded, rem:fibre, rem:minweight, prop:weight-monotone, def:targets, prop:flat-instance, reductions/def:emitnorm, reductions/rem:intertwining, reductions/ass:recv, reductions/ass:probe, foundations/req:rounding-direction, reductions/req:post-processing-order, req:descent-decided-exactly, req:column-stochastic-refusal, req:fibre-equality, req:absorbing-bounded-letters, prop:precomposed-blocks, receiver/detector-imperfections/prop:noise-floor]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Assumes nothing: the supplier's facts enter through prop:route under A-RECV. eq:certroute is displayed here as the property that makes the routed weights certified; prop:route proves it. The dark-composed form is a declared family, Hermitian, positive semidefinite and complete per block, that the model takes below the cutoff; eq:darkstep is not asserted of it, since a snapped dark-composed family is in general not R^cg applied to any positive bare family, and only the per-block properties are read (prop:flat-instance (I1)). The lead-in conditions the positive definiteness of the composed model on the receiver module's conditions (receiver/detector-imperfections/prop:noise-floor)."
+% ---
+
+One granularity fact shapes this definition. The supplier emits the
+\emph{coarse-grained} blocks $\blk{M}{=m}_{y|t}$, one per emitted letter
+$y\in\Yset$, together with a \tref{dark-count channel} $R$ that acts on
+\emph{raw} click patterns $2^{[K]}$ and weights $p^{(t)}_i$, one per setting,
+certified for \emph{raw} outcome sets $\mathcal{O}_i\subseteq2^{[K]}$. A
+consumer holding only the coarse blocks cannot in general apply $R$ to them,
+because $S\mapsto\cg(S)$ is many-to-one and $R$ need not respect it. This
+definition therefore requires $R$ to \emph{descend} through $\cg$
+(Lemma~\ref{lem:descent}; decided exactly,
+Requirement~\ref{req:descent-decided-exactly}). The case $\cg=\mathrm{id}$, in
+which the emitted blocks are the raw ones, satisfies the condition
+trivially. Remarks~\ref{rem:absorbneeded} and~\ref{rem:fibre} show that
+neither the absorbing condition nor the fibre condition below can be dropped
+(without the absorbing condition the bound \eqref{eq:certroute} for the
+weights of \eqref{eq:weightroute} fails in general, in the \emph{unsafe}
+direction), and Remark~\ref{rem:minweight} shows why the weight at $(y_i,t)$
+is formed from the weight of its own setting, and why a slot carrying one
+weight at every setting, as every one-setting slot does, gives the numbers of
+the uniform route, which consumes each entry's minimum over the settings.
+The order in which steps~1--2 precede the first squashing link is that of
+Remark~\ref{rem:intertwining} and Requirement~\ref{req:post-processing-order};
+the column-stochasticity of $R^{\cg}$, the fibre condition and the absorbing
+condition are decided by Requirements~\ref{req:column-stochastic-refusal},
+\ref{req:fibre-equality} and~\ref{req:absorbing-bounded-letters}; and the
+downward rounding of the routed weights is that of
+\xref{foundations/req:rounding-direction}, which rounds every emitted lower
+bound down. A declaring party may compose the dark counts into the
+receiver's model before it snaps the blocks, so that the snap is made on a
+model whose elements are positive definite where the receiver module's
+conditions for that hold (loss in the receiver and a dark-count probability
+strictly between zero and one in every port,
+\xref{receiver/detector-imperfections/prop:noise-floor}); it then supplies
+the blocks already composed, and possibly snapped. The dark-composed form
+below admits them, and Proposition~\ref{prop:precomposed-blocks} shows that
+it forms the same instance as composing afterwards wherever no snap
+intervenes.
+
+\begin{definition}\label{def:weight-route}
+Let a receiver artifact supply, for each setting $t\in\Tset$, preserved
+photon-number blocks, $m\le N$, in one of the two input forms below, for a
+conditional POVM $\{M_{y|t}\}_{y\in\Yset}$ on $\Chan$ block diagonal at the
+cutoff; a
+dark-count matrix $R$ on $2^{[K]}$ that descends through the
+\tref{declared coarse-graining} $\cg$ with descended matrix $R^{\cg}$
+(Lemma~\ref{lem:descent}); \tref{class weights} $\{q_t\}_{t\in\Tset}$ as in
+Definition~\ref{def:joint-family}; and a slot
+$\{(\mathcal{O}_i,(p^{(t)}_i)_{t\in\Tset})\}_{i=1}^{r}$ of certified
+high-photon weights, one per entry and per setting of the same $\Tset$;
+every declared entry and scalar lies on the declared lattice
+\eqref{eq:latinv}, and every one of the supplier's facts about them is held
+under Assumption~\ref{ass:recv} (Proposition~\ref{prop:route}\,(iv)). The
+\term[The three ordered steps that carry a receiver artifact's blocks and certified weights through the dark counts and the private setting into the flat instance.]{weight route}
+is the following three steps, in this order, each with the claim that
+licenses it. Steps~1--2 are classical post-processing of the physical outcome
+and precede the first squashing link.
+\begin{enumerate}[leftmargin=2.2em]
+\item \emph{Dark counts, on the emitted alphabet.} Replace the supplied
+  conditional POVM by
+  \begin{equation}\label{eq:darkstep}
+    \widetilde M_{y|t}\;\coloneqq\;\sum_{y'\in\Yset}R^{\cg}_{y|y'}\,M_{y'|t},
+    \qquad y\in\Yset,\ t\in\Tset .
+  \end{equation}
+  This is post-processing by a column-stochastic matrix
+  (Lemma~\ref{lem:linear}\,(i)), so the result is a conditional POVM at each
+  $t$ with the same photon-number block structure, and
+  Lemma~\ref{lem:descent} shows it equals the coarse-graining of the raw-level
+  composition.
+\item \emph{\tref[joint alphabet]{Joint alphabet}.} Form the
+  \tref{joint family} of Definition~\ref{def:joint-family}\,(b),
+  $M_{(y,t)}\coloneqq q_t\,\widetilde M_{y|t}$ on the joint alphabet
+  $\Vset=\Yset\times\Tset$;
+  this is a POVM by \eqref{eq:jointfamily} (Lemma~\ref{lem:linear}\,(ii);
+  the weights are the measuring party's own, Assumption~\ref{ass:probe}), block diagonal at
+  the cutoff, and the \tref{class-marginal identity} \eqref{eq:classmarginal}
+  holds of it block by block. Its preserved blocks $\blk{M}{=m}_{(y,t)}$,
+  $m\le N$, are the
+  \term[The preserved photon-number blocks of the joint family formed by steps 1 and 2 of the weight route.]{post-processed datum}.
+\item \emph{The instance.} The post-processed joint family, with the routed
+  weights below, is the datum, the hypotheses and the target data of the
+  \emph{flat instance} (Proposition~\ref{prop:flat-instance}), and its
+  emission is that instance's.
+\end{enumerate}
+
+\emph{The two input forms.} The supplied preserved blocks are declared in one
+of two forms. In the
+\term[The input form of the weight route in which the supplied preserved blocks are those of the conditional POVM before the dark-count channel, so that step 1 acts on them.]{bare form}
+they are the blocks $\blk{M}{=m}_{y|t}$, $m\le N$, of the conditional POVM
+above, and step~1 acts on them. In the
+\term[The input form of the weight route in which the supplied preserved blocks are a declared complete family that the model takes below the cutoff after the dark counts, so that step 1 is not applied to them.]{dark-composed form}
+they are a declared family $\{\blk{\widetilde M}{=m}_{y|t}\}_{y\in\Yset}$,
+$m\le N$, per setting $t$, each block Hermitian, positive semidefinite and
+complete on its block, which the model takes below the cutoff after the
+dark counts: in this form the family $\widetilde M_{y|t}$ of step~1 is
+defined as these blocks below the cutoff and by \eqref{eq:darkstep} above
+it, step~1 is not applied to the supplied blocks, and the post-processed
+datum is formed from them by step~2 alone. Where no snap intervened between
+composing and supplying, this form is the bare form composed in advance
+(Proposition~\ref{prop:precomposed-blocks}\,(ii)); where the declaring party
+snapped the composed blocks, they are its snapped family, and this
+definition asserts of them no relation to a bare family. In either form $R^{\cg}$ is
+formed and its conditions are decided as below, \eqref{eq:darkstep} defines
+the family above the cutoff, $\blk{\widetilde M}{\gtN}_{y|t}
+=\sum_{y'}R^{\cg}_{y|y'}\blk{M}{\gtN}_{y'|t}$, and the routed weights below
+read $R^{\cg}$ as they stand. In either form $\{\widetilde M_{y|t}\}_y$ is a
+POVM at each $t$, block diagonal at the cutoff: below it by step~1 in the
+bare form and by the declared properties of the supplied blocks in the
+dark-composed form, and above it by step~1.
+
+\emph{Exactness of steps~1 and~2.} The two steps are written on the declared
+numbers, and their POVM conclusions hold \emph{exactly} of them. The declared
+$R^{\cg}$ is exactly column-stochastic with non-negative entries, decided on
+entry, and $\{q_t\}$ is
+exactly a probability distribution, as Definition~\ref{def:joint-family}
+requires of \tref{class weights}; and the combination is formed in the exact
+substrate of Lemma~\ref{lem:exactpsd} (Definition~\ref{def:substrate}), so
+$\{\widetilde M_{y|t}\}_y$ and $\{M_{(y,t)}\}$ are POVMs and every claim of
+this submodule reads them as such. What the two steps can nevertheless do is
+leave the lattice: a product of two dyadic rationals adds significand widths,
+so the post-processed blocks $\blk{M}{=m}_{(y,t)}$ need not be binary64
+numbers even though every factor is. That is the one place in this submodule
+where exact arithmetic outruns the representation; it is where the emission
+normaliser of Definition~\ref{def:emitnorm} acts, and it acts on numbers this
+module computed and is about to declare, never on numbers it was handed.
+
+\emph{The routed weights.} They follow the same route, one bounded letter at a
+time. Fix an entry $i$ whose bounded set is exactly a fibre,
+$\mathcal{O}_i=\cg^{-1}(y_i)$, and whose letter is absorbing,
+$R^{\cg}_{y_i|y_i}=1$; both are declared input validity conditions, and both
+are decided exactly. Write
+\begin{equation}\label{eq:weightroute}
+\begin{gathered}
+  \hat p_{(y_i,t)}\ \coloneqq\
+  q_t\Big(\big(1-r_{\min,i}\big)p^{(t)}_i+r_{\min,i}\Big),
+  \qquad
+  p_{(y_i,t)}\ \coloneqq\ \lat{\hat p_{(y_i,t)}},\\
+  r_{\min,i}\coloneqq\min_{y'\ne y_i}R^{\cg}_{y_i|y'}
+  \ \ \big(\coloneqq0\ \text{when that minimum is over the empty set}\big),
+\end{gathered}
+\end{equation}
+with $p_{(y,t)}\coloneqq0$ for every other $(y,t)$; the family
+$(p_v)_{v\in\Vset}$ is the
+\term[The weights the weight route assigns to the joint outcomes: at a bounded letter, the class weight times that setting's certified weight sharpened by the dark counts, rounded down onto the lattice; zero elsewhere.]{routed weights},
+and $p\coloneqq\sum_{v\in\Vset}p_v$. Here
+\begin{equation}\label{eq:latdown}
+  \lat{x}\;\coloneqq\;2^{-\kappa}\big\lfloor2^{\kappa}x\big\rfloor
+\end{equation}
+is the largest integer multiple of $2^{-\kappa}$ that is at most $x$: the
+\emph{downward} rounding onto the declared lattice, computed exactly on the
+rational $\hat p_{(y_i,t)}$ and equal to it whenever it is already a lattice
+number. The routed weights are \emph{certified} when the element
+$M_{(y_i,t)}$ of step~2 satisfies, on every channel block above the cutoff,
+\begin{equation}\label{eq:certroute}
+  \blk{M}{\gtN}_{(y_i,t)}\ \succeq\ p_{(y_i,t)}\,\idon{}
+  \qquad\text{for every }i\text{ and every }t\in\Tset ,
+\end{equation}
+which Proposition~\ref{prop:route} proves from the declared input validity
+conditions together with the absorbing hypothesis those conditions impose,
+and from nothing else.
+
+\emph{The direction of the rounding.} The emitted weight is $p_{(y_i,t)}$ and
+not $\hat p_{(y_i,t)}$, and the direction of that rounding is the whole of
+what makes it safe: it is the one emitted number of this submodule that a
+downstream inequality consumes as a \emph{bound}, the certified-weight
+inequality of Definition~\ref{def:targets} is preserved when a certified
+weight is lowered and, when one is raised, is no longer proved and can be
+false, and $\lat{\cdot}$ only lowers (Proposition~\ref{prop:route};
+Proposition~\ref{prop:weight-monotone}\,(i)). Four features of the route are relied on, and none of them may
+be dropped.
+\emph{(a)} $r_{\min}$ is indexed by the bounded letter: it is a property of row
+$y_i$ of $R^{\cg}$ read across the columns $y'\ne y_i$, and one entry's value is
+not another's.
+\emph{(b)} The absorbing condition is a hypothesis, not a consequence:
+without it the bound \eqref{eq:certroute} for the weights of
+\eqref{eq:weightroute} is no longer proved.
+\emph{(c)} A non-zero $r_{\min,i}$ can occur only at $r=1$
+(Corollary~\ref{cor:oneabsorbing}), so for $r\ge2$ \emph{every} entry
+contributes the un-improved weight $\lat{q_tp^{(t)}_i}$, which is sound,
+merely not an improvement.
+\emph{(d)} $p_{(y_i,t)}\ge0$ needs no clamp: $\hat p_{(y_i,t)}$ is $q_t>0$
+times $(1-r_{\min,i})p^{(t)}_i+r_{\min,i}$, a convex combination of
+$p^{(t)}_i\ge0$ and $1$, since $r_{\min,i}\in[0,1]$ as an entry of the
+column-stochastic $R^{\cg}$ or as $0$; and the largest lattice number at most
+a non-negative rational is itself non-negative.
+\end{definition}

@@ -1,0 +1,71 @@
+% ---
+% id: reductions/wpfss/rem:colstoch
+% kind: rem
+% title: "Column-stochasticity of R and of its descended matrix"
+% summary: >-
+%   Exact column-stochasticity of the declared R gives that of R^cg by
+%   regrouping one finite sum, so one exact decision on R serves both; the
+%   route, the post-processing step and the one-letter corollary rely on it.
+%   Every result here is proved for an exactly column-stochastic R only.
+% prominence: standard
+% status: accepted
+% uses: [lem:descent, prop:route, reductions/lem:linear, cor:oneabsorbing, def:weight-route, reductions/def:joint-family]
+% mentions: [reductions/lem:exactpsd, reductions/def:substrate, rem:darkcompose, req:column-stochastic-refusal, req:absorbing-bounded-letters, req:total-weight-refusal, receiver/detector-imperfections/def:darkadm]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:colstoch}
+\emph{One matrix suffices.} The declared $R$ is decided exactly
+column-stochastic, $R_{S|S'}\ge0$ for every entry and $\sum_SR_{S|S'}=1$ for
+every column (Requirement~\ref{req:column-stochastic-refusal}). The fibres of
+$\cg$ partition $2^{[K]}$, $\cg$ being a total surjection onto $\Yset$
+(Lemma~\ref{lem:descent}). So
+$R^{\cg}_{y|y'}=\sum_{S\in\cg^{-1}(y)}R_{S|S'}$ is non-negative as a sum of
+non-negative entries, and
+$\sum_{y\in\Yset}R^{\cg}_{y|y'}=\sum_{S}R_{S|S'}=1$, which is exactly the
+column-stochasticity Lemma~\ref{lem:descent} states of $R^{\cg}$, there
+derived from the same hypothesis on $R$. In the exact substrate that inference
+carries: both identities regroup one finite sum in $\Fld$
+(Lemma~\ref{lem:exactpsd}, Definition~\ref{def:substrate}), so the decision on
+$R$ settles $R^{\cg}$ as well and no second decision is needed. A regrouped
+binary64 sum need not be the sum it regroups; under exact arithmetic the
+question does not arise.
+
+\emph{Where the property is used.} Three results rely on it.
+\emph{(i)} Proposition~\ref{prop:route}, whose proof restricts
+$(1-r_{\min,i})\blk{M}{\gtN}_{y_i|t}\succeq(1-r_{\min,i})p^{(t)}_i\idon{}$ and
+needs $1-r_{\min,i}\ge0$, which is non-negativity of the entries together with
+unit columns. \emph{(ii)} Lemma~\ref{lem:linear}\,(i) at step~1 of
+Definition~\ref{def:weight-route}: post-processing by $R^{\cg}$ yields a POVM
+because the coefficients are non-negative and each column sums to one; without
+both, $\{\widetilde M_{y|t}\}$ need not be one. \emph{(iii)}
+Corollary~\ref{cor:oneabsorbing}, whose proof reads a column of $R^{\cg}$ as a
+probability vector.
+
+\emph{What the decision closes: coverage and attribution, not soundness.} A
+violation that moves an emitted number in the unsafe direction can also be
+caught by the \tref{total weight}: with $\sum_tq_t=1$ (Definition~\ref{def:joint-family})
+and the weights read as the values of \eqref{eq:weightroute}'s expression,
+the routed total is $\sum_i\big(r_{\min,i}(1-\bar p_i)+\bar p_i\big)$ with
+$\bar p_i\coloneqq\sum_tq_tp^{(t)}_i$ and $0\le\bar p_i\le1$ from the slot's
+validity condition, which gives $0\le p^{(t)}_i\le1$ at every $t$ (at a slot
+with one weight at every setting $\bar p_i$ is that weight), so any
+$r_{\min,i}\ge1$ makes the $i$-th summand at least $1$, and the total at least
+$1$ as long as no other summand is negative
+(Requirement~\ref{req:total-weight-refusal}); a negative $r_{\min,j}$, a defect
+of the same class, can make one negative. A defect outside that path,
+one that neither lifts some $r_{\min,i}$ to $1$ nor shows up in the total,
+would meet no other rule. That path is not relied on: the decision on the
+declared matrix settles the two conditions directly and exactly, and the
+absorbing condition fixes $R^{\cg}_{y_i|y_i}=1$
+(Requirement~\ref{req:absorbing-bounded-letters}), so every admitted
+$r_{\min,i}$ lies in $[0,1]$. Every result of this contract is proved for an
+exactly column-stochastic $R$ and asserts nothing whatever about a
+declaration that is not one. Beyond diagnosis, the decision is used in one
+place: every admitted $R$ satisfies (D1) and (D2) of
+\xref{receiver/detector-imperfections/def:darkadm} exactly, which is half of
+Remark~\ref{rem:darkcompose}.
+\end{remark}

@@ -1,0 +1,36 @@
+% ---
+% id: foundations/fact:pinch-id
+% kind: fact
+% title: "Pinched trace-power form of the conditional Rényi entropy"
+% summary: >-
+%   For a purified input and a projective key measurement, the fixed-marginal
+%   conditional Rényi entropy equals a trace-power expression involving only
+%   the measured system's marginal. This removes the explicit purifier from
+%   the computable branch objective.
+% prominence: standard
+% status: accepted
+% uses: [def:pinching, def:renyi]
+% assumes: []
+% refs:
+%   - "kamin2025renyi, Thm. 8, Eq. (59)"
+% provenance: published
+% lean:
+% notes: "Stated after kamin2025renyi (arXiv:2504.12248v2), Thm. 8, Eq. (59), with the symbols mapped; the hypotheses are checked at each use site."
+% ---
+
+\begin{fact}\label{fact:pinch-id}
+Let $\rho_{QE}\in\Seq{QE}$ be pure, let $\{Z_j\}_{j=1}^{d}$ be orthogonal
+projectors on $Q$ with $\sum_jZ_j=\idon{Q}$, let
+$\VZ=\sum_j\ket{j}_{S}\otimes Z_j$ and
+$\sigma_{SQE}\coloneqq\VZ\,\rho_{QE}\,\VZ^{\dagger}$, and let
+$\cZ(\tau)\coloneqq\sum_jZ_j\tau Z_j$. Then, for $\alpha\in(1,\infty)$,
+\begin{equation}\label{eq:pinch-id}
+  \Hsanddown(S|E)_{\sigma_{SE}}
+  =\frac{1}{1-\alpha}\log_2
+  \tr\!\left[\left(\cZ\big(\rho_Q^{1/\alpha}\big)\right)^{\alpha}\right].
+\end{equation}
+\emph{Locator note.} The source states no $\alpha$ restriction in the
+theorem; the domain $(1,\infty)$ used here lies inside the domain
+$(0,1)\cup(1,\infty)$ of its entropy definitions and is the only range any
+claim that uses this fact invokes.
+\end{fact}

@@ -1,0 +1,31 @@
+% ---
+% id: statistics/binomial-box/req:request-defaults
+% kind: req
+% title: "Defaults for the constrained outcomes and the allocation"
+% summary: >-
+%   Where a request names no constrained outcomes the engine constrains every
+%   outcome, and where it names no allocation it takes the uniform rule, which
+%   gives each tail of each constrained outcome the budget divided by twice the
+%   number of constrained outcomes.
+% prominence: standard
+% status: implemented
+% uses: [rem:selector, def:monotone-rule]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.construction:resolve
+% lean:
+% ---
+
+No choice of the constrained outcomes dominates (Remark~\ref{rem:selector}),
+and the \tref{uniform rule} is a \tref{monotone allocation rule}
+(Definition~\ref{def:monotone-rule}); the engine fixes both only as defaults.
+
+\begin{requirement}\label{req:request-defaults}
+Where a request omits the constrained outcomes, the engine takes
+$\Chatcon=\Chatset$ (\iface{constrained_outcomes}); where it omits the
+allocation, the engine takes the uniform rule of
+Definition~\ref{def:monotone-rule} at the request's budget,
+$\varepsilon^{\pm}(\hat c)=\ecomp/(2|\Chatcon|)$ for every
+$\hat c\in\Chatcon$ (\iface{budget_allocation}).
+\end{requirement}

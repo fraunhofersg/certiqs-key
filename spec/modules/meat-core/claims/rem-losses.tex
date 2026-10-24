@@ -1,0 +1,29 @@
+% ---
+% id: meat-core/rem:losses
+% kind: rem
+% title: "Where each step of the reduction loses"
+% summary: >-
+%   The divergence term passes through the reduction as an identity,
+%   purification loses nothing when the optimum is attained on pure states, and
+%   the arrow replacement's gap closes as α → 1. No step reverses direction.
+% prominence: standard
+% status: accepted
+% uses: [thm:accumulated-entropy, foundations/def:renyi, thm:branch-formula, thm:reduction]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:losses}
+The divergence term is passed through as an identity: the imported rate
+\eqref{eq:hqkd-def} already carries the KL divergence $\sfD$, so nothing
+is lost there. Step 2 of the proof of Theorem~\ref{thm:reduction} loses
+nothing when the feasible optimum is attained on pure states; Step 3 is the
+standard down-arrow relaxation (\xref{foundations/def:renyi}), whose gap
+closes at $\alpha\to1^+$ (both variants converge to the von~Neumann
+conditional entropy). No step reverses direction. The bounds
+$0\le K_{\hat c}\le P_{\hat c}$ that Step~4 also supplies are read at points
+that are not pure, which is why Theorem~\ref{thm:branch-formula} states them
+as its \emph{cone clause}.
+\end{remark}

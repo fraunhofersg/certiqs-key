@@ -1,0 +1,120 @@
+% ---
+% id: reductions/cor:companion-factor-enclosure
+% kind: cor
+% title: "Factor enclosures carried to the reference companion"
+% summary: >-
+%   Where an instance forms its datum as a non-negative rational combination
+%   of measurement blocks, factor enclosures of the reference's blocks give
+%   one of each element of the companion's datum, columns side by side and
+%   cores scaled, and so of the target's block on that data sector.
+% prominence: standard
+% status: implemented
+% uses: [cor:reference-companion, def:reduction-instance, cor:identity-instance, foundations/def:factor-enclosure]
+% mentions: [req:reference-companion, reductions/wpfss/cor:flat-companion]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.companion:combined_factor
+% lean:
+% notes: "Kept apart from cor:reference-companion so that its accepted text and the claims resting on it keep their review scope. Branching and register instances are not shown here to have a rule of the named kind; a factor enclosure is carried only where a claim establishes it, and no current companion that carries one goes through them."
+% ---
+
+Corollary~\ref{cor:reference-companion}\,(iii) carries the
+\tref[entrywise enclosure]{entrywise enclosures} of the handed reference to
+the companion's datum through the expression the instance's rule of (I1) is.
+A \tref{factor enclosure} passes through a narrower class of rules. A sum, with non-negative weights, of members of
+factor enclosures is a member of the enclosure whose columns are theirs side
+by side and whose core is theirs scaled by the weights, and no arithmetic on
+the columns is needed for it. The corollary names that class of rules and
+carries the factor enclosures through it. The identity instance is in it, and
+so is the flat instance (Corollary~\ref{cor:flat-companion}). A rule outside
+it, such as one that maps a block by a conjugation before it combines blocks,
+carries no factor enclosure here, and the elements it forms are known
+through their entrywise enclosures alone
+(Requirement~\ref{req:reference-companion}).
+
+\begin{corollary}\label{cor:companion-factor-enclosure}
+Let $\mathcal{J}$, $K$, $G$ and $A^{\mathrm{ref}}$ be as in
+Corollary~\ref{cor:reference-companion}, the blocks $K^{(b)}_j$ indexed by a
+block $b$ and an outcome $j$, together with the setting where the blocks are
+given per setting. Call the rule of part (I1) of $\mathcal{J}$
+(Definition~\ref{def:reduction-instance}) a \emph{non-negative combination}
+when for every \tref{data sector} $s$ and every $v\in\Vset$ there are
+non-negative rationals $\lambda^{(s,v)}_{b,j}$ such that, for every family
+$K'$ with the properties that Corollary~\ref{cor:reference-companion} lists
+for $G$, the datum $A'$ the rule forms from $K'$ satisfies
+\begin{equation}\label{eq:datum-combination}
+  A'^{(s)}_v\;=\;\sum_{b,j}\lambda^{(s,v)}_{b,j}\,K'^{(b)}_j ,
+\end{equation}
+every block $K'^{(b)}_j$ with $\lambda^{(s,v)}_{b,j}>0$ being of dimension
+$d_s$. Let the rule be a non-negative combination, and let some blocks
+$G^{(b)}_j$ carry \tref[factor enclosure]{factor enclosures}
+$\big(L^{(b)}_{j},\varrho^{(b)}_{j},W^{(b)}_{j}\big)$
+(\xref{foundations/def:factor-enclosure}).
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item Let $s$ be a data sector and $v\in\Vset$ such that every block
+  $G^{(b)}_j$ with $\lambda^{(s,v)}_{b,j}>0$ carries one, and list the pairs
+  $(b,j)$ with $\lambda^{(s,v)}_{b,j}>0$ in a fixed order. The triple whose
+  \tref{matrix box} has as its centre and its radii those of the boxes
+  $\big(L^{(b)}_{j},\varrho^{(b)}_{j}\big)$ side by side in that order, and
+  whose core is the diagonal matrix of the
+  $\lambda^{(s,v)}_{b,j}W^{(b)}_{j}$ in that order, is a factor enclosure of
+  $A^{\mathrm{ref},(s)}_v$, its number of columns the sum of theirs; where
+  every $\lambda^{(s,v)}_{b,j}$ is zero, it has no column.
+\item The block of the companion's target $F_v[A^{\mathrm{ref}}]$ on the data
+  sector $s$ is $A^{\mathrm{ref},(s)}_v$, so the triple of (i) is a factor
+  enclosure of that block.
+\item The rule of (I1) of the identity instance of
+  Corollary~\ref{cor:identity-instance} is a non-negative combination: each
+  element of its datum is the block of the family it is read from at the
+  same sector and outcome, with the coefficient $1$, every other coefficient
+  being $0$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+\emph{(i).} By Corollary~\ref{cor:reference-companion}, $A^{\mathrm{ref}}$ is
+the datum the rule of (I1) forms from $G$, a family with the properties that
+corollary lists, so \eqref{eq:datum-combination} with $K'=G$ gives
+$A^{\mathrm{ref},(s)}_v=\sum_{(b,j)}\lambda^{(s,v)}_{b,j}G^{(b)}_j$, the sum
+over the listed pairs, the others having coefficient $0$. Each listed block
+carries its factor enclosure, so there is a matrix $L^{(b)}_{j,*}$ that the
+box $\big(L^{(b)}_{j},\varrho^{(b)}_{j}\big)$ contains with
+$G^{(b)}_j=L^{(b)}_{j,*}W^{(b)}_{j}L^{(b)\dagger}_{j,*}$
+(\xref{foundations/def:factor-enclosure}); every such matrix has $d_s$ rows,
+its block being of dimension $d_s$. Let $L_*$ be the matrix with the
+$L^{(b)}_{j,*}$ side by side in the listed order and $W$ the block-diagonal
+matrix of the $\lambda^{(s,v)}_{b,j}W^{(b)}_{j}$ in the same order. Each
+column of the box of the triple is a column of one of the boxes it is made
+of, with its centre and radii, so the box contains $L_*$; its centre has
+entries in $\mathbb{Q}(i)$ and its radii are non-negative rationals, as
+those of the boxes it is made of; and $W$ is diagonal, each
+$W^{(b)}_j$ being diagonal, with positive rational diagonal entries, each a
+product of a positive rational $\lambda^{(s,v)}_{b,j}$ and a positive
+rational entry of $W^{(b)}_j$. Multiplying by blocks,
+\begin{equation*}
+  L_*WL_*^{\dagger}
+  =\sum_{(b,j)}L^{(b)}_{j,*}\big(\lambda^{(s,v)}_{b,j}W^{(b)}_{j}\big)L^{(b)\dagger}_{j,*}
+  =\sum_{(b,j)}\lambda^{(s,v)}_{b,j}\,G^{(b)}_j
+  =A^{\mathrm{ref},(s)}_v ,
+\end{equation*}
+which is what a factor enclosure of $A^{\mathrm{ref},(s)}_v$ asks
+(\xref{foundations/def:factor-enclosure}). The number of columns of $L_*$ is
+the sum of those of the $L^{(b)}_{j,*}$. Where every coefficient is zero, no
+pair is listed, $L_*$ has no column, and $A^{\mathrm{ref},(s)}_v=0$, the one
+member of a triple with no column.
+
+\emph{(ii).} By Corollary~\ref{cor:reference-companion}\,(i) the reference
+companion is a reduction instance at the datum $A^{\mathrm{ref}}$, and its
+target is \eqref{eq:instance-target} of
+Definition~\ref{def:reduction-instance} at that datum, whose block on a data
+sector $s$ is $A^{\mathrm{ref},(s)}_v$.
+
+\emph{(iii).} The rule of (I1) of the identity instance is the identity: its
+datum is the declared family read as a sector-block list,
+$A^{(s)}_v$ being the block of $M_v$ on the sector $s$
+(Corollary~\ref{cor:identity-instance}), and the same rule reads any family
+$K'$ over the same sectors so. That is \eqref{eq:datum-combination} with
+$\lambda^{(s,v)}_{s,v}=1$ and every other coefficient $0$, and the block
+with the coefficient $1$ is of dimension $d_s$.
+\end{proof}

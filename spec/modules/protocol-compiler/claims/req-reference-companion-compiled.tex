@@ -1,0 +1,82 @@
+% ---
+% id: protocol-compiler/req:reference-companion-compiled
+% kind: req
+% title: "The reference companion compiled beside the declaration"
+% summary: >-
+%   Where the chains of one or more measured factors carry a
+%   reference companion, the compiler forms beside the declaration one
+%   companion replacing each, by the same map, weighted exactly with its
+%   factor enclosures, decides none of its predicates and emits it
+%   evaluation-only, with no run of its own.
+% prominence: standard
+% status: implemented
+% uses: [def:compile, def:weighted, lem:weighted, lem:weighted-factor, def:declaration, reductions/cor:reference-companion, reductions/lem:row-relaxation, foundations/def:factor-enclosure]
+% mentions: [req:pass-through, def:validator, def:chaincond, def:exact, reductions/req:reference-companion, meat-core/prop:reference-companion, meat-core/req:companion-admission]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.companion:compile_reference_companion
+% lean:
+% notes: "Stated for every measured factor whose last link carries a companion, as the compiler forms it: one companion replacing each such factor's family and entries, both stations of an entanglement-based declaration among them."
+% ---
+
+The companion a reductions emission carries beside its artefact
+(\xref{reductions/req:reference-companion}) is the same receiver segment run
+on the reference. Compiling it by the same map, from the same specification,
+gives a tuple that differs from the declaration in the measured families of
+the factors it replaces and the entries of their last links and in nothing
+else (\xref{meat-core/prop:reference-companion}). Those families are known
+through enclosures and are off the binary64 grid, so the checks this module
+decides on emitted \tref{binary64 numbers}, the validator's
+(Definition~\ref{def:validator}) and the chain conditions'
+(Definition~\ref{def:chaincond}), do not apply to them; that each is a POVM
+is imported from the reductions corollary, and the consumer that evaluates it
+admits it under its own rule (\xref{meat-core/req:companion-admission}).
+
+\begin{requirement}\label{req:reference-companion-compiled}
+Where the last link of the receiver segment of one or more
+\tref[measured factor]{measured factors} was emitted with a reference
+companion (\xref{reductions/req:reference-companion}), the engine emits,
+beside the declaration $\Decl$ it compiles, one \emph{compiled reference
+companion} $\Decl^{\mathrm{ref}}$, in \iface{reference_companion}:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item it is the tuple the \tref{compilation map} (Definition~\ref{def:compile})
+  gives from the same specification with, for every measured factor whose
+  last link was so emitted, that link's \tref{target family} replaced by its
+  companion's and that link's entries replaced by its companion's relaxed
+  entries (\xref{reductions/lem:row-relaxation}), those of the entries
+  requested of the link included where the companion carries them, and none
+  in place of a requested entry the companion does not carry
+  (\xref{reductions/req:reference-companion}\,(iii)); the engine forms it by
+  the code path that forms $\Decl$, every other slot read from the same
+  data, the family and the entries of every other measured factor's last
+  link among them;
+\item where a \tref{measured factor}'s family is weighted after its chain,
+  by that factor's weighting (Definition~\ref{def:weighted}), every product
+  $P(f\,|\,t(v))\,F_v$ is
+  formed exactly from the companion's enclosure: the centre multiplied by
+  the weight and every radius by its modulus, so that the result encloses
+  the product of the weight and the companion's element. Where the companion
+  carries a \tref{factor enclosure} (\xref{foundations/def:factor-enclosure})
+  of a block of $F_v$ (\xref{reductions/req:reference-companion}\,(vii)),
+  the block of the product carries, beside its \tref{entrywise enclosure}, the one of
+  Lemma~\ref{lem:weighted-factor}: the same box, its centres and radii
+  unaltered, and the core multiplied by the weight in exact rational
+  arithmetic. Where the family is not weighted after its chain, every factor
+  enclosure the companion carries is passed to $\Decl^{\mathrm{ref}}$
+  unaltered;
+\item the engine decides on $\Decl^{\mathrm{ref}}$ none of the predicates
+  it decides on the binary64 numbers of $\Decl$: no Hermiticity, positivity
+  or completeness of the family, no completeness sum in a \tref{declared order}
+  (Definition~\ref{def:exact}), no chain condition and no check of the
+  validator; it passes the companion's entries through as
+  Requirement~\ref{req:pass-through} passes every entry;
+\item it emits no bundle of a run of its own from $\Decl^{\mathrm{ref}}$
+  and marks it evaluation-only, a declaration with no run of its own, with
+  a reference to the declaration $\Decl$ it is the
+  companion of and the companion's record carried unchanged.
+\end{enumerate}
+Where no measured factor's last link carries a companion, nothing of this
+requirement applies, and the run forms its first-order number on $\Decl$
+alone, its blocks resting as the records of the artefact say.
+\end{requirement}

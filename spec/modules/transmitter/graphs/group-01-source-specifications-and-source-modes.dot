@@ -1,0 +1,12 @@
+digraph claims {
+  rankdir=LR;
+  graph [label="1 Source specifications and source modes\nArrow: claim -> prerequisite. Solid: uses; dashed: assumes.\nDeclared dependencies, not a proof check. Mentions excluded.", labelloc=t, fontsize=13, fontname="Arial", bgcolor="white", pad=0.25, nodesep=0.3];
+  node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11, margin="0.13,0.09"];
+  edge [color="#526777", arrowsize=0.65];
+  subgraph "cluster_transmitter" {
+    label="transmitter"; color="#cbd5df";
+    "transmitter/def:source-spec" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/def:source-spec<BR/>Source specification<BR/>implemented</TD></TR><TR><TD HREF="../claims/def-source-spec.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/def:source-spec" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled", URL="../claims/def-source-spec.tex", target="_top"];
+    "transmitter/rem:source-mode" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/rem:source-mode<BR/>The two source modes<BR/>accepted</TD></TR><TR><TD HREF="../claims/rem-source-mode.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/rem:source-mode" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../claims/rem-source-mode.tex", target="_top"];
+  }
+  "transmitter/rem:source-mode" -> "transmitter/def:source-spec";
+}

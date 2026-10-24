@@ -1,0 +1,57 @@
+% ---
+% id: receiver/rem:cdirection
+% kind: rem
+% title: "The direction of the unclamped $c$ at odd and even photon numbers"
+% summary: >-
+%   An admitted negative c lowers the analytic bound at odd photon numbers and
+%   can raise it at even ones, by at most (K−1)ε₂², second order on the declared
+%   domain. Neither comparison is an enclosure of the exact bound.
+% prominence: standard
+% status: accepted
+% uses: [def:tolmap, def:bounddata, rem:tolerancedomain]
+% mentions: [thm:exact-and-evaluated, def:enclosed-weight, rem:ia]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:cdirection}
+Definition~\ref{def:tolmap}\,(iv) admits $c\in[-\varepsilon_2,0)$ and feeds
+that value to \eqref{eq:beta} unchanged. Since
+$\Bnd(n)=1+(K-1)\gamma c^{\,n}-\sum_k\beta_kd_k^{\,n}$ is increasing in
+$c^{\,n}$, and since the exact $c$ satisfies $c_{\mathrm{ex}}\ge0$, the effect
+splits by the parity of $n$, and both sides are stated.
+\begin{itemize}[leftmargin=1.6em]
+\item \emph{Odd $n$.} $c^{\,n}<0\le c_{\mathrm{ex}}^{\,n}$, so the evaluated
+  $\Bnd(n)$ is \emph{below} the exact one. Conservative, and by a first-order
+  amount: measured against the value at $c=0$ the deficit is
+  $(K-1)\gamma|c|^{\,n}\le(K-1)\varepsilon_2$ at $n=1$, which is a lower bound
+  on the deficit against $\Bnd(n)$ at $c_{\mathrm{ex}}$, that one being
+  $(K-1)\gamma\big(c_{\mathrm{ex}}^{\,n}+|c|^{\,n}\big)$.
+\item \emph{Even $n\ge2$.} $c^{\,n}=|c|^{\,n}>0$, so the evaluated $\Bnd(n)$
+  can \emph{exceed} the exact one, by at most
+  $(K-1)\gamma\big(|c|^{\,n}-c_{\mathrm{ex}}^{\,n}\big)
+  \le(K-1)|c|^{\,n}\le(K-1)\varepsilon_2^{\,2}$, using $\gamma\le1$,
+  $|c|\le\varepsilon_2$ and $\varepsilon_2\le1$. The bound
+  $|c|\le\varepsilon_2$ is Definition~\ref{def:tolmap}\,(iv) and no other rule,
+  which is why that item decides the admission of $c$ on \emph{every} route,
+  item~(v)'s route-(ii) admission at $\varepsilon_1$ not being a bound on $|c|$
+  at all. The last step is where the declared upper bound of
+  Remark~\ref{rem:tolerancedomain} is used, since
+  $\varepsilon_2^{\,n}\le\varepsilon_2^{\,2}$ for even $n\ge2$ holds exactly on
+  $\varepsilon_2\le1$ and fails above it. The overshoot is second order in
+  $\varepsilon_2$ on the declared domain, and this is the one direction in
+  which clamping $c$ to $0$ would have been the safer choice.
+\end{itemize}
+The contract fixes the unclamped rule because a clamped and an unclamped
+evaluation are both defensible and they differ, so leaving the choice to an
+implementation would leave the emitted number undetermined by the contract.
+Neither statement above is an enclosure: they compare two evaluations of
+\eqref{eq:beta}, and Theorem~\ref{thm:exact-and-evaluated}\,(ii) still governs the distance
+from either to the exact quantity. The case arises in the floating-point
+evaluation only: the rigorous evaluation takes its lower end of $c$ in
+$[0,1]$ (Remark~\ref{rem:ia}, Definition~\ref{def:enclosed-weight}), so no
+negative $c$ enters a weight it forms.
+\end{remark}

@@ -1,0 +1,69 @@
+% ---
+% id: receiver/thm:coarse-graining
+% kind: thm
+% title: "Coarse-graining of the click-pattern POVM"
+% summary: >-
+%   The emitted POVM of a declared coarse-graining is a POVM, block diagonal in
+%   the photon number, and lower bounds on disjoint raw outcomes add. A bound on
+%   a merged outcome gives nothing about the click patterns it merges.
+% prominence: main
+% status: implemented
+% uses: [thm:click-povm, lem:fock-block-spectrum]
+% mentions: [def:slot]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.coarse:coarse_block
+% lean:
+% ---
+
+Merging outcomes keeps everything the POVM structure needs and loses
+information in one direction only. Part (iii) is why the
+\tref{strengthening slot} of Definition~\ref{def:slot} is indexed by
+outcome sets rather than by emitted letters: by (ii) a bound on a set of raw
+outcomes passes to every emitted outcome whose fibre contains the set, while
+by (iii) a bound on an emitted outcome cannot be split back.
+
+\begin{theorem}\label{thm:coarse-graining}
+Let $\cg$ be a \tref{declared coarse-graining}.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $\{F_v\}_{v\in\Vset}$ is a POVM on $\mathcal{F}(\mathbb{C}^{\Inp})$, and
+  every $F_v$ is block diagonal in the photon number with
+  $\blk{F}{\eqn}_v=\sum_{S\in\cg^{-1}(v)}\blk{M}{\eqn}_S$.
+\item \emph{Bounds add.} If $\mathcal{O}\subseteq2^{[K]}$ and
+  $\blk{M}{\gtN}_S\succeq p_S\,\id^{(>N)}$ for every $S\in\mathcal{O}$ with
+  $p_S\ge0$, then
+  $\sum_{S\in\mathcal{O}}\blk{M}{\gtN}_S\succeq
+  \big(\sum_{S\in\mathcal{O}}p_S\big)\id^{(>N)}$. In particular, if
+  $\cg^{-1}(v)\supseteq\mathcal{O}$ then
+  $\blk{F}{\gtN}_v\succeq\big(\sum_{S\in\mathcal{O}}p_S\big)\id^{(>N)}$.
+\item \emph{Coarsening is lossy in one direction only.} A bound on a coarse
+  outcome does not descend to its fibres: $F_v\succeq p\,\id$ implies nothing
+  about the individual $M_S$ with $\cg(S)=v$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) Each $F_v$ is a finite sum of positive operators, hence positive; the
+fibres $\cg^{-1}(v)$ partition $2^{[K]}$ because $\cg$ is a map, so
+$\sum_vF_v=\sum_SM_S=\id$ by Theorem~\ref{thm:click-povm}\,(i). Block diagonality is
+inherited from each summand (Theorem~\ref{thm:click-povm}\,(iii)), and the block of a
+finite sum is the sum of the blocks.
+
+(ii) The Löwner order is preserved by sums:
+$\sum_{S\in\mathcal{O}}\blk{M}{\gtN}_S-\big(\sum_Sp_S\big)\id^{(>N)}
+=\sum_{S\in\mathcal{O}}\big(\blk{M}{\gtN}_S-p_S\id^{(>N)}\big)\succeq0$. For
+the second sentence add the remaining, positive, elements of the fibre.
+
+(iii) Take $K=2$ and $\Vset=\{v\}$ with $\cg$ constant, so $F_v=\id$ and the
+bound $F_v\succeq1\cdot\id$ is available. Choose port Grams with
+$\lmin(A_\Sigma)=0$, i.e.\ $A_\Sigma$ singular: any lossy receiver with an
+input direction no port sees. By Lemma~\ref{lem:fock-block-spectrum},
+$\lmax\big(\blk{M}{\eqn}_{\varnothing}\big)=(1-\lmin(A_\Sigma))^n=1$, so on
+every block there is a unit vector $\ket{\psi}$ with
+$\bra{\psi}\blk{M}{\eqn}_{\varnothing}\ket{\psi}=1$; completeness and
+positivity then force
+$\bra{\psi}\blk{M}{\eqn}_{S}\ket{\psi}=0$ for every $S\ne\varnothing$, and in
+particular $\lmin\big(\blk{M}{\eqn}_{\{1,2\}}\big)=0$. So a bound on the
+coarse outcome gives nothing about its fibres.
+\end{proof}

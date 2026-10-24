@@ -1,0 +1,66 @@
+% ---
+% id: foundations/def:declared-order
+% kind: def
+% title: "Sums in a declared order and sums that round nowhere"
+% summary: >-
+%   A sum of declared values is accumulated left to right in a declared order,
+%   and it rounds nowhere when every one of its binary64 additions is exact.
+%   Binary64 addition is not associative, so the order is part of the datum.
+% prominence: standard
+% status: implemented
+% uses: [def:binary64]
+% mentions: [rem:summation-order]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.exact:sum_in_declared_order
+% lean:
+% ---
+
+In exact arithmetic the order in which a finite sum is accumulated is
+immaterial. Binary64 addition is not associative, so a sum that a predicate
+reads comes with its order, and the order is part of the datum
+(Remark~\ref{rem:summation-order}).
+
+\begin{definition}\label{def:declared-order}
+Let $(x_1,\dots,x_n)$, $n\ge1$, be a finite sequence of elements of
+$\mathbb{B}_{\mathbb{C}}$, or of matrices of one shape over
+$\mathbb{B}_{\mathbb{C}}$ (Definition~\ref{def:binary64}\,(i)): declared values
+and declared matrices (Definition~\ref{def:binary64}\,(iii)), or the computed
+inner sums of a sum of sums below. Its
+\term[the exact sum of a finite sequence, accumulated left to right from
+zero]{sequential sum} is
+\begin{equation}\label{eq:seqsum}
+  S_0\coloneqq0,\qquad S_i\coloneqq S_{i-1}+x_i\quad(1\le i\le n),
+\end{equation}
+and its \term[the left-to-right accumulation of a finite sequence from zero
+with every addition rounded by fl, entrywise, with no re-ordering and no
+re-association]{computed sequential sum} is $\hat S_0\coloneqq0$,
+$\hat S_i\coloneqq\mathrm{fl}(\hat S_{i-1}+x_i)$ for $1\le i\le n$
+(Definition~\ref{def:binary64}\,(ii)), formed left to right, entrywise, with no
+re-ordering and no re-association. The accumulation \term[said of an
+accumulation every one of whose binary64 additions is exact]{rounds nowhere}
+when
+every one of its $n$ binary64 additions is exact: for every $1\le i\le n$, every
+entry of $\hat S_{i-1}$ is finite and $\hat S_i=\hat S_{i-1}+x_i$.
+
+A \term[a total order on a finite alphabet, fixed together with the
+alphabet]{declared order} on a finite alphabet $J$ is a total order
+$j_1\prec j_2\prec\dots\prec j_{|J|}$ on $J$, fixed together with $J$. For a
+family $\{a_j\}_{j\in J}$ of declared values, or of declared matrices of one
+shape, the \term[the sequential sum of a family indexed by an alphabet, taken
+in the alphabet's declared order]{sum in the declared order} is the sequential
+sum of
+$(a_{j_1},\dots,a_{j_{|J|}})$, and the family's sum rounds nowhere when that
+accumulation does. The trace of a declared $d\times d$ matrix $X$ is
+accumulated as the sequential sum of $(X_{11},X_{22},\dots,X_{dd})$, in
+increasing row index. A sum of such sums over an alphabet with a declared order
+rounds nowhere when every inner accumulation rounds nowhere and the sequential
+sum, in that order, of the computed inner sums rounds nowhere; that sequential
+sum is then the computed sum of sums. Each computed inner sum is then over
+$\mathbb{B}_{\mathbb{C}}$: its last addition is exact, so it equals a sum of
+finite numbers, and it is a value of $\mathrm{fl}$, which lies in
+$\mathbb{B}\cup\{\pm\infty\}$ entry by entry and part by part
+(Definition~\ref{def:binary64}\,(ii)). The outer sequential sum is therefore
+one of the sequences above.
+\end{definition}

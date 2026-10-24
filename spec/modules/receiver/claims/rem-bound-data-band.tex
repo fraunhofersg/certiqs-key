@@ -1,0 +1,129 @@
+% ---
+% id: receiver/rem:bound-data-band
+% kind: rem
+% title: "The bound-data test and the contractivity test on the band"
+% summary: >-
+%   Where the contractivity test at ε₁ admits and the bound-data test at ε₂
+%   refuses, the bound-data test decides: an exact implication between the two
+%   conditions transports no admission between computed numbers. Admitting the
+%   band would make a stated error term false on admitted values.
+% prominence: standard
+% status: accepted
+% uses: [def:tolmap, def:gram, def:bounddata, thm:multiclick-bound, thm:port-grams, thm:exact-and-evaluated, rem:cdirection, rem:tolerancedomain, cor:unconditioned-family]
+% mentions: [rem:ranktwosided, ass:passive, receiver/component-catalogue/ex:bb84]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Items (iv) and (v) of Definition~\ref{def:tolmap} both widen an exact
+condition by a receiver tolerance, and in exact arithmetic the condition of
+item (v) implies that of item (iv). This remark says why the implication
+nevertheless admits nothing, and what each widened test does and does not
+guard against.
+
+\begin{remark}\label{rem:bound-data-band}
+\emph{Why item (iv) is widened at all.} Admissible receivers with
+$\lmax(B)=1$ exactly are ordinary: at a receiver without a probe $B=A_\Sigma$
+(Corollary~\ref{cor:unconditioned-family}), and the channel-only receiver of
+Example~\ref{ex:bb84} has $A_\Sigma=\id_2$. There a computed $\lmax(B)$ one
+rounding unit above $1$ makes $c$ negative on a receiver that is admissible,
+and refusing it would refuse the simplest legitimate device.
+
+\emph{The two items decide different objects.} A declaration can satisfy one
+and fail the other: item~(v) admits a route-(ii) $\Gmat$ at $\varepsilon_1$,
+item (iv) decides the derived $c$ at $\varepsilon_2$, and whenever
+$\varepsilon_1>\varepsilon_2$, the ordinary declaration, the band
+\eqref{eq:tolmapband} is non-empty, admitted by item~(v)'s test and refused by
+item (iv)'s. On route (i) the band has no analogue, item~(i) and item (iv)
+carrying the same $\varepsilon_2$; but item (iv) is a test there too and not a
+formality, for the reason step~(2) below gives. Item (iv) wins on the band, in
+four steps.
+
+(1) \emph{In exact arithmetic item~(v)'s condition implies item (iv)'s, so
+item (iv) is redundant, exactly.} $\Gmat^\dagger\Gmat\preceq\id$ gives
+$A_\Sigma\preceq\Gmat_{\Inp}^\dagger\Gmat_{\Inp}\preceq\id$ by
+Theorem~\ref{thm:port-grams}\,(i), hence $\lmax(A_\Sigma)\le1$ and $c\ge0$; and at
+every setting $B^{(t)}\preceq\id$ by \eqref{eq:bbkhyp}, hence $c\ge0$ again.
+
+(2) \emph{But item~(v) never establishes its exact condition.} It admits under
+a widened test on a \emph{computed} number, and Theorem~\ref{thm:exact-and-evaluated}\,(ii)
+bounds the distance from that number to the exact one by nothing at all. So
+what step~(1) transports is an implication between exact quantities and
+\emph{no implication whatever between the two computed quantities}, which are
+separated by at least one matrix product
+($A_k=\Gmat_{\Inp}^\dagger\Emd{\{k\}}\Gmat_{\Inp}$,
+Definition~\ref{def:gram}) and, at a setting of a family a submodule
+constructs from the Grams, by the further operations of that construction as
+well. Reading
+item~(v) as admitting anything under item (iv) is reading an exact implication
+as a bound on an evaluation, which is the one substitution
+Theorem~\ref{thm:exact-and-evaluated}\,(ii) exists to forbid. This step is also why item (iv)
+is not redundant on route (i), where step~(1) holds just as well from
+$\sum_kA_k\preceq\id$: redundancy of the \emph{exact} condition is not
+admission of the \emph{computed} one. And $0\le c$ is tested where the rest of
+\eqref{eq:bounddata} is not because the error term of
+Remark~\ref{rem:cdirection}, on which step~(3) turns, is stated for a negative
+computed $c$ and bounded through this test alone.
+
+(3) \emph{The band is not empty of consequence, and the consequence is
+quantitative and unsafe.} Remark~\ref{rem:cdirection} bounds the even-$n$
+overshoot of the unclamped evaluation by
+$(K-1)|c|^{\,n}\le(K-1)\varepsilon_2^{\,2}$, and that bound is stated in
+$\varepsilon_2$ \emph{because item (iv) is what bounds $|c|$}. Admitting
+\eqref{eq:tolmapband} would make $|c|$ as large as $\varepsilon_1$ and the
+true bound $(K-1)\varepsilon_1^{\,2}$, larger by the factor
+$(\varepsilon_1/\varepsilon_2)^2$, which at an ordinary pair of declared
+numbers is many orders of magnitude. A stated error term of this contract
+would then be false on values this contract admits, in the direction where
+the evaluated $\Bnd(n)$ \emph{exceeds} the exact one, which is the direction
+that reaches a key length. Remark~\ref{rem:tolerancedomain} says what a
+declared domain buys, ``that every error term this contract states holds on
+every value the contract admits'', and that is the property item~(v) winning
+would destroy.
+
+(4) \emph{Nothing is lost by item (iv) deciding.} The case the widening exists
+for, a receiver with $\lmax(B)=1$ exactly whose computed $\lmax(B)$ sits a
+rounding unit above $1$, is admitted by item (iv)'s own $-\varepsilon_2$; and item (iv) tests the
+very quantity that enters \eqref{eq:beta}, where item~(v) tests one two
+computations upstream. A declarer who wants the wider band declares a wider
+$\varepsilon_2$, which is what a receiver tolerance is for and which carries
+the stated error term with it, rather than leaving it behind.
+
+\emph{Item (v) is one-sided as a test and two-sided in its consequences.}
+$\Gmat^\dagger\Gmat\preceq\id$ is an upper bound on a spectrum, so the test
+relaxes in one direction only: it admits
+$\lmax(\Gmat^\dagger\Gmat)\in(1,1+\varepsilon_1]$, which the exact condition
+excludes, and it refuses nothing that the exact condition, applied to the same
+computed number, would admit. The \emph{errors} are two-sided in the sense of
+Remark~\ref{rem:ranktwosided}, and deliberately so. Too tight refuses a
+legitimate device: a receiver with a unitary $\Gmat$, such as the worked
+instrument \eqref{eq:bb84G} of Example~\ref{ex:bb84}, has
+$\lmax(\Gmat^\dagger\Gmat)=1$ \emph{exactly}, so a computed value one rounding unit above
+$1$ would refuse it, which is the argument for widening item~(iv) verbatim.
+Too loose admits a genuinely non-contractive $\Gmat$, which violates
+Assumption~\ref{ass:passive}. Route (ii) carries no separate Gram
+admissibility check, because Theorem~\ref{thm:port-grams}\,(i) \emph{derives}
+$\sum_kA_k\preceq\Gmat_{\Inp}^\dagger\Gmat_{\Inp}\preceq\id$ from
+contractivity, so the \emph{exact} condition item~(i) tests at route (i) is
+redundant here rather than dropped.
+
+\emph{What that derivation transports, and what it does not.} It is an
+implication between \emph{exact} quantities. It therefore makes item~(i)'s
+exact condition redundant on route (ii), and, through $B\preceq\id$ in
+\eqref{eq:bbkhyp}, item~(iv)'s exact condition $c\ge0$ redundant too. It
+transports \emph{no admission}: the computed $\lmax(A_\Sigma)$ and the computed
+$c$ are separate evaluations, related to the exact ones by nothing this
+contract asserts (Theorem~\ref{thm:exact-and-evaluated}\,(ii)), so an $\varepsilon_1$-admitted
+$\Gmat$ does not thereby satisfy any test stated at $\varepsilon_2$. Item~(iv)
+accordingly decides the bound data on route (ii) as on every other, and the
+band \eqref{eq:tolmapband} that opens when $\varepsilon_1>\varepsilon_2$ is
+refused. \emph{Each route therefore tests its own declared datum under its own
+declared number}, $\varepsilon_1$ on the supplied $\Gmat$ at route (ii) and
+$\varepsilon_2$ on the supplied Grams at route (i), because each is the
+tolerance attached to \emph{that} datum's residual, and neither is thereby a
+tolerance on the derived $c$. A declarer who wants one slack on
+$\lmax(A_\Sigma)$ regardless of route declares
+$\varepsilon_1=\varepsilon_2$, which also empties \eqref{eq:tolmapband}.
+\end{remark}

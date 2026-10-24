@@ -1,0 +1,92 @@
+% ---
+% id: reductions/wpfss/lem:descent
+% kind: lem
+% title: "Descent of a dark-count matrix through a coarse-graining"
+% summary: >-
+%   R descends through a coarse-graining when each fibre sum depends on a
+%   column only through its letter; then R and the coarse-graining commute
+%   via a column-stochastic R^cg. A monotone R descends if the
+%   coarse-graining is injective off the multiclick set and maps exactly that
+%   set to one letter.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [rem:descentneedsconstant, reductions/def:substrate]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The receiver emits its blocks on the coarse alphabet $\Yset$ but supplies its
+\tref{dark-count channel} on the raw click patterns $2^{[K]}$. This lemma says
+when the channel can be moved onto the coarse alphabet through the
+\tref{declared coarse-graining} $\cg$, and gives the sufficient condition the
+canonical threshold-detector declaration meets; the constancy clause of that
+condition cannot be dropped (Remark~\ref{rem:descentneedsconstant}).
+
+\begin{lemma}
+\label{lem:descent}
+Let $R$ be column-stochastic on $2^{[K]}$ and $\cg\colon2^{[K]}\to\Yset$
+surjective. Say that \emph{$R$ descends through $\cg$} if the quantity
+$P(y\,|\,S')\coloneqq\sum_{S\in\cg^{-1}(y)}R_{S|S'}$ depends on $S'$ only
+through $\cg(S')$; the resulting matrix
+$R^{\cg}_{y|y'}\coloneqq P(y\,|\,S')$ for any $S'\in\cg^{-1}(y')$ is then well
+defined and column-stochastic. In that case, for every family of operators
+$\{X_{S}\}$,
+\begin{equation}\label{eq:descend}
+  \sum_{S\in\cg^{-1}(y)}\ \sum_{S'}R_{S|S'}X_{S'}
+  \;=\;\sum_{y'\in\Yset}R^{\cg}_{y|y'}\ \sum_{S'\in\cg^{-1}(y')}X_{S'},
+\end{equation}
+so applying $R$ and then coarse-graining agrees with coarse-graining and then
+applying $R^{\cg}$. A sufficient condition, which the canonical
+threshold-detector declaration satisfies, is that $R$ be \emph{monotone}
+($R_{S|S'}>0\Rightarrow S'\subseteq S$) and that, with
+$\MCK\coloneqq\{S:|S|\ge2\}$,
+\begin{equation}\label{eq:canonicalcg}
+  \cg\ \text{is injective on }2^{[K]}\setminus\MCK,
+  \qquad
+  \cg\ \text{is \emph{constant} on }\MCK,\ \text{say }\cg(\MCK)=\{y_{\mc}\},
+  \qquad
+  \cg^{-1}(y_{\mc})=\MCK ;
+\end{equation}
+the case $\cg=\mathrm{id}$ is trivial.
+
+On declared data both the hypothesis and the conclusion are read exactly. The
+declared $R$ is exactly column-stochastic, and the descent
+condition, that $P(y|S')=P(y|S'')$ for every $y$ and every pair $S',S''$ with
+$\cg(S')=\cg(S'')$, is an identity between the dyadic rationals the
+declaration carries and is decided as one
+(Definition~\ref{def:substrate}).
+The representative is declared, not chosen:
+$R^{\cg}_{y|y'}\coloneqq P(y|S'_{y'})$ with $S'_{y'}$ the first element of
+$\cg^{-1}(y')$ in the \tref{declared order} of $2^{[K]}$, so the descended
+matrix is a determinate object and not one of several. Column-stochasticity of
+$R^{\cg}$ needs no second decision: the identity
+$\sum_yR^{\cg}_{y|y'}=\sum_SR_{S|S'}$ of the proof regroups one finite sum,
+and in the exact substrate a regrouped sum \emph{is} the sum it regroups. So \eqref{eq:descend} holds of the declared
+numbers as an exact identity.
+\end{lemma}
+
+\begin{proof}
+Well-definedness is the stated hypothesis, and
+$\sum_yR^{\cg}_{y|y'}=\sum_yP(y|S')=\sum_SR_{S|S'}=1$ gives
+column-stochasticity. For \eqref{eq:descend}, exchange the two sums on the left
+and group the columns by $\cg(S')$:
+$\sum_{S'}P(y|S')X_{S'}
+=\sum_{y'}\sum_{S'\in\cg^{-1}(y')}R^{\cg}_{y|y'}X_{S'}$.
+
+For the sufficient condition \eqref{eq:canonicalcg}: if $S'\in\MCK$ and
+$R_{S|S'}>0$ then $S\supseteq S'$ by monotonicity, so $|S|\ge2$ and $S\in\MCK$;
+hence the whole column $S'$ is supported on $\MCK$, which by the constancy and
+preimage clauses is exactly $\cg^{-1}(y_{\mc})$. Column-stochasticity then gives
+$P(y_{\mc}|S')=\sum_{S\in\MCK}R_{S|S'}=1$ and $P(y|S')=0$ for $y\ne y_{\mc}$,
+the same values for \emph{every} $S'\in\MCK$. This is where constancy of
+$\cg$ on $\MCK$ is needed: without it, $\MCK$ would split across several
+letters and the individual $P(y|S')$ could differ inside $\MCK$
+(Remark~\ref{rem:descentneedsconstant}). If $S'\notin\MCK$ then $\cg(S')$
+determines $S'$: by the preimage clause $\cg(S')\ne y_{\mc}$, so by the
+constancy clause no pattern of $\MCK$ has the letter $\cg(S')$, and $\cg$ is
+injective on $2^{[K]}\setminus\MCK$. So $P(y|S')$ depends on $S'$
+only through $\cg(S')$ in both cases.
+\end{proof}

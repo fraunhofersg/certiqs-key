@@ -1,0 +1,41 @@
+% ---
+% id: receiver/req:residual-refusal
+% kind: req
+% title: "Refusal on a residual above its tolerance, and no repair"
+% summary: >-
+%   Each emitted residual, and the residual gap of a declared window, is
+%   compared with its receiver tolerance, and one above it refuses the request.
+%   No block is Hermitized, symmetrized, projected, clamped or otherwise
+%   repaired: the artifact carries the computed block and its own defect.
+% prominence: standard
+% status: implemented
+% uses: [def:residuals, lem:windowtail, def:pmc]
+% mentions: [rem:res5why, rem:exacteig]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.residuals:check_residuals
+% lean:
+% ---
+
+A repaired block is a different operator, and no claim of this contract holds
+for it (Remark~\ref{rem:res5why}); so a residual only ever refuses.
+
+\begin{requirement}\label{req:residual-refusal}
+The engine compares each residual that exists (Definition~\ref{def:residuals})
+with its \tref[receiver tolerances]{receiver tolerance} $\varepsilon_i$, and a
+residual above its tolerance is a \emph{refusal}, not a warning; in particular
+$r_5>\varepsilon_5$ refuses with the reason
+\iface{photon_block_positivity_residual_above_tolerance}, and
+$r_6>\varepsilon_6$ with the reason
+\iface{window_eigenvalue_consistency_residual_above_tolerance}. In the same
+way, at every setting where \tref{predicate (X)} of
+Definition~\ref{def:pmc} fails, the engine compares the residual gap
+$g_{N,m_t}$ of \eqref{eq:resgap} on the declared window $m_t$ with
+$\varepsilon_{\mathrm{gap}}$, and a gap above it refuses. The direction
+is refuse-only: no block is Hermitized, symmetrized, projected onto the
+positive cone, clamped or repaired in any way; the artifact carries the
+computed block itself, and $r_5$ reports that block's own defect. The same
+holds of $r_6$: it refuses and repairs nothing (Remark~\ref{rem:exacteig}
+states the direction of failure it is blind to).
+\end{requirement}

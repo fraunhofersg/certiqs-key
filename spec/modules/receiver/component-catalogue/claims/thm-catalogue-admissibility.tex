@@ -1,0 +1,112 @@
+% ---
+% id: receiver/component-catalogue/thm:catalogue-admissibility
+% kind: thm
+% title: "Admissibility of the catalogue entries"
+% summary: >-
+%   Every catalogue entry maps its whole declared parameter domain to
+%   contractions on its modes, lossless exactly on the subfamily the
+%   catalogue's table lists for it. Only the generic block, an arbitrary matrix
+%   on declared modes, needs its contractivity checked at admission.
+% prominence: main
+% status: implemented
+% uses: [receiver/thm:compilation-well-defined, receiver/def:compile, receiver/def:embed, receiver/def:graph, lem:attenuated, def:catalogue-entries]
+% mentions: [rem:bsconv]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.catalogue:Component
+% lean:
+% ---
+
+A \tref{declared element graph} is \tref{well formed} only if every element
+is a contraction on its support. For entries C1--C9 this holds by theorem on
+the whole declared domain, so for each of them condition (E1) of
+Definition~\ref{def:graph} reduces to checking that its parameters lie in
+that domain.
+
+\begin{theorem}\label{thm:catalogue-admissibility}
+Let $\Gmat_\Sigma$ be the matrix of an entry type C1--C10 of
+Definition~\ref{def:catalogue-entries} at a parameter tuple in its declared
+domain. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $\Gmat_\Sigma^\dagger\Gmat_\Sigma\preceq\id_\Sigma$, so $\Gmat_\Sigma$
+  is a \tref{local element} in the sense of Definition~\ref{def:embed};
+\item $\Gmat_\Sigma$ is lossless,
+  $\Gmat_\Sigma^\dagger\Gmat_\Sigma=\id_\Sigma$, exactly on the subfamily
+  named in Table~\ref{tab:catalogue};
+\item for C1--C9, a matrix whose parameter tuple passes the domain comparison
+  of (E1) (Definition~\ref{def:graph}) is contractive by (i); C10 is the only
+  entry whose declared domain is the contractivity condition itself, so that
+  its check of Theorem~\ref{thm:compilation-well-defined}\,(iv)(E1) is a
+  spectral test on the supplied matrix.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} Each of the entries C1--C9 is exhibited in the form $D_2VD_1$ of
+Lemma~\ref{lem:attenuated}, after which only the unitarity of the core has to
+be checked, and the lemma then gives (i) and the lossless case (ii) together.
+Entry C10 is decided by its hypothesis, checked on the supplied matrix.
+
+\emph{C1.} $\Bsp(x,\varphi)$ is unitary: its first column has squared norm
+$x+(1-x)=1$, its second $(1-x)+x=1$, and their inner product is
+$\sqrt{x}\sqrt{1-x}e^{i\varphi}+\overline{\sqrt{1-x}e^{-i\varphi}}(-\sqrt{x})
+=\sqrt{x(1-x)}e^{i\varphi}-\sqrt{x(1-x)}e^{i\varphi}=0$. Tensoring with
+$\id_2$ preserves unitarity, and
+$\operatorname{diag}(\sqrt{1-y_1},\sqrt{1-y_2})\otimes\id_2$ is a positive
+semidefinite contraction because $1-y_i\in[0,1]$. Lemma~\ref{lem:attenuated}
+with $D_1=\id$ gives admissibility and losslessness exactly at $y_1=y_2=0$.
+(At $\varphi=0$ the core is real with $\det\Bsp=-1$; that sign is an artefact
+of the convention, see Remark~\ref{rem:bsconv}.)
+
+\emph{C2.} $\Bsp(t_H,\varphi_H)\oplus\Bsp(t_V,\varphi_V)$ is a direct sum of
+unitaries, hence unitary; conjugating by the permutation $\Xi$ preserves
+unitarity; the prefactor is again a positive semidefinite diagonal contraction.
+The polarization-dependent beamsplitter of entry C1 is this matrix written in
+the reordered basis $(p_1H,p_2H,p_1V,p_2V)$, so the same argument covers it.
+At $t_H=1$, $t_V=0$, $\varphi_H=\varphi_V=0$, $y_1=y_2=0$ the element is the
+signed permutation
+$p_1H\mapsto p_1H$, $p_1V\mapsto p_2V$, $p_2H\mapsto -p_2H$,
+$p_2V\mapsto p_1V$, which is the intended routing up to per-mode phases.
+
+\emph{C3.} $\Rot(\theta)$ is real orthogonal ($\Rot(\theta)^{\transpose}
+\Rot(\theta)=\id$ by $\cos^2+\sin^2=1$) and
+$\operatorname{diag}(1,e^{i\delta})$ is unitary, so
+$\Wplate(\delta,\theta)$ is a product of unitaries times the unimodular scalar
+$e^{-i\delta/2}$, hence unitary; the expanded form in \eqref{eq:retarder} is
+the product carried out, and \eqref{eq:hwpqwp} is $\delta=\pi$, using
+$e^{i\pi}=-1$, $\cos^2\theta-\sin^2\theta=\cos2\theta$ and
+$2\sin\theta\cos\theta=\sin2\theta$, with the scalar $e^{-i\pi/2}=-i$. The
+prefactor $\sqrt{1-y}$ is a scalar contraction.
+
+\emph{C4.} $\Rot(\rho)$ is real orthogonal, hence unitary, with no attenuation
+factor.
+
+\emph{C5.} $\operatorname{diag}(e^{i\varphi_H},e^{i\varphi_V})F$ is a product
+of unitaries ($F$ is diagonal with entries of modulus one in both cases), and
+$\operatorname{diag}(\sqrt{R_H},\sqrt{R_V})$ is a positive semidefinite
+contraction, equal to $\id$ exactly when $R_H=R_V=1$.
+
+\emph{C6, C9.} Diagonal with unimodular entries, respectively a permutation
+matrix: both unitary, both with $D_1=D_2=\id$.
+
+\emph{C7.} $V=\id$, $D_2=\operatorname{diag}(\sqrt{\eta_m})$, a positive
+semidefinite contraction equal to $\id$ exactly when every $\eta_m=1$.
+
+\emph{C8.} The two displayed forms agree because
+$\Rot(\theta)\ket{H}=\ket{e_\theta}$ and $\Rot(\theta)\ket{V}=
+\ket{e_\theta^{\perp}}$, so conjugating $\operatorname{diag}(\sqrt t,
+\sqrt{t_\perp})$ by $\Rot(\theta)$ is the spectral decomposition written in
+the rotated basis. The result is Hermitian positive semidefinite with
+eigenvalues $\sqrt t,\sqrt{t_\perp}\in[0,1]$, so it is itself a positive
+semidefinite contraction: Lemma~\ref{lem:attenuated} applies with
+$V=\id$, $D_1=\id$, and equality holds exactly at $t=t_\perp=1$.
+
+\emph{C10.} The condition is the hypothesis, checked on the supplied matrix;
+losslessness is the same check with equality.
+
+\emph{Item (iii).} For C1--C9 it is (i), which holds on the whole declared
+domain; for C10 the declared domain is, by
+Definition~\ref{def:catalogue-entries}, the set of blocks $\Gmat_\Sigma$ with
+$\Gmat_\Sigma^\dagger\Gmat_\Sigma\preceq\id_\Sigma$.
+\end{proof}

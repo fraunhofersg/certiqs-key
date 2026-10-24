@@ -1,0 +1,34 @@
+% ---
+% id: reductions/req:party-label
+% kind: req
+% title: "Party partition emitted with the sector map"
+% summary: >-
+%   Each reduction instance's party partition is emitted with its sector map:
+%   the default one, every factor Bob's, unless a party label is declared.
+%   Where several parties measure, each factor's artefact carries that
+%   factor's own label.
+% prominence: standard
+% status: implemented
+% uses: [def:reduction-instance]
+% mentions: [thm:emit, thm:emitted-product]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.sectors:party_partition_statement
+% lean:
+% ---
+
+The consuming declaration places its well-formedness conditions on a
+party's side (Theorem~\ref{thm:emit}\,(ii)), so the party partition of
+Definition~\ref{def:reduction-instance}\,(I2) is part of what a consumer
+reads with the target.
+
+\begin{requirement}\label{req:party-label}
+The engine emits the party partition of each \tref{reduction instance} with
+its \tref{sector map} (\iface{target_descriptor}): the
+\tref{default party partition} where the instance declares no party label,
+and otherwise the declared label (\iface{party_label}) on every factor of
+every $\Hs{\Qsys_s}$. Where several parties measure, each factor's artefact
+carries that factor's own label with its own sector map
+(Theorem~\ref{thm:emitted-product}\,(i)).
+\end{requirement}

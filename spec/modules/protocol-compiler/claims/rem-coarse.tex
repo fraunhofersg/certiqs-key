@@ -1,0 +1,39 @@
+% ---
+% id: protocol-compiler/rem:coarse
+% kind: rem
+% title: "Direction of the outcome correspondence"
+% summary: >-
+%   With a trace-preserving chain, a correspondence from the emitted alphabet
+%   onto the physical one forces every physical element covered more than once
+%   to vanish, so it admits no coarse-graining. The correspondence therefore
+%   runs from the physical alphabet onto the emitted one.
+% prominence: standard
+% status: accepted
+% uses: [def:chaincond, thm:chain-consumption]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:coarse}
+The direction in (C2) is forced, and the argument that forces it is a
+\emph{typing} argument: (C2) fixes the direction of a tabulated map, it is
+combinatorial, and it is read exactly.
+
+Suppose instead a total surjection
+$\gamma':\Vset\to\Vph$ from the emitted alphabet onto the physical one, with the
+pullback read as $\Lambda^{\dagger}(F_v)=\Fph_{\gamma'(v)}$. With
+trace-preserving channel data, Theorem~\ref{thm:chain-consumption}\,(iii)
+says that this reading forces $\Fph_w=0$ for every outcome $w$ covered more
+than once; the computation is Step~3 of its proof. The only non-injective $\gamma'$ that
+survives is one whose extra outcomes are null, i.e.\ no coarse-graining at all.
+Coarse-graining is a real operation --- a squashed family is typically
+\emph{coarser} than the physical one --- so the correspondence must run from
+the finer alphabet to the coarser, which is (C2), and the identity it feeds
+must sum the fibre, which is \eqref{eq:pullback}. Emitting the pair
+$(\gamma,\eqref{eq:pullback})$ rather than a bare correspondence of indices is
+what keeps the statistics identity \eqref{eq:pullbackstats} true outcome by
+outcome.
+\end{remark}

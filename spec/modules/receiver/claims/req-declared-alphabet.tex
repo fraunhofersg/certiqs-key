@@ -1,0 +1,35 @@
+% ---
+% id: receiver/req:declared-alphabet
+% kind: req
+% title: "Declared emitted alphabet and coarse-graining"
+% summary: >-
+%   The engine takes the emitted outcome alphabet and the coarse-graining onto
+%   it as declared inputs and never fixes an alphabet internally. The
+%   optical profile's six outcomes at four detectors are one declared
+%   instance, not the definition.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [def:coarse]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The optical profile's six-outcome alphabet
+$\Yset=\{\nc,\singlec_H,\singlec_V,\singlec_+,\singlec_-,\mc\}$
+(\repodoc{spec/notation.md#37-optical-profile-symbols}) is the instance
+$K=4$, $\cg(\varnothing)=\nc$, $\cg(\{k\})=\singlec_k$, and $\cg(S)=\mc$ for
+$S\in\MCK$: one declared instance among many.
+
+\begin{requirement}\label{req:declared-alphabet}
+The engine takes the emitted alphabet $\Vset$ as an input
+(\iface{emitted_outcome_alphabet}) and the \tref{declared coarse-graining}
+$\cg$ of Definition~\ref{def:coarse} with it
+(\iface{outcome_coarse_graining}); it never fixes an outcome alphabet
+internally. A receiver that fixed six outcomes over four detectors
+internally would make the outcome alphabet an implementation detail of the
+receiver rather than a declared property of the protocol, and every
+downstream index would then depend on an undeclared convention.
+\end{requirement}

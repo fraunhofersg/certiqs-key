@@ -1,0 +1,233 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://certiqs-key/runs/run-input.schema.json",
+  "title": "CERTIQS-KEY run input: a run request, its configuration, and the instance description it is written against",
+  "description": "What a caller SENDS to the run tier, where record.schema.json is what it gets back. A run request names an instance and carries a configuration in RunConfig.to_payload form (runs/config.py); the instance's own parameter table (runs/surface.py InstanceIdentity.as_payload) says which model and device keys it reads. The schema decides shape only: RunConfig.from_payload and the instance's check_keys decide every value and refuse with a runs/errors.py RunInputReason code, so a payload this schema admits can still be refused. $defs/run_config is record.schema.json's $defs/config without config_digest, which the engine computes (tests/unit/test_run_input_schema.py holds the two to the same property names).",
+  "$ref": "#/$defs/run_request",
+  "$defs": {
+    "rational": {
+      "description": "An exact number: a 'p/q' string, an integer string or a decimal string ('1/8', '3', '0.02'); RunConfig reads it as a Fraction. A JSON number is accepted where the engine says so and converted with its conversion recorded.",
+      "type": ["string", "number"]
+    },
+    "run_request": {
+      "type": "object",
+      "required": ["instance", "config"],
+      "additionalProperties": false,
+      "properties": {
+        "instance": {
+          "description": "The instance id, as list_instances returns it (InstanceDescriptor.id). The configuration does not name its instance, so the request does.",
+          "type": "string"
+        },
+        "config": {"$ref": "#/$defs/run_config"},
+        "honest": {"anyOf": [{"type": "null"}, {"$ref": "#/$defs/honest_override"}]}
+      }
+    },
+    "honest_override": {
+      "description": "Statistics from elsewhere in place of the instance's own honest model (the runner's honest_provider injection point). Exactly one of table or envelope. The run record names the override in payload.honest_model_note with overridden true, and the key-rate report lists it among the inputs the user vouches for.",
+      "type": "object",
+      "required": ["source"],
+      "additionalProperties": false,
+      "properties": {
+        "table": {
+          "description": "One honest law: acceptance-alphabet label to probability, as exact rationals. Labels are prepare's acceptance_alphabet.",
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/rational"}
+        },
+        "envelope": {
+          "description": "A range per acceptance label (Assumption A-HON-ENV): every honest law with lower <= p <= upper is accepted with the certified completeness.",
+          "type": "object",
+          "required": ["lower", "upper"],
+          "additionalProperties": false,
+          "properties": {
+            "lower": {"type": "object", "additionalProperties": {"$ref": "#/$defs/rational"}},
+            "upper": {"type": "object", "additionalProperties": {"$ref": "#/$defs/rational"}}
+          }
+        },
+        "source": {
+          "description": "Where the statistics come from, in the user's words (a measurement, a simulator, a datasheet). Carried verbatim into the record's honest_model_note.",
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "oneOf": [
+        {"required": ["table"]},
+        {"required": ["envelope"]}
+      ]
+    },
+    "run_config": {
+      "type": "object",
+      "description": "RunConfig.to_payload: the values selected TOGETHER for one run. Exact rationals are 'p/q' strings; declared_tolerance and the key-length parameters are JSON numbers because each IS its binary64 datum. Start from describe_instance's default_config and change only what the user declared.",
+      "required": [
+        "rounds",
+        "completeness_budget",
+        "declared_tolerance",
+        "parameters",
+        "model",
+        "device"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "rounds": {"type": "integer", "minimum": 1},
+        "completeness_budget": {"$ref": "#/$defs/rational"},
+        "declared_tolerance": {
+          "description": "Required; null describes the configuration that declares none, which the engine refuses (declared_tolerance_absent).",
+          "type": ["number", "null"],
+          "minimum": 0,
+          "exclusiveMaximum": 1
+        },
+        "parameters": {
+          "type": "object",
+          "required": ["alpha", "eps_pa", "eps_ev", "lambda_ec"],
+          "additionalProperties": false,
+          "properties": {
+            "alpha": {"type": "number"},
+            "eps_pa": {"type": "number"},
+            "eps_ev": {"type": "number"},
+            "lambda_ec": {"type": "integer", "minimum": 0},
+            "eps_auth": {"type": "number", "minimum": 0, "exclusiveMaximum": 1},
+            "k_auth": {"type": "integer", "minimum": 0},
+            "reference_enclosure": {"type": "boolean", "description": "Whether the instance hands beside its snap the blocks of its reference known through rigorous enclosures (default true); off, only the blocks known exactly are handed, and every other moved block rests on A-SNAP in the group no_usable_reference."},
+            "strict_snaps": {"type": "boolean", "description": "The strict option (default false): the run refuses wherever a moved block or class would rest on A-SNAP, rather than disclosing it, and reports no key length that rests on it."},
+            "statistics_check": {"enum": ["on", "off"], "description": "The check of the acceptance set against the statistics the declared model can produce (default on): a run whose honest statistics are supplied or whose declaration carries a constraint entry you declared is checked once, and refused with no key length where the cap on the probability that devices behaving as declared pass the acceptance test is at most min_model_pass_probability; off opts out, and the record names A-REACH as unchecked."},
+            "min_model_pass_probability": {"description": "tau in (0, 1] (default 1/2): a checked run whose proven cap on the probability that devices behaving as declared pass the acceptance test is at most tau is refused, with no key length; an exact rational p/q, or a number read exactly.", "oneOf": [{"$ref": "#/$defs/rational"}, {"type": "number", "exclusiveMinimum": 0, "maximum": 1}]}
+          }
+        },
+        "model": {
+          "description": "The instance's CHANNEL parameters (section model of its parameter table), each an exact rational.",
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/rational"}
+        },
+        "device": {
+          "description": "The instance's APPARATUS parameters (section device): an exact rational, a choice name, or for a per_port_fraction parameter an object keyed by exactly its per_port_labels.",
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {"$ref": "#/$defs/rational"},
+              {"type": "object", "additionalProperties": {"$ref": "#/$defs/rational"}}
+            ]
+          }
+        },
+        "alpha": {"type": ["number", "null"], "description": "The Renyi order the run solves at; null solves at parameters.alpha, or lets alpha_search choose it. Setting both is refused (alpha_and_alpha_search_both_set)."},
+        "alpha_search": {
+          "description": "The opt-in outer alpha search (run tier; record schema 0.24.0). Absent means none: the run solves at alpha or parameters.alpha. Set, the runner runs the configuration once per searched alpha (a coarse log grid in alpha - 1, then golden-section refinement) and returns the best run. An absent key of the block takes its default.",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "lower_alpha_minus_one": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1, "description": "Default 1e-05."},
+            "upper_alpha_minus_one": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1, "description": "Above lower_alpha_minus_one. Default 0.25."},
+            "coarse_points": {"type": "integer", "minimum": 2, "description": "Default 6."},
+            "refine_steps": {"type": "integer", "minimum": 0, "description": "Default 5."}
+          }
+        },
+        "constrained": {"type": ["array", "null"], "items": {"type": "string"}},
+        "solver": {
+          "description": "Null means the solver's own defaults. The ordinary choices are method, budget_seconds and max_iterations; every expert choice is under advanced. A key the block does not read is refused (solver_key_not_admitted), among them the expert keys written beside method instead of under advanced.",
+          "type": ["object", "null"],
+          "additionalProperties": false,
+          "properties": {
+            "method": {"enum": ["auto", "fw", null], "description": "auto: the coordinator's schedule under one wall budget; fw: plain Frank-Wolfe, bounded by max_iterations. Absent means the run tier's default (runs/surface.py DEFAULT_METHOD)."},
+            "budget_seconds": {"type": ["number", "null"], "exclusiveMinimum": 0},
+            "max_iterations": {"type": ["integer", "null"], "minimum": 1},
+            "advanced": {
+              "description": "The expert choices; absent or null means the solver's own for each. advanced.method overrides method, and setting both is refused (solver_method_set_twice).",
+              "type": ["object", "null"],
+              "additionalProperties": false,
+              "properties": {
+                "method": {"enum": ["pairwise", "factor", "entropy", "corrective", null]},
+                "oracle": {"enum": ["qics", "spectral", null]},
+                "gap_tolerance": {"type": ["number", "null"], "exclusiveMinimum": 0},
+                "warm_start": {
+                  "type": ["object", "null"],
+                  "required": ["file", "sha256"],
+                  "properties": {
+                    "file": {"type": "string"},
+                    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+                  }
+                },
+                "certified_evaluation": {"enum": ["on", "off", "strict", null]}
+              }
+            }
+          }
+        },
+        "endpoint_rule": {"enum": ["exact", "bernstein"]},
+        "tail_evaluation": {"enum": ["sweep", "enclosure"]},
+        "device_name_fields": {
+          "description": "Device keys whose string value is a NAME even though it reads as a number.",
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "input_preparation": {"type": "array"}
+      }
+    },
+    "parameter_domain": {
+      "description": "ParameterDomain.as_payload (runs/surface.py).",
+      "type": "object",
+      "required": ["form"],
+      "properties": {
+        "form": {"enum": ["interval", "choices", "unrestricted"]},
+        "lower": {"type": ["string", "null"]},
+        "upper": {"type": ["string", "null"]},
+        "lower_open": {"type": "boolean"},
+        "upper_open": {"type": "boolean"},
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["value", "meaning"],
+            "properties": {"value": {"type": "string"}, "meaning": {"type": "string"}}
+          }
+        }
+      }
+    },
+    "parameter": {
+      "description": "ParameterSpec.as_payload (runs/surface.py): one parameter as data a consumer can act on.",
+      "type": "object",
+      "required": [
+        "name", "section", "kind", "quantity", "unit", "default", "domain",
+        "snapped", "meaning", "per_port_labels", "applies_when", "station"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string"},
+        "section": {"enum": ["model", "device", "run", "key-length", "solver"]},
+        "kind": {"enum": ["fraction", "int", "choice", "per_port_fraction", "float", "labels", "record", "boolean"]},
+        "quantity": {"type": "string"},
+        "unit": {"type": ["string", "null"]},
+        "default": {},
+        "domain": {"$ref": "#/$defs/parameter_domain"},
+        "snapped": {"type": "boolean"},
+        "meaning": {"type": "string"},
+        "per_port_labels": {"type": "array", "items": {"type": "string"}},
+        "applies_when": {
+          "type": ["object", "null"],
+          "additionalProperties": {"type": "array"}
+        },
+        "station": {"type": ["string", "null"]}
+      }
+    },
+    "preset": {
+      "description": "Preset.as_payload (runs/surface.py).",
+      "type": "object",
+      "required": ["name", "note", "model", "device"],
+      "properties": {
+        "name": {"type": "string"},
+        "note": {"type": "string"},
+        "model": {"type": "object"},
+        "device": {"type": "object"}
+      }
+    },
+    "instance": {
+      "description": "InstanceIdentity.as_payload (runs/surface.py): the descriptor's four strings and the parameter table. The same block a run record carries as payload.instance.",
+      "type": "object",
+      "required": ["id", "title", "summary", "readme", "parameters"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string"},
+        "title": {"type": "string"},
+        "summary": {"type": "string"},
+        "readme": {"type": "string"},
+        "parameters": {"type": "array", "items": {"$ref": "#/$defs/parameter"}}
+      }
+    }
+  }
+}

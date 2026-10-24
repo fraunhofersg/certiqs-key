@@ -1,0 +1,106 @@
+% ---
+% id: reductions/rem:intertwining
+% kind: rem
+% title: "Classical maps before a squasher, and relabelling after one"
+% summary: >-
+%   A noise or coarse-graining map changes the physical family a squasher is
+%   built from, so it acts on the physical POVM before the first link. A
+%   stochastic relabelling of both sides by the private setting after a
+%   link
+%   keeps the channel, the sectors, every pull-back and every certificate.
+% prominence: standard
+% status: accepted
+% uses: [lem:linear, def:joint-family]
+% mentions: [def:link, def:chain, ass:tsm, rem:master-scope, lem:master, req:post-processing-order]
+% assumes: [A-TSM]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Lemma~\ref{lem:linear} post-processes both sides of a relation at once
+(part (i)) and folds a private variable into the outcome (part (ii)). This
+remark says where in a chain of squashers each of the two may be used.
+
+\begin{remark}\label{rem:intertwining}
+\emph{A private variable inside the alphabet.} In
+Lemma~\ref{lem:linear}\,(ii) the private variable never enters $\Qsys$: the
+target space is unchanged, no block is opened, and no constraint is produced,
+the weights $q_t$ being carried by the target effects themselves. A variable
+the measuring party draws privately, such as a probe setting or an internal coin of known
+bias, is therefore squashed into the outcome alphabet at no cost \emph{by (ii)
+alone}. That is the treatment the output-state test-statistics model of
+Assumption~\ref{ass:tsm} requires, and the reason
+Definition~\ref{def:joint-family} builds the joint alphabet before squashing
+rather than after. The no-cost statement concerns (ii) alone and need not
+survive a squasher composed with it: once (ii) is composed with a flag-shaped
+squasher, every value of the private variable opens flag sectors of its own.
+A variable the squasher's channel does not depend on, such as a test-round designation drawn against the setting, is
+then carried more cheaply \emph{after} the link, by (i), than inside the
+alphabet before it (the relabelling \eqref{eq:relabel}); only a
+variable the channel depends on, as a probe setting does through the
+conditional families, has to be in the alphabet before the first link. The
+branching rule of Lemma~\ref{lem:master}, by contrast, files its classical
+variable in $\Qsys$ and does cost something (Remark~\ref{rem:master-scope}).
+
+Part (i) applies a post-processing to \emph{both} sides at once, and two uses
+of it differ: one is refused across a link and the other is not.
+
+\emph{A noise or coarse-graining map changes the family a squasher is built
+from.} A \tref{dark-count channel} or a coarse-graining applied to the
+physical POVM produces a different physical family, and a squasher
+constructed for the original one is not a squasher to the same target for it:
+$M\dsq_{\Lambda}F$ gives $\Lambda^{\dagger}(F_v)=M_v$, which is not $(PM)_v$
+in general. That is why such a map is applied to the physical POVM
+\emph{before} the first squashing link (in the \tref{weight route} of the
+flag-state submodule, the descended dark-count matrix acts before the joint
+family of Definition~\ref{def:joint-family} is formed). Part (i) does move a
+stochastic $P$ across a fixed squasher, but only together with the target:
+from $M\dsq_{\Lambda}F$ it gives $PM\dsq_{\Lambda}PF$, with the same channel
+and the target $PF$ in place of $F$, whose elements, and with them its
+\tref[scalar value]{scalar values}, its class sums and the entries built from
+them, are not the ones the chain was built and certified for. Where the map
+acts on a finer alphabet than the squasher's --- a dark-count channel $P$ on
+raw click patterns, applied before the \tref{declared coarse-graining} $K$
+that produces the
+squasher's family $KM_{\mathrm{raw}}$ from the raw click-pattern POVM
+$M_{\mathrm{raw}}$ --- moving it across the squasher asks for a stochastic
+$P'$ on the coarse alphabet with $P'KM_{\mathrm{raw}}=KPM_{\mathrm{raw}}$, a
+linear feasibility problem in $P'$ with no solution in general. For two
+detectors whose single-click patterns $K$ merges into one letter, with
+dark-count probabilities $d_1\ne d_2$ acting independently, the double-click
+element of $KPM_{\mathrm{raw}}$ carries the element of the pattern in which
+only detector~$1$ clicked with the coefficient $d_2$ and that of the pattern
+in which only detector~$2$ clicked with the coefficient $d_1$, while every
+element of $P'KM_{\mathrm{raw}}$ carries the two with one common
+coefficient; so no $P'$ exists when the four elements of $M_{\mathrm{raw}}$
+are linearly independent. This contract does neither: the order is fixed
+(Requirement~\ref{req:post-processing-order}).
+
+\emph{A stochastic relabelling applied to both sides after a link is part (i)
+itself, and it is sound.} Let $M\dsq_{\Lambda}F$ be a link's relation over
+the joint alphabet $\Vset$ of Definition~\ref{def:joint-family}, and let
+$P(f\,|\,t)$ be a stochastic matrix from the settings $\Tset$ to a finite
+alphabet of values $f$, depending on the private component $t=t(v)$ of the
+outcome only and never on the device outcome $y$, since otherwise $f$ would
+be inferred from an outcome. Then, over the support of $P$,
+\begin{equation}\label{eq:relabel}
+  \big\{P(f\,|\,t(v))\,M_v\big\}_{(v,f)}\ \dsq_{\Lambda}\
+  \big\{P(f\,|\,t(v))\,F_v\big\}_{(v,f)}
+\end{equation}
+by Lemma~\ref{lem:linear}\,(i) for the stochastic matrix from $\Vset$ to
+$\Vset\times\{f\}$ with entries $\delta_{vv'}P(f\,|\,t(v'))$ --- every column
+sums to $\sum_fP(f|t(v'))=1$ --- with the \emph{same} channel. Nothing of the
+link changes: $\Qsys$, its \tref{sector map} and its dimension are unchanged;
+every element $P(f|t(v))F_v$ is a scalar multiple of an existing one, so
+block diagonality holds by construction; every carried operator has the
+same pull-back; and every entry's certificate is untouched. On a
+\tref{scalar sector} the value becomes $P(f|t(v))\phi_s(v)$, and no sector is indexed by
+$f$. Such a relabelling is therefore not a link in the sense of
+Definition~\ref{def:link}: a link composes a new channel, while a relabelling
+changes the alphabet at both ends of an existing relation. This contract
+declares no kind, no register and no position in a chain
+(Definition~\ref{def:chain}) for it: it is the \emph{consumer's} to apply,
+after the chain, by the same lemma, which the module that compiles the
+protocol may use directly.
+\end{remark}

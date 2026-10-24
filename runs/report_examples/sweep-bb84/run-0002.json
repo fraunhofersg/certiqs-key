@@ -1,0 +1,1417 @@
+{
+  "created_by": "runs.report_examples.generate",
+  "kind": "run-record",
+  "payload": {
+    "composition_flow": {
+      "mermaid": "flowchart TD\n    s0[\"compilation (protocol-compiler) -- ok\"]\n    s1[\"honest_model (runs) -- ok\"]\n    s2[\"acceptance_construction (statistics) -- ok\"]\n    s3[\"docking (meat-core) -- ok\"]\n    s4[\"bundle_write (runs) -- ok\"]\n    s5[\"bundle_read (runs) -- ok\"]\n    s6[\"solve (meat-core) -- REFUSED: security_statement_vacuous\"]\n    s0 --> s1\n    s1 --> s2\n    s2 --> s3\n    s3 --> s4\n    s4 --> s5\n    s5 --> s6\n",
+      "stages": [
+        {
+          "children": [],
+          "consumes": {
+            "artefact_kinds": [],
+            "artefacts": [],
+            "config": []
+          },
+          "detail": {
+            "acceptance_alphabet": [
+              "gen",
+              "ok",
+              "err",
+              "disc"
+            ],
+            "key_length_eligible": true
+          },
+          "emits": [
+            {
+              "digest": "467cf56ca0b1a5dae80b8322e483d76871f454b23205a2b25acf62732c3973df",
+              "id": "transmitter_artifact:467cf56ca0b1",
+              "kind": "transmitter_artifact",
+              "record_key": "payload.contracts.transmitter"
+            },
+            {
+              "digest": "0bba6be1b6cecc1a8c65e623cbd0e3191775f95d25b6756a1572a7c0a351d1dc",
+              "id": "declaration:0bba6be1b6ce",
+              "kind": "declaration",
+              "record_key": "payload.stages.compilation"
+            }
+          ],
+          "module": "protocol-compiler",
+          "reason": null,
+          "refusal_detail": null,
+          "stage": "compilation",
+          "station": null,
+          "status": "executed",
+          "wall_time_s": 0.007204700028523803
+        },
+        {
+          "children": [],
+          "consumes": {
+            "artefact_kinds": [
+              "declaration"
+            ],
+            "artefacts": [
+              "declaration:0bba6be1b6ce"
+            ],
+            "config": [
+              "model"
+            ]
+          },
+          "detail": {
+            "outcomes": 4,
+            "overridden": false
+          },
+          "emits": [
+            {
+              "digest": "761644e057825d5b82f8a7d4559d6ec5637376e77147b907e63d03f4b406d2dc",
+              "id": "honest_distribution:761644e05782",
+              "kind": "honest_distribution",
+              "record_key": "payload.stages.acceptance_construction.honest_distribution"
+            }
+          ],
+          "module": "runs",
+          "reason": null,
+          "refusal_detail": null,
+          "stage": "honest_model",
+          "station": null,
+          "status": "executed",
+          "wall_time_s": 0.007391500053927302
+        },
+        {
+          "children": [],
+          "consumes": {
+            "artefact_kinds": [
+              "honest_distribution",
+              "declaration"
+            ],
+            "artefacts": [
+              "honest_distribution:761644e05782",
+              "declaration:0bba6be1b6ce"
+            ],
+            "config": [
+              "rounds",
+              "completeness_budget",
+              "constrained",
+              "endpoint_rule",
+              "tail_evaluation"
+            ]
+          },
+          "detail": {
+            "completeness_exact": false,
+            "geometry": "PolytopeGeometry"
+          },
+          "emits": [
+            {
+              "digest": "b51509e4c9706ac70e64aaeec4b2fa70c0c3cbd16e084b55aa5d080f04d57473",
+              "id": "acceptance_set:b51509e4c970",
+              "kind": "acceptance_set",
+              "record_key": "payload.stages.acceptance_construction"
+            }
+          ],
+          "module": "statistics",
+          "reason": null,
+          "refusal_detail": null,
+          "stage": "acceptance_construction",
+          "station": null,
+          "status": "executed",
+          "wall_time_s": 1.4414709999691695
+        },
+        {
+          "children": [],
+          "consumes": {
+            "artefact_kinds": [
+              "declaration",
+              "acceptance_set"
+            ],
+            "artefacts": [
+              "declaration:0bba6be1b6ce",
+              "acceptance_set:b51509e4c970"
+            ],
+            "config": [
+              "rounds",
+              "parameters"
+            ]
+          },
+          "detail": {
+            "constraint_entries": 0,
+            "rounds": 10000
+          },
+          "emits": [
+            {
+              "digest": "f0a6fdbc2beee31f12ef1cc1fe209d3645237a55aea93f8a9dd629ae8fdcec84",
+              "id": "docked_declaration:f0a6fdbc2bee",
+              "kind": "docked_declaration",
+              "record_key": null
+            }
+          ],
+          "module": "meat-core",
+          "reason": null,
+          "refusal_detail": null,
+          "stage": "docking",
+          "station": null,
+          "status": "executed",
+          "wall_time_s": 0.0015971999382600188
+        },
+        {
+          "children": [],
+          "consumes": {
+            "artefact_kinds": [
+              "declaration",
+              "docked_declaration"
+            ],
+            "artefacts": [
+              "declaration:0bba6be1b6ce",
+              "docked_declaration:f0a6fdbc2bee"
+            ],
+            "config": []
+          },
+          "detail": {
+            "directory": "run-0002",
+            "schema_version": "0.3.0"
+          },
+          "emits": [
+            {
+              "digest": "f0a6fdbc2beee31f12ef1cc1fe209d3645237a55aea93f8a9dd629ae8fdcec84",
+              "id": "bundle:f0a6fdbc2bee",
+              "kind": "bundle",
+              "record_key": "payload.stages.bundle"
+            }
+          ],
+          "module": "runs",
+          "reason": null,
+          "refusal_detail": null,
+          "stage": "bundle_write",
+          "station": null,
+          "status": "executed",
+          "wall_time_s": 0.01664879999589175
+        },
+        {
+          "children": [],
+          "consumes": {
+            "artefact_kinds": [
+              "bundle"
+            ],
+            "artefacts": [
+              "bundle:f0a6fdbc2bee"
+            ],
+            "config": []
+          },
+          "detail": {
+            "round_trip_identical": true,
+            "schema_version": "0.3.0"
+          },
+          "emits": [
+            {
+              "digest": "f0a6fdbc2beee31f12ef1cc1fe209d3645237a55aea93f8a9dd629ae8fdcec84",
+              "id": "bundle:f0a6fdbc2bee",
+              "kind": "bundle",
+              "record_key": "payload.stages.bundle"
+            }
+          ],
+          "module": "runs",
+          "reason": null,
+          "refusal_detail": null,
+          "stage": "bundle_read",
+          "station": null,
+          "status": "executed",
+          "wall_time_s": 0.0003399000270292163
+        },
+        {
+          "children": [],
+          "consumes": {
+            "artefact_kinds": [
+              "bundle"
+            ],
+            "artefacts": [
+              "bundle:f0a6fdbc2bee"
+            ],
+            "config": [
+              "alpha",
+              "parameters",
+              "solver"
+            ]
+          },
+          "detail": {},
+          "emits": [],
+          "module": "meat-core",
+          "reason": "security_statement_vacuous",
+          "refusal_detail": "the `parameters` table: eps_PA + eps_EV + 2 eps_auth = 9.313225746154785e-10 + 9.313225746154785e-10 + 2*0.5 = 1.0000000018626451 (formed exactly) >= 1, so the (eps_PA + eps_EV + 2 eps_auth)-security statement of cor:composed-security (iii) -- at eps_auth = 0 the (eps_PA + eps_EV)-statement of (ii) -- is EMPTY: a distinguishing advantage bounded by one or more is bounded for every protocol, including one that publishes the key -- and NO KEY LENGTH IS REPORTED UNDER IT. cor:keylength-bound (b) excludes this corner rather than claiming it: its proof records that ell = 1 satisfies the expression at eps_PA = eps_EV = 1 under a security statement that is empty. THE ARITHMETIC IS NOT IN QUESTION and is unchanged; THE RUN IS REFUSED. Every budget keeps its domain and the refusal is on their SUM (req:security-statement-not-vacuous). A DISCLOSED SCOPE NARROWING",
+          "stage": "solve",
+          "station": null,
+          "status": "refused",
+          "wall_time_s": 0.0018521000165492296
+        }
+      ]
+    },
+    "config": {
+      "alpha": null,
+      "completeness_budget": "1/1000000",
+      "config_digest": "048d8556f5cecab1415d10e865afecb9a1cf1f52cf87db33634c26548f256465",
+      "constrained": null,
+      "declared_tolerance": 0.0,
+      "device": {
+        "alice_x": "1/2",
+        "alice_z": "1/2",
+        "bob_x": "1/2",
+        "bob_z": "1/2"
+      },
+      "endpoint_rule": "exact",
+      "model": {
+        "qber": "3/50"
+      },
+      "parameters": {
+        "alpha": 1.5,
+        "eps_auth": 0.5,
+        "eps_ev": 9.313225746154785e-10,
+        "eps_pa": 9.313225746154785e-10,
+        "k_auth": 0,
+        "lambda_ec": 0,
+        "min_model_pass_probability": "1/2",
+        "reference_enclosure": true,
+        "statistics_check": "on",
+        "strict_snaps": false
+      },
+      "rounds": 10000,
+      "solver": {
+        "max_iterations": 5,
+        "method": "fw"
+      },
+      "tail_evaluation": "sweep"
+    },
+    "contracts": {},
+    "instance": {
+      "id": "bb84",
+      "parameters": [
+        {
+          "applies_when": null,
+          "default": "0",
+          "domain": {
+            "form": "interval",
+            "lower": "0",
+            "lower_open": false,
+            "upper": "1/2",
+            "upper_open": true
+          },
+          "kind": "fraction",
+          "meaning": "Error rate Q of the honest depolarizing channel in either basis; a model input, not an observed rate",
+          "name": "qber",
+          "per_port_labels": [],
+          "quantity": "probability",
+          "section": "model",
+          "snapped": false,
+          "station": null,
+          "unit": null
+        },
+        {
+          "applies_when": null,
+          "default": "1/2",
+          "domain": {
+            "form": "interval",
+            "lower": "0",
+            "lower_open": true,
+            "upper": "1",
+            "upper_open": true
+          },
+          "kind": "fraction",
+          "meaning": "Probability that Alice prepares in the Z basis; Alice's two basis weights sum to one",
+          "name": "alice_z",
+          "per_port_labels": [],
+          "quantity": "probability",
+          "section": "device",
+          "snapped": false,
+          "station": null,
+          "unit": null
+        },
+        {
+          "applies_when": null,
+          "default": "1/2",
+          "domain": {
+            "form": "interval",
+            "lower": "0",
+            "lower_open": true,
+            "upper": "1",
+            "upper_open": true
+          },
+          "kind": "fraction",
+          "meaning": "Probability that Alice prepares in the X basis; Alice's two basis weights sum to one",
+          "name": "alice_x",
+          "per_port_labels": [],
+          "quantity": "probability",
+          "section": "device",
+          "snapped": false,
+          "station": null,
+          "unit": null
+        },
+        {
+          "applies_when": null,
+          "default": "1/2",
+          "domain": {
+            "form": "interval",
+            "lower": "0",
+            "lower_open": true,
+            "upper": "1",
+            "upper_open": true
+          },
+          "kind": "fraction",
+          "meaning": "Probability that Bob measures in the Z basis; Bob's two basis weights sum to one",
+          "name": "bob_z",
+          "per_port_labels": [],
+          "quantity": "probability",
+          "section": "device",
+          "snapped": false,
+          "station": null,
+          "unit": null
+        },
+        {
+          "applies_when": null,
+          "default": "1/2",
+          "domain": {
+            "form": "interval",
+            "lower": "0",
+            "lower_open": true,
+            "upper": "1",
+            "upper_open": true
+          },
+          "kind": "fraction",
+          "meaning": "Probability that Bob measures in the X basis; Bob's two basis weights sum to one",
+          "name": "bob_x",
+          "per_port_labels": [],
+          "quantity": "probability",
+          "section": "device",
+          "snapped": false,
+          "station": null,
+          "unit": null
+        }
+      ],
+      "readme": "instances/bb84/README.md",
+      "summary": "Trusted-source BB84 with configurable basis weights, a directly declared qubit measurement and an explicit identity reduction link. The honest channel is depolarizing and is parameterized by its quantum bit error rate. This instance provides a simple reference for optical BB84 runs.",
+      "title": "Ideal qubit BB84"
+    },
+    "protocol_document": {
+      "absent": [],
+      "canonical": {
+        "alphabets": {
+          "ann": {
+            "union": [
+              {
+                "enum": [
+                  {
+                    "basis": "Z",
+                    "label": "Z"
+                  }
+                ]
+              },
+              {
+                "attrs": {
+                  "basis": "X"
+                },
+                "product": {
+                  "dims": {
+                    "bit": [
+                      0,
+                      1
+                    ]
+                  },
+                  "label": "(X,{bit})"
+                }
+              }
+            ]
+          },
+          "signal": {
+            "product": {
+              "dims": {
+                "basis": [
+                  "Z",
+                  "X"
+                ],
+                "bit": [
+                  0,
+                  1
+                ]
+              },
+              "label": "({basis},{bit})"
+            }
+          }
+        },
+        "channel_interface": {
+          "variant": "qubit_identity"
+        },
+        "format": "certiqs-key/protocol-document",
+        "format_version": "1",
+        "honest": {
+          "bind": {
+            "qber": {
+              "param": "qber"
+            }
+          },
+          "library": "depolarized_bell_pair"
+        },
+        "identity": {
+          "id": "bb84",
+          "readme": "instances/bb84/README.md",
+          "record_label": "bb84",
+          "summary": "Trusted-source BB84 with configurable basis weights, a directly declared qubit measurement and an explicit identity reduction link. The honest channel is depolarizing and is parameterized by its quantum bit error rate. This instance provides a simple reference for optical BB84 runs.",
+          "title": "Ideal qubit BB84"
+        },
+        "parameters": {
+          "device_absent": "refuse",
+          "model_absent": "refuse",
+          "table": [
+            {
+              "default": 0,
+              "domain": {
+                "form": "interval",
+                "lower": 0,
+                "upper": "1/2",
+                "upper_open": true
+              },
+              "kind": "fraction",
+              "meaning": "Error rate Q of the honest depolarizing channel in either basis; a model input, not an observed rate",
+              "name": "qber",
+              "quantity": "probability",
+              "section": "model",
+              "snapped": false
+            },
+            {
+              "default": "1/2",
+              "domain": {
+                "form": "interval",
+                "lower": 0,
+                "lower_open": true,
+                "upper": 1,
+                "upper_open": true
+              },
+              "kind": "fraction",
+              "meaning": "Probability that Alice prepares in the Z basis; Alice's two basis weights sum to one",
+              "name": "alice_z",
+              "quantity": "probability",
+              "section": "device",
+              "snapped": false
+            },
+            {
+              "default": "1/2",
+              "domain": {
+                "form": "interval",
+                "lower": 0,
+                "lower_open": true,
+                "upper": 1,
+                "upper_open": true
+              },
+              "kind": "fraction",
+              "meaning": "Probability that Alice prepares in the X basis; Alice's two basis weights sum to one",
+              "name": "alice_x",
+              "quantity": "probability",
+              "section": "device",
+              "snapped": false
+            },
+            {
+              "default": "1/2",
+              "domain": {
+                "form": "interval",
+                "lower": 0,
+                "lower_open": true,
+                "upper": 1,
+                "upper_open": true
+              },
+              "kind": "fraction",
+              "meaning": "Probability that Bob measures in the Z basis; Bob's two basis weights sum to one",
+              "name": "bob_z",
+              "quantity": "probability",
+              "section": "device",
+              "snapped": false
+            },
+            {
+              "default": "1/2",
+              "domain": {
+                "form": "interval",
+                "lower": 0,
+                "lower_open": true,
+                "upper": 1,
+                "upper_open": true
+              },
+              "kind": "fraction",
+              "meaning": "Probability that Bob measures in the X basis; Bob's two basis weights sum to one",
+              "name": "bob_x",
+              "quantity": "probability",
+              "section": "device",
+              "snapped": false
+            }
+          ]
+        },
+        "presets": [
+          {
+            "device": {
+              "alice_x": "1/2",
+              "alice_z": "1/2",
+              "bob_x": "1/2",
+              "bob_z": "1/2"
+            },
+            "name": "BB84-w1",
+            "note": "the balanced instance; every weight dyadic, so the products are exact."
+          },
+          {
+            "device": {
+              "alice_x": "1/4",
+              "alice_z": "3/4",
+              "bob_x": "1/2",
+              "bob_z": "1/2"
+            },
+            "name": "BB84-w2",
+            "note": "asymmetric and still dyadic."
+          },
+          {
+            "device": {
+              "alice_x": "1/3",
+              "alice_z": "2/3",
+              "bob_x": "1/5",
+              "bob_z": "4/5"
+            },
+            "name": "BB84-w3",
+            "note": "DELIBERATELY NON-DYADIC, so that the exact-to-binary64 boundary is forced into the open rather than hidden behind fixtures that happen to convert without loss. The registry's own words."
+          }
+        ],
+        "public": {
+          "acceptance": {
+            "alphabet": [
+              "gen",
+              "ok",
+              "err",
+              "disc"
+            ],
+            "map": [
+              {
+                "value": "gen",
+                "when": {
+                  "A": "Z",
+                  "B": "Z"
+                }
+              },
+              {
+                "value": "ok",
+                "when": {
+                  "A.basis": "X",
+                  "A.bit": {
+                    "eq": "B.bit"
+                  },
+                  "B.basis": "X"
+                }
+              },
+              {
+                "value": "err",
+                "when": {
+                  "A.basis": "X",
+                  "B.basis": "X"
+                }
+              },
+              {
+                "value": "disc"
+              }
+            ]
+          },
+          "announcements": {
+            "alice": {
+              "alphabet": "ann",
+              "map": [
+                {
+                  "value": "Z",
+                  "when": {
+                    "x.basis": "Z"
+                  }
+                },
+                {
+                  "value": "(X,{x.bit})"
+                }
+              ]
+            },
+            "bob": {
+              "alphabet": "ann",
+              "map": [
+                {
+                  "value": "Z",
+                  "when": {
+                    "v.choice": "Z"
+                  }
+                },
+                {
+                  "value": "(X,{v.outcome})"
+                }
+              ]
+            }
+          },
+          "key": {
+            "alphabet": [
+              0,
+              1
+            ],
+            "holder": "A",
+            "rule": [
+              {
+                "value": {
+                  "int": "o.bit"
+                }
+              }
+            ]
+          },
+          "partition": "default",
+          "sifting": [
+            {
+              "value": "pass",
+              "when": {
+                "A": "Z",
+                "B": "Z"
+              }
+            },
+            {
+              "value": "fail"
+            }
+          ]
+        },
+        "run_defaults": {
+          "completeness_budget": "1/1000000",
+          "declared_tolerance": 0,
+          "parameters": {
+            "alpha": "1.5",
+            "eps_ev": "2^-30",
+            "eps_pa": "2^-30",
+            "lambda_ec": 0
+          },
+          "rounds": 10000,
+          "sections": "replace"
+        },
+        "snap": {
+          "groups": [
+            [
+              "alice_z",
+              "alice_x"
+            ],
+            [
+              "bob_z",
+              "bob_x"
+            ]
+          ],
+          "lattice_exponent": 40
+        },
+        "source": {
+          "alice": {
+            "choice_family": {
+              "choices": [
+                "Z",
+                "X"
+              ],
+              "conditional_alphabets": {
+                "X": [
+                  0,
+                  1
+                ],
+                "Z": [
+                  0,
+                  1
+                ]
+              },
+              "conditional_elements": "conjugate_states",
+              "joint_label": "({choice},{outcome})",
+              "weights": {
+                "X": {
+                  "param": "alice_x"
+                },
+                "Z": {
+                  "param": "alice_z"
+                }
+              }
+            }
+          },
+          "alice_dim": 2,
+          "alice_marginal": {
+            "scale": {
+              "factor": "1/2",
+              "of": {
+                "identity": 2
+              }
+            }
+          },
+          "alphabet": "signal",
+          "certificate": {
+            "form": "pure",
+            "psi": {
+              "outer": {
+                "squared_norm": 2,
+                "vector": [
+                  1,
+                  0,
+                  0,
+                  1
+                ]
+              }
+            },
+            "virtual_dim": 2
+          },
+          "kind": "trusted_ensemble",
+          "states": {
+            "(X,0)": {
+              "matrix": [
+                [
+                  "1/2",
+                  "1/2"
+                ],
+                [
+                  "1/2",
+                  "1/2"
+                ]
+              ]
+            },
+            "(X,1)": {
+              "matrix": [
+                [
+                  "1/2",
+                  "-1/2"
+                ],
+                [
+                  "-1/2",
+                  "1/2"
+                ]
+              ]
+            },
+            "(Z,0)": {
+              "matrix": [
+                [
+                  1,
+                  0
+                ],
+                [
+                  0,
+                  0
+                ]
+              ]
+            },
+            "(Z,1)": {
+              "matrix": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  1
+                ]
+              ]
+            }
+          },
+          "transmitted_dim": 2,
+          "weights": {
+            "(X,0)": {
+              "expr": "alice_x / 2"
+            },
+            "(X,1)": {
+              "expr": "alice_x / 2"
+            },
+            "(Z,0)": {
+              "expr": "alice_z / 2"
+            },
+            "(Z,1)": {
+              "expr": "alice_z / 2"
+            }
+          }
+        },
+        "stations": [
+          {
+            "id": "bob",
+            "measurement": {
+              "choice_family": {
+                "choices": [
+                  "Z",
+                  "X"
+                ],
+                "conditional_alphabets": {
+                  "X": [
+                    0,
+                    1
+                  ],
+                  "Z": [
+                    0,
+                    1
+                  ]
+                },
+                "conditional_elements": {
+                  "X": {
+                    "0": {
+                      "matrix": [
+                        [
+                          "1/2",
+                          "1/2"
+                        ],
+                        [
+                          "1/2",
+                          "1/2"
+                        ]
+                      ]
+                    },
+                    "1": {
+                      "matrix": [
+                        [
+                          "1/2",
+                          "-1/2"
+                        ],
+                        [
+                          "-1/2",
+                          "1/2"
+                        ]
+                      ]
+                    }
+                  },
+                  "Z": {
+                    "0": {
+                      "matrix": [
+                        [
+                          1,
+                          0
+                        ],
+                        [
+                          0,
+                          0
+                        ]
+                      ]
+                    },
+                    "1": {
+                      "matrix": [
+                        [
+                          0,
+                          0
+                        ],
+                        [
+                          0,
+                          1
+                        ]
+                      ]
+                    }
+                  }
+                },
+                "joint_label": "({choice},{outcome})",
+                "weights": {
+                  "X": {
+                    "param": "bob_x"
+                  },
+                  "Z": {
+                    "param": "bob_z"
+                  }
+                }
+              },
+              "dimension": 2,
+              "kind": "declared_povm"
+            },
+            "party": "B",
+            "reduction": {
+              "links": [
+                {
+                  "kind": "identity"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "conversions": [],
+      "digest": "017c81159da61e927d12a8c7699087e6a9282392beb7279e9d8a90f8625671ec",
+      "expansion": {
+        "acceptance": {
+          "rows": [
+            [
+              "Z",
+              "Z",
+              "gen",
+              0
+            ],
+            [
+              "Z",
+              "(X,0)",
+              "disc",
+              3
+            ],
+            [
+              "Z",
+              "(X,1)",
+              "disc",
+              3
+            ],
+            [
+              "(X,0)",
+              "Z",
+              "disc",
+              3
+            ],
+            [
+              "(X,0)",
+              "(X,0)",
+              "ok",
+              1
+            ],
+            [
+              "(X,0)",
+              "(X,1)",
+              "err",
+              2
+            ],
+            [
+              "(X,1)",
+              "Z",
+              "disc",
+              3
+            ],
+            [
+              "(X,1)",
+              "(X,0)",
+              "err",
+              2
+            ],
+            [
+              "(X,1)",
+              "(X,1)",
+              "ok",
+              1
+            ]
+          ],
+          "unmatched": [],
+          "variables": [
+            "A",
+            "B"
+          ]
+        },
+        "announce_alice": {
+          "rows": [
+            [
+              "(Z,0)",
+              "Z",
+              0
+            ],
+            [
+              "(Z,1)",
+              "Z",
+              0
+            ],
+            [
+              "(X,0)",
+              "(X,0)",
+              1
+            ],
+            [
+              "(X,1)",
+              "(X,1)",
+              1
+            ]
+          ],
+          "unmatched": [],
+          "variables": [
+            "x"
+          ]
+        },
+        "announce_bob": {
+          "rows": [
+            [
+              "(Z,0)",
+              "Z",
+              0
+            ],
+            [
+              "(Z,1)",
+              "Z",
+              0
+            ],
+            [
+              "(X,0)",
+              "(X,0)",
+              1
+            ],
+            [
+              "(X,1)",
+              "(X,1)",
+              1
+            ]
+          ],
+          "unmatched": [],
+          "variables": [
+            "v"
+          ]
+        },
+        "key": {
+          "rows": [
+            [
+              "(Z,0)",
+              "Z",
+              "Z",
+              0,
+              0
+            ],
+            [
+              "(Z,0)",
+              "Z",
+              "(X,0)",
+              0,
+              0
+            ],
+            [
+              "(Z,0)",
+              "Z",
+              "(X,1)",
+              0,
+              0
+            ],
+            [
+              "(Z,0)",
+              "(X,0)",
+              "Z",
+              0,
+              0
+            ],
+            [
+              "(Z,0)",
+              "(X,0)",
+              "(X,0)",
+              0,
+              0
+            ],
+            [
+              "(Z,0)",
+              "(X,0)",
+              "(X,1)",
+              0,
+              0
+            ],
+            [
+              "(Z,0)",
+              "(X,1)",
+              "Z",
+              0,
+              0
+            ],
+            [
+              "(Z,0)",
+              "(X,1)",
+              "(X,0)",
+              0,
+              0
+            ],
+            [
+              "(Z,0)",
+              "(X,1)",
+              "(X,1)",
+              0,
+              0
+            ],
+            [
+              "(Z,1)",
+              "Z",
+              "Z",
+              1,
+              0
+            ],
+            [
+              "(Z,1)",
+              "Z",
+              "(X,0)",
+              1,
+              0
+            ],
+            [
+              "(Z,1)",
+              "Z",
+              "(X,1)",
+              1,
+              0
+            ],
+            [
+              "(Z,1)",
+              "(X,0)",
+              "Z",
+              1,
+              0
+            ],
+            [
+              "(Z,1)",
+              "(X,0)",
+              "(X,0)",
+              1,
+              0
+            ],
+            [
+              "(Z,1)",
+              "(X,0)",
+              "(X,1)",
+              1,
+              0
+            ],
+            [
+              "(Z,1)",
+              "(X,1)",
+              "Z",
+              1,
+              0
+            ],
+            [
+              "(Z,1)",
+              "(X,1)",
+              "(X,0)",
+              1,
+              0
+            ],
+            [
+              "(Z,1)",
+              "(X,1)",
+              "(X,1)",
+              1,
+              0
+            ],
+            [
+              "(X,0)",
+              "Z",
+              "Z",
+              0,
+              0
+            ],
+            [
+              "(X,0)",
+              "Z",
+              "(X,0)",
+              0,
+              0
+            ],
+            [
+              "(X,0)",
+              "Z",
+              "(X,1)",
+              0,
+              0
+            ],
+            [
+              "(X,0)",
+              "(X,0)",
+              "Z",
+              0,
+              0
+            ],
+            [
+              "(X,0)",
+              "(X,0)",
+              "(X,0)",
+              0,
+              0
+            ],
+            [
+              "(X,0)",
+              "(X,0)",
+              "(X,1)",
+              0,
+              0
+            ],
+            [
+              "(X,0)",
+              "(X,1)",
+              "Z",
+              0,
+              0
+            ],
+            [
+              "(X,0)",
+              "(X,1)",
+              "(X,0)",
+              0,
+              0
+            ],
+            [
+              "(X,0)",
+              "(X,1)",
+              "(X,1)",
+              0,
+              0
+            ],
+            [
+              "(X,1)",
+              "Z",
+              "Z",
+              1,
+              0
+            ],
+            [
+              "(X,1)",
+              "Z",
+              "(X,0)",
+              1,
+              0
+            ],
+            [
+              "(X,1)",
+              "Z",
+              "(X,1)",
+              1,
+              0
+            ],
+            [
+              "(X,1)",
+              "(X,0)",
+              "Z",
+              1,
+              0
+            ],
+            [
+              "(X,1)",
+              "(X,0)",
+              "(X,0)",
+              1,
+              0
+            ],
+            [
+              "(X,1)",
+              "(X,0)",
+              "(X,1)",
+              1,
+              0
+            ],
+            [
+              "(X,1)",
+              "(X,1)",
+              "Z",
+              1,
+              0
+            ],
+            [
+              "(X,1)",
+              "(X,1)",
+              "(X,0)",
+              1,
+              0
+            ],
+            [
+              "(X,1)",
+              "(X,1)",
+              "(X,1)",
+              1,
+              0
+            ]
+          ],
+          "unmatched": [],
+          "variables": [
+            "o",
+            "A",
+            "B"
+          ]
+        },
+        "sifting": {
+          "rows": [
+            [
+              "Z",
+              "Z",
+              "pass",
+              0
+            ],
+            [
+              "Z",
+              "(X,0)",
+              "fail",
+              1
+            ],
+            [
+              "Z",
+              "(X,1)",
+              "fail",
+              1
+            ],
+            [
+              "(X,0)",
+              "Z",
+              "fail",
+              1
+            ],
+            [
+              "(X,0)",
+              "(X,0)",
+              "fail",
+              1
+            ],
+            [
+              "(X,0)",
+              "(X,1)",
+              "fail",
+              1
+            ],
+            [
+              "(X,1)",
+              "Z",
+              "fail",
+              1
+            ],
+            [
+              "(X,1)",
+              "(X,0)",
+              "fail",
+              1
+            ],
+            [
+              "(X,1)",
+              "(X,1)",
+              "fail",
+              1
+            ]
+          ],
+          "unmatched": [],
+          "variables": [
+            "A",
+            "B"
+          ]
+        }
+      },
+      "format_version": "1",
+      "id": "bb84",
+      "packaged": true,
+      "unmatched": {
+        "acceptance": [],
+        "announce_alice": [],
+        "announce_bob": [],
+        "key": [],
+        "sifting": []
+      },
+      "user_declared": [
+        {
+          "assumptions": [
+            "A-SPEC",
+            "A-IDEAL"
+          ],
+          "kind": "receiver_povm",
+          "label": "bob",
+          "path": "/stations/0/measurement",
+          "text": "The measurement of station 'bob', declared as a POVM. Declared in the run's protocol document (your own or a shipped template), not derived by the engine; you vouch for it. The premise is that these matrices describe the receiver you have, performed in every round on that round's system alone, whatever happens in the other rounds (A-SPEC). The Band-A route the engine takes for a declared POVM rests on A-IDEAL: an ideal qubit measurement, on a transmitted system that is exactly a qubit, with unit efficiency, no loss, no dark counts, no multi-photon events and no misalignment. If your receiver is not such a measurement, A-IDEAL fails and the key length does not apply to it; declare it as an optical station (kind: optical) instead (instances/declared/README.md)."
+        }
+      ]
+    },
+    "provenance": {
+      "engine": {
+        "distribution_version": "0.0.1.dev0",
+        "git_commit": "3203843199ea99a9d152155416440f0d3de5dbb2",
+        "git_dirty": false
+      }
+    },
+    "refused": true,
+    "stages": {
+      "solve": {
+        "detail": "the `parameters` table: eps_PA + eps_EV + 2 eps_auth = 9.313225746154785e-10 + 9.313225746154785e-10 + 2*0.5 = 1.0000000018626451 (formed exactly) >= 1, so the (eps_PA + eps_EV + 2 eps_auth)-security statement of cor:composed-security (iii) -- at eps_auth = 0 the (eps_PA + eps_EV)-statement of (ii) -- is EMPTY: a distinguishing advantage bounded by one or more is bounded for every protocol, including one that publishes the key -- and NO KEY LENGTH IS REPORTED UNDER IT. cor:keylength-bound (b) excludes this corner rather than claiming it: its proof records that ell = 1 satisfies the expression at eps_PA = eps_EV = 1 under a security statement that is empty. THE ARITHMETIC IS NOT IN QUESTION and is unchanged; THE RUN IS REFUSED. Every budget keeps its domain and the refusal is on their SUM (req:security-statement-not-vacuous). A DISCLOSED SCOPE NARROWING",
+        "reason": "security_statement_vacuous",
+        "refused": true
+      }
+    },
+    "statistics_consistency": {
+      "alpha_0_rule": "fixed_order",
+      "caller_constraint_entries": 0,
+      "checked": false,
+      "honest_statistics_supplied": false,
+      "min_model_pass_probability": "1/2",
+      "model_pass_decision": null,
+      "model_pass_exponent_bits": null,
+      "model_pass_exponent_tier": null,
+      "no_cap_reason": null,
+      "orders": [],
+      "refused": false,
+      "rounds": 10000,
+      "solve": null,
+      "statistics_check": "on",
+      "unchecked_premise": "A-REACH",
+      "unchecked_reason": "out_of_scope"
+    }
+  },
+  "schema_version": "0.46.0"
+}

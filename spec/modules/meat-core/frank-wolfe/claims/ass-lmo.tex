@@ -1,0 +1,51 @@
+% ---
+% id: meat-core/frank-wolfe/ass:lmo
+% kind: ass
+% title: "Exact linear minimisation over the feasible set"
+% summary: >-
+%   At every iterate a first-order bound uses, the block list consumed from the
+%   oracle, any positivity repair included, puts the linear form of the
+%   gradient its bracket consumes at or below its minimum over the exact Choi
+%   feasible set. No claim rests on it: [[lem:feasible-side-dual]] bounds that
+%   minimum instead.
+% prominence: standard
+% status: superseded
+% uses: [def:first-order-setting]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-LMO
+% verification: never
+% category: numerical-trust
+% affects: [secrecy]
+% user_statement: >-
+%   No run rests on this assumption: the engine verifies a lower bound on the
+%   solver's linear minimisation in exact arithmetic instead of trusting it.
+%   The assumption states that at every step whose bound the engine uses, the
+%   semidefinite-programming solver returned a block list at which the linear
+%   objective it was asked to minimise, the gradient of the objective the
+%   bound is taken for, is no larger than its true minimum over the exact
+%   feasible set, after the engine's small positivity repair of the return.
+% notes: "Superseded for every first-order run: every bracket's feasible side is the lower bound of lem:feasible-side-dual, formed as req:verified-feasible-side says, through thm:firstorder (iv); no claim assumes A-LMO. Its ledger row and machine key stay in the submodule's interface because the claim-closure table lists every assumption, superseded ones included, with its key."
+% lean:
+% ---
+
+The first-order bound consumes at each iterate two linear minimisations: one
+over the acceptance set, which is exact rational data and is minimised
+exactly, and one over the Choi feasible set, a semidefinite program a backend
+solves in binary64. The second is what this assumption trusts. A positivity
+repair the adapter applies to the backend's return lies inside the trusted
+object, and checking that the return is feasible cannot replace the
+assumption, since feasibility gives the opposite inequality.
+
+\begin{assumption}\label{ass:lmo}
+(i) At each iterate $x_t$ at which the engine accumulates a bracket of the
+first-order bound, the block list $S_t$ it consumes, which is the backend's
+return after any positivity repair the adapter applies to it, satisfies the
+\tref{feasible-side inequality} of \eqref{eq:lmo}
+(Definition~\ref{def:first-order-setting}), its minimum taken over the
+\emph{exact} $\Feas^{J}$ and not over the \tref{relaxed feasible set}, at
+$\lmoJ_t$, the block part of the gradient $(\lmoq_t,\lmoJ_t)$ the bracket
+consumes at $x_t$, of the objective, or of that of a \tref{dropped program}.
+\end{assumption}

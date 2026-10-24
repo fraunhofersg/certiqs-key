@@ -1,0 +1,38 @@
+% ---
+% id: receiver/rem:blockmeaning
+% kind: rem
+% title: "Scope of the photon-number block structure"
+% summary: >-
+%   The block structure is in the total input photon number, which equals the
+%   channel photon number only without a probe; an occupation-diagonal probe
+%   state suffices to recover the channel grading. The emitted low
+%   blocks decompose the POVM and are not compressions or a squashing
+%   argument.
+% prominence: standard
+% status: accepted
+% uses: [thm:click-povm]
+% mentions: [def:probe]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The difference between an operator block and a compression is the third
+caveat of the sector convention
+(\repodoc{spec/notation.md#24-sector-decompositions-and-block-restrictions}).
+
+\begin{remark}\label{rem:blockmeaning}
+The grading in Theorem~\ref{thm:click-povm}\,(iii) is by the \emph{total} photon
+number of the declared inputs $\Inp=\InpC\sqcup\InpS$. When a probe is
+declared, that is not the same as the channel photon number, and the
+downstream modules need the \emph{channel} grading; recovering it is what the
+occupation-diagonality of the probe states (Definition~\ref{def:probe}) is
+required for, and the submodule that conditions on the probe states proves
+that it suffices. When no probe is
+declared ($\InpS=\varnothing$) the two gradings coincide. The emitted
+low-photon blocks $\blk{M}{\leqN}_S$ are operators on
+$\Hs{\Chan_{\leq N}}$ and are \emph{not} the compressions
+$\Pnum{\le N}M_S\Pnum{\le N}$; emitting them is a decomposition of the
+physical POVM, never a squashing argument.
+\end{remark}

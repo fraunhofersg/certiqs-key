@@ -1,0 +1,79 @@
+% ---
+% id: meat-core/frank-wolfe/def:first-order-setting
+% kind: def
+% title: "Ambient program, pairings, acceptance support and linear minimisation"
+% summary: >-
+%   The first-order argument runs on the Choi program, the state form being
+%   primary in untrusted-source mode. Acceptance vectors are paired over the
+%   acceptance support and operators by the trace, and the acceptance-side and
+%   feasible-side linear-minimisation inequalities are named.
+% prominence: standard
+% status: implemented
+% uses: [meat-core/thm:choi, meat-core/def:untrusted-choi]
+% mentions: [meat-core/cor:full-gradient, meat-core/def:admissible-acceptance-set, lem:fo-khyp, rem:acc-side, rem:pairing-on-acceptance-support]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.support:acceptance_support
+% lean:
+% ---
+
+The lemmas, the theorem and the corollaries of the first-order bound share
+one ambient program, one pair of inner products and the two linear
+minimisations whose minima the bound reads at each iterate, through a pair
+satisfying the inequalities below or through lower bounds on the minima.
+The pairing on the
+acceptance side runs over the outcomes that some accepted distribution
+charges; Remark~\ref{rem:pairing-on-acceptance-support} explains why that
+restriction loses nothing, and Lemma~\ref{lem:fo-khyp} and
+Remark~\ref{rem:acc-side} show that the acceptance-side gradient lives
+on those outcomes.
+
+\begin{definition}\label{def:first-order-setting}
+From this definition on, the ambient program of this submodule is the
+Choi program \eqref{eq:choi-program} of Theorem~\ref{thm:choi}: the
+variable is $x=(\mathbf q,J)$ with $\mathbf q\in\acSet$ and
+$J=(J_s)_{s\in\SecSet}\in\Feas^{J}$ of \eqref{eq:choi-feas}, and the
+objective is the function $O^{J}_{\alpha}$ displayed in
+\eqref{eq:choi-program}, so that
+$\hlow=\inf\{O^{J}_{\alpha}(x):x\in\acSet\times\Feas^{J}\}$ by that
+theorem. In \tref{untrusted-source mode} the state form is primary: there
+$J_s$, $\Feas^{J}$, $\chi_{\Qsys_s}$ and $O^{J}_{\alpha}$ denote $\omega_s$,
+$\Feas$, the identity and $O_{\alpha}$
+(Definition~\ref{def:untrusted-choi}), and every later statement of this
+submodule is read with these substitutions, as
+Corollary~\ref{cor:full-gradient} reads the gradients.
+
+The
+\term[The outcomes of the acceptance alphabet to which some distribution of the acceptance set gives positive probability.]{acceptance support}
+of the acceptance set $\acSet$ (Definition~\ref{def:admissible-acceptance-set}) is
+\begin{equation}\label{eq:chacc-def}
+  \Chacc\coloneqq\big\{\hat c\in\Chatset:\ q(\hat c)>0
+  \ \text{for some }\mathbf q\in\acSet\big\}.
+\end{equation}
+Pairings are the real inner products
+$\langle\mathbf a,\mathbf b\rangle=
+\sum_{\hat c\in\Chacc}a(\hat c)b(\hat c)$ on $\mathbb{R}^{\Chacc}$, the
+acceptance support being where the acceptance-side gradient lives
+(Lemma~\ref{lem:fo-khyp}), and
+$\langle A,B\rangle=\tr[A B]$ on Hermitian operators, the latter real and,
+on a tuple $(A_s)_s$, summed over $s$.
+
+For linear forms $\lmoq_t\in\mathbb{R}^{\Chacc}$ and
+$\lmoJ_t=(\lmoJ_{t,s})_{s\in\SecSet}$, a tuple of Hermitian operators of the
+block shape of $\Feas^{J}$, a pair $(v_t,S_t)$ of a vector in
+$\mathbb{R}^{\Chacc}$ and such a tuple satisfies the
+\term[The inequality asking the acceptance-side linear form at the point used to be at most its minimum over the acceptance set.]{acceptance-side inequality}
+of \eqref{eq:lmo} when the first inequality below holds, and the
+\term[The inequality asking the feasible-side linear form at a block list to be at most its minimum over the exact Choi feasible set.]{feasible-side inequality}
+when the second holds:
+\begin{equation}\label{eq:lmo}
+  \langle\lmoq_t,v_t\rangle\le
+  \min_{\mathbf q'\in\acSet}\langle\lmoq_t,\mathbf q'\rangle
+  \qquad\text{and}\qquad
+  \langle\lmoJ_t,S_t\rangle\le
+  \min_{J'\in\Feas^{J}}\langle\lmoJ_t,J'\rangle ,
+\end{equation}
+the second minimum being taken over the exact $\Feas^{J}$ of
+\eqref{eq:choi-feas}.
+\end{definition}

@@ -1,0 +1,37 @@
+% ---
+% id: receiver/detector-imperfections/rem:effrank
+% kind: rem
+% title: "A port Gram whose rank drops under within-port attenuation"
+% summary: >-
+%   A port of two modes with Gram diag(1, ε²) has rank two; attenuating one of
+%   its modes to zero leaves rank one. Apart from a zero efficiency,
+%   within-port attenuation is the one operation in this contract that can
+%   change the answer to the one-mode-per-port rank test.
+% prominence: standard
+% status: accepted
+% uses: [receiver/thm:representation-independence, receiver/rem:rankone]
+% mentions: [thm:efficiency, receiver/req:one-mode-per-port]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:effrank}
+Take $|\Inp|=2$ and a port collecting two modes, with the two rows of
+$\Emd{\{k\}}\Gmat_{\Inp}$ equal to $(1,0)$ and $(0,\varepsilon)$ for some
+$\varepsilon\in(0,1]$. Then $A_k=\operatorname{diag}(1,\varepsilon^2)$ has rank
+$2$. Attenuating the second of those modes to zero, by a diagonal $D$ with
+entries $1$ and $0$ inside the same port, gives
+$A_k^{\mathrm{eff}}=\operatorname{diag}(1,0)$, of rank $1$. So a device that
+does \emph{not} satisfy the one-mode-per-port criterion of
+Theorem~\ref{thm:representation-independence}\,(iv) satisfies it after a within-port attenuation, and
+the rank test gives its answer only on the Grams after every efficiency is
+applied, never before (Requirement~\ref{req:one-mode-per-port}). For
+single-mode ports the situation never arises, which is why the layer L1
+declares one $\eta_k$ per port (the uniform case of
+Theorem~\ref{thm:efficiency}\,(i)) by construction. Apart from declaring some
+$\eta_k=0$, which sends $A_k$ to $0$ by Theorem~\ref{thm:efficiency}\,(i), this
+is the one operation in this contract that can change the answer to the rank
+test (Remark~\ref{rem:rankone}).
+\end{remark}

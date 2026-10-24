@@ -1,0 +1,45 @@
+% ---
+% id: reductions/prop:preorder
+% kind: prop
+% title: "The squashing relation as a pre-order"
+% summary: >-
+%   Every POVM squashes to itself through the identity channel, and two
+%   successive squashing relations compose into one, their carried operator
+%   tuples included. A chain of squashers is therefore again a squashing
+%   relation that keeps its constraint information.
+% prominence: standard
+% status: accepted
+% uses: [def:squashing, lem:sep]
+% mentions: [cor:transported, def:sound, lem:linear, lem:master, prop:pinching, prop:tensor]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+This proposition, Lemma~\ref{lem:linear} and Propositions~\ref{prop:pinching}
+and~\ref{prop:tensor} are the operations that build
+\tref[squashing relation]{squashing relations} out of squashing relations. With the branching rule of Lemma~\ref{lem:master}
+they generate every construction this contract emits, so a squasher
+submodule assembles its constructions from them rather than proving each
+afresh. Where a rule also produces a constraint it is stated for one round,
+and Corollary~\ref{cor:transported} lifts every such statement to the
+$n$-round soundness of Definition~\ref{def:sound}.
+
+\begin{proposition}\label{prop:preorder}
+$M\dsq_{\idmap}M$, and $M\dsq_{\Lambda_1}F_1$ together with
+$F_1\dsq_{\Lambda_2}F_2$ imply $M\dsq_{\Lambda_2\circ\Lambda_1}F_2$. The same
+holds for the relation with \tref{carried operators}, the operator tuples
+composing the same way: $(M;O)\dsq_{\Lambda_1}(F_1;\hat O^{1})$ and
+$(F_1;\hat O^{1})\dsq_{\Lambda_2}(F_2;\hat O^{2})$ give
+$(M;O)\dsq_{\Lambda_2\circ\Lambda_1}(F_2;\hat O^{2})$.
+\end{proposition}
+
+\begin{proof}
+The identity is a channel and $\idmap^{\dagger}=\idmap$. Compositions of
+channels are channels and
+$(\Lambda_2\circ\Lambda_1)^{\dagger}=\Lambda_1^{\dagger}\circ
+\Lambda_2^{\dagger}$, which is \eqref{eq:pairing} applied twice. Hence
+$\Lambda_1^{\dagger}\big(\Lambda_2^{\dagger}(F_{2,v})\big)
+=\Lambda_1^{\dagger}(F_{1,v})=M_v$, and identically for each $\hat O_k$.
+\end{proof}

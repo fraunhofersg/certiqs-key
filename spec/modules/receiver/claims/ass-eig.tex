@@ -1,0 +1,59 @@
+% ---
+% id: receiver/ass:eig
+% kind: ass
+% title: "Declared slack on the computed block eigenvalues"
+% summary: >-
+%   Where an exact window is evaluated in floating point, the declared slack
+%   bounds any overestimate of the exact block minimum eigenvalue by the
+%   computed one. This one-sided premise on the arithmetic is the price of that
+%   window; a setting without one, or evaluated rigorously, does not invoke it.
+% prominence: standard
+% status: accepted
+% uses: [def:pmcex, def:exactbnd, def:slot, def:evaluation-model]
+% mentions: [def:enclosed-weight]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-EIG
+% verification: never
+% category: numerical-trust
+% affects: [secrecy]
+% user_statement: >-
+%   Applies only if you request an exact-window depth at a setting whose weight
+%   the receiver evaluates in floating point. Wherever your declaration
+%   describes a valid receiver exactly, the receiver evaluates the weight
+%   rigorously instead, from a proved lower bound on each block eigenvalue, and
+%   does not use this premise; the record says which evaluation each setting
+%   got. Where it falls back to floating point, the eigensolver that computes
+%   the smallest eigenvalue of each requested high-photon block may
+%   overestimate it by at most the slack ε_eig you declared. The engine cannot
+%   check this and trusts its floating-point eigensolver up to ε_eig. Without
+%   an exact-window request this premise is not used, and the bound comes from
+%   a closed form that rests on no premise about the eigensolver.
+% lean:
+% ---
+
+On finitely many blocks the exact window takes the larger of the analytic
+bound and a computed smallest eigenvalue less a declared slack. That the computed extreme
+eigenvalue of a matrix of dimension $\binom{D+n-1}{n}$, $D$ being the
+dimension of the \tref{channel input space}, does not overshoot the exact one
+by more than the slack is a premise about the arithmetic, not a theorem. It is one-sided: since the analytic bound stays as a floor, an undershoot
+costs tightness only. A declaration
+that requests no exact window does not invoke it, and neither does a setting
+whose weight is the \tref{enclosed weight} of Definition~\ref{def:enclosed-weight},
+where a proved lower bound on the block eigenvalue stands in place of the
+computed one.
+
+\begin{assumption}
+\label{ass:eig}
+(i) At every setting $t$ carrying a declared exact-window depth $m^{\ast}_t$
+whose emitted weight is that of Definition~\ref{def:pmcex} formed by the
+floating-point evaluation of Definition~\ref{def:evaluation-model}, and every
+index $N<n\le m^{\ast}_t$, the value
+$\widehat\Bnd^{\ast(t)}(n)$ an implementation computes for the exact block
+minimum eigenvalue $\Bnd^{\ast(t)}(n)$ of \eqref{eq:exactbnd} satisfies
+\begin{equation}\label{eq:eigassumption}
+  \widehat\Bnd^{\ast(t)}(n)-\varepsilon_{\mathrm{eig}}
+  \ \le\ \Bnd^{\ast(t)}(n) .
+\end{equation}
+\end{assumption}

@@ -1,0 +1,178 @@
+% ---
+% id: transmitter/def:source-link
+% kind: def
+% title: "Source link"
+% summary: >-
+%   A source link maps one Alice-side signal ensemble to another with the same
+%   labels and weights, through a channel given as data or by a named theorem.
+%   A theorem-supplied channel carries an obligation record, whose registry
+%   entry a consumer decides and whose family membership it does not.
+% prominence: standard
+% status: implemented
+% uses: []
+% mentions: [def:source-segment, def:srcert, def:source-spec, transmitter/decoy/prop:tagging, reductions/def:link, reductions/def:chain]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.links:SourceLink
+% lean:
+% notes: "The status value certified_outer is a link status of the reduction artefact (spec/architecture.md section 4.3), not a claim status. SourceLink is the nine-slot tuple of eq:source-link; the stage-generic wire record a chain carries is certiqs_key.domain.chain:ChainLink, which lacks slots (d), (e) and the obligation of (c2)."
+% ---
+
+A source link replaces Alice's signal ensemble by another one, carrying the
+labels and the weights through unchanged; along a source segment the links
+run from the virtual ensemble a certificate is written against to the
+specified ensemble (Definition~\ref{def:source-segment}\,(S1), (S3)). Besides
+its channel, the tuple records the family of descriptors the channel's
+identity is asserted for, which is what makes a link sound rather than merely
+well typed. The one kind admitted is the decoy submodule's tagging kind, whose
+channel is supplied by a theorem (Proposition~\ref{prop:tagging}); the kind
+\textsf{source-map} that this module declares has no soundness claim and is
+refused. How source links compose with the receiver-stage links of a chain is
+stated by the module that composes chains; which links are admitted at all is
+Definition~\ref{def:source-segment}.
+
+\begin{definition}\label{def:source-link}
+A \term[A link of a reduction chain's source stage that maps one Alice-side ensemble to another with the same labels and weights.]{source link} $\Xi$ is a typed link of a reduction chain
+(\xref{reductions/def:chain}) at the stage
+\textsf{source}: a tuple
+\begin{equation}\label{eq:source-link}
+  \Xi=\Big(\textsf{kind},\
+  \big(A^{\mathrm{in}},\{\sigma^{\mathrm{in}}_x\}_{x\in\Xset}\big),\
+  \big(A^{\mathrm{out}},\{\sigma^{\mathrm{out}}_x\}_{x\in\Xset}\big),\
+  \Gamma_{\Xi},\ \mathcal{D}_{\Xi},\ \Smap_{\Xi},\
+  \CList_{\Xi},\ \textsf{licence},\ \textsf{status}\Big)
+\end{equation}
+whose slots are the following.
+
+\emph{(a) The kind.} \textsf{kind} is a source-stage link kind. The
+vocabulary is the kinds this module declares, of which there is exactly one,
+\textsf{source-map}, together with the kinds a submodule of this module
+declares in its own interface. A submodule that declares a kind supplies its
+soundness claim, and a kind for which no claim of this repository proves the
+link's identity is declared and refused
+(Definition~\ref{def:source-segment}, ``Which kinds are admitted''), as
+\textsf{source-map} is. An admitted kind has an entry in the soundness
+registry of that definition, and a kind without one is not admitted whatever
+a link declares.
+
+\emph{(b) The two descriptors.} The \term[The transmitted system and signal ensemble a source link starts from.]{source descriptor}
+$(A^{\mathrm{in}},\{\sigma^{\mathrm{in}}_x\})$ is the \tref{transmitted system} and
+signal ensemble the link starts from and the \term[The transmitted system and signal ensemble a source link produces.]{target descriptor}
+$(A^{\mathrm{out}},\{\sigma^{\mathrm{out}}_x\})$ the one it produces, both
+indexed by the same alphabet $\Xset$ in the same declared order, and both
+read through their \tref{weighted members} $\sigma_x=p_x\rho_x$, as every ensemble
+of this module is (Definition~\ref{def:source-spec}): $\sigma^{\mathrm{in}}_x$ and
+$\sigma^{\mathrm{out}}_x$ are positive semidefinite with
+$\tr\sigma^{\mathrm{in}}_x=\tr\sigma^{\mathrm{out}}_x=p_x$, which is what
+carrying the weights untouched means.
+
+\emph{(c) The channel witness, in one of two ways.} $\Gamma_{\Xi}$ is a
+channel from $A^{\mathrm{in}}$ to $A^{\mathrm{out}}$, supplied either
+\emph{as data} or \emph{as a theorem constructor}.
+\begin{enumerate}[label=(c\arabic*),leftmargin=2.6em]
+\item \emph{As data}: both systems are finite dimensional and the channel is
+declared, so that the identity
+$\Gamma_{\Xi}(\sigma^{\mathrm{in}}_x)=\sigma^{\mathrm{out}}_x$ for every
+$x\in\Xset$ is an exact matrix identity on declared numbers and is decided as
+such (Definition~\ref{def:source-segment}\,(S3)).
+\item \emph{As a} \term[A named claim of a submodule that supplies a source link's channel for each member of a declared family of descriptors.]{theorem constructor}: the witness is supplied by a
+named claim of a submodule of this module, which constructs one channel for
+each member of a declared family of descriptors and proves the identity of
+(c1) for it. The identity is then \emph{not} decided on numbers: the link
+carries an \term[What a theorem-supplied source link carries in place of a decided identity: its kind, the soundness claim, the assumptions the obligation carries, and the family member its descriptors are.]{obligation record} of four components, the triple
+\begin{equation}\label{eq:obligation}
+  \big(\textsf{kind},\ \text{the id of the soundness claim},\
+  \mathcal{A}(\textsf{kind})\big)
+\end{equation}
+and, as the fourth, the member of the declared family the link's descriptors
+are. The third component is the assumptions the obligation carries, which
+Definition~\ref{def:source-segment}\,(A1) defines as the soundness claim's
+assumption closure together with the physical-source assumption the
+submodule declares for the \tref{source model} the claim is stated over, an
+assumption the soundness claim itself does \emph{not} assume. The obligation
+record travels with the link and, where the link carries a licence record, in
+it. \emph{Its first three components are decided}, against the soundness
+registry of the artefact that carries the link
+(Definition~\ref{def:source-segment}\,(A1), (A2)), by a comparison of
+declared strings. The fourth is not: which member of the family the
+descriptors are is asserted by the module that emits the link and re-proved
+by no consumer, and no verdict on a number is carried, there being none to
+decide.
+\end{enumerate}
+A channel supplied as a theorem constructor is how a link whose source or
+target is not a matrix is expressed at all, and it is the only way an
+obligation enters this module: no claim here discharges one.
+
+\emph{(d) The declared descriptor family.} $\mathcal{D}_{\Xi}$, the
+\term[The family of source descriptors for which a source link's channel identity is asserted.]{declared descriptor family}, is the family of source descriptors the
+witness's identity is asserted for. It contains the declared source
+descriptor; for a link whose channel is supplied as data it is that
+descriptor alone; for a constructor link it is the family the named claim
+proves the identity for. The link is \term[Said of a source link whose channel maps every source member to its target member at every member of its descriptor family.]{sound} when
+$\Gamma_{\Xi}(\sigma^{\mathrm{in}}_x)=\sigma^{\mathrm{out}}_x$ holds for
+every $x\in\Xset$ at every member of $\mathcal{D}_{\Xi}$; for a data link
+this is what (S3) decides, and for a constructor link it is what the named
+claim concludes and the obligation record names. A link whose family does not
+contain its own declared descriptor asserts nothing about the descriptor it
+carries, and is refused. For a constructor link that membership is not a
+decidable condition: the family is the extension of a hypothesis of a claim,
+the emitting module asserts that its descriptors satisfy it, and what a
+consumer decides instead is the triple \eqref{eq:obligation} against the
+registry and the provenance of the artefact
+(Definition~\ref{def:source-segment}\,(A1) to (A3)). The refusal of a family
+that excludes its own descriptor therefore applies where membership is
+decidable, to a data link, whose family is by definition its own descriptor,
+so that it refuses a data link whose family slot excludes that descriptor;
+elsewhere
+membership is an obligation of the emitting module, and what the registry
+bounds is which claims a link may name for it.
+
+\emph{(e) The retained-register sector map.} $\Smap_{\Xi}$, the
+\term[An optional matched pair of sector structures, on Alice's retained system and on the descriptor the certificate is written against.]{retained-register sector map}, is optional: a link may emit a matched
+pair of \tref[sector structure]{sector structures} over one ordered index set, one on Alice's
+retained system $A$ and one on the Alice-side descriptor \emph{the
+certificate is written against}, which is the \emph{source} descriptor of the
+segment's first link, the virtual pair
+(Definition~\ref{def:source-segment}\,(S1)), in the sense the \tref{block form} of
+Definition~\ref{def:srcert} is written against. It is
+not the descriptor the link produces: a link's target may be a system that
+carries no sector structure at all, and for a constructor link whose target
+is infinite dimensional it never carries one. The sector map is a
+presentation datum: it says how the certificate, the marginal and Alice's
+measurement are presented, and it is no statement about any joint state
+(Definition~\ref{def:source-spec}, ``What the sector structure is not'').
+Where the slot is empty the \tref{one-sector structure} is meant.
+
+\emph{(f) The transported constraint entries and the licence.}
+$\CList_{\Xi}$ is the list of \term[Entries of a consumer's constraint list carried across a link, each with the certificate case that discharges it.]{transported constraint entries}, entries
+of a consumer's constraint list carried across the link, each
+carrying, \emph{per entry}, the certificate case that discharges it --- the
+statement, for that entry, that what the entry asserts of the link's target
+is implied by what holds of its source --- and \textsf{licence} is the
+link's licence record, the slot every link of a chain has for its transported
+entries (\xref{reductions/def:link}), present exactly when
+$\CList_{\Xi}\ne\varnothing$. \emph{A non-empty list is refused}: a
+consumer's constraint operators live on the measured system, and no claim of
+this repository transports an Alice-side entry. An admitted link therefore
+carries an empty list and no licence record of its own.
+
+\emph{(g) The status.}
+$\textsf{status}\in\{\textsf{exact},\textsf{certified\_outer},
+\textsf{exploratory\_numeric}\}$, the link statuses of
+\xref{reductions/def:link}, with \textsf{exact} meaning that the
+identity of (c1) holds with no error term --- for a constructor link, that
+the named claim concludes it with none.
+
+\emph{Alice-side descriptor discipline.} Both descriptors of a source link
+are Alice-side: each names a transmitted system and an ensemble on it, and
+no condition on a source link mentions the receiver's systems, its outcome
+alphabets or its measurements. A source link changes what Alice emits and
+nothing else.
+
+\emph{The degenerate link.} A link that supplies its channel as data, whose
+declared descriptor family is that one descriptor, whose sector-map slot is
+empty and whose entry list is empty gains nothing from its slots (d) and
+(e): they carry exactly what the identity of (c1) asserts and the one-sector
+structure.
+\end{definition}

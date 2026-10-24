@@ -1,0 +1,29 @@
+% ---
+% id: meat-core/req:key-length-alpha-domain
+% kind: req
+% title: "Rényi order of a reported key length"
+% summary: >-
+%   The engine reports a key length only at a Rényi order α in (1, 2), the
+%   order at which every key-length statement holds, and reports none at any
+%   other order.
+% prominence: standard
+% status: implemented
+% uses: [thm:keylength, cor:keylength-bound, rem:alpha-domain]
+% mentions: [meat-core/frank-wolfe/cor:fo-keylength]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.keylength:check_alpha_key_length
+% lean:
+% ---
+
+Theorem~\ref{thm:keylength}, Corollary~\ref{cor:keylength-bound} and
+Corollary~\ref{cor:fo-keylength} give a key length only for
+$\alpha\in(1,2)$, the domain of the R\'enyi leftover-hashing lemma
+(Remark~\ref{rem:alpha-domain}).
+
+\begin{requirement}\label{req:key-length-alpha-domain}
+The engine reports a key length only at a R\'enyi order $\alpha\in(1,2)$;
+at any other order it reports no key length
+(\iface{alpha_in_the_profile_domain}).
+\end{requirement}

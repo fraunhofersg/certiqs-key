@@ -1,0 +1,36 @@
+% ---
+% id: receiver/cor:extinction
+% kind: cor
+% title: "Extinction criterion for rank one at two input modes"
+% summary: >-
+%   At two input modes a nonzero port Gram has rank one exactly when the port
+%   extinguishes some polarization completely. At more input modes one null
+%   direction bounds the rank only by the number of input modes minus one.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The rank criterion of the one-mode-per-port description has a laboratory
+reading when there are two input modes, such as two polarizations.
+
+\begin{corollary}\label{cor:extinction}
+Suppose $|\Inp|=2$. Then $\rk A_k\le1$ holds if and only if either $A_k=0$ or
+there is a unit vector $v\in\mathbb{C}^{2}$ with $v^\dagger A_kv=0$, that is,
+a polarization the port extinguishes completely. For $|\Inp|>2$ the two
+conditions are \emph{not} equivalent: the existence of one null direction of a
+positive semidefinite $A_k$ says only $\rk A_k\le|\Inp|-1$.
+\end{corollary}
+
+\begin{proof}
+For $A_k\succeq0$ and $v$ a unit vector, $v^\dagger A_kv=0$ iff
+$A_k^{1/2}v=0$ iff $A_kv=0$, so a null direction is a kernel vector. On
+$\mathbb{C}^2$ a nonzero positive semidefinite matrix with a kernel vector has
+rank exactly $1$; conversely a rank-$1$ matrix on $\mathbb{C}^2$ has a
+one-dimensional kernel. On $\mathbb{C}^d$ a kernel vector only gives
+$\rk A_k\le d-1$.
+\end{proof}

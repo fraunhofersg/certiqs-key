@@ -1,0 +1,70 @@
+% ---
+% id: reductions/cor:pullback
+% kind: cor
+% title: "Pull-back of operator bounds"
+% summary: >-
+%   A carried operator's partial expectation on a squashed state equals its
+%   pull-back's on the physical input, as an operator on the side system. An
+%   identity, positivity or spectral bound on the pull-back therefore becomes
+%   an operator constraint on every state the squashing channel produces.
+% prominence: standard
+% status: accepted
+% uses: [lem:statistics]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The following corollary is the recipe every constraint of this contract is
+built by: pick an operator $\hat O$ on $\Qsys$, compute its pull-back, and
+read off what the physical device already guarantees about it.
+
+\begin{corollary}\label{cor:pullback}
+Let $(M;O)\dsq_{\Lambda}(F;\hat O)$, let $R$ be a finite-dimensional side
+system, let $\rho\in\Seq{\Bsys R}$ and let
+$\sigma=(\Lambda\otimes\idmap_R)(\rho)$. Then for every $k$,
+\begin{equation}\label{eq:transport}
+  \tr_{\Qsys}\big[(\hat O_k\otimes\idon{R})\,\sigma\big]
+  =\tr_{\Bsys}\big[(O_k\otimes\idon{R})\,\rho\big]
+\end{equation}
+as operators on $R$. Consequently, on every such $\sigma$:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{Exact values.} If $O_k=c\,\idon{\Bsys}$ then
+  $\tr_{\Qsys}[(\hat O_k\otimes\idon{R})\sigma]=c\,\sigma_R$; in particular
+  $\tr[\hat O_k\sigma]=c$, and at $c=0$,
+  $\tr[(\hat O_k\otimes X)\sigma]=0$ for every $X\in\Lin{R}$.
+\item \emph{Positivity.} If $O_k\succeq0$ then
+  $\tr_{\Qsys}[(\hat O_k\otimes\idon{R})\sigma]\succeq0$; in particular
+  $\tr[\hat O_k\sigma]\ge0$.
+\item \emph{Spectral bounds.} If
+  $a\,\idon{\Bsys}\preceq O_k\preceq b\,\idon{\Bsys}$ then
+  $a\,\sigma_R\preceq\tr_{\Qsys}[(\hat O_k\otimes\idon{R})\sigma]
+  \preceq b\,\sigma_R$; in particular
+  $a\le\tr[\hat O_k\sigma]\le b$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+Test \eqref{eq:transport} against an arbitrary $X\in\Lin{R}$. By the defining
+property of the partial trace and the side-system form of the statistics
+equivalence, Lemma~\ref{lem:statistics}\,(iii),
+\begin{equation*}
+  \tr_R\!\Big\{X\,\tr_{\Qsys}\big[(\hat O_k\otimes\idon{R})\sigma\big]\Big\}
+  =\tr\big[(\hat O_k\otimes X)\sigma\big]
+  =\tr\big[(O_k\otimes X)\rho\big]
+  =\tr_R\!\Big\{X\,\tr_{\Bsys}\big[(O_k\otimes\idon{R})\rho\big]\Big\},
+\end{equation*}
+and since $R$ is finite-dimensional the trace pairing on $\Lin{R}$ separates
+points, so the two operators on $R$ coincide.
+
+(i) With $O_k=c\,\idon{\Bsys}$ the right-hand side of \eqref{eq:transport} is
+$c\,\tr_{\Bsys}\rho=c\,\rho_R$, and $\rho_R=\sigma_R$ because $\Lambda$ is
+trace preserving and acts only on $\Bsys$. (ii) For $X\succeq0$ we have
+$O_k\otimes X\succeq0$, so $\tr[(O_k\otimes X)\rho]\ge0$; hence
+$\tr_R\{X\,\tr_{\Qsys}[(\hat O_k\otimes\idon{R})\sigma]\}\ge0$ for every
+$X\succeq0$, which for a Hermitian operator on a finite-dimensional space is
+positive semidefiniteness. (iii) Apply (ii) to $O_k-a\,\idon{\Bsys}\succeq0$
+and to $b\,\idon{\Bsys}-O_k\succeq0$, then use (i) on the identity terms; the
+scalar forms follow by taking traces and using $\tr\sigma_R=1$.
+\end{proof}

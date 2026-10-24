@@ -1,0 +1,42 @@
+% ---
+% id: receiver/rem:exactpositivity
+% kind: rem
+% title: "Positivity of the multiclick element as a separate hypothesis"
+% summary: >-
+%   Data satisfying every hypothesis of the multiclick bound can display a
+%   multiclick element with exact block bound −3, so non-negativity of the
+%   exact block bound needs positivity as its own hypothesis. No receiver of
+%   this contract produces such an operator.
+% prominence: standard
+% status: accepted
+% uses: [lem:exactbasic, thm:multiclick-bound]
+% mentions: [lem:exactwindow, thm:emitted-bound]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:exactpositivity}
+Hypothesis \eqref{eq:mcpos} does not follow from \eqref{eq:bbkhyp} and
+\eqref{eq:prefactorform}, and the failure is not delicate. Take $K=4$,
+$\gamma=\beta_k=1$, $B=\id$ and $B_k=0$: then $0\preceq B_k\preceq B\preceq\id$
+and $\gamma\le\beta_k\le1$, so every hypothesis of
+Theorem~\ref{thm:multiclick-bound} holds, while the operator $M_{\mc}$ that
+the theorem forms from the operators \eqref{eq:prefactorform} is
+$M_{\mc}=\id+3\,\Fock(0)-4\,\Fock(\id)$, which on every block $n\ge1$ is
+$-3\,\id^{(=n)}$ because $\Fock(0)^{(n)}=0$ there. So $\Bnd^{\ast}(n)=-3<0$.
+
+Theorem~\ref{thm:multiclick-bound} is untouched by the instance: the same data give $c=1-\lmax(B)=0$ and $d_k=1-\lmin(B_k)=1$, hence
+$\Bnd(n)=1+0-4=-3$, and \eqref{eq:mcbound} holds with equality. A
+\emph{lower} bound on $\lmin$ needs no positivity; the statement
+$\Bnd^{\ast}\ge0$ is about the operator itself and does. What the instance
+excludes is the operator, not the numbers: no receiver of this contract
+produces it, because there the left-hand sides of \eqref{eq:prefactorform}
+are the \tref{joint no-click elements} of a POVM and $M_{\mc}$ is a sum of
+that POVM's elements. Stating \eqref{eq:mcpos} explicitly, rather than
+reading it off the notation \eqref{eq:prefactorform} uses, is what keeps
+Lemma~\ref{lem:exactbasic} and Lemma~\ref{lem:exactwindow} true as printed;
+Theorem~\ref{thm:emitted-bound} discharges it at each of the two instances, and no
+emitted value depends on the difference.
+\end{remark}

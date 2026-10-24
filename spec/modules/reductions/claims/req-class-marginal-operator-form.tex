@@ -1,0 +1,29 @@
+% ---
+% id: reductions/req:class-marginal-operator-form
+% kind: req
+% title: "Refusal of the operator form of the class-marginal identity"
+% summary: >-
+%   The engine refuses a request to impose the class-marginal identity on the
+%   target as an operator identity, a form [[rem:unsound]] shows unsound. Its
+%   sound squashed form is the expectation identity.
+% prominence: standard
+% status: accepted
+% uses: [rem:unsound]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Where the physical \tref{class-marginal identity} holds, its squashed counterpart
+holds in expectation on every reachable state but not, in general, as an
+operator identity on the target, and imposing the operator form where the
+target does not satisfy it would exclude reachable states
+(Remark~\ref{rem:unsound}).
+
+\begin{requirement}\label{req:class-marginal-operator-form}
+The engine refuses, with the reason \iface{unsound_constraint_requested}, a
+request to impose on the squashed states the operator form
+$\sum_{v\in\Vset_t}F_v=q_t\,\idon{\Qsys}$ of the class-marginal identity
+(Remark~\ref{rem:unsound}).
+\end{requirement}

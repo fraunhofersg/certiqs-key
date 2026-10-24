@@ -1,0 +1,46 @@
+% ---
+% id: receiver/lem:deficiency
+% kind: lem
+% title: "Decomposition of the loss deficiency"
+% summary: >-
+%   The undetected fraction splits exactly into light lost through the
+%   dilation and light reaching declared modes that no port monitors, both
+%   positive semidefinite. It is the check that loss is counted exactly once.
+% prominence: standard
+% status: accepted
+% uses: [def:instrument, def:gram]
+% assumes: [A-TRUST, A-PASSIVE, A-VAC, A-MODES, A-EXACT, A-NOSEL, A-ROUND]
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The identity mentions no efficiency and holds for every receiver instrument, and the core's residual r_3 (def:residuals) is written on it; that is why it is a core lemma and not part of detector-imperfections, whose efficiency theorem cites it. The assumes list is deliberately broader than the proof, which uses only def:instrument and def:gram: it carries the device assumptions under which the declared instrument is the physical receiver in every round, which the physical reading of the two labelled summands (light lost through the dilation, light reaching an unmonitored declared mode) needs."
+% ---
+
+The identity below holds for every receiver instrument and is the correct
+check that loss was accounted for exactly once.
+
+\begin{lemma}\label{lem:deficiency}
+Let $\Recv$ be a receiver instrument with port Grams $\{A_k\}$ and let
+$\Emd{\mathrm{un}}$ be the projector onto the declared modes lying in no
+port. Then
+\begin{equation}\label{eq:deficiencyid}
+  \defic\;=\;\id_{\Inp}-A_\Sigma
+  \;=\;\underbrace{\big(\id_{\Inp}
+    -\Gmat_{\Inp}^\dagger\Gmat_{\Inp}\big)}_{\text{left through the
+    dilation}}
+  \;+\;\underbrace{\Gmat_{\Inp}^\dagger\,\Emd{\mathrm{un}}\,
+    \Gmat_{\Inp}}_{\text{reached an unmonitored declared mode}} ,
+\end{equation}
+and both summands are positive semidefinite.
+\end{lemma}
+
+\begin{proof}
+The ports and the unmonitored declared modes partition $\Modes$, so
+$\Emd{[K]}+\Emd{\mathrm{un}}=\id_{\Modes}$ and hence
+$\Gmat_{\Inp}^\dagger\Gmat_{\Inp}=A_\Sigma+\Gmat_{\Inp}^\dagger
+\Emd{\mathrm{un}}\Gmat_{\Inp}$. Rearranging gives \eqref{eq:deficiencyid}. The
+first summand is positive semidefinite because $\Gmat$ is a contraction and the
+restriction of $\id-\Gmat^\dagger\Gmat\succeq0$ to the principal submatrix on
+$\Inp$ is $\id_{\Inp}-\Gmat_{\Inp}^\dagger\Gmat_{\Inp}$; the second is a
+conjugated projector.
+\end{proof}

@@ -1,0 +1,2509 @@
+{
+ "assumptions": [
+  {
+   "constrains": {},
+   "id": "A-TRUST",
+   "machine_key": "receiver_trusted_exact",
+   "never_verified": true,
+   "provenance": {
+    "engine_field": "preparation.stations[0].receiver.assumption_ledger[0]"
+   }
+  },
+  {
+   "constrains": {
+    "catalogue_entries": [
+     "C1",
+     "C2",
+     "C3"
+    ]
+   },
+   "id": "A-PASSIVE",
+   "machine_key": "passive_optics",
+   "never_verified": true,
+   "provenance": {
+    "engine_field": "preparation.stations[0].receiver.assumption_ledger[1]"
+   }
+  },
+  {
+   "constrains": {
+    "undeclared_input_modes": [
+     "X_H",
+     "X_V",
+     "Xr_H",
+     "Xr_V",
+     "Zr_H",
+     "Zr_V"
+    ]
+   },
+   "id": "A-VAC",
+   "machine_key": "undeclared_inputs_vacuum",
+   "never_verified": true,
+   "provenance": {
+    "engine_field": "preparation.stations[0].receiver.assumption_ledger[2]"
+   }
+  },
+  {
+   "constrains": {},
+   "id": "A-MODES",
+   "machine_key": "no_undeclared_paths",
+   "never_verified": true,
+   "provenance": {
+    "engine_field": "preparation.stations[0].receiver.assumption_ledger[3]"
+   }
+  },
+  {
+   "constrains": {
+    "tau": 0
+   },
+   "id": "A-THRESH",
+   "machine_key": "threshold_memoryless_detectors",
+   "never_verified": true,
+   "provenance": {
+    "engine_field": "preparation.stations[0].receiver.assumption_ledger[4]"
+   }
+  },
+  {
+   "constrains": {
+    "ports": [
+     "H",
+     "V",
+     "D",
+     "A"
+    ]
+   },
+   "id": "A-PORT",
+   "machine_key": "mode_insensitive_ports",
+   "never_verified": true,
+   "provenance": {
+    "engine_field": "preparation.stations[0].receiver.assumption_ledger[5]"
+   }
+  },
+  {
+   "constrains": {
+    "declared_tolerance_fields": []
+   },
+   "id": "A-EXACT",
+   "machine_key": "exact_parameters",
+   "never_verified": true,
+   "provenance": {
+    "engine_field": "preparation.stations[0].receiver.assumption_ledger[6]"
+   }
+  },
+  {
+   "constrains": {},
+   "id": "A-NOSEL",
+   "machine_key": "device_not_adversarial",
+   "never_verified": true,
+   "provenance": {
+    "engine_field": "preparation.stations[0].receiver.assumption_ledger[7]"
+   }
+  },
+  {
+   "constrains": {},
+   "id": "A-ROUND",
+   "machine_key": "round_homogeneity",
+   "never_verified": true,
+   "provenance": {
+    "engine_field": "preparation.stations[0].receiver.assumption_ledger[8]"
+   }
+  },
+  {
+   "constrains": {
+    "eigenvalue_routine": "numpy.linalg.eigvalsh (LAPACK divide-and-conquer symmetric eigensolver); direct, deterministic, no iteration bound and no undeclared threshold",
+    "eps_eig": 0.001,
+    "invoked_at": []
+   },
+   "id": "A-EIG",
+   "machine_key": "exact_window_eigenvalue_slack",
+   "never_verified": true,
+   "provenance": {
+    "engine_field": "preparation.stations[0].receiver.assumption_ledger[9]"
+   }
+  }
+ ],
+ "chain": [
+  {
+   "claim": "receiver/def:graph",
+   "detail": "4 elements, 3 edges, 8 modes",
+   "id": "element_graph",
+   "provenance": {
+    "claim": "receiver/def:graph",
+    "engine_field": "preparation.stations[0].receiver.receiver_construction.elements"
+   },
+   "title": "element graph"
+  },
+  {
+   "claim": "receiver/def:compile",
+   "detail": "Γ_G, the element matrices multiplied in topological order",
+   "id": "compile_element_graph",
+   "provenance": {
+    "claim": "receiver/def:compile",
+    "engine_field": "preparation.stations[0].receiver.receiver_construction.edges"
+   },
+   "title": "instrument matrix"
+  },
+  {
+   "claim": "receiver/def:gram",
+   "detail": "4 ports",
+   "id": "port_grams",
+   "provenance": {
+    "claim": "receiver/def:gram",
+    "engine_field": "preparation.stations[0].receiver.port_grams"
+   },
+   "title": "port Grams"
+  },
+  {
+   "claim": "receiver/detector-imperfections/thm:efficiency",
+   "detail": "efficiency once in D_η; dark counts per_port_product_form",
+   "id": "detector_layer",
+   "provenance": {
+    "claim": "receiver/detector-imperfections/thm:efficiency",
+    "engine_field": "preparation.stations[0].receiver.dark_count_channel"
+   },
+   "title": "detector layer"
+  },
+  {
+   "claim": "receiver/def:clickalphabet",
+   "detail": "blocks by photon number: n=0 (dim 1), n=1 (dim 2)",
+   "id": "click_povm",
+   "provenance": {
+    "claim": "receiver/def:clickalphabet",
+    "engine_field": "preparation.stations[0].receiver.photon_blocks.settings"
+   },
+   "title": "click-pattern POVM"
+  },
+  {
+   "claim": "receiver/def:coarse",
+   "detail": "6 letters",
+   "id": "coarse_graining",
+   "provenance": {
+    "claim": "receiver/def:coarse",
+    "engine_field": "preparation.stations[0].receiver.outcome_alphabet"
+   },
+   "title": "coarse-graining"
+  }
+ ],
+ "coarse_graining": [
+  {
+   "fibre": [
+    []
+   ],
+   "id": 0,
+   "letter": "nc",
+   "provenance": {
+    "claim": "receiver/def:coarse",
+    "engine_field": "preparation.stations[0].receiver.outcome_alphabet.coarse_graining[0]"
+   }
+  },
+  {
+   "fibre": [
+    [
+     "H"
+    ]
+   ],
+   "id": 1,
+   "letter": "H",
+   "provenance": {
+    "claim": "receiver/def:coarse",
+    "engine_field": "preparation.stations[0].receiver.outcome_alphabet.coarse_graining[1]"
+   }
+  },
+  {
+   "fibre": [
+    [
+     "V"
+    ]
+   ],
+   "id": 2,
+   "letter": "V",
+   "provenance": {
+    "claim": "receiver/def:coarse",
+    "engine_field": "preparation.stations[0].receiver.outcome_alphabet.coarse_graining[2]"
+   }
+  },
+  {
+   "fibre": [
+    [
+     "D"
+    ]
+   ],
+   "id": 3,
+   "letter": "D",
+   "provenance": {
+    "claim": "receiver/def:coarse",
+    "engine_field": "preparation.stations[0].receiver.outcome_alphabet.coarse_graining[3]"
+   }
+  },
+  {
+   "fibre": [
+    [
+     "A"
+    ]
+   ],
+   "id": 4,
+   "letter": "A",
+   "provenance": {
+    "claim": "receiver/def:coarse",
+    "engine_field": "preparation.stations[0].receiver.outcome_alphabet.coarse_graining[4]"
+   }
+  },
+  {
+   "fibre": [
+    [
+     "H",
+     "V"
+    ],
+    [
+     "H",
+     "D"
+    ],
+    [
+     "H",
+     "A"
+    ],
+    [
+     "V",
+     "D"
+    ],
+    [
+     "V",
+     "A"
+    ],
+    [
+     "D",
+     "A"
+    ],
+    [
+     "H",
+     "V",
+     "D"
+    ],
+    [
+     "H",
+     "V",
+     "A"
+    ],
+    [
+     "H",
+     "D",
+     "A"
+    ],
+    [
+     "V",
+     "D",
+     "A"
+    ],
+    [
+     "H",
+     "V",
+     "D",
+     "A"
+    ]
+   ],
+   "id": 5,
+   "letter": "mc",
+   "provenance": {
+    "claim": "receiver/def:coarse",
+    "engine_field": "preparation.stations[0].receiver.outcome_alphabet.coarse_graining[5]"
+   }
+  }
+ ],
+ "columns": [
+  [
+   "bs"
+  ],
+  [
+   "hwp",
+   "pbs_z"
+  ],
+  [
+   "pbs_x"
+  ]
+ ],
+ "edges": [
+  [
+   "bs",
+   "hwp"
+  ],
+  [
+   "bs",
+   "pbs_z"
+  ],
+  [
+   "hwp",
+   "pbs_x"
+  ]
+ ],
+ "elements": [
+  {
+   "catalogue_id": "C1",
+   "class_name": "Beamsplitter",
+   "class_summary": "C1 -- beamsplitter. Support: two paths, four modes. Eq. ``eq:bs``.",
+   "class_title": "beamsplitter",
+   "column": 0,
+   "id": "bs",
+   "known": true,
+   "name": "bs",
+   "parameters": [
+    {
+     "exact": false,
+     "name": "transmittance",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[0].parameters.transmittance"
+     },
+     "value": 0.5
+    },
+    {
+     "exact": true,
+     "name": "phase",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[0].parameters.phase"
+     },
+     "value": 0
+    },
+    {
+     "exact": true,
+     "name": "loss_1",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[0].parameters.loss_1"
+     },
+     "value": 0
+    },
+    {
+     "exact": true,
+     "name": "loss_2",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[0].parameters.loss_2"
+     },
+     "value": 0
+    }
+   ],
+   "provenance": {
+    "claim": "receiver/def:catalogue",
+    "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[0]"
+   },
+   "support": [
+    "Z_H",
+    "Z_V",
+    "X_H",
+    "X_V"
+   ]
+  },
+  {
+   "catalogue_id": "C3",
+   "class_name": "Retarder",
+   "class_summary": "C3 -- retarder, Eq. ``eq:retarder``, with the presets of Eq. eq:hwpqwp.",
+   "class_title": "retarder",
+   "column": 1,
+   "id": "hwp",
+   "known": true,
+   "name": "hwp",
+   "parameters": [
+    {
+     "exact": false,
+     "name": "retardance",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[1].parameters.retardance"
+     },
+     "value": {
+      "pi_coefficient": "1"
+     }
+    },
+    {
+     "exact": false,
+     "name": "angle",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[1].parameters.angle"
+     },
+     "value": {
+      "pi_coefficient": "1/8"
+     }
+    },
+    {
+     "exact": true,
+     "name": "loss",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[1].parameters.loss"
+     },
+     "value": 0
+    }
+   ],
+   "provenance": {
+    "claim": "receiver/def:catalogue",
+    "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[1]"
+   },
+   "support": [
+    "X_H",
+    "X_V"
+   ]
+  },
+  {
+   "catalogue_id": "C2",
+   "class_name": "PolarizingBeamsplitter",
+   "class_summary": "C2 -- polarizing beamsplitter, Eq. ``eq:pbs``. Ideal at t_H=1, t_V=0.",
+   "class_title": "polarizing beamsplitter",
+   "column": 1,
+   "id": "pbs_z",
+   "known": true,
+   "name": "pbs_z",
+   "parameters": [
+    {
+     "exact": false,
+     "name": "transmittance_h",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[2].parameters.transmittance_h"
+     },
+     "value": 1.0
+    },
+    {
+     "exact": false,
+     "name": "transmittance_v",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[2].parameters.transmittance_v"
+     },
+     "value": 0.0
+    },
+    {
+     "exact": true,
+     "name": "phase_h",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[2].parameters.phase_h"
+     },
+     "value": 0
+    },
+    {
+     "exact": true,
+     "name": "phase_v",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[2].parameters.phase_v"
+     },
+     "value": 0
+    },
+    {
+     "exact": true,
+     "name": "loss_1",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[2].parameters.loss_1"
+     },
+     "value": 0
+    },
+    {
+     "exact": true,
+     "name": "loss_2",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[2].parameters.loss_2"
+     },
+     "value": 0
+    }
+   ],
+   "provenance": {
+    "claim": "receiver/def:catalogue",
+    "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[2]"
+   },
+   "support": [
+    "Z_H",
+    "Z_V",
+    "Zr_H",
+    "Zr_V"
+   ]
+  },
+  {
+   "catalogue_id": "C2",
+   "class_name": "PolarizingBeamsplitter",
+   "class_summary": "C2 -- polarizing beamsplitter, Eq. ``eq:pbs``. Ideal at t_H=1, t_V=0.",
+   "class_title": "polarizing beamsplitter",
+   "column": 2,
+   "id": "pbs_x",
+   "known": true,
+   "name": "pbs_x",
+   "parameters": [
+    {
+     "exact": false,
+     "name": "transmittance_h",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[3].parameters.transmittance_h"
+     },
+     "value": 1.0
+    },
+    {
+     "exact": false,
+     "name": "transmittance_v",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[3].parameters.transmittance_v"
+     },
+     "value": 0.0
+    },
+    {
+     "exact": true,
+     "name": "phase_h",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[3].parameters.phase_h"
+     },
+     "value": 0
+    },
+    {
+     "exact": true,
+     "name": "phase_v",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[3].parameters.phase_v"
+     },
+     "value": 0
+    },
+    {
+     "exact": true,
+     "name": "loss_1",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[3].parameters.loss_1"
+     },
+     "value": 0
+    },
+    {
+     "exact": true,
+     "name": "loss_2",
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[3].parameters.loss_2"
+     },
+     "value": 0
+    }
+   ],
+   "provenance": {
+    "claim": "receiver/def:catalogue",
+    "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[3]"
+   },
+   "support": [
+    "X_H",
+    "X_V",
+    "Xr_H",
+    "Xr_V"
+   ]
+  }
+ ],
+ "engine_gaps": [
+  "Per-port detector parameters are not attached to a station's detectors: the parameter table does not say which station they belong to. The η shown is read from this station's own efficiency record."
+ ],
+ "kind": "optics",
+ "modes": [
+  {
+   "channel": false,
+   "label": "X_H",
+   "path": "X",
+   "polarization": "H",
+   "probe": false,
+   "provenance": {
+    "claim": "receiver/def:modes",
+    "engine_field": "preparation.channel_interface.arms[0].modes[0]"
+   },
+   "structured": true,
+   "tau": 0
+  },
+  {
+   "channel": false,
+   "label": "X_V",
+   "path": "X",
+   "polarization": "V",
+   "probe": false,
+   "provenance": {
+    "claim": "receiver/def:modes",
+    "engine_field": "preparation.channel_interface.arms[0].modes[1]"
+   },
+   "structured": true,
+   "tau": 0
+  },
+  {
+   "channel": false,
+   "label": "Xr_H",
+   "path": "Xr",
+   "polarization": "H",
+   "probe": false,
+   "provenance": {
+    "claim": "receiver/def:modes",
+    "engine_field": "preparation.channel_interface.arms[0].modes[2]"
+   },
+   "structured": true,
+   "tau": 0
+  },
+  {
+   "channel": false,
+   "label": "Xr_V",
+   "path": "Xr",
+   "polarization": "V",
+   "probe": false,
+   "provenance": {
+    "claim": "receiver/def:modes",
+    "engine_field": "preparation.channel_interface.arms[0].modes[3]"
+   },
+   "structured": true,
+   "tau": 0
+  },
+  {
+   "channel": true,
+   "label": "Z_H",
+   "path": "Z",
+   "polarization": "H",
+   "probe": false,
+   "provenance": {
+    "claim": "receiver/def:modes",
+    "engine_field": "preparation.channel_interface.arms[0].channel_modes[0]"
+   },
+   "structured": true,
+   "tau": 0
+  },
+  {
+   "channel": true,
+   "label": "Z_V",
+   "path": "Z",
+   "polarization": "V",
+   "probe": false,
+   "provenance": {
+    "claim": "receiver/def:modes",
+    "engine_field": "preparation.channel_interface.arms[0].channel_modes[1]"
+   },
+   "structured": true,
+   "tau": 0
+  },
+  {
+   "channel": false,
+   "label": "Zr_H",
+   "path": "Zr",
+   "polarization": "H",
+   "probe": false,
+   "provenance": {
+    "claim": "receiver/def:modes",
+    "engine_field": "preparation.channel_interface.arms[0].modes[6]"
+   },
+   "structured": true,
+   "tau": 0
+  },
+  {
+   "channel": false,
+   "label": "Zr_V",
+   "path": "Zr",
+   "polarization": "V",
+   "probe": false,
+   "provenance": {
+    "claim": "receiver/def:modes",
+    "engine_field": "preparation.channel_interface.arms[0].modes[7]"
+   },
+   "structured": true,
+   "tau": 0
+  }
+ ],
+ "photon_cutoff": 1,
+ "ports": [
+  {
+   "column": 3,
+   "detector": {
+    "eta_record": {
+     "provenance": {
+      "claim": "receiver/detector-imperfections/thm:efficiency",
+      "engine_field": "preparation.stations[0].receiver.efficiency_record.rows[12]"
+     },
+     "value": 1.0
+    },
+    "parameters": []
+   },
+   "modes": [
+    "Z_H",
+    "Z_V"
+   ],
+   "port": "H",
+   "provenance": {
+    "claim": "receiver/def:instrument",
+    "engine_field": "preparation.stations[0].receiver.receiver_construction.port_map[0]"
+   }
+  },
+  {
+   "column": 3,
+   "detector": {
+    "eta_record": {
+     "provenance": {
+      "claim": "receiver/detector-imperfections/thm:efficiency",
+      "engine_field": "preparation.stations[0].receiver.efficiency_record.rows[13]"
+     },
+     "value": 1.0
+    },
+    "parameters": []
+   },
+   "modes": [
+    "Zr_H",
+    "Zr_V"
+   ],
+   "port": "V",
+   "provenance": {
+    "claim": "receiver/def:instrument",
+    "engine_field": "preparation.stations[0].receiver.receiver_construction.port_map[1]"
+   }
+  },
+  {
+   "column": 3,
+   "detector": {
+    "eta_record": {
+     "provenance": {
+      "claim": "receiver/detector-imperfections/thm:efficiency",
+      "engine_field": "preparation.stations[0].receiver.efficiency_record.rows[14]"
+     },
+     "value": 1.0
+    },
+    "parameters": []
+   },
+   "modes": [
+    "X_H",
+    "X_V"
+   ],
+   "port": "D",
+   "provenance": {
+    "claim": "receiver/def:instrument",
+    "engine_field": "preparation.stations[0].receiver.receiver_construction.port_map[2]"
+   }
+  },
+  {
+   "column": 3,
+   "detector": {
+    "eta_record": {
+     "provenance": {
+      "claim": "receiver/detector-imperfections/thm:efficiency",
+      "engine_field": "preparation.stations[0].receiver.efficiency_record.rows[15]"
+     },
+     "value": 1.0
+    },
+    "parameters": []
+   },
+   "modes": [
+    "Xr_H",
+    "Xr_V"
+   ],
+   "port": "A",
+   "provenance": {
+    "claim": "receiver/def:instrument",
+    "engine_field": "preparation.stations[0].receiver.receiver_construction.port_map[3]"
+   }
+  }
+ ],
+ "provenance": {
+  "engine_field": "preparation.stations"
+ },
+ "rails": [
+  {
+   "key": "path:X",
+   "modes": [
+    "X_H",
+    "X_V"
+   ],
+   "path": "X",
+   "structured": true
+  },
+  {
+   "key": "path:Xr",
+   "modes": [
+    "Xr_H",
+    "Xr_V"
+   ],
+   "path": "Xr",
+   "structured": true
+  },
+  {
+   "key": "path:Z",
+   "modes": [
+    "Z_H",
+    "Z_V"
+   ],
+   "path": "Z",
+   "structured": true
+  },
+  {
+   "key": "path:Zr",
+   "modes": [
+    "Zr_H",
+    "Zr_V"
+   ],
+   "path": "Zr",
+   "structured": true
+  }
+ ],
+ "residuals": [],
+ "route": "element_graph",
+ "station": {
+  "index": 0,
+  "label": "alice_station",
+  "party": "A",
+  "provenance": {
+   "engine_field": "preparation.stations[0]"
+  },
+  "title": "station 0 · party A (alice_station)"
+ },
+ "stations": [
+  {
+   "assumptions": [
+    {
+     "constrains": {},
+     "id": "A-TRUST",
+     "machine_key": "receiver_trusted_exact",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.assumption_ledger[0]"
+     }
+    },
+    {
+     "constrains": {
+      "catalogue_entries": [
+       "C1",
+       "C2",
+       "C3"
+      ]
+     },
+     "id": "A-PASSIVE",
+     "machine_key": "passive_optics",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.assumption_ledger[1]"
+     }
+    },
+    {
+     "constrains": {
+      "undeclared_input_modes": [
+       "X_H",
+       "X_V",
+       "Xr_H",
+       "Xr_V",
+       "Zr_H",
+       "Zr_V"
+      ]
+     },
+     "id": "A-VAC",
+     "machine_key": "undeclared_inputs_vacuum",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.assumption_ledger[2]"
+     }
+    },
+    {
+     "constrains": {},
+     "id": "A-MODES",
+     "machine_key": "no_undeclared_paths",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.assumption_ledger[3]"
+     }
+    },
+    {
+     "constrains": {
+      "tau": 0
+     },
+     "id": "A-THRESH",
+     "machine_key": "threshold_memoryless_detectors",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.assumption_ledger[4]"
+     }
+    },
+    {
+     "constrains": {
+      "ports": [
+       "H",
+       "V",
+       "D",
+       "A"
+      ]
+     },
+     "id": "A-PORT",
+     "machine_key": "mode_insensitive_ports",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.assumption_ledger[5]"
+     }
+    },
+    {
+     "constrains": {
+      "declared_tolerance_fields": []
+     },
+     "id": "A-EXACT",
+     "machine_key": "exact_parameters",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.assumption_ledger[6]"
+     }
+    },
+    {
+     "constrains": {},
+     "id": "A-NOSEL",
+     "machine_key": "device_not_adversarial",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.assumption_ledger[7]"
+     }
+    },
+    {
+     "constrains": {},
+     "id": "A-ROUND",
+     "machine_key": "round_homogeneity",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.assumption_ledger[8]"
+     }
+    },
+    {
+     "constrains": {
+      "eigenvalue_routine": "numpy.linalg.eigvalsh (LAPACK divide-and-conquer symmetric eigensolver); direct, deterministic, no iteration bound and no undeclared threshold",
+      "eps_eig": 0.001,
+      "invoked_at": []
+     },
+     "id": "A-EIG",
+     "machine_key": "exact_window_eigenvalue_slack",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[0].receiver.assumption_ledger[9]"
+     }
+    }
+   ],
+   "chain": [
+    {
+     "claim": "receiver/def:graph",
+     "detail": "4 elements, 3 edges, 8 modes",
+     "id": "element_graph",
+     "provenance": {
+      "claim": "receiver/def:graph",
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements"
+     },
+     "title": "element graph"
+    },
+    {
+     "claim": "receiver/def:compile",
+     "detail": "Γ_G, the element matrices multiplied in topological order",
+     "id": "compile_element_graph",
+     "provenance": {
+      "claim": "receiver/def:compile",
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.edges"
+     },
+     "title": "instrument matrix"
+    },
+    {
+     "claim": "receiver/def:gram",
+     "detail": "4 ports",
+     "id": "port_grams",
+     "provenance": {
+      "claim": "receiver/def:gram",
+      "engine_field": "preparation.stations[0].receiver.port_grams"
+     },
+     "title": "port Grams"
+    },
+    {
+     "claim": "receiver/detector-imperfections/thm:efficiency",
+     "detail": "efficiency once in D_η; dark counts per_port_product_form",
+     "id": "detector_layer",
+     "provenance": {
+      "claim": "receiver/detector-imperfections/thm:efficiency",
+      "engine_field": "preparation.stations[0].receiver.dark_count_channel"
+     },
+     "title": "detector layer"
+    },
+    {
+     "claim": "receiver/def:clickalphabet",
+     "detail": "blocks by photon number: n=0 (dim 1), n=1 (dim 2)",
+     "id": "click_povm",
+     "provenance": {
+      "claim": "receiver/def:clickalphabet",
+      "engine_field": "preparation.stations[0].receiver.photon_blocks.settings"
+     },
+     "title": "click-pattern POVM"
+    },
+    {
+     "claim": "receiver/def:coarse",
+     "detail": "6 letters",
+     "id": "coarse_graining",
+     "provenance": {
+      "claim": "receiver/def:coarse",
+      "engine_field": "preparation.stations[0].receiver.outcome_alphabet"
+     },
+     "title": "coarse-graining"
+    }
+   ],
+   "coarse_graining": [
+    {
+     "fibre": [
+      []
+     ],
+     "id": 0,
+     "letter": "nc",
+     "provenance": {
+      "claim": "receiver/def:coarse",
+      "engine_field": "preparation.stations[0].receiver.outcome_alphabet.coarse_graining[0]"
+     }
+    },
+    {
+     "fibre": [
+      [
+       "H"
+      ]
+     ],
+     "id": 1,
+     "letter": "H",
+     "provenance": {
+      "claim": "receiver/def:coarse",
+      "engine_field": "preparation.stations[0].receiver.outcome_alphabet.coarse_graining[1]"
+     }
+    },
+    {
+     "fibre": [
+      [
+       "V"
+      ]
+     ],
+     "id": 2,
+     "letter": "V",
+     "provenance": {
+      "claim": "receiver/def:coarse",
+      "engine_field": "preparation.stations[0].receiver.outcome_alphabet.coarse_graining[2]"
+     }
+    },
+    {
+     "fibre": [
+      [
+       "D"
+      ]
+     ],
+     "id": 3,
+     "letter": "D",
+     "provenance": {
+      "claim": "receiver/def:coarse",
+      "engine_field": "preparation.stations[0].receiver.outcome_alphabet.coarse_graining[3]"
+     }
+    },
+    {
+     "fibre": [
+      [
+       "A"
+      ]
+     ],
+     "id": 4,
+     "letter": "A",
+     "provenance": {
+      "claim": "receiver/def:coarse",
+      "engine_field": "preparation.stations[0].receiver.outcome_alphabet.coarse_graining[4]"
+     }
+    },
+    {
+     "fibre": [
+      [
+       "H",
+       "V"
+      ],
+      [
+       "H",
+       "D"
+      ],
+      [
+       "H",
+       "A"
+      ],
+      [
+       "V",
+       "D"
+      ],
+      [
+       "V",
+       "A"
+      ],
+      [
+       "D",
+       "A"
+      ],
+      [
+       "H",
+       "V",
+       "D"
+      ],
+      [
+       "H",
+       "V",
+       "A"
+      ],
+      [
+       "H",
+       "D",
+       "A"
+      ],
+      [
+       "V",
+       "D",
+       "A"
+      ],
+      [
+       "H",
+       "V",
+       "D",
+       "A"
+      ]
+     ],
+     "id": 5,
+     "letter": "mc",
+     "provenance": {
+      "claim": "receiver/def:coarse",
+      "engine_field": "preparation.stations[0].receiver.outcome_alphabet.coarse_graining[5]"
+     }
+    }
+   ],
+   "columns": [
+    [
+     "bs"
+    ],
+    [
+     "hwp",
+     "pbs_z"
+    ],
+    [
+     "pbs_x"
+    ]
+   ],
+   "edges": [
+    [
+     "bs",
+     "hwp"
+    ],
+    [
+     "bs",
+     "pbs_z"
+    ],
+    [
+     "hwp",
+     "pbs_x"
+    ]
+   ],
+   "elements": [
+    {
+     "catalogue_id": "C1",
+     "class_name": "Beamsplitter",
+     "class_summary": "C1 -- beamsplitter. Support: two paths, four modes. Eq. ``eq:bs``.",
+     "class_title": "beamsplitter",
+     "column": 0,
+     "id": "bs",
+     "known": true,
+     "name": "bs",
+     "parameters": [
+      {
+       "exact": false,
+       "name": "transmittance",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[0].parameters.transmittance"
+       },
+       "value": 0.5
+      },
+      {
+       "exact": true,
+       "name": "phase",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[0].parameters.phase"
+       },
+       "value": 0
+      },
+      {
+       "exact": true,
+       "name": "loss_1",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[0].parameters.loss_1"
+       },
+       "value": 0
+      },
+      {
+       "exact": true,
+       "name": "loss_2",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[0].parameters.loss_2"
+       },
+       "value": 0
+      }
+     ],
+     "provenance": {
+      "claim": "receiver/def:catalogue",
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[0]"
+     },
+     "support": [
+      "Z_H",
+      "Z_V",
+      "X_H",
+      "X_V"
+     ]
+    },
+    {
+     "catalogue_id": "C3",
+     "class_name": "Retarder",
+     "class_summary": "C3 -- retarder, Eq. ``eq:retarder``, with the presets of Eq. eq:hwpqwp.",
+     "class_title": "retarder",
+     "column": 1,
+     "id": "hwp",
+     "known": true,
+     "name": "hwp",
+     "parameters": [
+      {
+       "exact": false,
+       "name": "retardance",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[1].parameters.retardance"
+       },
+       "value": {
+        "pi_coefficient": "1"
+       }
+      },
+      {
+       "exact": false,
+       "name": "angle",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[1].parameters.angle"
+       },
+       "value": {
+        "pi_coefficient": "1/8"
+       }
+      },
+      {
+       "exact": true,
+       "name": "loss",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[1].parameters.loss"
+       },
+       "value": 0
+      }
+     ],
+     "provenance": {
+      "claim": "receiver/def:catalogue",
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[1]"
+     },
+     "support": [
+      "X_H",
+      "X_V"
+     ]
+    },
+    {
+     "catalogue_id": "C2",
+     "class_name": "PolarizingBeamsplitter",
+     "class_summary": "C2 -- polarizing beamsplitter, Eq. ``eq:pbs``. Ideal at t_H=1, t_V=0.",
+     "class_title": "polarizing beamsplitter",
+     "column": 1,
+     "id": "pbs_z",
+     "known": true,
+     "name": "pbs_z",
+     "parameters": [
+      {
+       "exact": false,
+       "name": "transmittance_h",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[2].parameters.transmittance_h"
+       },
+       "value": 1.0
+      },
+      {
+       "exact": false,
+       "name": "transmittance_v",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[2].parameters.transmittance_v"
+       },
+       "value": 0.0
+      },
+      {
+       "exact": true,
+       "name": "phase_h",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[2].parameters.phase_h"
+       },
+       "value": 0
+      },
+      {
+       "exact": true,
+       "name": "phase_v",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[2].parameters.phase_v"
+       },
+       "value": 0
+      },
+      {
+       "exact": true,
+       "name": "loss_1",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[2].parameters.loss_1"
+       },
+       "value": 0
+      },
+      {
+       "exact": true,
+       "name": "loss_2",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[2].parameters.loss_2"
+       },
+       "value": 0
+      }
+     ],
+     "provenance": {
+      "claim": "receiver/def:catalogue",
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[2]"
+     },
+     "support": [
+      "Z_H",
+      "Z_V",
+      "Zr_H",
+      "Zr_V"
+     ]
+    },
+    {
+     "catalogue_id": "C2",
+     "class_name": "PolarizingBeamsplitter",
+     "class_summary": "C2 -- polarizing beamsplitter, Eq. ``eq:pbs``. Ideal at t_H=1, t_V=0.",
+     "class_title": "polarizing beamsplitter",
+     "column": 2,
+     "id": "pbs_x",
+     "known": true,
+     "name": "pbs_x",
+     "parameters": [
+      {
+       "exact": false,
+       "name": "transmittance_h",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[3].parameters.transmittance_h"
+       },
+       "value": 1.0
+      },
+      {
+       "exact": false,
+       "name": "transmittance_v",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[3].parameters.transmittance_v"
+       },
+       "value": 0.0
+      },
+      {
+       "exact": true,
+       "name": "phase_h",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[3].parameters.phase_h"
+       },
+       "value": 0
+      },
+      {
+       "exact": true,
+       "name": "phase_v",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[3].parameters.phase_v"
+       },
+       "value": 0
+      },
+      {
+       "exact": true,
+       "name": "loss_1",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[3].parameters.loss_1"
+       },
+       "value": 0
+      },
+      {
+       "exact": true,
+       "name": "loss_2",
+       "provenance": {
+        "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[3].parameters.loss_2"
+       },
+       "value": 0
+      }
+     ],
+     "provenance": {
+      "claim": "receiver/def:catalogue",
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.elements[3]"
+     },
+     "support": [
+      "X_H",
+      "X_V",
+      "Xr_H",
+      "Xr_V"
+     ]
+    }
+   ],
+   "engine_gaps": [
+    "Per-port detector parameters are not attached to a station's detectors: the parameter table does not say which station they belong to. The η shown is read from this station's own efficiency record."
+   ],
+   "kind": "optics",
+   "modes": [
+    {
+     "channel": false,
+     "label": "X_H",
+     "path": "X",
+     "polarization": "H",
+     "probe": false,
+     "provenance": {
+      "claim": "receiver/def:modes",
+      "engine_field": "preparation.channel_interface.arms[0].modes[0]"
+     },
+     "structured": true,
+     "tau": 0
+    },
+    {
+     "channel": false,
+     "label": "X_V",
+     "path": "X",
+     "polarization": "V",
+     "probe": false,
+     "provenance": {
+      "claim": "receiver/def:modes",
+      "engine_field": "preparation.channel_interface.arms[0].modes[1]"
+     },
+     "structured": true,
+     "tau": 0
+    },
+    {
+     "channel": false,
+     "label": "Xr_H",
+     "path": "Xr",
+     "polarization": "H",
+     "probe": false,
+     "provenance": {
+      "claim": "receiver/def:modes",
+      "engine_field": "preparation.channel_interface.arms[0].modes[2]"
+     },
+     "structured": true,
+     "tau": 0
+    },
+    {
+     "channel": false,
+     "label": "Xr_V",
+     "path": "Xr",
+     "polarization": "V",
+     "probe": false,
+     "provenance": {
+      "claim": "receiver/def:modes",
+      "engine_field": "preparation.channel_interface.arms[0].modes[3]"
+     },
+     "structured": true,
+     "tau": 0
+    },
+    {
+     "channel": true,
+     "label": "Z_H",
+     "path": "Z",
+     "polarization": "H",
+     "probe": false,
+     "provenance": {
+      "claim": "receiver/def:modes",
+      "engine_field": "preparation.channel_interface.arms[0].channel_modes[0]"
+     },
+     "structured": true,
+     "tau": 0
+    },
+    {
+     "channel": true,
+     "label": "Z_V",
+     "path": "Z",
+     "polarization": "V",
+     "probe": false,
+     "provenance": {
+      "claim": "receiver/def:modes",
+      "engine_field": "preparation.channel_interface.arms[0].channel_modes[1]"
+     },
+     "structured": true,
+     "tau": 0
+    },
+    {
+     "channel": false,
+     "label": "Zr_H",
+     "path": "Zr",
+     "polarization": "H",
+     "probe": false,
+     "provenance": {
+      "claim": "receiver/def:modes",
+      "engine_field": "preparation.channel_interface.arms[0].modes[6]"
+     },
+     "structured": true,
+     "tau": 0
+    },
+    {
+     "channel": false,
+     "label": "Zr_V",
+     "path": "Zr",
+     "polarization": "V",
+     "probe": false,
+     "provenance": {
+      "claim": "receiver/def:modes",
+      "engine_field": "preparation.channel_interface.arms[0].modes[7]"
+     },
+     "structured": true,
+     "tau": 0
+    }
+   ],
+   "photon_cutoff": 1,
+   "ports": [
+    {
+     "column": 3,
+     "detector": {
+      "eta_record": {
+       "provenance": {
+        "claim": "receiver/detector-imperfections/thm:efficiency",
+        "engine_field": "preparation.stations[0].receiver.efficiency_record.rows[12]"
+       },
+       "value": 1.0
+      },
+      "parameters": []
+     },
+     "modes": [
+      "Z_H",
+      "Z_V"
+     ],
+     "port": "H",
+     "provenance": {
+      "claim": "receiver/def:instrument",
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.port_map[0]"
+     }
+    },
+    {
+     "column": 3,
+     "detector": {
+      "eta_record": {
+       "provenance": {
+        "claim": "receiver/detector-imperfections/thm:efficiency",
+        "engine_field": "preparation.stations[0].receiver.efficiency_record.rows[13]"
+       },
+       "value": 1.0
+      },
+      "parameters": []
+     },
+     "modes": [
+      "Zr_H",
+      "Zr_V"
+     ],
+     "port": "V",
+     "provenance": {
+      "claim": "receiver/def:instrument",
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.port_map[1]"
+     }
+    },
+    {
+     "column": 3,
+     "detector": {
+      "eta_record": {
+       "provenance": {
+        "claim": "receiver/detector-imperfections/thm:efficiency",
+        "engine_field": "preparation.stations[0].receiver.efficiency_record.rows[14]"
+       },
+       "value": 1.0
+      },
+      "parameters": []
+     },
+     "modes": [
+      "X_H",
+      "X_V"
+     ],
+     "port": "D",
+     "provenance": {
+      "claim": "receiver/def:instrument",
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.port_map[2]"
+     }
+    },
+    {
+     "column": 3,
+     "detector": {
+      "eta_record": {
+       "provenance": {
+        "claim": "receiver/detector-imperfections/thm:efficiency",
+        "engine_field": "preparation.stations[0].receiver.efficiency_record.rows[15]"
+       },
+       "value": 1.0
+      },
+      "parameters": []
+     },
+     "modes": [
+      "Xr_H",
+      "Xr_V"
+     ],
+     "port": "A",
+     "provenance": {
+      "claim": "receiver/def:instrument",
+      "engine_field": "preparation.stations[0].receiver.receiver_construction.port_map[3]"
+     }
+    }
+   ],
+   "provenance": {
+    "claim": "receiver/def:instrument",
+    "engine_field": "preparation.stations[0].receiver"
+   },
+   "rails": [
+    {
+     "key": "path:X",
+     "modes": [
+      "X_H",
+      "X_V"
+     ],
+     "path": "X",
+     "structured": true
+    },
+    {
+     "key": "path:Xr",
+     "modes": [
+      "Xr_H",
+      "Xr_V"
+     ],
+     "path": "Xr",
+     "structured": true
+    },
+    {
+     "key": "path:Z",
+     "modes": [
+      "Z_H",
+      "Z_V"
+     ],
+     "path": "Z",
+     "structured": true
+    },
+    {
+     "key": "path:Zr",
+     "modes": [
+      "Zr_H",
+      "Zr_V"
+     ],
+     "path": "Zr",
+     "structured": true
+    }
+   ],
+   "residuals": [],
+   "route": "element_graph",
+   "station": {
+    "index": 0,
+    "label": "alice_station",
+    "party": "A",
+    "provenance": {
+     "engine_field": "preparation.stations[0]"
+    },
+    "title": "station 0 · party A (alice_station)"
+   },
+   "version": 1
+  },
+  {
+   "assumptions": [
+    {
+     "constrains": {},
+     "id": "A-TRUST",
+     "machine_key": "receiver_trusted_exact",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[1].receiver.assumption_ledger[0]"
+     }
+    },
+    {
+     "constrains": {
+      "catalogue_entries": [
+       "C1",
+       "C2",
+       "C3"
+      ]
+     },
+     "id": "A-PASSIVE",
+     "machine_key": "passive_optics",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[1].receiver.assumption_ledger[1]"
+     }
+    },
+    {
+     "constrains": {
+      "undeclared_input_modes": [
+       "X_H",
+       "X_V",
+       "Xr_H",
+       "Xr_V",
+       "Zr_H",
+       "Zr_V"
+      ]
+     },
+     "id": "A-VAC",
+     "machine_key": "undeclared_inputs_vacuum",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[1].receiver.assumption_ledger[2]"
+     }
+    },
+    {
+     "constrains": {},
+     "id": "A-MODES",
+     "machine_key": "no_undeclared_paths",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[1].receiver.assumption_ledger[3]"
+     }
+    },
+    {
+     "constrains": {
+      "tau": 0
+     },
+     "id": "A-THRESH",
+     "machine_key": "threshold_memoryless_detectors",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[1].receiver.assumption_ledger[4]"
+     }
+    },
+    {
+     "constrains": {
+      "ports": [
+       "H",
+       "V",
+       "D",
+       "A"
+      ]
+     },
+     "id": "A-PORT",
+     "machine_key": "mode_insensitive_ports",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[1].receiver.assumption_ledger[5]"
+     }
+    },
+    {
+     "constrains": {
+      "declared_tolerance_fields": []
+     },
+     "id": "A-EXACT",
+     "machine_key": "exact_parameters",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[1].receiver.assumption_ledger[6]"
+     }
+    },
+    {
+     "constrains": {},
+     "id": "A-NOSEL",
+     "machine_key": "device_not_adversarial",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[1].receiver.assumption_ledger[7]"
+     }
+    },
+    {
+     "constrains": {},
+     "id": "A-ROUND",
+     "machine_key": "round_homogeneity",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[1].receiver.assumption_ledger[8]"
+     }
+    },
+    {
+     "constrains": {
+      "eigenvalue_routine": "numpy.linalg.eigvalsh (LAPACK divide-and-conquer symmetric eigensolver); direct, deterministic, no iteration bound and no undeclared threshold",
+      "eps_eig": 0.001,
+      "invoked_at": []
+     },
+     "id": "A-EIG",
+     "machine_key": "exact_window_eigenvalue_slack",
+     "never_verified": true,
+     "provenance": {
+      "engine_field": "preparation.stations[1].receiver.assumption_ledger[9]"
+     }
+    }
+   ],
+   "chain": [
+    {
+     "claim": "receiver/def:graph",
+     "detail": "4 elements, 3 edges, 8 modes",
+     "id": "element_graph",
+     "provenance": {
+      "claim": "receiver/def:graph",
+      "engine_field": "preparation.stations[1].receiver.receiver_construction.elements"
+     },
+     "title": "element graph"
+    },
+    {
+     "claim": "receiver/def:compile",
+     "detail": "Γ_G, the element matrices multiplied in topological order",
+     "id": "compile_element_graph",
+     "provenance": {
+      "claim": "receiver/def:compile",
+      "engine_field": "preparation.stations[1].receiver.receiver_construction.edges"
+     },
+     "title": "instrument matrix"
+    },
+    {
+     "claim": "receiver/def:gram",
+     "detail": "4 ports",
+     "id": "port_grams",
+     "provenance": {
+      "claim": "receiver/def:gram",
+      "engine_field": "preparation.stations[1].receiver.port_grams"
+     },
+     "title": "port Grams"
+    },
+    {
+     "claim": "receiver/detector-imperfections/thm:efficiency",
+     "detail": "efficiency once in D_η; dark counts per_port_product_form",
+     "id": "detector_layer",
+     "provenance": {
+      "claim": "receiver/detector-imperfections/thm:efficiency",
+      "engine_field": "preparation.stations[1].receiver.dark_count_channel"
+     },
+     "title": "detector layer"
+    },
+    {
+     "claim": "receiver/def:clickalphabet",
+     "detail": "blocks by photon number: n=0 (dim 1), n=1 (dim 2)",
+     "id": "click_povm",
+     "provenance": {
+      "claim": "receiver/def:clickalphabet",
+      "engine_field": "preparation.stations[1].receiver.photon_blocks.settings"
+     },
+     "title": "click-pattern POVM"
+    },
+    {
+     "claim": "receiver/def:coarse",
+     "detail": "6 letters",
+     "id": "coarse_graining",
+     "provenance": {
+      "claim": "receiver/def:coarse",
+      "engine_field": "preparation.stations[1].receiver.outcome_alphabet"
+     },
+     "title": "coarse-graining"
+    }
+   ],
+   "coarse_graining": [
+    {
+     "fibre": [
+      []
+     ],
+     "id": 0,
+     "letter": "nc",
+     "provenance": {
+      "claim": "receiver/def:coarse",
+      "engine_field": "preparation.stations[1].receiver.outcome_alphabet.coarse_graining[0]"
+     }
+    },
+    {
+     "fibre": [
+      [
+       "H"
+      ]
+     ],
+     "id": 1,
+     "letter": "H",
+     "provenance": {
+      "claim": "receiver/def:coarse",
+      "engine_field": "preparation.stations[1].receiver.outcome_alphabet.coarse_graining[1]"
+     }
+    },
+    {
+     "fibre": [
+      [
+       "V"
+      ]
+     ],
+     "id": 2,
+     "letter": "V",
+     "provenance": {
+      "claim": "receiver/def:coarse",
+      "engine_field": "preparation.stations[1].receiver.outcome_alphabet.coarse_graining[2]"
+     }
+    },
+    {
+     "fibre": [
+      [
+       "D"
+      ]
+     ],
+     "id": 3,
+     "letter": "D",
+     "provenance": {
+      "claim": "receiver/def:coarse",
+      "engine_field": "preparation.stations[1].receiver.outcome_alphabet.coarse_graining[3]"
+     }
+    },
+    {
+     "fibre": [
+      [
+       "A"
+      ]
+     ],
+     "id": 4,
+     "letter": "A",
+     "provenance": {
+      "claim": "receiver/def:coarse",
+      "engine_field": "preparation.stations[1].receiver.outcome_alphabet.coarse_graining[4]"
+     }
+    },
+    {
+     "fibre": [
+      [
+       "H",
+       "V"
+      ],
+      [
+       "H",
+       "D"
+      ],
+      [
+       "H",
+       "A"
+      ],
+      [
+       "V",
+       "D"
+      ],
+      [
+       "V",
+       "A"
+      ],
+      [
+       "D",
+       "A"
+      ],
+      [
+       "H",
+       "V",
+       "D"
+      ],
+      [
+       "H",
+       "V",
+       "A"
+      ],
+      [
+       "H",
+       "D",
+       "A"
+      ],
+      [
+       "V",
+       "D",
+       "A"
+      ],
+      [
+       "H",
+       "V",
+       "D",
+       "A"
+      ]
+     ],
+     "id": 5,
+     "letter": "mc",
+     "provenance": {
+      "claim": "receiver/def:coarse",
+      "engine_field": "preparation.stations[1].receiver.outcome_alphabet.coarse_graining[5]"
+     }
+    }
+   ],
+   "columns": [
+    [
+     "bs"
+    ],
+    [
+     "hwp",
+     "pbs_z"
+    ],
+    [
+     "pbs_x"
+    ]
+   ],
+   "edges": [
+    [
+     "bs",
+     "hwp"
+    ],
+    [
+     "bs",
+     "pbs_z"
+    ],
+    [
+     "hwp",
+     "pbs_x"
+    ]
+   ],
+   "elements": [
+    {
+     "catalogue_id": "C1",
+     "class_name": "Beamsplitter",
+     "class_summary": "C1 -- beamsplitter. Support: two paths, four modes. Eq. ``eq:bs``.",
+     "class_title": "beamsplitter",
+     "column": 0,
+     "id": "bs",
+     "known": true,
+     "name": "bs",
+     "parameters": [
+      {
+       "exact": false,
+       "name": "transmittance",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[0].parameters.transmittance"
+       },
+       "value": 0.5
+      },
+      {
+       "exact": true,
+       "name": "phase",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[0].parameters.phase"
+       },
+       "value": 0
+      },
+      {
+       "exact": true,
+       "name": "loss_1",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[0].parameters.loss_1"
+       },
+       "value": 0
+      },
+      {
+       "exact": true,
+       "name": "loss_2",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[0].parameters.loss_2"
+       },
+       "value": 0
+      }
+     ],
+     "provenance": {
+      "claim": "receiver/def:catalogue",
+      "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[0]"
+     },
+     "support": [
+      "Z_H",
+      "Z_V",
+      "X_H",
+      "X_V"
+     ]
+    },
+    {
+     "catalogue_id": "C3",
+     "class_name": "Retarder",
+     "class_summary": "C3 -- retarder, Eq. ``eq:retarder``, with the presets of Eq. eq:hwpqwp.",
+     "class_title": "retarder",
+     "column": 1,
+     "id": "hwp",
+     "known": true,
+     "name": "hwp",
+     "parameters": [
+      {
+       "exact": false,
+       "name": "retardance",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[1].parameters.retardance"
+       },
+       "value": {
+        "pi_coefficient": "1"
+       }
+      },
+      {
+       "exact": false,
+       "name": "angle",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[1].parameters.angle"
+       },
+       "value": {
+        "pi_coefficient": "1/8"
+       }
+      },
+      {
+       "exact": true,
+       "name": "loss",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[1].parameters.loss"
+       },
+       "value": 0
+      }
+     ],
+     "provenance": {
+      "claim": "receiver/def:catalogue",
+      "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[1]"
+     },
+     "support": [
+      "X_H",
+      "X_V"
+     ]
+    },
+    {
+     "catalogue_id": "C2",
+     "class_name": "PolarizingBeamsplitter",
+     "class_summary": "C2 -- polarizing beamsplitter, Eq. ``eq:pbs``. Ideal at t_H=1, t_V=0.",
+     "class_title": "polarizing beamsplitter",
+     "column": 1,
+     "id": "pbs_z",
+     "known": true,
+     "name": "pbs_z",
+     "parameters": [
+      {
+       "exact": false,
+       "name": "transmittance_h",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[2].parameters.transmittance_h"
+       },
+       "value": 1.0
+      },
+      {
+       "exact": false,
+       "name": "transmittance_v",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[2].parameters.transmittance_v"
+       },
+       "value": 0.0
+      },
+      {
+       "exact": true,
+       "name": "phase_h",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[2].parameters.phase_h"
+       },
+       "value": 0
+      },
+      {
+       "exact": true,
+       "name": "phase_v",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[2].parameters.phase_v"
+       },
+       "value": 0
+      },
+      {
+       "exact": true,
+       "name": "loss_1",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[2].parameters.loss_1"
+       },
+       "value": 0
+      },
+      {
+       "exact": true,
+       "name": "loss_2",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[2].parameters.loss_2"
+       },
+       "value": 0
+      }
+     ],
+     "provenance": {
+      "claim": "receiver/def:catalogue",
+      "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[2]"
+     },
+     "support": [
+      "Z_H",
+      "Z_V",
+      "Zr_H",
+      "Zr_V"
+     ]
+    },
+    {
+     "catalogue_id": "C2",
+     "class_name": "PolarizingBeamsplitter",
+     "class_summary": "C2 -- polarizing beamsplitter, Eq. ``eq:pbs``. Ideal at t_H=1, t_V=0.",
+     "class_title": "polarizing beamsplitter",
+     "column": 2,
+     "id": "pbs_x",
+     "known": true,
+     "name": "pbs_x",
+     "parameters": [
+      {
+       "exact": false,
+       "name": "transmittance_h",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[3].parameters.transmittance_h"
+       },
+       "value": 1.0
+      },
+      {
+       "exact": false,
+       "name": "transmittance_v",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[3].parameters.transmittance_v"
+       },
+       "value": 0.0
+      },
+      {
+       "exact": true,
+       "name": "phase_h",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[3].parameters.phase_h"
+       },
+       "value": 0
+      },
+      {
+       "exact": true,
+       "name": "phase_v",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[3].parameters.phase_v"
+       },
+       "value": 0
+      },
+      {
+       "exact": true,
+       "name": "loss_1",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[3].parameters.loss_1"
+       },
+       "value": 0
+      },
+      {
+       "exact": true,
+       "name": "loss_2",
+       "provenance": {
+        "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[3].parameters.loss_2"
+       },
+       "value": 0
+      }
+     ],
+     "provenance": {
+      "claim": "receiver/def:catalogue",
+      "engine_field": "preparation.stations[1].receiver.receiver_construction.elements[3]"
+     },
+     "support": [
+      "X_H",
+      "X_V",
+      "Xr_H",
+      "Xr_V"
+     ]
+    }
+   ],
+   "engine_gaps": [
+    "Per-port detector parameters are not attached to a station's detectors: the parameter table does not say which station they belong to. The η shown is read from this station's own efficiency record."
+   ],
+   "kind": "optics",
+   "modes": [
+    {
+     "channel": false,
+     "label": "X_H",
+     "path": "X",
+     "polarization": "H",
+     "probe": false,
+     "provenance": {
+      "claim": "receiver/def:modes",
+      "engine_field": "preparation.channel_interface.arms[1].modes[0]"
+     },
+     "structured": true,
+     "tau": 0
+    },
+    {
+     "channel": false,
+     "label": "X_V",
+     "path": "X",
+     "polarization": "V",
+     "probe": false,
+     "provenance": {
+      "claim": "receiver/def:modes",
+      "engine_field": "preparation.channel_interface.arms[1].modes[1]"
+     },
+     "structured": true,
+     "tau": 0
+    },
+    {
+     "channel": false,
+     "label": "Xr_H",
+     "path": "Xr",
+     "polarization": "H",
+     "probe": false,
+     "provenance": {
+      "claim": "receiver/def:modes",
+      "engine_field": "preparation.channel_interface.arms[1].modes[2]"
+     },
+     "structured": true,
+     "tau": 0
+    },
+    {
+     "channel": false,
+     "label": "Xr_V",
+     "path": "Xr",
+     "polarization": "V",
+     "probe": false,
+     "provenance": {
+      "claim": "receiver/def:modes",
+      "engine_field": "preparation.channel_interface.arms[1].modes[3]"
+     },
+     "structured": true,
+     "tau": 0
+    },
+    {
+     "channel": true,
+     "label": "Z_H",
+     "path": "Z",
+     "polarization": "H",
+     "probe": false,
+     "provenance": {
+      "claim": "receiver/def:modes",
+      "engine_field": "preparation.channel_interface.arms[1].channel_modes[0]"
+     },
+     "structured": true,
+     "tau": 0
+    },
+    {
+     "channel": true,
+     "label": "Z_V",
+     "path": "Z",
+     "polarization": "V",
+     "probe": false,
+     "provenance": {
+      "claim": "receiver/def:modes",
+      "engine_field": "preparation.channel_interface.arms[1].channel_modes[1]"
+     },
+     "structured": true,
+     "tau": 0
+    },
+    {
+     "channel": false,
+     "label": "Zr_H",
+     "path": "Zr",
+     "polarization": "H",
+     "probe": false,
+     "provenance": {
+      "claim": "receiver/def:modes",
+      "engine_field": "preparation.channel_interface.arms[1].modes[6]"
+     },
+     "structured": true,
+     "tau": 0
+    },
+    {
+     "channel": false,
+     "label": "Zr_V",
+     "path": "Zr",
+     "polarization": "V",
+     "probe": false,
+     "provenance": {
+      "claim": "receiver/def:modes",
+      "engine_field": "preparation.channel_interface.arms[1].modes[7]"
+     },
+     "structured": true,
+     "tau": 0
+    }
+   ],
+   "photon_cutoff": 1,
+   "ports": [
+    {
+     "column": 3,
+     "detector": {
+      "eta_record": {
+       "provenance": {
+        "claim": "receiver/detector-imperfections/thm:efficiency",
+        "engine_field": "preparation.stations[1].receiver.efficiency_record.rows[12]"
+       },
+       "value": 1.0
+      },
+      "parameters": []
+     },
+     "modes": [
+      "Z_H",
+      "Z_V"
+     ],
+     "port": "H",
+     "provenance": {
+      "claim": "receiver/def:instrument",
+      "engine_field": "preparation.stations[1].receiver.receiver_construction.port_map[0]"
+     }
+    },
+    {
+     "column": 3,
+     "detector": {
+      "eta_record": {
+       "provenance": {
+        "claim": "receiver/detector-imperfections/thm:efficiency",
+        "engine_field": "preparation.stations[1].receiver.efficiency_record.rows[13]"
+       },
+       "value": 1.0
+      },
+      "parameters": []
+     },
+     "modes": [
+      "Zr_H",
+      "Zr_V"
+     ],
+     "port": "V",
+     "provenance": {
+      "claim": "receiver/def:instrument",
+      "engine_field": "preparation.stations[1].receiver.receiver_construction.port_map[1]"
+     }
+    },
+    {
+     "column": 3,
+     "detector": {
+      "eta_record": {
+       "provenance": {
+        "claim": "receiver/detector-imperfections/thm:efficiency",
+        "engine_field": "preparation.stations[1].receiver.efficiency_record.rows[14]"
+       },
+       "value": 1.0
+      },
+      "parameters": []
+     },
+     "modes": [
+      "X_H",
+      "X_V"
+     ],
+     "port": "D",
+     "provenance": {
+      "claim": "receiver/def:instrument",
+      "engine_field": "preparation.stations[1].receiver.receiver_construction.port_map[2]"
+     }
+    },
+    {
+     "column": 3,
+     "detector": {
+      "eta_record": {
+       "provenance": {
+        "claim": "receiver/detector-imperfections/thm:efficiency",
+        "engine_field": "preparation.stations[1].receiver.efficiency_record.rows[15]"
+       },
+       "value": 1.0
+      },
+      "parameters": []
+     },
+     "modes": [
+      "Xr_H",
+      "Xr_V"
+     ],
+     "port": "A",
+     "provenance": {
+      "claim": "receiver/def:instrument",
+      "engine_field": "preparation.stations[1].receiver.receiver_construction.port_map[3]"
+     }
+    }
+   ],
+   "provenance": {
+    "claim": "receiver/def:instrument",
+    "engine_field": "preparation.stations[1].receiver"
+   },
+   "rails": [
+    {
+     "key": "path:X",
+     "modes": [
+      "X_H",
+      "X_V"
+     ],
+     "path": "X",
+     "structured": true
+    },
+    {
+     "key": "path:Xr",
+     "modes": [
+      "Xr_H",
+      "Xr_V"
+     ],
+     "path": "Xr",
+     "structured": true
+    },
+    {
+     "key": "path:Z",
+     "modes": [
+      "Z_H",
+      "Z_V"
+     ],
+     "path": "Z",
+     "structured": true
+    },
+    {
+     "key": "path:Zr",
+     "modes": [
+      "Zr_H",
+      "Zr_V"
+     ],
+     "path": "Zr",
+     "structured": true
+    }
+   ],
+   "residuals": [],
+   "route": "element_graph",
+   "station": {
+    "index": 1,
+    "label": "bob_station",
+    "party": "B",
+    "provenance": {
+     "engine_field": "preparation.stations[1]"
+    },
+    "title": "station 1 · party B (bob_station)"
+   },
+   "version": 1
+  }
+ ],
+ "version": 1
+}

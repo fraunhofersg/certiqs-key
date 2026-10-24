@@ -1,0 +1,103 @@
+% ---
+% id: reductions/lem:master
+% kind: lem
+% title: "Instrument-conditioned squashing"
+% summary: >-
+%   A generalized instrument followed by a squasher in each branch squashes to
+%   the direct sum of the branch targets, with or without the branch label in
+%   the outcome. Branch operators are transported, and a branch weight is a
+%   fixed number only where its pull-back is a multiple of the identity.
+% prominence: standard
+% status: accepted
+% uses: [lem:sep, lem:linear, cor:pullback, def:generalized-instrument]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A receiver described branch by branch squashes as a whole once each branch
+does. The lemma combines a generalized instrument with one squasher per branch
+into a single squashing relation whose target stacks the branch targets as
+diagonal blocks, and carries each branch weight along as an operator.
+
+\begin{lemma}\label{lem:master}
+Let $J$ be a finite set and let $\Ins_j\colon\Tcl{\Bsys}\to\Tcl{\Bsys'_j}$ be
+CP maps with $\sum_{j}\tr\circ\Ins_j=\tr$, that is, a generalized instrument
+(Definition~\ref{def:generalized-instrument}). For each $j$ let $M^{(j)}$ be a
+POVM on $\Bsys'_j$ over a common finite alphabet $\Vset$ with
+$(M^{(j)};O^{(j)})\dsq_{\Lambda_j}(F^{(j)};\hat O^{(j)})$, where $F^{(j)}$ is a
+POVM on a finite-dimensional $\Qsys_j$. Each $\Ins_j$ is trace
+non-increasing; write $\Ins_j^{\dagger}$ for its adjoint in the sense of
+Lemma~\ref{lem:sep}, the completely positive map fixed by
+$\tr[X\Ins_j(\rho)]=\tr[\Ins_j^{\dagger}(X)\rho]$ for $X\in\Lin{\Bsys'_j}$ and
+$\rho\in\Tcl{\Bsys}$. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $M_{v,j}\coloneqq\Ins_j^{\dagger}\big(M^{(j)}_v\big)$ defines a POVM on
+  $\Bsys$ with joint outcome $(v,j)\in\Vset\times J$;
+\item with $\Qsys\coloneqq\bigoplus_{j\in J}\Qsys_j$ and $F_{v,j}$ the operator
+  equal to $F^{(j)}_v$ in the $j$-th block and zero elsewhere,
+  \begin{equation}\label{eq:master}
+    \{M_{v,j}\}\;\dsq_{\Lambda}\;\{F_{v,j}\},
+    \qquad
+    \Lambda(\rho)\coloneqq\bigoplus_{j\in J}\Lambda_j\big(\Ins_j(\rho)\big);
+  \end{equation}
+\item \emph{(coarse graining)} with the same channel,
+  $\big\{\sum_jM_{v,j}\big\}_v\dsq_{\Lambda}
+   \big\{\bigoplus_jF^{(j)}_v\big\}_v$;
+\item \emph{(branch weights)} $\Lambda^{\dagger}(\Pi_j)
+  =\Ins_j^{\dagger}(\idon{\Bsys'_j})$, where $\Pi_j$ projects onto the $j$-th
+  block. In particular, if $\Ins_j^{\dagger}(\idon{\Bsys'_j})=q_j\,\idon{\Bsys}$
+  for constants $q_j$, then for every finite-dimensional side system $R$ and
+  every \tref{reachable} $\sigma$,
+  $\tr_{\Qsys}[(\Pi_j\otimes\idon{R})\sigma]=q_j\,\sigma_R$, and in particular
+  $\tr[\Pi_j\sigma]=q_j$;
+\item \emph{(transported operators)} the composite carries the operator equal
+  to $\hat O^{(j)}_k$ in block $j$ and zero elsewhere, with pull-back
+  $\Ins_j^{\dagger}\big(O^{(j)}_k\big)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For $\rho\succeq0$ every term of $\sum_{j'}\tr\Ins_{j'}(\rho)=\tr\rho$ is
+non-negative, so $\tr\Ins_j(\rho)\le\tr\rho$: each $\Ins_j$ is trace
+non-increasing, and Lemma~\ref{lem:sep} gives its adjoint $\Ins_j^{\dagger}$,
+completely positive and so positive. The hypothesis
+$\sum_j\tr\circ\Ins_j=\tr$ says exactly
+$\sum_j\Ins_j^{\dagger}(\idon{\Bsys'_j})=\idon{\Bsys}$, by
+Lemma~\ref{lem:sep}\,(i) applied to
+$\sum_j\Ins_j^{\dagger}(\idon{})-\idon{\Bsys}$.
+
+(i) $M_{v,j}\succeq0$, and
+$\sum_{v,j}\Ins_j^{\dagger}(M^{(j)}_v)
+=\sum_j\Ins_j^{\dagger}(\idon{\Bsys'_j})=\idon{\Bsys}$.
+
+(ii) $\Lambda$ is CP as a direct sum of compositions of CP maps, and trace
+preserving: $\tr\Lambda(\rho)=\sum_j\tr\Lambda_j(\Ins_j(\rho))
+=\sum_j\tr\Ins_j(\rho)=\tr\rho$. Its output is block diagonal, so only the
+diagonal blocks of an operator on $\Qsys$ contribute to the pairing
+\eqref{eq:pairing}; for $X=\bigoplus_jX_j$,
+\begin{equation}\label{eq:masteradjoint}
+  \tr\big[X\,\Lambda(\rho)\big]
+  =\sum_j\tr\big[X_j\,\Lambda_j(\Ins_j(\rho))\big]
+  =\sum_j\tr\Big[\Ins_j^{\dagger}\big(\Lambda_j^{\dagger}(X_j)\big)\,\rho\Big],
+  \quad\text{so}\quad
+  \Lambda^{\dagger}\Big(\bigoplus_jX_j\Big)
+  =\sum_j\Ins_j^{\dagger}\big(\Lambda_j^{\dagger}(X_j)\big).
+\end{equation}
+Taking $X=F_{v,j}$, with only the $j$-th block non-zero, gives
+$\Lambda^{\dagger}(F_{v,j})=\Ins_j^{\dagger}\big(\Lambda_j^{\dagger}
+(F^{(j)}_v)\big)=\Ins_j^{\dagger}(M^{(j)}_v)=M_{v,j}$. That
+$\{F_{v,j}\}$ is a POVM on $\Qsys$ follows blockwise from
+$\sum_vF^{(j)}_v=\idon{\Qsys_j}$.
+
+(iii) is Lemma~\ref{lem:linear}\,(i) for the stochastic map that forgets $j$.
+
+(iv) Take $X=\Pi_j$, that is $X_j=\idon{\Qsys_j}$ and zero elsewhere, in
+\eqref{eq:masteradjoint}: $\Lambda^{\dagger}(\Pi_j)
+=\Ins_j^{\dagger}\big(\Lambda_j^{\dagger}(\idon{\Qsys_j})\big)
+=\Ins_j^{\dagger}(\idon{\Bsys'_j})$ by unitality of $\Lambda_j^{\dagger}$. The
+constraint claim is Corollary~\ref{cor:pullback}\,(i).
+
+(v) is \eqref{eq:masteradjoint} evaluated on the stated operator.
+\end{proof}

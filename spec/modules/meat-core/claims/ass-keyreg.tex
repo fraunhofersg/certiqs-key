@@ -1,0 +1,50 @@
+% ---
+% id: meat-core/ass:keyreg
+% kind: ass
+% title: "Dedicated key register and one-way reconciliation"
+% summary: >-
+%   The post-processing acts on the raw-key string the rounds write, the
+%   declared holder computes that string, and reconciliation runs one way from
+%   the holder through a padded fixed-length transcript. The leakage term
+%   counts the register's full length.
+% prominence: standard
+% status: accepted
+% uses: [def:declaration, def:postprocessing-model]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-KEYREG
+% verification: never
+% category: post-processing
+% affects: [secrecy]
+% user_statement: >-
+%   Error correction is one-way. The key holder computes its raw key from its
+%   own record (its letters, the detection results of its measuring
+%   stations, or both, whichever it holds) and the public announcements, and
+%   its messages depend only on that raw key and public random seeds. The transcript
+%   always has exactly λ_EC bits, shorter messages being padded. Interactive
+%   error
+%   correction (for example Cascade) or a variable-length transcript is not
+%   covered by this key length.
+% lean:
+% ---
+
+The chain-rule penalty counts the dimension of the transcript register, not
+the average length of a transcript, which is why the register has a fixed
+length. Whether the raw-key map is one the holder can compute from its own
+readout is the party-computability condition of
+Definition~\ref{def:declaration}, decided on the declared tables; what is
+assumed here is that the run's post-processing acts on that string, one way.
+
+\begin{assumption}\label{ass:keyreg}
+(i) Error correction, error verification and privacy amplification are
+applied to $Z_1^n$, the string of raw-key values $r(x,v)$ that the rounds
+write to the registers $Z_1,\dots,Z_n$
+(Definition~\ref{def:postprocessing-model});
+(ii) the declared key holder $\hold$ (Definition~\ref{def:declaration})
+computes $Z_1^n$ from its own outcome record and the public announcements;
+(iii) reconciliation is one-way from $\hold$: its transcript
+$L_{\mathrm{EC}}$ is a function of $Z_1^n$ and public seeds only;
+(iv) $L_{\mathrm{EC}}$ occupies a fixed-length register of $\lEC$ bits,
+shorter transcripts being padded, so that $\dim(L_{\mathrm{EC}})=2^{\lEC}$.
+\end{assumption}

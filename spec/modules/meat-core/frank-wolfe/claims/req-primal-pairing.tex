@@ -1,0 +1,41 @@
+% ---
+% id: meat-core/frank-wolfe/req:primal-pairing
+% kind: req
+% title: "The primal pairing in the first-order bracket"
+% summary: >-
+%   The bracket of the first-order bound pairs the gradient with the oracle's
+%   primal return, never with a dual objective the backend reports. No bracket
+%   uses either: [[req:verified-feasible-side]] puts a verified lower bound in
+%   place of the pairing.
+% prominence: standard
+% status: superseded
+% uses: [thm:firstorder]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Superseded by req:verified-feasible-side, together with A-LMO. Its reason, that an approximately dual-feasible return's reported dual objective can lie above the primal minimum, is what the replacement removes: it never reads a reported objective, it forms lem:feasible-side-dual's bound from the dual point in exact arithmetic, where the infeasibility of the dual costs d times the least eigenvalue of the residual, a known and signed term, and an inequality multiplier is made positive semidefinite by an exact shift. The implements binding is the replacement's, and with A-LMO superseded this requirement assumes nothing."
+% ---
+
+A backend that solves the linear subproblem by an interior-point method
+reports a \emph{dual} objective, and it is tempting to read that number as a
+lower bound on $\min_{J'\in\Feas^{J}}\langle\lmoJ_t,J'\rangle$ and to use it
+in place of $\langle\lmoJ_t,S_t\rangle$ in \eqref{eq:hlb}. Weak duality
+bounds the primal minimum from below by the dual objective at a
+\emph{feasible} dual point; an interior-point return is only approximately
+dual-feasible, and for an infeasibility residual $R$ the corrected bound
+carries a term of size at most
+$\|R\|\cdot\sup_{J'\in\Feas^{J}}\|J'\|_1$, of \emph{unknown sign} without
+$R$ itself. A scalar convergence indicator does not supply $R$, and this
+module requires no oracle to report it. Consequently a reported dual
+objective can lie above the primal value at the returned point, and
+substituting it would put \eqref{eq:hlb} on the unsafe side of the very
+quantity it is supposed to bound.
+
+\begin{requirement}\label{req:primal-pairing}
+In the bracket of \eqref{eq:hlb} the engine uses the primal pairing
+$\langle\lmoJ_t,S_t\rangle$ at the returned point $S_t$ and nothing else; in
+particular it never uses a dual objective reported by the backend in its
+place.
+\end{requirement}

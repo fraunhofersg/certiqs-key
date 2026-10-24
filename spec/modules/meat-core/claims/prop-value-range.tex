@@ -1,0 +1,98 @@
+% ---
+% id: meat-core/prop:value-range
+% kind: prop
+% title: "Range of the value and its finite entropy part"
+% summary: >-
+%   The objective is non-negative on the feasible set, so h_low lies in
+%   [0, +∞]; each entropy term is at most log₂(d_Z + 1), while the divergence
+%   penalty has no finite bound. If h_low = +∞, no accepted distribution is
+%   absolutely continuous with respect to the statistics of a feasible state.
+% prominence: standard
+% status: accepted
+% uses: [foundations/def:kl, def:feasible, thm:branch-formula, thm:reduction, foundations/def:renyi, lem:cond-more]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The \tref{objective} is a divergence penalty plus one entropy term per
+\tref{key-live acceptance value} (Definition~\ref{def:feasible}). The two parts
+behave differently: every entropy term is at most $\log_2(d_Z+1)$, while the
+penalty is not bounded at all.
+
+\begin{proposition}\label{prop:value-range}
+Let $\alpha\in(1,\infty)$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(lower bound)} $O_{\alpha}(\mathbf q,\omega)\ge0$ for every
+distribution $\mathbf q$ on $\Chatset$ and every $\omega\in\Feas$; hence
+$\hlow\in[0,+\infty]$.
+\item \emph{(entropy-part ceiling)} For every $\omega\in\Feas$ and every
+$\hat c\in\Chkey$ with $P_{\hat c}(\omega)>0$, the entropy term
+$e_{\hat c}(\omega)\coloneqq\frac{1}{1-\alpha}
+\log_2\frac{K_{\hat c}(\omega)}{P_{\hat c}(\omega)}$ satisfies
+$e_{\hat c}(\omega)\le\log_2|\Zset|=\log_2(d_Z+1)$.
+\item \emph{(no overall ceiling)} No finite a-priori upper bound on $\hlow$
+exists: the divergence penalty is unbounded already at fixed $\alpha$.
+\item \emph{(infinite value)} $\hlow=+\infty$ whenever no
+$(\mathbf q,\omega)$ with $\mathbf q\ll\Phimap[\omega]$ is feasible. If
+$\hlow=+\infty$, then no $\mathbf q\in\acSet$ is absolutely continuous with
+respect to $\Phimap[\omega]$ for any $\omega\in\Feas$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\emph{(i)} By \xref{foundations/def:kl} and
+\eqref{eq:objective}--\eqref{eq:hlow-def},
+$O_{\alpha}(\mathbf q,\omega)
+=\frac{\alpha}{\alpha-1}\sfD(\mathbf q\|\Phimap[\omega])
++\sum_{\hat c\in\Chkey}q(\hat c)\,e_{\hat c}(\omega)$ with
+$e_{\hat c}\coloneqq\frac{1}{1-\alpha}\log_2\frac{K_{\hat c}}{P_{\hat c}}$;
+the KL term is non-negative by Gibbs' inequality of
+\xref{foundations/def:kl}, $\mathbf q$ and $\Phimap[\omega]$ being
+probability vectors, and $e_{\hat c}\ge0$ since
+$K_{\hat c}\le P_{\hat c}$ (Theorem~\ref{thm:branch-formula}, \emph{cone
+clause}: a point of $\Feas$ is not pure, so the identity \eqref{eq:c5} is not
+what is read here) and $\frac{1}{1-\alpha}<0$. Both parts are non-negative at
+every $(\mathbf q,\omega)$, so $O_{\alpha}(\mathbf q,\omega)\ge0$ there and
+$\hlow\ge0$.
+
+\emph{(ii)} (If $P_{\hat c}=0$ and $q(\hat c)>0$, the KL term is already
+$+\infty$.) Let $P_{\hat c}(\omega)>0$. Purifying $\omega$ as in
+Theorem~\ref{thm:reduction}, by Theorem~\ref{thm:branch-formula}
+$e_{\hat c}$ equals $\Hsanddown(Z|I\Etil\Etil_2)$ of a normalized branch
+state, and by the arrow order $\Hsanddown\le\Hsandup$ of
+\xref{foundations/def:renyi} and Lemma~\ref{lem:cond-more} (dropping all
+conditioning) it is at most the R\'enyi entropy
+$H_{\alpha}(Z)=\frac{1}{1-\alpha}\log_2\sum_zp(z)^{\alpha}
+\le\log_2|\Zset|=\log_2(d_Z+1)$, using that
+$\sum_zp(z)^{\alpha}\ge|S|^{1-\alpha}$ for $\alpha>1$ and
+$S=\operatorname{supp}p$ (convexity of $t\mapsto t^{\alpha}$:
+$\frac{1}{|S|}\sum_{z\in S}p(z)^{\alpha}
+\ge\big(\frac{1}{|S|}\big)^{\alpha}$), so that
+$\frac{1}{1-\alpha}\log_2\sum_zp(z)^{\alpha}\le\log_2|S|$.
+
+\emph{(iii)} Take $d_A=d_Q=1$ (single Alice outcome, trivial
+announcement), $\Vset=\{0,1\}$ with $F_0=\epsilon$, $F_1=1-\epsilon$ for
+$\epsilon\in(0,\tfrac12)$ and $a_B=\mathrm{id}$, $\phi(\kappa)=c_B$,
+all-fail sifting ($\varsigma\equiv\mathrm{fail}$, $r\equiv\perp$, so
+$\Chkey=\varnothing$), and a singleton acceptance set
+$\acSet=\{(q_0,1-q_0)\}$ with $q_0\in(0,1]$ fixed. Then
+$\Phimap\equiv(\epsilon,1-\epsilon)$ and the objective is the constant
+$\frac{\alpha}{\alpha-1}\sfD\big((q_0,1-q_0)\|(\epsilon,1-\epsilon)\big)
+\ge\frac{\alpha}{\alpha-1}\,\big(q_0\log_2\frac{q_0}{\epsilon}
++(1-q_0)\log_2(1-q_0)\big)\to+\infty$ as $\epsilon\to0^{+}$, at every
+fixed $\alpha\in(1,\infty)$.
+
+\emph{(iv)} If no $(\mathbf q,\omega)\in\acSet\times\Feas$ has
+$\mathbf q\ll\Phimap[\omega]$, the KL term is $+\infty$ at every such pair
+(the convention $u\log_2\frac u0=+\infty$ for $u>0$ of
+\xref{foundations/def:kl}) and the entropy terms are non-negative by (i), so
+$\hlow=+\infty$. Conversely, if some $(\mathbf q,\omega)\in\acSet\times\Feas$
+has $\mathbf q\ll\Phimap[\omega]$, its KL term is finite, and every
+$\hat c\in\Chkey$ with $q(\hat c)>0$ has $P_{\hat c}(\omega)>0$ and an
+entropy term in $[0,\log_2|\Zset|]$ by (i) and (ii), so
+$O_{\alpha}(\mathbf q,\omega)<+\infty$ and $\hlow<+\infty$. Hence
+$\hlow=+\infty$ means that no $\mathbf q\in\acSet$ is absolutely continuous
+with respect to $\Phimap[\omega]$ for any $\omega\in\Feas$.
+\end{proof}

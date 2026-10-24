@@ -1,0 +1,37 @@
+% ---
+% id: receiver/req:weight-provenance
+% kind: req
+% title: "Provenance of each emitted multiclick weight"
+% summary: >-
+%   An exact window is evaluated only on request, never by default. The slot
+%   carries the per-setting weights, and the artifact says for each which
+%   evaluation and which definition produced it and at what depth; block
+%   eigenvalues may also be reported as diagnostics.
+% prominence: standard
+% status: accepted
+% uses: [rem:notsharp, req:rigorous-weight]
+% mentions: [def:pmc, def:pmcex, def:slot, def:enclosed-weight, thm:emitted-bound]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}
+\label{req:weight-provenance}
+The engine evaluates an exact window, that of Definition~\ref{def:pmcex} or
+the \tref{rigorous window bounds} of Definition~\ref{def:enclosed-weight}, only
+where a declaration requests it by an exact-window depth, and never by
+default. Where it is not requested, the engine may also report block
+eigenvalues as a diagnostic; the values entering the \tref{strengthening slot}
+(Definition~\ref{def:slot}), \iface{high_photon_bounds}, are the
+\tref[per-setting weight]{per-setting weights} $\pmc^{(t)}$ of
+Theorem~\ref{thm:emitted-bound} --- at a receiver without a probe the single
+value $\pmc$ --- each the \tref{enclosed weight} of
+Definition~\ref{def:enclosed-weight}, rounded down, where
+Requirement~\ref{req:rigorous-weight} forms it, and otherwise the
+floating-point evaluation of Definition~\ref{def:pmc} or~\ref{def:pmcex}; and
+the artifact says, for each, which evaluation produced it, which of
+Definitions~\ref{def:pmc} and~\ref{def:pmcex} gives its formula and at what
+depth, in \iface{bound_quantifier_domain}.
+\end{requirement}

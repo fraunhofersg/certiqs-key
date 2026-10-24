@@ -1,0 +1,60 @@
+id: component-catalogue
+kind: submodule
+version: 0.10.0
+title: "Component catalogue"
+abstract: >-
+  The component catalogue lets a receiver be declared as an optical layout
+  instead of a single matrix. Each of its ten entries fixes a support, a
+  parameter domain and a passive matrix with every phase and every loss the
+  part has written out ([[def:catalogue-entries]]). The main result is that
+  every entry maps its whole declared domain into local elements, lossless
+  exactly on a named subfamily ([[thm:catalogue-admissibility]]); one
+  attenuation lemma carries most of the proof. The amplitude each entry
+  removes has rows of its own, none on the lossless subfamily, and along a
+  compiled graph they make a port dilation of the receiver
+  ([[lem:catalogue-dilations]]).
+  Detector efficiency and the probe source are declared layers outside the
+  catalogue because they act at different points of the measurement. A
+  worked BB84 receiver follows one declaration through compilation to its
+  port Grams, its analytic high-photon weight and the improvement an exact
+  window buys at a smaller cutoff.
+reading_groups:
+- title: Catalogue entries and their admissibility
+  start: lem:attenuated
+  abstract: >-
+    The main result, [[thm:catalogue-admissibility]], is that every entry
+    maps its whole declared domain into local elements, lossless exactly on
+    the subfamily its table row names. Every entry but the generic block is
+    written as a unitary core with a positive contractive attenuation on one
+    or both sides, so one lemma gives this for each of them. The generic
+    block is the one entry whose admission is a spectral test, decided at
+    the route-(ii) receiver tolerance ([[def:c10-tolerance]]). The remarks place the rotator
+    outside the retarder family, give the physical roles of the entries,
+    separate the detector and source layers from the chain, and say which
+    convention factors are free. The rows that carry what each entry
+    removes, stacked along a compiled graph with those of the detector
+    efficiencies, make a port dilation of the receiver
+    ([[lem:catalogue-dilations]]).
+- title: A worked BB84 receiver
+  start: ex:bb84
+  abstract: >-
+    A four-detector BB84 receiver with a probe path is declared from three
+    catalogue entries, compiled, and reduced to its channel port Grams
+    ([[ex:bb84]]). Its analytic multiclick weight is computed in closed form,
+    and an exact window of depth two, evaluated in floating point, reaches at
+    cutoff one, less the declared eigenvalue slack, the weight the analytic
+    bound reaches only at cutoff two.
+order:
+  - lem:attenuated
+  - def:catalogue-entries
+  - thm:catalogue-admissibility
+  - lem:catalogue-dilations
+  - def:c10-tolerance
+  - rem:rotator
+  - rem:entry-roles
+  - rem:layers
+  - rem:bsconv
+  - rem:out
+  - ex:bb84
+  - ex:bb84bound
+  - ex:bb84exact

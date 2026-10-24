@@ -1,0 +1,114 @@
+% ---
+% id: foundations/lem:recentred-enclosure
+% kind: lem
+% title: "Zeroing the centres an enclosure cannot tell from zero"
+% summary: >-
+%   Zeroing every centre entry whose enclosure contains zero, and adding its
+%   modulus bound to the radius, gives another entrywise enclosure of the same
+%   matrix; a reference so recentred is the same reference. Any enclosure of a
+%   Hermitian matrix becomes an entrywise one by averaging.
+% prominence: technical
+% status: implemented
+% uses: [def:exact-reference, def:snap]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.recentring:recentred_enclosure
+% lean:
+% ---
+
+An enclosure whose disc contains zero does not say whether the entry it
+encloses is zero. A family evaluated at its centres would then carry, at such
+an entry, a number of the order of the radius that the model may not have,
+and a support decision taken on the evaluation could see support there that
+the model lacks. Setting such a centre to zero, and widening the radius by
+what was removed, keeps the enclosure valid; the lemma says so and fixes the
+rational bound the widening uses. An enclosure formed by arithmetic on
+enclosures, of a matrix known to be Hermitian, need not come with a Hermitian
+centre and symmetric radii; part (iv) gives it them, so that it can be
+recentred in turn.
+
+\begin{lemma}\label{lem:recentred-enclosure}
+Let $(C,r)$ be an entrywise enclosure of a complex $d\times d$ matrix $X$
+(Definition~\ref{def:exact-reference}), and let
+\begin{equation*}
+  Z\;\coloneqq\;\big\{(i,l):(\operatorname{Re}C_{il})^{2}
+     +(\operatorname{Im}C_{il})^{2}\le r_{il}^{2}\big\},
+\end{equation*}
+the entries whose enclosure contains $0$. Put $C'_{il}\coloneqq0$ and
+$r'_{il}\coloneqq r_{il}+|\operatorname{Re}C_{il}|+|\operatorname{Im}C_{il}|$
+for $(i,l)\in Z$, and $C'_{il}\coloneqq C_{il}$, $r'_{il}\coloneqq r_{il}$
+otherwise. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item $Z$ is decided by comparisons of rationals, and $(C',r')$ is an
+  entrywise enclosure of $X$: $C'$ is Hermitian with entries in
+  $\mathbb{Q}(i)$, and $r'_{il}=r'_{li}\ge0$ are rationals;
+\item $r'_{il}\le(1+\sqrt2)\,r_{il}$ for every $(i,l)$, and $r'_{il}=r_{il}$
+  wherever $C_{il}=0$; in particular an entry that is
+  \tref{structurally zero} for $(C,r)$ (Definition~\ref{def:snap}) is so
+  for $(C',r')$, and every entry of $Z$ has centre $0$ in $(C',r')$;
+\item if $G$ is a \tref{reference} with constant $c$ read with enclosures
+  $\big(C^{(s)}_j,r^{(s)}_j\big)$, then $G$ read with the enclosures
+  $\big(C'^{(s)}_j,r'^{(s)}_j\big)$ formed by (i) from each is a reference
+  with the same constant; it is the same family $G$, and it is an
+  \tref{exact reference} exactly when the first is;
+\item if $X$ is Hermitian and $(\tilde C,\tilde r)$ is any pair of a complex
+  $d\times d$ matrix $\tilde C$ with entries in $\mathbb{Q}(i)$ and rationals
+  $\tilde r_{il}\ge0$ with $|X_{il}-\tilde C_{il}|\le\tilde r_{il}$ for all
+  $i,l$, Hermitian or symmetric or not, then
+  $\big(\tfrac12(\tilde C+\tilde C^{\dagger}),\tfrac12(\tilde r+\tilde r^{\mathsf T})\big)$
+  is an entrywise enclosure of $X$, equal to $(\tilde C,\tilde r)$ where
+  $\tilde C$ is Hermitian and $\tilde r$ symmetric, so (i)--(ii) apply to
+  it.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) The real and imaginary parts of an entry of $\mathbb{Q}(i)$ are rationals
+and $r_{il}$ is rational, so the inequality defining $Z$ is a comparison of
+rationals, and $r'_{il}$ is a sum of rationals. For $(i,l)\in Z$,
+\begin{equation*}
+  |X_{il}-C'_{il}|=|X_{il}|\le|X_{il}-C_{il}|+|C_{il}|
+  \le r_{il}+|\operatorname{Re}C_{il}|+|\operatorname{Im}C_{il}|=r'_{il},
+\end{equation*}
+by the triangle inequality, \eqref{eq:entrywise-enclosure} and
+$|a+ib|\le|a|+|b|$; off $Z$ nothing changed. $C$ is Hermitian, so
+$C_{li}=\overline{C_{il}}$, which has the same modulus and the same moduli of
+real and imaginary part; with $r_{li}=r_{il}$ this gives
+$(l,i)\in Z\iff(i,l)\in Z$ and $r'_{li}=r'_{il}$. On $Z$ both $C'_{il}$ and
+$C'_{li}$ are $0=\overline{0}$, and off $Z$ they are $C_{il}$ and
+$\overline{C_{il}}$, so $C'$ is Hermitian; a diagonal entry of $C$ is real
+and stays real or becomes $0$.
+
+(ii) For $(i,l)\in Z$, $|\operatorname{Re}C_{il}|+|\operatorname{Im}C_{il}|
+\le\sqrt2\,|C_{il}|\le\sqrt2\,r_{il}$ by the Cauchy--Schwarz inequality in
+$\mathbb{R}^{2}$ and the definition of $Z$; off $Z$, $r'=r$. Where
+$C_{il}=0$ the added term is $0$. An entry is structurally zero for an
+enclosure exactly when its centre and its radius are both $0$
+(Definition~\ref{def:snap}); such an entry lies in $Z$, keeps centre $0$ and
+radius $0$, and an entry with centre or radius not zero keeps a radius not
+zero or a centre not zero, since $r'_{il}\ge r_{il}$ and $C'_{il}\neq0$ only
+off $Z$, where $C'_{il}=C_{il}$. Every entry of $Z$ has centre $0$ by
+construction.
+
+(iii) Definition~\ref{def:exact-reference} asks of a reference that its
+blocks be Hermitian, positive semidefinite and complete at $c$, properties of
+$G$ alone, and that each block be read with an entrywise enclosure with a
+Hermitian centre in $\mathbb{Q}(i)$ and symmetric non-negative rational radii,
+which (i) gives. The family $G$ is unchanged. Every radius of $(C,r)$ is $0$
+exactly when every radius of $(C',r')$ is: if every $r_{il}=0$, an entry lies
+in $Z$ only where $C_{il}=0$, so $r'=r$ by (ii); and $r'\ge r$ always.
+
+(iv) The entries of $\tfrac12(\tilde C+\tilde C^{\dagger})$ are
+$\tfrac12(\tilde C_{il}+\overline{\tilde C_{li}})\in\mathbb{Q}(i)$, the
+matrix is Hermitian, and $\tfrac12(\tilde r_{il}+\tilde r_{li})$ is a
+non-negative rational, symmetric in $(i,l)$. Since $X_{il}=\overline{X_{li}}$,
+\begin{equation*}
+  \Big|X_{il}-\tfrac12\big(\tilde C_{il}+\overline{\tilde C_{li}}\big)\Big|
+  \le\tfrac12|X_{il}-\tilde C_{il}|+\tfrac12\big|\overline{X_{li}-\tilde C_{li}}\big|
+  \le\tfrac12(\tilde r_{il}+\tilde r_{li}).
+\end{equation*}
+Where $\tilde C$ is Hermitian and $\tilde r$ symmetric, both averages return
+them unchanged.
+\end{proof}

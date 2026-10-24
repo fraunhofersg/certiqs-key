@@ -1,0 +1,64 @@
+% ---
+% id: transmitter/ass:ens
+% kind: ass
+% title: "Emission of the specified ensemble"
+% summary: >-
+%   The physical source draws each round's letter independently with the
+%   declared weights and emits the product of the declared states, no round
+%   depending on another. It ties a source specification declared as matrices
+%   to the device it describes.
+% prominence: standard
+% status: accepted
+% uses: [def:source-spec]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Protocol 2, step 1(a)"
+% provenance: newly-derived
+% short_id: A-ENS
+% verification: never
+% category: source
+% presupposes: [trusted-source]
+% affects: [secrecy]
+% user_statement: >-
+%   Your source prepares, in every round, one of the declared states with the
+%   declared probabilities. Each round's letter is drawn independently with
+%   weights p_x, and the states emitted over the n rounds form a product: no
+%   round's letter or state depends on another round, its detection results or
+%   its public messages. A source with memory or drift between rounds (for
+%   example pattern effects in a modulator) violates this. Where your source is
+%   a pair source inside your laboratory with one half measured there to herald
+%   or fix the letter, those local detectors belong to the declared ensemble:
+%   their efficiency mismatch must be carried by the declared weights and
+%   states, and their memory across rounds (for example afterpulsing or dead
+%   time) violates this like any other dependence between rounds.
+% lean:
+% notes: "A specification declared by a source model carries the physical-source assumption its submodule declares in the place of this one (def:source-spec (b); decoy/ass:wcp)."
+% ---
+
+The assumption is about the source as it runs: in every round it emits
+exactly the declared ensemble, not an approximation of it, and it does so
+afresh, independently of every other round. The published prepare-and-measure
+protocol makes the same premise, Alice preparing each round's state
+``independently for each round'' \cite[Protocol~2, step~1(a)]{tupkary2026decoy};
+the product it gives the $n$ rounds is the state from which the
+source-replacement lemma starts. A specification declared by a \tref{source
+model} carries the premise its submodule declares in the place of this one. In
+\tref{untrusted-source mode} the protocol compiler's assumption on Alice's
+measurement governs the measurement by which Alice obtains a letter from a
+received system.
+
+\begin{assumption}
+\label{ass:ens}
+For the declared signal ensemble $\{p_x,\rho_x\}$ of
+Definition~\ref{def:source-spec} on the \tref{transmitted system}, the
+letters the physical source draws and the systems it emits satisfy the
+following; a letter that Alice obtains in untrusted-source mode by measuring a
+received system is not drawn by the source, and nothing below concerns it:
+(i) the letters $x_1,\dots,x_n$ it draws in the $n$ rounds are drawn
+independently, each with the weights $p_x$;
+(ii) given those letters, the systems it emits in the $n$ rounds are in the
+state $\rho_{x_1}\otimes\dots\otimes\rho_{x_n}$;
+(iii) neither the letter it draws in a round nor the state it emits in it
+depends on what happens in the other rounds, their outcomes and public
+messages included.
+\end{assumption}

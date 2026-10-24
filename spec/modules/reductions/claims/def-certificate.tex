@@ -1,0 +1,36 @@
+% ---
+% id: reductions/def:certificate
+% kind: def
+% title: Certificates of transported constraints
+% summary: >-
+%   The certificate of a transported constraint is the hypothesis that makes
+%   it hold: for a case of [[cor:pullback]] an operator fact about the device
+%   and the channel, valid whatever the input, and for the assumed case of
+%   [[cor:transported]] an assumption on the input states.
+% prominence: standard
+% status: accepted
+% uses: [cor:pullback]
+% mentions: [cor:transported]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A constraint is a condition on squashed states that an analysis imposes.
+Corollary~\ref{cor:pullback} derives one from an identity, a positivity or a
+spectral bound on a carried operator's pull-back, and
+Corollary~\ref{cor:transported}, in the section on
+output-state equality, reads the same derivation over $n$ rounds and also
+admits a bound assumed to hold on the \tref{physical inputs}.
+
+\begin{definition}\label{def:certificate}
+The
+\term[The hypothesis that makes a transported constraint hold: an operator identity or inequality on the pull-back, or an assumption on the input states; not a source-replacement certificate.]{certificate}
+of a transported constraint is the hypothesis that makes it hold: for a
+constraint from Corollary~\ref{cor:pullback}, the hypothesis of the case that
+yields it, an operator identity in its case~(i) and an operator inequality in
+its cases (ii)--(iii), both facts about the device and the channel, valid
+whatever the input; and, for an assumed constraint of
+Corollary~\ref{cor:transported}\,(ii), an assumption on the input states.
+\end{definition}

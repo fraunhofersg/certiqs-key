@@ -1,0 +1,58 @@
+% ---
+% id: receiver/prop:slotvalid
+% kind: prop
+% title: "Range of the strengthening-slot weights"
+% summary: >-
+%   At every setting the strengthening slot's weights (high-photon lower bounds
+%   on disjoint sets of raw outcomes) are non-negative and sum to at most one,
+%   as are their minima over the settings, and each emitted multiclick weight
+%   lies in [0, 1]. That the emitted weights are valid bounds is
+%   [[thm:emitted-bound]].
+% prominence: main
+% status: accepted
+% uses: [def:slot, thm:emitted-bound, def:setting-family]
+% mentions: [cor:emitted-unconditioned, ass:eig]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Among the conditions under which a squashing request fails are a negative
+weight, weights summing to more than one, and a bound that does not hold
+where it is stated (\repodoc{spec/architecture.md#54-failure-policy}). The proposition rules
+out the first two for every slot and names the result that rules out the third for the slot this module emits,
+under Assumption~\ref{ass:eig} only where a computed block eigenvalue enters a
+weight.
+
+\begin{proposition}
+\label{prop:slotvalid}
+For any list \eqref{eq:slot} satisfying the stated guarantee with pairwise
+disjoint $\mathcal{O}_i$, one has at every setting $t\in\Tset$ that
+$p^{(t)}_i\ge0$ for every $i$ and $\sum_{i}p^{(t)}_i\le1$; hence the uniform
+weights satisfy $p_i\ge0$ for every $i$ and $\sum_{i}p_i\le1$. In particular
+the list this module emits --- by Corollary~\ref{cor:emitted-unconditioned}
+and, for a setting family a submodule constructs, by that submodule's
+instance of Theorem~\ref{thm:emitted-bound} --- satisfies
+$\pmc^{(t)}\in[0,1]$ at every setting, so the failure conditions
+``$p_y<0$'' and ``$\sum_yp_y>1$'' of a squashing request cannot be triggered
+by this module's output; and what the further failure condition of a
+squashing request, ``a bound does not hold at every declared setting it is
+stated for and every photon number above the cutoff'', requires to hold --- each $\pmc^{(t)}$ at
+its own setting $t$ and $\pmc$ at every setting, for every photon number
+above the cutoff --- is Theorem~\ref{thm:emitted-bound}.
+\end{proposition}
+
+\begin{proof}
+Non-negativity is part of \eqref{eq:slot}. For the sum, fix any $t$ and any
+unit vector $\ket{\psi}$ in a block $n>N$. Since the $\mathcal{O}_i$ are
+pairwise disjoint subsets of $2^{[K]}$ and $\{M_{S|t}\}$ is a POVM
+(Definition~\ref{def:setting-family}\,(a)),
+$\sum_i\sum_{S\in\mathcal{O}_i}\blk{M}{\eqn}_{S|t}\preceq
+\sum_{S\subseteq[K]}\blk{M}{\eqn}_{S|t}=\id^{(=n)}$, so by the guarantee at
+$t$,
+$\sum_ip^{(t)}_i\le\sum_i\bra{\psi}\sum_{S\in\mathcal{O}_i}\blk{M}{\eqn}_{S|t}\ket{\psi}
+\le\bra{\psi}\id\ket{\psi}=1$. The uniform weights satisfy
+$0\le p_i\le p^{(t)}_i$ (Definition~\ref{def:slot}), so $p_i\ge0$ and
+$\sum_ip_i\le\sum_ip^{(t)}_i\le1$ at any $t$.
+\end{proof}

@@ -1,0 +1,26 @@
+% ---
+% id: reductions/req:identity-link-recorded
+% kind: req
+% title: "Identity link recorded for an already-finite receiver"
+% summary: >-
+%   Where nothing is reduced, the artefact carries the identity link rather
+%   than an empty chain. An empty chain could not say whether a reduction was
+%   performed and found trivial or never considered.
+% prominence: standard
+% status: accepted
+% uses: [thm:chain, def:chain]
+% mentions: [ex:identity]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}\label{req:identity-link-recorded}
+The engine records the reduction of an already-finite receiver as the
+identity link of Example~\ref{ex:identity}, never as an empty chain: an empty
+chain would leave the artefact unable to say whether a reduction was performed
+and found trivial or never considered, and the composition order the chain
+carries as data (Definition~\ref{def:chain}) has to be carried even when there
+is nothing to order.
+\end{requirement}

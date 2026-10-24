@@ -1,0 +1,33 @@
+% ---
+% id: reductions/rem:psdalgorithm
+% kind: rem
+% title: "Algorithms that decide the positivity test"
+% summary: >-
+%   Any procedure that decides the positivity test of [[lem:exactpsd]] exactly
+%   in the substrate conforms, such as the Faddeev–Le Verrier recursion or a
+%   rational LDL factorisation with the zero-pivot test. A procedure that
+%   decides it approximately does not, whatever its error bound.
+% prominence: standard
+% status: accepted
+% uses: [lem:exactpsd]
+% mentions: [foundations/req:exact-emission]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:psdalgorithm}
+Lemma~\ref{lem:exactpsd} fixes \emph{what} is decided, not \emph{how}. The
+coefficients $e_k(X)$ are produced exactly by the Faddeev--Le~Verrier
+recursion or by any division-free characteristic-polynomial method. A
+rational $LDL^{\dagger}$ factorisation with symmetric pivoting and the
+zero-pivot row test decides the same predicate, often faster, in $O(d^{3})$
+field operations. Enumerating all $2^{d}-1$ principal minors also decides it
+and is never necessary. Any procedure that decides \eqref{eq:psdtest} exactly
+in $\Fld$ conforms to this contract; \emph{one that decides it approximately
+does not, whatever its error bound}. A floating-point eigenvalue is such a
+procedure, which is why \xref{foundations/req:exact-emission}\,(iii) excludes
+one by name.
+\end{remark}

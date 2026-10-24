@@ -1,0 +1,77 @@
+% ---
+% id: reductions/req:emission-record
+% kind: req
+% title: "The record of an emission"
+% summary: >-
+%   Every emission records the lattice exponent and the strict option, each
+%   displacement, the kept and moved classes with the step that snapped each,
+%   and every rounding direction. It names each moved sector, which rests on
+%   the snapped-measurement premise unless evaluated off its snap.
+% prominence: standard
+% status: implemented
+% uses: [def:emitnorm, thm:emit]
+% mentions: [rem:emitclaim, req:reference-companion, meat-core/frank-wolfe/req:certified-evaluation, foundations/def:evaluated-off-snap, foundations/req:snap-reference, foundations/req:support-safe-snap, foundations/req:who-snaps]
+% assumes: [A-SNAP]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.artifact:EmissionRecord
+% lean:
+% notes: "The reference kind of the normalizer's snaps is exact, the handed datum being its own reference, so the enclosure setting, recorded as foundations/req:who-snaps asks, does not bear on it."
+% ---
+
+Where the normalizer moved the datum, nothing proved relates the
+\tref{declared model} to the \tref{handed model}, and the size of the move is
+not such a relation (Theorem~\ref{thm:emit}\,(v),
+Remark~\ref{rem:emitclaim}); the record carries the move so that it is visible
+to the consumer. A run that forms the number its key length is formed
+from on the reference companion of Requirement~\ref{req:reference-companion},
+which carries no data of this normalizer, evaluates off its snap every data
+sector that holds a moved class
+(\xref{foundations/def:evaluated-off-snap}); elsewhere a moved sector rests on
+the premise \xref{foundations/ass:snapped-measurement}, and the record says so
+in the form \xref{foundations/req:snap-reference}\,(iii) asks, so that a
+report on the key rate can flag it, as the record of a snap names every block
+that rests on the premise (\xref{foundations/req:who-snaps}). A class snapped
+by the last resort carries its flag, since its elements may treat as possible
+an outcome the \tref{handed datum} makes impossible
+(\xref{foundations/req:support-safe-snap}\,(iv)).
+
+\begin{requirement}\label{req:emission-record}
+The engine emits with every artefact, in \iface{emission_record}: the
+declared \tref{lattice exponent} $\kappa$; whether the run declared the strict
+option of \xref{foundations/req:snap-reference}\,(iv); the reference kind of
+every snap the normalizer makes, \emph{exact}, every radius zero, the
+reference being the \tref{handed datum} itself
+(Definition~\ref{def:emitnorm}), so that the enclosure setting, recorded as
+\xref{foundations/req:who-snaps} asks of the record of every snap, does not
+bear on it; per \tref{data sector}, the \tref{emission displacement}
+$\Delta_s$ of \eqref{eq:displacement}; per data sector and class, whether the
+class was kept (Definition~\ref{def:emitnorm}\,(1)) or moved, and for a moved
+class the step (2) or (3) of Definition~\ref{def:emitnorm} that snapped it,
+the weight $w$ taken or the fall-back of (3), the hosts of the components of
+the residue under (2), and for (3) the flag \iface{support_not_preserved}; and
+the direction of every bound it rounds, each \tref{scalar value} rounded
+down and each complementary value recomputed (Theorem~\ref{thm:emit}\,(iv)).
+A data sector \emph{rests on} \xref{foundations/ass:snapped-measurement}
+where some class of it is moved, save where it is
+\tref{evaluated off its snap} (\xref{foundations/def:evaluated-off-snap}):
+in a run whose key length is formed from a number on the reference
+companion of Requirement~\ref{req:reference-companion}, its first-order
+bound or a number certified on it, which carries no data of this emission's
+normalizer, every data sector that holds a moved class is, a kept sector
+being named as kept and not counted among them, and none rests on the
+assumption. Where the key length is formed instead from a number certified
+on the snapped declaration in the fallback of
+\xref{meat-core/frank-wolfe/req:certified-evaluation}\,(i), none is, and
+every data sector that holds a moved class rests on the assumption, with the
+cause \iface{companion_not_certified}
+(\xref{foundations/req:snap-reference}\,(iii)(b)). The record names every moved sector, with the flag of any class
+of it snapped by (3), and carries
+\xref{foundations/ass:snapped-measurement} among the assumptions the
+artefact may rest on exactly where there is one. This record is emitted with
+the artefact, before the run knows whether the number its key length is
+formed from is formed on the reference companion; what it names is therefore provisional, and the
+record of the run decides which sectors rest on the assumption, each with
+its cause and group (\xref{foundations/req:snap-reference}\,(iii);
+Theorem~\ref{thm:emit}\,(vi)).
+\end{requirement}

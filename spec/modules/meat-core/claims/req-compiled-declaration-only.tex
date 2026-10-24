@@ -1,0 +1,42 @@
+% ---
+% id: meat-core/req:compiled-declaration-only
+% kind: req
+% title: "Key lengths only on declarations the compiler emitted"
+% summary: >-
+%   The engine reports a key length only on a declaration that the protocol
+%   compiler emitted, and none on a declaration from anywhere else. Every
+%   condition of admissibility is then decided on every route that reports a
+%   key length.
+% prominence: standard
+% status: implemented
+% uses: [def:admissible-declaration, thm:keylength, cor:keylength-bound]
+% mentions: [meat-core/frank-wolfe/cor:fo-keylength, protocol-compiler/def:compile, protocol-compiler/thm:feasibility]
+% implements: certiqs_key.meat_core.finitekey.keylength:declaration_provenance_failure
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The key-length results hold of an \tref{admissible declaration}
+(Definition~\ref{def:admissible-declaration}) that describes the protocol
+being run. On a declaration that the compiler did not emit and whose
+constraint list is non-empty, no code path of this module decides
+condition~(vii), the non-empty \tref{feasible set}, exactly, and nothing in this
+module relates such a declaration to a specification of the protocol. On a
+declaration the compiler emitted, the compiler has decided condition~(vii)
+(\xref{protocol-compiler/thm:feasibility}), and it has filled the declaration
+from a specification of the protocol (\xref{protocol-compiler/def:compile}) whose
+agreement with the apparatus is what the compiler's own assumptions state.
+Refusing a key length elsewhere therefore leaves no condition of
+admissibility undecided, and needs no premise that a declaration from
+elsewhere describes the protocol. Numerical use of any declaration outside
+the key length stays open.
+
+\begin{requirement}\label{req:compiled-declaration-only}
+The engine reports a key length, whether as a key-length claim of
+Theorem~\ref{thm:keylength}, Corollary~\ref{cor:keylength-bound} or
+Corollary~\ref{cor:fo-keylength} or as a numeric key length, only on a
+declaration that the protocol compiler emitted; on any other declaration it
+reports none.
+\end{requirement}

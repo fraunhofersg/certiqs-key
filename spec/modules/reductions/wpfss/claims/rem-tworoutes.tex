@@ -1,0 +1,62 @@
+% ---
+% id: reductions/wpfss/rem:tworoutes
+% kind: rem
+% title: "Soundness of the two routes and one route per artefact"
+% summary: >-
+%   Both routes are sound, and the encoded one, which needs no attestation, is
+%   preferable where it is available. Pairing the licensed entry with the
+%   encoded route's channel is unsound, so an artefact takes one route.
+% prominence: standard
+% status: accepted
+% uses: [def:routes, reductions/cor:monotone, reductions/rem:channel-choice, prop:chain, def:targets, reductions/thm:transfer, reductions/rem:unsound]
+% mentions: [reductions/thm:licence, reductions/def:link, reductions/prop:obstruction, req:one-route-per-artifact, reductions/req:constraint-and-licence-slots]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Part~(iii) of Proposition~\ref{prop:chain} is the whole difference between the
+two targets. Under $\Fwp$ the device fact is an operator inequality \emph{on
+the target}, true of every state the adversary could possibly prepare, so it
+needs no constraint, no licence and no attestation. Under $\Ffss$ the same
+fact is true only on the image, so it must travel as a declared constraint
+entry, and something must certify that the adversary cannot leave the image,
+which is exactly Theorem~\ref{thm:licence}. Part~(ii) of the proposition says
+which of the two hands the adversary more: by Corollary~\ref{cor:monotone} a
+cleaner target never helps, and $\Ffss$ is cleaner than $\Fwp$, in general
+strictly so: part~(iv) gives data on which the reverse relation fails.
+
+\begin{remark}\label{rem:tworoutes}
+Both routes of Definition~\ref{def:routes} are sound, and an artefact takes
+exactly one of them (Requirement~\ref{req:one-route-per-artifact}). The encoded route is
+preferable wherever it is available, because it requires no attestation a
+program cannot check. It is \emph{not} always available:
+Proposition~\ref{prop:obstruction} exhibits a device fact, a bound on a
+\emph{union} of outcomes that must not be merged, that no target classical on
+the whole of $\Qsys$ can carry and that $\Fwp$, one weight per outcome, does
+not carry, and for which the licensed route is the only route; this is why
+every artefact carries a constraint slot and a licence slot
+(Requirement~\ref{req:constraint-and-licence-slots}).
+
+\emph{Why one route per artefact.} The two routes run on different channels,
+$\Lwp$ and $\Lfss$, and by Remark~\ref{rem:channel-choice}\,(c) a constraint
+sound for one channel need not be sound for another. Here it is not: pairing
+the licensed entry with the encoded route's channel gives, by
+\eqref{eq:WPadjoint},
+\begin{equation}\label{eq:crosspairing}
+  \Lwp^{\dagger}\big(\Ffss_o-p_o\Pflag\big)
+  =\blk{M}{\leqN}_o\ \dsum\
+   \Big(\tfrac{1}{1-p}\big(\blk{M}{\gtN}_o-p_o\idon{}\big)-p_o\idon{}\Big),
+\end{equation}
+whose flag block is \emph{not} implied positive by \eqref{eq:certweights}: at
+the tight end $\blk{M}{\gtN}_o=p_o\idon{}$ it equals $-p_o\idon{}\prec0$ for
+$p_o>0$. So that pairing would impose a constraint some reachable state
+violates, voiding Theorem~\ref{thm:transfer}, which is exactly the failure
+Remark~\ref{rem:unsound} describes. Since an artefact's payload is
+single-valued (Requirement~\ref{req:one-route-per-artifact}) and
+\eqref{eq:link} binds each link's constraint list to \emph{that link's}
+\tref{channel witness}, the remedy is structural: one route per artefact, and
+two requests for a caller who wants both bundles, with no schema in which the
+unsound pairing can be expressed.
+\end{remark}

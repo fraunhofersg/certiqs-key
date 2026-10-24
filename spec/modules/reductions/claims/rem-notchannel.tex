@@ -1,0 +1,41 @@
+% ---
+% id: reductions/rem:notchannel
+% kind: rem
+% title: "Reductions that are not squashings"
+% summary: >-
+%   The universal squash model establishes a statistical equivalence and
+%   cutoff-based dimension reduction controls the effect of a cutoff, neither
+%   by exhibiting a squashing channel. Without such a channel the output-state
+%   equality behind [[thm:transfer]] is not available.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [thm:transfer, thm:factorization, req:channel-witness, req:certified-entries-only]
+% assumes: []
+% refs:
+%   - "fung2011universal, Sec. II"
+%   - "upadhyaya2021dimension, Sec. III"
+%   - "nahar2024postselection, Lemma 6"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:notchannel}
+Not every dimension reduction used in QKD comes with a squashing channel, and
+one that does not cannot be fed into the security transfer,
+Theorem~\ref{thm:transfer}. The universal squash model of
+\cite[Sec.~II]{fung2011universal} establishes a statistical
+equivalence between the threshold-detector setup and an ideal squashed one by
+routing both through classical post-processing of a photon-number-resolving
+measurement, and the dimension-reduction method of
+\cite[Sec.~III]{upadhyaya2021dimension} controls the effect of a finite cutoff
+rather than exhibiting a channel. Neither proceeds through the existence of a
+$\Lambda$ with $\Lambda^{\dagger}(F_v)=M_v$, which is exactly the hypothesis the
+output-state equality of Theorem~\ref{thm:factorization} runs on and the
+hypothesis \cite[Lemma~6]{nahar2024postselection} states for a narrower model.
+The rule that follows for the emitted artefact, a \tref{reduction chain} of
+links, is Requirement~\ref{req:channel-witness}: an explicit
+\tref{channel witness} for every link. The companion rule for constraint
+entries, exactly one named certificate each, is
+Requirement~\ref{req:certified-entries-only}.
+\end{remark}

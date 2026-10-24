@@ -1,0 +1,36 @@
+% ---
+% id: statistics/binomial-box/def:monotone-rule
+% kind: def
+% title: "Monotone allocation rule"
+% summary: >-
+%   A monotone allocation rule allocates each completeness budget within that
+%   budget, every allocated tail budget non-decreasing in it; the uniform rule
+%   is one. It is the hypothesis on the allocation under which [[thm:monotonicity-limits]] (i)
+%   compares the acceptance sets at two budgets.
+% prominence: standard
+% status: implemented
+% uses: []
+% mentions: [req:request-defaults]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.construction:uniform_allocation
+% lean:
+% ---
+
+Comparing the acceptance sets at two completeness budgets needs the
+allocation at the larger budget to give every tail at least as much as the
+allocation at the smaller one. Where a request names no allocation, the
+uniform rule is the default (Requirement~\ref{req:request-defaults}).
+
+\begin{definition}\label{def:monotone-rule}
+A \term[A map assigning to each completeness budget an allocation within
+it, every allocated tail budget non-decreasing in the budget.]{monotone allocation rule}
+assigns to each budget $e\in[0,1)$ an allocation
+$\varepsilon^{\pm}_{(e)}$ on $\Chatcon$ such that
+$\sum_{\hat c}(\varepsilon^{-}_{(e)}(\hat c)+\varepsilon^{+}_{(e)}(\hat c))\le
+e$ and each $e\mapsto\varepsilon^{\pm}_{(e)}(\hat c)$ is non-decreasing. The
+\term[The allocation rule that splits the completeness budget equally over
+the two tails of every constrained outcome.]{uniform rule}
+$\varepsilon^{\pm}_{(e)}(\hat c)=e/(2|\Chatcon|)$ is monotone.
+\end{definition}

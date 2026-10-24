@@ -1,0 +1,175 @@
+% ---
+% id: meat-core/lem:product-marginal
+% kind: lem
+% title: "Product marginal of Alice's retained systems"
+% summary: >-
+%   In trusted-source mode, under retention, emission of the specified
+%   ensemble, sequential rounds, private source randomness and a sealed
+%   laboratory, the n rounds start with Alice's systems in the declared
+%   marginal in product, and each round finds her system in that marginal.
+% prominence: standard
+% status: accepted
+% uses: [def:roundmodel, transmitter/def:source-spec, transmitter/def:srcert, transmitter/def:source-segment, transmitter/thm:certificate-sufficiency]
+% mentions: [thm:accumulated-entropy, prop:trivial-alice-system, transmitter/ass:src, transmitter/ass:ens, transmitter/ass:seq, transmitter/decoy/ass:wcp]
+% assumes: [A-SRC, A-ENS, A-SEQ, A-SEED, A-LAB]
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Parts (ii) and (iii) state the product marginal of A (omega_{A_1^n} = tau_A^{otimes n}, per round omega_A = tau_A, in trusted-source mode), derived here under A-SRC, A-ENS, A-SEQ, A-SEED (v) and A-LAB (i) and (ii) at the party of A, with the adversary's initial register finite-dimensional, as every register of the round model is (a hypothesis of the statement, not a premise about the adversary: an adversary with memory of any dimension is reached by cor:composed-security through lem:memory-lift). The untrusted-mode reading is stated where it is used (thm:accumulated-entropy, fact:meat locator note (vii)), and the d_A = 1 case is the last sentence of the statement."
+% ---
+
+In \tref{trusted-source mode} the \tref{round model} takes Alice's retained
+systems as inputs of the round channels, and the accumulation theorem
+(Theorem~\ref{thm:accumulated-entropy}) asks that they start in the declared
+marginal, in product over the rounds. The lemma derives that from the
+transmitter's premises. The \tref{source-replacement certificate} describes
+one round's preparation as Alice's measurement of her half of the certificate
+(\xref{transmitter/thm:certificate-sufficiency}\,(iii)); A-ENS
+(\xref{transmitter/ass:ens}) makes the $n$ preparations a product, and
+A-SEED (Assumption~\ref{ass:seed}\,(v)) makes them independent of what the
+adversary holds at the start; and retention, A-SRC
+(\xref{transmitter/ass:src}), the sealed laboratory of the party that holds
+$A$, A-LAB (Assumption~\ref{ass:lab}\,(i), (ii)), and the sequential round structure,
+A-SEQ (\xref{transmitter/ass:seq}), let each measurement be moved into its
+round. Retention alone does not give the product: it fixes what may
+act on each round's system, and the independence of the source's rounds gives
+the product. A specification declared by a \tref{source model} carries, in
+the place of A-ENS, the premise its submodule declares, which refines A-ENS:
+for weak coherent pulses it is A-WCP (\xref{transmitter/decoy/ass:wcp}), whose
+last three clauses are A-ENS's for the model's states. At $d_A=1$ the conclusion holds of every state
+(Proposition~\ref{prop:trivial-alice-system}\,(ii)).
+
+\begin{lemma}\label{lem:product-marginal}
+Let the declaration be in \tref{trusted-source mode} with $d_A\ge2$, and let
+its $A$, $\tau_A$ and $\{M_x\}$ be those of a \tref{source specification}
+(\xref{transmitter/def:source-spec}) that carries a source-replacement
+certificate $\Psi$ for $(A,\mathbb{T},\tau_A,\{M_x\})$ against its
+\tref{virtual ensemble} $\{p_x,\rvirt_x\}$ on $\Avirt$, in any of the forms of
+\xref{transmitter/def:srcert}, an \tref{ensemble presentation} being read as
+the block-form certificate it defines; let its \tref{source segment} satisfy
+the source identity $\Xi(\rvirt_x)=\rho_x$ for every $x\in\Xset$, with $\Xi$
+the composite channel of the segment and $\Xi=\idmap$ when the segment is
+empty (\xref{transmitter/def:source-segment}\,(S3)). Let A-SRC
+(\xref{transmitter/ass:src}), A-ENS (\xref{transmitter/ass:ens}), A-SEQ
+(\xref{transmitter/ass:seq}), A-SEED (Assumption~\ref{ass:seed})
+and A-LAB (Assumption~\ref{ass:lab}) at the party to which the
+\tref{party partition} assigns $A$ hold of the physical protocol, let the
+adversary's initial register $E$ be finite-dimensional, and let $\sigma_E$
+be the state in which it starts. Put
+\begin{equation}\label{eq:product-input}
+  \omega^{0}\coloneqq\Big(\bigotimes_{j=1}^{n}\Psi_{A_j\Avirt_j}\Big)
+  \otimes\sigma_E\ \in\ \Seq{A_1^nE_0},
+  \qquad E_0\coloneqq(\Avirt)_1^n\,E .
+\end{equation}
+Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(source replacement over the $n$ rounds)} against every attack,
+the physical protocol and the protocol that starts from $\omega^{0}$, applies
+$\Xi$ to $\Avirt_j$ in round $j$ in the place of the source's emission, and
+applies $\pcNmsm$, Alice's measurement as the channel of
+\xref{transmitter/thm:certificate-sufficiency}\,(iii), to $A_j$ at the point of
+round $j$ at which the declared protocol's measurements are made, produce
+the same state after every round, on every register that both then hold; in
+the second protocol $A_j$ is an input of that measurement and of no other
+operation, which is how the round model of Definition~\ref{def:roundmodel}
+takes Alice's system in trusted-source mode;
+\item $\omega^{0}_{A_1^n}=\tau_A^{\otimes n}$;
+\item for every \tref{attack sequence} of Definition~\ref{def:roundmodel}
+and every $j$, the state on which the round channel $\Mprot_j$ acts, in a run
+of the round model from $\omega^{0}$, has the marginal $\tau_A$ on $A_j$.
+\end{enumerate}
+At $d_A=1$, where $\tau_A=[1]$ and no certificate is declared, (ii) and (iii)
+hold of every state on $A_1^nE_0$.
+\end{lemma}
+
+\begin{proof}
+\emph{Idea.} The physical preparation is a product over the rounds of one
+round's classical-quantum source state, which the certificate writes as
+Alice's measurement of her half of $\Psi$ followed by $\Xi$; nothing touches
+her half or her letter before the round's measurements, so the interchange
+law moves her measurement there; and the marginal of a product of copies of
+$\Psi$ on Alice's side is the product of their marginals.
+
+\emph{At $d_A=1$.} $\Seq{A}=\{[1]\}$, so $\Seq{A_1^n}$ is a singleton and
+every state on $A_1^nE_0$, and every state the round channels act on, has the
+marginal $[1]^{\otimes n}=\tau_A^{\otimes n}$, respectively $[1]=\tau_A$.
+
+\emph{Step 1 (the physical source state).} Let $X_j$ hold the letter of
+round $j$, and write
+$\rho_{X\Asig}\coloneqq\sum_{x\in\Xset}p_x\dyad{x}_X\otimes\rho_x$ for one
+round's classical-quantum source state on the \tref{transmitted system}. By
+A-ENS (i) and (ii) the letters of the $n$ rounds are independent with the
+weights $p_x$ and, given them, the emitted systems are in
+$\rho_{x_1}\otimes\dots\otimes\rho_{x_n}$, so the letters and the emitted
+systems are jointly in
+$\sum_{x_1^n}\prod_jp_{x_j}\dyad{x_1^n}\otimes\rho_{x_1}\otimes\dots\otimes
+\rho_{x_n}=\rho_{X\Asig}^{\otimes n}$. By A-ENS (iii) neither the letter of
+round $j$ nor the state emitted in it depends on anything that happens in the
+other rounds, so preparing all $n$ letters and systems at the start in that
+state, and releasing the round-$j$ system only in round $j$, changes nothing
+the protocol produces. By A-SEED (v) the letters and the prepared systems
+are jointly independent of the adversary's initial register, and by its last
+clause no purification of a prepared system is made available to the
+adversary during or after the protocol, so that no register beyond the
+letters and the emitted systems carries the preparation; the protocol
+starts from $\rho_{X\Asig}^{\otimes n}\otimes\sigma_E$.
+
+\emph{Step 2 (the certificate).} By the source identity,
+$\rho_{X\Asig}=(\idmap_X\otimes\Xi)(\rho_{X\Avirt})$ with
+$\rho_{X\Avirt}\coloneqq\sum_xp_x\dyad{x}_X\otimes\rvirt_x$. By (SR2), in the
+form of \xref{transmitter/thm:certificate-sufficiency}\,(iii)(b) with the
+identity channel in the place of $\mathcal{E}$,
+$(\pcNmsm\otimes\idmap_{\Avirt})(\Psi)=\rho_{X\Avirt}$. Hence
+$\rho_{X\Asig}=(\pcNmsm\otimes\Xi)(\Psi)$, and the initial state of Step~1 is
+$\big(\bigotimes_j(\pcNmsm\otimes\Xi)_{A_j\Avirt_j}\big)(\omega^{0})$: the
+physical protocol is the protocol that starts from $\omega^{0}$ and applies,
+at the start, $\pcNmsm$ to every $A_j$ and $\Xi$ to every $\Avirt_j$, the
+round-$j$ output of $\Xi$ being released in round $j$. Applying $\Xi$ to
+$\Avirt_j$ at the start or in round $j$ produces the same state, since
+nothing else acts on $\Avirt_j$ before round $j$.
+
+\emph{Step 3 (moving the measurement into the round).} Fix $j$. Let
+$\mathcal{E}_j$ be the composite of every operation of the protocol, of the
+parties and of the adversary, from the start to the point of round $j$ at
+which the declared protocol's measurements are made. It acts on neither $A_j$
+nor $X_j$; the measurements of the other rounds, wherever they stand, act on
+$A_k$ and $X_k$ with $k\ne j$. On $A_j$: by A-SRC (ii) no operation of the
+protocol or of the adversary acts on $A$ except the declared measurement on it.
+On $X_j$, for the adversary's operations: the letters are records of the
+party to which the party partition assigns $A$, and by A-LAB (i) at that party
+no information about them leaves its laboratory except through the systems
+handed out of it, which in trusted-source mode are the systems its source
+emits, and the public messages of the protocol, and by A-LAB (ii) the
+adversary acts on its laboratory only through the systems delivered into it,
+as its declared measurements receive them, and the messages the protocol
+delivers to it, so that nothing she does reads or writes the letter record;
+no operation of the adversary acts on $X_j$
+itself: what the emitted systems carry about the
+letter is already in the state of Step~2, and the messages are treated next. On $X_j$,
+for the protocol's own operations: the letter of round $j$ is a record of
+that same party, which the declared protocol
+reads only in the round-$j$ protocol map, at or after the round's
+measurements, and in the post-processing; by A-SEQ (i) the messages of round
+$j$ are sent after every measurement of the round, by A-SEQ (iv) no operation
+on a quantum system of round $j$ depends on them, and by A-SEQ (ii) the
+post-processing follows all $n$ rounds. So $\pcNmsm$, a map out of $A_j$
+alone into $X_j$, and $\mathcal{E}_j$ act on complementary registers, and by
+the interchange law of \xref{transmitter/thm:certificate-sufficiency}\,(iii)(a)
+$\mathcal{E}_j\circ(\pcNmsm)_{A_j}=(\pcNmsm)_{A_j}\circ\mathcal{E}_j$ as maps on
+the whole input. Applying this for $j=1,\dots,n$ moves each measurement from
+the start to its round without changing any state the protocol produces after
+the round, which is~(i); in the protocol so obtained $A_j$ enters no operation
+but the round-$j$ measurement.
+
+\emph{Step 4 (the marginals).} (ii): $\sigma_E$ is a state, so
+$\omega^{0}_{A_1^n}=\bigotimes_j\tr_{\Avirt_j}\Psi_{A_j\Avirt_j}
+=\tau_A^{\otimes n}$ by (SR1). (iii): in a run of the round model from
+$\omega^{0}$, the state on which $\Mprot_j$ acts is produced from $\omega^{0}$
+by $\Mprot_1,\dots,\Mprot_{j-1}$ and the attack channel $\Aev_j$
+(Definition~\ref{def:roundmodel}, \eqref{eq:roundchannel}), and in
+trusted-source mode each $\Mprot_k$ acts on $A_kE_{k-1}$ and $\Aev_j$ on
+$E_{j-1}$, none of them on $A_j$. A channel on a register complementary to
+$A_j$ leaves the $A_j$-marginal unchanged, the partial trace over that
+register being invariant under it, so the marginal is $\omega^{0}_{A_j}$, which
+is $\tau_A$ by~(ii).
+\end{proof}

@@ -1,0 +1,84 @@
+% ---
+% id: reductions/lem:exactpsd
+% kind: lem
+% title: "Exact decision of positivity and of an operator-norm bound"
+% summary: >-
+%   A Hermitian matrix with entries in the substrate is positive semidefinite
+%   exactly when, for every k, the sum of its principal minors of order k is
+%   non-negative, and an operator-norm bound reduces to such a test. Both are
+%   decided by field operations and sign comparisons, with no eigenvalue
+%   computed.
+% prominence: standard
+% status: accepted
+% uses: [def:substrate]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+An eigenvalue of a matrix with rational entries is in general irrational, so
+an exact decision of positivity cannot go through one. The lemma replaces it
+by the signs of the coefficients of the characteristic polynomial, which lie
+in the substrate.
+
+\begin{lemma}
+\label{lem:exactpsd}
+Let $\Fld,\Fldi$ be the substrate of Definition~\ref{def:substrate} and let
+$d,d'\ge1$.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item Let $X=X^{\dagger}\in\Lin{\mathbb{C}^{d}}$ have all entries in $\Fldi$ and
+  write
+  \begin{equation}\label{eq:charpoly}
+    \det\big(\lambda\,\idon{d}+X\big)=\sum_{k=0}^{d}e_k(X)\,\lambda^{d-k},
+    \qquad e_0(X)=1 ,
+  \end{equation}
+  so that $e_k(X)$ is the sum of the $k\times k$ principal minors of $X$. Then
+  every $e_k(X)$ lies in $\Fld$, and
+  \begin{equation}\label{eq:psdtest}
+    X\succeq0
+    \quad\Longleftrightarrow\quad
+    e_k(X)\ge0\ \text{ for every }k=1,\dots,d .
+  \end{equation}
+\item Let $Z\in\Linn{\mathbb{C}^{d'}}{\mathbb{C}^{d}}$ have all entries in $\Fldi$ and
+  let $\delta\in\Fld$, $\delta\ge0$. Then
+  \begin{equation}\label{eq:normtest}
+    \opn{Z}\le\delta
+    \quad\Longleftrightarrow\quad
+    \delta^{2}\,\idon{d'}-Z^{\dagger}Z\;\succeq\;0 ,
+  \end{equation}
+  the right-hand side being a test of the form (i) on a Hermitian matrix with
+  entries in $\Fldi$.
+\end{enumerate}
+Both predicates are therefore decided by finitely many field operations and
+sign comparisons in $\Fld$: no rounding, no threshold, and \emph{no
+eigenvalue is computed}.
+\end{lemma}
+
+\begin{proof}
+(i) A principal submatrix of a Hermitian matrix is Hermitian, so each principal
+minor is real; it is also a polynomial with integer coefficients in entries of
+$\Fldi$, hence lies in $\Fldi$. Being both real and in $\Fldi$, it lies in
+$\Fld$, and so does each $e_k(X)$. The identification of $e_k(X)$ with the
+coefficient in \eqref{eq:charpoly} is the standard expansion of the
+characteristic polynomial by principal minors.
+
+Let $\lambda_1,\dots,\lambda_d\in\mathbb{R}$ be the eigenvalues of $X$ with
+multiplicity, so that
+$\det(\lambda\idon{d}+X)=\prod_{j=1}^{d}(\lambda+\lambda_j)$ and $e_k(X)$ is
+the $k$-th elementary symmetric polynomial in them. If $X\succeq0$ then every
+$\lambda_j\ge0$ and every $e_k(X)$, a sum of products of $\lambda_j$'s, is
+$\ge0$. Conversely suppose $e_k(X)\ge0$ for every $k$ and that some
+$\lambda_{j_0}<0$. Put $\lambda\coloneqq-\lambda_{j_0}>0$. On the one hand
+$\prod_j(\lambda+\lambda_j)=0$, because the factor $j_0$ vanishes. On the other
+hand
+$\sum_{k=0}^{d}e_k(X)\lambda^{d-k}\ge e_0(X)\lambda^{d}=\lambda^{d}>0$, every
+omitted term being non-negative. The two sides of \eqref{eq:charpoly} at that
+$\lambda$ are therefore $0$ and something strictly positive, a
+contradiction. Hence no eigenvalue is negative and $X\succeq0$.
+
+(ii) $Z^{\dagger}Z$ is Hermitian with entries in $\Fldi$, and
+$\opn{Z}^{2}=\lmax(Z^{\dagger}Z)$ by definition of the operator norm. So
+$\opn{Z}\le\delta$ iff $\lmax(Z^{\dagger}Z)\le\delta^{2}$ iff
+$\delta^{2}\idon{d'}-Z^{\dagger}Z\succeq0$.
+\end{proof}

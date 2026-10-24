@@ -1,0 +1,154 @@
+% ---
+% id: receiver/detector-imperfections/rem:noise-floor-receiver
+% kind: rem
+% title: "What a receiver declaration needs for a rate that rests on its model"
+% summary: >-
+%   Declare the loss and dark counts the device surely has, in every port;
+%   then every element is positive definite and no snap revives a zero row.
+%   A run that uses no enclosed reference rests, at a cutoff of two or more,
+%   on its snap; an angle decides whether the reference can be exact.
+% prominence: standard
+% status: accepted
+% uses: [prop:noise-floor, def:dark-composed, cor:exact-dark-composed, receiver/def:exact-route, receiver/thm:exact-blocks, receiver/def:complex-enclosure, foundations/rem:noise-floor, foundations/lem:rational-obstruction, foundations/def:evaluated-off-snap]
+% mentions: [reductions/lem:row-relaxation, receiver/component-catalogue/def:catalogue-entries, receiver/req:exact-route-decision, foundations/req:snap-reference, foundations/req:support-safe-snap, meat-core/frank-wolfe/rem:fo-arithmetic, meat-core/frank-wolfe/req:certified-evaluation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The remark ends with reductions that apply a channel to the model before
+comparing it with a lattice family; they are planned beyond these contracts
+(\repodoc{spec/future-scope.md}).
+
+\begin{remark}\label{rem:noise-floor-receiver}
+The emitted blocks of a receiver are snapped onto a lattice before a key
+rate is computed, and the dark-composed reference
+(Corollary~\ref{cor:exact-dark-composed}), enclosed for any declared
+parameters and exact where its radii are zero, is handed beside the snap.
+Where the run's first-order bound is evaluated on that reference and its key
+length is formed from a number on it, the blocks carrying it are
+\tref{evaluated off its snap} (\xref{foundations/def:evaluated-off-snap}) and
+the key rate rests on the declared model, not on the snap. Where the key
+length is formed instead from a number certified on the snapped declaration
+(\xref{meat-core/frank-wolfe/req:certified-evaluation}\,(i)), the moved
+ones among those blocks rest on the snapped-measurement premise, as every
+other moved block does
+(\xref{foundations/req:snap-reference}\,(iii)).
+This remark says what that means for a receiver declaration.
+
+\emph{What to declare.} Model the loss and the dark counts the device has,
+in every port: an efficiency $\eta_k<1$ (or any loss that leaves
+$\lmax(A_\Sigma)<1$) and a dark-count probability $0<p_{\dc|k}<1$. By
+Proposition~\ref{prop:noise-floor} every element of the dark-composed family
+is then positive definite on every photon-number block. At a setting $t$
+whose operator and prefactor in the setting family are $B^{(t)}$ and
+$\gamma^{(t)}$, the least eigenvalue on block $n$ is at least
+$r_S\gamma^{(t)}\big(1-\lmax(B^{(t)})\big)^{n}$ for a click pattern $S$, and
+at least the sum of these over a fibre for an emitted outcome
+(Proposition~\ref{prop:noise-floor}\,(i)). For the unconditioned receiver,
+$B=A_\Sigma$ and $\gamma=1$, so the bound is
+$r_S\big(1-\lmax(A_\Sigma)\big)^{n}$, which is at least
+$r_S(1-\max_k\eta_k)^{n}$ when the loss sits in the terminal efficiency layer
+(Proposition~\ref{prop:noise-floor}\,(iii)); a setting whose operator has
+$\lmax(B^{(t)})\le\lmax(A_\Sigma)$ and whose prefactor $\gamma^{(t)}$ is below
+one has at least $\gamma^{(t)}$ times that floor. No row of such a block is
+structurally zero, so even the last resort of
+\xref{foundations/req:support-safe-snap}\,(iv) gives no element of it
+support that the data deny. The same floor is what makes domination by such
+a model possible at a small weight
+(\xref{foundations/rem:noise-floor}); no run relates a snap to its model
+that way. The rates to declare are the smallest ones the
+user is sure the device has. A larger rate gives a larger floor, but a model
+noisier than the device is a wrong model, which nothing in the engine can
+detect.
+
+\emph{The enclosure.} An enclosed reference is evaluated at its centres,
+which displaces the measured family by up to the enclosure's radius
+(\xref{meat-core/frank-wolfe/rem:fo-arithmetic}). The radii of the
+\tref[square-root enclosure]{square-root enclosures} and
+\tref[angle enclosure]{angle enclosures}
+(Definition~\ref{def:complex-enclosure}) from which the blocks are computed
+are amplified on the way to the radius of a block: through the permanents of
+the Fock blocks, the inclusion--exclusion sums over click patterns and the
+sums over a fibre of the coarse-graining. The radius of a block bears on a
+run in two places. The companion's entries are relaxed outward by it, so a
+larger radius loosens them, which never raises the bound formed on the
+companion (\xref{reductions/lem:row-relaxation}); and the evaluated family
+lies up to the radius from the model, a perturbation that no claim bounds
+in its effect on the key rate (\xref{meat-core/frank-wolfe/rem:fo-arithmetic}).
+No size of the radius is a threshold for either: the enclosures are chosen
+as tight as their exact computation allows, and the record shows the
+largest radius of every handed block and of the companion's datum.
+
+\emph{A run that uses no enclosed reference.} A run may declare that enclosed
+references are not used (\xref{foundations/req:snap-reference}\,(i)). Then
+only the blocks whose reference is exact are handed, and every other moved
+block rests on the snapped-measurement premise, in the group no usable
+reference, unless the run declares the strict option
+(\xref{foundations/req:snap-reference}\,(iv)), which refuses. The receiver's
+reference is in general exact only on the \tref{exact route}, and there with
+certainty only on the blocks of at most one photon
+(Theorem~\ref{thm:exact-blocks}\,(iii)): on a block of two or more photons,
+an entry between occupation vectors $\vec m,\vec m'$ with
+$\vec m!\,\vec m'!$ not a square is in general a Gaussian rational times an
+irrational factor such as $1/\sqrt2$, and is enclosed with a positive radius.
+In general, therefore, every run with a cutoff $N\ge2$ that uses no enclosed
+reference rests on its snap there, and so does every such run whose
+declaration is off the exact route; its record and a report on it say so.
+
+\emph{An ideal device beyond one photon.} Without loss the no-click element
+vanishes on every block $n\ge1$, and without dark counts every click pattern
+vanishes on the vacuum block (Proposition~\ref{prop:noise-floor}\,(iv),
+(v)); so an ideal device has rank-deficient elements on every block, and a
+snap of it may need its last resort, which the record flags. A receiver that
+measures in a rotated basis can have some of them rank-deficient along
+irrational directions: on the one-photon block where a direction of the
+basis has no Gaussian-rational representative, and on blocks of more photons
+even where every direction has one. In an ideal passive BB84 receiver, the
+two-photon element in which only the detector of the diagonal polarization
+clicks, behind a half-wave plate at $\pi/8$, is a multiple of the projector
+onto $\tfrac12\ket{2,0}+\tfrac1{\sqrt2}\ket{1,1}+\tfrac12\ket{0,2}$ in the
+occupation basis of the channel's two polarization modes, and that ray
+contains no Gaussian-rational vector, although the one-photon directions of
+the diagonal basis are rational. By
+\xref{foundations/lem:rational-obstruction}, every weight at which the model
+dominates a lattice family declared in this basis is then at least the
+largest eigenvalue of that element, at every lattice exponent, which is $1/4$
+for a balanced basis choice; that is why a declared device weight, and not a
+snap, is where domination could serve. At a cutoff $N\le1$ on the
+\tref{exact route} the blocks are known exactly
+(Theorem~\ref{thm:exact-blocks}\,(iii)); where they are moreover dyadic
+rationals of bounded denominator, as at a balanced basis choice with dyadic
+efficiencies, they are lattice values and the snap keeps them. The
+obstruction belongs to domination, which compares the model with a lattice
+family element by element in the occupation basis. A reduction that first
+maps the $m$-photon block of the two polarization modes isometrically into
+the $m$-fold tensor power of $\mathbb{C}^{2}$ carries the ray above to a
+vector with rational coordinates (\xref{foundations/rem:noise-floor}); for
+an ideal device on these two modes whose port Grams are Gaussian-rational it
+would give a target with entries in $\mathbb{Q}(i)$ at every cutoff, at
+dimension $2^{m}$ instead of $m+1$ (with $d$ input modes, $d^{m}$ instead of
+$\binom{d+m-1}{m}$). The images of the elements sum to the projector onto
+the symmetric subspace, not to the identity, so such a target is complete
+only after an outcome is added on the complement of that subspace. No claim
+of these contracts makes that reduction.
+
+\emph{Angles.} A half-wave plate at axis angle $\theta$ has entries
+$\pm\cos2\theta$ and $\pm\sin2\theta$
+(\eqref{eq:hwpqwp} of Definition~\ref{def:catalogue-entries}). Every angle
+is enclosed, so the angle decides nothing about whether a reference exists;
+it decides whether the reference can be exact. Behind an ideal polarizing
+beamsplitter the plate's port Gram on the two polarization modes has the
+diagonal entries $(1\pm\cos4\theta)/2$, up to a rational factor, and the exact
+route needs Gaussian-rational Grams (Definition~\ref{def:exact-route}), so it
+needs $\cos4\theta$ rational. At multiples of $\pi/8$,
+$\cos4\theta\in\{0,\pm1\}$; at $\theta=\pi/24$, $\cos4\theta=\sqrt3/2$ and
+the reference is enclosed, which the run hands and evaluates as it does an
+exact one. The \tref{exact route} reads an angle given as a rational
+coefficient of $\pi$ (Requirement~\ref{req:exact-route-decision}\,(ii)); an
+angle given in radians is a dyadic rational, and a non-zero one is no
+rational multiple of $\pi$, so a plate declared at the binary64 value nearest
+$\pi/8$ is enclosed, while one declared as $\tfrac18\pi$ can be on the
+exact route.
+\end{remark}

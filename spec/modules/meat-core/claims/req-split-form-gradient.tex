@@ -1,0 +1,37 @@
+% ---
+% id: meat-core/req:split-form-gradient
+% kind: req
+% title: "Split-form evaluation of the trace-power gradient"
+% summary: >-
+%   The engine evaluates the gradient of the pinched trace power in the split
+%   form of [[thm:gradient]] (i): divided differences over the positive
+%   spectrum, pinched operators on the ambient space. It compresses the whole
+%   computation only to a pinching-invariant space containing the branch support.
+% prominence: standard
+% status: implemented
+% uses: [thm:gradient, def:branch-support]
+% mentions: [lem:branch-support]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.gradient:pullback_trace_power_gradient
+% lean:
+% ---
+
+A branch operator is in general singular, and its
+\tref{maximal branch support} is in general not invariant under the
+\tref{key pinching} (Lemma~\ref{lem:branch-support}\,(iv)); compressing the whole
+computation to its support then computes a different quantity, as the
+rank-one witness in the proof of Theorem~\ref{thm:gradient} shows.
+
+\begin{requirement}\label{req:split-form-gradient}
+The engine evaluates the gradient of the pinched trace power at a branch
+operator $X$ in the split form of Theorem~\ref{thm:gradient}\,(i): the
+divided-difference map $DX^{p}[\cdot]$ compressed to
+$\operatorname{supp}X$, its kernel summed over the strictly positive
+eigenvalues of $X$ only, and $\cZ(X^{p})$, $Y^{\alpha-1}$ and
+$\cZ(Y^{\alpha-1})$ formed on the ambient branch space. It compresses the
+whole computation to a subspace $S'$ only where $S'$ contains the maximal
+branch support $W_{\hat c,s}$ of Definition~\ref{def:branch-support} and
+$Z_jS'\subseteq S'$ for every $j$.
+\end{requirement}

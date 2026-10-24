@@ -1,0 +1,75 @@
+% ---
+% id: transmitter/ass:seq
+% kind: ass
+% title: "Sequential round structure"
+% summary: >-
+%   Each round runs the delivery of its quantum systems, then every party's
+%   measurement, then the round's public messages, then sifting; each party
+%   measures in round order, post-processing follows all rounds and every
+%   message is public. It is the timing premise of the security analysis.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Def. 8.1, Def. 8.2, Lemma 8.2"
+%   - "tupkary2026decoy, Sec. 8.1.1, Protocol 2"
+% provenance: newly-derived
+% short_id: A-SEQ
+% verification: never
+% category: protocol-structure
+% affects: [secrecy]
+% user_statement: >-
+%   In every round the quantum systems come first: where your source is
+%   trusted, it prepares and sends that round's signal, and otherwise the
+%   systems of the round are delivered to the measuring stations. Then every
+%   party that measures completes its measurement, and only then are that
+%   round's public messages sent, in the declared order. Sifting is then
+%   determined by the announcements, and no operation on a quantum system of a round
+%   depends on a public message of that round. All classical post-processing
+%   (for example error correction, verification and privacy amplification)
+%   runs after all n rounds, and every classical message is public. A message
+%   sent before a measurement of the same round has finished (for example an
+%   early basis announcement) violates this. Each party that measures
+%   completes its measurement of each round before it completes that of the
+%   next round.
+% lean:
+% ---
+
+With one measuring party this is the structure of
+\cite[Def.~8.1, Def.~8.2]{tupkary2026decoy}, whose state evolution is its
+Lemma~8.2, and it is the hypothesis under which this module applies the
+imported source-replacement lemma, whose own statement places no condition on
+the sequential structure of the operations after the preparation. The cited definitions are that case and
+no more: they have one measuring party and one announcement block per round,
+and the reading for several measuring parties is this contract's own. Of the
+messages, the assumption fixes only that all of them follow all measurements
+of the round; a message may depend on earlier messages of the same round,
+which is a property of the declared messages and not of this assumption. The
+clauses have two consequences worth naming. Where one party
+measures, as in a prepare-and-measure protocol, every measurement of the round
+is that party's. Where two parties measure systems delivered by a source
+neither of them prepared, neither party's message precedes the other party's
+measurement. Clause (v) is the measurement part of the timing condition of
+the published Protocol~2 (Bob's measurement times increasing there), read for
+each measuring party \cite[Sec.~8.1.1, Protocol~2]{tupkary2026decoy}; the
+monotone order of preparations and of announcements is not adopted, and the
+analysis does not need it; with (i) it puts every
+measurement of a round before every public message of a later round.
+
+\begin{assumption}\label{ass:seq}
+The physical protocol has the sequential structure the declared protocol
+describes:
+(i) each round runs, in this order, state preparation and transmission; the
+measurements of the round, by every party that measures in it; the public
+messages of the round, in their declared order, \emph{each of them sent after
+every measurement of the round is complete}, whichever party sends it and
+whichever party measured; and announcement-determined sifting;
+(ii) the classical post-processing is applied after the $n$ rounds;
+(iii) every message is public;
+(iv) no operation on a quantum system of round $j$ depends on a public
+message of round $j$;
+(v) every party that measures makes its measurements in round order: its
+measurement of round $j$ is complete before its measurement of round $j+1$
+is.
+\end{assumption}

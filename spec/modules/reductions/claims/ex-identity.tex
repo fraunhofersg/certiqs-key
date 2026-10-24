@@ -1,0 +1,44 @@
+% ---
+% id: reductions/ex:identity
+% kind: ex
+% title: "The identity link"
+% summary: >-
+%   An already-finite receiver reduces by one identity link (the identity
+%   channel or the sector pinching) with the same POVM, no constraint entries
+%   and exact status; the chain theorem returns the physical model unchanged.
+%   No input the module's interface declares carries such a receiver.
+% prominence: standard
+% status: accepted
+% uses: [prop:preorder, prop:pinching, thm:chain, def:chain]
+% mentions: [cor:identity-instance, cor:emitted-identity, req:identity-link-recorded]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{example}\label{ex:identity}
+For an already-finite receiver (an ideal qubit protocol, or any fixture whose
+POVM can be consumed directly), the chain has one link with
+$\textsf{stage}=\textsf{receiver}$, $\textsf{kind}=\textsf{identity}$,
+$\Lambda_{\Lnk}=\idmap$ --- or the sector pinching $\PinS$ of the declared
+decomposition, which is the identity on every block-diagonal state and is the
+channel of the identity instance, Corollary~\ref{cor:identity-instance} ---,
+$M^{\mathrm{out}}=M^{\mathrm{in}}$, the carried tuple
+empty or the identity on any declared operators (block-diagonal ones where
+the channel is $\PinS$),
+$\Srch_{\Lnk}$ the whole declared input family, pinched where the channel is
+$\PinS$,
+$\CList_{\Lnk}=\varnothing$, no licence, and
+$\textsf{status}=\textsf{exact}$. It is a \tref{squashing relation}: by
+reflexivity (Proposition~\ref{prop:preorder}) for $\idmap$, and by
+Proposition~\ref{prop:pinching} for $\PinS$, every declared element being
+block diagonal for the decomposition. So Theorem~\ref{thm:chain} applies and
+returns the physical model unchanged. The link is recorded rather than
+omitted (Requirement~\ref{req:identity-link-recorded}). It is the chain of
+the identity instance (Corollary~\ref{cor:identity-instance}), whose emitted
+family is Corollary~\ref{cor:emitted-identity}. No input the module's
+interface declares carries an already-finite receiver, so no declaration
+reaches this link; admitting one is a new declared input with a new refusal
+rule.
+\end{example}

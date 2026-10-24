@@ -1,0 +1,35 @@
+% ---
+% id: transmitter/rem:import
+% kind: rem
+% title: "Scope of the imported source replacement"
+% summary: >-
+%   The imported construction gives Alice's retained label register one
+%   dimension per letter, with a singular marginal whenever the signal states
+%   are linearly dependent, as in BB84. [[thm:certificate-sufficiency]] removes that constraint;
+%   the import says nothing about granting the adversary a purification.
+% prominence: standard
+% status: accepted
+% uses: [fact:sr]
+% mentions: [thm:certificate-sufficiency, def:srcert, cor:noncanonical]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:import}
+Fact~\ref{fact:sr} supplies the \emph{canonical} source replacement: one
+particular purification and one particular measurement, with $\Abar$ of
+dimension $|\Xset|$. A consumer that admitted only that form would be
+forced to declare $d_A=|\Xset|$ with a singular marginal in every protocol
+whose signal states are not linearly independent --- including BB84, where
+the canonical $\tau_{\Abar}$ has rank two in a four-dimensional space.
+Theorem~\ref{thm:certificate-sufficiency} removes that constraint: it states the property that
+makes a declared triple $(\Psi,\tau_A,\{M_x\})$ a source replacement
+(Definition~\ref{def:srcert}), proves that any triple with that property
+describes the same protocol, and thereby admits the qubit form that
+Corollary~\ref{cor:noncanonical} exhibits for BB84. The import supplies no
+statement about the adversary being granted a purification of Alice's
+retained system; that step belongs to the consuming engine's round model and
+is not claimed here.
+\end{remark}

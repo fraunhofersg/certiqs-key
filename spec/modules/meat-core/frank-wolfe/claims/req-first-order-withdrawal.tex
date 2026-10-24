@@ -1,0 +1,54 @@
+% ---
+% id: meat-core/frank-wolfe/req:first-order-withdrawal
+% kind: req
+% title: "Withdrawal of the first-order bound"
+% summary: >-
+%   An iterate at which a first-order hypothesis fails or is not established
+%   contributes no bracket and its reason is recorded; with none left h_lb is
+%   withdrawn and the run falls to the estimate tier. The oracle's return and
+%   its status withdraw nothing.
+% prominence: standard
+% status: implemented
+% uses: [thm:firstorder, rem:fo-interface]
+% mentions: [rem:fo-nopert, rem:acc-side, req:iterate-checks, req:iterate-repair, req:verified-feasible-side, foundations/req:tiers]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.reasons:AssuranceReason
+% lean:
+% ---
+
+Every run reports its \tref{estimate} and names the \tref{tier} that carries
+its claim (\xref{foundations/req:tiers}). The \tref{first-order} bound $\hlb$
+of Theorem~\ref{thm:firstorder} holds only where the theorem's hypotheses
+hold at the iterates its maximum runs over, and a gradient taken after a
+perturbation bounds another function (Remark~\ref{rem:fo-nopert}).
+No hypothesis of that theorem is read of the backend: the feasible side of
+a bracket is a lower bound formed without its return or its status
+(Requirement~\ref{req:verified-feasible-side}), so neither withdraws a
+bracket. Withdrawal is never a weakening of what $\hlb$ means
+(Remark~\ref{rem:fo-interface}).
+
+\begin{requirement}\label{req:first-order-withdrawal}
+An iterate at which any of the following holds is not a member of
+$\Itset$: it contributes no bracket to the maximum in \eqref{eq:hlb}, and the
+engine records the machine-readable reason.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item (H-POS) fails (\iface{gradient_hypothesis_positivity});
+\item (H-SUPP) fails (\iface{gradient_hypothesis_support});
+\item a gradient perturbation was applied, that is, (H-NOPERT) fails
+  (\iface{gradient_perturbation_applied});
+\item the point consumed at that iterate fails one of the three checks of
+  Requirement~\ref{req:iterate-checks} and is not repairable under
+  Requirement~\ref{req:iterate-repair}, or its acceptance-side component
+  $\mathbf q_t$ was not formed on the \tref{exact island} under ($\alpha$)
+  and ($\beta$) of Remark~\ref{rem:acc-side}, so that its membership in the
+  product $\acSet\times\Feas^{J}(\varepsilon)$ is not established
+  (\iface{iterate_not_feasible} in either case).
+\end{enumerate}
+Neither the point the oracle returned at that iterate nor its status
+removes the iterate from $\Itset$.
+If no iterate is left, $\Itset$ is empty: the engine withdraws $\hlb$ and
+the tier falls to the estimate, with a reason from the same
+machine-readable vocabulary.
+\end{requirement}

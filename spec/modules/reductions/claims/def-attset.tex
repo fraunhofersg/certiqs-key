@@ -1,0 +1,91 @@
+% ---
+% id: reductions/def:attset
+% kind: def
+% title: "Admissible attack sets in the consumer's format"
+% summary: >-
+%   For a constraint list with real constants, the admissible attack channels
+%   are the round model's attack sets: adjoint conditions in each source mode
+%   and, for party-local entries, a condition with a reference system. The
+%   licence [[thm:licence]] says when every squashed physical attack lies
+%   there.
+% prominence: standard
+% status: accepted
+% uses: [foundations/def:round-model]
+% mentions: [def:licensed, thm:licence, meat-core/def:roundmodel, protocol-compiler/def:homog]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Current caveat: the three sets are the attack sets of foundations/def:round-model at the per-round system Q, and eq:attset, eq:attsetun and eq:attsetpl are that definition's displays at Q, kept here because this module's claims, its code and the oracle registries cite their labels."
+% ---
+
+The consuming engine accepts a declared constraint list inside its security
+chain only under an assumption it never verifies: that security of the
+physical protocol reduces to the squashed \tref{round model} with attacks
+restricted to the declared admissible set. This definition fixes that set in
+the consumer's format, and Theorem~\ref{thm:licence} proves the reduction
+from one hypothesis.
+
+\begin{definition}
+\label{def:attset}
+Let $\CList=\{(\hat O_k,\bowtie_k,\Theta_k)\}_{k=1}^{m}$ be a declared list of
+Hermitian $\hat O_k\in\Lin{\Qsys}$, relations
+$\bowtie_k\in\{\preceq,=,\succeq\}$ and right-hand sides typed by the declared
+source mode. For a list whose entries carry real constants $c_k$, as every
+list this module emits does (Definition~\ref{def:licensed}), the admissible
+sets are the \tref[attack set]{attack sets} of $\CList$ of
+\xref{foundations/def:round-model} at the per-round system $S=\Qsys$, which the
+consuming contract states at the same system
+(\xref{meat-core/def:roundmodel}); their displays at that system are,
+verbatim,
+\begin{equation}\label{eq:attset}
+  \AttSet_{\CList}(E',\,\Qsys E'')\coloneqq
+  \Big\{\Aev\in\mathrm{CPTP}(E',\Qsys E''):\
+  \Aev^{\dagger}\big(\hat O_k\otimes\idon{E''}\big)
+  \bowtie_k c_k\,\idon{E'}\ \ \forall k\Big\}
+  \qquad\text{(trusted-source mode)},
+\end{equation}
+and, with the constraint operator lifted to the larger supplied system,
+\begin{equation}\label{eq:attsetun}
+  \AttSet_{\CList}(E',\,A\Qsys E'')\coloneqq
+  \Big\{\Aev\in\mathrm{CPTP}(E',A\Qsys E''):\
+  \Aev^{\dagger}\big(\idon{A}\otimes\hat O_k\otimes\idon{E''}\big)
+  \bowtie_k c_k\,\idon{E'}\ \ \forall k\Big\}
+\end{equation}
+in \tref{untrusted-source mode}, the two distinguished by the output system
+named in the argument. This contract writes $\bowtie_k$ in the operator
+spelling of \eqref{eq:attset} and \eqref{eq:attsetun} in both source modes,
+and everything it emits is admitted under either spelling. An entry that declares a Hermitian
+right-hand side $\Theta_k$ on Alice's system, rather than a real constant, is
+a \emph{general} entry: it is admissible input to the consuming contract but
+is never licensed (\xref{protocol-compiler/def:homog}). Every entry this module emits
+carries a real scalar $c_k$ and is written $(\hat O_k,\bowtie_k,c_k)$
+(Definition~\ref{def:licensed}, Theorem~\ref{thm:licence}\,(iv)).
+
+\emph{Party-local entries.} Where the \tref{measured system} is a product
+$\Qsys=\bigotimes_f\Qsys_f$ and $\CList$ carries entries tagged party-local
+(Definition~\ref{def:licensed}), the admissible set is cut out, for each such
+entry $(\hat O_k,\bowtie_k,c_k;f)$, by the condition
+\begin{equation}\label{eq:attsetpl}
+  \big(\idmap_{R'}\otimes\Aev\big)^{\dagger}
+  \Big(X\otimes\big(\hat O_k-c_k\,\idon{\Qsys_f}\big)\otimes\idon{E''}\Big)
+  \;\bowtie_k\;0
+  \qquad\text{for every finite-dimensional }R'\text{ and every }
+  X\in\Pos{R'R\,\Qsys_{f^c}} ,
+\end{equation}
+in place of the scalar condition of \eqref{eq:attset} or
+\eqref{eq:attsetun}, where $\Qsys_{f^c}$ is the product of the other
+factors and $R$ is $A$ in untrusted-source mode and trivial in
+\tref{trusted-source mode}; the untagged entries keep their conditions. The
+reference system $R'$ is what carries Alice's retained system in
+trusted-source mode, where it is no output of $\Aev$. Taking $R'$ trivial
+and $X=\idon{}$ in \eqref{eq:attsetpl} gives the scalar condition for the
+lifted operator $\idon{\Qsys_{f^c}}\otimes\hat O_k$, so the set with
+party-local entries is contained in the set with the same entries read as
+scalars. The condition \eqref{eq:attsetpl} is that of an entry tagged with the
+factor $f$ in \xref{foundations/def:round-model}\,(iii) at $S=\Qsys$, which the
+consuming contract states at the same system. An \tref{attack sequence} is
+$\CList$-admissible (an \tref{admissible attack sequence} for $\CList$) if
+$\Aev_j$ lies in the corresponding set with
+$E'=E_{j-1}$ and $E''=E'_j$ for every $j$.
+\end{definition}

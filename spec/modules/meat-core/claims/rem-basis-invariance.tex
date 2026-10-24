@@ -1,0 +1,154 @@
+% ---
+% id: meat-core/rem:basis-invariance
+% kind: rem
+% title: "Invariance under the declared basis of the Choi input"
+% summary: >-
+%   Within one support frame the declared isometry is fixed up to a unitary on
+%   A₀, which carries the Choi program onto itself, so the reported estimate,
+%   h_lb and key length are invariant. Across frames only h_low and the sector
+%   report are frame-free, and h_lb ≤ h_low holds in each frame.
+% prominence: standard
+% status: accepted
+% uses: [lem:choi-marginal, def:support-frame, thm:choi, def:feasible, def:homog, rem:ordering, prop:frame-free-rows]
+% mentions: [meat-core/frank-wolfe/thm:firstorder, def:branch-support, cor:full-gradient, req:frame-recorded]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:basis-invariance}
+In trusted-source mode the isometry $\iota$ of \eqref{eq:iota} is not
+canonical --- neither its range, the support frame, nor, within a fixed
+range, its columns --- and this module declares no canonical choice. It
+needs none, and the two freedoms are settled separately. \emph{Within one
+range} $\iota$ is canonical up to a unitary on $A_0$, and every quantity
+this module computes is invariant under that freedom; that is (a)--(d).
+\emph{Across ranges} the programs genuinely differ --- they have
+different numbers of variables --- but their value does not: by
+Theorem~\ref{thm:choi} each maps \emph{onto} the one set $\Feas$, whose
+infimum is $\hlow$ by \eqref{eq:hlow-def}, a definition that never
+mentions $A_0$. What is frame-free across ranges is therefore the
+\emph{mathematical} $\hlow$ of \eqref{eq:hlow-def}, and not the reported
+numbers: the reported \tref{estimate} is the objective at the returned
+\emph{point}, and the reported key length is computed from
+$\max\{0,\hlb\}$, so both are functions of the iterates and neither
+\emph{is} $\hlow$. Across ranges the programs carry different numbers of
+variables, a run in one frame is not the image of a run in the other, and
+those three reported numbers --- the estimate, $\hlb$ and the key
+length --- may all differ. What (a)--(d) establish is the
+\emph{within-range} statement, and there they are invariant, the two runs
+corresponding under $\mathrm{Ad}_{U}$. What holds in every frame
+regardless is the inequality: $\hlb\le\hlow$ by
+Theorem~\ref{thm:firstorder}\,(ii), respectively~(iiib), applied in that
+frame, against the one frame-free $\hlow$.
+
+\emph{(a) Within one range the freedom is exactly a unitary.} Let
+$\iota,\iota'$ both satisfy \eqref{eq:iota} \emph{with the same range},
+write $\Pi\coloneqq\iota\iota^{\dagger}=\iota'\iota'^{\dagger}$ and put
+$U\coloneqq\iota^{\dagger}\iota'$. Since
+$\operatorname{ran}\iota'=\operatorname{ran}\Pi$ we have
+$\Pi\iota'=\iota'$, so
+$U^{\dagger}U=\iota'^{\dagger}\iota\,\iota^{\dagger}\iota'
+=\iota'^{\dagger}\Pi\iota'=\iota'^{\dagger}\iota'=\idon{A_0}$, and
+likewise $UU^{\dagger}=\iota^{\dagger}\Pi\iota=\idon{A_0}$: $U$ is unitary
+on $A_0$, and
+$\iota U=\iota\,\iota^{\dagger}\iota'=\Pi\iota'=\iota'$. Conversely
+$\iota U$ satisfies \eqref{eq:iota}, with the same range, for every
+unitary $U$ on $A_0$. The two admissible Choi factors are therefore
+related by $W'_{\tau}\coloneqq\tau_A^{1/2}\iota'=W_{\tau}U$, and every
+identity of Lemma~\ref{lem:choi-marginal}\,(i)--(iii) holds verbatim for
+either:
+$W'_{\tau}W'^{\dagger}_{\tau}
+=W_{\tau}UU^{\dagger}W_{\tau}^{\dagger}=\tau_A$, and
+$W'^{+}_{\tau}=(W_{\tau}U)^{+}=U^{\dagger}W^{+}_{\tau}$ (the
+Moore--Penrose inverse of a product with a unitary right factor), so
+$W'_{\tau}W'^{+}_{\tau}=W_{\tau}W^{+}_{\tau}
+=\Pi_{\operatorname{supp}\tau_A}$ and
+$W'^{+}_{\tau}W'_{\tau}=U^{\dagger}P_{\iota}U$, which is $\idon{A_0}$
+exactly when the frame is tight. In particular $\ker W'_{\tau}
+=U^{\dagger}(\ker W_{\tau})$ has the same dimension, so tightness is a
+property of the range and not of the columns.
+
+\emph{(b) The two parametrizations differ by a relabelling.} For a unitary
+$U$ on $A_0$ write
+$\mathrm{Ad}_{U}(J)\coloneqq(U\otimes\idon{})\,J\,
+(U^{\dagger}\otimes\idon{})$ on $\Lin{A_0B'}$. From
+$W'_{\tau}=W_{\tau}U$,
+\begin{equation}\label{eq:chi-relabel}
+  \chi'_{B'}=\chi_{B'}\circ\mathrm{Ad}_{U}.
+\end{equation}
+Moreover $\mathrm{Ad}_{U}$ carries
+$\{J\in\Pos{A_0B'}:\tr_{B'}J=\idon{A_0}\}$ onto itself, with inverse
+$\mathrm{Ad}_{U^{\dagger}}$: it preserves positivity, and
+$\tr_{B'}\mathrm{Ad}_{U}(J)=U(\tr_{B'}J)U^{\dagger}
+=U\idon{A_0}U^{\dagger}=\idon{A_0}$. Hence
+Lemma~\ref{lem:choi-marginal} holds for either choice \emph{with the same
+image} $\{\omega\in\Pos{AB'}:\tr_{B'}\omega=\tau_A\}$, and the two
+parametrizations of one and the same $\omega$ are related by
+$J'=\mathrm{Ad}_{U^{\dagger}}(J)$.
+
+\emph{(c) The Choi program is carried onto itself.} Apply
+$\mathrm{Ad}_{U}$ blockwise to $(J_s)_{s}$. Positivity and the coupling
+constraint $\sum_s\tr_{\Qsys_s}J_s=\idon{A_0}$ are preserved by (b). For a
+constraint entry, $(\idon{A_0}\otimes\hat O^{(s)}_k)$ commutes with
+$U\otimes\idon{}$, so
+\begin{equation*}
+  \sum_s\tr_{\Qsys_s}\big[(\idon{A_0}\otimes\hat O^{(s)}_k)\,
+  \mathrm{Ad}_{U}(J_s)\big]
+  =U\Big(\sum_s\tr_{\Qsys_s}\big[(\idon{A_0}\otimes\hat O^{(s)}_k)\,
+  J_s\big]\Big)U^{\dagger},
+\end{equation*}
+and conjugating by $W_{\tau}$ gives
+$W_{\tau}U(\cdot)U^{\dagger}W^{\dagger}_{\tau}
+=W'_{\tau}(\cdot)W'^{\dagger}_{\tau}$: the constraint of
+\eqref{eq:choi-feas} built with $\iota'$ and imposed on $(J_s)_s$ is the
+constraint built with $\iota$ and imposed on
+$(\mathrm{Ad}_{U}(J_s))_s$. So $\mathrm{Ad}_{U}$ is a bijection from
+$\Feas^{J}$ built with $\iota'$ onto $\Feas^{J}$ built with $\iota$. It
+preserves the objective as well, because every ingredient of
+\eqref{eq:choi-program} is a pullback along $\chi$: by
+\eqref{eq:chi-relabel},
+$P'^{J}_{\hat c}(J)=P^{J}_{\hat c}(\mathrm{Ad}_{U}(J))$,
+$f'^{J}_{\hat c,s}(J_s)=f^{J}_{\hat c,s}(\mathrm{Ad}_{U}(J_s))$ and
+$K'^{J}_{\hat c}(J)=K^{J}_{\hat c}(\mathrm{Ad}_{U}(J))$. The two programs
+therefore have the same value, and $\hlow$ is unchanged. (Independently:
+$\hlow$ is \emph{defined} by \eqref{eq:hlow-def} as an infimum over
+$\Feas$ in the state variable $\omega$, which never mentions $A_0$;
+Theorem~\ref{thm:choi} asserts that the Choi program equals that number
+for any admissible $\iota$, so the invariance is already forced by the
+theorem.)
+
+\emph{(d) Everything downstream is invariant or covariant.} The
+frame-free form \eqref{eq:frame-free-row} of a homogeneous row
+(Proposition~\ref{prop:frame-free-rows}) is preserved, since
+$c_k\idon{A_0}=U(c_k\idon{A_0})U^{\dagger}$ and conjugation by a unitary
+preserves each of $\preceq$, $=$, $\succeq$. The branch operators
+$X_{\hat c,s}=\cG_{\hat c,s}(\omega_s)$, the
+\tref[maximal branch support]{maximal branch supports}
+$W_{\hat c,s}$ of \eqref{eq:Wcs} and every value the objective takes are
+\emph{literally} unchanged, being functions of
+$\omega_s=\chi_{\Qsys_s}(J_s)$ and of $\operatorname{supp}\tau_A$ alone.
+The gradients of Corollary~\ref{cor:full-gradient} are covariant:
+$W'^{\dagger}_{\tau}M_xW'_{\tau}
+=U^{\dagger}(W^{\dagger}_{\tau}M_xW_{\tau})U$ and
+$\chi'^{\dagger}_{\Qsys_{s}}
+=\mathrm{Ad}_{U^{\dagger}}\circ\chi^{\dagger}_{\Qsys_{s}}$, so both
+$\Gamma^{(s')}_{\hat c}$ and $\Delta^{(s')}_{\hat c}$ transform as
+$G\mapsto(U^{\dagger}\otimes\idon{})G(U\otimes\idon{})$, and a
+Frank--Wolfe run in one declared basis is the
+$\mathrm{Ad}_{U^{\dagger}}$-image of the same run in the other.
+Consequently, \emph{within one range}, the reported estimate, $\hlb$ and
+the reported key length are independent of which columns were chosen: the
+two runs correspond under $\mathrm{Ad}_{U}$ and the objective, the
+gradients and the pairings are carried along with them. Only the reported
+$J_s$ and the channel reading of Remark~\ref{rem:ordering} are
+basis-relative, and they are what the frame is recorded for
+(Requirement~\ref{req:frame-recorded}). The sector report is frame-free in
+the stronger sense, across ranges as well: its predicates read the declared
+blocks $F^{(s)}_v$, $\hat O^{(s)}_k$ and $\{M_x\}$ and the declared tables,
+and no $A_0$ enters any of them. \emph{Across ranges the reported numbers
+are not claimed invariant}; what survives there is the mathematical
+$\hlow$, and $\hlb\le\hlow$ in each frame, as the opening paragraph says.
+\end{remark}

@@ -1,0 +1,537 @@
+{
+  "schema_version": "1.0.0",
+  "generated": "2026-09-01",
+  "entries": [
+    {
+      "ref_id": "arqand2025meat",
+      "type": "arxiv",
+      "title": "Marginal-constrained entropy accumulation theorem",
+      "authors": [
+        "Amir Arqand",
+        "Ernest Y.-Z. Tan"
+      ],
+      "year": 2025,
+      "arxiv_id": "2502.02563",
+      "arxiv_version": "v4",
+      "doi": null,
+      "journal_ref": null,
+      "retrieved": "2026-08-26",
+      "bibtex_key": "arqand2025meat"
+    },
+    {
+      "ref_id": "kamin2025renyi",
+      "type": "arxiv",
+      "title": "Rényi security framework against coherent attacks applied to decoy-state QKD",
+      "authors": [
+        "Lars Kamin",
+        "John Burniston",
+        "Ernest Y.-Z. Tan"
+      ],
+      "year": 2025,
+      "arxiv_id": "2504.12248",
+      "arxiv_version": "v2",
+      "doi": null,
+      "journal_ref": null,
+      "retrieved": "2026-08-26",
+      "bibtex_key": "kamin2025renyi"
+    },
+    {
+      "ref_id": "tupkary2026decoy",
+      "type": "arxiv",
+      "title": "A rigorous and complete security proof of decoy-state BB84 quantum key distribution",
+      "authors": [
+        "Devashish Tupkary",
+        "Shlok Nahar",
+        "Amir Arqand",
+        "Ernest Y.-Z. Tan",
+        "Norbert Lütkenhaus"
+      ],
+      "year": 2026,
+      "arxiv_id": "2601.18035",
+      "arxiv_version": "v1",
+      "doi": null,
+      "journal_ref": null,
+      "retrieved": "2026-08-26",
+      "bibtex_key": "tupkary2026decoy"
+    },
+    {
+      "ref_id": "winick2018reliable",
+      "type": "arxiv",
+      "title": "Reliable numerical key rates for quantum key distribution",
+      "authors": [
+        "Adam Winick",
+        "Norbert Lütkenhaus",
+        "Patrick J. Coles"
+      ],
+      "year": 2018,
+      "arxiv_id": "1710.05511",
+      "arxiv_version": "v2",
+      "doi": null,
+      "journal_ref": "Quantum 2, 77 (2018)",
+      "retrieved": "2026-08-26",
+      "bibtex_key": "winick2018reliable"
+    },
+    {
+      "ref_id": "tomamichel2016finite",
+      "type": "arxiv",
+      "title": "Quantum Information Processing with Finite Resources — Mathematical Foundations",
+      "authors": [
+        "Marco Tomamichel"
+      ],
+      "year": 2016,
+      "arxiv_id": "1504.00233",
+      "arxiv_version": "v3",
+      "doi": "10.1007/978-3-319-21891-5",
+      "journal_ref": "SpringerBriefs in Mathematical Physics, Vol. 5, Springer (2016)",
+      "retrieved": "2026-08-27",
+      "bibtex_key": "tomamichel2016finite"
+    },
+    {
+      "doi": "10.1103/PRXQuantum.5.040315",
+      "journal_ref": "PRX Quantum 5, 040315 (2024)",
+      "ref_id": "nahar2024postselection",
+      "type": "arxiv",
+      "title": "Postselection technique for optical Quantum Key Distribution with improved de Finetti reductions",
+      "authors": [
+        "Shlok Nahar",
+        "Devashish Tupkary",
+        "Yuming Zhao",
+        "Norbert Lütkenhaus",
+        "Ernest Y.-Z. Tan"
+      ],
+      "year": 2024,
+      "arxiv_id": "2403.11851",
+      "arxiv_version": "v3",
+      "retrieved": "2026-08-28",
+      "bibtex_key": "nahar2024postselection"
+    },
+    {
+      "doi": "10.22331/q-2026-03-24-2044",
+      "journal_ref": "Quantum 10, 2044 (2026)",
+      "ref_id": "nahar2025imperfect",
+      "type": "arxiv",
+      "title": "Imperfect detectors for adversarial tasks with applications to quantum key distribution",
+      "authors": [
+        "Shlok Nahar",
+        "Devashish Tupkary",
+        "Norbert Lütkenhaus"
+      ],
+      "year": 2025,
+      "arxiv_id": "2503.06328",
+      "arxiv_version": "v3",
+      "retrieved": "2026-08-28",
+      "bibtex_key": "nahar2025imperfect"
+    },
+    {
+      "doi": "10.1103/PhysRevResearch.6.043223",
+      "journal_ref": "Phys. Rev. Research 6, 043223 (2024)",
+      "ref_id": "kamin2024improved",
+      "type": "arxiv",
+      "title": "Improved decoy-state and flag-state squashing methods",
+      "authors": [
+        "Lars Kamin",
+        "Norbert Lütkenhaus"
+      ],
+      "year": 2024,
+      "arxiv_id": "2405.05069",
+      "arxiv_version": "v2",
+      "retrieved": "2026-08-28",
+      "bibtex_key": "kamin2024improved"
+    },
+    {
+      "doi": "10.1103/PhysRevResearch.3.013076",
+      "journal_ref": "Phys. Rev. Research 3, 013076 (2021)",
+      "ref_id": "zhang2021security",
+      "type": "arxiv",
+      "title": "Security proof of practical quantum key distribution with detection-efficiency mismatch",
+      "authors": [
+        "Yanbao Zhang",
+        "Patrick J. Coles",
+        "Adam Winick",
+        "Jie Lin",
+        "Norbert Lütkenhaus"
+      ],
+      "year": 2021,
+      "arxiv_id": "2004.04383",
+      "arxiv_version": "v2",
+      "retrieved": "2026-08-28",
+      "bibtex_key": "zhang2021security"
+    },
+    {
+      "doi": "10.1103/PhysRevA.85.023820",
+      "journal_ref": "Phys. Rev. A 85, 023820 (2012)",
+      "ref_id": "sperling2012",
+      "type": "arxiv",
+      "title": "True photo-counting statistics of multiple on-off detectors",
+      "authors": [
+        "J. Sperling",
+        "W. Vogel",
+        "G. S. Agarwal"
+      ],
+      "year": 2012,
+      "arxiv_id": "1202.5106",
+      "arxiv_version": "v1",
+      "retrieved": "2026-08-28",
+      "bibtex_key": "sperling2012"
+    },
+    {
+      "doi": "10.1103/PhysRevLett.101.093601",
+      "journal_ref": "Phys. Rev. Lett. 101, 093601 (2008)",
+      "ref_id": "beaudry2008squashing",
+      "type": "arxiv",
+      "title": "Squashing models for optical measurements in quantum communication",
+      "authors": [
+        "Normand J. Beaudry",
+        "Tobias Moroder",
+        "Norbert Lütkenhaus"
+      ],
+      "year": 2008,
+      "arxiv_id": "0804.3082",
+      "arxiv_version": "v4",
+      "retrieved": "2026-08-28",
+      "bibtex_key": "beaudry2008squashing"
+    },
+    {
+      "doi": "10.1063/1.2008996",
+      "journal_ref": "J. Math. Phys. 46, 082109 (2005)",
+      "ref_id": "buscemi2005clean",
+      "type": "arxiv",
+      "title": "Clean positive operator valued measures",
+      "authors": [
+        "F. Buscemi",
+        "G. M. D'Ariano",
+        "M. Keyl",
+        "P. Perinotti",
+        "R. Werner"
+      ],
+      "year": 2005,
+      "arxiv_id": "quant-ph/0505095",
+      "arxiv_version": "v5",
+      "retrieved": "2026-08-28",
+      "bibtex_key": "buscemi2005clean"
+    },
+    {
+      "doi": "10.1103/PhysRevA.84.020303",
+      "journal_ref": "Phys. Rev. A 84, 020303(R) (2011)",
+      "ref_id": "fung2011universal",
+      "type": "arxiv",
+      "title": "Universal squash model for optical communications using linear optics and threshold detectors",
+      "authors": [
+        "Chi-Hang Fred Fung",
+        "H. F. Chau",
+        "Hoi-Kwong Lo"
+      ],
+      "year": 2011,
+      "arxiv_id": "1011.2982",
+      "arxiv_version": "v1",
+      "retrieved": "2026-08-28",
+      "bibtex_key": "fung2011universal"
+    },
+    {
+      "doi": "10.1103/PRXQuantum.2.020325",
+      "journal_ref": "PRX Quantum 2, 020325 (2021)",
+      "ref_id": "upadhyaya2021dimension",
+      "type": "arxiv",
+      "title": "Dimension reduction in quantum key distribution for continuous- and discrete-variable protocols",
+      "authors": [
+        "Twesh Upadhyaya",
+        "Thomas van Himbeeck",
+        "Jie Lin",
+        "Norbert Lütkenhaus"
+      ],
+      "year": 2021,
+      "arxiv_id": "2101.05799",
+      "arxiv_version": "v2",
+      "retrieved": "2026-08-28",
+      "bibtex_key": "upadhyaya2021dimension"
+    },
+    {
+      "doi": "10.1103/RevModPhys.94.025008",
+      "journal_ref": "Rev. Mod. Phys. 94, 025008 (2022)",
+      "ref_id": "portmann2022security",
+      "type": "arxiv",
+      "title": "Security in quantum cryptography",
+      "authors": [
+        "Christopher Portmann",
+        "Renato Renner"
+      ],
+      "year": 2022,
+      "arxiv_id": "2102.00021",
+      "arxiv_version": "v2",
+      "retrieved": "2026-08-28",
+      "bibtex_key": "portmann2022security"
+    },
+    {
+      "doi": null,
+      "journal_ref": null,
+      "ref_id": "kamin2025improvedfinite",
+      "type": "arxiv",
+      "title": "Improved finite-size effects in QKD protocols with applications to decoy-state QKD",
+      "authors": [
+        "Lars Kamin",
+        "Devashish Tupkary",
+        "Norbert Lütkenhaus"
+      ],
+      "year": 2025,
+      "arxiv_id": "2502.05382",
+      "arxiv_version": "v1",
+      "retrieved": "2026-08-28",
+      "bibtex_key": "kamin2025improvedfinite"
+    },
+    {
+      "doi": null,
+      "journal_ref": null,
+      "ref_id": "tupkary2025survey",
+      "type": "arxiv",
+      "title": "Security proofs for practical QKD: variations, techniques, gaps, and limitations",
+      "authors": [
+        "Devashish Tupkary",
+        "Ernest Y.-Z. Tan",
+        "Shlok Nahar",
+        "Lars Kamin",
+        "Norbert Lütkenhaus"
+      ],
+      "year": 2025,
+      "arxiv_id": "2502.10340",
+      "arxiv_version": "v3",
+      "retrieved": "2026-08-28",
+      "bibtex_key": "tupkary2025survey"
+    },
+    {
+      "ref_id": "douglas1966majorization",
+      "type": "article",
+      "title": "On majorization, factorization, and range inclusion of operators on Hilbert space",
+      "authors": [
+        "R. G. Douglas"
+      ],
+      "year": 1966,
+      "arxiv_id": null,
+      "arxiv_version": null,
+      "doi": "10.1090/S0002-9939-1966-0203464-1",
+      "journal_ref": "Proc. Amer. Math. Soc. 17, 413-415 (1966)",
+      "retrieved": "2026-08-28",
+      "bibtex_key": "douglas1966majorization"
+    },
+    {
+      "ref_id": "hecht2017optics",
+      "type": "book",
+      "title": "Optics",
+      "authors": [
+        "Eugene Hecht"
+      ],
+      "year": 2017,
+      "arxiv_id": null,
+      "arxiv_version": null,
+      "doi": null,
+      "journal_ref": null,
+      "edition": "5th",
+      "publisher": "Pearson",
+      "isbn": "978-0-13-397722-6",
+      "retrieved": null,
+      "bibtex_key": "hecht2017optics"
+    },
+    {
+      "ref_id": "kok2010optical",
+      "type": "book",
+      "title": "Introduction to Optical Quantum Information Processing",
+      "authors": [
+        "Pieter Kok",
+        "Brendon W. Lovett"
+      ],
+      "year": 2010,
+      "arxiv_id": null,
+      "arxiv_version": null,
+      "doi": null,
+      "journal_ref": null,
+      "publisher": "Cambridge University Press",
+      "isbn": "978-0-521-51914-4",
+      "retrieved": null,
+      "bibtex_key": "kok2010optical"
+    },
+    {
+      "ref_id": "konig2021newton",
+      "type": "arxiv",
+      "title": "Newton series expansion of bosonic operator functions",
+      "authors": [
+        "Jürgen König",
+        "Alfred Hucht"
+      ],
+      "year": 2021,
+      "arxiv_id": "2008.11139",
+      "arxiv_version": "v4",
+      "doi": "10.21468/SciPostPhys.10.1.007",
+      "journal_ref": "SciPost Phys. 10, 007 (2021)",
+      "retrieved": "2026-08-28",
+      "bibtex_key": "konig2021newton"
+    },
+    {
+      "ref_id": "migdal2014multiphoton",
+      "type": "arxiv",
+      "title": "Which multiphoton states are related via linear optics?",
+      "authors": [
+        "Piotr Migdał",
+        "Javier Rodríguez-Laguna",
+        "Michał Oszmaniec",
+        "Maciej Lewenstein"
+      ],
+      "year": 2014,
+      "arxiv_id": "1403.3069",
+      "arxiv_version": "v2",
+      "doi": "10.1103/PhysRevA.89.062329",
+      "journal_ref": "Phys. Rev. A 89, 062329 (2014)",
+      "retrieved": "2026-08-28",
+      "bibtex_key": "migdal2014multiphoton"
+    },
+    {
+      "ref_id": "navarro2025conic",
+      "type": "arxiv",
+      "title": "Finite-size quantum key distribution rates from Rényi entropies using conic optimization",
+      "authors": [
+        "Mariana Navarro",
+        "Andrés González Lorente",
+        "Pablo V. Parellada",
+        "Carlos Pascual-García",
+        "Mateus Araújo"
+      ],
+      "year": 2025,
+      "arxiv_id": "2511.10584",
+      "arxiv_version": "v3",
+      "doi": null,
+      "journal_ref": null,
+      "retrieved": "2026-08-28",
+      "bibtex_key": "navarro2025conic"
+    },
+    {
+      "ref_id": "lydersen2010hacking",
+      "type": "arxiv",
+      "title": "Hacking commercial quantum cryptography systems by tailored bright illumination",
+      "authors": [
+        "Lars Lydersen",
+        "Carlos Wiechers",
+        "Christoffer Wittmann",
+        "Dominique Elser",
+        "Johannes Skaar",
+        "Vadim Makarov"
+      ],
+      "year": 2010,
+      "arxiv_id": "1008.4593",
+      "arxiv_version": "v2",
+      "doi": "10.1038/nphoton.2010.214",
+      "journal_ref": "Nature Photonics 4, 686-689 (2010)",
+      "retrieved": "2026-08-31",
+      "bibtex_key": "lydersen2010hacking"
+    },
+    {
+      "ref_id": "shen2025selftesting",
+      "type": "arxiv",
+      "title": "Countering detector manipulation attacks in quantum communication through detector self-testing",
+      "authors": [
+        "Lijiong Shen",
+        "Christian Kurtsiefer"
+      ],
+      "year": 2025,
+      "arxiv_id": "2204.06155",
+      "arxiv_version": "v2",
+      "doi": "10.1063/5.0233772",
+      "journal_ref": "APL Photonics 10, 016106 (2025)",
+      "retrieved": "2026-08-31",
+      "bibtex_key": "shen2025selftesting"
+    },
+    {
+      "ref_id": "wiesemann2026security",
+      "type": "arxiv",
+      "title": "Security framework for practical quantum key distribution with imperfect devices",
+      "authors": [
+        "Jerome Wiesemann",
+        "John Burniston",
+        "Devashish Tupkary",
+        "Norbert Lütkenhaus"
+      ],
+      "year": 2026,
+      "arxiv_id": "2609.15790",
+      "arxiv_version": "v1",
+      "doi": null,
+      "journal_ref": null,
+      "retrieved": "2026-09-29",
+      "bibtex_key": "wiesemann2026security"
+    },
+    {
+      "ref_id": "joshi2020network",
+      "type": "arxiv",
+      "title": "A trusted-node-free eight-user metropolitan quantum communication network",
+      "authors": [
+        "Siddarth Koduru Joshi",
+        "Djeylan Aktas",
+        "Sören Wengerowsky",
+        "Martin Lončarić",
+        "Sebastian Philipp Neumann",
+        "Bo Liu",
+        "Thomas Scheidl",
+        "Guillermo Currás-Lorenzo",
+        "Željko Samec",
+        "Laurent Kling",
+        "Alex Qiu",
+        "Mohsen Razavi",
+        "Mario Stipčević",
+        "John G. Rarity",
+        "Rupert Ursin"
+      ],
+      "year": 2020,
+      "arxiv_id": "1907.08229",
+      "arxiv_version": "v4",
+      "doi": "10.1126/sciadv.aba0959",
+      "journal_ref": "Science Advances 6, no. 36 (2020): eaba0959",
+      "retrieved": "2026-10-08",
+      "bibtex_key": "joshi2020network"
+    },
+    {
+      "ref_id": "neumann2022transnational",
+      "type": "arxiv",
+      "title": "Continuous entanglement distribution over a transnational 248 km fibre link",
+      "authors": [
+        "Sebastian Philipp Neumann",
+        "Alexander Buchner",
+        "Lukas Bulla",
+        "Martin Bohmann",
+        "Rupert Ursin"
+      ],
+      "year": 2022,
+      "arxiv_id": "2203.12417",
+      "arxiv_version": "v1",
+      "doi": "10.1038/s41467-022-33919-0",
+      "journal_ref": "Nature Communications 13, 6134 (2022)",
+      "retrieved": "2026-10-08",
+      "bibtex_key": "neumann2022transnational"
+    },
+    {
+      "ref_id": "wengerowsky2019submarine",
+      "type": "arxiv",
+      "title": "In-field entanglement distribution over a 96 km-long submarine optical fibre",
+      "authors": [
+        "Sören Wengerowsky",
+        "Siddarth Koduru Joshi",
+        "Fabian Steinlechner",
+        "Julien R. Zichi",
+        "Sergiy M. Dobrovolskiy",
+        "René van der Molen",
+        "Johannes W. N. Los",
+        "Val Zwiller",
+        "Marijn A. M. Versteegh",
+        "Alberto Mura",
+        "Davide Calonico",
+        "Massimo Inguscio",
+        "Hannes Hübel",
+        "Anton Zeilinger",
+        "André Xuereb",
+        "Rupert Ursin"
+      ],
+      "year": 2019,
+      "arxiv_id": "1803.00583",
+      "arxiv_version": "v1",
+      "doi": "10.1073/pnas.1818752116",
+      "journal_ref": "PNAS 116 (14), 6684-6688 (2019)",
+      "retrieved": "2026-10-08",
+      "bibtex_key": "wengerowsky2019submarine"
+    }
+  ]
+}

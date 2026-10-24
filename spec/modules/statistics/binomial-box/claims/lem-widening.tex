@@ -1,0 +1,184 @@
+% ---
+% id: statistics/binomial-box/lem:widening
+% kind: lem
+% title: "Widening the box keeps its guarantees"
+% summary: >-
+%   Lowering the box's lower bounds and raising its upper ones gives a superset
+%   that is failed no more often and has no larger infimum, and integer
+%   endpoints so moved still meet their tail budgets. Moving them the other way
+%   can break the tail budgets and the reported completeness figure ε*.
+% prominence: standard
+% status: accepted
+% uses: [def:construction, def:endpoint-rule, def:interval, lem:guard, statistics/def:taxonomy, statistics/def:freq, statistics/def:envelope]
+% mentions: [statistics/def:conservative-evaluation, prop:rule-exact]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A \tref{conservative evaluation} (Definition~\ref{def:conservative-evaluation})
+can only return a smaller lower and a larger upper endpoint than an exact one,
+and the consuming engine's outward rounding of the emitted bounds moves them
+the same way. The lemma says that every such move keeps what the construction
+guarantees and costs only rate, and that the reverse move does not;
+Proposition~\ref{prop:rule-exact}\,(iii) and Lemma~\ref{lem:guard}\,(ii) are
+its counterparts for a rule's own interval.
+
+\begin{lemma}\label{lem:widening}
+Let $\acSet$ be the output of $\mathsf{Acc}_R$
+(Definition~\ref{def:construction}) on an \tref{admissible input}
+(Definition~\ref{def:endpoint-rule}) for an \tref{admissible endpoint rule}
+$R$, with box bounds $\qlo,\qhi$ \eqref{eq:boxbounds} and
+\tref{guarded endpoints} $k^{\mp}$ \eqref{eq:guard}. Let
+$\tilde{\mathbf{q}}^{-},\tilde{\mathbf{q}}^{+}\in\mathbb{R}^{\Chatset}$
+satisfy $\tilde q^{-}(\hat c)\le q^{-}(\hat c)$ and
+$\tilde q^{+}(\hat c)\ge q^{+}(\hat c)$ for every $\hat c\in\Chatset$, and put
+\begin{equation}\label{eq:widened-set}
+  \acSet'\ \coloneqq\ \{\mathbf{q}\in\simplex{\Chatset}:\
+  \tilde q^{-}(\hat c)\le q(\hat c)\le\tilde q^{+}(\hat c)\ \
+  \forall\hat c\in\Chatset\}.
+\end{equation}
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(containment)} $\acSet\subseteq\acSet'$.
+\item \emph{(failure probability)} For all $\Chatset$-valued random
+variables $\Chat_1,\dots,\Chat_n$ on one probability space,
+\begin{equation*}
+  \Pr\big[\operatorname{freq}_{\Chat_1^n}\notin\acSet'\big]
+  \ \le\ \Pr\big[\operatorname{freq}_{\Chat_1^n}\notin\acSet\big].
+\end{equation*}
+\item \emph{(infima)} For every function
+$\Psi:\simplex{\Chatset}\to[-\infty,+\infty]$,
+\begin{equation}\label{eq:widened-inf}
+  \inf_{\mathbf{q}\in\acSet'}\Psi(\mathbf{q})
+  \ \le\ \inf_{\mathbf{q}\in\acSet}\Psi(\mathbf{q}).
+\end{equation}
+\item \emph{(integer endpoints)} Let
+$\tilde k^{-},\tilde k^{+}:\Chatcon\to\mathbb{Z}$ satisfy
+$0\le\tilde k^{-}(\hat c)\le k^{-}(\hat c)$ and
+$k^{+}(\hat c)\le\tilde k^{+}(\hat c)\le n$ for every $\hat c\in\Chatcon$,
+and let $\tilde{\mathbf{q}}^{\mp}$ be given by \eqref{eq:boxbounds} with
+$\tilde k^{\mp}$ in place of $k^{\mp}$. Then $\tilde{\mathbf{q}}^{\mp}$
+satisfy the hypothesis above, so (i)--(iii) hold; the pair
+$(\tilde{\mathbf{q}}^{-},\tilde{\mathbf{q}}^{+})$ meets the conditions of the
+\tref{canonical box form} of Definition~\ref{def:taxonomy}, and its
+denotation \eqref{eq:boxset} is $\acSet'$; and for every $\hat c\in\Chatcon$,
+with $\Ncount{\hat c}^{\mp}$ as in Definition~\ref{def:endpoint-rule},
+\begin{equation}\label{eq:widened-tails}
+  \Pr\big[\Ncount{\hat c}^{-}<\tilde k^{-}(\hat c)\big]
+  \le\Pr\big[\Ncount{\hat c}^{-}<k^{-}(\hat c)\big]
+  \le\varepsilon^{-}(\hat c),
+  \qquad
+  \Pr\big[\Ncount{\hat c}^{+}>\tilde k^{+}(\hat c)\big]
+  \le\Pr\big[\Ncount{\hat c}^{+}>k^{+}(\hat c)\big]
+  \le\varepsilon^{+}(\hat c).
+\end{equation}
+Summed over $\Chatcon$, the tails at $\tilde k^{\mp}$ therefore total at most
+the tails at $k^{\mp}$, and at most $\ecomp$.
+\item \emph{(not the reverse)} Replacing $k^{-}(\hat c)$ by a larger integer
+or $k^{+}(\hat c)$ by a smaller one keeps, in general, neither the budgets of
+\eqref{eq:widened-tails} nor the tail sum at $k^{\mp}$ as a bound on the
+probability that the \tref{frequency vector} leaves the set. Take
+$\Chatset=\{\hat c_0,\hat c_1\}$, the \tref{degenerate envelope} at
+$\honest=(\tfrac12,\tfrac12)$ (Definition~\ref{def:envelope}), $n=3$,
+$\Chatcon=\{\hat c_0\}$,
+$\varepsilon^{-}(\hat c_0)=\varepsilon^{+}(\hat c_0)=\tfrac25$,
+$\ecomp=\tfrac45$ and the \tref{exact binomial quantile rule} of
+Definition~\ref{def:interval}. Then $k^{-}(\hat c_0)=1$, $k^{+}(\hat c_0)=2$,
+and the tails at these endpoints sum to $\tfrac14$. Replacing
+$k^{-}(\hat c_0)$ by $2$, or $k^{+}(\hat c_0)$ by $1$, gives a tail of
+$\tfrac12>\tfrac25$ on the replaced side; and for $\Chat_1,\Chat_2,\Chat_3$
+independent with law $\honest$, the frequency vector lies outside the set
+\eqref{eq:accset} built from the replaced endpoints with probability
+$\tfrac58>\tfrac14$, while it lies outside $\acSet$ with probability
+$\tfrac14$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{(i).} Let $\mathbf{q}\in\acSet$ and $\hat c\in\Chatset$. By
+\eqref{eq:accset} and the hypothesis,
+$\tilde q^{-}(\hat c)\le q^{-}(\hat c)\le q(\hat c)\le q^{+}(\hat c)\le
+\tilde q^{+}(\hat c)$. Since also $\mathbf{q}\in\simplex{\Chatset}$, every
+defining condition of \eqref{eq:widened-set} holds, and
+$\mathbf{q}\in\acSet'$.
+
+\emph{(ii).} The frequency vector $\operatorname{freq}_{\Chat_1^n}$ of
+Definition~\ref{def:freq} is a function of the finitely valued string
+$\Chat_1^n$, so $\{\operatorname{freq}_{\Chat_1^n}\in S\}$ is the finite
+union of the events $\{\Chat_1^n=\hat c_1^n\}$ over the strings with
+$\operatorname{freq}_{\hat c_1^n}\in S$, an event for every set $S$. By (i),
+$\{\operatorname{freq}_{\Chat_1^n}\in\acSet\}\subseteq
+\{\operatorname{freq}_{\Chat_1^n}\in\acSet'\}$; taking complements,
+$\{\operatorname{freq}_{\Chat_1^n}\notin\acSet'\}\subseteq
+\{\operatorname{freq}_{\Chat_1^n}\notin\acSet\}$, and a probability measure
+is monotone under inclusion.
+
+\emph{(iii).} For every $\mathbf{q}\in\acSet$, (i) gives
+$\mathbf{q}\in\acSet'$, so the infimum over $\acSet'$ is at most
+$\Psi(\mathbf{q})$. The infimum over $\acSet'$ is therefore a lower bound of
+$\{\Psi(\mathbf{q}):\mathbf{q}\in\acSet\}$, hence at most its greatest lower
+bound, which is \eqref{eq:widened-inf}. This holds in the extended reals for
+every $\Psi$, with no continuity or measurability required, and also when
+$\acSet$ is empty, its infimum then being $+\infty$.
+
+\emph{(iv).} \emph{The hypothesis.} For $\hat c\in\Chatcon$,
+\eqref{eq:boxbounds} gives
+$\tilde q^{-}(\hat c)=\tilde k^{-}(\hat c)/n\le k^{-}(\hat c)/n=q^{-}(\hat c)$
+and $\tilde q^{+}(\hat c)=\tilde k^{+}(\hat c)/n\ge k^{+}(\hat c)/n
+=q^{+}(\hat c)$, using $n\ge1$; for $\hat c\notin\Chatcon$ both pairs of
+bounds are $0$ and $1$. So $\tilde{\mathbf{q}}^{\mp}$ satisfy the hypothesis,
+and (i)--(iii) apply.
+
+\emph{The canonical box form.} Every $\tilde q^{\mp}(\hat c)$ is an integer
+divided by $n$, or $0$ or $1$, hence rational. For $\hat c\in\Chatcon$,
+\eqref{eq:ordering} of Lemma~\ref{lem:guard}\,(i) gives
+$k^{-}(\hat c)\le k^{+}(\hat c)$, so
+$0\le\tilde k^{-}(\hat c)\le k^{-}(\hat c)\le k^{+}(\hat c)\le
+\tilde k^{+}(\hat c)$ and $0\le\tilde q^{-}(\hat c)\le\tilde q^{+}(\hat c)$;
+for $\hat c\notin\Chatcon$, $0\le0\le1$. These are the conditions of the
+canonical box form, and its denotation \eqref{eq:boxset} with these bounds is
+\eqref{eq:widened-set}.
+
+\emph{The tails.} By Lemma~\ref{lem:guard}\,(ii) the map
+$k\mapsto\Pr[\Ncount{\hat c}^{-}<k]$ is non-decreasing and the map
+$k\mapsto\Pr[\Ncount{\hat c}^{+}>k]$ is non-increasing on the integers, so
+$\tilde k^{-}(\hat c)\le k^{-}(\hat c)$ and
+$\tilde k^{+}(\hat c)\ge k^{+}(\hat c)$ give the first inequality of each
+half of \eqref{eq:widened-tails}; the second is \eqref{eq:budget-met} of the
+same lemma. Summing the first inequalities over $\hat c\in\Chatcon$ compares
+the two tail sums, and summing the second ones bounds the sum at $k^{\mp}$ by
+$\sum_{\hat c\in\Chatcon}(\varepsilon^{-}(\hat c)+\varepsilon^{+}(\hat c))$,
+which the allocation of an admissible input keeps at most $\ecomp$
+(Definition~\ref{def:endpoint-rule}\,(vi)).
+
+\emph{(v).} With the degenerate envelope at $\tfrac12$, the two counts
+$\Ncount{\hat c_0}^{-}$ and $\Ncount{\hat c_0}^{+}$ have one law; write
+$\Ncount{}$ for a count binomial with parameters $(3,\tfrac12)$, whose law is
+$(\tfrac18,\tfrac38,\tfrac38,\tfrac18)$ on $\{0,1,2,3\}$. The exact rule
+takes \eqref{eq:kappaminus}: $\Pr[\Ncount{}<0]=0$ and
+$\Pr[\Ncount{}<1]=\tfrac18$ are at most $\tfrac25$, while
+$\Pr[\Ncount{}<k]\ge\Pr[\Ncount{}<2]=\tfrac12>\tfrac25$ for every $k\ge2$, so
+$\kappa^{-}(\hat c_0)=1$. It takes \eqref{eq:kappaplus}:
+$\Pr[\Ncount{}>2]=\tfrac18\le\tfrac25$ and $\Pr[\Ncount{}>3]=0$, while
+$\Pr[\Ncount{}>k]\ge\Pr[\Ncount{}>1]=\tfrac12>\tfrac25$ for every $k\le1$, so
+$\kappa^{+}(\hat c_0)=2$. The guard \eqref{eq:guard} is inert, since
+$\lfloor\tfrac32\rfloor=1$ and $\lceil\tfrac32\rceil=2$, so
+$k^{-}(\hat c_0)=1$ and $k^{+}(\hat c_0)=2$, and the tails at them are
+$\Pr[\Ncount{}<1]+\Pr[\Ncount{}>2]=\tfrac18+\tfrac18=\tfrac14$. The replaced
+tails are $\Pr[\Ncount{}<2]=\tfrac12$ and $\Pr[\Ncount{}>1]=\tfrac12$, each
+above $\tfrac25$.
+
+For the failure probabilities, let $\Chat_1,\Chat_2,\Chat_3$ be independent
+with law $\honest$. The count of $\hat c_0$ in $\Chat_1^3$ is then binomial
+with parameters $(3,\tfrac12)$, so it has the law of $\Ncount{}$. On a
+two-letter alphabet a vector of $\simplex{\Chatset}$ is fixed by its
+coordinate at $\hat c_0$, and the bounds at $\hat c_1$ are $0$ and $1$ by
+\eqref{eq:boxbounds}, so a frequency vector lies in a set \eqref{eq:accset}
+built from endpoints $(a,b)$ at $\hat c_0$ exactly when the count of
+$\hat c_0$ lies in $\{a,\dots,b\}$. For $\acSet$, with $(a,b)=(1,2)$, the
+failure probability is $\Pr[\Ncount{}\in\{0,3\}]=\tfrac14$. With $k^{-}$
+replaced by $2$, $(a,b)=(2,2)$ and the failure probability is
+$1-\Pr[\Ncount{}=2]=\tfrac58$; with $k^{+}$ replaced by $1$, $(a,b)=(1,1)$
+and it is $1-\Pr[\Ncount{}=1]=\tfrac58$. Both exceed $\tfrac14$.
+\end{proof}

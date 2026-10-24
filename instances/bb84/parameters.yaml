@@ -1,0 +1,118 @@
+# instances/bb84/parameters.yaml
+#
+# THE BB84 INSTANCE'S DECLARED DATA. An instance is DATA AND NOT A CLAIM
+# (PRINCIPLES.md section 5): the
+# protocol compiler's worked declaration PC12 lives here, its constructors in specification.py and its hand derivations in
+# tests/oracles/registry_instances_bb84.py.
+# Nothing in this file is normative and nothing cites it as authority.
+#
+# WHAT PINS IT: the two frozen oracle entries O-PC-BB84 and O-PC-CONJUGATION of
+# tests/oracles/registry_instances_bb84.py, hand-derived and never regenerated
+# from the code they test.
+#
+# WHAT IS NOT HERE. The run tier's data -- eps_pa, eps_ev, lambda_ec, the
+# number of rounds n, tau_num, eps_comp -- and the channel's qber are run
+# configuration (surface.py's PARAMETERS and default_config); the compiler has
+# no free numerical parameter at all and reads none of them.
+
+instance: bb84
+kind: "worked declaration (Band A, one identity link, ideal qubit receiver)"
+module: protocol-compiler
+constructors: instances/bb84/specification.py
+document: instances/bb84/NOTES.md
+
+# ---------------------------------------------------------------------------
+# basis_weights
+#   The four numbers bb84_specification takes. The claims fix them only up to
+#   p^A_Z, p^A_X > 0 with p^A_Z + p^A_X = 1 on Alice's side and likewise on
+#   Bob's; NOTHING PREFERS A DYADIC WEIGHT, and the three pairs below are
+#   fixture choices that the frozen registry pins.
+# ---------------------------------------------------------------------------
+basis_weights:
+
+  - name: BB84-w1
+    note: "the balanced instance; every weight dyadic, so the products are exact."
+    alice: {Z: "1/2", X: "1/2"}
+    bob: {Z: "1/2", X: "1/2"}
+
+  - name: BB84-w2
+    note: "asymmetric and still dyadic."
+    alice: {Z: "3/4", X: "1/4"}
+    bob: {Z: "1/2", X: "1/2"}
+
+  - name: BB84-w3
+    note: >-
+      DELIBERATELY NON-DYADIC, so that the exact-to-binary64 boundary is forced
+      into the open rather than hidden behind fixtures that happen to convert
+      without loss. The registry's own words.
+    alice: {Z: "2/3", X: "1/3"}
+    bob: {Z: "4/5", X: "1/5"}
+
+  - name: "the 0.9/0.1 presentation"
+    note: >-
+      NOT A CONSTRUCTOR ARGUMENT BUT A CASE. The decimal literals fl(0.9) and
+      fl(0.1) sum to exactly 1 on the computed binary64 total while the EXACT
+      sum is 1 + 2^-55, so the weight sum ROUNDS. The compiler refuses the
+      weight list with `choice_weights_not_normalized`
+      (protocol-compiler/req:weight-list), which decides sum_t q_t = 1 on the
+      exact sum and requires its accumulation to round nowhere. Presented as
+      the matrices themselves, the same family passes (C) and is refused by
+      condition (S) on its completeness sum, `alice_povm_summation_rounds`.
+      The instance surface prepares decimal inputs onto weights that sum to
+      exactly 1, so a run does not meet this case.
+
+# ---------------------------------------------------------------------------
+# alice_marginal, certificate
+# ---------------------------------------------------------------------------
+source:
+  alice_dim: 2
+  transmitted_dim: 2
+  alice_marginal: "1_A / 2"
+  certificate_psi: "|Phi+><Phi+| on A A^v, DECLARED AS THE OPERATOR"
+  certificate_psi_note: >-
+    Every entry of the operator is 0 or 1/2, both binary64; the VECTOR |Phi+>
+    has amplitudes 1/sqrt2 that no binary64 number squares to 1/2, which is why
+    the certificate declares Psi and never a vector (transmitter/def:srcert).
+  source_segment: "empty (L_s = 0); no source reduction is declared"
+
+# ---------------------------------------------------------------------------
+# receiver, chain
+# ---------------------------------------------------------------------------
+receiver:
+  physical_dim: 2
+  sector_map: "one sector, d_s = 2, block kind `proof_sector`"
+  sector_block_kind_note: >-
+    `proof_sector` is the member this map IS: its decomposition is justified by
+    source replacement, not by a photon number (`physical_sector`) and not by
+    solver sparsity (`numerical_block`). The instance declares WHICH member;
+    the format fixes the alphabet (spec/architecture.md 2.9).
+  chain: "Band A: one identity link, Lambda_1 = id, gamma = id"
+
+# ---------------------------------------------------------------------------
+# constraints
+# ---------------------------------------------------------------------------
+constraints:
+  constraint_list: "EMPTY (m = 0), so gate (G3) is not engaged and A-LIC is not engaged"
+  attack_set_license: "absent, and not demanded at m = 0"
+
+# ---------------------------------------------------------------------------
+# recorded_for_the_consumer
+#   The two rows the compiler's interface carries under `parameters` and that
+#   NO CLAIM OF THAT MODULE DEPENDS ON. They are the consuming engine's and are
+#   written here so that an instance that docks into it has values to hand.
+# ---------------------------------------------------------------------------
+recorded_for_the_consumer:
+  alpha:
+    domain: "(1, 2)"
+    value: null
+    note: >-
+      NOT A PARAMETER OF THE COMPILER and not fixed by this instance. The
+      intersection of the imports on the key-length path is (1, 2); the run
+      configuration chooses a value.
+  purifier_dim:
+    domain: ">= d_A d_Q"
+    value: null
+    note: >-
+      NOT ENFORCED BY THE COMPILER, which emits d_A and the sector dimensions,
+      "which is exactly what the consumer needs to enforce it". At this
+      instance d_A d_Q = 4.

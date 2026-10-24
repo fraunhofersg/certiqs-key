@@ -1,0 +1,36 @@
+% ---
+% id: meat-core/frank-wolfe/req:acceptance-geometries
+% kind: req
+% title: "The admitted acceptance geometries"
+% summary: >-
+%   The engine solves the acceptance-side minimisation exactly for a singleton
+%   or a polytope acceptance set and admits no other geometry. A declaration
+%   with any other acceptance set is refused before any solve.
+% prominence: standard
+% status: accepted
+% uses: [rem:acc-side]
+% mentions: [meat-core/def:admissible-acceptance-set, meat-core/req:acceptance-set-admission]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.oracles.acceptance:acceptance_oracle
+% lean:
+% notes: "The refusal at admission is realised by certiqs_key.meat_core.declaration.validation:validate_acceptance_set (and by the bundle reader for a serialised declaration); acceptance_oracle refuses again a declaration built in memory that never passed admission."
+% ---
+
+Definition~\ref{def:admissible-acceptance-set} admits any closed convex
+subset of the probability simplex, while Remark~\ref{rem:acc-side} solves the
+acceptance-side minimisation exactly for two geometries only. For any other
+set the bracket would need a certified $\bacc$ of \eqref{eq:bacc-def} from
+elsewhere, which no requirement decides and no assumption carries, so the
+engine admits no other set. The refusal is this requirement's own: the
+general admission rule, Requirement~\ref{req:acceptance-set-admission}, would
+admit a third tag whose every datum denotes a closed convex set.
+
+\begin{requirement}\label{req:acceptance-geometries}
+The engine solves the acceptance-side minimisation exactly for the two
+geometries of Remark~\ref{rem:acc-side}, a singleton~(a) and a polytope~(b),
+and admits an acceptance set in no other geometry: a declaration whose
+$\acSet$ fits neither is refused at admission, before any solve, and no
+\tref{first-order} bound is formed for it.
+\end{requirement}

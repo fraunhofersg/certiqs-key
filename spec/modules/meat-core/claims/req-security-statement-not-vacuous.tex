@@ -1,0 +1,40 @@
+% ---
+% id: meat-core/req:security-statement-not-vacuous
+% kind: req
+% title: "Refusal of budgets with an empty security statement"
+% summary: >-
+%   The engine refuses a run whose budgets satisfy ε_PA + ε_EV + 2ε_auth ≥ 1,
+%   deciding the sum exactly on the three declared numbers before any program
+%   is built. The security statement of [[cor:composed-security]] is then
+%   empty, and [[cor:keylength-bound]] (b) does not claim the corner.
+% prominence: standard
+% status: implemented
+% uses: [thm:keylength, cor:composed-security, cor:keylength-bound]
+% mentions: [ass:auth]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.keylength:check_security_statement
+% lean:
+% ---
+
+A security statement with parameter at least $1$ excludes nothing: every
+protocol meets it. The proof of Corollary~\ref{cor:keylength-bound}\,(b)
+exhibits such a corner inside the hypotheses of
+Theorem~\ref{thm:keylength}, $\ell=1$ at $\epa=\eev=1$ and $\lEC=0$. The
+parameter a run reports is the composed one of
+Corollary~\ref{cor:composed-security}\,(iii), which at the default
+$\varepsilon_{\mathrm{auth}}=0$ of Assumption~\ref{ass:auth} is equal to
+$\epa+\eev$, the parameter of (ii) (and numerically of (i)).
+
+\begin{requirement}\label{req:security-statement-not-vacuous}
+The engine refuses a run whose budgets satisfy
+$\epa+\eev+2\varepsilon_{\mathrm{auth}}\ge1$, deciding the sum exactly on the
+three declared numbers before any program is built, and reports
+\iface{security_statement_vacuous}: the
+$(\epa+\eev+2\varepsilon_{\mathrm{auth}})$-security statement of
+Corollary~\ref{cor:composed-security}\,(iii), at
+$\varepsilon_{\mathrm{auth}}=0$ equal to $\epa+\eev$, the parameter of (ii)
+(and numerically of (i)), is then empty, and Corollary~\ref{cor:keylength-bound}\,(b) does
+not claim the corner.
+\end{requirement}

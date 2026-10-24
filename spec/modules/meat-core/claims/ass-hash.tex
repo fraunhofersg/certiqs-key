@@ -1,0 +1,49 @@
+% ---
+% id: meat-core/ass:hash
+% kind: ass
+% title: "Ideal two-universal privacy amplification"
+% summary: >-
+%   Privacy amplification uses an ideal two-universal family, collision
+%   probability exactly 2^−ℓ for distinct inputs, and error verification a
+%   two-universal family. The first is what leftover hashing reads, the
+%   second what the verification collision bound reads.
+% prominence: standard
+% status: accepted
+% uses: [def:postprocessing-model]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Lemma 6.5 and Rem. 6.1"
+%   - "kamin2025renyi, Thm. 4"
+%   - "tupkary2026decoy, Def. 3.5"
+% provenance: newly-derived
+% short_id: A-HASH
+% verification: never
+% category: post-processing
+% affects: [secrecy, correctness]
+% user_statement: >-
+%   Privacy amplification uses a hash family in which any two different
+%   inputs collide with probability exactly 2^−ℓ (an ideal two-universal
+%   family, such as Toeplitz hashing), and error verification uses a
+%   two-universal hash family. If your privacy-amplification family is only
+%   two-universal (collision probability at most 2^−ℓ), shorten the key by
+%   one further bit.
+% lean:
+% ---
+
+The R\'enyi leftover-hashing lemma \cite[Thm.~4]{kamin2025renyi} is applied
+under the reading of \cite[Lemma~6.5 and Rem.~6.1]{tupkary2026decoy}, which
+asks for an ideal family; the correctness argument uses the collision
+probability of the verification family only as an upper bound. The two
+notions are those of \cite[Def.~3.5]{tupkary2026decoy}.
+
+\begin{assumption}\label{ass:hash}
+(i) The privacy-amplification family of
+Definition~\ref{def:postprocessing-model}, applied to $Z_1^n$, is ideal
+two-universal: for any two distinct inputs, the probability under the
+family's law that their $\ell$-bit values coincide is exactly $2^{-\ell}$;
+(ii) the error-verification family of
+Definition~\ref{def:postprocessing-model} is two-universal: for any two
+distinct inputs, the probability under the family's law that their
+$\lceil\log_2\frac1{\eev}\rceil$-bit values coincide is at most
+$2^{-\lceil\log_2(1/\eev)\rceil}$.
+\end{assumption}

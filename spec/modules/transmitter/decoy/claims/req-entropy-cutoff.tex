@@ -1,0 +1,34 @@
+% ---
+% id: transmitter/decoy/req:entropy-cutoff
+% kind: req
+% title: "Entropy cutoff of at most two photons"
+% summary: >-
+%   The engine refuses an entropy cutoff of three or more. This is a scope limit
+%   and no consequence of the claims, which hold for every entropy cutoff; a
+%   basis with exactly declarable dyad entries is exhibited only for the
+%   polarisations H, V, + and −, at one and at two photons.
+% prominence: standard
+% status: implemented
+% uses: [cor:emitted-decoy]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.decoy.emit:emit_decoy_declaration
+% lean:
+% ---
+
+\begin{requirement}\label{req:entropy-cutoff}
+The engine refuses, with no artefact, a declaration with
+$N_{\mathrm{ent}}\ge3$ (\iface{entropy_cutoff_above_two}). The refusal is a
+scope decision and not a consequence of anything the claims state: every claim
+of this submodule is stated for arbitrary $N_{\mathrm{ent}}\le N_{\mathrm{src}}$
+and nothing in them fails at $N_{\mathrm{ent}}\ge3$. What is missing is a
+construction of the kind Corollary~\ref{cor:emitted-decoy}\,(iv)(b) supplies
+for the four polarisations $\Dset$ at one and at two photons: a declared
+basis in which the signal dyads have exactly declarable entries. This
+repository has no such construction at three photons and above. Admitting such
+a sector would mean deciding exact conditions on dyad entries that differ from
+the entries of the signal states, so until the construction exists the sector
+is refused rather than declared with entries that are not the numbers written.
+\end{requirement}

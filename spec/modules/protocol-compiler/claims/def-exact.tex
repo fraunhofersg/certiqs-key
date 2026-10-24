@@ -1,0 +1,153 @@
+% ---
+% id: protocol-compiler/def:exact
+% kind: def
+% title: "Exact admissibility of declared operator data"
+% summary: >-
+%   Declared binary64 operator data are admitted by sector-map agreement,
+%   Hermiticity, positivity, completeness and a completeness sum that rounds
+%   nowhere, each decided exactly on the declared numbers. No tolerance is
+%   read and no ideal operator is inferred.
+% prominence: standard
+% status: implemented
+% uses: [def:declaration, foundations/def:binary64, foundations/def:exact-admissibility, foundations/lem:exact-accumulation]
+% mentions: [thm:typing, def:compile, def:weighted, thm:sifting-and-key, foundations/req:consumer-decides-exactly, foundations/def:declared-order, foundations/rem:summation-order, foundations/req:exact-emission, foundations/req:boundary-admission, req:validator-refusals]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.exact:sum_in_declared_order
+% lean:
+% notes: "The five conditions are exact admissibility of foundations/def:exact-admissibility with constant 1, restated in this module's words; the per-factor reading and the conditions on Alice's data are this module's strengthenings and stay here. The ensemble form is not an instance of the core: it replaces the core's completeness identity by the identity with tau_A, so the family {N_x} is decided under foundations/req:boundary-admission (ii), and no citation of the core covers it."
+% ---
+
+Of the five conditions of the definition, four are conditions on an operator
+family and one, (S), is a condition on the binary64 additions that form a
+completeness sum. Binary64 addition is not associative, so each such sum comes
+with the order in which it is accumulated
+(\xref{foundations/rem:summation-order}).
+
+Deciding every admission predicate on \tref{declared data} exactly, on the
+\tref[declared value]{declared values}, is what \xref{foundations/req:consumer-decides-exactly} requires of
+every consumer.
+The conditions the definition states on Alice's data, on $\{M_x\}$ and on
+$\tau_A$, are producer obligations of this module and not only consumer
+checks, since the consuming engine decides them exactly and refuses
+otherwise, so a declaration this module emitted without deciding them would
+be refused downstream on data this module had passed. For $\{M_x\}$ and
+for the trace sum of $\tau_A$ the obligation is
+\xref{foundations/req:exact-emission}\,(ii)--(v), and for the Hermiticity,
+positivity and unit trace of $\tau_A$ it is
+\xref{foundations/req:boundary-admission}\,(ii). Each is decided here, before
+emission, and refused with a named reason otherwise
+(Requirement~\ref{req:validator-refusals}).
+
+\begin{definition}
+\label{def:exact}
+Declared operator data are \tref{binary64 numbers}, each the dyadic rational
+it denotes and not an approximation of anything
+(\xref{foundations/def:binary64}\,(iii)), and every predicate this module
+decides on them is decided \emph{exactly}, on those numbers. This definition lists
+those predicates, together with the one condition of the list that is a
+condition on the arithmetic that forms a sum rather than a predicate on an
+operator.
+
+\emph{The declared summation order.} The \tref{compilation map} emits a
+total order on every declared alphabet and on $\SecSet$: the
+\tref[index map]{label-to-index map} $\idxm$, which numbers the letters of
+each declared alphabet, and the sectors, consecutively from $0$
+(Definition~\ref{def:compile}, Theorem~\ref{thm:typing}); the
+\tref{declared order} of an alphabet is its $\idxm$ order. For a finite
+family $\{a_j\}_{j\in J}$ of $n\times n$ matrices indexed by a declared
+alphabet $J$ with $\idxm$ order $j_1\prec\dots\prec j_{|J|}$, the
+\tref{sum in the declared order} is accumulated as the
+\tref{computed sequential sum} (\xref{foundations/def:declared-order})
+\begin{equation}\label{eq:declorder}
+  \Sigma_0\coloneqq0,\qquad
+  \Sigma_i\coloneqq\Sigma_{i-1}+a_{j_i}\ \ (1\le i\le|J|),\qquad
+  \Sigma\coloneqq\Sigma_{|J|},
+\end{equation}
+formed left to right, entrywise, in binary64, with no re-ordering and no
+re-association; the trace of a matrix is likewise accumulated over its row
+index in increasing order, which is the order of the emitted array.
+
+\emph{The five conditions.} Let $\{a_j\}_{j\in J}$ be a finite family of
+block lists against a sector map $\Smap$, one array $a_j^{(s)}$ on
+$\Hs{\Qsys_s}$ per $s\in\SecSet$. The family is \tref{exactly admissible}
+for $\Smap$ when
+\begin{itemize}[leftmargin=2.6em]
+\item[(T)] \emph{(sector map)} the sector map the supplied family carries is
+  $\Smap$, the map this module holds: the same block kind, the same block
+  identifiers in the same order, the same dimensions, so that
+  $a_j=\bigoplus_sa_j^{(s)}$ holds \emph{by construction}. This is a type
+  condition: it is decided, never measured, and an off-block entry is not
+  small but inexpressible;
+\item[(S)] \emph{(the sum \tref{rounds nowhere})} writing $\Sigma^{(s)}$ for
+  the total $\Sigma$ that \eqref{eq:declorder} produces on the block family
+  $\{a_j^{(s)}\}_j$: for each $s$, every one of the $|J|$ entrywise binary64
+  additions forming it is exact, so that the computed $\Sigma^{(s)}$ \emph{is}
+  the real sum $\sum_ja_j^{(s)}$;
+\item[(H)] \emph{(Hermiticity)} $a_j^{(s)}=a_j^{(s)\dagger}$ for every $(j,s)$;
+\item[(P)] \emph{(positivity)} $a_j^{(s)}\succeq0$ for every $(j,s)$; the
+  matrix being Hermitian by (H), this says that its spectrum is non-negative;
+\item[(C)] \emph{(completeness)} $\Sigma^{(s)}=\idon{\Qsys_s}$ for every $s$.
+\end{itemize}
+Each of (H), (P), (C) is an \emph{identity or an order relation between
+exactly represented numbers} and is decided as such: (H) and (C) entry by
+entry, (P) by exact symmetric elimination on the block with the zero-pivot
+row test (a negative pivot fails, and a zero pivot passes only when the rest
+of its row is zero), cubic in $d_s$. Together the five conditions are exact
+admissibility for $\Smap$ with constant $1$, that is with every completeness
+sum equal to the identity, in the sense of
+\xref{foundations/def:exact-admissibility}, the declared order of $J$ being
+its $\idxm$ order: (T), (H), (P) and (S) are the conditions of that
+definition bearing the same names, and (C), which reads the computed sum, is
+its completeness identity, because under (S) the computed sum $\Sigma^{(s)}$
+is the exact sum $\sum_ja_j^{(s)}$
+(\xref{foundations/lem:exact-accumulation}).
+
+\emph{The same conditions on Alice's data, where there is one block and no
+sector map.} $A$ carries no sector decomposition, so a family on $A$ is one
+array per index and (T) is empty for it. $\{M_x\}_{x\in\Xset}$ is
+\emph{exactly admissible} when (S), (H), (P) and (C) hold of it on $A$ with
+$\idon{A}$ on the right of (C); the declared marginal $\tau_A$ satisfies its
+own three conditions when $\tau_A=\tau_A^{\dagger}$, $\tau_A\succeq0$ and
+$\tr\tau_A=1$ with the trace accumulated in the row order \emph{without
+rounding}, the trace being a sum, read below as an identity of real numbers
+exactly as a completeness sum is.
+
+\emph{What is not on this list.} A strict inequality on a declared scalar,
+such as the condition of Definition~\ref{def:weighted} that every
+public-choice weight be positive, is a domain condition on a declared real
+number, decided by its sign and not by any of the five. A relation symbol, a
+declared tag and the type of a right-hand side are likewise decided and never
+measured (D(vi)). And nothing in this definition is a \emph{norm}: no
+quantity here is compared against a tolerance window, and no
+\tref[defects]{defect}, the entrywise size of the difference a condition
+names, is computed.
+
+\emph{The general format.} For a declaration in the general format of
+Definition~\ref{def:declaration}\,(DX1)--(DX6) the same conditions are read
+as follows. \emph{Per measured factor:} for every $f\in\mathbb{F}$ the
+family $\{F^{f}_{v_f}\}_{v_f\in\Vset^{f}}$ is exactly admissible for the
+sector map of $f$ --- (T) against that factor's map, and (S), (H), (P), (C)
+on that factor's blocks in that factor's declared order. No condition is
+decided on a product block \eqref{eq:productfamily}, none being a datum; that
+the product family then satisfies (H), (P) and (C) on $\Qsys$ as identities
+of real numbers is shown in (DX3). An entry's operator $\hat O_k$ is decided
+(T) and (H) against the map of its scope. \emph{Alice's data, block by
+block:} with a factor tagged $A$, condition (T) is not empty for Alice's
+data: $\tau_A$, the operators of her measurement slot and a general
+$\Theta_k$ are block lists against that factor's map. In POVM form
+$\{M^{(t)}_x\}_x$ satisfies (S), (H), (P) and (C) on every $A_t$ with
+$\idon{A_t}$ on the right of (C); $\tau_A$ satisfies (H) and (P) block by
+block and $\sum_t\tr\tau^{(t)}_A=1$, the traces accumulated in the row order
+and then over the blocks in their declared order, rounding nowhere.
+\emph{Ensemble form:} the family $\{N^{(t)}_x\}_x$ satisfies (S), (H) and
+(P) on every $A_t$, and in place of (C) the identity
+$\Sigma^{(t)}=\tau^{(t)}_A$ of \eqref{eq:ensembleform}, entry by entry,
+between the declared-order sum and the declared block of $\tau_A$; and
+$\tau^{(t)}_A\ne0$ for every $t$, a comparison of declared entries with the
+datum $0$. These are all the conditions of the form: nothing is decided of
+the denoted $\{M_x\}$ of \eqref{eq:ensemblepovm}, its being a POVM a theorem
+(Theorem~\ref{thm:sifting-and-key}\,(v)). At one Alice sector and one measured factor in
+POVM form these readings are the paragraphs above.
+\end{definition}

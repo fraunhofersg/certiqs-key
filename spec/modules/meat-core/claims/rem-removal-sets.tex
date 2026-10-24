@@ -1,0 +1,88 @@
+% ---
+% id: meat-core/rem:removal-sets
+% kind: rem
+% title: "The set hypothesis of the composition rule"
+% summary: >-
+%   Per-sector removal flags do not compose: two sectors can witness each
+%   other's removal, and deleting both raises the value by a bit per round.
+%   The set hypothesis of [[prop:removal-compose]] is sufficient, not
+%   necessary, and is read on the recorded witnesses.
+% prominence: standard
+% status: accepted
+% uses: [prop:removal-compose, thm:removal, prop:retention, def:classes]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:removal-sets}
+\emph{The hypothesis of Proposition~\ref{prop:removal-compose} is on the
+\emph{set}, not on any one sector, and without it the per-sector flags do
+not compose.} The flag \emph{removable} is a per-sector flag and
+Theorem~\ref{thm:removal} licenses the deletion of \emph{one} sector;
+neither says that deleting every flagged sector at once is sound, and
+\emph{in general it is not}. Two state-blind
+constraint-active sectors with identical declared
+responses each witness the other: take the declaration of
+Proposition~\ref{prop:retention} and split its sector~2 into two
+one-dimensional sectors $2a$ and $2b$ carrying the same $F_0=1$, $F_1=0$
+(all other data unchanged, so $f_{\hat c_0,2a}=f_{\hat c_0,2b}\equiv0$,
+$K=1+w_1(2^{1-\alpha}-1)$ and the infimum is still $0$, at $w_1=0$). Then
+$\{2b\}$ with $\mu_1=1$ and $\chi_1$ the state on $\Qsys_{2b}$ is a
+witness for $2a$ meeting (W1)--(W6) exactly, and symmetrically for $2b$,
+so both flags are set with (W2) satisfied at every step --- and deleting
+both forces $w_1=1$ and raises the reported value from $0$ to $1$, the
+same one bit per round by the same mechanism as
+Proposition~\ref{prop:retention}. The hypothesis of
+Proposition~\ref{prop:removal-compose} is what fails there, and it is the
+only thing that fails.
+
+\emph{Three readings of that hypothesis.} \emph{First, it is sufficient and
+not necessary.} With
+recorded single-target witnesses forming a chain
+$s_a\to s_b\to s_c\to s_d$ and
+$\SecSet_{\mathrm{del}}=\{s_a,s_b,s_c\}$ ($s_d$ retained), the hypothesis
+fails and the deletion is refused --- although deleting all three is in
+fact sound: $s_c$ may be deleted first, and $s_b$ is then witnessed by
+$s_c$'s own witness, since $s_c$ is state-blind by (W1) and therefore
+$\tr[F^{(s_c)}_v\chi]=c_{v,s_c}$ for every state $\chi$, so
+$c_{v,s_b}=c_{v,s_c}=\sum_j\nu_j\tr[F^{(s_d)}_v\xi_j]$ and (RM1) closes
+with $(\nu_j,\xi_j)$ in place of the original targets, and likewise
+(RM3). Refusal is the safe side and this module claims sufficiency
+only. \emph{Second, the hypothesis is decided on the \emph{recorded}
+witnesses}, so it constrains the record and not the search: a run may
+re-derive each surviving sector's witness in the reduced declaration after
+every deletion and record \emph{those}. \emph{Nothing here forbids
+sequential re-witnessing}; what is forbidden is deleting a set whose
+recorded witnesses point into it. \emph{But the strategy is
+order-sensitive, and the order is part of it}: re-derivation runs on the
+\emph{surviving} sectors, so it can drop a recorded reference to a sector
+already deleted and never to one deleted \emph{later}. What a run must
+therefore achieve is that every recorded witness names only sectors it
+\emph{retains}, and the way to achieve it is to delete leaf-first --- a
+sector only when its current witness names retained sectors alone. On the
+chain $s_a\to s_b\to s_c\to s_d$ above with
+$\SecSet_{\mathrm{del}}=\{s_a,s_b,s_c\}$ the order $s_c,s_b,s_a$ does it:
+after $s_c$ goes, $s_b$ re-derives onto $s_d$ by the argument just given,
+then $s_a$ likewise, and the final record is
+$s_a\to s_d$, $s_b\to s_d$, $s_c\to s_d$, which meets the hypothesis and
+deletes all three. \emph{The order $s_a,s_b,s_c$ does not}: re-derivation
+never touches $s_a$'s or $s_b$'s already-recorded witnesses, the record
+ends as $s_a\to s_b$, $s_b\to s_c$ with both targets inside
+$\SecSet_{\mathrm{del}}$, and the deletion of the set is refused as a
+whole. On that record, with $s_c\to s_d$ beside them, a subset of
+$\SecSet_{\mathrm{del}}$ meets the hypothesis exactly when it does not
+contain $s_b$ together with $s_a$ or $s_c$; the largest is
+$\{s_a,s_c\}$, whose recorded targets $s_b$ and $s_d$ it retains, so the
+run keeps at most the deletion of $s_a$ and $s_c$, taken as a set of its
+own, and retains $s_b$. \emph{So re-witnessing loses nothing
+\emph{when such an order exists}}, and where none does --- the two
+mutually witnessing sectors of the counterexample above, whose witness
+relation is cyclic --- no order helps and the refusal is the correct
+outcome, that being precisely the case the hypothesis of
+Proposition~\ref{prop:removal-compose} exists to refuse. \emph{Third, the
+comparison is of index data and is decided at no window}, exactly like
+(W2), and a singleton $\SecSet_{\mathrm{del}}$ satisfies the hypothesis
+automatically, by (W2).
+\end{remark}

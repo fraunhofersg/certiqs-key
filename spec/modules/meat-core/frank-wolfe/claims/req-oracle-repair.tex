@@ -1,0 +1,40 @@
+% ---
+% id: meat-core/frank-wolfe/req:oracle-repair
+% kind: req
+% title: "Repair of an oracle return"
+% summary: >-
+%   An oracle return with a slightly negative spectrum may be rejected, or
+%   projected onto the positive cone within a declared window of its own.
+%   Every repair is recorded with its block, iterate and depth, apart from
+%   iterate repairs, and the repaired return serves the search alone.
+% prominence: standard
+% status: implemented
+% uses: [rem:fo-oracle-repair]
+% mentions: [req:iterate-repair, req:verified-feasible-side, foundations/req:tolerance-scope]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.oracles.qics.adapter:QicsSectorChoiOracle
+% lean:
+% ---
+
+No bracket reads a point the backend returned
+(Requirement~\ref{req:verified-feasible-side}), so a repair of a return
+changes only the search's next step and a recorded diagnostic. A window
+bounds the displacement of the block but gives no bound on a pairing with
+it (Remark~\ref{rem:fo-oracle-repair}), and the object repaired is a
+\tref{computed object}, whose window is a number of its own
+(\xref{foundations/req:tolerance-scope}\,(ii)).
+
+\begin{requirement}\label{req:oracle-repair}
+The engine may reject outright an oracle return a block of which has a
+negative spectrum, or project that block onto the positive semidefinite cone
+within the declared window \iface{oracle_repair_window}, a number of its own,
+declared beside $\tnum$ and never as an instance of it. It records every
+such repair, with the block, the iterate and the measured depth, in
+\iface{optimizer_certificate}, kept apart there from the iterate repairs of
+Requirement~\ref{req:iterate-repair}, and uses the repaired return only as
+a step of the search and in the diagnostic pairing of
+Requirement~\ref{req:verified-feasible-side}\,(vi), never in a bracket and
+never as a bound on anything.
+\end{requirement}

@@ -1,0 +1,248 @@
+% ---
+% id: protocol-compiler/thm:choice-encoding
+% kind: thm
+% title: "Encoding of public choices in the measurement operators"
+% summary: >-
+%   A public choice of known bias enters as weights inside the measurement
+%   operators: the family stays a POVM, fixed weights are reproduced exactly
+%   as choice probabilities where the weighted family is emitted, and
+%   setting-dependent weights commute with the chain. A fraction outside them
+%   is refused.
+% prominence: main
+% status: implemented
+% uses: [def:weighted, lem:weighted, thm:measurements-and-statistics, def:phi, def:compile, def:chaincond, def:spec, def:banda]
+% mentions: [rem:relabel, reductions/lem:linear, reductions/rem:intertwining, reductions/ass:tsm, req:no-fixed-fraction, req:setting-only-weighting, req:stochastic-weights, req:weighted-family-emission]
+% assumes: [A-COIN, A-LINK]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.weights:resolve_povm
+% lean:
+% notes: "reductions/lem:linear is mentioned, not used: the proof of (vi) writes the linearity argument out and names the lemma only as the general statement (vi) is an instance of. A uses edge would carry the lemma's assumption closure (check_claims --assumptions reductions/lem:linear) into this claim and its dependents."
+% ---
+
+The theorem has two halves: (i)--(iv) for a choice of known bias declared on
+either party's side, (v)--(viii) for a choice whose weight depends on the
+private setting of the apparatus that measures a system, whichever party
+draws it, applied after the chain. By (ii) the weight inside
+the operators reproduces the declared choice statistics exactly wherever the
+weighted family is the one emitted. A measuring party's presentation in front
+of a receiver segment that squashes is the other case: there the weighted
+family is the physical one handed to the chain, the emitted family is the
+chain's, and the first half says what still holds. The
+assumption of the output-state test-statistics model that (vii) declares is
+\xref{reductions/ass:tsm}; it is named here, and the theorem does not use it.
+Remark~\ref{rem:relabel} explains
+why the relabelling of (vi) is not a link of the chain; it is the relabelling
+of \xref{reductions/rem:intertwining}, which leaves it to the consumer to
+apply.
+
+\begin{theorem}
+\label{thm:choice-encoding}
+Let a per-round public choice of known bias --- a basis choice, a choice
+between test and generation rounds, a probe setting --- be declared on either
+party's side with alphabet $\Tpub$, weights $(q_t)$ and conditional POVMs
+$\{N_{u|t}\}$, under Assumption~\ref{ass:coin}. Then the compiler forms the
+choice-weighted family \eqref{eq:weighted}, and (iv) below holds. Where that
+family is the emitted one --- the presentation is Alice's, or it is a
+measuring party's and the last link of that party's receiver segment
+delivers the weighted family itself, on its own alphabet, as its
+\tref[target povm]{target POVM}, as on the \tref{Band A} route
+(Definition~\ref{def:banda}\,(b)) --- the compiler emits it, and (i)--(iii)
+hold as well:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item the emitted family is a POVM and preserves sector block-diagonality
+(Lemma~\ref{lem:weighted}\,(i),(ii)), so the encoding cannot break D(iii) ---
+and it is emitted only after the two decisions of
+Definition~\ref{def:weighted}, so that what is emitted is binary64 data whose
+own predicates D(iii) is then decided on
+(Theorem~\ref{thm:measurements-and-statistics}\,(i), and (i$'$) in the
+general format);
+\item the encoding is \emph{exact}: for every state, the marginal probability
+of the choice value $t$ computed from the emitted declaration equals the
+declared weight $q_t$ (Lemma~\ref{lem:weighted}\,(iii));
+\item the choice value is a component of the joint outcome, hence enters every
+downstream quantity only through $P_{\Decl}[\omega]$ and
+$\Phimap[\omega]$ of Definition~\ref{def:phi}; no factor $q_t$ is emitted
+anywhere outside a POVM element; and
+\item the alternative encoding --- declaring the conditional families
+$\{N_{u|t}\}$ together with a separate state-independent fraction $q_t$ to be
+applied outside the operators --- is never emitted, and a specification
+requesting it is refused.
+\end{enumerate}
+Where the presentation is a measuring party's and the last link of that
+party's receiver segment delivers any other family, the weighted family is
+the physical receiver family handed to the chain
+(Definition~\ref{def:spec}\,(b)) and is not emitted: it is a POVM on the
+physical receiver space, and for every unit-trace state there the marginal
+probability of $t$ computed from it is $q_t$
+(Lemma~\ref{lem:weighted}\,(i), (iii)); no factor $q_t$ is emitted anywhere
+outside a POVM element, and (iv) holds. The emitted family is that link's
+target POVM, whose own conditions are (C3)'s and check V3's
+(Definition~\ref{def:chaincond}), and
+nothing here asserts (ii) or (iii) of it; the declared test-statistics model
+is the output-state model, as (vii) says of the setting-dependent form.
+Let, further, a public choice $f\in\mathcal{F}$ be declared whose weight
+depends on the private setting of the apparatus that measures the
+\tref{measured system}, as a
+stochastic matrix $P(f\,|\,t)$ read through the setting map
+$t:\Vset\to\mathcal{T}$ of the family $\{F_v\}_{v\in\Vset}$ the last link of
+$\Chrec$ delivered --- the setting-dependent form of
+Definition~\ref{def:weighted}; in the general format, at a measured factor,
+read through that factor's setting map on the family the last link of that
+factor's receiver segment delivered, with $S$ that factor's system --- under
+Assumption~\ref{ass:coin}. Then the compiler applies it \emph{after} the
+reduction chain, emits the family \eqref{eq:weighted-t},
+$N_{v,f}=P(f\,|\,t(v))F_v$ over the support $\Vset_P$, and:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em,resume]
+\item the emitted family is a POVM and preserves sector block-diagonality
+(Lemma~\ref{lem:weighted}\,(i),(ii)), every element being a scalar multiple
+of an element the chain delivered, so the encoding cannot break D(iii); and it
+is emitted only after the two decisions of Definition~\ref{def:weighted} on
+the products $P(f\,|\,t(v))F_v$, so that what is emitted is binary64 data
+whose own predicates D(iii) is then decided on
+(Theorem~\ref{thm:measurements-and-statistics}\,(i), and (i$'$) in the
+general format);
+\item \emph{(soundness: the relabelling commutes with the chain)} for every
+channel $\Lambda$ into $S$ and every family $\{G_v\}_{v\in\Vset}$ on its
+input space with $\Lambda^{\dagger}(F_v)=G_v$ for every $v$,
+\begin{equation}\label{eq:relabel-sound}
+  \Lambda^{\dagger}\big(N_{v,f}\big)=P(f\,|\,t(v))\,G_v
+  \qquad\text{for every }(v,f)\in\Vset_P :
+\end{equation}
+the weighted target and the identically weighted input family stand in the
+same relation under the \emph{same} channel, with the same target space, the
+same sector map, the same constraint entries transported along the chain and
+every pull-back unchanged. In this module's setting $G$ is the
+$\gamma$-coarse-grained physical family of
+Definition~\ref{def:chaincond}\,(C4), $G_v=\sum_{w\in\gamma^{-1}(v)}\Fph_w$,
+so the emitted family and the physical family weighted by
+$P(f\,|\,t(\gamma(w)))$ satisfy the pullback identity \eqref{eq:pullback}
+with the outcome correspondence $(w,f)\mapsto(\gamma(w),f)$ restricted to the
+support, wherever (C4) is decidable, and are related as (C4)'s families are
+wherever it is not. This is \xref{reductions/lem:linear}\,(i) for the
+stochastic matrix from $\Vset$ to $\Vset\times\mathcal{F}$ with entries
+$\delta_{vv'}P(f\,|\,t(v'))$;
+\item \emph{(what is not asserted)} the exactness clause (ii) is asserted for
+the setting-independent form and for it alone. For this form the marginal of
+$f$ is the quantity \eqref{eq:fmarginal} of
+Lemma~\ref{lem:weighted}\,(iv), a function of the state through the setting
+marginal, equal to the declared $q_f$ for every state when $P(f\,|\,t)=q_f$
+and state-dependent in general otherwise; nothing here asserts otherwise, no
+state-independent fraction is emitted, and the declared test-statistics model
+is the output-state model.
+What (iv) says of the fixed-fraction encoding holds of this form unchanged;
+\item \emph{(refusals)} a weighting presented through anything but the
+setting map --- indexed by $\Vset$, by the device outcome, or by any
+component of $v$ other than $t(v)$ --- is refused; a $P$ with a negative
+entry or a row whose declared-order sum is not exactly $1$ is refused; and
+the two emission decisions of Definition~\ref{def:weighted} refuse, for a
+product that is not representable or with the predicate that failed. Each
+refusal emits no declaration.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Under the hypothesis of (i)--(iii) the emitted family is the weighted family
+itself, on its own alphabet: for Alice's presentation by
+Definition~\ref{def:compile}, which emits her measurement slot from the
+presentation; for a measuring party's because the emitted family is the
+target POVM of the last link (Definition~\ref{def:compile}), which by
+hypothesis is the weighted family on $\Vset=\bigsqcup_t\Uset_t\times\{t\}$
+--- on the Band A route by Definition~\ref{def:banda}\,(b), with $\gamma$ the
+identity on $\Vset=\Vph$ and $F_v=\Fph_v$ entry for entry. So (i) and (ii)
+are Lemma~\ref{lem:weighted}, read of the emitted family and against D(iii)
+and the emission decisions of Definition~\ref{def:weighted}. For (iii): the
+emitted alphabet is $\bigsqcup_t\Uset_t\times\{t\}$ and the emitted matrices
+are the $N_{u,t}$; the choice value $t$ is recoverable from the outcome index
+alone, and no other emitted slot carries $q_t$. Since $P_{\Decl}[\omega]$ and
+$\Phimap[\omega]$ are functions of $\omega$ and the emitted operators only
+(Definition~\ref{def:phi}), the claim follows. (iv) is a rule of the
+\tref{compilation map}, not a derived statement, and is stated here because it
+is the rule the encoding exists to enforce: the emitted declaration carries
+the output-state model, and no path of the compiler produces an artefact
+carrying a fixed-fraction model. Requirement~\ref{req:no-fixed-fraction}
+binds its refusal.
+
+For a measuring party's presentation whose last link delivers any other
+family, Definition~\ref{def:spec}\,(b) makes the weighted family the physical
+receiver family, the object (C2) and (C4) of Definition~\ref{def:chaincond}
+read, and Definition~\ref{def:compile} fills the emitted family from the last
+link's target POVM, so the weighted family is not emitted. Lemma~\ref{lem:weighted}\,(i)
+and (iii) are stated on any finite-dimensional $S$ and apply with $S$ the
+physical receiver space: the weighted family is a POVM there and its choice
+marginal is $q_t$ for every unit-trace state there. No slot of the
+declaration is filled from the weights: the emitted family is the target
+POVM and the remaining slots are the other parts' (Definition~\ref{def:compile}),
+so no factor $q_t$ is emitted outside a POVM element, and (iv) is the rule
+of the compilation map as before. Nothing is asserted of the emitted family
+beyond (C3) and check V3, and nothing more could be in general: (C2) admits
+any tabulated total surjection $\gamma$, so $t$ need not be recoverable from
+an emitted outcome; and where $\gamma$ keeps the choice value, every emitted
+outcome carrying the $t$ of each physical outcome it receives, so that (C4)
+summed over the emitted outcomes carrying $t$ reads
+$\Lambda^{\dagger}(\Pi_t)=q_t\idon{}$ on the physical receiver space with
+$\Pi_t$ the sum of the emitted elements carrying $t$, that fixes $\Pi_t$
+only through $\Lambda^{\dagger}$ and does not make it $q_t\idon{\Qsys}$ off
+the image of the channel. The
+sentence on the test-statistics model is, as in (vii), a statement of what
+the emitted declaration carries.
+
+(v) is Lemma~\ref{lem:weighted}\,(i), (ii) for the setting-dependent form,
+read against D(iii) and the emission decisions exactly as (i) is.
+
+(vi) By linearity of $\Lambda^{\dagger}$,
+$\Lambda^{\dagger}(P(f\,|\,t(v))F_v)=P(f\,|\,t(v))\Lambda^{\dagger}(F_v)
+=P(f\,|\,t(v))G_v$, which is \eqref{eq:relabel-sound}; nothing else is used,
+and in particular nothing about $\Lambda$ beyond linearity of its adjoint.
+That the two weighted families are POVMs is (v) and its mirror on the input
+side (the same computation with $G$ for $F$, $\sum_vG_v=\Lambda^{\dagger}
+(\sum_vF_v)$ being the identity where $\Lambda^{\dagger}$ is unital, which is
+the trace-preservation clause of the obligation of the chain's producer and
+not a step of this proof). The identity \eqref{eq:relabel-sound} is the
+instance of the post-processing part~(i) of \xref{reductions/lem:linear} for
+the relation $G\dsq_{\Lambda}F$ and the stochastic matrix
+$\Pi\big((v',f)\,|\,v\big)\coloneqq\delta_{vv'}P(f\,|\,t(v'))$ from $\Vset$ to
+$\Vset\times\mathcal{F}$, every column of which sums to
+$\sum_fP(f\,|\,t(v))=1$: $(\Pi F)_{(v,f)}=P(f\,|\,t(v))F_v$ and
+$(\Pi G)_{(v,f)}=P(f\,|\,t(v))G_v$, and the computation above is that
+lemma's argument for $\Pi$, written out. The target space, its
+sector map and the transported entries are untouched because a relabelling
+changes the index set of the two families and nothing else: every constraint
+operator $\hat O_k$ is an operator on $\Qsys$, not a function of $v$, and its
+pull-back $\Lambda^{\dagger}(\hat O_k)$ is computed through the same
+$\Lambda$. For the compiler's instance of it, substitute (C4)'s
+$G_v=\sum_{w\in\gamma^{-1}(v)}\Fph_w$: then
+$\Lambda^{\dagger}(N_{v,f})=\sum_{w\in\gamma^{-1}(v)}P(f\,|\,t(\gamma(w)))\Fph_w$,
+which is \eqref{eq:pullback} for the family
+$\{P(f\,|\,t(\gamma(w)))\Fph_w\}_{(w,f)}$ under the correspondence
+$(w,f)\mapsto(\gamma(w),f)$, a total surjection onto $\Vset_P$ because
+$\gamma$ is one onto $\Vset$ and the weight depends on $w$ only through
+$\gamma(w)$; where (C4) is not decidable from the data,
+\eqref{eq:relabel-sound} is still an identity of linear maps, and it says of
+the relation the chain's producer asserts and nobody here decides
+(Definition~\ref{def:chaincond}\,(C4), second sentence) exactly what it says
+of a decided one.
+
+(vii) is Lemma~\ref{lem:weighted}\,(iv): \eqref{eq:fmarginal} is the marginal
+of $f$ computed from the emitted declaration, it equals $q_f$ for every state
+in the setting-independent case, and it is in general a function of the state
+otherwise. The theorem asserts no value for it in that case; the sentence
+about the \tref{declared model} is a statement of what the emitted declaration
+carries, as (iv) is.
+
+(viii) is the rule of the compilation map that Definition~\ref{def:weighted}
+states and Requirements~\ref{req:setting-only-weighting},
+\ref{req:stochastic-weights} and~\ref{req:weighted-family-emission} bind,
+stated beside (iv) because it is the rule the encoding exists to enforce: a
+weighting that reaches an outcome through anything but its setting would make
+$f$ a function of the device outcome, which is the inference
+Assumption~\ref{ass:coin} excludes; a row of $P$ with non-negative entries
+whose sum is not $1$ would make \eqref{eq:forgetf} false at every $v$ of that
+setting with $F_v\ne0$, the inner sum over the support \eqref{eq:support}
+being that row sum, and a negative entry, which the support never keeps and
+which therefore reaches no emitted element, is refused because
+Assumption~\ref{ass:coin} reads $P(\,\cdot\,|\,t)$ as the distribution the
+choice $f$ is drawn from, and a negative number is no probability; and
+the two emission decisions are those of the setting-independent form, taken on
+the products of this one.
+\end{proof}

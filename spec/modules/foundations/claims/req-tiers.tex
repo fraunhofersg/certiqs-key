@@ -1,0 +1,40 @@
+% ---
+% id: foundations/req:tiers
+% kind: req
+% title: "Reporting of the tiers"
+% summary: >-
+%   Every run that reports a key rate reports it at each tier it reaches and
+%   names the strongest, whose number is the headline and gives the key length.
+%   No module labels a number with a tier its checks do not support, and a
+%   request for an unknown tier is refused.
+% prominence: standard
+% status: accepted
+% uses: [def:tiers]
+% mentions: [meat-core/frank-wolfe/req:certified-evaluation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A run reaches the \tref{certified} tier only where its certified evaluation
+succeeds, which is the business of the solver that forms the number
+(\xref{meat-core/frank-wolfe/req:certified-evaluation}); the rule below only
+says how the tiers a run reaches are reported.
+
+\begin{requirement}\label{req:tiers}
+Every run that reports a key rate reports it at every tier of
+Definition~\ref{def:tiers} that it reaches: the estimate always, the
+first-order number wherever the hypotheses of the claim that establishes it
+held, and the certified number wherever the requirement of the solver that
+forms it reports it at that tier, which may withhold the tier from a number
+that meets Definition~\ref{def:tiers}\,(iii) but rests on an upstream
+premise; together with the field
+\iface{reported_tier}, which names the strongest tier reached, the tier that
+carries the run's claim. Where the first-order number is reported, the number
+at that strongest tier is the headline key rate, and the key length the run
+reports is formed from it; a number at a weaker tier is recorded beside it.
+No module reports a number under a tier stronger than the checks that number
+has passed support, and a request naming a tier that
+Definition~\ref{def:tiers} does not list is refused as an unknown tier.
+\end{requirement}

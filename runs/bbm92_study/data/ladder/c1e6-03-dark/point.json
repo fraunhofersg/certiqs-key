@@ -1,0 +1,52 @@
+{
+ "alpha": "search",
+ "device": {
+  "alice_dark_count": {
+   "A": "13/100000000",
+   "D": "13/100000000",
+   "H": "13/100000000",
+   "V": "13/100000000"
+  },
+  "alice_efficiency": {
+   "A": "4/5",
+   "D": "4/5",
+   "H": "4/5",
+   "V": "4/5"
+  },
+  "bob_dark_count": {
+   "A": "13/100000000",
+   "D": "13/100000000",
+   "H": "13/100000000",
+   "V": "13/100000000"
+  },
+  "bob_efficiency": {
+   "A": "4/5",
+   "D": "4/5",
+   "H": "4/5",
+   "V": "4/5"
+  }
+ },
+ "f_ec": 1.1,
+ "id": "c1e6-03-dark",
+ "labels": {
+  "coincidences": 1000000,
+  "effect": "dark",
+  "loss_db": 0.0,
+  "rounds": 1700000,
+  "rung": 3,
+  "source": "joshi2020network",
+  "value": "1.3e-7 per port per round"
+ },
+ "model": {
+  "alice_transmittance": "1",
+  "bob_transmittance": "1",
+  "visibility": "49/50"
+ },
+ "parameters": {},
+ "rounds": 1700000,
+ "solver": {
+  "budget_seconds": 600,
+  "max_iterations": null,
+  "method": "auto"
+ }
+}

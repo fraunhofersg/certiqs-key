@@ -1,0 +1,133 @@
+% ---
+% id: meat-core/frank-wolfe/rem:certified-scope
+% kind: rem
+% title: "What a certified number rests on"
+% summary: >-
+%   A certified number rests on the claims, the modelling premises of its
+%   declaration and the correctness of the code, its ball-arithmetic library
+%   included, and on no premise about arithmetic. It does not reach data
+%   computed before the declaration; a receiver weight in floating point
+%   withholds it.
+% user_statement: >-
+%   Certified means that every number between the declaration and the key
+%   rate was computed exactly or with a rigorous bound on its rounding. It
+%   does not mean that the declaration describes your devices: the source,
+%   receiver and laboratory premises in the report still apply, and a number
+%   formed on the snapped measurement rests where the record says on the
+%   device measuring it. Nor is the software assumed correct by a premise:
+%   its correctness, its interval-arithmetic library included, is checked by
+%   review and tests. Ideal analysers with irrational projector entries (at
+%   pi/8, say) certify on your model where the receiver gives their elements
+%   in factor form; otherwise, as for some lossy multi-photon receivers, the
+%   rate can be certified on the snapped measurement, resting there on that
+%   premise, unless the run sets strict_snaps. A floating-point multiclick
+%   weight keeps the first-order number.
+% prominence: standard
+% status: accepted
+% uses: [cor:certified-keylength, cor:certified-keylength-reference, lem:certified-bracket, lem:certified-bracket-enclosed, thm:firstorder, req:certified-evaluation, rem:fo-arithmetic, rem:fo-check-exposures, meat-core/lem:branch-support, foundations/def:tiers, foundations/cor:least-eigenvalue-over-enclosure, foundations/cor:rank-over-factor-enclosure]
+% mentions: [req:bracket-on-reference, foundations/ass:snapped-measurement, foundations/req:snap-reference, reductions/ass:recv, reductions/req:recv-row-provenance, receiver/thm:enclosed-weight, receiver/req:evaluation-label]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:certified-scope}
+A certified number, Requirement~\ref{req:certified-evaluation}, is by
+Corollary~\ref{cor:certified-keylength} a lower bound on the value of the
+declaration it is formed on, and it rests on three things.
+
+\emph{The claims.} Lemma~\ref{lem:certified-bracket} and
+Corollary~\ref{cor:certified-keylength}, on a reference companion with
+Lemma~\ref{lem:certified-bracket-enclosed} and
+Corollary~\ref{cor:certified-keylength-reference}, with what they use, the hypotheses of
+Theorem~\ref{thm:firstorder} among them, each of which the evaluation
+establishes at the point itself: positive definite blocks, which give
+(H-SUPP) by Lemma~\ref{lem:branch-support}\,(i); (H-POS) with certified
+signs; and the exact gradient, which is (H-NOPERT). The binary64 checks whose
+exposures Remark~\ref{rem:fo-check-exposures} names, the oracle's return and
+the gradient the search computed enter no certified number, and the
+exposures of Remark~\ref{rem:fo-arithmetic} are those of the first-order
+number, not of this one.
+
+\emph{The modelling premises of that declaration.} They are the premises of
+the first-order number on the same declaration, and certification decides
+none of them and adds none. Where the number is formed on the declaration
+the run searched, the blocks that rest there on
+\xref{foundations/ass:snapped-measurement} rest on it for the certified number
+as well. That includes the fallback of
+Requirement~\ref{req:certified-evaluation}\,(i): where a companion counts but
+certifies no point and the number is certified on the searched declaration,
+the blocks the companion carried rest on that assumption for the reported
+key length, though they would not for the companion's first-order number
+(Requirement~\ref{req:bracket-on-reference}\,(v)). On a reference companion
+the number holds of the companion itself, not of the centres of its
+enclosure; and the premises of the source and the receiver remain, on every
+route.
+
+\emph{The implementation.} Every arithmetic step from the declaration's data
+is exact or \tref{rigorously enclosed}, so no premise is about how a number
+was computed and none of the category numerical-trust enters through the
+evaluation (\xref{foundations/def:tiers}). What remains is that the code
+computes what the claims state, the library of the rigorous arithmetic
+included. That is the correctness of the engine, held to review and to tests
+like every other part of it; no assumption is stated for it, and a defect
+there is a defect of the engine and not the failure of a premise.
+
+The chain begins at the declaration's data. A supplier's floating-point
+evaluation that produced those data, under an allowance or an assumption of
+its own, lies before it. Such an evaluation of the receiver's blocks reaches
+a number formed on the declaration the run searched only through the snap,
+where the run rests on \xref{foundations/ass:snapped-measurement} as the
+paragraph on modelling premises above says, and the tier is not withheld
+there. The tier is withheld in the two cases
+Requirement~\ref{req:certified-evaluation}\,(vii) names: where an
+assumption of the category numerical-trust is invoked on the run, and where
+the declaration carries a weight routed from a receiver's high-photon weights
+into which a per-setting weight enters that the receiver evaluated in
+floating point, the uniform weight counting every setting, a number that
+holds of the device only as \xref{reductions/ass:recv}\,(ii) attests it and
+that the receiver records so (\xref{receiver/req:evaluation-label}). A receiver weight
+evaluated rigorously is a bound by the receiver's own theorem
+(\xref{receiver/thm:enclosed-weight}), and rests on that assumption only for
+the artifact's provenance and for the device premises of the receiver, where
+the ledger carries its row; for an artifact the run built itself, exact and
+with every weight evaluated rigorously, the row is omitted
+(\xref{reductions/req:recv-row-provenance}), and the receiver's own
+ledger carries those device premises.
+
+Over a companion known through enclosures, the number exists only where
+every element the gradient reads has a fixed rank
+(Lemma~\ref{lem:certified-bracket-enclosed}). An element whose principal
+block on the rows its entrywise enclosure does not fix at zero is singular
+has no positive lower bound on that block's least eigenvalue, the element
+being among the matrices its enclosure contains, so the rule of
+\xref{foundations/cor:least-eigenvalue-over-enclosure}\,(iv) fixes no rank
+for it, at any radius. Among the elements whose enclosure carries a
+positive radius, that is the case of every rank-deficient element whose
+support is spanned by no set of coordinate vectors, by part (iii) of that
+corollary, such as the projector of an ideal analyser at an angle whose
+projector has irrational entries, and of every rank-deficient element whose
+zero rows the enclosure does not fix at zero. Such an element has a fixed
+rank all the same where it is carried with a factor enclosure that has no
+column, or whose columns have a Gram matrix with a positive floor over its
+box, its rank then being the number of columns at every member
+(\xref{foundations/cor:rank-over-factor-enclosure}); so the analyser's
+projector certifies on the companion where the receiver emits its elements
+in that form. A factor enclosure fixes no rank where the columns of a member
+are linearly dependent, its Gram matrix being singular there, and where the
+member's rank is also below its dimension, neither rule fixes one: a
+multi-photon element of a receiver with loss and no dark counts can be of
+this kind. Nor is a rank fixed for a rank-deficient element carried with no
+factor enclosure, as where the receiver forms its blocks without an exact
+dilation of its instrument, for a generic component with none, or where a squashing map acts on a data sector after
+the factor is formed. A run whose companion reads such an element at a pair
+that is not \tref{key-inert} certifies no point on the companion, and it
+reaches the certified tier only through the fallback of
+Requirement~\ref{req:certified-evaluation}\,(i), on the declaration it
+searched, which does not run under the strict option \emph{strict\_snaps}
+(\xref{foundations/req:snap-reference}\,(iv)), resting there on
+\xref{foundations/ass:snapped-measurement} for the blocks the companion
+carried. An element the companion carries exactly,
+with radius zero, is factorised exactly and is not subject to these rules.
+\end{remark}

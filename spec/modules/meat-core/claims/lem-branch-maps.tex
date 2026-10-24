@@ -1,0 +1,114 @@
+% ---
+% id: meat-core/lem:branch-maps
+% kind: lem
+% title: "Properties of the pass and fail branch maps"
+% summary: >-
+%   The pass and fail maps are trace-non-increasing, their traces add up to the
+%   acceptance value's probability, their outputs have orthogonal supports and
+%   the fail branch is fixed by the key pinching. They split by sector on
+%   block-diagonal inputs, and a value that is not key-live has a zero pass
+%   map.
+% prominence: standard
+% status: implemented
+% uses: [def:maps, thm:protocol-channel, def:declaration, def:branch, def:admissible-declaration]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.branch:evaluate_branches
+% lean:
+% ---
+
+\begin{lemma}\label{lem:branch-maps}
+Under Definition~\ref{def:admissible-declaration}, for every $\hat c\in\Chatset$:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $\cG_{\hat c}$ and $\Theta_{\hat c}$ are CP and trace-non-increasing,
+with
+\begin{equation}\label{eq:traces}
+  \tr\cG_{\hat c}(\omega)+\tr\Theta_{\hat c}(\omega)
+  =\Phimap[\omega](\hat c)
+  \qquad\text{for all }\omega\in\Pos{A\Qsys}.
+\end{equation}
+\item $\cG_{\hat c}(\omega)$ is supported on
+$\operatorname{span}\{\ket{j}_R:j\in\Zval\}$ and
+$\Theta_{\hat c}(\omega)=\dyad{\perp}_{R}\otimes\theta_{\hat c}(\omega)$ for
+a CP map $\theta_{\hat c}$; in particular their supports are orthogonal and
+$\cZ(\Theta_{\hat c}(\omega)^{p})=\Theta_{\hat c}(\omega)^{p}$ for every
+$p>0$.
+\item (Sector decomposition.) If
+$\omega=\bigoplus_{s\in\SecSet}\omega_s$ is block-diagonal with respect to
+the decomposition $\Hs{A\Qsys}=\bigoplus_s\Hs{A\Qsys_s}$, then
+\begin{equation}\label{eq:G-sector}
+  \cG_{\hat c}(\omega)=\bigoplus_{s\in\SecSet}\cG_{\hat c,s}(\omega_s),
+  \qquad
+  \Theta_{\hat c}(\omega)=\bigoplus_{s\in\SecSet}\Theta_{\hat c,s}(\omega_s),
+  \qquad
+  \Phimap[\omega]=\sum_{s\in\SecSet}\Phimap_s[\omega_s],
+\end{equation}
+where the direct sums refer to the (mutually orthogonal) subspaces
+$\Hs{R\,XY\,C_AC_B}\otimes\Hs{A\Qsys_s}$ and
+$\Phimap_s$ is \eqref{eq:Phimap} with $F_v^{(s)}$ in place of $F_v$.
+\item If $\hat c\notin\Chkey$ then $\cG_{\hat c}=0$.
+\end{enumerate}
+The complete positivity of $\cG_{\hat c}$ and $\Theta_{\hat c}$ in (i),
+and all of (iii), hold as well when $\{F_v\}$ is any family of
+sector-block-diagonal positive semidefinite operators, complete or not,
+the other components satisfying Definition~\ref{def:admissible-declaration}.
+\end{lemma}
+
+\begin{proof}
+(i) CP is Kraus form. For the trace, note that for a single class $\kappa$,
+the register kets $\ket{r(x,v),x,v,\kappa}$ appearing in
+$K_{\kappa}$ are mutually orthonormal as $(x,v)$ ranges over
+$a^{-1}(\kappa)$ (they differ in $XY$), so
+$\tr[K_{\kappa}\omega K_{\kappa}^{\dagger}]
+=\sum_{(x,v)\in a^{-1}(\kappa)}\tr[(M_x\otimes F_v)\,\omega]$ by cyclicity.
+Summing over $\kappa\in\phi^{-1}(\hat c)$ (pass and fail together) and
+comparing with \eqref{eq:Phimap} gives \eqref{eq:traces}; each summand of
+\eqref{eq:traces} is non-negative, so
+$\tr\cG_{\hat c}(\omega)$ and $\tr\Theta_{\hat c}(\omega)$ are each at
+most $\Phimap[\omega](\hat c)$. The remaining step,
+$\Phimap[\omega](\hat c)\le1$ for a state $\omega$, is not a property of the
+branch maps: it is
+Theorem~\ref{thm:protocol-channel}\,(iii), that $\Phimap[\omega]$ is a probability
+distribution on $\Chatset$, whose proof consumes the completeness of the
+declared POVMs, $\sum_vF_v=\idon{\Qsys}$ and $\sum_xM_x=\idon{A}$
+(Definition~\ref{def:admissible-declaration}). Hence both maps are trace-non-increasing on
+states.
+
+(ii) By announcement-determined sifting
+(Definition~\ref{def:admissible-declaration}\,(v)), $r(x,v)\in\Zval$ for every $(x,v)$ in a
+pass class and $r(x,v)=\perp$ for every $(x,v)$ in a fail class. Hence every
+Kraus operator of $\cG_{\hat c}$ carries an $R$-ket in $\Zval$ and every
+Kraus operator of $\Theta_{\hat c}$ carries $\ket{\perp}_R$; the $\perp$
+value factors out of the sum defining $\Theta_{\hat c}$. The pinching $\cZ$
+acts as the identity on any operator supported on a single $R$-eigenspace,
+and powers preserve supports.
+
+(iii) By blockwise functional calculus,
+$\sqrt{F_v}=\bigoplus_s\sqrt{F_v^{(s)}}$, so
+$K_{\kappa}=\sum_s K_{\kappa}^{(s)}$ with
+$K_{\kappa}^{(s)}=K_{\kappa}(\idon{A}\otimes\Pi_s)$ mapping
+$\Hs{A\Qsys_s}$ into $\Hs{R\,XY\,C_AC_B}\otimes\Hs{A\Qsys_s}$ (the operators
+$\sqrt{M_x}\otimes\sqrt{F_v^{(s)}}$ do not leave the sector). For
+block-diagonal $\omega$,
+$K_{\kappa}\,\omega\,K_{\kappa}^{\dagger}
+=\sum_{s,s'}K_{\kappa}^{(s)}\,\omega\,K_{\kappa}^{(s')\dagger}$
+and $K_{\kappa}^{(s)}\omega\,K_{\kappa}^{(s')\dagger}
+=K_{\kappa}^{(s)}(\idon{}\otimes\Pi_s)\,\omega\,(\idon{}\otimes\Pi_{s'})
+K_{\kappa}^{(s')\dagger}$ vanishes for $s\ne s'$ because
+$(\idon{}\otimes\Pi_s)\,\omega\,(\idon{}\otimes\Pi_{s'})=0$. The images for
+different $s$ lie in orthogonal subspaces, giving the direct sums; the
+$\Phimap$ statement follows from linearity of the trace and block-diagonality
+of $F_v$.
+
+(iv) If $\hat c\notin\Chkey$ there are no pass classes in $\phi^{-1}(\hat c)$
+by \eqref{eq:chkey}, so the sum \eqref{eq:GTheta} defining
+$\cG_{\hat c}$ is empty.
+
+\emph{Any positive family.} The Kraus-form argument for complete
+positivity in (i) and the argument for (iii) read of $\{F_v\}$ only that
+each $F_v$ is positive semidefinite, so that $\sqrt{F_v}$ is defined, and
+sector-block-diagonal; neither reads $\sum_vF_v=\idon{\Qsys}$, which
+enters (i) only through Theorem~\ref{thm:protocol-channel}\,(iii) for the
+bound on the traces.
+\end{proof}

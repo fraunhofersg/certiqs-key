@@ -1,0 +1,101 @@
+% ---
+% id: reductions/def:link
+% kind: def
+% title: "Typed link"
+% summary: >-
+%   A typed link is a source link of the transmitter's type or a receiver-stage
+%   tuple of ten slots: stage, kind, source family, target, channel witness,
+%   carried operators, reachable-set statement, transported entries, licence
+%   record and status. Each link carries enough to be re-checked.
+% prominence: standard
+% status: accepted
+% uses: [def:sound, cor:pullback, def:certificate, transmitter/def:source-link, transmitter/def:source-segment]
+% mentions: [def:chain, rem:ordering, thm:chain, thm:two-sided]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The third component of the obligation record is named as the assumptions the obligation carries and not as the assumptions of the soundness claim: transmitter/def:source-segment (A1) makes it the soundness claim's assumption closure together with the submodule's physical-source assumption, which that claim does not assume. This module computes and re-decides neither."
+% ---
+
+What this module emits is not a squashed POVM but a chain of typed links,
+each carrying enough to re-check it, in an order that is data rather than
+convention. This definition states a link. How
+\tref[source link]{source links} and receiver-stage links compose is
+Definition~\ref{def:chain}, with its condition (C3) for the order the record
+carries and its admission rule for which such chains are admitted at all; Remark~\ref{rem:ordering} gives the
+reason, Theorem~\ref{thm:chain} what the receiver stage composes to, and
+Theorem~\ref{thm:two-sided} what the two stages compose to.
+
+\begin{definition}\label{def:link}
+A
+\term[A link of a reduction chain, at the source stage or the receiver stage, carrying what is needed to re-check it.]{typed link}
+carries a stage $\textsf{stage}\in\{\textsf{source},\textsf{receiver}\}$.
+A link at the stage \textsf{source} is a \tref{source link} in the sense of
+\xref{transmitter/def:source-link}: its descriptors are Alice-side, a
+\tref{transmitted system} with a signal ensemble on either end and a channel
+witness between them, and no condition on it mentions the receiver's
+systems, \tref[outcome alphabet]{outcome alphabets} or measurements.
+\emph{This module reads that type as the transmitter states it}: the channel
+witness is supplied either
+\emph{as data}, in which case the source identity is decided on declared
+numbers, or \emph{as a \tref{theorem constructor}}, in which case the link
+carries an \tref{obligation record}, namely the triple of the kind, the id of
+the soundness claim and the assumptions the obligation carries, which
+\xref{transmitter/def:source-segment}\,(A1) defines and which this module
+neither computes nor re-decides, together with the member of its
+\tref{declared descriptor family} that its descriptors are; and a source link
+carries in addition that family, an optional
+\tref{retained-register sector map}, its
+\tref{transported constraint entries} with its licence slot, and its status.
+Which kinds are admitted at all, and which components a consumer decides
+\emph{on data} (the emitted \tref{soundness registry}, the triple compared
+against it entry by entry with those assumptions demanded in the ledger, and
+the provenance rule for a non-empty segment), is
+\xref{transmitter/def:source-segment}, conditions (A1) to (A3); this module
+re-decides none of them, adds none, and adds no source-stage kind. A
+\term[A tuple of ten slots relating a source family to a target through a channel witness, with its carried operators, reachable-set statement, transported entries, licence record and status.]{receiver-stage typed link}
+$\Lnk$ is a tuple
+\begin{equation}\label{eq:link}
+  \Lnk=\Big(\textsf{stage},\ \textsf{kind},\
+  \big(\Bsys^{\mathrm{in}},M^{\mathrm{in}}\big),\
+  \big(\Bsys^{\mathrm{out}},M^{\mathrm{out}}\big),\
+  \Lambda_{\Lnk},\
+  \big(\hat O^{\mathrm{out}},O^{\mathrm{in}}\big),\
+  \Srch_{\Lnk},\
+  \CList_{\Lnk},\
+  \textsf{licence},\ \textsf{status}\Big)
+\end{equation}
+in which: $\textsf{stage}=\textsf{receiver}$;
+\textsf{kind} is one of the receiver-stage link kinds the module's interface
+declares (the core's kinds, and those a submodule's interface adds);
+$(\Bsys^{\mathrm{in}},M^{\mathrm{in}})$ is the
+\term[The system and POVM a receiver-stage link starts from.]{source family}
+--- the system and POVM the link starts from --- and
+$(\Bsys^{\mathrm{out}},M^{\mathrm{out}})$ its \emph{target};
+$\Lambda_{\Lnk}$ is the
+\term[The squashing channel a link carries, relating its source family to its target together with the carried operators.]{channel witness},
+with
+$\big(M^{\mathrm{in}};O^{\mathrm{in}}\big)\dsq_{\Lambda_{\Lnk}}
+\big(M^{\mathrm{out}};\hat O^{\mathrm{out}}\big)$;
+$\Srch_{\Lnk}$ is the
+\term[The set of reachable squashed states of a link, for its channel witness and the declared family of inputs.]{reachable-set statement}
+of Definition~\ref{def:sound} for $\Lambda_{\Lnk}$ and the declared family of
+inputs; $\CList_{\Lnk}$ is the list of transported constraint entries
+$(\hat O_k,\bowtie_k,c_k)$ with, per entry, the \tref{certificate} case of
+Corollary~\ref{cor:pullback} that discharges it; \textsf{licence} is the
+\term[The record of the attack-set licence a link carries exactly when its constraint list is non-empty.]{licence record}
+of the module's outputs, present exactly when $\CList_{\Lnk}\ne\varnothing$;
+and $\textsf{status}\in\{\textsf{exact},\textsf{certified\_outer},
+\textsf{exploratory\_numeric}\}$, with \textsf{exact} meaning that
+$\Lambda_{\Lnk}^{\dagger}(M^{\mathrm{out}}_v)=M^{\mathrm{in}}_v$ holds with no
+error term.
+
+\emph{The count.} A receiver-stage link has ten slots. Six of
+them are the required fields --- source family, target, channel witness,
+reachable-set statement, transported constraint entries, licence record ---
+and the remaining four are \textsf{stage}, \textsf{kind}, the carried
+operator pair, and \textsf{status}. Wherever this contract says ``the six
+required fields'' it means the first group; the tuple \eqref{eq:link} is the
+whole of what an implementer binds.
+\end{definition}

@@ -1,0 +1,54 @@
+% ---
+% id: reductions/lem:top
+% kind: lem
+% title: "Flag PVM as a top element"
+% summary: >-
+%   Every POVM with a finite alphabet squashes to the flag PVM on its outcomes
+%   through a measure-and-prepare channel, and to any PVM on the same alphabet
+%   that vanishes only where the POVM does. A squasher therefore always
+%   exists; the work lies in finding a target tight enough to leave a key rate.
+% prominence: standard
+% status: accepted
+% uses: [def:squashing]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A receiver is rarely characterized as a single POVM on a single space. It is
+characterized \emph{conditionally}: below a photon-number cutoff we know what
+it does and above it we do not; on one value of a classical branch register it
+behaves as specified and on another we promise nothing. The lemma shows first
+that existence of a squasher is never the difficulty. The work of this
+module's constructions is therefore not to find a squasher but to find one
+whose target is tight enough to leave a key rate.
+
+\begin{lemma}\label{lem:top}
+Let $M$ be any POVM on any $\Bsys$ with finite alphabet $\Vset$, and let
+$\Ppvm=\{\dyad{v}\}_{v\in\Vset}$ be the \emph{flag PVM} on
+$\Hs{\Flag}=\mathbb{C}^{|\Vset|}$ with orthonormal basis
+$\{\ket{v}\}_{v\in\Vset}$. Then
+\begin{equation}\label{eq:mpsquasher}
+  M\;\dsq_{\Lmp}\;\Ppvm,
+  \qquad
+  \Lmp(\rho)\coloneqq\sum_{v\in\Vset}\tr[M_v\rho]\,\dyad{v} .
+\end{equation}
+More generally, if $P$ is any PVM on a space $\Qsys$ with the same alphabet and
+$P_v=0\Rightarrow M_v=0$, then $M\dsq P$.
+\end{lemma}
+
+\begin{proof}
+$\Lmp$ is a measure-and-prepare channel: CP, and trace preserving because
+$\sum_v\tr[M_v\rho]=\tr\rho$. Its adjoint is
+$\Lmp^{\dagger}(X)=\sum_v\bra{v}X\ket{v}\,M_v$, since
+$\tr[X\Lmp(\rho)]=\sum_v\tr[M_v\rho]\bra{v}X\ket{v}$; evaluating at
+$X=\dyad{v'}$ gives $M_{v'}$. For the general case pick, for each $v$ with
+$M_v\neq0$, a state $\omega_v$ with $P_v\omega_vP_v=\omega_v$ (possible since
+$P_v\neq0$), and set
+$\Lambda(\rho)\coloneqq\sum_{v:M_v\neq0}\tr[M_v\rho]\,\omega_v$. This is trace
+preserving because the omitted terms vanish and $\sum_vM_v=\idon{\Bsys}$, and
+$\Lambda^{\dagger}(P_{v'})=\sum_{v:M_v\neq0}\tr[P_{v'}\omega_v]\,M_v=M_{v'}$,
+because $\tr[P_{v'}\omega_v]=\delta_{vv'}$ by orthogonality of the ranges of a
+PVM, and because the identity reads $0=0$ when $M_{v'}=0$.
+\end{proof}

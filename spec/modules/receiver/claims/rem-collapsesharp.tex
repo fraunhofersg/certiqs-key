@@ -1,0 +1,35 @@
+% ---
+% id: receiver/rem:collapsesharp
+% kind: rem
+% title: "Sharpness of the collapse lemma"
+% summary: >-
+%   At the data γ = βₖ = 1, d₁ = 1 and dₖ = c for k ≥ 2, the bound function
+%   is identically zero, so the monotonicity step of [[lem:collapse]] cannot
+%   be strengthened to strict increase.
+% prominence: standard
+% status: accepted
+% uses: [lem:collapse, def:bounddata, cor:unconditioned-family]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:collapsesharp}
+Equality holds in \eqref{eq:target} at the data $\gamma=\beta_k=1$,
+$d_1=1$, $d_2=\dots=d_K=c$: there $\Bnd(n)=1+(K-1)c^{\,n}-1-(K-1)c^{\,n}=0$ for
+every $n$, so $\Bnd$ is constant and the implication
+\eqref{eq:collapsestep} cannot be strengthened to strict increase. More
+generally, at $\gamma=\beta_k=1$ every $d_1=1$ gives $\Bnd(n)\le0$ for every
+$n$, because $d_k\ge c$ by \eqref{eq:bounddata} makes
+$\Bnd(n)\le1+(K-1)c^{\,n}-1-(K-1)c^{\,n}$. Physically, $d_1=1$ is a singular
+$B_1$, and at a receiver without a probe, where $B_1=A_{[K]\setminus\{1\}}$
+(Corollary~\ref{cor:unconditioned-family}), that is a receiver in which some
+input polarization reaches no port other than port~$1$: no multiclick weight
+can be guaranteed at any photon number, and the bound correctly returns $0$.
+The data above attain equality; at a receiver without a probe they force
+ports $2$ to $K$ to receive nothing, since $d_k=c$ means
+$\lmin(B_k)=\lmax(B)$, which with $B_k\preceq B$ forces $B_k=B$, that is
+$A_k=0$.
+\end{remark}

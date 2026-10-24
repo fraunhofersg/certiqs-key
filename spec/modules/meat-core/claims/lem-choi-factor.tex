@@ -1,0 +1,213 @@
+% ---
+% id: meat-core/lem:choi-factor
+% kind: lem
+% title: "Fixed-marginal parametrisation with any factor"
+% summary: >-
+%   Any factor W of Alice's marginal parametrises the fixed-marginal states per
+%   Alice sector, and the objective reads her side only through her measurement
+%   sandwiched by W. On the full frame these are the declared operators of an
+%   ensemble-form declaration, so no rank is computed.
+% prominence: standard
+% status: implemented
+% uses: [lem:choi-marginal, def:support-frame, def:declaration, def:feasible, def:branch, def:maps, thm:branch-formula, lem:cone-concavity, lem:ensemble-form, def:joint-sectors, lem:branch-maps, def:admissible-declaration]
+% mentions: [thm:choi]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.joint:joint_choi_parametrization
+% lean:
+% notes: "The ensemble form needs no full-rank tau_A and no frame beyond the two of def:support-frame: on the full frame the factor is tau_A^{1/2}, part (iii) holds at every rank and the conjugated row form is exact on every frame. What is forgone is the frame-free row form (prop:frame-free-rows) on an ensemble-form declaration whose tau_A is not diagonal, which changes no value."
+% ---
+
+Of $W_{\tau}$, the parametrisation of Lemma~\ref{lem:choi-marginal} reads
+only that it is a factor of $\tau_A$. Stated for any factor, and per Alice
+sector, it shows that the objective reads Alice's side only through the
+operators $W^{\dagger}M_xW$, which on the \tref{full frame} are the operators an
+ensemble-form declaration declares.
+
+\begin{lemma}\label{lem:choi-factor}
+Let $\Decl$ satisfy Definition~\ref{def:admissible-declaration} in trusted-source mode, in the
+general format of Definition~\ref{def:declaration}.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(any factor serves)} Let $\tau\in\Pos{A'}$ on a
+finite-dimensional system $A'$, of any trace, and let $W\in\Linn{A_0}{A'}$
+satisfy $WW^{\dagger}=\tau$. Let $P_W$ be the projector onto
+$(\ker W)^{\perp}$. For every finite-dimensional $B'$ the map
+$\chi^{W}_{B'}(J)\coloneqq(W\otimes\idon{B'})J(W^{\dagger}\otimes\idon{B'})$
+maps $\{J\in\Pos{A_0B'}:\tr_{B'}J=\idon{A_0}\}$ onto
+$\{\omega\in\Pos{A'B'}:\tr_{B'}\omega=\tau\}$; it is injective when
+$\ker W=0$, and, if $\dim\Hs{B'}\ge2$, only then; and
+$\chi^{W}_{B'}(J)=\chi^{W}_{B'}(J')$ exactly when
+$(P_W\otimes\idon{})J(P_W\otimes\idon{})=(P_W\otimes\idon{})J'(P_W\otimes\idon{})$.
+The operator $W_{\tau}$ of \eqref{eq:Wtau} is such a factor of $\tau_A$ for
+every admissible frame.
+\item \emph{(per Alice sector)} For every $t\in\mathbb{T}$ let $W_t\in
+\Linn{A_{0,t}}{A_t}$ satisfy $W_tW_t^{\dagger}=\tau^{(t)}_A$, and put
+$A_0\coloneqq\bigoplus_tA_{0,t}$, $W\coloneqq\bigoplus_tW_t$. Then
+$WW^{\dagger}=\tau_A$, and the assignment
+$(J_{t,s})\mapsto\big(\omega^{(t,s)}\big)$,
+$\omega^{(t,s)}\coloneqq(W_t\otimes\idon{\Qsys_s})J_{t,s}
+(W_t^{\dagger}\otimes\idon{\Qsys_s})$, maps
+\begin{equation}\label{eq:choi-coupling-t}
+  \Big\{(J_{t,s})_{(t,s)}:\ J_{t,s}\in\Pos{A_{0,t}\Qsys_s},\quad
+  \sum_{s\in\SecSet}\tr_{\Qsys_s}J_{t,s}=\idon{A_{0,t}}
+  \ \ \forall t\in\mathbb{T}\Big\}
+\end{equation}
+onto the set of lists over the \tref[joint sector]{joint sectors} with positive semidefinite
+blocks and $\sum_s\tr_{\Qsys_s}\omega^{(t,s)}=\tau^{(t)}_A$ for every $t$,
+bijectively when $\ker W_t=0$ for every $t$, and, if
+$\dim\Hs{\Qsys}\ge2$, only then. The set
+\eqref{eq:choi-coupling-t} is a Cartesian product over $t$. If every
+$\iota_t$ satisfies \eqref{eq:iota} for $\tau^{(t)}_A$ on $A_t$, then
+$\iota\coloneqq\bigoplus_t\iota_t$ satisfies \eqref{eq:iota} for $\tau_A$ and
+$W_{\tau}=\bigoplus_t(\tau^{(t)}_A)^{1/2}\iota_t$.
+\item \emph{(the objective reads Alice's side through $N_x$)} For a factor
+$W=\bigoplus_tW_t$ as in (ii) put
+\begin{equation}\label{eq:NfromW}
+  N^{W}_x\coloneqq W^{\dagger}M_xW=\bigoplus_tW_t^{\dagger}M^{(t)}_xW_t
+  \in\Pos{A_0},
+\end{equation}
+let $K^{N}_{\kappa}$ be \eqref{eq:kraus} with $\sqrt{N^{W}_x}$ in place of
+$\sqrt{M_x}$, an operator
+$\Hs{A_0\Qsys}\to\Hs{R\,XY\,C_AC_B\,A_0\Qsys}$, and let $\cG^{N}_{\hat c}$ be
+\eqref{eq:GTheta} with $K^{N}_{\kappa}$. Then for every $J\in\Pos{A_0\Qsys}$,
+every $(x,v)$ and every $\hat c$, with
+$\omega\coloneqq\chi^{W}_{\Qsys}(J)$,
+\begin{equation}\label{eq:choi-N}
+  \tr[(M_x\otimes F_v)\,\omega]=\tr[(N^{W}_x\otimes F_v)\,J],\qquad
+  \tr\cG_{\hat c}(\omega)=\tr\cG^{N}_{\hat c}(J),\qquad
+  T\big(\cG_{\hat c}(\omega)\big)=T\big(\cG^{N}_{\hat c}(J)\big),
+\end{equation}
+$T$ the functional \eqref{eq:Tcone}; hence $P_{\hat c}$, $K_{\hat c}$ and
+$O_{\alpha}$ at $\omega$ are functions of $J$, $\{N^{W}_x\}$, $\{F_v\}$ and
+the classical maps alone, and the same holds sector by sector for the
+joint-sector quantities of Definition~\ref{def:joint-sectors}.
+\item \emph{(\tref{ensemble form})} On the full frame, $A_{0,t}=A_t$ and
+$W_t=(\tau^{(t)}_A)^{1/2}$, one has
+$N^{W}_x=\tau_A^{1/2}M_x\tau_A^{1/2}=N_x$, the operators of
+Definition~\ref{def:declaration}\,(DX4): for an ensemble-form declaration
+they are the \emph{declared} numbers. So the program of an ensemble-form
+declaration is the program \eqref{eq:choi-coupling-t}, (iii) in the declared
+$\{N_x\}$ and $\{F_v\}$, with every constraint row in the conjugated form of
+\eqref{eq:choi-feas}; it is defined, and equals $\hlow$ of the denoted
+declaration, at every rank of every $\tau^{(t)}_A$, and no rank is computed.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) Three facts about $W$. (a) $WW^{\dagger}=\tau$ is the hypothesis. (b)
+$\operatorname{ran}W=\operatorname{ran}(WW^{\dagger})=\operatorname{supp}\tau$:
+for any operator, $\operatorname{ran}W\supseteq\operatorname{ran}WW^{\dagger}$
+and $\ker W^{\dagger}=\ker WW^{\dagger}$ (if $WW^{\dagger}\xi=0$ then
+$\|W^{\dagger}\xi\|^2=\bra{\xi}WW^{\dagger}\ket{\xi}=0$), so the two ranges,
+being the orthogonal complements of equal kernels, agree. (c) Therefore the
+Moore--Penrose inverse satisfies
+$WW^{+}=\Pi_{\operatorname{supp}\tau}$ and $W^{+}W=P_W$, and
+$W=WW^{+}W=WP_W$. The proof of Lemma~\ref{lem:choi-marginal} uses of
+$W_{\tau}$ exactly \eqref{eq:WWtau}, which is (a), and \eqref{eq:Wplus} with
+the identity $W_{\tau}(\idon{A_0}-P_{\iota})=0$, which are (c); it uses
+neither $\tr\tau_A=1$ nor the isometry $\iota$ otherwise. We repeat it for
+$W$. \emph{Forward:} $\chi^{W}(J)\succeq0$ and
+$\tr_{B'}\chi^{W}(J)=W(\tr_{B'}J)W^{\dagger}=WW^{\dagger}=\tau$.
+\emph{Onto:} let $\omega\succeq0$ with $\tr_{B'}\omega=\tau$ and
+$\Pi^{\perp}\coloneqq\idon{}-\Pi_{\operatorname{supp}\tau}$; then
+$\tr[(\Pi^{\perp}\otimes\idon{})\omega]=\tr[\Pi^{\perp}\tau]=0$, and
+positivity gives $(\Pi^{\perp}\otimes\idon{})\omega=0$. Put
+$J_0\coloneqq(W^{+}\otimes\idon{})\omega(W^{+\dagger}\otimes\idon{})\succeq0$.
+Then $\tr_{B'}J_0=W^{+}WW^{\dagger}W^{+\dagger}=P_WP_W^{\dagger}=P_W$ and
+$\chi^{W}(J_0)=(WW^{+}\otimes\idon{})\omega(WW^{+}\otimes\idon{})^{\dagger}
+=\omega$. With any state $\varphi$ on $B'$,
+$J\coloneqq J_0+(\idon{A_0}-P_W)\otimes\varphi\succeq0$ has
+$\tr_{B'}J=\idon{A_0}$ and $\chi^{W}(J)=\omega$, because
+$W(\idon{}-P_W)=0$. \emph{Fibres:} $\chi^{W}(J)=(W\otimes\idon{})
+[(P_W\otimes\idon{})J(P_W\otimes\idon{})](W^{\dagger}\otimes\idon{})$ and $W$
+is injective on $\operatorname{ran}P_W$, so $\chi^{W}(J)$ determines and is
+determined by the compression; injectivity holds when $P_W=\idon{A_0}$. If
+$P_W\ne\idon{A_0}$ and $\dim\Hs{B'}\ge2$, two states $\varphi\ne\varphi'$
+on $B'$ and any state $\varphi_0$ give the two operators
+$P_W\otimes\varphi_0+(\idon{A_0}-P_W)\otimes\varphi$ and
+$P_W\otimes\varphi_0+(\idon{A_0}-P_W)\otimes\varphi'$ of the domain, which
+differ and have the same compression, hence the same image, as in the proof
+of Lemma~\ref{lem:choi-marginal}. Finally $W_{\tau}W_{\tau}^{\dagger}=\tau_A$ is
+\eqref{eq:WWtau}.
+
+(ii) $WW^{\dagger}=\bigoplus_tW_tW_t^{\dagger}=\tau_A$. Fix $t$ and apply (i)
+with $A'=A_t$, $\tau=\tau^{(t)}_A$, $B'=\Qsys$. The map $\chi^{W_t}_{\Qsys}$
+and the section $\omega\mapsto J_0$ act on the first tensor factor alone, so
+they commute with $X\mapsto(\idon{}\otimes\Pi_s)X(\idon{}\otimes\Pi_{s'})$
+and preserve block diagonality along $\SecSet$; choosing the state $\varphi$
+of (i) supported on one $\Hs{\Qsys_{s_0}}$ keeps the completed $J$ block
+diagonal as well. For operators block diagonal along $\SecSet$,
+$\tr_{\Qsys}J_t=\sum_s\tr_{\Qsys_s}J_{t,s}$, and likewise for $\omega$. So
+for each $t$ the map is onto, and injective when $\ker W_t=0$; if
+$\ker W_t\ne0$ and $\dim\Hs{\Qsys}\ge2$, the two operators of (i) for
+$W_t$, built with a sector-block-diagonal $\varphi_0$ and two different
+sector-block-diagonal states $\varphi\ne\varphi'$ on $\Qsys$ (states on two
+sectors, or two states on one sector of dimension at least two), are two
+different block-diagonal preimages of one point. The domain and the
+codomain are products over $t$ of the per-sector sets, and the map is the
+product of the per-sector maps, which gives the statement.
+For the frames: $\iota^{\dagger}\iota=\bigoplus_t\iota_t^{\dagger}\iota_t
+=\idon{A_0}$ and $\iota\iota^{\dagger}\tau_A=\bigoplus_t\iota_t
+\iota_t^{\dagger}\tau^{(t)}_A=\tau_A$, and
+$\tau_A^{1/2}=\bigoplus_t(\tau^{(t)}_A)^{1/2}$ by blockwise functional
+calculus.
+
+(iii) The first identity is cyclicity of the trace:
+$\tr[(M_x\otimes F_v)(W\otimes\idon{})J(W^{\dagger}\otimes\idon{})]
+=\tr[(W^{\dagger}M_xW\otimes F_v)J]$. The second follows from it and the
+trace formula in the proof of Lemma~\ref{lem:branch-maps}\,(i), which reads of the
+operators in the slot of $\sqrt{M_x}$ only that their squares' traces against
+the input are $\tr[(M_x\otimes F_v)\,\cdot\,]$, resp.\
+$\tr[(N^{W}_x\otimes F_v)\,\cdot\,]$. For the third, fix $x$. The operator
+$Y_x\coloneqq\sqrt{M_x}\,W\in\Linn{A_0}{A}$ satisfies
+$Y_x^{\dagger}Y_x=W^{\dagger}M_xW=N^{W}_x$, so by the polar decomposition
+$Y_x=V_x\sqrt{N^{W}_x}$ with $V_x\in\Linn{A_0}{A}$ a partial isometry whose
+initial space is $\mathcal{I}_x\coloneqq\overline{\operatorname{ran}}\,N^{W}_x$:
+$V_x^{\dagger}V_x$ is the projector onto $\mathcal{I}_x$. Put
+$\widetilde V\coloneqq\sum_{x\in\Xset}\dyad{x}_X\otimes V_x$, acting as the
+identity on $R$, $Y$, $C_AC_B$ and $\Qsys$; it is a partial isometry with
+initial projector
+$\widetilde E\coloneqq\sum_x\dyad{x}_X\otimes V_x^{\dagger}V_x$. Every term
+of $K_{\kappa}(W\otimes\idon{\Qsys})$ is
+$\ket{r(x,v)}\ket{x,v}\ket{\kappa}\otimes(V_x\sqrt{N^{W}_x}\otimes\sqrt{F_v})$,
+so
+\begin{equation*}
+  K_{\kappa}(W\otimes\idon{\Qsys})=\widetilde V\,K^{N}_{\kappa},\qquad
+  \widetilde E\,K^{N}_{\kappa}=K^{N}_{\kappa},
+\end{equation*}
+the second because the term of $K^{N}_{\kappa}$ at $x$ has its $A_0$ range in
+$\operatorname{ran}\sqrt{N^{W}_x}\subseteq\mathcal{I}_x$. Hence
+$\cG_{\hat c}(\omega)=\widetilde V\,X\,\widetilde V^{\dagger}$ with
+$X\coloneqq\cG^{N}_{\hat c}(J)\succeq0$ and $\widetilde EX\widetilde E=X$.
+For such a pair, $\widetilde V$ is isometric on the support of $X$, so
+$(\widetilde VX\widetilde V^{\dagger})^{1/\alpha}
+=\widetilde VX^{1/\alpha}\widetilde V^{\dagger}$; $\widetilde V$ and
+$\widetilde E$ commute with every $Z_j=\dyad{j}_R$, so
+$\cZ(\widetilde VX^{1/\alpha}\widetilde V^{\dagger})
+=\widetilde V\cZ(X^{1/\alpha})\widetilde V^{\dagger}$ and
+$\widetilde E\cZ(X^{1/\alpha})\widetilde E=\cZ(X^{1/\alpha})$; therefore
+$(\widetilde V\cZ(X^{1/\alpha})\widetilde V^{\dagger})^{\alpha}
+=\widetilde V\cZ(X^{1/\alpha})^{\alpha}\widetilde V^{\dagger}$ and its trace
+is $\tr[\cZ(X^{1/\alpha})^{\alpha}\widetilde E]=\tr[\cZ(X^{1/\alpha})^{\alpha}]$.
+That is $T(\cG_{\hat c}(\omega))=T(X)$. The consequences: $P_{\hat c}$ is a
+sum of the first quantities, $K_{\hat c}=T+P-\tr\cG$ by \eqref{eq:fK}, and
+$O_{\alpha}$ is a function of these by \eqref{eq:objective}. The argument
+used no property of $J$ beyond $J\succeq0$; applied to a $J$ supported on
+one joint sector, where $W$, $M_x$ and $N^{W}_x$ act through their $t$-blocks
+and $F_v$ through its $s$-block, it gives the sector-by-sector statement.
+
+(iv) $W_t=(\tau^{(t)}_A)^{1/2}$ is Hermitian with $W_tW_t^{\dagger}
+=\tau^{(t)}_A$, a factor in the sense of (ii) and the operator
+\eqref{eq:Wtau} of the full frame. $N^{W}_x=\tau_A^{1/2}M_x\tau_A^{1/2}$ is
+the definition \eqref{eq:NfromW}; for the declaration an ensemble form
+denotes it is the declared $N_x$ by Lemma~\ref{lem:ensemble-form}\,(ii). By
+(ii) the assignment is onto the marginal-constrained lists at every rank, a
+constraint row evaluated at $\omega=\chi^{W}(J)$ is the conjugated row by
+substitution, exactly as in the proof of Theorem~\ref{thm:choi}, and by (iii)
+the objective is evaluated from the declared operators; so the infimum over
+$\acSet$ and the feasible lists of that program is the infimum of $O_{\alpha}$ over
+$\acSet\times\Feas$ for the denoted declaration, which is $\hlow$. Nothing in
+(i)--(iii) reads a rank, an inverse or the operators
+\eqref{eq:ensemblepovm}.
+\end{proof}

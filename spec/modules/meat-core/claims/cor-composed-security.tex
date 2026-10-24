@@ -1,0 +1,269 @@
+% ---
+% id: meat-core/cor:composed-security
+% kind: cor
+% title: "Security of the protocol and its net key"
+% summary: >-
+%   Secrecy and correctness compose to (ε_PA + ε_EV)-security with honest
+%   authentication; over an authentication scheme within ε_auth that consumes
+%   k_auth bits of pre-shared key, the protocol is (ε_PA + ε_EV +
+%   2ε_auth)-secure; when both parties output a key, its net key gain is
+%   ℓ − k_auth bits.
+% user_statement: >-
+%   A run either aborts or outputs a key of ℓ bits that is a perfect key up
+%   to the security parameter ε: identical for both parties, uniform and
+%   independent of all the attacker holds, public messages included. One
+%   party may abort while the other gets a key. No test, whatever the
+%   attacker knows, tells the run's output from an ideal protocol's with
+%   advantage above ε = ε_PA + ε_EV + 2ε_auth. It holds against every attack,
+%   of any memory, if every premise in the run record holds, [[A-AUTH]],
+%   [[A-CONFORM]] and [[A-FIXED]] included. A first-order run also needs its
+%   bound to hold, computed h_lb ≤ h_low, which no premise covers
+%   ([[meat-core/frank-wolfe/rem:fo-arithmetic]]). ε averages over aborted
+%   runs too. The criterion is composable. Separate executions provably add ε
+%   ([[cor:separate-executions]]). Not every later use of the key is covered
+%   ([[rem:repeated-executions]]). A run where both get a key nets ℓ − k_auth
+%   bits; an abort uses up to k_auth. Abort rates:
+%   [[rem:completeness-scope]].
+% prominence: main
+% status: implemented
+% uses: [thm:keylength, lem:ev-correctness, lem:memory-lift, lem:honest-attacks, def:postprocessing-model, def:authenticated-channel]
+% mentions: [def:execution-end]
+% assumes: [A-AUTH, A-FIXED, A-CONFORM]
+% refs:
+%   - "tupkary2025survey, Sec. 2.3, Def. 2.1, Eq. (1)"
+%   - "tupkary2025survey, Sec. 2.3.1, Thm. 2.1"
+%   - "portmann2022security, Sec. III.B.3, Thm. 2"
+%   - "portmann2022security, Sec. III.B.1"
+%   - "portmann2022security, Sec. II.E, Def. 1"
+%   - "portmann2022security, Sec. II.F, Eqs. (4)-(6)"
+%   - "portmann2022security, Sec. VII.D"
+%   - "tupkary2026decoy, Sec. 3.3, Def. 3.8, Def. 3.9, Eqs. (13)-(17), Eq. (23)"
+%   - "tupkary2026decoy, Sec. 5, Thm. 5.1 and the paragraph following it"
+%   - "tupkary2026decoy, Sec. 5, Eqs. (37)-(38)"
+%   - "tupkary2026decoy, Sec. 4.1, Protocol 1, steps 2-6"
+%   - "tupkary2026decoy, Sec. 4, footnote 8"
+%   - "tupkary2025survey, Sec. 5.6.1"
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.keylength:composed_security
+% lean:
+% ---
+
+Secrecy (Theorem~\ref{thm:keylength}) and correctness
+(Lemma~\ref{lem:ev-correctness}) are the two halves of the security of the
+fixed-length protocol in the setting where authentication behaves honestly.
+A real authentication scheme can abort asymmetrically and has its own error;
+the authentication post-processing reduces the first to the honest setting
+\cite[Sec.~5, Thm.~5.1]{tupkary2026decoy}, and the scheme's error enters the
+security parameter, here through the triangle inequality, which charges it
+twice. That it enters is the motivation of
+\cite[Sec.~4, footnote~8]{tupkary2026decoy} and
+\cite[Sec.~5.6.1]{tupkary2025survey}; (iii) is derived without them.
+
+\begin{corollary}\label{cor:composed-security}
+Let the hypotheses of Theorem~\ref{thm:keylength}, the run as in
+Lemma~\ref{lem:memory-lift}\,(a) and (H-CHAIN) among them, hold at every
+attack in the sense of Lemma~\ref{lem:memory-lift}\,(b) that is all-at-once
+and has finite registers, with $\ell\ge1$ satisfying \eqref{eq:keylength},
+A-SEQ with its clause (v) among them; let those of
+Lemma~\ref{lem:ev-correctness} hold; and put
+$\tau_{K_AK_B}\coloneqq2^{-\ell}\sum_{k\in\{0,1\}^{\ell}}
+\dyad{k}_{K_A}\otimes\dyad{k}_{K_B}$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item In the \tref{honest-authentication setting}, at every output state the
+  setting admits, whatever the dimension of the adversary's registers and the
+  order in which the source releases its signals, the protocol is
+  $\epa$-secret on the accepted state as Theorem~\ref{thm:keylength} states
+  it, and $(\epa+\eev)$-secure in the sense of
+  \cite[Sec.~2.3, Def.~2.1, Eq.~(1)]{tupkary2025survey}:
+  \begin{equation}\label{eq:composed-honest}
+    \frac12\Big\|\rho_{K_AK_B\,E_{\mathrm{tot}}\wedge\Omega_{\mathrm{acc}}}
+    -\tau_{K_AK_B}\otimes
+    \rho_{E_{\mathrm{tot}}\wedge\Omega_{\mathrm{acc}}}\Big\|_1
+    \le\epa+\eev ,
+  \end{equation}
+  and on the complement of $\Omega_{\mathrm{acc}}$ both parties output
+  $\perp$.
+\item Run with the \tref{authentication post-processing}
+  (Definition~\ref{def:authenticated-channel}\,(c)) over the
+  \tref{authenticated classical channel}
+  (Definition~\ref{def:authenticated-channel}\,(a)), the protocol is
+  $(\epa+\eev)$-secure in the sense of
+  \cite[Sec.~3.3, Def.~3.8]{tupkary2026decoy}, which admits asymmetric
+  aborts, for every output state that channel admits.
+\item Let Assumptions~\ref{ass:auth}, \ref{ass:fixed}
+  and~\ref{ass:conform} hold, with $\varepsilon_{\mathrm{auth}}$ and
+  $k_{\mathrm{auth}}$ the parameters of Assumption~\ref{ass:auth}. Run with
+  the authentication post-processing over the classical channel of
+  Assumption~\ref{ass:auth}, the protocol is
+  $(\epa+\eev+2\varepsilon_{\mathrm{auth}})$-secure in the sense of
+  \cite[Sec.~3.3, Def.~3.8]{tupkary2026decoy}: for every attack on that run,
+  with output state $\rho'$ on the key registers and the adversary's final
+  information,
+  \begin{equation}\label{eq:composed-auth}
+    \frac12\big\|\rho'-\mathcal R_{\mathrm{ideal}}(\rho')\big\|_1
+    \le\epa+\eev+2\varepsilon_{\mathrm{auth}},
+  \end{equation}
+  with $\mathcal R_{\mathrm{ideal}}$ the map of
+  \cite[Sec.~3.3, Eqs.~(13)--(17)]{tupkary2026decoy}. It consumes at most
+  $k_{\mathrm{auth}}$ bits of the pre-shared key, and when both parties
+  output an $\ell$-bit key its \emph{net key gain} is
+  $\ell_{\mathrm{net}}\coloneqq\ell-k_{\mathrm{auth}}$ bits; for
+  $\ell_{\mathrm{net}}\le0$ the run yields no net key.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+\emph{(i).} We prove the two bounds at an all-at-once attack with finite
+registers first, and then at every output state of the setting.
+
+\emph{At an all-at-once attack with finite registers.} Theorem~\ref{thm:keylength}
+gives the secrecy there. The rest is the statement that correctness and secrecy together imply
+security \cite[Sec.~2.3.1, Thm.~2.1]{tupkary2025survey}, which is
+\cite[Sec.~III.B.3, Thm.~2]{portmann2022security}; we give the argument in
+this contract's notation. In the honest-authentication setting both parties
+learn $\Omega_{\mathrm{acc}}$, a function of the announced $\Chat_1^n$ and
+$F_{\mathrm{acc}}$, so on its complement both output $\perp$, where the real
+and the ideal state coincide; it remains to bound
+\eqref{eq:composed-honest}. Write
+$\sigma\coloneqq\rho_{K\hat K E_{\mathrm{tot}}\wedge\Omega_{\mathrm{acc}}}
+=\sum_{k,k'}\dyad{k}_K\otimes\dyad{k'}_{\hat K}\otimes\sigma^{k,k'}$, with
+$\sigma^{k,k'}\ge0$ on $E_{\mathrm{tot}}$, and let $C$ be the channel on $K$
+that measures $K$ in its classical basis and writes the outcome into $K$ and
+into a copy $\hat K$, $C(X)\coloneqq\sum_k\bra{k}X\ket{k}\,
+\dyad{k}_K\otimes\dyad{k}_{\hat K}$. Put
+$\sigma'\coloneqq(C\otimes\idmap_{E_{\mathrm{tot}}})
+(\rho_{K E_{\mathrm{tot}}\wedge\Omega_{\mathrm{acc}}})
+=\sum_{k}\dyad{k}_K\otimes\dyad{k}_{\hat K}\otimes\sum_{k'}\sigma^{k,k'}$.
+The difference $\sigma-\sigma'$ is block diagonal in $k$, the terms with
+$k'=k$ cancel, and in block $k$ it is
+$\sum_{k'\ne k}\dyad{k'}_{\hat K}\otimes\sigma^{k,k'}
+-\dyad{k}_{\hat K}\otimes\sum_{k'\ne k}\sigma^{k,k'}$, whose trace norm is
+$2\sum_{k'\ne k}\tr\sigma^{k,k'}$ because every $\sigma^{k,k'}$ is positive.
+Hence
+$\frac12\|\sigma-\sigma'\|_1=\Pr[\Omega_{\mathrm{acc}}\wedge K\ne\hat K]
+\le\eev$ by Lemma~\ref{lem:ev-correctness}. Since $C$ maps
+$\idon{K}/2^{\ell}$ to $\tau_{K\hat K}$ and a channel does not increase the
+trace norm,
+$\frac12\|\sigma'-\tau_{K\hat K}\otimes
+\rho_{E_{\mathrm{tot}}\wedge\Omega_{\mathrm{acc}}}\|_1\le\epa$ by
+Theorem~\ref{thm:keylength}. The triangle inequality gives
+\eqref{eq:composed-honest}, read for $(K_A,K_B)$, which is $(K,\hat K)$ in
+the order the key holder fixes; $\tau$ is symmetric under exchanging the two
+registers.
+
+\emph{At every output state of the setting.} With $\Pi$ the projection onto
+$\Omega_{\mathrm{acc}}$, a function of the public messages, the secrecy
+distance of Theorem~\ref{thm:keylength} is the criterion $f$ of
+Lemma~\ref{lem:memory-lift}\,(ii) for $L_1(\sigma)$ the selection
+$\Pi\sigma\Pi$ followed by the partial trace over every register other than
+$K$ and the public registers of $E_{\mathrm{tot}}$, and
+$L_2(\sigma)\coloneqq\frac{\idon{K}}{2^{\ell}}\otimes\tr_KL_1(\sigma)$; the
+left side of \eqref{eq:composed-honest} is the same with $K_AK_B$ in place of
+$K$ and $\tau_{K_AK_B}$ in place of $\idon{K}/2^{\ell}$. Each $L_t$ is
+completely positive, does not increase the trace, keeps the public messages
+and acts on the other registers given their value, as part (iii) of that
+lemma asks, being composed of the selection by $\Pi$, which is diagonal in
+the public messages, partial traces over other registers and the appending
+of a state. By the first part both bounds hold at every all-at-once attack
+with finite registers, so by Lemma~\ref{lem:memory-lift}\,(ii) at every attack
+in the sense of its (b). By Lemma~\ref{lem:honest-attacks}, whose premises
+A-SEQ, its clause (v) included, A-LAB at both parties, A-CONFORM and
+A-ALICE-MEAS\,(i) where no \tref{source-replacement certificate} is demanded
+are among those of Theorem~\ref{thm:keylength}, every output state of the
+honest-authentication setting is $(\idmap\otimes\Phi)(\rho)$ for the output
+state $\rho$ of such an attack and a channel $\Phi$ of the adversary given
+the public messages, and by Lemma~\ref{lem:memory-lift}\,(iii) neither
+criterion increases under $\Phi$. That both parties output $\perp$ off
+$\Omega_{\mathrm{acc}}$ holds at every output state, being the run's
+processing of its public messages.
+
+\emph{(ii).} Write $\widetilde{\mathcal P}$ for the protocol of the
+\tref{fixed-length post-processing model} and
+$\mathcal P\coloneqq\mathcal P_{\mathrm{APP}}\circ\widetilde{\mathcal P}$ for
+it followed by the authentication post-processing. The model is an instance
+of the protocol of \cite[Sec.~4.1, Protocol~1, steps~2--5]{tupkary2026decoy}
+with the key holder as Alice: the length and error-correction decisions are
+$\ell(\hat c_1^n)=\ell\cdot\mathbf 1[\operatorname{freq}_{\hat c_1^n}\in
+\acSet]$ and the constant $\lEC$, so the messages that carry them are public
+functions of $\Chat_1^n$; error correction is one-way with at most
+$2^{\lEC}$ transcripts; error verification and privacy amplification are
+those steps with the hash lengths of
+Definition~\ref{def:postprocessing-model}. By (i),
+$\widetilde{\mathcal P}$ is $(\epa+\eev)$-secure, for every output state of
+the honest-authentication setting, in the sense of
+\cite[Sec.~3.3, Def.~3.9]{tupkary2026decoy} at fixed length
+\cite[Eq.~(23)]{tupkary2026decoy}: its key lengths always coincide, and
+$E_{\mathrm{tot}}$ holds every public message of $\widetilde{\mathcal P}$
+(the announcements, the acceptance values, the seeds, $L$ and $G$) together
+with the adversary's quantum memory. That is the hypothesis of
+\cite[Sec.~5, Thm.~5.1]{tupkary2026decoy}, whose honest-authentication setting
+is this contract's and whose practical authentication setting is the
+authenticated classical channel of
+Definition~\ref{def:authenticated-channel}\,(a), properties (A1) and (A2)
+being its Eqs.~(37)--(38). The theorem concludes $(\epa+\eev)$-security of
+$\mathcal P$ in the sense of Def.~3.8 for every output state of that channel;
+by the paragraph following it, it applies to an arbitrary protocol followed
+by the authentication post-processing of that work, which is
+Definition~\ref{def:authenticated-channel}\,(c): step~6 of
+\cite[Sec.~4.1, Protocol~1]{tupkary2026decoy} together with the rule of its
+preamble that a party receiving an authentication failure aborts, with the
+key holder in the role of Alice and the partner in that of Bob.
+
+\emph{(iii).} By Assumption~\ref{ass:conform} the run is $\mathcal P$: it
+applies the acceptance test and the verification abort, sends no message
+beyond those of the model and of the authentication post-processing,
+outputs the $\ell$-bit keys the model computes or $\perp$, uses no key
+before the \tref{end of an execution} (Definition~\ref{def:execution-end}),
+and aborts on an authentication failure. By
+Assumption~\ref{ass:fixed}, $\varepsilon_{\mathrm{auth}}$ and
+$k_{\mathrm{auth}}$, with every other parameter, are fixed before the run,
+and by Assumption~\ref{ass:auth}\,(i) the run uses one scheme, so the scheme
+and the protocol are fixed systems. If the classical channel
+is itself the authenticated classical channel
+(Assumption~\ref{ass:auth}\,(i), second case), the run is one of those of
+(ii), $\varepsilon_{\mathrm{auth}}=0$, and \eqref{eq:composed-auth} is (ii).
+Otherwise fix an attack on the run over the scheme, with output state
+$\rho'$. By Assumption~\ref{ass:auth}\,(iii) and
+Definition~\ref{def:authenticated-channel}\,(b) there is a simulator $\sigma$
+at the adversary's interface such that no distinguisher tells the scheme,
+run on two identical copies of a uniformly distributed key independent of
+everything else and the unauthenticated channel, from the authenticated classical channel
+with $\sigma$ with advantage above $\varepsilon_0$
+\cite[Sec.~II.E, Def.~1; Sec.~II.F, Eqs.~(4)--(6)]{portmann2022security}.
+The run, the attack and any distinguisher after them form a channel applied
+to the joint state, before the run, of the two parties' copies of the
+pre-shared key with every other register and the adversary's information, together with fresh systems
+independent of it; by Assumption~\ref{ass:auth}\,(iv) and because a channel
+does not increase the trace distance, every final state against the scheme
+run on the actual copies lies within $\delta$ of the one against the scheme
+run on the ideal copies. So the scheme run on the actual copies is told from
+the
+authenticated classical channel with $\sigma$ with advantage at most
+$\varepsilon_0+\delta\le\varepsilon_{\mathrm{auth}}$
+(Assumption~\ref{ass:auth}\,(v)).
+Consider the distinguisher that plays both parties of $\mathcal P$, every
+quantum round included, and the given attack, which reaches the classical
+channel only through the adversary's interface of the system the
+distinguisher is given, and which then holds the parties' key registers and
+the adversary's final information. Its final state is $\rho'$ against the
+scheme and, against the authenticated channel with $\sigma$, the output
+state $\rho$ of $\mathcal P$ under the attack that the given one forms with
+$\sigma$; that attack reads messages and controls their delivery only
+through the authenticated classical channel, so $\rho$ is an output state
+that channel admits. Any measurement on the final state completes this
+distinguisher, and the distinguishing advantage between two states is their
+trace distance \cite[Sec.~III.B.1]{portmann2022security}, so
+$\frac12\|\rho'-\rho\|_1\le\varepsilon_{\mathrm{auth}}$. By (ii),
+$\frac12\|\rho-\mathcal R_{\mathrm{ideal}}(\rho)\|_1\le\epa+\eev$. The map
+$\mathcal R_{\mathrm{ideal}}$ is a channel on the key registers
+\cite[Sec.~3.3, Eqs.~(13), (17)]{tupkary2026decoy}, so it does not increase the
+trace norm and
+$\frac12\|\mathcal R_{\mathrm{ideal}}(\rho)-\mathcal R_{\mathrm{ideal}}(\rho')\|_1
+\le\varepsilon_{\mathrm{auth}}$. The triangle inequality over $\rho'$, $\rho$,
+$\mathcal R_{\mathrm{ideal}}(\rho)$ and $\mathcal R_{\mathrm{ideal}}(\rho')$
+gives \eqref{eq:composed-auth}. The run consumes at most $k_{\mathrm{auth}}$
+bits of pre-shared key (Assumption~\ref{ass:auth}\,(ii)) and, when both
+parties output a key, produces an $\ell$-bit key, which is the accounting of
+key consumed against key produced in \cite[Sec.~VII.D]{portmann2022security};
+the net key gain is then $\ell-k_{\mathrm{auth}}$.
+\end{proof}

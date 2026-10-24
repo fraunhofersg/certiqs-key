@@ -1,0 +1,58 @@
+% ---
+% id: receiver/detector-imperfections/def:pure-loss
+% kind: def
+% title: "Pure-loss channel on the channel modes"
+% summary: >-
+%   The pure-loss channel of transmittance t sends every channel mode through a
+%   beamsplitter of transmittance t whose other input is vacuum and discards
+%   the reflected light. It is the uniform loss a normalized station hands to
+%   the channel.
+% prominence: standard
+% status: accepted
+% uses: [receiver/def:fock, receiver/def:instrument, receiver/lem:fock-maps]
+% mentions: [prop:efficiency-normalization]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Uniform loss in front of a receiver acts on the light the adversary sends,
+before any optical element. Writing it as a channel on the channel system lets
+Proposition~\ref{prop:efficiency-normalization} hand it to the adversary.
+
+\begin{definition}\label{def:pure-loss}
+Let $\InpC$ be the \tref{channel modes} of a \tref{receiver instrument}, so
+that the channel system is $\Hs{\Chan}=\mathcal{F}(\mathbb{C}^{\InpC})$
+(Definition~\ref{def:instrument}), let $\InpC'$ be a disjoint copy of
+$\InpC$, with $m\mapsto m'$ the copying bijection, and let $t\in[0,1]$. Put
+\begin{equation}\label{eq:lossiso}
+  w_t\colon\mathbb{C}^{\InpC}\to\mathbb{C}^{\InpC\sqcup\InpC'},\qquad
+  w_t\ket{m}\coloneqq\sqrt{t}\,\ket{m}+\sqrt{1-t}\,\ket{m'} ,
+\end{equation}
+and identify $\mathcal{F}(\mathbb{C}^{\InpC\sqcup\InpC'})$ with
+$\mathcal{F}(\mathbb{C}^{\InpC})\otimes\mathcal{F}(\mathbb{C}^{\InpC'})$ by
+the occupation identification of Lemma~\ref{lem:fock-maps}\,(ii),
+which is unitary. The
+\term[The channel on the channel system that sends every channel mode through a beamsplitter of transmittance t with vacuum in its other input and discards the reflected light.]{pure-loss channel}
+of transmittance $t$ is
+\begin{equation}\label{eq:pureloss}
+  \Lambda^{\mathrm{loss}}_t(\rho)\;\coloneqq\;
+  \tr_{\mathcal{F}(\mathbb{C}^{\InpC'})}\!\big[\Fock(w_t)\,\rho\,\Fock(w_t)^{\dagger}\big],
+  \qquad \rho\in\Tcl{\Chan},
+\end{equation}
+and its adjoint is
+\begin{equation}\label{eq:purelossadj}
+  (\Lambda^{\mathrm{loss}}_t)^{\dagger}(Y)\;\coloneqq\;
+  \Fock(w_t)^{\dagger}\big(Y\otimes\idon{\mathcal{F}(\mathbb{C}^{\InpC'})}\big)\Fock(w_t),
+  \qquad Y\in\Lin{\Chan}.
+\end{equation}
+Since $w_t^{\dagger}w_t=t\,\id+(1-t)\,\id=\id$, the map $\Fock(w_t)$ is an
+isometry (Lemma~\ref{lem:fock-maps}\,(i)); so $\Lambda^{\mathrm{loss}}_t$ is completely positive and trace
+preserving, $(\Lambda^{\mathrm{loss}}_t)^{\dagger}$ is completely positive and
+unital, and
+$\tr[Y\,\Lambda^{\mathrm{loss}}_t(\rho)]=\tr[(\Lambda^{\mathrm{loss}}_t)^{\dagger}(Y)\,\rho]$
+for every bounded $Y$ and trace-class $\rho$, by the defining property of the
+partial trace and cyclicity of the trace. At $t=1$ the channel is the
+identity.
+\end{definition}

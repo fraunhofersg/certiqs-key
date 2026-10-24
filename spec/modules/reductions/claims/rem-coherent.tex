@@ -1,0 +1,29 @@
+% ---
+% id: reductions/rem:coherent
+% kind: rem
+% title: "Coherent attacks covered by the output-state equality"
+% summary: >-
+%   The output-state equality holds for an arbitrary adversary input and an
+%   arbitrary attack sequence, so it covers an adversary entangling all n
+%   rounds. The tensor power is a hypothesis about Bob's device, not about the
+%   adversary.
+% prominence: standard
+% status: accepted
+% uses: [thm:factorization, cor:sequential, rem:variants]
+% assumes: [A-MEAS, A-ROUND-SQ]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:coherent}
+Nothing in Theorem~\ref{thm:factorization} or
+Corollary~\ref{cor:sequential} refers to the structure of the adversary's
+input: $\rho$ is an arbitrary state on $A^{n}\Bsys^{n}E$ and $(\Aev_j)_j$ an
+arbitrary sequence of channels, so the conclusion covers Eve entangling all $n$
+rounds and holding $E$ correlated with everything. The tensor power in
+\eqref{eq:factorization} is a hypothesis about Bob's \emph{device} --- the same
+POVM every round, with no memory between rounds
+(Assumptions~\ref{ass:meas}, \ref{ass:round}) --- and is itself relaxed in
+Remark~\ref{rem:variants}. It is not a hypothesis about the adversary.
+\end{remark}

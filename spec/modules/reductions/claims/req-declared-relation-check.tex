@@ -1,0 +1,38 @@
+% ---
+% id: reductions/req:declared-relation-check
+% kind: req
+% title: "Exact check of a declared relation"
+% summary: >-
+%   Every relation a caller declares is tested against both necessary
+%   conditions of [[lem:obstructions]], decided exactly on the declared
+%   numbers, and refused where one fails. No eigenvalue is computed and no
+%   threshold is used.
+% prominence: standard
+% status: accepted
+% uses: [lem:obstructions, rem:obstructiondecide]
+% mentions: [lem:exactpsd]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Lemma~\ref{lem:obstructions} rules out an impossible relation by inspection,
+and Remark~\ref{rem:obstructiondecide} gives the exact form in which each of
+its conditions is decided on declared numbers.
+
+\begin{requirement}\label{req:declared-relation-check}
+The engine tests every declared relation (input \iface{declared_relations})
+against both necessary conditions of Lemma~\ref{lem:obstructions} and
+refuses one that fails either, with \iface{declared_relation_impossible}.
+With $X$ and $X'$ as in that lemma, it decides (i) in operator form on the
+rational enclosures $a\le b$ the declaration exhibits: the pair $a\idon{\Qsys}\preceq X\preceq b\idon{\Qsys}$
+exactly by \eqref{eq:psdtest} and, where it holds, the same pair for $X'$;
+and (ii) as the exact rank over $\Fldi$ of the matrix whose columns are the
+vectorized declared elements, by elimination in the field, together with its
+linear relations: an exact basis of the solutions $(a,c)$ of
+$\sum_va_vF_v=c\,\idon{\Qsys}$, obtained by elimination in the field, each
+basis solution tested on the declared physical elements as
+$\sum_va_vM_v=c\,\idon{\Bsys}$. No eigenvalue is computed and no threshold is
+used.
+\end{requirement}

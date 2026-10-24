@@ -1,0 +1,5220 @@
+{
+  "$defs": {
+    "Acceptance": {
+      "additionalProperties": false,
+      "description": "The acceptance map and, optionally, its alphabet order.",
+      "properties": {
+        "alphabet": {
+          "anyOf": [
+            {
+              "items": {
+                "type": [
+                  "string",
+                  "integer"
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Alphabet"
+        },
+        "map": {
+          "$ref": "#/$defs/Rules"
+        }
+      },
+      "required": [
+        "map"
+      ],
+      "title": "Acceptance",
+      "type": "object"
+    },
+    "AdvancedSolverBlock": {
+      "additionalProperties": false,
+      "description": "``AdvancedSolverSettings``, without a warm start: the expert choices.",
+      "properties": {
+        "method": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Method"
+        },
+        "oracle": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Oracle"
+        },
+        "gap_tolerance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Exact"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "certified_evaluation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Certified Evaluation"
+        }
+      },
+      "title": "AdvancedSolverBlock",
+      "type": "object"
+    },
+    "AliceChoices": {
+      "additionalProperties": false,
+      "description": "Alice's measurement as a choice family.",
+      "properties": {
+        "choice_family": {
+          "$ref": "#/$defs/ChoiceFamily"
+        }
+      },
+      "required": [
+        "choice_family"
+      ],
+      "title": "AliceChoices",
+      "type": "object"
+    },
+    "AlicePovm": {
+      "additionalProperties": false,
+      "description": "Alice's measurement as a direct POVM.",
+      "properties": {
+        "povm": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Matrix"
+          },
+          "title": "Povm",
+          "type": "object"
+        }
+      },
+      "required": [
+        "povm"
+      ],
+      "title": "AlicePovm",
+      "type": "object"
+    },
+    "AlphabetNode": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/EnumAlphabet"
+        },
+        {
+          "$ref": "#/$defs/ProductAlphabet"
+        },
+        {
+          "$ref": "#/$defs/UnionAlphabet"
+        }
+      ]
+    },
+    "AnnouncementAlphabets": {
+      "additionalProperties": false,
+      "description": "The parties' announcement alphabets under a transcript.",
+      "properties": {
+        "A": {
+          "items": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "title": "A",
+          "type": "array"
+        },
+        "B": {
+          "items": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "title": "B",
+          "type": "array"
+        }
+      },
+      "required": [
+        "A",
+        "B"
+      ],
+      "title": "AnnouncementAlphabets",
+      "type": "object"
+    },
+    "Announcements": {
+      "additionalProperties": false,
+      "description": "The accepted format's two announcement maps.",
+      "properties": {
+        "alice": {
+          "$ref": "#/$defs/Readout"
+        },
+        "bob": {
+          "$ref": "#/$defs/Readout"
+        }
+      },
+      "required": [
+        "alice",
+        "bob"
+      ],
+      "title": "Announcements",
+      "type": "object"
+    },
+    "Attestation": {
+      "additionalProperties": false,
+      "description": "A user's (SR3) retention attestation: recorded, never verified.",
+      "properties": {
+        "attested_by": {
+          "title": "Attested By",
+          "type": "string"
+        },
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "attested_by",
+        "statement"
+      ],
+      "title": "Attestation",
+      "type": "object"
+    },
+    "BeamsplitterElement": {
+      "additionalProperties": false,
+      "description": "A C1 element.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "support": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Support",
+          "type": "array"
+        },
+        "component": {
+          "const": "beamsplitter",
+          "title": "Component",
+          "type": "string"
+        },
+        "params": {
+          "$ref": "#/$defs/BeamsplitterParams",
+          "default": {
+            "transmittance": null,
+            "phase_pi": null,
+            "loss_1": null,
+            "loss_2": null
+          }
+        }
+      },
+      "required": [
+        "name",
+        "support",
+        "component"
+      ],
+      "title": "BeamsplitterElement",
+      "type": "object"
+    },
+    "BeamsplitterParams": {
+      "additionalProperties": false,
+      "description": "C1.",
+      "properties": {
+        "transmittance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "phase_pi": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "In units of pi: the catalogue field without _pi receives float(value) * pi, an integer 0 exactly 0."
+        },
+        "loss_1": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "loss_2": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "BeamsplitterParams",
+      "type": "object"
+    },
+    "BlockCertificate": {
+      "additionalProperties": false,
+      "description": "``BlockFormCertificate``.",
+      "properties": {
+        "form": {
+          "const": "block",
+          "title": "Form",
+          "type": "string"
+        },
+        "alice_sectors": {
+          "$ref": "#/$defs/Sectors"
+        },
+        "virtual_sectors": {
+          "$ref": "#/$defs/Sectors"
+        },
+        "alice_marginal_blocks": {
+          "items": {
+            "$ref": "#/$defs/Matrix"
+          },
+          "title": "Alice Marginal Blocks",
+          "type": "array"
+        },
+        "psi_blocks": {
+          "items": {
+            "$ref": "#/$defs/Matrix"
+          },
+          "title": "Psi Blocks",
+          "type": "array"
+        },
+        "virtual_weights": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Scalar"
+          },
+          "title": "Virtual Weights",
+          "type": "object"
+        },
+        "virtual_blocks": {
+          "additionalProperties": {
+            "items": {
+              "$ref": "#/$defs/Matrix"
+            },
+            "type": "array"
+          },
+          "title": "Virtual Blocks",
+          "type": "object"
+        }
+      },
+      "required": [
+        "form",
+        "alice_sectors",
+        "virtual_sectors",
+        "alice_marginal_blocks",
+        "psi_blocks",
+        "virtual_weights",
+        "virtual_blocks"
+      ],
+      "title": "BlockCertificate",
+      "type": "object"
+    },
+    "Blocks": {
+      "additionalProperties": false,
+      "description": "An operator written as its sector blocks.",
+      "properties": {
+        "blocks": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Matrix"
+          },
+          "title": "Blocks",
+          "type": "object"
+        }
+      },
+      "required": [
+        "blocks"
+      ],
+      "title": "Blocks",
+      "type": "object"
+    },
+    "Certificate": {
+      "discriminator": {
+        "mapping": {
+          "block": "#/$defs/BlockCertificate",
+          "ensemble_presentation": "#/$defs/PresentationCertificate",
+          "pure": "#/$defs/PureCertificate"
+        },
+        "propertyName": "form"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/PureCertificate"
+        },
+        {
+          "$ref": "#/$defs/BlockCertificate"
+        },
+        {
+          "$ref": "#/$defs/PresentationCertificate"
+        }
+      ]
+    },
+    "ChannelInterfaceBlock": {
+      "additionalProperties": false,
+      "description": "Which channel-interface builder applies.",
+      "properties": {
+        "variant": {
+          "default": "none",
+          "enum": [
+            "qubit_identity",
+            "single_photon",
+            "mode_intensity",
+            "bipartite",
+            "none"
+          ],
+          "title": "Variant",
+          "type": "string"
+        },
+        "source_model": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sw_Annotated_str__Strict_strict_True___"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "bipartite only: the source model the interface names; default the honest model's name. Its parameters are the configuration's model section."
+        }
+      },
+      "title": "ChannelInterfaceBlock",
+      "type": "object"
+    },
+    "ChoiceFamily": {
+      "additionalProperties": false,
+      "description": "A weighted choice family, lowered to ``PublicChoices``.",
+      "properties": {
+        "choices": {
+          "items": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "title": "Choices",
+          "type": "array"
+        },
+        "weights": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Scalar"
+          },
+          "title": "Weights",
+          "type": "object"
+        },
+        "conditional_alphabets": {
+          "additionalProperties": {
+            "items": {
+              "type": [
+                "string",
+                "integer"
+              ]
+            },
+            "type": "array"
+          },
+          "title": "Conditional Alphabets",
+          "type": "object"
+        },
+        "conditional_elements": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "additionalProperties": {
+                  "$ref": "#/$defs/Matrix"
+                },
+                "type": "object"
+              },
+              "type": "object"
+            },
+            {
+              "const": "conjugate_states",
+              "type": "string"
+            }
+          ],
+          "title": "Conditional Elements"
+        },
+        "joint_label": {
+          "title": "Joint Label",
+          "type": "string"
+        }
+      },
+      "required": [
+        "choices",
+        "weights",
+        "conditional_alphabets",
+        "conditional_elements",
+        "joint_label"
+      ],
+      "title": "ChoiceFamily",
+      "type": "object"
+    },
+    "ChoiceWeighting": {
+      "additionalProperties": false,
+      "description": "The compiler's ``ChoiceWeighting``; ``matrix`` is keyed ``\"setting|choice\"``.",
+      "properties": {
+        "choices": {
+          "items": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "title": "Choices",
+          "type": "array"
+        },
+        "settings": {
+          "items": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "title": "Settings",
+          "type": "array"
+        },
+        "setting_of": {
+          "$ref": "#/$defs/Rules"
+        },
+        "matrix": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Scalar"
+          },
+          "title": "Matrix",
+          "type": "object"
+        }
+      },
+      "required": [
+        "choices",
+        "settings",
+        "setting_of",
+        "matrix"
+      ],
+      "title": "ChoiceWeighting",
+      "type": "object"
+    },
+    "CoarseGraining": {
+      "additionalProperties": false,
+      "description": "The letters and the rules over click patterns.",
+      "properties": {
+        "letters": {
+          "items": {
+            "additionalProperties": {
+              "type": [
+                "string",
+                "integer"
+              ]
+            },
+            "type": "object"
+          },
+          "title": "Letters",
+          "type": "array"
+        },
+        "map": {
+          "$ref": "#/$defs/Rules"
+        }
+      },
+      "required": [
+        "letters",
+        "map"
+      ],
+      "title": "CoarseGraining",
+      "type": "object"
+    },
+    "ConstraintEntry": {
+      "additionalProperties": false,
+      "description": "An explicit, flagged ``ConstraintEntry``.",
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "operator": {
+          "$ref": "#/$defs/Blocks"
+        },
+        "relation": {
+          "enum": [
+            "ge",
+            "le",
+            "eq"
+          ],
+          "title": "Relation",
+          "type": "string"
+        },
+        "rhs": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "$ref": "#/$defs/Matrix"
+            },
+            {
+              "$ref": "#/$defs/Blocks"
+            }
+          ],
+          "title": "Rhs"
+        },
+        "tag": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tag"
+        },
+        "scope": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scope"
+        }
+      },
+      "required": [
+        "label",
+        "operator",
+        "relation",
+        "rhs"
+      ],
+      "title": "ConstraintEntry",
+      "type": "object"
+    },
+    "Constraints": {
+      "additionalProperties": false,
+      "description": "Docking of the reductions' constraints, and the explicit, flagged escapes.",
+      "properties": {
+        "docked": {
+          "$ref": "#/$defs/Sw_Annotated_bool__Strict_strict_True___",
+          "default": true
+        },
+        "party_local_view": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sw_Literal__operator____licensed_scalar___"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "entries": {
+          "$ref": "#/$defs/Sw_list_ConstraintEntry__",
+          "default": []
+        },
+        "attack_set_license": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Licence"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "feasibility_witness": {
+          "$ref": "#/$defs/Sw_Union_Literal__auto____none____WitnessBlocks__",
+          "default": "auto"
+        }
+      },
+      "title": "Constraints",
+      "type": "object"
+    },
+    "DeclaredPovm": {
+      "additionalProperties": false,
+      "description": "A measurement declared as matrices (Band A).",
+      "properties": {
+        "kind": {
+          "const": "declared_povm",
+          "title": "Kind",
+          "type": "string"
+        },
+        "dimension": {
+          "title": "Dimension",
+          "type": "integer"
+        },
+        "choice_family": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ChoiceFamily"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "povm": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/Matrix"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Povm"
+        }
+      },
+      "required": [
+        "kind",
+        "dimension"
+      ],
+      "title": "DeclaredPovm",
+      "type": "object"
+    },
+    "Detector": {
+      "additionalProperties": false,
+      "description": "One ``DetectorPort``.",
+      "properties": {
+        "port": {
+          "title": "Port",
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "efficiency": {
+          "$ref": "#/$defs/Scalar"
+        },
+        "dark_count": {
+          "$ref": "#/$defs/Scalar"
+        }
+      },
+      "required": [
+        "port",
+        "efficiency",
+        "dark_count"
+      ],
+      "title": "Detector",
+      "type": "object"
+    },
+    "Domain": {
+      "additionalProperties": false,
+      "description": "``ParameterDomain.as_payload``'s shape.",
+      "properties": {
+        "form": {
+          "enum": [
+            "interval",
+            "choices"
+          ],
+          "title": "Form",
+          "type": "string"
+        },
+        "lower": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Exact"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "upper": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Exact"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "lower_open": {
+          "default": false,
+          "title": "Lower Open",
+          "type": "boolean"
+        },
+        "upper_open": {
+          "default": false,
+          "title": "Upper Open",
+          "type": "boolean"
+        },
+        "options": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/DomainOption"
+          },
+          "title": "Options",
+          "type": "array"
+        }
+      },
+      "required": [
+        "form"
+      ],
+      "title": "Domain",
+      "type": "object"
+    },
+    "DomainOption": {
+      "additionalProperties": false,
+      "description": "One ``(value, meaning)`` pair of a ``choices`` domain.",
+      "properties": {
+        "value": {
+          "title": "Value",
+          "type": "string"
+        },
+        "meaning": {
+          "title": "Meaning",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "meaning"
+      ],
+      "title": "DomainOption",
+      "type": "object"
+    },
+    "Element": {
+      "discriminator": {
+        "mapping": {
+          "beamsplitter": "#/$defs/BeamsplitterElement",
+          "generic_block": "#/$defs/GenericBlockElement",
+          "half_wave": "#/$defs/WaveplateElement",
+          "loss": "#/$defs/LossElement",
+          "mirror": "#/$defs/MirrorElement",
+          "mode_routing": "#/$defs/ModeRoutingElement",
+          "phase_shifter": "#/$defs/PhaseShifterElement",
+          "polarizer": "#/$defs/PolarizerElement",
+          "polarizing_beamsplitter": "#/$defs/PolarizingBeamsplitterElement",
+          "quarter_wave": "#/$defs/WaveplateElement",
+          "retarder": "#/$defs/RetarderElement",
+          "rotator": "#/$defs/RotatorElement"
+        },
+        "propertyName": "component"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/BeamsplitterElement"
+        },
+        {
+          "$ref": "#/$defs/PolarizingBeamsplitterElement"
+        },
+        {
+          "$ref": "#/$defs/RetarderElement"
+        },
+        {
+          "$ref": "#/$defs/WaveplateElement"
+        },
+        {
+          "$ref": "#/$defs/RotatorElement"
+        },
+        {
+          "$ref": "#/$defs/MirrorElement"
+        },
+        {
+          "$ref": "#/$defs/PhaseShifterElement"
+        },
+        {
+          "$ref": "#/$defs/LossElement"
+        },
+        {
+          "$ref": "#/$defs/PolarizerElement"
+        },
+        {
+          "$ref": "#/$defs/ModeRoutingElement"
+        },
+        {
+          "$ref": "#/$defs/GenericBlockElement"
+        }
+      ]
+    },
+    "Entry": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Scalar"
+        },
+        {
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "$ref": "#/$defs/Scalar"
+            }
+          ],
+          "type": "array"
+        }
+      ]
+    },
+    "EnumAlphabet": {
+      "additionalProperties": false,
+      "description": "``{enum: [label | {label, ...attrs}]}``.",
+      "properties": {
+        "enum": {
+          "items": {
+            "$ref": "#/$defs/EnumEntry"
+          },
+          "title": "Enum",
+          "type": "array"
+        },
+        "attrs": {
+          "additionalProperties": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "default": {},
+          "title": "Attrs",
+          "type": "object"
+        }
+      },
+      "required": [
+        "enum"
+      ],
+      "title": "EnumAlphabet",
+      "type": "object"
+    },
+    "EnumEntry": {
+      "anyOf": [
+        {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        {
+          "additionalProperties": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "EnvelopeBounds": {
+      "additionalProperties": false,
+      "description": "The two sides of an honest envelope.",
+      "properties": {
+        "lower": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Scalar"
+          },
+          "title": "Lower",
+          "type": "object"
+        },
+        "upper": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Scalar"
+          },
+          "title": "Upper",
+          "type": "object"
+        }
+      },
+      "required": [
+        "lower",
+        "upper"
+      ],
+      "title": "EnvelopeBounds",
+      "type": "object"
+    },
+    "Eq": {
+      "additionalProperties": false,
+      "description": "``{eq: path}``: matches where both sides exist and are equal.",
+      "properties": {
+        "eq": {
+          "title": "Eq",
+          "type": "string"
+        }
+      },
+      "required": [
+        "eq"
+      ],
+      "title": "Eq",
+      "type": "object"
+    },
+    "Exact": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "ExplicitOperator": {
+      "additionalProperties": false,
+      "description": "A carried-operator request written out; the reductions certify it.\n\n``certified_against`` is not a field: it is read from the first-pass\nartefact's squashing channel, never from the document.",
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "operator": {
+          "$ref": "#/$defs/Matrix"
+        },
+        "relation": {
+          "enum": [
+            "ge",
+            "le",
+            "eq"
+          ],
+          "title": "Relation",
+          "type": "string"
+        },
+        "constant": {
+          "$ref": "#/$defs/Scalar"
+        },
+        "certificate_kind": {
+          "enum": [
+            "identity",
+            "positivity",
+            "spectral"
+          ],
+          "title": "Certificate Kind",
+          "type": "string"
+        },
+        "form": {
+          "default": "expectation",
+          "enum": [
+            "expectation",
+            "operator"
+          ],
+          "title": "Form",
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "operator",
+        "relation",
+        "constant",
+        "certificate_kind"
+      ],
+      "title": "ExplicitOperator",
+      "type": "object"
+    },
+    "ExplicitPartition": {
+      "additionalProperties": false,
+      "description": "A partition written as rules.",
+      "properties": {
+        "alice_readout": {
+          "$ref": "#/$defs/Readout"
+        },
+        "bob_readout": {
+          "$ref": "#/$defs/Readout"
+        },
+        "sector_factor_parties": {
+          "additionalProperties": {
+            "enum": [
+              "A",
+              "B"
+            ],
+            "type": "string"
+          },
+          "default": {},
+          "title": "Sector Factor Parties",
+          "type": "object"
+        }
+      },
+      "required": [
+        "alice_readout",
+        "bob_readout"
+      ],
+      "title": "ExplicitPartition",
+      "type": "object"
+    },
+    "Expr": {
+      "additionalProperties": false,
+      "description": "``{expr: \"...\"}``: exact arithmetic over parameters.\n\n``+ - * /``, parentheses, integer powers (``2^-30``), decimals, fractions,\nand the names of ``fraction`` and ``int`` parameters (``dark_count[H]``\nfor one port). No functions and no irrational numbers.",
+      "properties": {
+        "expr": {
+          "title": "Expr",
+          "type": "string"
+        }
+      },
+      "required": [
+        "expr"
+      ],
+      "title": "Expr",
+      "type": "object"
+    },
+    "Generation": {
+      "additionalProperties": false,
+      "description": "What a generation round sends.",
+      "properties": {
+        "intensity": {
+          "title": "Intensity",
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "polarisations": {
+          "items": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "title": "Polarisations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "intensity",
+        "polarisations"
+      ],
+      "title": "Generation",
+      "type": "object"
+    },
+    "GenericBlockElement": {
+      "additionalProperties": false,
+      "description": "A C10 element.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "support": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Support",
+          "type": "array"
+        },
+        "component": {
+          "const": "generic_block",
+          "title": "Component",
+          "type": "string"
+        },
+        "params": {
+          "$ref": "#/$defs/GenericBlockParams",
+          "default": {
+            "block": null
+          }
+        }
+      },
+      "required": [
+        "name",
+        "support",
+        "component"
+      ],
+      "title": "GenericBlockElement",
+      "type": "object"
+    },
+    "GenericBlockParams": {
+      "additionalProperties": false,
+      "description": "C10.",
+      "properties": {
+        "block": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Matrix"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "GenericBlockParams",
+      "type": "object"
+    },
+    "Honest": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/HonestLibrary"
+        },
+        {
+          "$ref": "#/$defs/HonestAcceptanceTable"
+        },
+        {
+          "$ref": "#/$defs/HonestRawTable"
+        },
+        {
+          "$ref": "#/$defs/HonestEnvelope"
+        },
+        {
+          "$ref": "#/$defs/Switch_Union_HonestLibrary__HonestAcceptanceTable__HonestRawTable__HonestEnvelope__"
+        }
+      ]
+    },
+    "HonestAcceptanceTable": {
+      "additionalProperties": false,
+      "description": "A table over the acceptance alphabet.",
+      "properties": {
+        "acceptance_table": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Scalar"
+          },
+          "title": "Acceptance Table",
+          "type": "object"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "note": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Note",
+          "type": "object"
+        }
+      },
+      "required": [
+        "acceptance_table",
+        "source"
+      ],
+      "title": "HonestAcceptanceTable",
+      "type": "object"
+    },
+    "HonestEnvelope": {
+      "additionalProperties": false,
+      "description": "``HonestEnvelope``.",
+      "properties": {
+        "envelope": {
+          "$ref": "#/$defs/EnvelopeBounds"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "note": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Note",
+          "type": "object"
+        }
+      },
+      "required": [
+        "envelope",
+        "source"
+      ],
+      "title": "HonestEnvelope",
+      "type": "object"
+    },
+    "HonestLibrary": {
+      "additionalProperties": false,
+      "description": "An honest model from the engine's library, bound to parameter values.",
+      "properties": {
+        "library": {
+          "title": "Library",
+          "type": "string"
+        },
+        "station": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Station"
+        },
+        "bind": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Scalar"
+          },
+          "default": {},
+          "title": "Bind",
+          "type": "object"
+        },
+        "note": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Note",
+          "type": "object"
+        }
+      },
+      "required": [
+        "library"
+      ],
+      "title": "HonestLibrary",
+      "type": "object"
+    },
+    "HonestRawTable": {
+      "additionalProperties": false,
+      "description": "A joint table over ``X x V``, keyed ``\"x|v\"``.",
+      "properties": {
+        "raw_table": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Scalar"
+          },
+          "title": "Raw Table",
+          "type": "object"
+        },
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "note": {
+          "additionalProperties": true,
+          "default": {},
+          "title": "Note",
+          "type": "object"
+        }
+      },
+      "required": [
+        "raw_table",
+        "source"
+      ],
+      "title": "HonestRawTable",
+      "type": "object"
+    },
+    "Identity": {
+      "additionalProperties": false,
+      "description": "Who the document is: the descriptor's strings and the record label.",
+      "properties": {
+        "id": {
+          "maxLength": 64,
+          "pattern": "^[a-z][a-z0-9_]*$",
+          "title": "Id",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "summary": {
+          "title": "Summary",
+          "type": "string"
+        },
+        "readme": {
+          "default": "",
+          "description": "A packaged template's README path; empty for a custom document.",
+          "title": "Readme",
+          "type": "string"
+        },
+        "record_label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The prefix of every identity string a run records; default declared.<id>, and only that for a custom document.",
+          "title": "Record Label"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "summary"
+      ],
+      "title": "Identity",
+      "type": "object"
+    },
+    "IdentityMatrix": {
+      "additionalProperties": false,
+      "description": "``{identity: n}``.",
+      "properties": {
+        "identity": {
+          "title": "Identity",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "identity"
+      ],
+      "title": "IdentityMatrix",
+      "type": "object"
+    },
+    "IntOf": {
+      "additionalProperties": false,
+      "description": "``{int: path}``: the integer a component spells.",
+      "properties": {
+        "int": {
+          "title": "Int",
+          "type": "string"
+        }
+      },
+      "required": [
+        "int"
+      ],
+      "title": "IntOf",
+      "type": "object"
+    },
+    "Intensity": {
+      "additionalProperties": false,
+      "description": "One WCP intensity.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "mu": {
+          "$ref": "#/$defs/Scalar"
+        }
+      },
+      "required": [
+        "name",
+        "mu"
+      ],
+      "title": "Intensity",
+      "type": "object"
+    },
+    "Key": {
+      "additionalProperties": false,
+      "description": "The key map: holder, alphabet and rules over ``(o, class)``.",
+      "properties": {
+        "holder": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Holder",
+          "type": "string"
+        },
+        "alphabet": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Alphabet",
+          "type": "array"
+        },
+        "rule": {
+          "$ref": "#/$defs/Rules"
+        }
+      },
+      "required": [
+        "holder",
+        "alphabet",
+        "rule"
+      ],
+      "title": "Key",
+      "type": "object"
+    },
+    "KeyLengthBlock": {
+      "additionalProperties": false,
+      "description": "``KeyLengthParameters``, plus A-AUTH's two run inputs.",
+      "properties": {
+        "alpha": {
+          "$ref": "#/$defs/Exact"
+        },
+        "eps_pa": {
+          "$ref": "#/$defs/Exact"
+        },
+        "eps_ev": {
+          "$ref": "#/$defs/Exact"
+        },
+        "lambda_ec": {
+          "$ref": "#/$defs/Exact"
+        },
+        "eps_auth": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Exact"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "k_auth": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Exact"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "alpha",
+        "eps_pa",
+        "eps_ev",
+        "lambda_ec"
+      ],
+      "title": "KeyLengthBlock",
+      "type": "object"
+    },
+    "LibraryOperator": {
+      "additionalProperties": false,
+      "description": "A carried operator from the library (``two_sector_floor``).",
+      "properties": {
+        "library": {
+          "const": "two_sector_floor",
+          "title": "Library",
+          "type": "string"
+        }
+      },
+      "required": [
+        "library"
+      ],
+      "title": "LibraryOperator",
+      "type": "object"
+    },
+    "Licence": {
+      "additionalProperties": false,
+      "description": "An explicit, flagged attack-set licence.",
+      "properties": {
+        "statement": {
+          "title": "Statement",
+          "type": "string"
+        }
+      },
+      "required": [
+        "statement"
+      ],
+      "title": "Licence",
+      "type": "object"
+    },
+    "Link": {
+      "additionalProperties": false,
+      "description": "One reduction link.",
+      "properties": {
+        "kind": {
+          "enum": [
+            "identity",
+            "fss",
+            "wpfss",
+            "register-mixture",
+            "flags-enough",
+            "pinching"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "requested_status": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Requested Status"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "Link",
+      "type": "object"
+    },
+    "LossElement": {
+      "additionalProperties": false,
+      "description": "A C7 element.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "support": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Support",
+          "type": "array"
+        },
+        "component": {
+          "const": "loss",
+          "title": "Component",
+          "type": "string"
+        },
+        "params": {
+          "$ref": "#/$defs/LossParams",
+          "default": {
+            "efficiencies": null
+          }
+        }
+      },
+      "required": [
+        "name",
+        "support",
+        "component"
+      ],
+      "title": "LossElement",
+      "type": "object"
+    },
+    "LossParams": {
+      "additionalProperties": false,
+      "description": "C7.",
+      "properties": {
+        "efficiencies": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Scalar"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Efficiencies"
+        }
+      },
+      "title": "LossParams",
+      "type": "object"
+    },
+    "Matrix": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/MatrixRows"
+        },
+        {
+          "$ref": "#/$defs/Outer"
+        },
+        {
+          "$ref": "#/$defs/IdentityMatrix"
+        },
+        {
+          "$ref": "#/$defs/Scale"
+        },
+        {
+          "$ref": "#/$defs/Switch_Matrix_"
+        }
+      ]
+    },
+    "MatrixRows": {
+      "additionalProperties": false,
+      "description": "``{matrix: rows}``; ``serialize_matrix``'s output is accepted verbatim.",
+      "properties": {
+        "matrix": {
+          "items": {
+            "items": {
+              "$ref": "#/$defs/Entry"
+            },
+            "type": "array"
+          },
+          "title": "Matrix",
+          "type": "array"
+        }
+      },
+      "required": [
+        "matrix"
+      ],
+      "title": "MatrixRows",
+      "type": "object"
+    },
+    "Measurement": {
+      "discriminator": {
+        "mapping": {
+          "declared_povm": "#/$defs/DeclaredPovm",
+          "optical": "#/$defs/Optical"
+        },
+        "propertyName": "kind"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/DeclaredPovm"
+        },
+        {
+          "$ref": "#/$defs/Optical"
+        }
+      ]
+    },
+    "MessageValue": {
+      "additionalProperties": false,
+      "description": "``{label: template, attrs: {name: template}}``: a value later rules can read.",
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": "string"
+        },
+        "attrs": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "default": {},
+          "title": "Attrs",
+          "type": "object"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "title": "MessageValue",
+      "type": "object"
+    },
+    "MirrorElement": {
+      "additionalProperties": false,
+      "description": "A C5 element.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "support": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Support",
+          "type": "array"
+        },
+        "component": {
+          "const": "mirror",
+          "title": "Component",
+          "type": "string"
+        },
+        "params": {
+          "$ref": "#/$defs/MirrorParams",
+          "default": {
+            "reflectivity_h": null,
+            "reflectivity_v": null,
+            "phase_h_pi": null,
+            "phase_v_pi": null,
+            "handedness_flip": null
+          }
+        }
+      },
+      "required": [
+        "name",
+        "support",
+        "component"
+      ],
+      "title": "MirrorElement",
+      "type": "object"
+    },
+    "MirrorParams": {
+      "additionalProperties": false,
+      "description": "C5.",
+      "properties": {
+        "reflectivity_h": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reflectivity_v": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "phase_h_pi": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "In units of pi: the catalogue field without _pi receives float(value) * pi, an integer 0 exactly 0."
+        },
+        "phase_v_pi": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "In units of pi: the catalogue field without _pi receives float(value) * pi, an integer 0 exactly 0."
+        },
+        "handedness_flip": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Handedness Flip"
+        }
+      },
+      "title": "MirrorParams",
+      "type": "object"
+    },
+    "Mode": {
+      "additionalProperties": false,
+      "description": "One mode of ``ModeSpace.declare``.",
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "polarization": {
+          "enum": [
+            "H",
+            "V"
+          ],
+          "title": "Polarization",
+          "type": "string"
+        },
+        "tau": {
+          "default": 0,
+          "title": "Tau",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "polarization"
+      ],
+      "title": "Mode",
+      "type": "object"
+    },
+    "ModeRoutingElement": {
+      "additionalProperties": false,
+      "description": "A C9 element.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "support": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Support",
+          "type": "array"
+        },
+        "component": {
+          "const": "mode_routing",
+          "title": "Component",
+          "type": "string"
+        },
+        "params": {
+          "$ref": "#/$defs/ModeRoutingParams",
+          "default": {
+            "permutation": null
+          }
+        }
+      },
+      "required": [
+        "name",
+        "support",
+        "component"
+      ],
+      "title": "ModeRoutingElement",
+      "type": "object"
+    },
+    "ModeRoutingParams": {
+      "additionalProperties": false,
+      "description": "C9.",
+      "properties": {
+        "permutation": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Permutation"
+        }
+      },
+      "title": "ModeRoutingParams",
+      "type": "object"
+    },
+    "Ne": {
+      "additionalProperties": false,
+      "description": "``{ne: path}``: matches where both sides exist and differ.",
+      "properties": {
+        "ne": {
+          "title": "Ne",
+          "type": "string"
+        }
+      },
+      "required": [
+        "ne"
+      ],
+      "title": "Ne",
+      "type": "object"
+    },
+    "Not": {
+      "additionalProperties": false,
+      "description": "``{not: pattern}``.",
+      "properties": {
+        "not": {
+          "$ref": "#/$defs/Pattern"
+        }
+      },
+      "required": [
+        "not"
+      ],
+      "title": "Not",
+      "type": "object"
+    },
+    "Optical": {
+      "additionalProperties": false,
+      "description": "An optical receiver, lowered to ``ReceiverRequest``.",
+      "properties": {
+        "kind": {
+          "const": "optical",
+          "title": "Kind",
+          "type": "string"
+        },
+        "modes": {
+          "items": {
+            "$ref": "#/$defs/Mode"
+          },
+          "title": "Modes",
+          "type": "array"
+        },
+        "channel_modes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Channel Modes",
+          "type": "array"
+        },
+        "source_modes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Modes",
+          "type": "array"
+        },
+        "route": {
+          "enum": [
+            "element_graph",
+            "port_grams",
+            "instrument_matrix"
+          ],
+          "title": "Route",
+          "type": "string"
+        },
+        "elements": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Element"
+          },
+          "title": "Elements",
+          "type": "array"
+        },
+        "edges": {
+          "default": [],
+          "items": {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "type": "array"
+          },
+          "title": "Edges",
+          "type": "array"
+        },
+        "port_grams": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/Matrix"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "route port_grams: one Gram per port label, on the input modes (channel then source); converted to binary64 with a recorded conversion per inexact entry.",
+          "title": "Port Grams"
+        },
+        "instrument_matrix": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Matrix"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "route instrument_matrix: the |M| x |Inp| transfer matrix; converted to binary64 with a recorded conversion per inexact entry."
+        },
+        "ports": {
+          "items": {
+            "$ref": "#/$defs/Port"
+          },
+          "title": "Ports",
+          "type": "array"
+        },
+        "detectors": {
+          "items": {
+            "$ref": "#/$defs/Detector"
+          },
+          "title": "Detectors",
+          "type": "array"
+        },
+        "dark_count_channel": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Matrix"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "A declared dark-count channel R on the 2^K click patterns, rows and columns in the order: by number of ports fired, then lexicographically by port position. Requires every detector's dark_count to be 0."
+        },
+        "coarse_graining": {
+          "$ref": "#/$defs/CoarseGraining"
+        },
+        "photon_cutoff": {
+          "$ref": "#/$defs/Scalar"
+        },
+        "exact_window": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The exact-window depth at the probe setting off, or none."
+        },
+        "tolerances": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/Exact"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The receiver's numerical tolerances; default eps_1..eps_5 and eps_gap at 1e-3, and eps_6 and eps_eig at 1e-3 where a window is declared.",
+          "title": "Tolerances"
+        },
+        "requested_assurance": {
+          "const": "estimate",
+          "default": "estimate",
+          "title": "Requested Assurance",
+          "type": "string"
+        },
+        "efficiency_normalization": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The factored loss t the receiver is compiled at: its detector efficiencies are divided by t and the common loss t is handed to the channel, which leaves the observed statistics unchanged. Absent, for a receiver without source modes: the largest detector efficiency divided by 99/100, or 1 where that efficiency is at least 99/100. Declared: a number in [largest efficiency, 1]; 1 turns the normalization off."
+        }
+      },
+      "required": [
+        "kind",
+        "modes",
+        "channel_modes",
+        "route",
+        "ports",
+        "detectors",
+        "coarse_graining",
+        "photon_cutoff"
+      ],
+      "title": "Optical",
+      "type": "object"
+    },
+    "Outer": {
+      "additionalProperties": false,
+      "description": "``{outer: {vector, squared_norm}}``: ``v v^dag / N``, never a square root.",
+      "properties": {
+        "outer": {
+          "$ref": "#/$defs/OuterSpec"
+        }
+      },
+      "required": [
+        "outer"
+      ],
+      "title": "Outer",
+      "type": "object"
+    },
+    "OuterSpec": {
+      "additionalProperties": false,
+      "description": "The arguments of ``foundations.exact.outer_projector``.",
+      "properties": {
+        "vector": {
+          "items": {
+            "$ref": "#/$defs/Entry"
+          },
+          "title": "Vector",
+          "type": "array"
+        },
+        "squared_norm": {
+          "$ref": "#/$defs/Scalar"
+        }
+      },
+      "required": [
+        "vector",
+        "squared_norm"
+      ],
+      "title": "OuterSpec",
+      "type": "object"
+    },
+    "ParamRef": {
+      "additionalProperties": false,
+      "description": "``{param: name}`` or ``{param: name, port: label}``: a configuration value.",
+      "properties": {
+        "param": {
+          "title": "Param",
+          "type": "string"
+        },
+        "port": {
+          "anyOf": [
+            {
+              "type": [
+                "string",
+                "integer"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Port"
+        }
+      },
+      "required": [
+        "param"
+      ],
+      "title": "ParamRef",
+      "type": "object"
+    },
+    "ParameterRow": {
+      "additionalProperties": false,
+      "description": "One parameter: a row of the run tier's ``ParameterSpec`` table.",
+      "properties": {
+        "name": {
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+          "title": "Name",
+          "type": "string"
+        },
+        "section": {
+          "enum": [
+            "model",
+            "device"
+          ],
+          "title": "Section",
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "fraction",
+            "int",
+            "choice",
+            "per_port_fraction"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "quantity": {
+          "$ref": "#/$defs/Quantity"
+        },
+        "unit": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Unit"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StaticValue"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "domain": {
+          "$ref": "#/$defs/Domain"
+        },
+        "snapped": {
+          "title": "Snapped",
+          "type": "boolean"
+        },
+        "meaning": {
+          "title": "Meaning",
+          "type": "string"
+        },
+        "applies_when": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "items": {
+                  "type": [
+                    "string",
+                    "integer"
+                  ]
+                },
+                "type": "array"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Applies When"
+        },
+        "station": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The id of the station this parameter describes, if one.",
+          "title": "Station"
+        },
+        "per_port_of": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "For kind per_port_fraction: the id of the station whose port labels key the value, in port-map order. A single number as a default means that number on every port.",
+          "title": "Per Port Of"
+        }
+      },
+      "required": [
+        "name",
+        "section",
+        "kind",
+        "quantity",
+        "domain",
+        "snapped",
+        "meaning"
+      ],
+      "title": "ParameterRow",
+      "type": "object"
+    },
+    "Parameters": {
+      "additionalProperties": false,
+      "description": "The parameter table, and what an absent configuration key means.",
+      "properties": {
+        "model_absent": {
+          "default": "refuse",
+          "description": "refuse: a configuration must declare every applicable model key; default: an absent key reads the table default.",
+          "enum": [
+            "refuse",
+            "default"
+          ],
+          "title": "Model Absent",
+          "type": "string"
+        },
+        "device_absent": {
+          "default": "refuse",
+          "description": "As model_absent, for the device section.",
+          "enum": [
+            "refuse",
+            "default"
+          ],
+          "title": "Device Absent",
+          "type": "string"
+        },
+        "check_order": {
+          "default": [
+            "model",
+            "device"
+          ],
+          "description": "The order the two sections are checked in, so which refusal a configuration faulty in both reports first.",
+          "maxItems": 2,
+          "minItems": 2,
+          "prefixItems": [
+            {
+              "enum": [
+                "model",
+                "device"
+              ],
+              "type": "string"
+            },
+            {
+              "enum": [
+                "model",
+                "device"
+              ],
+              "type": "string"
+            }
+          ],
+          "title": "Check Order",
+          "type": "array"
+        },
+        "table": {
+          "items": {
+            "$ref": "#/$defs/ParameterRow"
+          },
+          "title": "Table",
+          "type": "array"
+        }
+      },
+      "required": [
+        "table"
+      ],
+      "title": "Parameters",
+      "type": "object"
+    },
+    "Pattern": {
+      "anyOf": [
+        {
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        {
+          "items": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "type": "array"
+        },
+        {
+          "$ref": "#/$defs/Eq"
+        },
+        {
+          "$ref": "#/$defs/Ne"
+        },
+        {
+          "$ref": "#/$defs/Not"
+        }
+      ]
+    },
+    "PhaseShifterElement": {
+      "additionalProperties": false,
+      "description": "A C6 element.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "support": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Support",
+          "type": "array"
+        },
+        "component": {
+          "const": "phase_shifter",
+          "title": "Component",
+          "type": "string"
+        },
+        "params": {
+          "$ref": "#/$defs/PhaseShifterParams",
+          "default": {
+            "phases_pi": null
+          }
+        }
+      },
+      "required": [
+        "name",
+        "support",
+        "component"
+      ],
+      "title": "PhaseShifterElement",
+      "type": "object"
+    },
+    "PhaseShifterParams": {
+      "additionalProperties": false,
+      "description": "C6.",
+      "properties": {
+        "phases_pi": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Scalar"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Each phase in units of pi, by the same rule as every _pi field.",
+          "title": "Phases Pi"
+        }
+      },
+      "title": "PhaseShifterParams",
+      "type": "object"
+    },
+    "Polarisation": {
+      "additionalProperties": false,
+      "description": "One WCP polarisation and the attributes its letters carry.",
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "part": {
+          "enum": [
+            "H",
+            "V",
+            "+",
+            "-"
+          ],
+          "title": "Part",
+          "type": "string"
+        },
+        "attrs": {
+          "additionalProperties": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "default": {},
+          "title": "Attrs",
+          "type": "object"
+        }
+      },
+      "required": [
+        "label",
+        "part"
+      ],
+      "title": "Polarisation",
+      "type": "object"
+    },
+    "PolarizerElement": {
+      "additionalProperties": false,
+      "description": "A C8 element.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "support": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Support",
+          "type": "array"
+        },
+        "component": {
+          "const": "polarizer",
+          "title": "Component",
+          "type": "string"
+        },
+        "params": {
+          "$ref": "#/$defs/PolarizerParams",
+          "default": {
+            "angle_pi": null,
+            "pass_transmittance": null,
+            "leak_transmittance": null
+          }
+        }
+      },
+      "required": [
+        "name",
+        "support",
+        "component"
+      ],
+      "title": "PolarizerElement",
+      "type": "object"
+    },
+    "PolarizerParams": {
+      "additionalProperties": false,
+      "description": "C8.",
+      "properties": {
+        "angle_pi": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "In units of pi: the catalogue field without _pi receives float(value) * pi, an integer 0 exactly 0."
+        },
+        "pass_transmittance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "leak_transmittance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "PolarizerParams",
+      "type": "object"
+    },
+    "PolarizingBeamsplitterElement": {
+      "additionalProperties": false,
+      "description": "A C2 element.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "support": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Support",
+          "type": "array"
+        },
+        "component": {
+          "const": "polarizing_beamsplitter",
+          "title": "Component",
+          "type": "string"
+        },
+        "params": {
+          "$ref": "#/$defs/PolarizingBeamsplitterParams",
+          "default": {
+            "transmittance_h": null,
+            "transmittance_v": null,
+            "phase_h_pi": null,
+            "phase_v_pi": null,
+            "loss_1": null,
+            "loss_2": null
+          }
+        }
+      },
+      "required": [
+        "name",
+        "support",
+        "component"
+      ],
+      "title": "PolarizingBeamsplitterElement",
+      "type": "object"
+    },
+    "PolarizingBeamsplitterParams": {
+      "additionalProperties": false,
+      "description": "C2.",
+      "properties": {
+        "transmittance_h": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "transmittance_v": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "phase_h_pi": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "In units of pi: the catalogue field without _pi receives float(value) * pi, an integer 0 exactly 0."
+        },
+        "phase_v_pi": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "In units of pi: the catalogue field without _pi receives float(value) * pi, an integer 0 exactly 0."
+        },
+        "loss_1": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "loss_2": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "PolarizingBeamsplitterParams",
+      "type": "object"
+    },
+    "Port": {
+      "additionalProperties": false,
+      "description": "One port of the ``PortMap``, in port-map order.",
+      "properties": {
+        "label": {
+          "title": "Label",
+          "type": [
+            "string",
+            "integer"
+          ]
+        },
+        "modes": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Modes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "label",
+        "modes"
+      ],
+      "title": "Port",
+      "type": "object"
+    },
+    "Preparation": {
+      "additionalProperties": false,
+      "description": "One further ``prepare_probabilities`` call that rebinds parameters.",
+      "properties": {
+        "site": {
+          "title": "Site",
+          "type": "string"
+        },
+        "lattice_exponent": {
+          "maximum": 53,
+          "minimum": 1,
+          "title": "Lattice Exponent",
+          "type": "integer"
+        },
+        "family": {
+          "description": "A probability family: expressions over parameters, summing to one.",
+          "items": {
+            "$ref": "#/$defs/Exact"
+          },
+          "title": "Family",
+          "type": "array"
+        },
+        "rebind": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "description": "Each parameter replaced by the prepared family's entry at this index.",
+          "title": "Rebind",
+          "type": "object"
+        }
+      },
+      "required": [
+        "site",
+        "lattice_exponent",
+        "family",
+        "rebind"
+      ],
+      "title": "Preparation",
+      "type": "object"
+    },
+    "PresentationCertificate": {
+      "additionalProperties": false,
+      "description": "``EnsemblePresentation``.",
+      "properties": {
+        "form": {
+          "const": "ensemble_presentation",
+          "title": "Form",
+          "type": "string"
+        },
+        "virtual_sectors": {
+          "$ref": "#/$defs/Sectors"
+        },
+        "weighted_blocks": {
+          "additionalProperties": {
+            "items": {
+              "$ref": "#/$defs/Matrix"
+            },
+            "type": "array"
+          },
+          "title": "Weighted Blocks",
+          "type": "object"
+        }
+      },
+      "required": [
+        "form",
+        "virtual_sectors",
+        "weighted_blocks"
+      ],
+      "title": "PresentationCertificate",
+      "type": "object"
+    },
+    "PresetBlock": {
+      "additionalProperties": false,
+      "description": "A named parameter set; values are numbers or ``{expr}`` without names.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "note": {
+          "default": "",
+          "title": "Note",
+          "type": "string"
+        },
+        "model": {
+          "additionalProperties": {
+            "$ref": "#/$defs/StaticValue"
+          },
+          "default": {},
+          "title": "Model",
+          "type": "object"
+        },
+        "device": {
+          "additionalProperties": {
+            "$ref": "#/$defs/StaticValue"
+          },
+          "default": {},
+          "title": "Device",
+          "type": "object"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "PresetBlock",
+      "type": "object"
+    },
+    "ProductAlphabet": {
+      "additionalProperties": false,
+      "description": "``{product: {dims, label}}``.",
+      "properties": {
+        "product": {
+          "$ref": "#/$defs/ProductSpec"
+        },
+        "attrs": {
+          "additionalProperties": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "default": {},
+          "title": "Attrs",
+          "type": "object"
+        }
+      },
+      "required": [
+        "product"
+      ],
+      "title": "ProductAlphabet",
+      "type": "object"
+    },
+    "ProductSpec": {
+      "additionalProperties": false,
+      "description": "``dims`` (the first varies slowest) and the label template.",
+      "properties": {
+        "dims": {
+          "additionalProperties": {
+            "items": {
+              "type": [
+                "string",
+                "integer"
+              ]
+            },
+            "type": "array"
+          },
+          "title": "Dims",
+          "type": "object"
+        },
+        "label": {
+          "title": "Label",
+          "type": "string"
+        }
+      },
+      "required": [
+        "dims",
+        "label"
+      ],
+      "title": "ProductSpec",
+      "type": "object"
+    },
+    "Public": {
+      "additionalProperties": false,
+      "description": "The public part: partition, announcements or transcript, and the tables.\n\nExactly one of announcements (two maps) and transcript (any number of\nmessages) is given.",
+      "properties": {
+        "partition": {
+          "$ref": "#/$defs/Sw_Union_Literal__default____factor_projection____ExplicitPartition__",
+          "default": "default"
+        },
+        "announcements": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sw_Announcements_"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The accepted format's two announcement maps with their alphabets; may switch as a whole, where a choice changes an alphabet."
+        },
+        "transcript": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Transcript"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "announcement_alphabets": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AnnouncementAlphabets"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sifting": {
+          "$ref": "#/$defs/Rules"
+        },
+        "key": {
+          "$ref": "#/$defs/Sw_Key_"
+        },
+        "acceptance": {
+          "$ref": "#/$defs/Sw_Acceptance_"
+        }
+      },
+      "required": [
+        "sifting",
+        "key",
+        "acceptance"
+      ],
+      "title": "Public",
+      "type": "object"
+    },
+    "PureCertificate": {
+      "additionalProperties": false,
+      "description": "``SourceReplacementCertificate``.",
+      "properties": {
+        "form": {
+          "const": "pure",
+          "title": "Form",
+          "type": "string"
+        },
+        "psi": {
+          "$ref": "#/$defs/Matrix"
+        },
+        "virtual_dim": {
+          "title": "Virtual Dim",
+          "type": "integer"
+        },
+        "virtual_weights": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/Scalar"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Virtual Weights"
+        },
+        "virtual_states": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/Matrix"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Virtual States"
+        }
+      },
+      "required": [
+        "form",
+        "psi",
+        "virtual_dim"
+      ],
+      "title": "PureCertificate",
+      "type": "object"
+    },
+    "Quantity": {
+      "description": "WHAT KIND OF NUMBER a parameter is: a small, closed vocabulary.\n\nA consumer attaches generic conversions and scales to these without knowing\nthe parameter: a ``TRANSMITTANCE`` has a decibel reading, a ``PHOTON_NUMBER``\nis a cutoff to step through, an ``ANGLE_PI`` is in units of pi. THE\nVOCABULARY IS CLOSED AND IS DEFINED HERE, so that two instances cannot\ndescribe the same physical quantity under two names; an instance that needs\na member this list does not have adds it here, in the open, rather than\nwriting a string of its own.",
+      "enum": [
+        "probability",
+        "transmittance",
+        "efficiency",
+        "angle_pi",
+        "count",
+        "photon_number",
+        "mean_photon_number",
+        "choice",
+        "renyi_order",
+        "renyi_order_offset",
+        "tolerance",
+        "duration",
+        "artefact"
+      ],
+      "title": "Quantity",
+      "type": "string"
+    },
+    "Readout": {
+      "additionalProperties": false,
+      "description": "An alphabet and the rules mapping into it.",
+      "properties": {
+        "alphabet": {
+          "$ref": "#/$defs/AlphabetNode"
+        },
+        "map": {
+          "$ref": "#/$defs/Rules"
+        }
+      },
+      "required": [
+        "alphabet",
+        "map"
+      ],
+      "title": "Readout",
+      "type": "object"
+    },
+    "Reduction": {
+      "additionalProperties": false,
+      "description": "The station's photon-number reduction (a ``ReductionRequest``).",
+      "properties": {
+        "links": {
+          "$ref": "#/$defs/Sw_list_Link__"
+        },
+        "route": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Sw_Literal__encoded____licensed___"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "carried_operators": {
+          "$ref": "#/$defs/Sw_list_Union_LibraryOperator__ExplicitOperator___",
+          "default": []
+        },
+        "squash_before_post_processing": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Squash Before Post Processing"
+        },
+        "declared_sector_order": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Declared Sector Order"
+        },
+        "declared_occupation_basis_order": {
+          "anyOf": [
+            {
+              "items": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Declared Occupation Basis Order"
+        },
+        "declared_relations": {
+          "default": [],
+          "items": {
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "items": {
+                  "$ref": "#/$defs/Matrix"
+                },
+                "type": "array"
+              },
+              {
+                "items": {
+                  "$ref": "#/$defs/Matrix"
+                },
+                "type": "array"
+              }
+            ],
+            "type": "array"
+          },
+          "title": "Declared Relations",
+          "type": "array"
+        },
+        "accepted_receiver_versions": {
+          "default": [
+            "receiver@0.9.0"
+          ],
+          "description": "The receiver versions the reduction accepts (Assumption A-RECV); only the default is admitted.",
+          "items": {
+            "type": "string"
+          },
+          "title": "Accepted Receiver Versions",
+          "type": "array"
+        },
+        "lattice_exponent": {
+          "default": 40,
+          "maximum": 53,
+          "minimum": 1,
+          "title": "Lattice Exponent",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "links"
+      ],
+      "title": "Reduction",
+      "type": "object"
+    },
+    "RetarderElement": {
+      "additionalProperties": false,
+      "description": "A general C3 element.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "support": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Support",
+          "type": "array"
+        },
+        "component": {
+          "const": "retarder",
+          "title": "Component",
+          "type": "string"
+        },
+        "params": {
+          "$ref": "#/$defs/RetarderParams",
+          "default": {
+            "retardance_pi": null,
+            "angle_pi": null,
+            "loss": null
+          }
+        }
+      },
+      "required": [
+        "name",
+        "support",
+        "component"
+      ],
+      "title": "RetarderElement",
+      "type": "object"
+    },
+    "RetarderParams": {
+      "additionalProperties": false,
+      "description": "C3, general.",
+      "properties": {
+        "retardance_pi": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "In units of pi: the catalogue field without _pi receives float(value) * pi, an integer 0 exactly 0."
+        },
+        "angle_pi": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "In units of pi: the catalogue field without _pi receives float(value) * pi, an integer 0 exactly 0."
+        },
+        "loss": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "RetarderParams",
+      "type": "object"
+    },
+    "RotatorElement": {
+      "additionalProperties": false,
+      "description": "A C4 element.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "support": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Support",
+          "type": "array"
+        },
+        "component": {
+          "const": "rotator",
+          "title": "Component",
+          "type": "string"
+        },
+        "params": {
+          "$ref": "#/$defs/RotatorParams",
+          "default": {
+            "rotation_angle_pi": null
+          }
+        }
+      },
+      "required": [
+        "name",
+        "support",
+        "component"
+      ],
+      "title": "RotatorElement",
+      "type": "object"
+    },
+    "RotatorParams": {
+      "additionalProperties": false,
+      "description": "C4.",
+      "properties": {
+        "rotation_angle_pi": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "In units of pi: the catalogue field without _pi receives float(value) * pi, an integer 0 exactly 0."
+        }
+      },
+      "title": "RotatorParams",
+      "type": "object"
+    },
+    "Rule": {
+      "additionalProperties": false,
+      "description": "``{when?: {path: pattern}, value: node}``; the first matching rule wins.",
+      "properties": {
+        "when": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/Pattern"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "When"
+        },
+        "value": {
+          "$ref": "#/$defs/RuleValue"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "title": "Rule",
+      "type": "object"
+    },
+    "RuleValue": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/MessageValue"
+        },
+        {
+          "$ref": "#/$defs/IntOf"
+        },
+        {
+          "$ref": "#/$defs/Switch_RuleValue_"
+        }
+      ]
+    },
+    "Rules": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/Rule"
+          },
+          "type": "array"
+        },
+        {
+          "$ref": "#/$defs/Switch_list_Rule__"
+        }
+      ]
+    },
+    "RunDefaults": {
+      "additionalProperties": false,
+      "description": "The base of ``default_config`` and how a caller's overrides combine with it.",
+      "properties": {
+        "rounds": {
+          "$ref": "#/$defs/Exact"
+        },
+        "completeness_budget": {
+          "$ref": "#/$defs/Exact"
+        },
+        "declared_tolerance": {
+          "$ref": "#/$defs/Exact"
+        },
+        "parameters": {
+          "$ref": "#/$defs/KeyLengthBlock"
+        },
+        "alpha": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Exact"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "constrained": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Constrained"
+        },
+        "endpoint_rule": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Endpoint Rule"
+        },
+        "tail_evaluation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tail Evaluation"
+        },
+        "solver": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SolverBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "model": {
+          "additionalProperties": {
+            "$ref": "#/$defs/StaticValue"
+          },
+          "default": {},
+          "title": "Model",
+          "type": "object"
+        },
+        "device": {
+          "additionalProperties": {
+            "$ref": "#/$defs/StaticValue"
+          },
+          "default": {},
+          "title": "Device",
+          "type": "object"
+        },
+        "sections": {
+          "default": "replace",
+          "description": "How a caller's model= or device= combines with the base section: replace it whole, or lay the caller's keys over it.",
+          "enum": [
+            "replace",
+            "merge"
+          ],
+          "title": "Sections",
+          "type": "string"
+        },
+        "derived": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Exact"
+          },
+          "default": {},
+          "description": "Defaults computed from other parameters, as expressions, e.g. exact_window: photon_cutoff + 1.",
+          "title": "Derived",
+          "type": "object"
+        },
+        "derived_timing": {
+          "anyOf": [
+            {
+              "enum": [
+                "base_only",
+                "unless_supplied"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "base_only: derived is evaluated on the base, before a caller's sections; unless_supplied: on the combined values, for each key the caller's section did not supply. Required with derived.",
+          "title": "Derived Timing"
+        }
+      },
+      "required": [
+        "rounds",
+        "completeness_budget",
+        "declared_tolerance",
+        "parameters"
+      ],
+      "title": "RunDefaults",
+      "type": "object"
+    },
+    "Scalar": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/ParamRef"
+        },
+        {
+          "$ref": "#/$defs/Expr"
+        },
+        {
+          "$ref": "#/$defs/Switch_Scalar_"
+        }
+      ]
+    },
+    "Scale": {
+      "additionalProperties": false,
+      "description": "``{scale: {factor, of}}``.",
+      "properties": {
+        "scale": {
+          "$ref": "#/$defs/ScaleSpec"
+        }
+      },
+      "required": [
+        "scale"
+      ],
+      "title": "Scale",
+      "type": "object"
+    },
+    "ScaleSpec": {
+      "additionalProperties": false,
+      "description": "The arguments of ``foundations.exact.scale``.",
+      "properties": {
+        "factor": {
+          "$ref": "#/$defs/Entry"
+        },
+        "of": {
+          "$ref": "#/$defs/Matrix"
+        }
+      },
+      "required": [
+        "factor",
+        "of"
+      ],
+      "title": "ScaleSpec",
+      "type": "object"
+    },
+    "Sectors": {
+      "additionalProperties": false,
+      "description": "A ``SectorStructure``.",
+      "properties": {
+        "labels": {
+          "items": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "title": "Labels",
+          "type": "array"
+        },
+        "dims": {
+          "items": {
+            "type": "integer"
+          },
+          "title": "Dims",
+          "type": "array"
+        },
+        "block_kind": {
+          "title": "Block Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "labels",
+        "dims",
+        "block_kind"
+      ],
+      "title": "Sectors",
+      "type": "object"
+    },
+    "Snap": {
+      "additionalProperties": false,
+      "description": "One ``prepare_config_probabilities`` call.",
+      "properties": {
+        "lattice_exponent": {
+          "maximum": 53,
+          "minimum": 1,
+          "title": "Lattice Exponent",
+          "type": "integer"
+        },
+        "groups": {
+          "default": [],
+          "items": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "title": "Groups",
+          "type": "array"
+        }
+      },
+      "required": [
+        "lattice_exponent"
+      ],
+      "title": "Snap",
+      "type": "object"
+    },
+    "SolverBlock": {
+      "additionalProperties": false,
+      "description": "``SolverSettings``: the ordinary choices, the expert ones under ``advanced``.",
+      "properties": {
+        "method": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Method"
+        },
+        "budget_seconds": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Exact"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "max_iterations": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Exact"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "advanced": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AdvancedSolverBlock"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "SolverBlock",
+      "type": "object"
+    },
+    "Source": {
+      "discriminator": {
+        "mapping": {
+          "trusted_ensemble": "#/$defs/TrustedEnsemble",
+          "untrusted": "#/$defs/Untrusted",
+          "wcp_decoy": "#/$defs/WcpDecoy"
+        },
+        "propertyName": "kind"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/TrustedEnsemble"
+        },
+        {
+          "$ref": "#/$defs/WcpDecoy"
+        },
+        {
+          "$ref": "#/$defs/Untrusted"
+        }
+      ]
+    },
+    "StaticNumber": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/Expr"
+        }
+      ]
+    },
+    "StaticValue": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/StaticNumber"
+        },
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/StaticNumber"
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "Station": {
+      "additionalProperties": false,
+      "description": "One station, in declared order; ``id`` is its factor label.",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "party": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Party",
+          "type": "string"
+        },
+        "declared_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Declared By"
+        },
+        "measurement": {
+          "$ref": "#/$defs/Measurement"
+        },
+        "reduction": {
+          "$ref": "#/$defs/Sw_Reduction_"
+        },
+        "choice_weighting": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ChoiceWeighting"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "id",
+        "party",
+        "measurement",
+        "reduction"
+      ],
+      "title": "Station",
+      "type": "object"
+    },
+    "Sw_Acceptance_": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Acceptance"
+        },
+        {
+          "$ref": "#/$defs/Switch_Acceptance_"
+        }
+      ]
+    },
+    "Sw_Annotated_bool__Strict_strict_True___": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "$ref": "#/$defs/Switch_Annotated_bool__Strict_strict_True___"
+        }
+      ]
+    },
+    "Sw_Annotated_str__Strict_strict_True___": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/Switch_Annotated_str__Strict_strict_True___"
+        }
+      ]
+    },
+    "Sw_Announcements_": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Announcements"
+        },
+        {
+          "$ref": "#/$defs/Switch_Announcements_"
+        }
+      ]
+    },
+    "Sw_Key_": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Key"
+        },
+        {
+          "$ref": "#/$defs/Switch_Key_"
+        }
+      ]
+    },
+    "Sw_Literal__encoded____licensed___": {
+      "anyOf": [
+        {
+          "enum": [
+            "encoded",
+            "licensed"
+          ],
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/Switch_Literal__encoded____licensed___"
+        }
+      ]
+    },
+    "Sw_Literal__operator____licensed_scalar___": {
+      "anyOf": [
+        {
+          "enum": [
+            "operator",
+            "licensed_scalar"
+          ],
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/Switch_Literal__operator____licensed_scalar___"
+        }
+      ]
+    },
+    "Sw_Reduction_": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Reduction"
+        },
+        {
+          "$ref": "#/$defs/Switch_Reduction_"
+        }
+      ]
+    },
+    "Sw_Union_Literal__auto____none____WitnessBlocks__": {
+      "anyOf": [
+        {
+          "enum": [
+            "auto",
+            "none"
+          ],
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/WitnessBlocks"
+        },
+        {
+          "$ref": "#/$defs/Switch_Union_Literal__auto____none____WitnessBlocks__"
+        }
+      ]
+    },
+    "Sw_Union_Literal__default____factor_projection____ExplicitPartition__": {
+      "anyOf": [
+        {
+          "enum": [
+            "default",
+            "factor_projection"
+          ],
+          "type": "string"
+        },
+        {
+          "$ref": "#/$defs/ExplicitPartition"
+        },
+        {
+          "$ref": "#/$defs/Switch_Union_Literal__default____factor_projection____ExplicitPartition__"
+        }
+      ]
+    },
+    "Sw_list_ConstraintEntry__": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/ConstraintEntry"
+          },
+          "type": "array"
+        },
+        {
+          "$ref": "#/$defs/Switch_list_ConstraintEntry__"
+        }
+      ]
+    },
+    "Sw_list_Link__": {
+      "anyOf": [
+        {
+          "items": {
+            "$ref": "#/$defs/Link"
+          },
+          "type": "array"
+        },
+        {
+          "$ref": "#/$defs/Switch_list_Link__"
+        }
+      ]
+    },
+    "Sw_list_Union_LibraryOperator__ExplicitOperator___": {
+      "anyOf": [
+        {
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/LibraryOperator"
+              },
+              {
+                "$ref": "#/$defs/ExplicitOperator"
+              }
+            ]
+          },
+          "type": "array"
+        },
+        {
+          "$ref": "#/$defs/Switch_list_Union_LibraryOperator__ExplicitOperator___"
+        }
+      ]
+    },
+    "Switch_Acceptance_": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Acceptance"
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Acceptance"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[Acceptance]",
+      "type": "object"
+    },
+    "Switch_Annotated_bool__Strict_strict_True___": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "type": "boolean"
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default"
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[Annotated[bool, Strict(strict=True)]]",
+      "type": "object"
+    },
+    "Switch_Annotated_str__Strict_strict_True___": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default"
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[Annotated[str, Strict(strict=True)]]",
+      "type": "object"
+    },
+    "Switch_Announcements_": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Announcements"
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Announcements"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[Announcements]",
+      "type": "object"
+    },
+    "Switch_Key_": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Key"
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Key"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[Key]",
+      "type": "object"
+    },
+    "Switch_Literal__encoded____licensed___": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "enum": [
+              "encoded",
+              "licensed"
+            ],
+            "type": "string"
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "enum": [
+                "encoded",
+                "licensed"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default"
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[Literal['encoded', 'licensed']]",
+      "type": "object"
+    },
+    "Switch_Literal__operator____licensed_scalar___": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "enum": [
+              "operator",
+              "licensed_scalar"
+            ],
+            "type": "string"
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "enum": [
+                "operator",
+                "licensed_scalar"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default"
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[Literal['operator', 'licensed_scalar']]",
+      "type": "object"
+    },
+    "Switch_Matrix_": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Matrix"
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Matrix"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[Matrix]",
+      "type": "object"
+    },
+    "Switch_Reduction_": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Reduction"
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Reduction"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[Reduction]",
+      "type": "object"
+    },
+    "Switch_RuleValue_": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "$ref": "#/$defs/RuleValue"
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RuleValue"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[RuleValue]",
+      "type": "object"
+    },
+    "Switch_Scalar_": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Scalar"
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[Scalar]",
+      "type": "object"
+    },
+    "Switch_Union_HonestLibrary__HonestAcceptanceTable__HonestRawTable__HonestEnvelope__": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/HonestLibrary"
+              },
+              {
+                "$ref": "#/$defs/HonestAcceptanceTable"
+              },
+              {
+                "$ref": "#/$defs/HonestRawTable"
+              },
+              {
+                "$ref": "#/$defs/HonestEnvelope"
+              }
+            ]
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/HonestLibrary"
+            },
+            {
+              "$ref": "#/$defs/HonestAcceptanceTable"
+            },
+            {
+              "$ref": "#/$defs/HonestRawTable"
+            },
+            {
+              "$ref": "#/$defs/HonestEnvelope"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default"
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[Union[HonestLibrary, HonestAcceptanceTable, HonestRawTable, HonestEnvelope]]",
+      "type": "object"
+    },
+    "Switch_Union_Literal__auto____none____WitnessBlocks__": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "enum": [
+                  "auto",
+                  "none"
+                ],
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/WitnessBlocks"
+              }
+            ]
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "enum": [
+                "auto",
+                "none"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/WitnessBlocks"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default"
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[Union[Literal['auto', 'none'], WitnessBlocks]]",
+      "type": "object"
+    },
+    "Switch_Union_Literal__default____factor_projection____ExplicitPartition__": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "enum": [
+                  "default",
+                  "factor_projection"
+                ],
+                "type": "string"
+              },
+              {
+                "$ref": "#/$defs/ExplicitPartition"
+              }
+            ]
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "enum": [
+                "default",
+                "factor_projection"
+              ],
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/ExplicitPartition"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default"
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[Union[Literal['default', 'factor_projection'], ExplicitPartition]]",
+      "type": "object"
+    },
+    "Switch_list_ConstraintEntry__": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "items": {
+              "$ref": "#/$defs/ConstraintEntry"
+            },
+            "type": "array"
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/ConstraintEntry"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default"
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[list[ConstraintEntry]]",
+      "type": "object"
+    },
+    "Switch_list_Link__": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "items": {
+              "$ref": "#/$defs/Link"
+            },
+            "type": "array"
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Link"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default"
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[list[Link]]",
+      "type": "object"
+    },
+    "Switch_list_Rule__": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "items": {
+              "$ref": "#/$defs/Rule"
+            },
+            "type": "array"
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Rule"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default"
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[list[Rule]]",
+      "type": "object"
+    },
+    "Switch_list_Union_LibraryOperator__ExplicitOperator___": {
+      "additionalProperties": false,
+      "properties": {
+        "switch": {
+          "title": "Switch",
+          "type": "string"
+        },
+        "cases": {
+          "additionalProperties": {
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/LibraryOperator"
+                },
+                {
+                  "$ref": "#/$defs/ExplicitOperator"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "title": "Cases",
+          "type": "object"
+        },
+        "default": {
+          "anyOf": [
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/LibraryOperator"
+                  },
+                  {
+                    "$ref": "#/$defs/ExplicitOperator"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default"
+        }
+      },
+      "required": [
+        "switch",
+        "cases"
+      ],
+      "title": "Switch[list[Union[LibraryOperator, ExplicitOperator]]]",
+      "type": "object"
+    },
+    "TestRounds": {
+      "additionalProperties": false,
+      "description": "What a test round sends, and the test coin.",
+      "properties": {
+        "coin": {
+          "$ref": "#/$defs/Scalar"
+        },
+        "intensity_probabilities": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Scalar"
+          },
+          "title": "Intensity Probabilities",
+          "type": "object"
+        },
+        "polarisations": {
+          "items": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "title": "Polarisations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "coin",
+        "intensity_probabilities",
+        "polarisations"
+      ],
+      "title": "TestRounds",
+      "type": "object"
+    },
+    "Transcript": {
+      "additionalProperties": false,
+      "description": "A transcript of any length.",
+      "properties": {
+        "messages": {
+          "items": {
+            "$ref": "#/$defs/TranscriptMessage"
+          },
+          "minItems": 1,
+          "title": "Messages",
+          "type": "array"
+        }
+      },
+      "required": [
+        "messages"
+      ],
+      "title": "Transcript",
+      "type": "object"
+    },
+    "TranscriptMessage": {
+      "additionalProperties": false,
+      "description": "One message; ``alphabet: derived`` lists the table's values in order.",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "sender": {
+          "enum": [
+            "A",
+            "B"
+          ],
+          "title": "Sender",
+          "type": "string"
+        },
+        "alphabet": {
+          "$ref": "#/$defs/AlphabetNode",
+          "description": "The message alphabet, or the word derived: the table's values in order of first appearance."
+        },
+        "table": {
+          "$ref": "#/$defs/Rules"
+        }
+      },
+      "required": [
+        "id",
+        "sender",
+        "alphabet",
+        "table"
+      ],
+      "title": "TranscriptMessage",
+      "type": "object"
+    },
+    "TrustedEnsemble": {
+      "additionalProperties": false,
+      "description": "A trusted source: an ensemble of states with a source-replacement certificate.",
+      "properties": {
+        "kind": {
+          "const": "trusted_ensemble",
+          "title": "Kind",
+          "type": "string"
+        },
+        "alphabet": {
+          "$ref": "#/$defs/AlphabetNode"
+        },
+        "alice_dim": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Alice Dim"
+        },
+        "transmitted_dim": {
+          "title": "Transmitted Dim",
+          "type": "integer"
+        },
+        "weights": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Scalar"
+          },
+          "title": "Weights",
+          "type": "object"
+        },
+        "states": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Matrix"
+          },
+          "title": "States",
+          "type": "object"
+        },
+        "alice": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AliceChoices"
+            },
+            {
+              "$ref": "#/$defs/AlicePovm"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Alice"
+        },
+        "alice_marginal": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Matrix"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "certificate": {
+          "$ref": "#/$defs/Certificate"
+        },
+        "retention_attestation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attestation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "kind",
+        "alphabet",
+        "transmitted_dim",
+        "weights",
+        "states",
+        "certificate"
+      ],
+      "title": "TrustedEnsemble",
+      "type": "object"
+    },
+    "UnionAlphabet": {
+      "additionalProperties": false,
+      "description": "``{union: [parts]}``; each part may add constant ``attrs``.",
+      "properties": {
+        "union": {
+          "items": {
+            "$ref": "#/$defs/AlphabetNode"
+          },
+          "title": "Union",
+          "type": "array"
+        },
+        "attrs": {
+          "additionalProperties": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "default": {},
+          "title": "Attrs",
+          "type": "object"
+        }
+      },
+      "required": [
+        "union"
+      ],
+      "title": "UnionAlphabet",
+      "type": "object"
+    },
+    "Untrusted": {
+      "additionalProperties": false,
+      "description": "An untrusted source, through ``emit_artifact``.",
+      "properties": {
+        "kind": {
+          "const": "untrusted",
+          "title": "Kind",
+          "type": "string"
+        },
+        "alphabet": {
+          "$ref": "#/$defs/AlphabetNode"
+        },
+        "transmitted_dim": {
+          "title": "Transmitted Dim",
+          "type": "integer"
+        },
+        "weights": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Scalar"
+          },
+          "title": "Weights",
+          "type": "object"
+        },
+        "states": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/Matrix"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "States"
+        },
+        "alice_dim": {
+          "title": "Alice Dim",
+          "type": "integer"
+        },
+        "alice_povm": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Matrix"
+          },
+          "title": "Alice Povm",
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind",
+        "alphabet",
+        "transmitted_dim",
+        "weights",
+        "alice_dim",
+        "alice_povm"
+      ],
+      "title": "Untrusted",
+      "type": "object"
+    },
+    "WaveplateElement": {
+      "additionalProperties": false,
+      "description": "A half- or quarter-wave C3 element.",
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "support": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Support",
+          "type": "array"
+        },
+        "component": {
+          "enum": [
+            "half_wave",
+            "quarter_wave"
+          ],
+          "title": "Component",
+          "type": "string"
+        },
+        "params": {
+          "$ref": "#/$defs/WaveplateParams",
+          "default": {
+            "angle_pi": null,
+            "loss": null
+          }
+        }
+      },
+      "required": [
+        "name",
+        "support",
+        "component"
+      ],
+      "title": "WaveplateElement",
+      "type": "object"
+    },
+    "WaveplateParams": {
+      "additionalProperties": false,
+      "description": "C3, half- and quarter-wave.",
+      "properties": {
+        "angle_pi": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "In units of pi: the catalogue field without _pi receives float(value) * pi, an integer 0 exactly 0."
+        },
+        "loss": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Scalar"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "title": "WaveplateParams",
+      "type": "object"
+    },
+    "WcpDecoy": {
+      "additionalProperties": false,
+      "description": "A tagged weak-coherent-pulse source, through ``emit_decoy_declaration``.",
+      "properties": {
+        "kind": {
+          "const": "wcp_decoy",
+          "title": "Kind",
+          "type": "string"
+        },
+        "polarisations": {
+          "items": {
+            "$ref": "#/$defs/Polarisation"
+          },
+          "title": "Polarisations",
+          "type": "array"
+        },
+        "intensities": {
+          "items": {
+            "$ref": "#/$defs/Intensity"
+          },
+          "title": "Intensities",
+          "type": "array"
+        },
+        "generation": {
+          "$ref": "#/$defs/Generation"
+        },
+        "test": {
+          "$ref": "#/$defs/TestRounds"
+        },
+        "entropy_cutoff": {
+          "$ref": "#/$defs/Scalar"
+        },
+        "source_cutoff": {
+          "$ref": "#/$defs/Scalar"
+        },
+        "lattice_exponent": {
+          "default": 24,
+          "maximum": 53,
+          "minimum": 1,
+          "title": "Lattice Exponent",
+          "type": "integer"
+        },
+        "flag_family": {
+          "default": "shared",
+          "enum": [
+            "shared",
+            "split_by_intensity"
+          ],
+          "title": "Flag Family",
+          "type": "string"
+        },
+        "letter_label": {
+          "default": "{round}-{intensity}-{polarisation}",
+          "description": "Each letter's label; it reads round (gen or test), intensity and polarisation.",
+          "title": "Letter Label",
+          "type": "string"
+        },
+        "record_site": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The prefix of the preparation records' sites (<site>.test_coin, ...); default the document's id.",
+          "title": "Record Site"
+        },
+        "record_label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "The instance string of the source's preparation record; default <record_label>.source.",
+          "title": "Record Label"
+        },
+        "retention_attestation": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Attestation"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "kind",
+        "polarisations",
+        "intensities",
+        "generation",
+        "test",
+        "entropy_cutoff",
+        "source_cutoff"
+      ],
+      "title": "WcpDecoy",
+      "type": "object"
+    },
+    "WitnessBlocks": {
+      "additionalProperties": false,
+      "description": "An explicit, flagged feasibility witness.",
+      "properties": {
+        "blocks": {
+          "items": {
+            "$ref": "#/$defs/Matrix"
+          },
+          "title": "Blocks",
+          "type": "array"
+        }
+      },
+      "required": [
+        "blocks"
+      ],
+      "title": "WitnessBlocks",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "A certiqs-key/protocol-document document, format_version 1. Generated from instances/declared/model.py by python -m instances.declared.schema; do not edit. The format guide is instances/declared/README.md.",
+  "properties": {
+    "format": {
+      "const": "certiqs-key/protocol-document",
+      "title": "Format",
+      "type": "string"
+    },
+    "format_version": {
+      "enum": [
+        "1",
+        1
+      ],
+      "title": "Format Version"
+    },
+    "identity": {
+      "$ref": "#/$defs/Identity"
+    },
+    "parameters": {
+      "$ref": "#/$defs/Parameters"
+    },
+    "presets": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/PresetBlock"
+      },
+      "title": "Presets",
+      "type": "array"
+    },
+    "snap": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Snap"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "preparations": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Preparation"
+      },
+      "title": "Preparations",
+      "type": "array"
+    },
+    "run_defaults": {
+      "$ref": "#/$defs/RunDefaults"
+    },
+    "alphabets": {
+      "additionalProperties": {
+        "$ref": "#/$defs/AlphabetNode"
+      },
+      "default": {},
+      "title": "Alphabets",
+      "type": "object"
+    },
+    "source": {
+      "$ref": "#/$defs/Source"
+    },
+    "stations": {
+      "items": {
+        "$ref": "#/$defs/Station"
+      },
+      "minItems": 1,
+      "title": "Stations",
+      "type": "array"
+    },
+    "public": {
+      "$ref": "#/$defs/Public"
+    },
+    "constraints": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/Constraints"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "honest": {
+      "$ref": "#/$defs/Honest"
+    },
+    "channel_interface": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ChannelInterfaceBlock"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "annotations": {
+      "additionalProperties": true,
+      "default": {},
+      "title": "Annotations",
+      "type": "object"
+    }
+  },
+  "required": [
+    "format",
+    "format_version",
+    "identity",
+    "parameters",
+    "run_defaults",
+    "source",
+    "stations",
+    "public",
+    "honest"
+  ],
+  "title": "ProtocolDocument",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "certiqs-key/protocol-document.schema.json"
+}

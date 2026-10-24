@@ -1,0 +1,31 @@
+% ---
+% id: foundations/rem:summation-order
+% kind: rem
+% title: "Dependence of a computed sum on its order"
+% summary: >-
+%   Two orderings of the same three binary64 numbers have the same exact sum
+%   but different computed sums, and only one of them rounds nowhere. A
+%   computed sum is therefore a determinate number only once its order is fixed.
+% prominence: standard
+% status: accepted
+% uses: [def:binary64, def:declared-order, lem:binary64-lattice, lem:exact-accumulation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:summation-order}
+Binary64 addition is not associative, so the computed sequential sum of
+Definition~\ref{def:declared-order} depends on the order of its terms. By
+Lemma~\ref{lem:binary64-lattice}\,(ii) the binary64 numbers in $[1,2)$ are the
+multiples of $2^{-52}$, so $1+2^{-60}$ lies strictly between the adjacent
+binary64 numbers $1$ and $1+2^{-52}$ and is nearer to $1$; hence
+$\mathrm{fl}(1+2^{-60})=1$ (Definition~\ref{def:binary64}\,(ii)). The
+sequence $(1,-1,2^{-60})$ therefore has computed sequential sum
+$0,1,0,2^{-60}$, every addition being exact, while $(1,2^{-60},-1)$ has
+computed sequential sum $0,1,1,0$, its second addition rounding. The exact sum is $2^{-60}$ in both orders. Only the first
+accumulation rounds nowhere, and its computed sum is the exact sum, as
+Lemma~\ref{lem:exact-accumulation} guarantees; the second computed sum is
+$0$.
+\end{remark}

@@ -1,0 +1,43 @@
+% ---
+% id: reductions/rem:dominating
+% kind: rem
+% title: "Dominated detectors and device families"
+% summary: >-
+%   A detector whose POVM dominates a characterized one is the characterized
+%   device plus a weighted flag, as in the published block-resolved
+%   construction. By [[prop:common]], a family of devices whose members squash
+%   to a common target becomes one squashed model with the label a branch
+%   register.
+% prominence: standard
+% status: accepted
+% uses: [prop:common]
+% mentions: [cor:instances, lem:master]
+% assumes: []
+% refs:
+%   - "nahar2025imperfect, Thm. 3, Eqs. (20)-(23)"
+%   - "douglas1966majorization, Thm. 1"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:dominating}
+A device has the form (i) of Corollary~\ref{cor:instances} whenever its POVM
+dominates a characterized one: if $M_v\succeq(1-q)G_v$ for all $v$ with
+$q\in(0,1]$, then $R_v\coloneqq\big(M_v-(1-q)G_v\big)/q$ is positive and sums
+to $\idon{\Bsys}$, so any detector that is $q$-close to a characterized
+detector \emph{in this operator sense} may be analysed as the characterized
+device plus a $q$-weighted flag. The published block-resolved form of that
+construction is \cite[Thm.~3, Eqs.~(20)--(23)]{nahar2025imperfect}, which
+builds exactly this channel from the block dominations
+$\Gamma_{m,\text{noise}}-(1-q_m)\Gamma_{m,\text{ideal}}\succeq0$ and records
+the weight $\Lambda^{\dagger}[\Pi_m]=(1-q_m)\Pi_m$ kept on block $m$, the flag
+receiving $q_m$.
+
+By Proposition~\ref{prop:common}, a family of devices indexed by a label $\xi$
+that the adversary selects becomes one squashed model as soon as each member
+squashes to a \emph{common} target, with the label a branch register carrying
+its own constraints from Lemma~\ref{lem:master}\,(iv). The operator
+factorization such a construction rests on (range inclusion, majorization and
+factorization are equivalent for bounded operators) is
+\cite[Thm.~1]{douglas1966majorization}; no proof of this contract uses it.
+\end{remark}

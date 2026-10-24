@@ -1,0 +1,25 @@
+% ---
+% id: receiver/rem:small-k
+% kind: rem
+% title: "Small numbers of ports"
+% summary: >-
+%   With one port the multiclick element vanishes, as the closed form
+%   confirms; with two ports each single-click element is the other port dark
+%   minus both dark. These cases check the inclusion-exclusion formula by hand.
+% prominence: standard
+% status: accepted
+% uses: [thm:click-povm]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:small-k}
+$K=1$: $M_\varnothing=\Fock(\id-A_1)$, $M_{\{1\}}=\id-\Fock(\id-A_1)$, and
+$\MCK=\varnothing$ so $M_{\mc}=0$, consistent with \eqref{eq:Mmc}, whose
+right-hand side is $\id+0-\Fock(\id-A_\varnothing)=\id-\Fock(\id)=0$.
+$K=2$, $S=\{1\}$: $M_{\{1\}}=\Fock(\id-A_2)-\Fock(\id-A_1-A_2)$, i.e.\ ``port
+$2$ dark'' minus ``both dark''. $K=2$, $\MCK=\{\{1,2\}\}$:
+$M_{\{1,2\}}=\id+\Fock(\id-A_\Sigma)-\Fock(\id-A_2)-\Fock(\id-A_1)$.
+\end{remark}

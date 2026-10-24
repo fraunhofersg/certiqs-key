@@ -1,0 +1,25 @@
+% ---
+% id: core-a/thm:main
+% kind: thm
+% title: Main bound
+% summary: Main bound, as the checker's tests need it.
+% prominence: standard
+% status: draft
+% uses: [def:base, ass:leaf]
+% assumes: [A-LEAF]
+% refs:
+%   - "beta2021study, Thm. 2"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{theorem}\label{thm:main}
+Under Assumption~\ref{ass:leaf} and \eqref{eq:base}, $x \le 1$ and
+$\partial_t x \le 0$ (a body may write \partial, which is not the sectioning
+command that the forbidden-command check refuses).
+\end{theorem}
+
+\begin{proof}[Proof sketch]
+Immediate from Definition~\ref{def:base}, as \cite[Thm. 2]{beta2021study}
+records.
+\end{proof}

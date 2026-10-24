@@ -1,0 +1,32 @@
+% ---
+% id: receiver/req:decidable-assumptions
+% kind: req
+% title: Validation of the assumptions on the declared data
+% summary: >-
+%   Every clause of an assumption that constrains the declared data is enforced
+%   by validation wherever it is decidable. The assumptions the engine never
+%   verifies form the never-verified set, and no code path decides more of them
+%   than their clauses on the declared data.
+% prominence: standard
+% status: implemented
+% uses: []
+% mentions: [rem:unchecked-assumptions]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.construct:construct_receiver
+% lean:
+% ---
+
+Which assumptions the engine never verifies is recorded in each one's
+verification field
+(\repodoc{spec/claim-format.md#32-whether-the-engine-verifies-an-assumption}),
+from which the contract generates the sentence that says so.
+
+\begin{requirement}\label{req:decidable-assumptions}
+The engine enforces by validation, wherever it is decidable, every clause of
+an assumption of this contract that constrains the \tref{declared data}. The
+assumptions that the engine never verifies, as the contract says of each
+(Remark~\ref{rem:unchecked-assumptions}), form \iface{never_verified_set},
+and no code path decides what they say beyond those clauses.
+\end{requirement}

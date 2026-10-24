@@ -1,0 +1,109 @@
+% ---
+% id: receiver/rem:exacteig
+% kind: rem
+% title: "The eigenvalue-slack assumption behind the exact window"
+% summary: >-
+%   In the exact-window maximum the analytic entry is a proven lower bound,
+%   while the computed eigenvalue less the slack is one only under [[A-EIG]];
+%   the rigorous evaluation replaces it by a proven bound. No test catches an
+%   overshoot, r_6 detects only an undershoot, and each weight stays in [0, 1].
+% prominence: standard
+% status: accepted
+% uses: [def:pmcex, thm:multiclick-bound, prop:exactnoworse, lem:exactbasic, lem:exactwindow, def:bounddata, lem:windowtail]
+% mentions: [def:evaluation-model, def:slot, prop:slotvalid, receiver/detector-imperfections/rem:d2slack, def:tolmap, def:residuals, thm:emitted-bound, thm:exact-and-evaluated, req:exact-window-record, def:enclosed-weight, thm:enclosed-weight, req:rigorous-weight]
+% assumes: [A-EIG]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The exact window trades the analytic bound for a sharper value on finitely
+many blocks, and in the floating-point evaluation the price is one assumption
+on the computed eigenvalues. The rigorous evaluation pays no such price: it
+puts a rigorous lower bound on the block eigenvalue in the computed value's
+place (Definition~\ref{def:enclosed-weight},
+Requirement~\ref{req:rigorous-weight}), and the weight is then a bound by
+Theorem~\ref{thm:enclosed-weight}.
+
+\begin{remark}
+\label{rem:exacteig}
+\eqref{eq:elldef} is a maximum of two lower bounds on $\Bnd^{\ast(t)}(n)$,
+and they are of two different \emph{kinds}. The first,
+$\Bnd^{(t)}(n)\le\Bnd^{\ast(t)}(n)$, is Theorem~\ref{thm:multiclick-bound}: an
+inequality between exact quantities, holding with no hypothesis about any
+computation. The second,
+$\widehat\Bnd^{\ast(t)}(n)-\varepsilon_{\mathrm{eig}}\le\Bnd^{\ast(t)}(n)$,
+is \emph{not a theorem of this contract}:
+the \tref{evaluation model} of Definition~\ref{def:evaluation-model} asserts no bound on
+the difference between a quantity computed in floating point and the exact
+one, and $\widehat\Bnd^{\ast}$ is the output
+of an extreme-eigenvalue computation on a matrix of dimension
+$\binom{|\InpC|+n-1}{n}$. It is Assumption~\ref{ass:eig}, and that
+assumption is invoked \emph{only} at the settings and indices where a depth
+is declared and the weight is that of Definition~\ref{def:pmcex}. What is a
+theorem is the same maximum with a \tref[rigorous window bounds]{rigorous
+window bound} in the second entry: in the \tref{enclosed weight} of
+Definition~\ref{def:enclosed-weight} the entry is a real proved to lie below
+$\Bnd^{\ast(t)}(n)$, not an evaluation of it, no slack is subtracted, and
+Theorem~\ref{thm:enclosed-weight} makes the weight a bound with no assumption.
+Everything below concerns the floating-point evaluation.
+
+\emph{The direction.} A computed eigenvalue landing \emph{below} the exact
+one costs tightness and nothing else, and \eqref{eq:elldef} floors the value
+at $\Bnd^{(t)}(n)$, which is sound with no assumption at all; so that
+direction cannot take the emitted weight below what the analytic evaluation
+emits (Proposition~\ref{prop:exactnoworse}). A computed eigenvalue landing
+\emph{above} the exact one by more than $\varepsilon_{\mathrm{eig}}$ can make
+the emitted weight $\pmc^{(t)}$ of that setting exceed
+$\inf_{n>N}\lmin(\blk{M}{\eqn}_{\mc|t})$: an over-large lower bound, the
+unsafe direction, and one that reaches a key length through
+Definition~\ref{def:slot}. No range check catches it, whatever the size of
+the overshoot. Every branch of \eqref{eq:pmcex} is capped by an analytic
+remainder that is at most $1$ and does not depend on
+$\widehat\Bnd^{\ast(t)}$, so $\pmc^{(t)}$ stays in $[0,1]$ (the
+\emph{Range} paragraph of this remark), and neither the ``$p_y<0$'' nor the
+``$\sum_yp_y>1$'' failure condition that Proposition~\ref{prop:slotvalid}
+names can fire on it. An overshoot of any size is caught by nothing. That
+asymmetry is why Assumption~\ref{ass:eig} is
+stated one-sidedly, on the side that matters, and why
+$\varepsilon_{\mathrm{eig}}$ is \emph{subtracted} rather than used as a
+comparison threshold: it decides nothing, it lowers a number.
+
+\emph{A slack, not a repair.} The computed $\widehat\Bnd^{\ast(t)}(n)$
+enters \eqref{eq:elldef} unmodified, and $\varepsilon_{\mathrm{eig}}$ enters
+only as a subtracted declared slack, so that \eqref{eq:elldef} can be
+recomputed from the recorded values
+(Requirement~\ref{req:exact-window-record}). This is the distinction
+Remark~\ref{rem:d2slack} draws for $\bar r$ and
+Definition~\ref{def:tolmap}\,(iv) draws for $c$: a coefficient or a slack
+inside a stated inequality is not a repair of a datum.
+
+\emph{What $r_6$ tests, and the direction it is blind to.} Since
+$\Bnd(n)\le\Bnd^{\ast}(n)$ is a theorem (Lemma~\ref{lem:exactbasic}), the
+window consistency defect $r_6$ of \eqref{eq:res6} has exact value $0$, and
+it is a residual in exactly the sense of the other five: what is emitted is
+its floating-point evaluation, and a value above $\varepsilon_6$ refuses. It
+catches an evaluation that contradicts an inequality this contract proves
+--- a block formed at the wrong index, a wrongly ordered occupation basis, a
+conditioned family taken at the wrong setting, an iteration that has not
+converged --- which is the failure mode most likely to be gross. It does
+\emph{not} verify Assumption~\ref{ass:eig}: $r_6$ fires when
+$\widehat\Bnd^{\ast}$ lands too \emph{low}, and Assumption~\ref{ass:eig}
+constrains it from landing too \emph{high}. No test in this contract bounds
+the unsafe direction; the assumption carries it.
+
+\emph{Range.} $0\le\pmc^{(t)}\le1$ holds exactly, whatever the computed
+values $\widehat\Bnd^{\ast(t)}(n)$ and whether or not
+Assumption~\ref{ass:eig} holds: the outer maximum of \eqref{eq:pmcex} gives
+$\pmc^{(t)}\ge0$, and the inner minimum of each branch contains an analytic
+remainder at most $1$ --- $\Bnd^{(t)}(m^{\ast}_t+1)\le1$ on branch~1 by
+Theorem~\ref{thm:multiclick-bound}, and the tail value
+$T^{(t)}_{m_t}=1-\sum_k\beta^{(t)}_k\big(d^{(t)}_k\big)^{m_t}\le1$ of
+\eqref{eq:windowtail} on branch~2 because $\beta^{(t)}_k,d^{(t)}_k\ge0$ by
+\eqref{eq:bounddata}. Lemma~\ref{lem:exactwindow} gives the same range only
+through \eqref{eq:ellhyp}, which at a setting carrying a depth is
+Assumption~\ref{ass:eig}. So Theorem~\ref{thm:emitted-bound}'s range statement
+and Proposition~\ref{prop:slotvalid} hold unchanged; their floating-point
+evaluation is governed by Theorem~\ref{thm:exact-and-evaluated}\,(ii) here as everywhere
+else, and no computed value is clamped into $[0,1]$ to make them look true.
+\end{remark}

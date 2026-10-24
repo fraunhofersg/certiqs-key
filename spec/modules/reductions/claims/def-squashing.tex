@@ -1,0 +1,64 @@
+% ---
+% id: reductions/def:squashing
+% kind: def
+% title: "Squashing relation"
+% summary: >-
+%   A squashing relation asks that the adjoint of a channel pull every target
+%   POVM element back to the physical one, and every carried operator back to
+%   its prescribed physical partner. The carried operators let one reduction
+%   move device facts into the squashed model as well as outcome statistics.
+% prominence: standard
+% status: accepted
+% uses: [lem:sep]
+% mentions: [def:protocol]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Squashing replaces one \emph{model} of the receiver by another. A model is what
+the analysis runs on: the system Bob receives and the POVM he measures on it.
+The physical model is $(\Bsys,M)$, the one the security statement is wanted
+for; the squashed model $(\Qsys,F)$ lives on a system a proof technique can
+handle. The squashed model must reproduce the physical model's outcome
+statistics \emph{exactly}, since a protocol reads Bob's device through nothing
+else (Definition~\ref{def:protocol}), and it must be at least as generous to
+the adversary. Handing $\Lambda$ to the adversary accomplishes that: the
+squashing channel is counted as part of her attack rather than of Bob's
+device, so every attack on the physical model, followed by $\Lambda$, is an
+attack on the squashed model. Both verbs the definition introduces, squashing
+and transporting, run from the physical side to the target side, in the
+direction of the symbol $\dsq$ and of $\Lambda$; the identities that define
+them are written with the adjoint $\Lambda^{\dagger}$, which runs the other
+way.
+
+\begin{definition}\label{def:squashing}
+Let $M=\{M_v\}_{v\in\Vset}$ be a POVM on $\Bsys$ and $F=\{F_v\}_{v\in\Vset}$ a
+POVM on $\Qsys$ over the same finite alphabet $\Vset$, and let
+$\hat O=(\hat O_k)_{k=1}^{m}$ and $O=(O_k)_{k=1}^{m}$ be tuples of Hermitian
+operators $\hat O_k\in\Lin{\Qsys}$, $O_k\in\Lin{\Bsys}$. For a channel
+$\Lambda\colon\Tcl{\Bsys}\to\Tcl{\Qsys}$, with adjoint $\Lambda^{\dagger}$ as
+in Lemma~\ref{lem:sep}, write
+\begin{equation}\label{eq:squashing}
+  (M;O)\;\dsq_{\Lambda}\;(F;\hat O)
+  \quad:\Longleftrightarrow\quad
+  \Lambda^{\dagger}(F_v)=M_v\ \ \forall v\in\Vset
+  \ \ \text{and}\ \
+  \Lambda^{\dagger}(\hat O_k)=O_k\ \ \forall k\in\{1,\dots,m\},
+\end{equation}
+and call \eqref{eq:squashing} a
+\term[The relation in which the adjoint of a channel takes every target POVM element to the physical one and every carried operator to its prescribed physical operator.]{squashing relation}:
+$M$ \emph{squashes to} the
+\term[The POVM on the squashed system that a squashing relation pulls back to the physical POVM.]{target POVM}
+$F$ via the
+\term[A channel from the physical system to the squashed system whose adjoint realises a squashing relation.]{squashing channel}
+$\Lambda$, which \emph{transports} $O$ to $\hat O$. The operators
+$\hat O_k$ are the relation's
+\term[Hermitian operators on the squashed system, listed beside the target POVM, whose pull-backs a squashing relation prescribes.]{carried operators}.
+The empty case $m=0$ is written $M\dsq_{\Lambda}F$, and $\dsq$ replaces
+$\dsq_{\Lambda}$ when only the existence of a squashing channel is asserted.
+We call $\Lambda^{\dagger}(\hat O_k)$ the
+\term[The image of an operator on the squashed system under the adjoint of the squashing channel.]{pull-back}
+of $\hat O_k$.
+\end{definition}

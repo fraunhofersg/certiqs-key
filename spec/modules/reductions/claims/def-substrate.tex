@@ -1,0 +1,38 @@
+% ---
+% id: reductions/def:substrate
+% kind: def
+% title: "The arithmetic substrate"
+% summary: >-
+%   Every exact decision is taken in an ordered field F between ℚ and ℝ, with
+%   its Gaussian extension F + iF, and the field is left open. No admissible
+%   choice changes a decision, every number a rule reads being rational, so ℚ
+%   always suffices.
+% prominence: standard
+% status: accepted
+% uses: [def:exactadm]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{definition}
+\label{def:substrate}
+The
+\term[An ordered field F with ℚ ⊆ F ⊆ ℝ, together with its Gaussian extension F + iF, in which every exact decision of this contract is taken.]{substrate}
+of this contract is an ordered field $\Fld$ with
+$\mathbb{Q}\subseteq\Fld\subseteq\mathbb{R}$ together with its Gaussian
+extension $\Fldi\coloneqq\Fld+i\Fld$, which is closed under complex
+conjugation. What is fixed is the \emph{predicate} each rule decides and the
+requirement that it be decided exactly; which such field carries the
+arithmetic is not. The choice cannot change any decision. Binary64 values are
+dyadic rationals (Definition~\ref{def:exactadm}\,(a)), and every number a rule
+reads is formed from the declared entries and from rational constants by
+field operations, floors of rationals and roundings of rationals to a
+lattice, so it is rational; since $\mathbb{Q}$ is an ordered subfield of every
+admissible $\Fld$ with the induced order, and $\mathbb{Q}+i\mathbb{Q}$ a
+subfield of $\Fldi$, each decision, a comparison or an equality of such
+numbers, is the same decision taken over $\mathbb{Q}$. In particular
+$\Fld=\mathbb{Q}$ always suffices. The latitude is bounded: it is a choice of
+arithmetic substrate, not of mathematics.
+\end{definition}

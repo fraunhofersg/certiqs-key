@@ -1,0 +1,41 @@
+% ---
+% id: meat-core/frank-wolfe/rem:pairing-on-acceptance-support
+% kind: rem
+% title: "Pairing over the acceptance support"
+% summary: >-
+%   Restricting the acceptance-side pairing to the acceptance support loses
+%   nothing: a feasible direction vanishes outside it, and the oracle term is
+%   defined by that pairing. The oracle return therefore need not be feasible,
+%   though in both admitted acceptance geometries it is.
+% prominence: standard
+% status: accepted
+% uses: [lem:fo-khyp, rem:acc-side]
+% mentions: [def:first-order-setting, thm:firstorder]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:pairing-on-acceptance-support}
+Restricting the first pairing of Definition~\ref{def:first-order-setting}
+to the \tref{acceptance support} $\Chacc$ costs nothing and is not a
+choice, and the reason splits in two according to what the pairing is
+applied to. \emph{Where a directional derivative is taken}, the vector on
+the right is $\mathbf q'-\mathbf q_t$ with \emph{both} entries in
+$\acSet$: $\mathbf q'$ by the quantifier of \eqref{eq:fo-subgrad}, and
+$\mathbf q_t$ because the acceptance-side iterate is formed on the
+\tref{exact island} and lies in $\acSet$ by construction
+(Remark~\ref{rem:acc-side}, ($\alpha$) and ($\beta$)). So it vanishes
+outside $\Chacc$ by Lemma~\ref{lem:fo-khyp}\,(i), and the sum over
+$\Chacc$ and the sum over $\Chatset$ agree, the second being the one that
+may fail to be defined. \emph{Where the oracle return $v_t$ enters}, the
+$\Chacc$ sum is not an abbreviation of the $\Chatset$ sum but the
+definition: \eqref{eq:lmo} is stated in it, \eqref{eq:hlb} evaluates it,
+and the two occurrences are the same functional, so the algebra closes
+whether or not $v_t$ lies in $\acSet$; that is why \eqref{eq:lmo} can
+decline to require feasibility of the pair. In both geometries Remark~\ref{rem:acc-side} admits, $v_t$
+\emph{does} lie in $\acSet$ (the singleton's one point; a vertex computed
+exactly over the rationals), or the acceptance half is discharged through
+$\bacc$ and no $v_t$ enters at all.
+\end{remark}

@@ -1,0 +1,32 @@
+% ---
+% id: receiver/def:coarse
+% kind: def
+% title: "Declared coarse-graining and the emitted POVM"
+% summary: >-
+%   A declared surjection from raw click patterns onto the protocol's
+%   outcome alphabet defines the emitted measurement. Each emitted element is
+%   the sum of the click-pattern elements in its fibre.
+% prominence: standard
+% status: implemented
+% uses: [def:instrument, thm:click-povm]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.coarse:CoarseGraining
+% lean:
+% ---
+
+The protocol reads an outcome alphabet that is usually coarser than the raw
+click pattern, for instance one that merges every pattern with two or more
+clicks into a single multiclick outcome.
+
+\begin{definition}\label{def:coarse}
+A \term[A surjection from the raw click patterns onto the declared emitted alphabet, supplied as data by the protocol declaration.]{declared coarse-graining} is a surjection
+$\cg:2^{[K]}\to\Vset$ onto the declared emitted alphabet, supplied as data by
+the protocol declaration, $[K]$ indexing the \tref{detector ports} of a
+\tref{receiver instrument} (Definition~\ref{def:instrument}). With $M_S$ the click-pattern elements of
+Theorem~\ref{thm:click-povm} (\eqref{eq:MSdef}), the \term[The measurement the receiver emits, one element per emitted outcome, each the sum of the click-pattern elements of its fibre.]{emitted POVM} is
+\begin{equation}\label{eq:coarse}
+  F_v\coloneqq\sum_{S\in\cg^{-1}(v)}M_S ,\qquad v\in\Vset .
+\end{equation}
+\end{definition}

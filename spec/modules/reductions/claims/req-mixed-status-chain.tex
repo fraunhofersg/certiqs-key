@@ -1,0 +1,27 @@
+% ---
+% id: reductions/req:mixed-status-chain
+% kind: req
+% title: "Refusal of a chain with a link that is not exact"
+% summary: >-
+%   A chain containing a link that is not exact is refused rather than given a
+%   composite status. No theorem of this contract converts
+%   an error term into a security penalty.
+% prominence: standard
+% status: implemented
+% uses: [thm:chain]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.validation:rule_approximate
+% lean:
+% ---
+
+\begin{requirement}\label{req:mixed-status-chain}
+The engine assigns a chain no composite status other than the one of
+Theorem~\ref{thm:chain}\,(iv): a chain containing a link that is not
+\textsf{exact} is refused, with
+\iface{approximate_squashing_unsupported}, rather than given a composite
+status, because no theorem of this contract converts an error term into a
+security penalty. The refusal is a rule of the engine and not a converse
+this contract proves.
+\end{requirement}

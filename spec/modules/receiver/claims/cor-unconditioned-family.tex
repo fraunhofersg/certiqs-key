@@ -1,0 +1,62 @@
+% ---
+% id: receiver/cor:unconditioned-family
+% kind: cor
+% title: "The unconditioned receiver is a setting family"
+% summary: >-
+%   A receiver without probe modes is a one-setting family whose prefactors
+%   are all exactly one, with bound data read off its port Grams. Its flag is
+%   exact by construction, so the collapse branch applies to it.
+% prominence: standard
+% status: accepted
+% uses: [def:setting-family, thm:multiclick-bound, def:instrument, def:gram, thm:port-grams, thm:click-povm, lem:collapse]
+% assumes: [A-TRUST, A-PASSIVE, A-VAC, A-MODES, A-THRESH, A-PORT, A-EXACT, A-NOSEL, A-ROUND]
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "These are the device assumptions under which the click-pattern POVM of thm:click-povm is the physical receiver's measurement; thm:click-povm itself declares none."
+% ---
+
+\begin{corollary}
+\label{cor:unconditioned-family}
+Let $\Recv$ be a \tref{receiver instrument} (Definition~\ref{def:instrument})
+with $\InpS=\varnothing$, so that $\Inp=\InpC$, and let $\{A_k\}$ be its
+\tref[port Gram matrices]{port Grams} and $\{M_S\}$ its click-pattern POVM
+(Theorem~\ref{thm:click-povm}). Then $\Tset=\{\off\}$ with
+\begin{equation}\label{eq:unconditioned-data}
+  M_{S|\off}\coloneqq M_S,\qquad
+  B^{(\off)}\coloneqq A_\Sigma,\qquad
+  B^{(\off)}_k\coloneqq A_{[K]\setminus\{k\}},\qquad
+  \gamma^{(\off)}=\beta^{(\off)}_k\coloneqq1,\qquad
+  \chi^{(\off)}\coloneqq\mathrm{exact},
+\end{equation}
+is a setting family (Definition~\ref{def:setting-family}) on
+$\mathcal{F}(\mathbb{C}^{\Inp})$, with $D=|\Inp|$. Its bound data are
+$c=1-\lmax(A_\Sigma)$ and $d_k=1-\lmin(A_{[K]\setminus\{k\}})$, and
+\eqref{eq:collapsehyp} holds with equality.
+\end{corollary}
+
+\begin{proof}
+The dimension is $D=|\Inp|=|\InpC|\ge1$, since $\InpC\neq\varnothing$ by
+Definition~\ref{def:instrument}\,(ii), as Definition~\ref{def:setting-family}
+requires. We check the three items of Definition~\ref{def:setting-family}.
+
+(a) $\{M_S\}$ is a POVM by Theorem~\ref{thm:click-povm}\,(i), block diagonal in
+the photon number of $\Inp=\InpC$ by Theorem~\ref{thm:click-povm}\,(iii), and by
+Theorem~\ref{thm:click-povm}\,(i) its joint no-click elements in the sense of
+\eqref{eq:family-elements} are $\Pvac{J}=\sum_{S\subseteq[K]\setminus J}M_S$.
+
+(b) Theorem~\ref{thm:click-povm}\,(ii) gives $\Pvac{J}=\Fock(\id-A_J)$ for every
+$J$, which is \eqref{eq:family-prefactor} with $\gamma=\beta_k=1$,
+$B=A_\Sigma$ and $B_k=A_{[K]\setminus\{k\}}$. Hypothesis \eqref{eq:bbkhyp}
+is $0\preceq A_{[K]\setminus\{k\}}\preceq A_\Sigma\preceq\id$: the first
+two inequalities because every $A_k\succeq0$ and $A_\Sigma-A_{[K]\setminus
+\{k\}}=A_k$ (Theorem~\ref{thm:port-grams}\,(i), Definition~\ref{def:gram}), the
+last by Theorem~\ref{thm:port-grams}\,(i). $\gamma\le\beta_k$ is $1\le1$.
+
+(c) $\gamma=\beta_k=1$ are identities of Theorem~\ref{thm:click-povm}\,(ii), read
+off the single declared fact $\InpS=\varnothing$ with no arithmetic
+performed, so the flag $\mathrm{exact}$ is admissible; at
+$\gamma=\beta_k=1$ hypothesis \eqref{eq:collapsehyp} of
+Lemma~\ref{lem:collapse} reads $K\ge K$, which is equality. The bound data
+are \eqref{eq:cd} at these operators.
+\end{proof}

@@ -1,0 +1,102 @@
+% ---
+% id: reductions/cor:identity-instance
+% kind: cor
+% title: "The identity instance"
+% summary: >-
+%   A declared block-diagonal measurement, decided exactly admissible on entry,
+%   is a reduction instance with the sector pinching as its channel, no scalar
+%   sector, no entry and the class-marginal identity discharged. Its chain is
+%   the identity link of [[ex:identity]].
+% prominence: standard
+% status: accepted
+% uses: [def:reduction-instance, def:joint-family, def:exactadm, prop:pinching, cor:blockdiag, def:link, def:chain, thm:chain, def:system-setting]
+% mentions: [ex:identity, cor:emitted-identity]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Uses def:system-setting because the instance needs B finite-dimensional with declared dimensions, which is a case of the setting's separable physical system with a finite target; it reads nothing of the adversary's registers, whose finite dimension is the round model's, read through lem:sep."
+% ---
+
+A receiver that is already finite needs no squasher, only the sector
+pinching that every instance's channel carries in front. Its chain is the
+identity link of Example~\ref{ex:identity}, and its emission is
+Corollary~\ref{cor:emitted-identity}.
+
+\begin{corollary}\label{cor:identity-instance}
+Let $\big(\Vset,\{\Vset_t\},\{q_t\}\big)$ be a joint alphabet with classes
+and weights, let $\SecSet_0$ be a declared finite ordered sector set with
+dimensions $d_s$, and let $\{M_v\}_{v\in\Vset}$ be a POVM on
+$\Hs{\Bsys}=\bigoplus_{s\in\SecSet_0}\mathbb{C}^{d_s}$ presented as the
+sector-block list $M_v=\bigoplus_sA^{(s)}_v$ of an admissible datum
+$A\in\mathcal{D}_{\mathrm{adm}}$ for the sectors $\SecSet_0$ with the default
+supports $\Vset^{(s)}=\Vset$, that is, a declared family every block of which
+is decided \tref{exactly admissible on the declared lattice} on entry with
+the class sums at $q_t$ (Definition~\ref{def:exactadm}\,(c)). Then the
+\emph{identity instance} $\mathcal{J}_{\mathrm{id}}$, given by
+\begin{enumerate}[label=(I\arabic*),leftmargin=3.0em]
+\item $\Bsys$ as given; $\SecSet_{\mathrm{dat}}=\SecSet_0$; the handed datum
+  $A$; (H) empty; and the model map $M_v[A']\coloneqq\bigoplus_{s}A'^{(s)}_v$;
+\item $\SecSet_{\mathrm{sc}}=\varnothing$, so that $\Qsys=\Bsys$ and
+  $F[A']=M[A']$;
+\item $\Lambda=\PinS$ for the decomposition $\SecSet_0$ (that is,
+  $\Lambda_0=\idmap$), independent of the datum, with the transported set
+  $\{\Pi_s\}_{s\in\SecSet_0}$ and pull-backs $\Pi_s$;
+\item an empty entry list, and the class-marginal identity
+  discharged,
+\end{enumerate}
+is a reduction instance. Its chain is the identity link: one receiver-stage
+link of kind
+\textsf{identity} with $\Lambda_{\Lnk}=\PinS$ (the identity on every state
+block diagonal for $\SecSet_0$, and $\idmap$ outright when $\SecSet_0$ has one
+sector), with $M^{\mathrm{out}}=M^{\mathrm{in}}$, the sector projectors
+carried to themselves, the \tref{reachable-set statement} the declared input
+family, pinched, no entries, no licence and
+$\textsf{status}=\textsf{exact}$.
+\end{corollary}
+
+\begin{proof}
+(I1) $M[A']$ is a POVM on $\Bsys$ for every $A'\in\mathcal{D}_{\mathrm{adm}}$:
+each block is positive semidefinite by admissibility (b), and
+$\sum_vM_v[A']=\bigoplus_s\sum_t\sum_{v\in\Vset_t}A'^{(s)}_v
+=\bigoplus_s\sum_tq_t\idon{d_s}=\idon{\Bsys}$ by class completeness
+\eqref{eq:classcomplete} and $\sum_tq_t=1$. $\Hs{\Bsys}$ is
+finite-dimensional, hence separable (Definition~\ref{def:system-setting}).
+(H) is
+empty, so the stability clause holds vacuously and what follows is
+established for every admissible datum.
+
+(I2) The target \eqref{eq:instance-target} with no scalar sector is
+$F_v[A']=\bigoplus_sA'^{(s)}_v=M_v[A']$, on $\Qsys=\Bsys$, and the sector map
+is $\SecSet_0$ with its dimensions, every sector of data kind.
+
+(I3) Every $F_v[A']$ is block diagonal for $\{\Pi_s\}_{s\in\SecSet_0}$ by
+construction, so Proposition~\ref{prop:pinching} gives
+$F[A']\dsq_{\PinS}F[A']$, which is $M[A']\dsq_{\PinS}F[A']$; and
+$\PinS^{\dagger}(\Pi_s)=\PinS(\Pi_s)=\Pi_s$, so every sector projector is
+transported to itself. $\Lambda=\PinS\circ\idmap$ has the form (I3) requires.
+
+(I4) The instance carries no entry of its own: the sector-projector
+certificate travels with the transported set, not in the entry list (the
+third consequence of Definition~\ref{def:reduction-instance}), and there is
+nothing else to certify. The class-marginal identity
+\eqref{eq:instance-classmarginal} reads
+$\sum_{v\in\Vset_t}M_v[A']=\bigoplus_sq_t\idon{d_s}=q_t\idon{\Bsys}$, which
+is class completeness \eqref{eq:classcomplete}; it is therefore discharged
+for every admissible datum.
+
+The chain: the link with \tref{source family} $(\Bsys,M[A'])$, target
+$(\Qsys,F[A'])=(\Bsys,M[A'])$, \tref{channel witness} $\PinS$, the carried
+pair $(\{\Pi_s\},\{\Pi_s\})$, the \tref{reachable-set statement} ``the
+declared input family, pinched'', $\CList=\varnothing$, no licence and
+$\textsf{status}=\textsf{exact}$ is a receiver-stage link of
+Definition~\ref{def:link} and, with an empty \tref{source segment}, a chain of
+Definition~\ref{def:chain}; Theorem~\ref{thm:chain}\,(iv) gives the status,
+the identity $\PinS^{\dagger}(M_v[A'])=M_v[A']$ carrying no error term. It is
+the identity link of Example~\ref{ex:identity} with $\PinS$ in the channel
+slot: $\PinS(\sigma)=\sum_s\Pi_s\sigma\Pi_s=\sigma$ for every $\sigma$ block
+diagonal for $\SecSet_0$, so on the block-diagonal states to which
+Corollary~\ref{cor:blockdiag}\,(iii) restricts the analysis the two channels
+agree, and when $\SecSet_0$ is a single sector $\Pi_s=\idon{\Bsys}$ and
+$\PinS=\idmap$.
+\end{proof}

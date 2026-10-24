@@ -1,0 +1,22 @@
+% =============================================================================
+%  Fixture macro set for tests/harness/test_check_symbols.py.
+%  Small on purpose: two catalogued macros, one reserved macro recorded only by
+%  the inline rule of notation section 3.9, and two module-local ones.
+% =============================================================================
+
+
+% =============================================================================
+%  PART A -- notation macros
+% =============================================================================
+\newcommand{\Hs}[1]{\mathcal{H}(#1)}        % Hilbert space of a system label
+\newcommand{\Qsys}{Q}                       % the declared measured system
+\newcommand{\Flag}{{\mathrm{Flg}}}          % flag system
+\newcommand{\Wflag}{W_{\Flag}}              % flag-space weight, through \Flag
+\newcommand{\Res}{R_{\mathrm{es}}}          % reserved: recorded by 3.9 only
+
+
+% =============================================================================
+%  PART B -- module-local macros
+% =============================================================================
+\newcommand{\Loc}{\mathfrak{L}}             % a module-local mark
+\newcommand{\Spare}{\mathfrak{S}}           % defined and used by no claim

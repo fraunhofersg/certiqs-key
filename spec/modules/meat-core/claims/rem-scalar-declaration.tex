@@ -1,0 +1,37 @@
+% ---
+% id: meat-core/rem:scalar-declaration
+% kind: rem
+% title: "Scalar declaration of a homogeneous right-hand side"
+% summary: >-
+%   A trusted-mode entry declares the scalar c_k, not an operator Θ_k said to
+%   equal c_k·τ_A, so its right-hand side and the transported bound are one
+%   expression. An operator only near c_k·τ_A would need a numerical test, and
+%   no relaxation of the program covers admitting it.
+% prominence: standard
+% status: accepted
+% uses: [def:homog, lem:range]
+% mentions: [def:feasible, meat-core/frank-wolfe/def:relaxed-feasible-set]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:scalar-declaration}
+Licensing is a type check in both modes and compares no numbers
+(Definition~\ref{def:homog}). This is deliberate, and it is the reason the
+trusted-mode entry declares ``a declared $c_k$'' and not ``a declared
+$\Theta_k$ satisfying $\Theta_k=c_k\tau_A$''. Under the latter form, a
+declaration carrying an operator $\Theta_k$ merely \emph{near} $c_k\tau_A$
+would have to be admitted or refused by a numerical test, and admitting one
+would be unsafe in a way no relaxation of this module covers: the transport
+Lemma~\ref{lem:range}\,(i) and \eqref{eq:transport} deliver exactly
+$c_k\tau_A$ on the right-hand side, while \eqref{eq:feas-modes} would impose
+the declared $\Theta_k$, and the two feasible sets are then neither nested nor
+related by the relaxation of Definition~\ref{def:relaxed-feasible-set}, whose
+window is a spectral floor, or an entrywise ball, on the \emph{relation}, and
+not an entrywise-relative window on the right-hand side. With the scalar
+declaration, $\Theta_k$ and the transported bound are the same expression in
+the same $c_k$ and the same $\tau_A$, and the two agree by construction on the
+declared numbers.
+\end{remark}

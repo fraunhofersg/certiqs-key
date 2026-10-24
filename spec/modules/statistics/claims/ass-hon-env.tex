@@ -1,0 +1,53 @@
+% ---
+% id: statistics/ass:hon-env
+% kind: ass
+% title: "Honest rounds inside a declared envelope"
+% summary: >-
+%   On an honest run each round's probability of each acceptance outcome, given
+%   everything before it, stays inside the declared honest envelope. The
+%   premise bears on the advertised honest abort probability and restricts no
+%   adversary.
+% prominence: standard
+% status: implemented
+% uses: [def:envelope]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.construction:ENVELOPE_MODEL_TAG
+% short_id: A-HON-ENV
+% verification: never
+% category: honest-model
+% affects: [completeness]
+% user_statement: >-
+%   When no attacker is present, each round's probability of each acceptance
+%   outcome, given everything that happened before, stays inside the honest
+%   model: between the lower and upper bounds of the honest envelope where you
+%   declared one, and equal to the honest distribution where you gave a single
+%   one instead (an envelope of zero width). With an envelope the channel may
+%   drift within and between runs as long as it stays inside it; with a single
+%   distribution it may not drift at all. This premise only bears on the
+%   advertised probability that an honest run aborts; it never affects
+%   security. If drift can leave the honest model, declare a wider envelope.
+% lean:
+% notes: "The filtration is part of what is assumed (there is one), not an input; it may be larger than the one the statistics generate, which is what admits a channel whose drift depends on hidden honest variables."
+% ---
+
+The premise is asserted about the honest channel only, never against an
+adversary. Under it the honest channel may change from round to round within
+a run, from run to run, and in a way that depends on past outcomes or on
+further honest variables recorded in $\mathcal{F}_{j-1}$, as long as each
+round's conditional law stays inside the envelope.
+
+\begin{assumption}\label{ass:hon-env}
+Let $({\honest}^{-},{\honest}^{+})$ be the declared \tref{honest envelope}
+(Definition~\ref{def:envelope}). On an honest run there is a filtration
+$\mathcal{F}_0\subseteq\mathcal{F}_1\subseteq\dots\subseteq\mathcal{F}_n$ on
+the underlying probability space such that
+(i) $\Chat_j$ is $\mathcal{F}_j$-measurable for every $j\in\{1,\dots,n\}$;
+(ii) for every such $j$ and every $\hat c\in\Chatset$, almost surely,
+\begin{equation}\label{eq:hon-env}
+  {\honest}^{-}(\hat c)\ \le\
+  \Pr\big[\Chat_j=\hat c\ \big|\ \mathcal{F}_{j-1}\big]\ \le\
+  {\honest}^{+}(\hat c).
+\end{equation}
+\end{assumption}

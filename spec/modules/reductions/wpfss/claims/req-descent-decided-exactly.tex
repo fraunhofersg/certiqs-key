@@ -1,0 +1,39 @@
+% ---
+% id: reductions/wpfss/req:descent-decided-exactly
+% kind: req
+% title: "Exact decision of monotonicity and descent"
+% summary: >-
+%   The declared dark-count matrix is decided exactly to be monotone and to
+%   descend through the declared coarse-graining, by testing descent itself;
+%   a declaration that fails either is refused. The canonical sufficient
+%   condition serves only as a shortcut checked in full.
+% prominence: standard
+% status: accepted
+% uses: [lem:descent, rem:descentneedsconstant]
+% mentions: [rem:darkcompose, reductions/def:substrate]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The descent condition is an identity between declared dyadic rationals, so
+it can be decided exactly. The sufficient condition \eqref{eq:canonicalcg}
+with its constancy clause left out would admit a declaration whose descended
+matrix is not defined (Remark~\ref{rem:descentneedsconstant}), so a shortcut
+through that condition is checked in full. Its monotonicity half is clause
+(D2) of the supplier's \tref{dark-count channel}, which every admitted matrix
+therefore satisfies exactly (Remark~\ref{rem:darkcompose}).
+
+\begin{requirement}\label{req:descent-decided-exactly}
+The engine decides exactly, on the declared dark-count matrix $R$, that $R$
+is monotone, $R_{S|S'}>0\Rightarrow S'\subseteq S$, and that it descends
+through the \tref{declared coarse-graining} $\cg$ in the sense of
+Lemma~\ref{lem:descent}, $P(y|S')=P(y|S'')$ for every $y$ and every pair
+$S',S''$ with $\cg(S')=\cg(S'')$, each an identity or a comparison between the
+dyadic rationals the declaration carries (Definition~\ref{def:substrate}). It
+tests the descent property itself, and treats the sufficient condition
+\eqref{eq:canonicalcg} only as a shortcut that must itself be checked in
+full. A declaration that fails either condition is refused with the reason
+\iface{dark_counts_do_not_descend}.
+\end{requirement}

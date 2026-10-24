@@ -1,0 +1,470 @@
+% ---
+% id: protocol-compiler/thm:validator-soundness
+% kind: thm
+% title: "Soundness, completeness and decidability of the validator"
+% summary: >-
+%   Passing the validator's eight checks establishes every target condition of
+%   a well-formed declaration, and every check but the feasibility check is
+%   complete, so a well-formed declaration is refused only when no default or
+%   supplied candidate is verified feasible. Every decision is finite and exact.
+% prominence: main
+% status: implemented
+% uses: [thm:feasibility, thm:measurements-and-statistics, def:declaration, def:validator, def:homog, def:target, def:exact, def:feasible]
+% mentions: [rem:nosearch, thm:band-a, def:chaincond, thm:sifting-and-key, req:operator-form, foundations/req:exact-island]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.validation:decidability_counts
+% lean:
+% notes: "thm:sifting-and-key is a mention and not a direct use: the general-format Step 3 names its (v) as a pointer, and no step of the proof rests on it. def:chaincond and thm:band-a are mentions: the proof's pointer to (C1) says where the descriptor equality is decided, V1 reading no chain descriptor, and (iv)'s pointer to thm:band-a (i) is explanatory. The counts of (iv) are this theorem's own assertions about the checks it pairs, not restatements of a tool's output. Also realised by certiqs_key.protocol_compiler.validation:reconstruct_sifting_predicate and reconstruct_holder_key_rule."
+% ---
+
+The consuming engine takes D(i)--D(viii) as hypotheses without re-deriving
+them, so what a pass of the validator buys has to be exactly those
+conditions. The theorem pairs each check of Definition~\ref{def:validator}
+with its target condition of Definition~\ref{def:target}, names the one check
+that is not equivalent to its condition, and counts what the checks compute.
+Remark~\ref{rem:nosearch} records why an empty \tref{feasible set} is the dangerous
+error and a spurious refusal is not. For the clause of (iv) that the
+validator assembles no array larger than one matrix of size $d_A$, $d_s$ or
+$d_Ad_s$ for a single sector $s$, see also
+Requirement~\ref{req:operator-form}, by which the engine holds every operator
+on $\Qsys$ as its block list.
+
+\begin{theorem}
+\label{thm:validator-soundness}
+For a candidate declaration with finite tabulated data:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(soundness, on all eight conditions)} if V1--V8 all
+pass then D(i)--D(viii) all hold, of the declared numbers;
+\item \emph{(completeness, on seven of the eight)} if D(i)--D(vi)
+and D(viii) hold then V1--V6 and V8 all pass;
+\item \emph{(V7 is one-sided, and the gap is exactly its third branch)} the
+converse of (i) fails, and it fails only at V7: D(vii) does \emph{not} imply
+V7. For a witness, take \tref{untrusted-source mode} with $\Qsys$ a qubit
+carrying the single sector $\SecSet=\{s_0\}$, every other slot well-formed,
+and the one-entry list
+$\CList=\{(\dyad{0}_{\Qsys},\ \ge,\ 1)\}$, whose entry reads
+$\tr[(\idon{A}\otimes\dyad{0})\,\omega]\ge1$. Then $\hat O_1$ is a
+one-block list, Hermitian, the typing is that of D(vi), and
+$\omega=\eta\otimes\dyad{0}$ is feasible for any state $\eta\in\Seq{A}$ --- it
+is Hermitian and positive semidefinite outright, has unit trace, and its
+constraint value is exactly $1$ --- so $\Feas\ne\varnothing$ and D(i)--D(viii)
+all hold. But $\CList\ne\varnothing$, and the default candidate
+\eqref{eq:witness-empty} that branch (b) of V7 tries first gives
+$\tr[(\idon{A}\otimes\dyad{0})(\idon{A}/d_A\otimes\idon{\Qsys}/2)]=\tfrac12$,
+which fails $\ge1$; so with no witness supplied branch (c) is unavailable, V7
+fails and the \tref{well-formed declaration} is refused. Exactly the same
+happens for every declaration with $\CList\ne\varnothing$ presented without a
+witness whose \tref{feasible set} is non-empty but does not contain
+\eqref{eq:witness-empty}. The refusal errs on the safe side --- a refused
+declaration is never consumed --- and the incompleteness is deliberate: deciding D(vii) in general is a
+semidefinite feasibility problem this module does not solve;
+\item \emph{(decidability, and what is computed)} each of V1--V6 and V8 is
+decided by finite enumeration over the declared alphabets together with
+finitely many arithmetic operations on the declared matrices; V7 is decided in
+the same sense on the candidate of its branch (b) or (c), and is otherwise a
+refusal. The arithmetic part consists of \emph{exact decisions}: an
+identity, a semidefiniteness, or the exactness of an addition. The following
+counts give the complete applicable predicate inventory for well-typed data,
+not the number an early-terminated execution necessarily performs.
+Write $I_{\mathrm{tr}}=1$ in trusted-source mode and $I_{\mathrm{tr}}=0$ when
+the marginal slot holds $\nomarg$. The complete arithmetic inventory of V2,
+V3 and V6 is
+\begin{equation}\label{eq:predcount}
+  \underbrace{3I_{\mathrm{tr}}}_{\text{V2}}
+  \;+\;\underbrace{2|\Xset|+1}_{\text{V3 on }A}
+  \;+\;\underbrace{|\SecSet|\,\big(2|\Vset|+1\big)}_{\text{V3 on }\Qsys}
+  \;+\;\underbrace{m\,|\SecSet|}_{\text{V3 on }\CList}
+  \;+\;\underbrace{m_{\text{gen}}}_{\text{V6}}
+\end{equation}
+predicate decisions, where $m_{\text{gen}}\le m$ counts the entries declared
+general --- the only ones carrying a matrix whose Hermiticity is
+decided; V6's remaining content is $m$ comparisons of a relation symbol, a tag
+and a type, which are decided and not computed. \emph{Beside these stand the
+summation decisions of condition~(S)}: one on $\tr\tau_A$ in trusted
+mode and none on the absent marginal in untrusted mode; one on
+$\sum_xM_x$; and one per sector on $\sum_vF_v^{(s)}$, so
+$|\SecSet|+1+I_{\mathrm{tr}}$ of them,
+each a pass over the additions of one declared-order sum. And V7, on the
+candidate it verifies, takes $2|\SecSet|+1$ decisions --- Hermiticity and
+semidefiniteness per block, and the trace --- one further in trusted mode for
+the marginal equality, and one decision per constraint entry: semidefiniteness
+for an inequality, exact entrywise equality for the relation $=$
+(Theorem~\ref{thm:feasibility}\,(ii)); in untrusted mode a constraint leg is one
+comparison of real numbers instead. Every one of them is taken on a matrix of
+size $d_A$, $d_s$ or $d_Ad_s$ for a single $s$; \emph{the validator
+assembles no array larger than one such matrix}, which where $|\SecSet|=1$ is
+$d_{\Qsys}$ or $d_Ad_{\Qsys}$ square, the one block being the whole space
+there (Theorem~\ref{thm:band-a}\,(i)).
+In trusted mode the V2 term is $3$ and not $4$: D(ii)'s named Hermiticity
+condition and the Hermiticity half of its positivity condition are the same
+decision, taken once. In untrusted mode V2 decides only the marginal slot's
+$\nomarg$ branch, with no marginal arithmetic or marginal summation predicate.
+\end{enumerate}
+
+\emph{The general format.} All four parts hold for a candidate declaration in
+the general format of Definition~\ref{def:declaration}\,(DX1)--(DX6), with the
+checks read as in the general-format paragraph of
+Definition~\ref{def:validator} and the conditions as in that of
+Definition~\ref{def:target}: (i) soundness on all eight and (ii) completeness
+on D(i)--D(vi) and D(viii); (iii) with the \emph{same} witness, which is a
+general-format declaration at $|\mathbb{T}|=1$, one \tref{measured factor} and
+no party-local entry; and (iv) with the predicate decisions of V2, V3 and V6
+numbering
+\begin{equation}\label{eq:predcount-general}
+  \underbrace{I_{\mathrm{tr}}\big(2|\mathbb{T}|+1
+    +|\mathbb{T}|\,\mathbb 1[\text{ensemble form}]\big)}_{\text{V2}}
+  \;+\;\underbrace{|\mathbb{T}|\,\big(2|\Xset|+1\big)}_{\text{V3 on }A}
+  \;+\;\underbrace{\sum_{f\in\mathbb{F}}|\SecSet^{f}|
+    \big(2|\Vset^{f}|+1\big)}_{\text{V3 per measured factor}}
+  \;+\;\underbrace{\sum_{k=1}^{m}|\SecSet^{f_k}|}_{\text{V3 on }\CList}
+  \;+\;\underbrace{m_{\text{gen}}\,|\mathbb{T}|}_{\text{V6}} ,
+\end{equation}
+beside them the summation decisions of condition~(S) --- one on
+$\tr\tau_A$ in trusted mode only, one per Alice sector on Alice's family,
+and one per factor and sector on that factor's family, so
+$|\mathbb{T}|+\sum_f|\SecSet^{f}|+I_{\mathrm{tr}}$ of them --- and V7, on the
+candidate it verifies, $2|\mathbb{T}|\,|\SecSet|+1$ decisions, $|\mathbb{T}|$
+further in trusted mode for the marginal equalities, and per entry $k$ either
+$|\mathbb{T}|$ operator comparisons, one comparison of real numbers in
+untrusted mode, or, for a party-local entry,
+$|\mathbb{T}|\,|\SecSet|/|\SecSet^{f_k}|$ operator comparisons.
+Each operator comparison is one semidefiniteness decision for an inequality
+or one exact entrywise equality decision for $=$
+(Theorem~\ref{thm:feasibility}\,(ii), general format). \emph{Every one of them is
+taken on a matrix of size $d_{A_t}$, $d_s$ or $d_{A_t}d_s$ for a single joint
+sector, or of size $d_{A_t}d_s/d_{f,s_f}$ for a single party-local row;
+the validator assembles no array larger than one joint block.} In the
+\tref{basic format} --- $|\mathbb{T}|=1$, one measured factor, POVM form, two
+messages neither reading the other and no party-local entry ---
+\eqref{eq:predcount-general} is
+\eqref{eq:predcount} term for term, and every other count of this paragraph is
+the corresponding count of (iv).
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} Parts (i) and (ii) are proved together, by pairing each check
+with its target condition. Three kinds of conjunct arise: combinatorial ones,
+which both sides state as the same comparison of labels, integers or
+tabulated values; numerical ones, which both sides state as the same exact
+predicate on the same declared numbers; and structural ones, which the block
+type makes true and neither side states. Two pairs, V5/D(v) and V8/D(viii),
+are combinatorial but need an argument. V7 implies D(vii), which completes
+(i), and (iii) is the counterexample stated with it. Part (iv) counts the
+decisions. The general format takes the same steps, the point being that on
+each side the quantifiers still run over one list.
+
+\emph{Step 1 (combinatorial conjuncts: the restatement is literal).} V1's
+finiteness, totality, dimension-sum, index-order and sector-map clauses; V4's
+key-alphabet clause; V6's relation-symbol, tag and type clauses. Each compares
+labels, integers or tabulated values, so V1/D(i), V4/D(iv) and the
+combinatorial half of V6/D(vi) are equivalences in both directions. For V1's
+sector-map clause we \emph{name} both lists rather than identify them: D(i)
+asks that there be one map and that every declared $\Qsys$-operator be a
+block list against \emph{it}, and the declared $\Qsys$-operators of
+\eqref{eq:declaration} are exactly the family $\{F_v\}_{v\in\Vset}$ together
+with the $m$ entries $\hat O_1,\dots,\hat O_m$ of $\CList$
+(Definition~\ref{def:declaration}); V1 compares the four components of the
+map carried by \emph{each of those same objects} against the emitted one, and
+compares the map of nothing else (Definition~\ref{def:validator}). The two
+quantifiers therefore run over one list, and two finite lists of labels and
+integers agree or they do not. \emph{Neither the descriptor that the chain's
+last link produces nor a supplied feasibility witness is on either side}: the
+first is a
+component of the chain record, decided at
+Definition~\ref{def:chaincond}\,(C1), and the second is a block list on
+$A\Qsys$ tested at branch~(c) of V7 --- so a candidate meeting D(i)--D(vi)
+and D(viii) cannot be refused at V1 on account of either, which is what (ii)
+asserts and what a wider V1 would have made false. \emph{V1's index-order
+clause is the last clause of D(i)}, word for word: both ask that the
+restriction of $\idxm$ to $\SecSet$ be the total order $\Smap$ fixes, and
+that comparison is again of two finite lists of labels. Both directions
+therefore hold of it as well, which is what makes (ii) true of a
+\emph{candidate}: a candidate meeting D(i)--D(vi) and D(viii) meets that
+clause too, so V1 cannot refuse it there.
+
+\emph{V6's combinatorial clauses pair with D(vi) on the same $m$ objects.}
+D(vi) asks of each entry of $\CList$ that its relation symbol lie in the set
+its emitted source mode admits and that its right-hand-side slot hold one of
+the two admitted data, whose type \emph{is} the tag
+(Definition~\ref{def:homog}); V6 decides those two things, of those same $m$
+entries, keyed on whether the marginal slot is filled --- which is the
+emitted source mode (Definition~\ref{def:declaration}). V6's remaining
+clause, that an explicit tag field on an \emph{arriving} entry agree with the
+type of the datum it names, is not a further conjunct on
+\eqref{eq:declaration}: no entry of a declaration carries such a field, so on
+a candidate that clause has no subject and cannot refuse one
+(Definition~\ref{def:validator}, V6). The pairing is therefore between equal
+lists here as well.
+
+\emph{Step 2 (numerical conjuncts: the two sides are the same exact
+predicate).} V2's three, V3's five and V6's Hermiticity of a $\Theta_k$
+declared general are, by construction, the same conditions on the same
+declared numbers as the corresponding conjuncts of D(ii), D(iii) and D(vi):
+both Definition~\ref{def:target} and Definition~\ref{def:validator} state
+them through Definition~\ref{def:exact}, exactly, with no window on either
+side. So V2/D(ii), the five-predicate half of V3/D(iii) and the Hermiticity
+half of V6/D(vi) are equivalences in both directions, a literal restatement.
+Condition~(S) pairs the same way: it is a clause of D(ii) and of D(iii)
+(Definition~\ref{def:target}) and a clause of V2 and V3, stated once in
+Definition~\ref{def:exact} and read by both.
+
+\emph{Step 3 (structural conjuncts: there is nothing left to pair).} D(iii)'s
+last two conjuncts, $\Pi_sF_v\Pi_{s'}=0$ and $\Pi_s\hat O_k\Pi_{s'}=0$, hold
+by the emitted type (Theorem~\ref{thm:measurements-and-statistics}\,(ii)) and have no counterpart in
+V3. They are therefore vacuous in the soundness direction --- V3 need not
+establish what cannot fail --- and vacuous in the completeness direction ---
+a declaration satisfying them is not thereby subjected to any check. The
+pairing is not broken by their absence; it is one conjunct shorter on each
+side. One direction of (ii) does fail for a reason that is not numerical, and
+it is a \emph{typing} failure: an operator presented outside the block type,
+as a full $d_{\Qsys}\times d_{\Qsys}$ array, is refused at V1 whatever its
+off-block entries are, exactly zero included, because it is not a declaration
+in the sense of Definition~\ref{def:declaration}. That is why (ii) is stated
+for declarations rather than for operators.
+
+\emph{Step 4 (V5 $\Leftrightarrow$ D(v) and V8 $\Leftrightarrow$ D(viii)).}
+These two pairs are combinatorial but need an argument.
+
+V5 $\Leftrightarrow$ D(v). ($\Leftarrow$) If $\varsigma$ exists as in
+D(v) and $a(x,v)=a(x',v')=\kappa$, then $r(x,v)=\perp$ and $r(x',v')=\perp$ are
+both equivalent to $\varsigma(\kappa)=\mathrm{fail}$, so V5 holds.
+($\Rightarrow$) Assume V5 and define
+$\varsigma(\kappa)\coloneqq\mathrm{fail}$ if there exists
+$(x,v)\in a^{-1}(\kappa)$ with $r(x,v)=\perp$, and
+$\varsigma(\kappa)\coloneqq\mathrm{pass}$ otherwise (in particular on
+$\kappa\notin\operatorname{ran}a$, where the choice is immaterial because the
+condition of D(v) quantifies over pairs $(x,v)$). This $\varsigma$ is total.
+For $(x,v)$ with $\kappa=a(x,v)$: if $r(x,v)=\perp$ then
+$\varsigma(\kappa)=\mathrm{fail}$ by construction; if
+$\varsigma(\kappa)=\mathrm{fail}$ then some $(x',v')\in a^{-1}(\kappa)$ has
+$r(x',v')=\perp$, and V5 gives $r(x,v)=\perp$. Hence D(v).
+
+V8 $\Leftrightarrow$ D(viii). ($\Leftarrow$) If \eqref{eq:partycomp}
+holds with a total $r_{\hold}$, then equal holder readouts and equal
+announcements give equal key values, which is V8; the announcement clause of
+D(viii) is the first clause of V8. ($\Rightarrow$) Assume V8 and define
+$r_{\hold}(o,\kappa)\coloneqq r(x,v)$ for any $(x,v)$ with
+$\rd{\hold}(x,v)=o$ and $a(x,v)=\kappa$ if such a pair exists --- well defined
+precisely by V8's implication --- and $r_{\hold}(o,\kappa)\coloneqq\perp$ on
+pairs $(o,\kappa)$ that are not realized. This $r_{\hold}$ is total on
+$\Oset{\hold}\times\Kann$ and satisfies \eqref{eq:partycomp} for every $(x,v)$,
+since every such pair realizes $(\rd{\hold}(x,v),a(x,v))$. Hence D(viii). The
+value chosen on unrealized pairs is immaterial: \eqref{eq:partycomp} quantifies
+over $(x,v)$ only.
+
+Steps 1 to 4 account for (ii) in full, and for (i) except at V7.
+
+\emph{Step 5 (V7 $\Rightarrow$ D(vii), which completes (i); and (iii)).}
+Assume V1--V8 all pass. By the equivalences of Steps 1 to 3, D(i)--D(iii)
+hold. If V7 passed by branch (a), $\CList=\varnothing$ and
+Theorem~\ref{thm:feasibility}\,(i) applies --- its hypotheses are exactly
+D(i)--D(iii) --- and exhibits $\omega^{\star}\in\Feas$. If V7 passed by
+branch (b) or (c), the candidate it verified satisfies every condition of
+Definition~\ref{def:feasible}, decided exactly (Theorem~\ref{thm:feasibility}\,(ii),
+whose further hypothesis D(vi) holds because V6 passed, by Steps 1 and 2),
+so that candidate lies in $\Feas$. Either way D(vii) holds. Statement (iii) is
+proved by the counterexample given with it, which is checked there against
+Definition~\ref{def:target} condition by condition.
+
+\emph{Step 6 (decidability, (iv)).} V1 enumerates the declared tables and
+compares finitely many declared integers and labels, the sector-map
+comparison included: it is $|\SecSet|$ identifier comparisons, $|\SecSet|$
+dimension comparisons, one block-kind comparison and one length comparison,
+per supplied family, plus the comparison of $\idxm$'s sector order with
+$\Smap$'s. V2, V3 and V6 take the decisions \eqref{eq:predcount} counts, on
+matrices of the declared finite dimensions: in trusted mode $3$ for V2 ---
+$\tau_A=\tau_A^{\dagger}$, $\tau_A\succeq0$, $\tr\tau_A=1$, the first serving
+both the Hermiticity condition of D(ii) and the Hermiticity half of its
+positivity condition; in untrusted mode none, because V2 takes its
+$\nomarg$ branch; $2|\Xset|+1$ for V3's Alice half, one Hermiticity and one
+semidefiniteness per $x$ and one completeness identity on $A$;
+$|\SecSet|(2|\Vset|+1)$ for its Bob half, the same per $(v,s)$ and one
+completeness identity per $s$; $m\,|\SecSet|$ Hermiticity decisions for its
+constraint half; and $m_{\text{gen}}$ for V6. Each is finite: an identity is
+a comparison of entries, and a semidefiniteness on a Hermitian matrix of size
+$n$ is decided by exact symmetric elimination with the zero-pivot row test,
+$O(n^3)$ exact rational operations. The summation decisions of (S) are one
+pass over the additions of each applicable declared-order sum; the marginal
+trace sum exists only in trusted mode. Early termination can omit later
+decisions within a check, which is why this complete inventory need not
+equal the length of a failed execution's transcript. V4, V5 and V8 enumerate
+$|\Xset||\Vset|$ pairs, respectively $(|\Xset||\Vset|)^2$ ordered pairs, and
+compare tabulated values. V7 is Theorem~\ref{thm:feasibility}\,(ii), which is likewise
+per block, and \emph{on both of its branches the decision is taken in exact
+arithmetic}: on branch (b) the candidate is formed by the compiler and decided
+in exact rational arithmetic, and on branch (c) the supplied witness's
+membership is decided exactly on the dyadic numbers it declares --- not
+because those numbers are exactly representable, which by
+Definition~\ref{def:exact} warrants nothing about the additions and products
+a decision forms, but because every decision this module takes on a computed
+quantity is taken exactly (\xref{foundations/req:exact-island}).
+
+\emph{The general format.} The three kinds of conjunct are the same three, and
+\emph{no fourth kind arises}; what has to be checked is that on each side the
+quantifiers still run over one list. The steps are those above.
+
+\emph{Step 1 in the general format (combinatorial conjuncts).} V1's
+finiteness, totality, factor-list, dimension, index-order and map-comparison
+clauses; V4's; V6's relation-symbol, tag, type and \emph{scope} clauses. Each
+compares labels, integers or tabulated values, so each is an equivalence in
+both directions once the two quantifiers are seen to run over one list, which
+needs saying in four places. \emph{First, the factor list.} D(i) asks that
+the sector map be one factorised map --- at most one factor tagged $A$ and
+then first, at least one tagged $\Qsys$, one block kind, the dimension
+identities --- and V1 decides those same clauses on the same list
+(Definition~\ref{def:validator}, the general format), so they pair literally.
+\emph{Second, the objects whose maps are compared.} In the general format the
+declared $\Qsys$-operators are the per-factor families
+$\{F^{f}_{v_f}\}_{v_f}$, one per $f\in\mathbb{F}$, together with the $m$
+operators $\hat O_1,\dots,\hat O_m$, each against the map of its scope
+(Definition~\ref{def:declaration}\,(DX1), (DX3), (DX6)); \emph{and Alice's
+declared data are on the list beside them} --- $\tau_A$, every operator of her
+measurement slot, and every $\Theta_k$ of an entry declared general, each
+against the map of the factor tagged $A$, which is where
+Definition~\ref{def:exact} states condition~(T) non-empty for them. D(i) asks
+that there be one factorised map and that \emph{each} of those objects be a
+block list against the map of its own factor; V1 compares the four
+components of the map carried by each of \emph{those same} objects and of
+nothing else. \emph{So the Alice-side conjunct is on both sides and pairs like
+the others}, which is what makes (i) sound and (ii) complete for it: a
+candidate whose Alice block list carries a different block kind, a different
+identifier list or a different order is refused at V1, and a candidate
+meeting D(i) is not refused there, both sides comparing two finite lists of
+labels and integers. Where no factor is tagged $A$, Alice's data are single
+arrays carrying no map and both sides are empty of them, as in Step 1 above.
+\emph{A product block \eqref{eq:productfamily} and the lifted operator of a
+scoped entry are on neither side}: neither is a \tref{declared datum}, so D(i) does
+not quantify over either and V1 compares neither --- which is what keeps (ii)
+true, a wider V1 refusing candidates D(i)--D(vi) and D(viii) admit. The
+descriptors that the chain's last links produce, one per factor, and a
+supplied witness stay outside both sides for the reasons of Step 1, now read
+per factor and over the joint sectors. \emph{Third, the index order.} D(i) asks
+that the restriction of $\idxm$ to each factor's sectors be the order that
+factor's map fixes, and records that the product order is \emph{derived}; V1
+decides exactly that and compares nothing about the derived orders, there
+being no second datum to compare them against. Both directions hold, so a
+candidate meeting D(i)--D(vi) and D(viii) cannot be refused there.
+\emph{Fourth, the transcript.} D(viii) asks that the announcement slot be a
+\tref{transcript protocol} with every table $a_m$ total on
+$\Oset{\pi_m}\times\mathcal{C}_1\times\dots\times\mathcal{C}_{m-1}$ --- so that
+a message reads its sender's readout and the earlier messages \emph{by its
+signature} --- and V1's totality clause together with V8's announcement clause
+decide that same thing of those same $L$ tables. A table whose stated domain
+names a later message's alphabet is not of the declared type and is refused at
+V1; so on a candidate the signature clause is not a numerical conjunct and
+needs no pairing beyond this one.
+
+\emph{And V6 pairs with D(vi) on the same $m$ entries, now with three forms and
+a scope.} D(vi) asks of each entry that its relation symbol lie in the set
+\emph{its form and its emitted mode} admit --- the mode's set for an untagged
+entry, $\{\preceq,=,\succeq\}$ in either mode for an entry declared
+party-local, with the scalar symbols also admitted where every row of that
+entry is $1\times1$ --- that its right-hand-side slot hold one of the three
+admitted data --- whose type, together with the arriving tag field for the
+party-local form, \emph{is} the tag (Definition~\ref{def:homog}) --- and that
+its scope name a measured factor of the map; V6 decides those three things of
+those same $m$ entries, keyed on whether the marginal slot is filled and on
+the declared tag, and its symbol clause is D(vi)'s symbol clause set for set,
+so that pair is an equivalence in both directions as before. The clause of V6
+about an arriving tag field is again not a further conjunct on
+\eqref{eq:declaration} for a homogeneous or general entry, whose tag is the
+type; \emph{for a party-local entry it is the tag, because the type of the
+datum does not separate that form from the homogeneous one}
+(Definition~\ref{def:homog}), and D(vi) in its general reading asks for that
+declared form, so here too the two sides ask the same thing of the same
+objects.
+
+\emph{Step 2 in the general format (numerical conjuncts).} V2's, V3's and
+V6's Hermiticity of a $\Theta^{(t)}_k$ declared general are, by construction,
+the same exact predicates on the same declared numbers as the corresponding
+conjuncts of D(ii), D(iii) and D(vi), both sides stating them through
+Definition~\ref{def:exact} in its general-format reading, exactly and with no
+window: per measured factor and per factor block on the measured families,
+and per Alice sector on Alice's data. Condition~(S) pairs the same way, per
+factor and per Alice sector. \emph{Two pairs are new and both are
+equivalences.} The ensemble form: V3's identity $\sum_xN^{(t)}_x=\tau^{(t)}_A$
+with its summation condition, and V2's $\tau^{(t)}_A\ne0$, are exactly the
+conditions Definition~\ref{def:exact} states for that form and D(ii), D(iii)
+ask; and V3's refusal of an ensemble-form slot beside a marginal slot holding
+$\nomarg$ pairs with D(iii)'s clause that ensemble form is refused in
+untrusted-source mode --- a decision on \emph{which of two slots is filled},
+hence combinatorial, hence an equivalence in both directions.
+
+\emph{Step 3 in the general format (structural conjuncts: again nothing is
+left to pair, and the list of them is longer).} D(iii)'s typing conjuncts
+hold by the emitted type along $\mathbb{T}$ as well as along $\SecSet$ and
+have no counterpart in V3; and \emph{three further statements that a naive
+reading would put on the data are theorems and are conjuncts of neither
+side}: that the product family $\{F_v\}_{v\in\Vset}$ is a POVM on $\Qsys$,
+block diagonal for the product map (Definition~\ref{def:declaration}\,(DX3));
+that the family \eqref{eq:ensemblepovm} an ensemble form denotes is a POVM on
+$A$ --- proved at Theorem~\ref{thm:sifting-and-key}\,(v), \emph{named here as a pointer
+and used by no step below}, what this step needs being only that neither
+D(iii) nor V3 states it; and that a lifted operator is Hermitian and block
+diagonal for the product map, which follows from the Hermiticity of
+$\hat O^{(s_{f_k})}_k$ that V3 does decide. So each is vacuous in the
+soundness direction --- V3 need not establish what follows --- and vacuous in
+the completeness direction, a declaration satisfying it being subjected to no
+check for it. The typing failure that makes (ii) a statement about
+declarations rather than operators is unchanged, and has two more instances: a
+family presented as one array over the product alphabet, and an Alice operator
+presented as one array on $A$ where an $A$ factor is declared, are refused at
+V1 whatever their entries are, because neither is a declaration in the sense
+of Definition~\ref{def:declaration}.
+
+\emph{Steps 4 and 5 in the general format (V5, V8 and V7; and (iii)).} The
+proofs of V5 $\Leftrightarrow$ D(v) and V8 $\Leftrightarrow$ D(viii) in
+Step 4 use of $a$ only that it is a total map into $\Kann$, and construct
+$\varsigma$ and $r_{\hold}$ on that alphabet; both hold verbatim with
+$\Kann=\prod_m\mathcal{C}_m$ and $a$ the function \eqref{eq:transcript}
+derives, \emph{whose totality is derived here and not imported}:
+$\kappa_1=a_1\circ\rd{\pi_1}$ is total because $a_1$ and $\rd{\pi_1}$ are, and
+if $\kappa_1,\dots,\kappa_{m-1}$ are total on $\Xset\times\Vset$ then so is
+$\kappa_m$, $a_m$ being tabulated on all of
+$\Oset{\pi_m}\times\mathcal{C}_1\times\dots\times\mathcal{C}_{m-1}$ (V1) and
+$\rd{\pi_m}$ total; induction on $m$ gives $a$ total into $\Kann$, which is
+all the two proofs consume of it. For V7 $\Rightarrow$ D(vii): if V7 passed by
+branch~(a) then $\CList=\varnothing$ and Theorem~\ref{thm:feasibility}\,(i) in its
+general-format reading exhibits \eqref{eq:witness-general} in $\Feas$, its
+hypotheses being exactly D(i)--D(iii); if by branch~(b) or (c), the candidate
+it verified satisfies every line of \eqref{eq:feas-general}, decided exactly
+(Theorem~\ref{thm:feasibility}\,(ii), general format, D(vi) holding because
+V6 passed), so it lies in $\Feas$. Either
+way D(vii) holds, and (i) is complete. \emph{And (iii) holds in the general
+format with the witness already given}: that declaration has one Alice sector,
+one measured factor, POVM form, two messages and no party-local entry, at which
+values D(i)--D(viii) in their general reading are the eight conditions read of
+it in (iii) (Definition~\ref{def:target}, the general format) and V7's three
+branches are the three branches read of it there, so it is a general-format
+declaration satisfying D(i)--D(viii) that V7 refuses. The incompleteness is
+therefore at V7 and, by the equivalences just listed, only there.
+
+\emph{Step 6 in the general format ((iv)).} V1 again enumerates declared
+tables and compares declared integers and labels: per factor,
+$|\SecSet^{f}|$ identifier and $|\SecSet^{f}|$ dimension comparisons, one
+block-kind and one length comparison per supplied family against that
+factor's map --- \emph{Alice's $\tau_A$, her measurement operators and each
+$\Theta_k$ of an entry declared general against the $A$ factor's map among
+them}, the same four comparisons each --- plus the comparisons of $\idxm$'s
+components with the factors' orders and with $\mathbb{T}$'s. V2, V3 and V6
+take the decisions \eqref{eq:predcount-general} counts: $2$ per Alice sector
+for V2 --- Hermiticity, which serves both D(ii)'s named condition and the
+Hermiticity half of its positivity condition, and semidefiniteness --- and one
+trace decision, with one non-zero comparison per sector in ensemble form, all
+of these V2 decisions and the marginal trace-summation decision being present
+only in trusted mode; when the slot holds $\nomarg$, V2 returns without taking
+any of them. V3 has $2|\Xset|+1$ per Alice sector for its Alice half, the
+$+1$ being the completeness identity in POVM form and the marginal identity
+in ensemble form; $|\SecSet^{f}|(2|\Vset^{f}|+1)$ per measured factor;
+$|\SecSet^{f_k}|$ Hermiticity decisions per entry; and
+$m_{\text{gen}}|\mathbb{T}|$ for V6. Each is finite and each is taken on a
+matrix of one of the four sizes named in the statement, a semidefiniteness on
+size $n$ costing $O(n^3)$ exact rational operations as before. V4, V5 and V8
+enumerate $|\Xset||\Vset|$ pairs, respectively $(|\Xset||\Vset|)^2$ ordered
+pairs, of \emph{tabulated} values, and $a$'s table is finite because each
+$a_m$'s is. V7 is Theorem~\ref{thm:feasibility}\,(ii) in its general-format reading,
+which is per joint block and in exact arithmetic on both of its branches, for
+the reasons given there.
+\end{proof}

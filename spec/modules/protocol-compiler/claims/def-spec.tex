@@ -1,0 +1,218 @@
+% ---
+% id: protocol-compiler/def:spec
+% kind: def
+% title: "Protocol specification"
+% summary: >-
+%   A protocol specification is the compiler's input: the transmitter
+%   artefact, the receiver part, a two-segment reduction chain, the public part
+%   and the constraint entries. In the general format the receiver part and the
+%   chain come per measured factor, with a transcript and scoped entries.
+% prominence: standard
+% status: implemented
+% uses: [def:homog, def:declaration, transmitter/def:source-spec, transmitter/def:srcert, transmitter/def:source-segment]
+% mentions: [def:weighted, def:validator, def:chaincond, def:eligible, reductions/def:chain, reductions/def:link, reductions/thm:emitted-product, req:pass-through, req:derived-objects, rem:gate-by-certificate-form, rem:chain-and-validator, rem:party-label-restriction, reductions/req:factorised-emission, transmitter/ass:ens]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.spec:ProtocolSpecification
+% lean:
+% notes: "reductions/def:chain and reductions/def:link are mentions and not uses: the record is typed in this module's words, and a uses edge would carry the producer's definitional ledger into every compiler theorem, the Band-A theorem included. The transmitter edges of (a) are uses: the source part is the transmitter's definition and carries no ledger of its own. def:chaincond is a mention: it points forward to the conditions decided on the record."
+% ---
+
+The compiler's input comes in five parts. Parts (a)--(e) describe the
+specification of a declaration in the \tref{basic format}; the paragraphs on
+the general format read the same five parts more widely. The descriptors a
+link carries are, for a \tref{source link}, the transmitter's
+\tref{source descriptor} and \tref{target descriptor}; for a receiver link
+they are receiver-side. How the compiler treats the slots it reads is
+Requirement~\ref{req:pass-through}. Which objects check V1 compares, and why
+a supplied witness is compared at check V7 instead, is
+Remark~\ref{rem:chain-and-validator}.
+
+In the general format, how (DX1) restricts the \tref{party partition} is
+Remark~\ref{rem:party-label-restriction}; that the product rule
+\eqref{eq:productfamily} of (b$'$) is formed by no one is
+Requirement~\ref{req:derived-objects}; and the ordered
+list of the factors' artefacts in (c$'$) is the one
+\xref{reductions/req:factorised-emission} emits. A certificate declared in
+\tref{block form} is refused at gate (G2) of Definition~\ref{def:eligible}.
+The ground is not that this module demands purity of every certificate: at several Alice sectors global purity
+fails for a presentation too. What separates the two forms is stated in
+Remark~\ref{rem:gate-by-certificate-form}, and the operative ground for the
+refusal is the scope rule: admitting a block form would widen an
+unsafe-direction gate at the degenerate values.
+
+\begin{definition}\label{def:spec}
+A \term[The compiler's input: a source part, a receiver part, a reduction chain, a public part and a constraint part.]{protocol specification} is a tuple
+\begin{equation*}
+  \Spec=\big(\Spec_{\mathrm{src}},\ \Spec_{\mathrm{rec}},\ \pcChain,\
+  \Spec_{\mathrm{pub}},\ \Spec_{\mathrm{con}}\big)
+\end{equation*}
+whose parts are:
+
+\emph{(a) Source part $\Spec_{\mathrm{src}}$.} A \tref{source specification}
+in the sense of \xref{transmitter/def:source-spec}, presented to this module as
+the \emph{transmitter artefact} in its declared mode: a finite non-empty
+alphabet $\Xset$ with its \tref{declared order}, a finite-dimensional system
+$A$ with declared computational basis, a POVM $\{M_x\}_{x\in\Xset}$ on $A$
+--- itself possibly presented as a \tref{choice-weighted family}
+(Definition~\ref{def:weighted}) --- and the \tref{specified signal ensemble}
+$\{p_x,\rho_x\}_{x\in\Xset}$ on the \tref{transmitted system} $\Asig$
+(\xref{transmitter/ass:ens}). The mode is read off the artefact's
+\tref{marginal slot} and is never a second datum. In
+\tref{trusted-source mode} the slot holds $\tau_A\in\Seq{A}$ --- at $d_A=1$
+the slot the transmitter filled with $[1]$ included --- and at $d_A\ge2$ the
+artefact additionally carries a \tref{source-replacement certificate}
+$(\tau_A,\Psi,\{p_x,\rvirt_x\}_{x\in\Xset})$ on $A\Avirt$ in the sense of
+\xref{transmitter/def:srcert}, written against the \tref{virtual ensemble}
+the \tref{source segment} \emph{starts from}, which lives on the
+\tref{virtual transmitted system} $\Avirt$, the \tref{source descriptor} of
+$\Xi_1$ (\xref{transmitter/def:source-segment}\,(S1), (S3)). When
+$L_{\mathrm s}=0$ that system and that ensemble are the specified ones:
+$\Avirt=\Asig$ and $\rvirt_x=\rho_x$. In \tref{untrusted-source mode} the slot
+holds $\nomarg$ and there is no certificate.
+
+\emph{(b) Receiver part $\Spec_{\mathrm{rec}}$.} A finite-dimensional physical
+receiver system with a POVM $\{\Fph_w\}_{w\in\Vph}$, possibly presented as a
+choice-weighted family; and, optionally, a public choice whose weight
+depends on the private setting of the measuring apparatus --- a
+stochastic matrix $P(f\,|\,t)$ with the setting map
+$t:\Vset\to\mathcal{T}$ it is read through --- to be applied by
+this module \emph{after} the \tref{reduction chain}, in the
+\tref{setting-dependent form} of Definition~\ref{def:weighted}.
+
+\emph{(c) Reduction chain $\pcChain=(\Chsrc,\Chrec)$.} A reduction chain in
+the sense of \xref{reductions/def:chain}, presented to this module as a
+record: an ordered \emph{pair} of ordered lists of \tref[typed link]{typed links}, the
+\emph{source segment} $\Chsrc=(\Xi_1,\dots,\Xi_{L_{\mathrm s}})$ with
+$L_{\mathrm s}\ge0$, which is a source segment in the sense of
+\xref{transmitter/def:source-segment} --- its links act on the transmitted
+system $\Asig$ and replace Alice's signal ensemble --- and the \emph{\tref[receiver segment]{receiver
+segment}} $\Chrec=(\Lambda_1,\dots,\Lambda_L)$ with $L\ge1$, whose links act on
+the receiver system and replace Bob's measurement. What this module reads of a
+link, stated in its own words, is this: each link of either segment carries a
+type tag, source and target system descriptors, a status tag, its channel as
+data where the link type has one, the constraint entries it transports, and a
+licence slot. A receiver-stage link in the sense of
+\xref{reductions/def:link} carries more --- its \tref{reachable-set statement} and
+its carried operator pair --- and this module reads none of it. The last link
+of $\Chrec$ has target descriptor $(\Qsys,\SecSet,(d_s)_s)$ with the
+sector projectors $\Pi_s$, and \tref[target povm]{target POVM} $\{F_v\}_{v\in\Vset}$. The two
+segments are separate lists because they have different types; the pair is
+composed source segment first. The \tref{interface conditions on a chain} that
+this module decides on the record are those of
+Definition~\ref{def:chaincond}.
+
+\emph{(d) Public part $\Spec_{\mathrm{pub}}$.} A \tref{party partition}
+$\Party$ (readouts $\rd{\mathsf A},\rd{\mathsf B}$ onto $\Oset{\mathsf A}$,
+$\Oset{\mathsf B}$, and the party labels), \tref[announcement map]{announcement maps}
+$a_A:\Oset{\mathsf A}\to\CAset$ and $a_B:\Oset{\mathsf B}\to\CBset$, a sifting
+predicate $\varsigma:\Kann\to\{\mathrm{pass},\mathrm{fail}\}$, a key rule
+$r_{\hold}^{0}:\Oset{\hold}\times\Kann\to\Zval$, a holder
+$\hold\in\{\mathsf A,\mathsf B\}$, a finite acceptance alphabet $\Chatset$ and
+a map $\phi:\Kann\to\Chatset$. All maps are total.
+
+\emph{(e) Constraint part $\Spec_{\mathrm{con}}$.} A finite, possibly empty,
+list of entries. Each $\hat O_k$ is presented as a \tref{block list} on
+$\Qsys$ together with the \tref{sector map} it is written against, which is
+carried with it as for every other supplied $\Qsys$-operator family, and is
+Hermitian block by block. Each entry carries a right-hand-side datum of one of
+two types, and the type fixes the entry's tag: \tref{homogeneous} with a real
+$c_k$, or \tref{general} with a Hermitian $\Theta_k$ on $A$, in trusted-source
+mode; a real $c_k$ in untrusted-source mode (Definition~\ref{def:homog}). The
+constraint part also carries the optional attack-set \tref{licence record} and an
+optional feasibility witness $\omega^{\star}$, likewise a block list with its
+own map. The map each $\hat O_k$ carries is compared with the emitted $\Smap$
+by check V1, an entry declared here being on the same footing as one
+transported by a link. The witness's map is not compared there: $\omega^{\star}$
+is a block list on $A\Qsys$ and not a $\Qsys$-operator, it is no slot of
+\eqref{eq:declaration}, and branch~(c) of check V7 is where it is required to
+be a block list against $\Smap$ (Definition~\ref{def:validator}).
+
+\emph{The general format.} A specification to be compiled into the general
+format of Definition~\ref{def:declaration}\,(DX1)--(DX6) has the same five
+parts, read as follows. At one Alice sector, one \tref{measured factor},
+\tref{POVM form}, two messages neither of which reads the other and no
+party-local entry these readings are (a)--(e) above, part for part on every
+component a derivation reads: at those values every such object named below
+is the object of the same name there and nothing else is presented. On the
+party labels of the tensor factors of each $\Hs{\Qsys_s}$, which no
+derivation of this module reads and which the consuming engine's laboratory
+premise reads as naming the parties' laboratories, (DX1) restricts the party
+partition of (d). The party set is unchanged: it is
+$\{\mathsf A,\mathsf B\}$, with the two \tref[readout map]{readout maps} of $\Party$. What
+is new is that several measured factors may carry a party label and that the
+factor tagged $A$ carries one too (DX1).
+
+\emph{(a$'$) Source part.} The artefact's marginal slot may hold a block list
+$(\tau^{(t)}_A)_{t\in\mathbb{T}}$ along the Alice sectors the artefact
+declares, and Alice's measurement arrives in one of the two forms of (DX4):
+the POVM slot, or, in trusted-source mode only, the ensemble slot holding the
+block lists $\{N_x\}_{x\in\Xset}$ of \eqref{eq:ensembleform}. The
+source-replacement certificate may accordingly be declared in
+\tref{pure form}, in \tref{block form}, or as an
+\tref{ensemble presentation}, all three in the sense of
+\xref{transmitter/def:srcert}. Which form a certificate is in is read off the
+artefact and is never a second datum, exactly as the mode is. That a form may
+be \emph{presented} is the transmitter's rule and is stated here. Which forms
+this module \emph{admits}, and what gate (G2) decides of each form, is
+Definition~\ref{def:eligible}'s and is stated once there.
+
+\emph{(b$'$) Receiver part.} $\Spec_{\mathrm{rec}}$ is an ordered list, one
+entry per measured factor $f\in\mathbb{F}$ and in the order of $\mathbb{F}$: a
+party label; a finite-dimensional physical receiver system with a POVM
+$\{F^{\mathrm{ph},f}_{w_f}\}_{w_f\in\mathcal{V}^{\mathrm{ph},f}}$, possibly
+presented as a choice-weighted family; and, optionally, a
+setting-dependent public choice at that factor --- a stochastic matrix
+$P_f(\,\cdot\mid\cdot\,)$ with the setting map on that factor's alphabet it is
+read through --- to be applied after that factor's segment, in the
+setting-dependent form of Definition~\ref{def:weighted}. No entry of the list
+carries an operator on another factor's system, and no product of physical
+families is presented: the product is the rule \eqref{eq:productfamily},
+formed by no one.
+
+\emph{(c$'$) Reduction chain.} $\pcChain=(\Chsrc,\Chrec)$ with $\Chsrc$ as
+in (c) and $\Chrec=(\pcChain^{f}_{\mathrm{rec}})_{f\in\mathbb{F}}$ one
+receiver segment per measured factor, each
+$\pcChain^{f}_{\mathrm{rec}}=(\Lambda^{f}_1,\dots,\Lambda^{f}_{L_f})$,
+$L_f\ge1$, a list of receiver-stage links whose source descriptor is factor
+$f$'s physical receiver system and whose last target descriptor is
+$(\Qsys_f,\SecSet^{f},(d_{f,s_f})_{s_f})$ with target POVM
+$\{F^{f}_{v_f}\}_{v_f\in\Vset^{f}}$. What this module reads of a link is what
+(c) lists and nothing more, of each segment separately: the segments are
+separate lists because their links act on different systems, and no link of
+one is composable with a link of another. Where the factors' data are the
+ordered list of the factors' artefacts that the reductions module emits,
+factor $f$'s receiver segment and \tref{target family} are that factor's
+own, and the product rule of \xref{reductions/thm:emitted-product} is
+emitted in place of a \tref{joint family}; that list
+is what the factor list of (DX1) is built from, in its order. The interface
+conditions on a chain that this module decides on the record are those of
+Definition~\ref{def:chaincond}, per factor for the receiver segments.
+
+\emph{(d$'$) Public part.} In place of $a_A$ and $a_B$ the public part
+declares the \tref[transcript protocol]{transcript} of (DX5): the number $L\ge1$ of messages and,
+for each $m$, its sender $\pi_m$, its finite alphabet $\mathcal{C}_m$ and
+its total table
+$a_m:\Oset{\pi_m}\times\mathcal{C}_1\times\dots\times\mathcal{C}_{m-1}
+\to\mathcal{C}_m$. The sifting predicate $\varsigma$, the key rule
+$r^{0}_{\hold}$, the holder $\hold$, the acceptance alphabet $\Chatset$ and
+$\phi$ are declared on the derived $\Kann=\prod_{m}\mathcal{C}_m$ of
+\eqref{eq:transcript}, which is a set determined by the tables and declared by
+no one. All tables are total. The party partition $\Party$ is as in (d), with
+a party label per measured factor and, where there is one, for the factor
+tagged $A$.
+
+\emph{(e$'$) Constraint part.} Each entry presents, in addition to what (e)
+lists, its \tref{scope}: the label of one measured factor of the chain; and
+$\hat O_k$ is a block list on $\Qsys_{f_k}$ together with the sector map of
+that factor, Hermitian block by block. Its right-hand-side datum is of one of
+the three forms of Definition~\ref{def:homog}: a real $c_k$ tagged
+homogeneous, a Hermitian $\Theta_k$ tagged general and then itself a block
+list along $\mathbb{T}$, or a real $c_k$ tagged \tref{party-local}. The
+arriving tag is compared with the type of that datum at check V6, which also
+decides that the scope names a measured factor of the emitted map. An optional
+witness $\omega^{\star}$ is a block list over the \tref[joint sector]{joint sectors} with
+its own map, compared at branch~(c) of V7 and nowhere else, for the reason
+(e) gives.
+\end{definition}

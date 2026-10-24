@@ -1,0 +1,50 @@
+% ---
+% id: protocol-compiler/ass:rhom
+% kind: ass
+% title: "Round homogeneity of the declaration"
+% summary: >-
+%   The same specification, source mode and operators describe every round:
+%   the sameness clause of round homogeneity, not the absence of memory across
+%   rounds. One compiled declaration and one certificate decision then serve
+%   the whole run.
+% prominence: standard
+% status: accepted
+% uses: [foundations/def:round-homogeneity]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-RHOM
+% verification: never
+% category: protocol-structure
+% affects: [secrecy]
+% user_statement: >-
+%   One protocol description covers the whole run. Every round uses the same
+%   measurements, the same setting choices and their probabilities, and the
+%   same classical processing, and, where the source is trusted, the same
+%   source, so one declaration and one certificate decision apply to all n
+%   rounds. A run in which you change settings, or your devices drift so
+%   that later rounds need different operators, violates this. Only parts of
+%   a run fixed before it starts, each processed as its own execution and
+%   composed under [[A-SEPARATE]], which also asks that no device carry a
+%   state from one part into the next, can be analysed separately; a split
+%   chosen after seeing the data is not covered. That no device remembers
+%   earlier rounds is not part of this premise: for the measuring stations
+%   it is [[A-SPEC]], for Alice's letter [[A-ALICE-MEAS]], and where the
+%   source is trusted the source premise.
+% lean:
+% notes: "The statement asserts clause (i), sameness, of foundations/def:round-homogeneity alone, although its family holds declared POVMs, the reduction chain's channels and the signal ensemble; its readers (the consuming engine's theorem that declares it, this module's gate theorem, and transmitter/fact:sr, which leaves the dropped per-round superscript to it) read it as sameness. A-SPEC (i) assumes that every declared receiver family (every measured factor's) has no memory across rounds, on every route, and A-ALICE-MEAS the same of Alice's measurement where no certificate is demanded; A-ROUND and A-ROUND-SQ assume the same of the receivers they describe, and A-ENS (iii), or the premise a source model declares in its place, of a trusted source. A-RHOM assumes nothing about any device's memory."
+% ---
+
+Rounds are not averaged and per-round variation is not modelled: one
+declaration stands for every round. Only sameness is asserted; that the
+devices have no memory across rounds, the second clause of
+\tref[round-homogeneous]{round homogeneity}, is not part of this assumption.
+
+\begin{assumption}\label{ass:rhom}
+(i) Every round of the protocol is described by the same specification, hence
+by the same declaration, the same source mode and the same operators: the
+family of the specification, the declaration, the source mode and the
+operators satisfies clause~(i), sameness, of
+\tref[round-homogeneous]{round homogeneity}
+(\xref{foundations/def:round-homogeneity}).
+\end{assumption}

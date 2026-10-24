@@ -1,0 +1,43 @@
+% ---
+% id: reductions/req:licence-record
+% kind: req
+% title: "Content and presence of the licence record"
+% summary: >-
+%   The licence record names the licensing theorem, the certificate per entry,
+%   the claim that discharges it and, where that claim reads a supplier's
+%   fact, the supplier artefact by version; it is emitted only when every
+%   entry has all of these. It also names the proof technique it was issued for.
+% prominence: standard
+% status: accepted
+% uses: [thm:licence, cor:entries, rem:gateweight, rem:notlicensed]
+% mentions: [ass:recv]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.constraints:issue_licence
+% lean:
+% ---
+
+Where the consumer's mechanical check degenerates, its gate rests on this
+record alone (Remark~\ref{rem:gateweight}); so the record names a proved
+theorem, its hypothesis and the claim that discharges it, never a bare
+attestation. Every emitted certificate is a conclusion of a claim
+(Corollary~\ref{cor:entries}); an instance with no supplier, such as the
+identity instance, has no supplier artefact to name.
+
+\begin{requirement}\label{req:licence-record}
+The engine emits the \tref{licence record} \iface{attack_set_license} naming
+the theorem that licenses the constraint list (Theorem~\ref{thm:licence});
+the hypothesis it was discharged on, which is the certificate
+\eqref{eq:certificate} of each entry; and, per entry, what discharges that
+hypothesis: the claim that establishes the certificate under
+Corollary~\ref{cor:entries} --- the instance's own claim for an entry of its
+list, that corollary for a default carried operator and for the
+class-marginal entry, the claim giving the decided certificate for a
+requested entry --- and, where that claim reads a fact a supplier's claims
+state, the supplier's artefact under Assumption~\ref{ass:recv}, named by its
+version. It emits the record only when every entry has its certificate and
+what discharges it. The artefact names the proof technique the licence was
+issued for, since under another technique the licence must be re-established
+(Remark~\ref{rem:notlicensed}\,(e)).
+\end{requirement}

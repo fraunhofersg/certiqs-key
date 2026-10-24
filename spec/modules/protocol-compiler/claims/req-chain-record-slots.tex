@@ -1,0 +1,32 @@
+% ---
+% id: protocol-compiler/req:chain-record-slots
+% kind: req
+% title: "Emission of both chain segments and every link slot"
+% summary: >-
+%   The emitted chain record carries the source segment, the receiver segment
+%   and, on every link, the constraint slot and the licence slot, whether or
+%   not they are empty, Band A included.
+% prominence: standard
+% status: implemented
+% uses: []
+% mentions: [def:chaincond, reductions/rem:ordering]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.compile:chain_record
+% lean:
+% ---
+
+The order rule (X1) of Definition~\ref{def:chaincond} is carried by the shape
+of the record, two segments, and the constraint entries each link transports
+are read off its slots (C5); the reason a \tref{source link} may not follow a
+receiver link is \xref{reductions/rem:ordering}.
+
+\begin{requirement}
+\label{req:chain-record-slots}
+The engine emits the chain record (\iface{reduction_chain_record}) with both
+of its segments, the \tref{source segment} and the \tref{receiver segment}, and on
+every link with both its constraint slot and its licence slot, each whether
+or not it is empty. This includes \tref{Band A}, where the source segment is
+empty and the receiver segment is one identity link with both slots empty.
+\end{requirement}

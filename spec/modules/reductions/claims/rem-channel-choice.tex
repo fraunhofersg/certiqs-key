@@ -1,0 +1,50 @@
+% ---
+% id: reductions/rem:channel-choice
+% kind: rem
+% title: "Soundness relative to the channel, fixed by the carried tuple"
+% summary: >-
+%   Channels realizing one squashing relation can have different reachable
+%   sets, so constraints sound for different channels may not be combined. A
+%   constraint built from an operator in the carried tuple has the same
+%   pull-back for every realizing channel.
+% prominence: standard
+% status: accepted
+% uses: [lem:statistics, thm:transfer, cor:sound, def:squashing, cor:transported]
+% mentions: [req:carried-tuple-emitted]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:channel-choice}
+The relation $M\dsq F$ asserts that \emph{some} squashing channel exists, and
+different channels realizing it have different reachable sets: by
+Lemma~\ref{lem:statistics}, two channels realizing
+$(M;O)\dsq(F;\hat O)$ agree only on
+$V\coloneqq\operatorname{span}\big(\{F_v\}\cup\{\hat O_k\}\big)$, and nothing
+forces $\Srch_E(\Lambda)=\Srch_E(\Lambda')$. Three consequences follow.
+\emph{(a)} Theorem~\ref{thm:transfer} needs only one channel, and every
+realizing channel gives a valid conclusion, since $\Lambda$ does not appear in
+it. \emph{(b)} There is something to choose between them for
+\emph{tightness}: the reachable sets are in general incomparable, so which
+channel is used decides which constraints are available. \emph{(c)}
+Corollary~\ref{cor:sound}\,(ii)--(iii) therefore require a \emph{common}
+channel: constraints sound for $\Lambda$ and constraints sound for $\Lambda'$
+may have an intersection excluding every state reachable under either, and
+imposing them together would void Theorem~\ref{thm:transfer} exactly as an
+unsound constraint does.
+
+What removes the hazard is the tuple of \tref{carried operators} of
+Definition~\ref{def:squashing}. If $\hat O^{(n)}$ lies in the span of the
+$n$-fold products of elements of $V$, then
+$(\Lambda^{\dagger})^{\otimes n}(\hat O^{(n)})
+=(\Lambda'^{\dagger})^{\otimes n}(\hat O^{(n)})$, since the adjoints act
+factorwise and agree on $V$; the pull-back, and with it every constraint
+Corollary~\ref{cor:transported} builds from it, is then the same for every
+realizing channel. This is what the tuple is for: listing an operator in the
+relation promotes a constraint that would otherwise be tied to one construction
+into one that belongs to the relation itself, which is why the emitted
+constraints are built from the tuple
+(Requirement~\ref{req:carried-tuple-emitted}).
+\end{remark}

@@ -1,0 +1,136 @@
+% ---
+% id: reductions/wpfss/rem:receiver-imports
+% kind: rem
+% title: "Supplier assumptions behind the receiver imports"
+% summary: >-
+%   The receiver facts imported here are the claims [[prop:route]] (iv) cites,
+%   and the emitted ledger names every supplier assumption they rest on and
+%   may name more. A-EIG enters only at an exact window evaluated in floating
+%   point; acyclicity needs no supplier assumption.
+% prominence: standard
+% status: accepted
+% uses: [receiver/detector-imperfections/prop:efficiency-normalization, receiver/thm:click-povm, receiver/thm:coarse-graining, receiver/thm:emitted-bound, receiver/def:slot, receiver/prop:slotvalid, receiver/detector-imperfections/def:darkadm, receiver/detector-imperfections/thm:dark-counts, receiver/def:setting-family, receiver/cor:unconditioned-family, prop:route, lem:descent, def:weight-route]
+% mentions: [cor:normalized-flat, receiver/def:pmcex, receiver/ass:eig, receiver/thm:enclosed-weight, receiver/req:evaluation-label, receiver/def:residuals, receiver/detector-imperfections/def:darktol, receiver/def:graph, receiver/def:evaluation-model, reductions/ass:recv, reductions/def:exactadm, rem:darkcompose, receiver/thm:compilation-well-defined, receiver/cor:compiled-instrument, receiver/def:instrument, receiver/thm:exact-and-evaluated, receiver/component-catalogue/thm:catalogue-admissibility, foundations/req:tolerance-scope, foundations/req:norm-conversion, req:supplier-eig-record, req:column-stochastic-refusal, req:descent-decided-exactly, reductions/req:supplier-ledger-pass-through, reductions/req:supplier-presence-rules, reductions/req:supplier-version-accepted, req:supplier-version, reductions/req:supplier-ledger-refusals, reductions/req:recv-row-provenance]
+% assumes: [A-RECV]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:receiver-imports}
+The receiver claims this submodule imports are those
+Proposition~\ref{prop:route}\,(iv) cites for the hypotheses on the
+supplier's objects, read under Assumption~\ref{ass:recv} or, for an
+artifact the run built itself from a declaration with a model admissible
+exactly and with every weight evaluated rigorously, under
+Requirement~\ref{req:recv-row-provenance}, which shows them to hold of its
+numbers under the supplier's own ledger. They are read at
+the module version the artifact names, an accepted version: for an
+artifact from outside the run by Assumption~\ref{ass:recv}\,(i) and
+Requirement~\ref{req:supplier-version-accepted}, and for one the run built
+as the effective status of the receiver's claims in the run's closure, which
+the record of the run reports (Requirement~\ref{req:recv-row-provenance}),
+whether or not the row is omitted; there each resolves and
+reads as Proposition~\ref{prop:route}\,(iv) cites it; for the
+\tref[per-setting weight]{per-setting weights} that version must state them
+(Requirement~\ref{req:supplier-version}). Where the receiver is compiled at
+its \tref{normalized station}, Corollary~\ref{cor:normalized-flat} imports in
+addition \xref{receiver/detector-imperfections/prop:efficiency-normalization},
+read under the same assumption. The claims named here are
+dependencies of this remark too, so the supplier assumptions the imported
+facts rest on are the assumption closure of those dependencies.
+
+\emph{A-EIG is invoked conditionally.} The supplier's \tref{evaluation model}
+(\xref{receiver/def:evaluation-model}), a restriction the
+supplier places on itself and not an assumption, governs
+\xref{receiver/thm:exact-and-evaluated} and the evaluation of the weights of
+\xref{receiver/thm:emitted-bound}, hence the weights $p^{(t)}_i$: each is
+evaluated in floating point or, where the supplier encloses its port Grams,
+at a setting where the needed enclosures are formed (the artifact records
+which), rigorously, and its artifact says which
+(\xref{receiver/req:evaluation-label}). A-EIG
+supports \xref{receiver/thm:exact-and-evaluated}\,(v) and \emph{the
+exact-window branch} of \xref{receiver/thm:emitted-bound}, hence the emitted
+$p^{(t)}_{\mc}$ itself at a setting carrying a depth whose weight the supplier
+evaluated in floating point. The supplier's
+\xref{receiver/ass:eig} is asserted only at a setting whose declaration
+carries an \tref{exact-window depth} $m^{\ast}_t$ (its
+\xref{receiver/def:pmcex}) and whose weight is so evaluated; where no depth is
+declared, or the weight is the supplier's \tref{enclosed weight}
+(\xref{receiver/thm:enclosed-weight}), the emitted value does not depend on
+it. \emph{This submodule can neither verify nor improve
+it}, and its declared \tref{eigenvalue slack} $\varepsilon_{\mathrm{eig}}$,
+which A-EIG assumes bounds the overestimate in the supplier's floating-point
+evaluation of an exact block minimum eigenvalue, is declared separately and
+never derived from the \tref{declared tolerance}
+(\xref{foundations/req:tolerance-scope}\,(iii)), nor from anything else this
+module reads. Its invocation record travels with its key
+(Requirement~\ref{req:supplier-eig-record}), and a caller that wants it out of
+the chain declares no exact window, or a receiver whose port Grams the
+supplier encloses and at every setting of which the weight is evaluated
+rigorously, as the artifact records.
+
+\emph{The emitted ledger names every assumption of that closure, and may name
+more.} The entry of the emitted assumption ledger for
+Assumption~\ref{ass:recv} is the supplier's own ledger, not that closure
+(Requirements~\ref{req:supplier-ledger-pass-through}
+and~\ref{req:supplier-presence-rules}). The two answer two questions: the
+closure says which of the supplier's assumptions the facts imported here rest
+on; the ledger passes on what the supplier asserts of the artifact it
+supplied. Where Requirement~\ref{req:recv-row-provenance} omits that row,
+the supplier's ledger reaches the record of the run as the artifact's own,
+which the run holds. Under the supplier's presence rules every row is emitted on every
+artifact, so no key is conditional. The ledger may name an assumption the
+closure is without, which names an assumption more than the imported facts
+need. \emph{No assumption that a fact imported here rests on at the
+declaration is missing from it}: the supplier's rules omit no key, and an
+artifact whose ledger lacks a key they make present is refused
+(Requirement~\ref{req:supplier-ledger-refusals}).
+
+\emph{Acyclicity needs no supplier assumption.} The acyclicity of a supplier's element graph is
+condition (E2) of \xref{receiver/def:graph}, a well-formedness condition on a
+supplier declaration that presents its receiver as an element graph, its
+route (iii), the route on which \xref{receiver/thm:compilation-well-defined}
+and \xref{receiver/component-catalogue/thm:catalogue-admissibility} produce
+the blocks consumed here, so a declaration whose element graph has a cycle is
+refused before any block exists and produces no blocks to consume. A
+declaration on the supplier's route (i) or (ii) declares no element graph at
+all. None of the claims imported here rests on a graph: each is stated of the
+supplier's \tref{receiver instrument} tuple (\xref{receiver/def:instrument}),
+the object on which its three input routes converge, or of an object more
+abstract still: a \tref{setting family} for \xref{receiver/thm:emitted-bound}
+and for the slot claims that read it, a dark-count channel for
+\xref{receiver/detector-imperfections/def:darkadm} and
+\xref{receiver/detector-imperfections/thm:dark-counts}. The supplier's
+\xref{receiver/cor:compiled-instrument}, which states that a well-formed
+\tref{declared element graph} with a \tref{declared mode space}, an input
+split and a port map \emph{is} a receiver instrument whose matrix is the
+compiled one, is deliberately not a dependency of the supplier's emitting
+claims, which are true of every receiver instrument and therefore on every one
+of its three routes.
+
+\emph{What is deliberately not imported: the supplier's own admission
+procedure for a declared $R$.} The receiver decides (D1) and (D2) for a
+\emph{declared} matrix at its own \tref{receiver tolerances} $\varepsilon_4$
+and $\varepsilon_2$ (\xref{receiver/detector-imperfections/def:darktol}) and
+carries what that widening costs in the capped coefficient $\bar r$ and the
+correction $\delta_{\dc}$ of its composed inequality. What this submodule
+imports is the \emph{definition} and not that procedure: it decides (D1) and
+(D2) on the declared matrix \emph{exactly} and refuses everything else
+(Requirements~\ref{req:column-stochastic-refusal}
+and~\ref{req:descent-decided-exactly}), so every declaration reaching a claim
+of this submodule satisfies (D1) and (D2) outright and
+\xref{receiver/detector-imperfections/thm:dark-counts} applies to it verbatim
+(Remark~\ref{rem:darkcompose}). \emph{Its residual budgets are different
+declared numbers and this submodule reads none of them}: the supplier's
+$r_1,\dots,r_6$ and the Hermiticity half of its
+\tref{Hermiticity-and-positivity defect} are stated in the \emph{spectral}
+norm (\xref{receiver/def:residuals}) and are decided
+against its own $\varepsilon_2,\varepsilon_4$, while this module decides each
+of its own conditions at exactly zero (Definition~\ref{def:exactadm}) and
+carries no number to compare them with. \emph{No conversion between the two is
+performed here and none is needed}; an instance that sizes a supplier budget
+performs one explicitly, with its dimension factor written down, on its own
+authority (\xref{foundations/req:norm-conversion}).
+\end{remark}

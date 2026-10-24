@@ -1,0 +1,196 @@
+% ---
+% id: meat-core/cor:separate-executions
+% kind: cor
+% title: "Security parameters of separate executions add"
+% summary: >-
+%   N executions that share no key and no device state and leave their keys
+%   unused until all have ended, run against one adversary, are together
+%   (ε_1 + ... + ε_N)-secure for the joint ideal map. A key reused from one
+%   execution in another is not covered.
+% user_statement: >-
+%   Running several executions against the same attacker, one after another
+%   or at the same time, costs the sum of their security parameters. If each
+%   execution i is secure with parameter ε_i and [[A-SEPARATE]] holds, whose
+%   conditions include that their number and parameters are fixed before the
+%   first starts, that they share no key material and no device state, and
+%   that their keys stay unused until all have ended, then all their keys
+%   together are within ε_1 + ... + ε_N of independent ideal keys. Parameters
+%   chosen from an earlier execution's data are not covered, nor is a key
+%   from one execution reused in another, for example to authenticate it.
+% prominence: standard
+% status: accepted
+% uses: [cor:composed-security, thm:keylength, thm:accumulated-entropy, thm:constrained-accumulation, lem:ev-correctness, def:roundmodel, def:execution-end]
+% mentions: [protocol-compiler/ass:atk]
+% assumes: [A-SEPARATE]
+% refs:
+%   - "tupkary2026decoy, Sec. 3.3, Def. 3.8, Eqs. (13)-(17)"
+%   - "portmann2022security, Sec. II.E"
+% provenance: newly-derived
+% lean:
+% ---
+
+Composable frameworks add the errors of protocols composed in sequence or
+in parallel \cite[Sec.~II.E]{portmann2022security}; that is the motivation
+for the trace-distance statement below, which is derived without it. Each
+execution's parameter holds against every attack on it, and the other
+executions, which touch none of its registers, are part of one such
+attack. The per-execution ideal maps are then applied one at a time, each
+step costing that execution's parameter.
+
+\begin{corollary}\label{cor:separate-executions}
+Let executions $1,\dots,N$ of the protocol run against one adversary, in
+sequence, concurrently or interleaved, the adversary carrying information
+from each to the others. For each $i$ let the hypotheses of
+Corollary~\ref{cor:composed-security}\,(iii) hold for execution~$i$, with
+its parameters $\epa^{(i)}$, $\eev^{(i)}$ and
+$\varepsilon_{\mathrm{auth}}^{(i)}$. Write
+$K^{(i)}\coloneqq K_A^{(i)}K_B^{(i)}$ for its key registers,
+$\mathcal R^{(i)}$ for the map $\mathcal R_{\mathrm{ideal}}$ of
+\cite[Sec.~3.3, Eqs.~(13)--(17)]{tupkary2026decoy} on $K^{(i)}$, and
+$\varepsilon_i\coloneqq\epa^{(i)}+\eev^{(i)}+2\varepsilon_{\mathrm{auth}}^{(i)}$.
+Let Assumption~\ref{ass:separate-executions} hold. Then for every attack on
+the $N$ executions under which each of them reaches its
+\tref{end of an execution} (Definition~\ref{def:execution-end}) on every
+branch, with $\rho$ the joint state of $K^{(1)}\cdots K^{(N)}$ and the
+adversary's information $E$ at the end of the last of them,
+\begin{equation}\label{eq:separate-executions}
+  \frac12\Big\|\rho-\big(\mathcal R^{(1)}\otimes\cdots\otimes
+  \mathcal R^{(N)}\otimes\idmap_E\big)(\rho)\Big\|_1
+  \le\sum_{i=1}^{N}\varepsilon_i .
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+Fix an attack on the $N$ executions under which each of them reaches its
+end on every branch. For each $i$ let $t_i$ be the
+\tref{end of an execution} (Definition~\ref{def:execution-end}) for
+execution~$i$, and let
+$t\coloneqq\max_i t_i$. For a time $s$ and an execution $i$, write
+$Y_i(s)$ for the adversary's registers at $s$ together with every register
+of the honest parties of every execution $j\ne i$ at $s$. By
+Assumption~\ref{ass:separate-executions}\,(iii), at $t$ the register
+$K^{(j)}$ of every execution holds that execution's output.
+
+The times $t_i$ and $t$ are random and may depend on the attack. The joint
+process is therefore read branch by branch over the classical record of
+when each party ends (where the end times are bounded, equivalently with
+idle steps that give every branch one schedule); the states named below
+are averaged over the branches. That record lies in $Y_i$: the key holder of execution~$i$ ends
+by sending a message the adversary sees, and the partner when the
+adversary delivers it (Definition~\ref{def:execution-end}). By
+Assumption~\ref{ass:separate-executions}\,(ii) and (iii), the evolution
+after execution~$i$ has ended depends on that execution's history only
+through $Y_i$. The restriction to attacks under which each execution
+reaches its end on every branch is the conjunction of the restrictions
+that Corollary~\ref{cor:composed-security}\,(iii) already makes for each
+execution, whose bound concerns the output state of a run that ends.
+
+\emph{Step 1: one execution against the others.} Fix $i$. Let
+$\mathcal E_i$ be the adversary whose initial register holds the given
+adversary's initial register together with the initial registers of the
+honest parties of every execution $j\ne i$ (their pre-shared keys, their
+local randomness and the initial states of their devices), in their joint
+initial state, and who carries out, at the times and in the order of the
+given attack, the given adversary's operations and every operation of the
+honest parties of the executions $j\ne i$. By
+Assumption~\ref{ass:separate-executions}\,(ii), no operation of the honest
+parties of another execution acts on a register of execution~$i$'s honest
+parties, none of theirs acts on a register of another execution, and
+execution~$i$ meets the other executions only through systems and
+classical channels the adversary has access to. The given adversary's own
+operations reach execution~$i$ only through those systems and channels,
+its attack interface, as in any attack on it. So
+$\mathcal E_i$ is an attack on execution~$i$ alone, whose registers at time
+$s$ are $Y_i(s)$, and execution~$i$ run against $\mathcal E_i$ is the same
+channel, applied to the same initial state, as the $N$ executions against
+the given adversary, with the registers grouped differently.
+
+Corollary~\ref{cor:composed-security}\,(iii) holds for every attack that
+its premises admit, whatever the dimension of the adversary's registers, and
+it restricts the adversary's initial register and its state by nothing
+else. Through Theorem~\ref{thm:keylength} it rests on
+Theorem~\ref{thm:accumulated-entropy}, whose initial state $\omega^0$ is
+arbitrary on the adversary's initial register $E_0$ of the
+\tref{round model} (Definition~\ref{def:roundmodel}), with Alice's marginal
+fixed in \tref{trusted-source mode}; in the constrained branch of
+Theorem~\ref{thm:keylength} it rests on
+Theorem~\ref{thm:constrained-accumulation}, whose hypotheses include those
+of Theorem~\ref{thm:accumulated-entropy} and so leave $\omega^0$ as
+arbitrary, the \tref{attack sequence} being $\CList$-admissible. It also
+rests on Lemma~\ref{lem:ev-correctness}, which holds for every attack. The
+initial register of $\mathcal E_i$, however it
+is correlated with the given adversary's and the other executions'
+systems, is such an $E_0$. The premises are the assumptions on which
+Corollary~\ref{cor:composed-security}\,(iii) rests for execution~$i$, and
+by Assumption~\ref{ass:separate-executions}\,(iv) each of them holds for
+execution~$i$ against $\mathcal E_i$. The registers of $\mathcal E_i$,
+which hold the other executions' registers, may be of any dimension, which
+the corollary allows. Where a constraint list is declared, A-ATK
+(\xref{protocol-compiler/ass:atk}) states its reduction over the
+\tref[licensed attack set]{licensed attack sets} of
+Definition~\ref{def:roundmodel}, defined for finite-dimensional registers,
+and is asked, with the corollary's other premises, of the all-at-once attacks
+with finite registers through which the corollary reaches $\mathcal E_i$.
+Clause (iv) asserts each of these, and the proof uses them only through
+Corollary~\ref{cor:composed-security}\,(iii). By
+Assumption~\ref{ass:separate-executions}\,(i) the parameters of
+execution~$i$, and with them $\varepsilon_i$, are fixed before any
+execution starts and do not depend on the attack.
+
+Corollary~\ref{cor:composed-security}\,(iii) therefore applies to
+execution~$i$ against $\mathcal E_i$, whose information when execution~$i$
+has ended is $Y_i(t_i)$. With $\sigma_i$ the state of $K^{(i)}Y_i(t_i)$ at
+$t_i$, \eqref{eq:composed-auth} gives
+\begin{equation*}
+  \frac12\big\|\sigma_i-(\mathcal R^{(i)}\otimes\idmap)(\sigma_i)\big\|_1
+  \le\varepsilon_i .
+\end{equation*}
+From $t_i$ to $t$, nothing acts on $K^{(i)}$ and no information about
+another register of execution~$i$'s honest parties leaves their
+laboratories (Assumption~\ref{ass:separate-executions}\,(iii)); those
+parties, having ended, act on nothing; and no operation of the honest
+parties of another execution acts on a register of execution~$i$
+(Assumption~\ref{ass:separate-executions}\,(ii)). What happens between
+$t_i$ and $t$ therefore acts on $Y_i$ alone and takes no input from a
+register of execution~$i$: it is a channel $\Phi_i$ from $Y_i(t_i)$ to
+$Y_i(t)$, and the state of $K^{(i)}Y_i(t)$ at $t$ is
+$(\idmap_{K^{(i)}}\otimes\Phi_i)(\sigma_i)$. The registers $K^{(j)}$,
+$j\ne i$, and $E$ at $t$ belong to $Y_i(t)$, so
+$\rho=(\idmap_{K^{(i)}}\otimes\Lambda_i)(\sigma_i)$ with $\Lambda_i$ the
+channel $\Phi_i$ followed by the partial trace onto them. This channel acts
+on registers other than $K^{(i)}$, so it commutes with
+$\mathcal R^{(i)}\otimes\idmap$, and a channel does not increase the trace
+norm of a Hermitian operator. Hence
+\begin{equation}\label{eq:separate-one}
+  \frac12\big\|\rho-(\mathcal R^{(i)}\otimes\idmap)(\rho)\big\|_1
+  \le\varepsilon_i\qquad(i=1,\dots,N).
+\end{equation}
+
+\emph{Step 2: the hybrid.} Put $\mathcal T_0\coloneqq\idmap$ and
+$\mathcal T_i\coloneqq\mathcal R^{(1)}\otimes\cdots\otimes
+\mathcal R^{(i)}\otimes\idmap$ for $i=1,\dots,N$, the identity acting on
+every other register. The maps $\mathcal R^{(i)}$ act on the disjoint
+registers $K^{(i)}$, so
+$\mathcal T_i=\mathcal T_{i-1}\circ(\mathcal R^{(i)}\otimes\idmap)$, and
+$\mathcal T_N$ is the map of \eqref{eq:separate-executions}. By linearity,
+\[
+  \rho-\mathcal T_N(\rho)
+  =\sum_{i=1}^{N}\big(\mathcal T_{i-1}(\rho)-\mathcal T_i(\rho)\big)
+  =\sum_{i=1}^{N}\mathcal T_{i-1}\big(\rho-(\mathcal R^{(i)}\otimes
+  \idmap)(\rho)\big).
+\]
+Each $\mathcal R^{(i)}$ is a channel
+\cite[Sec.~3.3, Eqs.~(13), (17)]{tupkary2026decoy}, so each
+$\mathcal T_{i-1}$ is a channel and does not increase the trace norm of the
+Hermitian operator it is applied to. The triangle inequality and
+\eqref{eq:separate-one} give \eqref{eq:separate-executions}.
+
+By \cite[Sec.~3.3, Eqs.~(14), (16), (17)]{tupkary2026decoy},
+$\mathcal R^{(i)}$ replaces, for each pair of key lengths of execution~$i$,
+its key registers by the ideal keys of that pair, independent of every other
+register. Applied for one execution after another, $\mathcal T_N(\rho)$ is
+therefore the state in which, for each tuple of the executions' pairs of key
+lengths, with its probability under $\rho$, the key registers of every
+execution hold the ideal keys of its pair, independent of each other and of
+$E$: the ideal of the $N$ executions together.
+\end{proof}

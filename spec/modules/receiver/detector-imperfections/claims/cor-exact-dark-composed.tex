@@ -1,0 +1,99 @@
+% ---
+% id: receiver/detector-imperfections/cor:exact-dark-composed
+% kind: cor
+% title: "The dark-composed reference, enclosed or exact"
+% summary: >-
+%   A dark-count channel has rational entries and mixes whole elements with
+%   non-negative weights, so enclosures of the click-pattern blocks give
+%   enclosures of the dark-composed blocks, exact where theirs are. With
+%   Hermitian centres they make the dark-composed blocks up to the cutoff a reference.
+% prominence: standard
+% status: accepted
+% uses: [def:dark-composed, def:darkadm, receiver/thm:enclosed-blocks, receiver/def:complex-enclosure, receiver/lem:enclosure-arithmetic, foundations/def:exact-reference, foundations/def:sector-map, foundations/def:binary64]
+% mentions: [receiver/thm:exact-blocks]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A dark count acts on the recorded click pattern, not on the light, so it
+mixes whole elements with scalar weights. An enclosure therefore passes
+through it with the same weights, and an exact one stays exact. Item~(iii)
+applies the corollary to the unconditioned receiver; for a setting family a
+submodule constructs, the hypothesis of item~(i) is the enclosure of its
+blocks that the submodule states. Where the click-pattern blocks
+are enclosed exactly up to one photon (Theorem~\ref{thm:exact-blocks}), so are
+the dark-composed ones.
+
+\begin{corollary}\label{cor:exact-dark-composed}
+Let $\{\widetilde M_{S|t}\}$ and $\{\widetilde F_{v|t}\}$ be the
+\tref{dark-composed family} of POVMs $\{M_{S|t}\}$ on
+$\mathcal{F}(\mathbb{C}^{I})$ (Definition~\ref{def:dark-composed}), with a
+\tref{dark-count channel} $R$ whose entries are rational.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item Suppose that for some $N\ge0$ every block $\blk{M}{\eqn}_{S|t}$ with
+  $n\le N$, read in the occupation basis of $\Symn{n}(\mathbb{C}^{I})$ in an
+  order fixed for that block, has a \tref{complex enclosure}
+  $\big(C^{(n)}_{S|t},r^{(n)}_{S|t}\big)$
+  (Definition~\ref{def:complex-enclosure}). Then
+  \begin{equation}\label{eq:exact-dark}
+    \Big(\sum_{S'\subseteq[K]}R_{\cg^{-1}(v)|S'}\,C^{(n)}_{S'|t},\
+         \sum_{S'\subseteq[K]}R_{\cg^{-1}(v)|S'}\,r^{(n)}_{S'|t}\Big)
+  \end{equation}
+  is a complex enclosure of $\blk{\widetilde F}{\eqn}_{v|t}$, exact on every
+  entry on which every $r^{(n)}_{S'|t}$ with $R_{\cg^{-1}(v)|S'}\neq0$ is
+  zero; the same holds for $\blk{\widetilde M}{\eqn}_{S|t}$, with $R_{S|S'}$
+  in place of $R_{\cg^{-1}(v)|S'}$.
+\item Made Hermitian-centred by
+  Lemma~\ref{lem:enclosure-arithmetic}\,(v), the enclosures of (i) make
+  $\{\widetilde F_{v|t}\}_v$, restricted to the blocks $n\le N$, a
+  \tref{reference} with constant $1$
+  (\xref{foundations/def:exact-reference}) at every setting, against every
+  \tref{sector map} whose blocks are the photon numbers $n=0,\dots,N$ in
+  increasing order, with any block kind and identifiers, each block read in
+  its fixed order; it is an \tref{exact reference} when every radius is zero.
+  The same holds for $\{\widetilde M_{S|t}\}_S$.
+\item For a \tref{receiver instrument} with $\InpS=\varnothing$, the
+  hypothesis of (i) holds with $\Tset=\{\off\}$, $M_{S|\off}=M_S$ and the
+  enclosures of Theorem~\ref{thm:enclosed-blocks}\,(ii), at every $N$.
+\item $R$ has rational entries on the \tref{generated dark-count route},
+  whose $p_{\dc|k}$ are declared values, and on the declared route, whose
+  entries are declared values; a declared value is the dyadic rational it
+  denotes (\xref{foundations/def:binary64}\,(iii)).
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(i) By Definition~\ref{def:dark-composed},
+$\blk{\widetilde F}{\eqn}_{v|t}=\sum_{S'}R_{\cg^{-1}(v)|S'}\blk{M}{\eqn}_{S'|t}$
+with non-negative rational coefficients $R_{\cg^{-1}(v)|S'}$, a sum of
+entries of $R$. Entry by entry,
+\begin{equation*}
+  \Big\lvert\big(\blk{\widetilde F}{\eqn}_{v|t}\big)_{il}
+   -\sum_{S'}R_{\cg^{-1}(v)|S'}\big(C^{(n)}_{S'|t}\big)_{il}\Big\rvert
+  \le\sum_{S'}R_{\cg^{-1}(v)|S'}\,\big(r^{(n)}_{S'|t}\big)_{il} ,
+\end{equation*}
+the centre has entries in $\mathbb{Q}(i)$, and the radius is a non-negative
+rational, zero exactly where every term with a non-zero coefficient has radius
+zero. The statement for $\widetilde M_{S|t}$ is the same computation with
+$\cg$ the identity.
+
+(ii) $\{\widetilde F_{v|t}\}_v$ is a POVM every element of which commutes with
+the photon number (Definition~\ref{def:dark-composed}), so each block is
+Hermitian and positive semidefinite and the blocks of one $n$ sum to the
+identity. Lemma~\ref{lem:enclosure-arithmetic}\,(v) turns the enclosures of
+(i) into entrywise enclosures with Hermitian Gaussian-rational centres, exact
+where both an entry and its transposed entry were. The block of photon number
+$n$ has the dimension $\binom{|I|+n-1}{n}$ of $\Symn{n}(\mathbb{C}^{I})$, and
+the constant $1$ is a positive declared value. These are the conditions of
+\xref{foundations/def:exact-reference}; the block kind and identifiers enter
+nowhere.
+
+(iii) Theorem~\ref{thm:enclosed-blocks}\,(ii) gives complex enclosures of
+every $\blk{M}{\eqn}_S$, formed in each block's fixed order.
+
+(iv) Each entry of \eqref{eq:darkR} is a product of the numbers $p_{\dc|k}$
+and $1-p_{\dc|k}$, rational when the $p_{\dc|k}$ are, and a declared value
+denotes the dyadic rational it is.
+\end{proof}

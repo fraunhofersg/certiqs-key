@@ -1,0 +1,74 @@
+% ---
+% id: meat-core/rem:representability-ceiling
+% kind: rem
+% title: "The representability ceiling"
+% summary: >-
+%   The condition N ≤ 53 + log₂ϵ of [[prop:optol-nobound]] is what exact
+%   admissibility forces on a two-outcome binary64 family. It caps N at 52,
+%   attained at ϵ = 1/2, and belongs to the number model, not to the map from
+%   the measurement to the rate.
+% prominence: standard
+% status: accepted
+% uses: [def:declaration, prop:value-range]
+% mentions: [prop:optol-nobound, rem:classes, req:infinite-value]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:representability-ceiling}
+Proposition~\ref{prop:optol-nobound} needs a declared family $(g_0,g_1)$
+with $g_0+g_1=1$ and both entries binary64: exact admissibility is an
+identity of the declared numbers (Definition~\ref{def:declaration}, the
+exact-admissibility paragraph), not of the reals they approximate, and it
+additionally requires the one addition of \eqref{eq:declorder} to be
+exact. The smaller entry $g_0$ satisfies $g_0\le\tfrac12$, so
+$g_1=1-g_0$ lies in the binade $[\tfrac12,1)$, the binary64 numbers with
+exponent $-1$, where consecutive numbers are $2^{-53}$ apart (the unit in
+the last place); hence $g_1$ is representable only if $g_0$ is a multiple
+of $2^{-53}$, and $g_0>0$ makes that $g_0\ge2^{-53}$. With
+$g_0=\epsilon2^{-N}$ this reads $\epsilon2^{-N}\ge2^{-53}$, that is
+$2^{N}\le\epsilon\,2^{53}$, the inequality the proposition assumes of
+$N$ and $\epsilon$; since $\epsilon\le\tfrac12$, it gives $N\le52$. The
+value is attained: $\epsilon=\tfrac12$ and $N=52$ give
+$(2^{-53},1-2^{-53})$, with the addition exact. The proof builds its
+families at the largest power of two $\epsilon'\le\epsilon$, with
+$g_0=\epsilon'2^{-N}$, and loses no $N$ by it: $2^{N-53}$ is itself a
+power of two, so the inequality holds at $\epsilon'$ exactly when it
+holds at $\epsilon$.
+
+The ceiling is a property of the number model at these fixed dimensions,
+not of the map $\{F_v\}\mapsto\hlow$: in exact real arithmetic the same
+construction runs at every $B>0$, and it is the number model that stops
+it. What the number model does is cap how much of the gap a family of
+finite value, $g_0>0$, can express, at $\frac{\alpha}{\alpha-1}N$ with
+$2^{N}\le\epsilon\,2^{53}$; the exactly admissible family $(0,1)$ has the
+value $\hlow=+\infty$ (Proposition~\ref{prop:value-range}\,(iv)) and carries
+no key-length claim (Requirement~\ref{req:infinite-value}), so it is set
+aside. At $\epsilon=2^{-40}$ the instance still
+delivers $N=13$, thirteen bits per round or more, and it runs down to
+$\epsilon=2^{-52}$, where $N=1$ still gives $\frac{\alpha}{\alpha-1}>1$
+bit per round. At the instance's $d_Z=1$ both exceed
+$\log_2|\Zset|=1$ bit per round, the entropy-part ceiling of
+Proposition~\ref{prop:value-range}\,(ii): more than the entropy terms of $\hlow$ can
+contribute at any declaration with $d_Z=1$, the rest of $\hlow$ being the
+acceptance-test penalty. The comparison is the instance's: at a larger
+$d_Z$ the entropy-part ceiling $\log_2(d_Z+1)$ can exceed a gap of that
+size (at $\alpha=1.9$, $d_Z=7$ and $N=1$ it is $3$, against
+$\frac{\alpha}{\alpha-1}N\approx2.1$). The representability ceiling
+shapes part~(ii) of the proposition, which rules out allowances below the
+exhibited scale rather than every allowance. It shapes as well
+Remark~\ref{rem:classes},
+which cites part~(i) to explain why a tolerance may refuse the deletion of
+a sector but never license one, and which states the gap there as
+$\frac{\alpha}{\alpha-1}N$ with $N$ up to $52$. The conclusion that
+matters is what the bounded statement still delivers: on the data of
+part~(i), part~(ii) with $N=1$ refutes, at every
+$\epsilon\in[2^{-52},\tfrac12]$, every $\mathrm{err}$ below
+$\frac{\alpha}{\alpha-1}$, so every $\mathrm{err}$ at or below that
+entropy-part ceiling of $1$ bit per round. The cap moves the refuted range
+from every allowance to the allowances below
+$\frac{\alpha}{\alpha-1}\cdot52$, still far above that ceiling, and no
+rule of this module turns on the difference.
+\end{remark}

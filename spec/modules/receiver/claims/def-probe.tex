@@ -1,0 +1,43 @@
+% ---
+% id: receiver/def:probe
+% kind: def
+% title: "Probe declaration"
+% summary: >-
+%   A probe declaration is a finite alphabet of probe settings, vacuum among
+%   them, with a declared probe state per setting that is diagonal in the
+%   occupation basis. In the Gaussian tier each state is a product of thermal
+%   states given by their mean photon numbers.
+% prominence: standard
+% status: accepted
+% uses: [def:instrument, def:fock]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A probe setting is classical data of known bias that the receiver chooses
+privately in each round; for a detector-attack countermeasure it fixes
+whether, and how brightly, the probe light shines. The bias, the weights $q_t$ of the shared
+notation, belongs to the protocol declaration, and this contract uses only the
+probe state of each setting. The word tier names a class of probe states here
+and is unrelated to the tiers a reported key rate carries.
+
+\begin{definition}\label{def:probe}
+A \term[A finite alphabet of probe settings, vacuum among them, with a declared occupation-diagonal state on the declared source modes for each setting.]{probe declaration} is a pair $\big(\Tset,\{\rho^{(t)}\}_{t\in\Tset}\big)$
+in which $\Tset$ is a finite non-empty alphabet of probe settings (including
+the setting $\off$, whose state is vacuum) and, for each $t$, $\rho^{(t)}$ is a
+declared state on $\mathcal{F}(\mathbb{C}^{\InpS})$ that is
+\term[Said of a state on the probe Fock space that is diagonal in its occupation basis.]{occupation-diagonal}: diagonal in the occupation basis of
+$\mathcal{F}(\mathbb{C}^{\InpS})$ (diagonal in the Fock basis). In the
+\term[The probe declarations whose states are products of single-mode thermal states, vacuum included.]{Gaussian tier} each $\rho^{(t)}$ is a zero-mean Gaussian state with
+diagonal normally-ordered second-moment matrix
+$\Gamma^{(t)}=\operatorname{diag}(\bar n^{(t)}_m)_{m\in\InpS}\succeq0$, that is,
+a product of single-mode thermal states with mean photon numbers
+$\bar n^{(t)}_m\ge0$; $\Gamma^{(t)}=0$ is vacuum. A state of the Gaussian tier
+is occupation-diagonal by construction, a thermal state being diagonal in the
+occupation basis. When $\InpS=\varnothing$ the
+declaration is $\Tset=\{\off\}$ and every statement about conditioning is
+vacuous.
+\end{definition}

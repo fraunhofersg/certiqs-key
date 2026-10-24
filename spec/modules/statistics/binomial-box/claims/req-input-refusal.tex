@@ -1,0 +1,47 @@
+% ---
+% id: statistics/binomial-box/req:input-refusal
+% kind: req
+% title: "Refusal of an input that violates a decidable clause"
+% summary: >-
+%   Before constructing anything the engine decides every condition of an
+%   admissible input its inputs determine; on a violation it reports the first
+%   by its code and emits no acceptance set, repairing nothing. Data not of
+%   the input's form, with the request defaults in place, are refused too.
+% prominence: standard
+% status: implemented
+% uses: [thm:honest-containment, def:endpoint-rule]
+% mentions: [foundations/req:consumer-decides-exactly, req:request-defaults, req:rule-in-force]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.construction:validate_request
+% lean:
+% ---
+
+By Theorem~\ref{thm:honest-containment}\,(iii) the construction never fails on an
+\tref{admissible input}, so every refusal comes from the input; this is
+\xref{foundations/req:consumer-decides-exactly} for the module's own inputs.
+The clause relating the alphabet and the round count to the consuming
+declaration is not among those decided here: it is checked in bundle
+validation
+(\repodoc{spec/architecture.md#36-bundle-validation-is-input-validation-not-a-module}).
+
+\begin{requirement}\label{req:input-refusal}
+Before it constructs anything, the engine decides exactly every condition of
+an admissible input (Definition~\ref{def:endpoint-rule}) that its own inputs
+determine on data of the form that definition fixes. On a violation it emits
+\iface{infeasibility_report} naming the violated condition by its code, the
+first violation in the order the interface fixes, and it emits no
+\iface{acceptance_set}; it repairs no input and puts no default in place of a
+violating value. The codes of the violations (1)--(11) of
+Theorem~\ref{thm:honest-containment}\,(iii) are, in that order,
+\iface{alphabet_empty}, \iface{alphabet_not_finite},
+\iface{rounds_out_of_range}, \iface{honest_not_a_distribution},
+\iface{honest_envelope_not_admissible}, \iface{budget_out_of_range},
+\iface{allocation_negative}, \iface{allocation_exceeds_budget},
+\iface{selector_not_a_subset}, \iface{inputs_not_rational} and
+\iface{endpoint_rule_unknown}. Data that, with the defaults of
+Requirements~\ref{req:request-defaults} and~\ref{req:rule-in-force} in place,
+do not have that form are refused as well: the engine emits no
+\iface{acceptance_set} for them and substitutes nothing for them.
+\end{requirement}

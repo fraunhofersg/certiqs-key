@@ -1,0 +1,128 @@
+% ---
+% id: meat-core/lem:objective-homogeneous
+% kind: lem
+% title: "Positive homogeneity of the objective"
+% summary: >-
+%   Read on the whole cone, the objective, its Choi form and the dropped
+%   objective are positively homogeneous of degree one: scaling the acceptance
+%   vector and the state by c > 0 scales the value by c. This is what lets a
+%   first-order bracket be formed without evaluating the objective.
+% prominence: technical
+% status: accepted
+% uses: [def:declaration, def:admissible-declaration, def:feasible, def:maps, thm:branch-formula, lem:cone-concavity, cor:f-nonpos, def:joint-sectors, lem:joint-sectors, def:dropped, thm:choi, def:untrusted-choi, foundations/def:kl]
+% mentions: [meat-core/frank-wolfe/lem:certified-bracket]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The objective is defined on the acceptance set and the feasible set, but its
+formula makes sense on the whole cone, and there it scales linearly: the
+divergence terms are jointly homogeneous of degree one in their two
+arguments, the statistics are linear, and the pinched trace power is
+homogeneous of degree one because $p\alpha=1$. Differentiated along the point
+itself, this says that the gradient paired with the point is the value at the
+point, which is how the Frank--Wolfe submodule forms a bracket from its two
+linear minima alone (Lemma~\ref{lem:certified-bracket}).
+
+\begin{lemma}\label{lem:objective-homogeneous}
+Let $\alpha\in(1,\infty)$ and let $\Decl$ be a tuple of the form of
+Definition~\ref{def:declaration}, in the basic or the general format, that
+satisfies conditions (i)--(vi) and (viii) of
+Definition~\ref{def:admissible-declaration}; its maps are read below. For
+$\mathbf q\in[0,\infty)^{\Chatset}$ and
+$\omega\in\Pos{A\Qsys}$ block diagonal along the sectors, along the
+\tref[joint sector]{joint sectors} in the general format of
+Definition~\ref{def:declaration}, let $O_{\alpha}(\mathbf q,\omega)$ be the
+right-hand side of \eqref{eq:objective}, with the conventions of
+\xref{foundations/def:kl} at vanishing arguments, and for a
+\tref{dropped set} $\mathcal{D}$ let $K^{\mathcal{D}}_{\hat c}$ and
+$O^{\mathcal{D}}_{\alpha}$ be those of Definition~\ref{def:dropped} at the
+same arguments. These are defined on all such $(\mathbf q,\omega)$, with
+values in $(-\infty,+\infty]$: there $P_{\hat c}(\omega)\ge0$ and
+$0\le K_{\hat c}(\omega)\le K^{\mathcal{D}}_{\hat c}(\omega)$. Let $c>0$,
+and read $c\cdot(+\infty)\coloneqq+\infty$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item $P_{\hat c}(c\omega)=c\,P_{\hat c}(\omega)$ for every
+  $\hat c\in\Chatset$; every sector deficit and every joint-sector deficit
+  satisfies $f(c\sigma)=c\,f(\sigma)$ on its cone; and
+  $K_{\hat c}(c\omega)=c\,K_{\hat c}(\omega)$ and
+  $K^{\mathcal{D}}_{\hat c}(c\omega)=c\,K^{\mathcal{D}}_{\hat c}(\omega)$ for
+  every $\hat c\in\Chkey$.
+\item $O_{\alpha}(c\mathbf q,c\omega)=c\,O_{\alpha}(\mathbf q,\omega)$ and
+  $O^{\mathcal{D}}_{\alpha}(c\mathbf q,c\omega)
+  =c\,O^{\mathcal{D}}_{\alpha}(\mathbf q,\omega)$.
+\item In \tref{trusted-source mode}, with $\chi_{\Qsys}$ the assignment of
+  Theorem~\ref{thm:choi} for a \tref{support frame}, the Choi forms
+  $O^{J}_{\alpha}(\mathbf q,J)\coloneqq O_{\alpha}(\mathbf q,\chi_{\Qsys}(J))$
+  and $O^{J,\mathcal{D}}_{\alpha}(\mathbf q,J)\coloneqq
+  O^{\mathcal{D}}_{\alpha}(\mathbf q,\chi_{\Qsys}(J))$ satisfy
+  $O^{J}_{\alpha}(c\mathbf q,cJ)=c\,O^{J}_{\alpha}(\mathbf q,J)$ and the same
+  for $O^{J,\mathcal{D}}_{\alpha}$, at every $\mathbf q\in[0,\infty)^{\Chatset}$
+  and every $J$ whose blocks are positive semidefinite; in
+  \tref{untrusted-source mode} the Choi form is the state form
+  (Definition~\ref{def:untrusted-choi}) and (ii) is the statement.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{The hypothesis.} The facts cited below, the cone clause of
+Theorem~\ref{thm:branch-formula}, Lemma~\ref{lem:joint-sectors}\,(ii),
+Corollary~\ref{cor:f-nonpos} and Lemma~\ref{lem:cone-concavity}\,(a), are
+stated for \tref[admissible declaration]{admissible declarations} or for the
+cone of a branch space, and
+their proofs read the declaration's maps, positivity and block structure
+only, never condition~(vii) of Definition~\ref{def:admissible-declaration},
+the non-empty feasible set; so they hold of $\Decl$.
+
+\emph{The domain.} $P_{\hat c}(\omega)=\Phimap[\omega](\hat c)$ is linear in
+$\omega$ (\eqref{eq:Phimap}) and non-negative on $\Pos{A\Qsys}$, being a sum
+of traces of products of positive semidefinite operators. The cone clause of
+Theorem~\ref{thm:branch-formula} gives $0\le K_{\hat c}(\omega)$ on the
+whole cone, and in the general format so does Lemma~\ref{lem:joint-sectors}\,(ii)
+through \eqref{eq:K-joint}, each $P_{\hat c,(t,s)}+f_{\hat c,(t,s)}$ being
+non-negative. $K^{\mathcal{D}}_{\hat c}$ is $K_{\hat c}$ with the deficits
+of the pairs of $\mathcal{D}$ removed (\eqref{eq:KD}, \eqref{eq:K-joint}), and
+every deficit is non-positive (Corollary~\ref{cor:f-nonpos},
+Lemma~\ref{lem:joint-sectors}\,(ii)), so $K^{\mathcal{D}}_{\hat c}\ge
+K_{\hat c}\ge0$. So every term $u\log_2\frac uv$ of \eqref{eq:objective} has
+$u\ge0$ and $v\ge0$, and by \xref{foundations/def:kl} it is $0$ when $u=0$,
+$+\infty$ when $u>0=v$, and real otherwise; a sum of finitely many such terms
+with positive coefficients lies in $(-\infty,+\infty]$.
+
+\emph{(i).} Linearity of $\Phimap$ gives the first claim. A sector deficit is
+$f_{\hat c,s}(\sigma)=T(\cG_{\hat c,s}(\sigma))-\tr\cG_{\hat c,s}(\sigma)$
+(\eqref{eq:f-def}) with $T$ the pinched trace power of \eqref{eq:Tcone};
+$\cG_{\hat c,s}$ and the trace are linear, and $T(cX)=c\,T(X)$ by
+Lemma~\ref{lem:cone-concavity}\,(a), so $f_{\hat c,s}(c\sigma)
+=c\,f_{\hat c,s}(\sigma)$. A joint-sector deficit is a restriction of a
+sector deficit (\eqref{eq:joint-deficit}), and
+Lemma~\ref{lem:joint-sectors}\,(ii) states its homogeneity as well. By
+\eqref{eq:fK},
+$K_{\hat c}(\omega)=T(\cG_{\hat c}(\omega))+P_{\hat c}(\omega)
+-\tr\cG_{\hat c}(\omega)$, each term homogeneous by the same two facts; in
+the general format $K_{\hat c}$ and $K^{\mathcal{D}}_{\hat c}$ are $P_{\hat c}$
+plus a sum of joint-sector deficits (\eqref{eq:K-joint}, \eqref{eq:KD}),
+each term homogeneous.
+
+\emph{(ii).} For $u,v\ge0$ and $c>0$,
+$(cu)\log_2\frac{cu}{cv}=c\cdot u\log_2\frac uv$ under the conventions of
+\xref{foundations/def:kl}: both sides are $0$ when $u=0$, both are $+\infty$
+when $u>0=v$, and otherwise the logarithm is unchanged by the common factor.
+Each term of \eqref{eq:objective} is such an expression, multiplied by a
+positive constant ($\frac{\alpha}{\alpha-1}$, $1$ or $\frac1{\alpha-1}$),
+with $u=q(\hat c)$ and $v=P_{\hat c}(\omega)$ or $v=K_{\hat c}(\omega)$, and
+by (i) the pair $(u,v)$ at $(c\mathbf q,c\omega)$ is $c$ times the pair at
+$(\mathbf q,\omega)$; the same holds with $K^{\mathcal{D}}_{\hat c}$. For
+$c>0$ and $a,b\in(-\infty,+\infty]$, $c(a+b)=ca+cb$, so the finite sum scales
+by $c$.
+
+\emph{(iii).} $\chi_{\Qsys}$ is linear and maps a list of positive
+semidefinite blocks to a block-diagonal positive semidefinite operator
+(Theorem~\ref{thm:choi}), so
+$O^{J}_{\alpha}(c\mathbf q,cJ)=O_{\alpha}(c\mathbf q,c\,\chi_{\Qsys}(J))
+=c\,O_{\alpha}(\mathbf q,\chi_{\Qsys}(J))$ by (ii), and likewise for
+$O^{J,\mathcal{D}}_{\alpha}$. In untrusted-source mode
+$\chi_{\Qsys}$ is the identity (Definition~\ref{def:untrusted-choi}).
+\end{proof}

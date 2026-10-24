@@ -1,0 +1,62 @@
+% ---
+% id: meat-core/rem:tightness-by-construction
+% kind: rem
+% title: "Tightness read off the construction of the frame"
+% summary: >-
+%   Deciding tightness of a given τ_A is a rank decision on a computed
+%   spectrum; the diagonal frame exhibits it by construction, the full frame
+%   exhibits nothing. Read at a positive window, the diagonality test would
+%   admit the frame-free rows on a frame that is not tight.
+% prominence: standard
+% status: accepted
+% uses: [def:support-frame, lem:choi-marginal, thm:choi, prop:frame-free-rows]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:tightness-by-construction}
+Tightness of a support frame is $\ker W_{\tau}=0$, equivalently
+$d_{A_0}=\operatorname{rank}\tau_A$ (Lemma~\ref{lem:choi-marginal}\,(iii)),
+so establishing it \emph{of a given} $\tau_A$ is a rank decision on a
+computed spectrum: the decision that \eqref{eq:iota} removes, since
+Lemma~\ref{lem:choi-marginal} and Theorem~\ref{thm:choi} hold on every
+support frame. What can be known without it is whether the construction
+that produced the frame exhibits $\ker W_{\tau}=0$ without computing a rank.
+
+Of the two constructions of Definition~\ref{def:support-frame}, the
+diagonal frame~(b) does: there
+$\operatorname{ran}\iota=\operatorname{supp}\tau_A$ holds by construction,
+the index set $\{i:t_i\neq0\}$ being fixed by a bit-level comparison of
+declared binary64 data, which is exact because~(b) is available only for a
+$\tau_A$ diagonal in the declared basis, where its diagonal entries
+\emph{are} its eigenvalues. This covers the case where every $t_i\neq0$
+and construction~(b) returns $\iota=\idon{A}$. The full frame taken as
+construction~(a) is built from $\idon{A}$ and from no property of $\tau_A$
+at all, and therefore exhibits nothing about $\operatorname{rank}\tau_A$,
+however nonsingular $\tau_A$ looks.
+
+The diagonality on which~(b) rests is itself decided by comparing declared
+entries with zero. Read at a positive window instead, a singular $\tau_A$
+with small off-diagonal entries and every $t_i\ne0$ would pass as
+diagonal, and~(b) would return the full frame, which is not tight. The
+frame-free form of Proposition~\ref{prop:frame-free-rows} read off that
+construction would then be imposed on a non-tight frame, where it imposes
+the row on the directions of $\ker W_{\tau}$ as well, cutting $\Feas^{J}$
+down to a subset, in general proper, whose image under $\chi_{\Qsys}$ need
+not be all of $\Feas$; by Proposition~\ref{prop:frame-free-rows}\,(ii) an
+infimum over that subset can only come out higher, the unsafe direction for
+a key length. For a party-local row of the general format, the
+unconjugated form $Y_k\bowtie_k0$ of
+Proposition~\ref{prop:frame-free-rows}\,(iii)(b) is equivalent to the
+conjugated row when $\ker W_t=0$, and otherwise implies it and in general
+restricts further.
+
+Declining the frame-free form costs nothing: the conjugated form is exact
+on every support frame, tight or not (Theorem~\ref{thm:choi}), so imposing
+it changes no value and forgoes only the redundant directions of
+$\ker W_{\tau}$. That is why the condition may be resolved conservatively
+rather than decided numerically.
+\end{remark}

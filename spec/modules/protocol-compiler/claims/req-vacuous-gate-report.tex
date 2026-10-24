@@ -1,0 +1,28 @@
+% ---
+% id: protocol-compiler/req:vacuous-gate-report
+% kind: req
+% title: "A vacuous pass recorded as vacuous"
+% summary: >-
+%   In untrusted-source mode gate (G3)(a) passes by construction, so the gate
+%   report records it as passed vacuously and not as passed. A vacuous pass is
+%   never reported as evidence of anything.
+% prominence: standard
+% status: accepted
+% uses: [rem:degenerate, def:eligible]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.gates:resolve_gates
+% lean:
+% ---
+
+In \tref{untrusted-source mode} the constraint gate rests on the attack-set
+licence alone (Remark~\ref{rem:degenerate}); the gate report must not make
+its type-check half look like a second check.
+
+\begin{requirement}\label{req:vacuous-gate-report}
+Where gate (G3)(a) of Definition~\ref{def:eligible} holds vacuously, in
+untrusted-source mode at any $d_A$, the engine records it in the gate report
+\iface{gate_report} as \emph{passed vacuously} rather than \emph{passed}, and
+it never reports the vacuous pass as evidence of anything.
+\end{requirement}

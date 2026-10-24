@@ -1,0 +1,29 @@
+% ---
+% id: reductions/wpfss/req:column-stochastic-refusal
+% kind: req
+% title: "Exact column-stochasticity of the declared dark-count matrix"
+% summary: >-
+%   The declared dark-count matrix is decided exactly to have non-negative
+%   entries and unit column sums, and is refused otherwise. No second rule
+%   decides the descended matrix, which inherits the property exactly.
+% prominence: standard
+% status: accepted
+% uses: [rem:colstoch, lem:descent]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Every result of this contract is proved for an exactly column-stochastic $R$,
+and the descended matrix inherits the property by regrouping one finite sum
+(Remark~\ref{rem:colstoch}).
+
+\begin{requirement}\label{req:column-stochastic-refusal}
+The engine decides \emph{exactly} that the declared dark-count matrix $R$ is
+column-stochastic, $R_{S|S'}\ge0$ for every entry and $\sum_SR_{S|S'}=1$ for
+every column, and refuses a declaration that is not, with the reason
+\iface{dark_counts_not_column_stochastic}. No second rule decides the
+property of the descended matrix $R^{\cg}$ of Lemma~\ref{lem:descent}.
+\end{requirement}

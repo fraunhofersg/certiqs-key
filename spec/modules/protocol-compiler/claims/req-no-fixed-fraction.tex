@@ -1,0 +1,39 @@
+% ---
+% id: protocol-compiler/req:no-fixed-fraction
+% kind: req
+% title: "No fixed fraction outside the measurement operators"
+% summary: >-
+%   The emitted declaration carries the output-state test-statistics model and
+%   never a fixed fraction. A specification requesting a state-independent
+%   fraction applied outside the operators is refused.
+% prominence: standard
+% status: implemented
+% uses: [thm:choice-encoding]
+% mentions: [reductions/ass:tsm, rem:exactness]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.weights:refuse_fixed_fraction
+% lean:
+% ---
+
+A state-independent fraction applied outside the operators is unsound, since
+the terms that carry the weight depend on the state
+(Remark~\ref{rem:exactness}), and by
+Theorem~\ref{thm:choice-encoding}\,(ii) the weight inside the operators
+reproduces the declared choice statistics exactly wherever the weighted
+family is the emitted one, so nothing is lost by refusing the fraction; in
+front of a \tref{receiver segment} that squashes, the weight sits inside the
+physical family handed to the chain, and no fraction is emitted either. This
+is the rule the encoding exists to enforce.
+
+\begin{requirement}\label{req:no-fixed-fraction}
+The emitted declaration carries the output-state test-statistics model
+(\xref{reductions/ass:tsm}) and never the fixed-fraction model: no path of the
+engine produces an artefact carrying a fixed-fraction model, and no weight
+$q_t$ is emitted outside a POVM element. A specification requesting the
+fixed-fraction encoding of Theorem~\ref{thm:choice-encoding}\,(iv) --- the conditional
+families together with a separate state-independent fraction $q_t$ to be
+applied outside the operators --- is refused with
+\iface{fixed_fraction_requested}.
+\end{requirement}

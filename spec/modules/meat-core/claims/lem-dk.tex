@@ -1,0 +1,127 @@
+% ---
+% id: meat-core/lem:dk
+% kind: lem
+% title: "Divided-difference derivative of a matrix function"
+% summary: >-
+%   At a Hermitian operator, a matrix function continuously differentiable
+%   around its spectrum has as derivative its divided-difference kernel between
+%   spectral projectors, self-adjoint under the trace pairing. At trace level
+%   only the diagonal kernel survives.
+% prominence: technical
+% status: implemented
+% uses: []
+% mentions: [thm:gradient, lem:cone-concavity, lem:b-derivative]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.linalg:divided_difference
+% lean:
+% ---
+
+Theorem~\ref{thm:gradient} differentiates $X\mapsto X^{p}$ inside the
+support of a branch operator with the kernel below, and
+Lemma~\ref{lem:b-derivative} uses its trace form.
+
+\begin{lemma}\label{lem:dk}
+Write $p\coloneqq1/\alpha\in(0,1)$ and $T$ for the functional
+\eqref{eq:Tcone} of Lemma~\ref{lem:cone-concavity} on the positive
+semidefinite cone of a branch space; $\log_2\mathrm{e}=1/\ln2$.
+
+Let $X$ be Hermitian with spectral decomposition $X=\sum_i\lambda_iP_i$, and
+let $f$ be continuously differentiable on an open interval
+$I\supseteq\operatorname{spec}X$. Then $X'\mapsto f(X')$, defined on the
+Hermitian operators with spectrum in $I$, is Fr\'echet differentiable at $X$
+with
+\begin{equation}\label{eq:dk}
+  Df(X)[H]=\sum_{i,j}f^{[1]}(\lambda_i,\lambda_j)\,P_iHP_j,
+  \qquad
+  f^{[1]}(\lambda,\mu)\coloneqq
+  \begin{cases}\dfrac{f(\lambda)-f(\mu)}{\lambda-\mu},&\lambda\ne\mu,\\[1ex]
+  f'(\lambda),&\lambda=\mu,\end{cases}
+\end{equation}
+and for Hermitian $A$, $H$:
+$\tr\!\big[A\,Df(X)[H]\big]=\tr\!\big[Df(X)[A]\,H\big]$. In particular
+this applies to $f(x)=x^{p}$ at every $X\succ0$, with $I=(0,\infty)$; and,
+at the trace level, for every Hermitian $Y$ and every $g$ continuously
+differentiable on an open interval containing $\operatorname{spec}Y$, the
+map $Y'\mapsto\tr g(Y')$ is Fr\'echet differentiable at $Y$ with
+\begin{equation}\label{eq:trace-diff}
+  \frac{\mathrm d}{\mathrm dt}\Big|_{t=0}\tr\,g(Y+tK)=\tr\big[g'(Y)K\big]
+  \qquad\text{for every Hermitian }K.
+\end{equation}
+For $\alpha>1$ the function $g(y)\coloneqq\max\{y,0\}^{\alpha}$ is
+continuously differentiable on $\mathbb{R}$, with
+$g'(y)=\alpha\max\{y,0\}^{\alpha-1}$, and $\tr g(Y)=\tr[Y^{\alpha}]$ for
+every $Y\succeq0$.
+\end{lemma}
+
+\begin{proof}
+\begin{sloppypar}
+\emph{Polynomials.} For a monomial $f(x)=x^{m}$,
+$\frac{\mathrm d}{\mathrm dt}(X+tH)^{m}\big|_{0}
+=\sum_{a+b=m-1}X^{a}HX^{b}$, and
+$\bra{i}\sum_{a+b=m-1}X^aHX^b\ket{j}
+=H_{ij}\sum_{a+b=m-1}\lambda_i^a\lambda_j^b
+=H_{ij}\,f^{[1]}(\lambda_i,\lambda_j)$, which is \eqref{eq:dk}; linearity
+extends it to polynomials. A polynomial map $X'\mapsto q(X')$ is a finite
+sum of products of $X'$ with itself, hence Fr\'echet differentiable at every
+$X$, and its Fr\'echet derivative is the directional derivative just
+computed.
+
+\emph{A Hilbert--Schmidt bound.} Let $h$ be continuously differentiable on a
+compact interval $[c,C]$, and let $A=\sum_ia_iP_i$ and $B=\sum_jb_jP'_j$ be
+Hermitian with spectra in $[c,C]$. Then
+$P_i\big(h(A)-h(B)\big)P'_j=(h(a_i)-h(b_j))P_iP'_j$ and
+$P_i(A-B)P'_j=(a_i-b_j)P_iP'_j$, so
+$h(A)-h(B)=\sum_{i,j}h^{[1]}(a_i,b_j)\,P_i(A-B)P'_j$, the terms with
+$a_i=b_j$ being $0$ on both sides. The maps $Z\mapsto P_iZP'_j$ are
+orthogonal projections of the Hilbert--Schmidt space onto mutually
+orthogonal subspaces that sum to it, and $|h^{[1]}|\le\|h'\|_{\infty}$ on
+$[c,C]^2$ by the mean value theorem, so
+$\|h(A)-h(B)\|_2\le\|h'\|_{\infty}\,\|A-B\|_2$; in the same way
+$\|\sum_{i,j}h^{[1]}(\lambda_i,\lambda_j)P_iHP_j\|_2
+\le\|h'\|_{\infty}\,\|H\|_2$.
+
+\emph{General $f$.} Choose a compact $[c,C]\subset I$ and $\delta>0$ with
+$\lambda_i\pm\delta\in[c,C]$ for every $i$. By Weyl's inequality every
+eigenvalue of $X+H$ lies within $\|H\|$ of one of $X$, so
+$\operatorname{spec}(X+H)\subseteq[c,C]$ whenever $\|H\|_2\le\delta$. Pick
+polynomials $q_n\to f'$ uniformly on $[c,C]$ (Weierstrass) and let $Q_n$ be
+primitives with $Q_n(c)=f(c)$, so that
+$\varepsilon_n\coloneqq\sup_{[c,C]}|f'-Q_n'|\to0$. Write
+$L(H)\coloneqq\sum_{i,j}f^{[1]}(\lambda_i,\lambda_j)P_iHP_j$ and $L_n$ for
+the same expression with $Q_n$, which is $DQ_n(X)$ by the polynomial step.
+For $\|H\|_2\le\delta$ the Hilbert--Schmidt bound, applied to $h=f-Q_n$,
+whose divided differences are those of $f$ less those of $Q_n$, gives
+\begin{equation*}
+  \big\|\big(f(X+H)-f(X)-L(H)\big)
+  -\big(Q_n(X+H)-Q_n(X)-L_n(H)\big)\big\|_2
+  \;\le\;2\varepsilon_n\|H\|_2 .
+\end{equation*}
+Given $\eta>0$, fix $n$ with $2\varepsilon_n\le\eta/2$ and then
+$\delta'\in(0,\delta]$ with
+$\|Q_n(X+H)-Q_n(X)-L_n(H)\|_2\le\frac{\eta}{2}\|H\|_2$ for
+$\|H\|_2\le\delta'$; then $\|f(X+H)-f(X)-L(H)\|_2\le\eta\|H\|_2$ for
+$\|H\|_2\le\delta'$. The estimate holds uniformly in $H$ on that ball, so
+$f$ is Fr\'echet differentiable at $X$ with $Df(X)=L$, which is
+\eqref{eq:dk}.
+
+\emph{Self-adjointness.} With $k_{ij}\coloneqq
+f^{[1]}(\lambda_i,\lambda_j)=k_{ji}$ real,
+$\tr[A\sum_{ij}k_{ij}P_iHP_j]=\sum_{ij}k_{ij}\tr[P_jAP_iH]
+=\tr\big[\big(\sum_{ij}k_{ji}P_iAP_j\big)H\big]
+=\tr[Df(X)[A]\,H]$.
+
+\emph{Trace level.} The general step applies to $g$ at $Y=\sum_i\mu_iP_i$,
+so $Y'\mapsto g(Y')$ is Fr\'echet differentiable at $Y$ with derivative
+$\sum_{i,j}g^{[1]}(\mu_i,\mu_j)P_iKP_j$, and so is its composition with the
+linear trace. Only the diagonal kernel survives the trace:
+$\tr[P_iKP_j]=\delta_{ij}\tr[P_iK]$, so
+$\frac{\mathrm d}{\mathrm dt}\tr g(Y+tK)\big|_0
+=\sum_ig'(\mu_i)\tr[P_iK]=\tr[g'(Y)K]$. For $\alpha>1$ the function
+$g(y)=\max\{y,0\}^{\alpha}$ has derivative $\alpha y^{\alpha-1}$ at $y>0$,
+$0$ at $y<0$, and $0$ at $y=0$, since $|g(y)|/|y|\le|y|^{\alpha-1}\to0$;
+that derivative is continuous because $\alpha-1>0$; and $g$ is $y^{\alpha}$
+on $[0,\infty)$, so $\tr g(Y)=\tr[Y^{\alpha}]$ for $Y\succeq0$.
+\end{sloppypar}
+\end{proof}

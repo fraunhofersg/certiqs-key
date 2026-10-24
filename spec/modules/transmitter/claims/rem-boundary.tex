@@ -1,0 +1,86 @@
+% ---
+% id: transmitter/rem:boundary
+% kind: rem
+% title: "Scope of a verified certificate"
+% summary: >-
+%   A verified certificate buys the interchange and the source identification
+%   of [[thm:certificate-sufficiency]] outright, and in block form the reached-state statement of
+%   [[lem:matched-pinching]]. It is no security reduction, restricts no
+%   consumer's feasible set and decides nothing about retention.
+% prominence: standard
+% status: accepted
+% uses: [thm:certificate-sufficiency, def:srcert, lem:matched-pinching, def:source-segment]
+% mentions: [ass:src, ass:seq, rem:xreg, def:source-spec, req:attestation-record, def:source-link]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:boundary}
+Theorem~\ref{thm:certificate-sufficiency}\,(iii) is a statement about the \emph{source}: it
+says that Alice's measurement commutes with every attack of the admitted
+form --- every channel on the \tref[virtual transmitted system]{transmitted system} and the adversary's
+registers, which by Assumption~\ref{ass:seq} is every operation of the
+round up to the announcements (Remark~\ref{rem:xreg}) --- and that the
+declared trusted-source data describe the virtual preparation (the
+specified one exactly when the \tref{source segment} is empty) against every such
+attack. It is not a security reduction, and it does not say that the
+consuming engine's optimization is sound; that argument --- granting the
+adversary a purification of Alice's retained system and the
+\tref[virtual transmitted system]{transmitted system}, restricting to the declared feasible set, accumulating over rounds
+--- lives in the engine's claims, which import Assumption~\ref{ass:src} for
+it. What this module owes depends on the form of the certificate
+(Theorem~\ref{thm:certificate-sufficiency}\,(i)). In pure and in block form it is the
+decided conditions of the declared certificate, those on $\Psi$ of its form
+together with (SR1) and (SR2), and the attestation (SR3). The conditions on $\Psi$
+are Hermiticity, $\Psi^2=\Psi$ and $\tr\Psi=1$ in pure form, and Hermiticity
+and positive semidefiniteness of every block and $\sum_t\tr\Psi_t=1$ in block
+form. For an ensemble presentation it is exactly (E1) to (E3), decided on
+the declared blocks, and the attestation (SR3); (SR1) and (SR2) then hold of
+the certificate the presentation defines as theorems and are decided by
+nothing.
+
+\emph{What a verified certificate buys.} A verified certificate, one whose
+decided conditions (Theorem~\ref{thm:certificate-sufficiency}\,(i)) hold, buys
+\eqref{eq:srmain} and \eqref{eq:srident} outright: the commutation, and the
+identification of the declared trusted-source data with the virtual source,
+as identities for every channel of the admitted form, with no residue and no
+qualification. That is what the exact reading of (SR1)--(SR2) is for, and it
+is what a consumer of the licence record, the record of the verified
+certificate that the artefact carries (Requirement~\ref{req:attestation-record}),
+is entitled to read the record as asserting. What the certificate does
+\emph{not} buy is (SR3), which no function of the declared data decides
+(Assumption~\ref{ass:src}); it is (SR3), with Assumption~\ref{ass:seq}, that
+makes the attack of a round a channel of the admitted form.
+
+\emph{What the block form adds.} A certificate declared in block form
+(Definition~\ref{def:srcert}) buys one thing more, and it is a statement about
+\emph{reached} states: Lemma~\ref{lem:matched-pinching}, that every state an
+admitted attack reaches from that certificate is block diagonal along the
+declared sectors with $A$-marginal $\tau_A$, and that pinching $A$ after the
+attack is the same operation as pinching the virtual signal before it. That is
+what a consumer may read the record as asserting of the declared \tref{sector
+structure}, and it is all of it. \emph{It does not buy a restriction of any
+consumer's feasible set.} A feasible set is a set of operators constrained to
+have the marginal $\tau_A$, not a set of states reached from a certificate,
+and a positive operator with that marginal need not be block diagonal
+(Lemma~\ref{lem:matched-pinching}\,(iii)). A consumer that minimises over
+block-diagonal operators alone does so under a theorem of its own module, with
+its own preconditions on declared data, and neither this module's licence
+record nor the presentation of $\tau_A$ and $\{M_x\}$ as block lists is that
+theorem (Definition~\ref{def:source-spec}, ``What the sector structure is
+not'').
+
+\emph{Links supplied by a theorem.} The same boundary, in the other
+direction, governs a \tref{source link} whose channel is supplied by a named claim
+of a submodule rather than as data (a \tref{theorem constructor},
+Definition~\ref{def:source-link}\,(c2)). For such a link, what the artefact
+carries about its source identity \eqref{eq:srcmap} is the link's \tref{obligation
+record}, which travels with the link in the source segment
+(Definition~\ref{def:source-segment}\,(S4)) and not in the licence record: a
+named claim and the assumptions the obligation carries, never a verdict this
+module decided, and there is nothing of that identity a consumer could
+re-decide.
+\end{remark}

@@ -1,0 +1,129 @@
+% ---
+% id: reductions/req:recv-row-provenance
+% kind: req
+% title: "Omission of the supplier row for a receiver artefact the run built"
+% summary: >-
+%   The ledger omits [[A-RECV]] only where every supplier artefact read is a
+%   receiver artefact this run built, with a model admissible exactly and
+%   every weight evaluated rigorously. Both clauses then hold by the
+%   receiver's theorems under its own ledger, with no premise on arithmetic.
+% user_statement: >-
+%   Where this run built the receiver artefact itself from your declared
+%   receiver, your declaration describes a valid receiver exactly, and every
+%   high-photon weight was computed rigorously, the report does not list the
+%   premise that a supplied receiver file is genuine and true of your device
+%   ([[A-RECV]]). What that premise says then follows from the receiver's
+%   theorems under the receiver's own assumptions, which the report lists, and
+%   whether those theorems are accepted is shown by their status in the
+%   report. Wherever a weight was evaluated in floating point, the receiver
+%   was admitted only within its tolerances, or the receiver file came from
+%   outside the run, the report keeps [[A-RECV]].
+% prominence: standard
+% status: implemented
+% uses: [receiver/def:setting-family, receiver/cor:unconditioned-family, receiver/thm:click-povm, receiver/thm:coarse-graining, receiver/def:slot, receiver/thm:enclosed-weight, receiver/thm:enclosed-blocks, receiver/thm:representation-independence]
+% mentions: [receiver/detector-imperfections/def:darkadm, receiver/detector-imperfections/thm:dark-counts, receiver/detector-imperfections/prop:efficiency-normalization, receiver/req:exact-route-decision, receiver/req:rigorous-weight, receiver/req:evaluation-label, receiver/thm:exact-and-evaluated, receiver/ass:eig, receiver/ass:trust, ass:recv, rem:recv-scope, req:assumption-ledger, req:supplier-version-accepted, req:supplier-ledger-pass-through, req:supplier-ledger-refusals, reductions/wpfss/rem:receiver-imports, reductions/wpfss/prop:route, reductions/wpfss/req:supplier-eig-record, foundations/def:declared-data, foundations/ass:snapped-measurement, protocol-compiler/req:link-row-provenance]
+% assumes: []
+% refs: []
+% implements: certiqs_key.reductions.emit:receiver_row_omitted_on_provenance
+% provenance: newly-derived
+% lean:
+% notes: "The receiver claims in uses are those wpfss/prop:route (iv) and wpfss/rem:receiver-imports cite for the hypotheses on the supplier's objects, read at a rigorously evaluated weight: thm:enclosed-weight in place of thm:emitted-bound, whose exact-window branch rests on A-EIG, which condition (iv) excludes; prop:slotvalid is a mention, its range being decided on entry. The detector-imperfections claims are mentions, a core claim using no claim of a submodule; their assumption closure is that of receiver/cor:unconditioned-family, which is in uses. rem:receiver-imports and prop:route are mentions, not uses, since both assume A-RECV, which a uses edge would bring into the closure of the omission. The claims behind a setting family a receiver submodule constructs are named by the claim of wpfss that reads that family and by the receiver's own emission result: a core claim names no claim of a removable submodule."
+% ---
+
+Assumption~\ref{ass:recv} names what a \tref{reduction instance} cannot see
+in a supplier artefact: that it is its module's output at an accepted
+version, on the inputs it declares, and that the facts the supplier's claims
+state hold of its numbers. Version, validation results and ledger are data
+that an artefact written by hand can carry equally; whether the run built
+the artefact is known to the part of the engine that ran the supplier, as
+for the chain of \xref{protocol-compiler/req:link-row-provenance}. Where the
+run built it, clause~(i) holds by construction: the artefact is the
+installed receiver's output on the declaration the run handed it, with that
+receiver's own validation results, at the version it states. For every
+receiver artefact the run built, whether or not the row is omitted,
+acceptance is no premise: it is the effective status of the receiver's
+claims in the run's closure, which the run's record reports, as for every
+module the run executes; the acceptance part of clause~(i) is a premise only
+for an artefact from outside the run. Clause~(ii) concerns the facts the instance imports, those the
+consuming claims cite (Remark~\ref{rem:receiver-imports};
+Proposition~\ref{prop:route}\,(iv)), and condition~(iv) below makes each a
+theorem of the receiver with no premise on arithmetic. A declaration with a
+model admissible exactly (\xref{receiver/req:exact-route-decision}) has
+the port Grams of a \tref{receiver instrument}, which determine its
+click-pattern measurement (\xref{receiver/thm:representation-independence}),
+so the theorems stated of a receiver instrument apply to it under the
+receiver's ledger, \xref{receiver/ass:trust} saying that it is the physical
+receiver: the block diagonality in the photon number of the
+elements of its \tref{setting family} and of their coarse-graining
+(\xref{receiver/def:setting-family}, \xref{receiver/thm:coarse-graining},
+\xref{receiver/thm:click-povm}, \xref{receiver/cor:unconditioned-family}); the
+\tref{dark-count channel}, the declared matrix or the product form, of which
+(D1) and (D2) hold by construction and which this module decides exactly on
+entry (\xref{receiver/detector-imperfections/def:darkadm},
+\xref{receiver/detector-imperfections/thm:dark-counts}); at a
+\tref{normalized station} the efficiency normalization
+(\xref{receiver/detector-imperfections/prop:efficiency-normalization}); and
+the \tref{strengthening slot} (\xref{receiver/def:slot}). Its weights carry
+the rigorous label (\xref{receiver/req:evaluation-label}), so each
+\tref{per-setting weight} is the largest binary64 number at or below an
+\tref{enclosed weight} (\xref{receiver/req:rigorous-weight}\,(iv)), and
+\xref{receiver/thm:enclosed-weight}\,(iii) gives its guarantee on every
+photon-number block above the declared cutoff at its own setting, the
+quantifier domain being the declared cutoff and settings; at a setting
+family a receiver submodule constructs, that submodule states the same of
+its rigorously evaluated weight (\xref{receiver/thm:exact-and-evaluated},
+lead-in). No computed eigenvalue enters such a weight, so
+\xref{receiver/ass:eig} is invoked at no setting, and the non-negativity and
+the sum of the weights at a setting are decided on entry (the slot row of
+\repodoc{spec/modules/reductions/wpfss/interface.yaml}). The photon-number
+blocks below the cutoff are no imported fact: they reach the instance as its
+declaration (\xref{foundations/def:declared-data}\,(ii)), beside rational
+enclosures that contain the model's blocks
+(\xref{receiver/thm:enclosed-blocks}), against which the declaring party
+snaps them, a moved block resting on
+\xref{foundations/ass:snapped-measurement} (Remark~\ref{rem:recv-scope}).
+Where a weight is evaluated in floating point, the receiver asserts no
+bound between the emitted number and the weight its theorems speak of
+(\xref{receiver/thm:exact-and-evaluated}\,(ii)), and where the declaration
+is admitted only within the \tref{receiver tolerances} no receiver instrument has
+its declared numbers; there clause~(ii) stays a premise.
+
+\begin{requirement}\label{req:recv-row-provenance}
+The engine omits the row of Assumption~\ref{ass:recv} from the assumption
+ledger \iface{assumption_ledger} of an emission only where the
+\tref{reduction instance} read at least one supplier artefact and, for every
+supplier artefact it read, all of the following hold:
+(i) the supplying module is the receiver, and the artefact is one that the
+part of the engine that ran this module obtained in the same run by running
+the receiver module, as installed where the run runs, on the receiver
+declaration the run holds, and handed to this module as it was emitted;
+(ii) the module version \iface{module_version} the artefact declares is the
+one that installed module states for the artefacts it emits, and the
+artefact passes Requirements~\ref{req:supplier-version-accepted}
+and~\ref{req:supplier-ledger-refusals};
+(iii) the record of the run carries that artefact's own assumption ledger;
+(iv) the artefact records that its declaration has a model admissible
+exactly (\xref{receiver/req:exact-route-decision}\,(iv)), and it carries the
+evaluation label \iface{rigorous} (\xref{receiver/req:evaluation-label}),
+every per-setting weight having been formed by the rigorous evaluation of
+\xref{receiver/req:rigorous-weight}.
+There clause~(i) of Assumption~\ref{ass:recv} holds by construction, the
+acceptance of the version being the effective status of the receiver's
+claims in the run's closure, which the record of the run reports, and
+clause~(ii) holds of the facts the instance imports, each a theorem of the
+receiver about the receiver instrument the declaration is, holding of the
+numbers emitted under the ledger~(iii) carries and resting on no premise
+about arithmetic. That (i) and (iii) hold is established by the part of the
+engine that ran the receiver module and docked its artefact into the
+instance, and is passed to this module beside the artefact
+(\iface{receiver_provenance}); the engine never reads it from the artefact.
+The engine decides (ii) and (iv) on the artefact. Where it omits the row, it
+records the omission with the artefact's version
+(\iface{receiver_row_omitted_on_provenance}), and the supplier's keys, which
+ride that row where it is emitted
+(Requirements~\ref{req:supplier-ledger-pass-through}
+and~\ref{req:supplier-eig-record}), reach the record of the run from the
+artefact's own ledger by~(iii). Where \iface{receiver_provenance} is not
+passed, or a condition fails for any artefact read, the row is emitted as
+Requirement~\ref{req:assumption-ledger} says.
+\end{requirement}

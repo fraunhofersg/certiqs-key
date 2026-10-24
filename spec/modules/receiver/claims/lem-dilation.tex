@@ -1,0 +1,74 @@
+% ---
+% id: receiver/lem:dilation
+% kind: lem
+% title: "Unitary dilation of a contraction"
+% summary: >-
+%   Every contractive instrument matrix is the input-to-output block of a
+%   unitary on the modes together with a copy of them as environment modes. The
+%   amplitude the matrix removes leaves through those extra outputs, which makes
+%   the matrix a passive physical device.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [lem:vacelim]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+An \tref{instrument matrix} is a contraction, and a contraction is not by itself
+the mode transformation of a physical device: the amplitude it removes has to
+leave through some output, and the input ports it does not use have to be
+filled with a state. The dilation of this lemma makes it physical, and
+Lemma~\ref{lem:vacelim} then shows that the dilation changes nothing:
+restricting to the declared input columns is \emph{exact}, not an
+approximation.
+
+\begin{lemma}\label{lem:dilation}
+Let $\Gmat$ be a contraction on $\mathbb{C}^{\Modes}$ and let
+$\Env$ be a disjoint copy of $\Modes$. With the defect operators
+$D_{\mathrm{out}}\coloneqq(\id-\Gmat\Gmat^\dagger)^{1/2}$ and
+$D_{\mathrm{in}}\coloneqq(\id-\Gmat^\dagger\Gmat)^{1/2}$, the matrix
+\begin{equation}\label{eq:dilationmatrix}
+  U_{\Gmat}=\begin{pmatrix}\Gmat & D_{\mathrm{out}}\\
+                           D_{\mathrm{in}} & -\Gmat^\dagger\end{pmatrix}
+  \quad\text{on }\ \mathbb{C}^{\Modes}\oplus\mathbb{C}^{\Env}
+\end{equation}
+is unitary, and its block from the inputs $\Modes$ to the outputs $\Modes$ is
+$\Gmat$.
+\end{lemma}
+
+\begin{proof}
+Both defect operators exist: $\Gmat^\dagger\Gmat\preceq\id$ by hypothesis, and
+$\Gmat\Gmat^\dagger$ has the same nonzero eigenvalues as
+$\Gmat^\dagger\Gmat$, so $\Gmat\Gmat^\dagger\preceq\id$ as well; the positive
+semidefinite square root of a positive semidefinite operator is unique. Write a
+singular value decomposition $\Gmat=\sum_js_j\,y_jx_j^\dagger$ with
+$s_j\in[0,1]$ and orthonormal $\{x_j\},\{y_j\}$. Then
+$\Gmat^\dagger\Gmat=\sum_js_j^2x_jx_j^\dagger$ and
+$\Gmat\Gmat^\dagger=\sum_js_j^2y_jy_j^\dagger$, so
+$D_{\mathrm{in}}x_j=\sqrt{1-s_j^2}\,x_j$ and
+$D_{\mathrm{out}}y_j=\sqrt{1-s_j^2}\,y_j$, both acting as the identity on the
+orthogonal complements. Hence
+\begin{equation}\label{eq:intertwine}
+  D_{\mathrm{out}}\Gmat=\sum_js_j\sqrt{1-s_j^2}\,y_jx_j^\dagger
+  =\Gmat D_{\mathrm{in}} .
+\end{equation}
+Multiplying \eqref{eq:dilationmatrix} by its adjoint blockwise and using
+$D_{\mathrm{out}}^\dagger=D_{\mathrm{out}}$,
+$D_{\mathrm{in}}^\dagger=D_{\mathrm{in}}$,
+\begin{equation}
+  U_{\Gmat}U_{\Gmat}^\dagger=
+  \begin{pmatrix}
+    \Gmat\Gmat^\dagger+D_{\mathrm{out}}^2 &
+    \Gmat D_{\mathrm{in}}-D_{\mathrm{out}}\Gmat\\
+    D_{\mathrm{in}}\Gmat^\dagger-\Gmat^\dagger D_{\mathrm{out}} &
+    D_{\mathrm{in}}^2+\Gmat^\dagger\Gmat
+  \end{pmatrix}
+  =\begin{pmatrix}\id&0\\0&\id\end{pmatrix},
+\end{equation}
+the diagonal blocks by the definitions of the defect operators and the
+off-diagonal blocks by \eqref{eq:intertwine} and its adjoint. A square matrix
+with $U U^\dagger=\id$ is unitary.
+\end{proof}

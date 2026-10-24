@@ -1,0 +1,228 @@
+% ---
+% id: reductions/cor:entries
+% kind: cor
+% title: "The emitted constraint entries"
+% summary: >-
+%   The emitted list is empty unless the request carries entries; then it
+%   holds the instance's entries, the class-marginal entry where discharged
+%   and further entries whose certificate a claim decides. Certificates hold
+%   of the emitted numbers, and off-lattice inequality constants are rounded
+%   outward.
+% prominence: standard
+% status: implemented
+% uses: [thm:emit, def:emitnorm, def:reduction-instance, def:joint-family, def:exactadm, thm:licence, cor:pullback, def:licensed]
+% mentions: [rem:unsound, cor:flag-instance, thm:instrument-instance, cor:register-instance, rem:entry-tags, req:party-local-tag]
+% assumes: [A-CONST]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.constraints:certify_carried_operators
+% lean:
+% notes: "Part (ii) is an implication and not a biconditional: the identity eq:entryclass may hold of the device where the instance does not discharge it, nothing in this contract then establishes it, and the refusal is what the undischarged case produces. Part (iii) admits a requested entry only on a decided certificate, so that every emitted certificate is a conclusion of a claim and no ledger row is needed for a caller's word."
+% ---
+
+A request either carries entries or carries none, and there is no third
+case; whether the emitted constraint list is empty, and with it whether the
+attack-set licence is present, depends on that alone. The flag-state
+submodule's encoded and licensed routes are that submodule's instance of the
+two cases, named here for the reader; this module declares no route key of
+its own. The entries below are untagged; where an entry carries the
+party-local tag instead is Requirement~\ref{req:party-local-tag}, and
+Remark~\ref{rem:entry-tags} explains why a one-factor emission carries none.
+Remark~\ref{rem:unsound} identifies the expectation form of the
+class-marginal identity, read in part (ii), as its sound squashed form.
+
+\begin{corollary}\label{cor:entries}
+Assume the hypotheses of Theorem~\ref{thm:emit} for a \tref{reduction instance}
+$\mathcal{J}$ with declared datum $A'$, target $\{F_v\}$, channel $\Lambda$
+and declared model $\Mdec$. A request \emph{carries entries} when it selects
+the case in which the instance's own entries are emitted: in the flag-state
+submodule that case is the licensed route; in a core-only artefact it is a
+caller's request for an entry --- for a default carried operator as an entry,
+or for the class-marginal entry. \emph{What is emitted is decided by the
+request}: \emph{where the request carries no entry the emitted constraint
+list is empty} --- whatever entries the instance's own list $\CList[A']$
+contains --- and the artefact carries no attack-set licence; \emph{where the
+request carries entries the emitted list is the instance's own entries, the
+class-marginal entry on request and any further requested entry that (iii)
+admits}, so that
+the list is non-empty and the licence of Theorem~\ref{thm:licence} is
+present. In \emph{both} cases the
+certificate $(\Pi_s,\succeq,0)$ of every sector projector of every instance
+is carried \emph{per entry in the transported set}, with the certificate case
+of Corollary~\ref{cor:pullback} that makes each usable, and not as a
+constraint entry. Then
+\emph{(i) and the identity \eqref{eq:entryclass} of (ii) of every request,
+and what each of (ii) and (iii) emits of a request that carries entries}:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(the default \tref{carried operators})} every operator of the
+  instance's \emph{default carried set} --- every sector projector $\Pi_s$,
+  $s\in\SecSet$, which Definition~\ref{def:reduction-instance}\,(I3) puts in
+  the transported set of every instance, together with the sums of sector
+  projectors that instance transports besides (for a target split at a
+  cutoff, the projector onto the blocks below it and the projector onto the
+  flag blocks; for a branching instance, the branch projector $\Pi_j$) ---
+  is emitted at $c=0$ with $\bowtie\,=\,\succeq$: its entries
+  are $0$ and $1$, hence on the lattice at every $\kappa\ge1$, and its
+  pull-back
+  \begin{equation}\label{eq:entrysector}
+    \Lambda^{\dagger}(\Pi_s)\;\succeq\;0
+  \end{equation}
+  is exactly positive for every instance, as therefore is the pull-back of
+  every sum of them. \emph{It is emitted with the transported set}, per entry
+  and whatever the request carries, as the certificate case of
+  Corollary~\ref{cor:pullback}\,(ii) that entry records, and it becomes an
+  entry of $\CList$ only where a caller requests it \emph{as an entry} ---
+  a request that makes the emitted list non-empty and so brings the licence
+  with it;
+\item \emph{(the class-marginal entry)} For $\hat O=\sum_{v\in\Vset_t}F_v$ at
+  a declared $t\in\Tset$ --- the expectation form of the physical
+  \tref{class-marginal identity} \eqref{eq:classmarginal} ---
+  \begin{equation}\label{eq:entryclass}
+    \Lambda^{\dagger}\big(\hat O\big)\;=\;q_t\,\idon{\Bsys}
+    \qquad\text{exactly}
+  \end{equation}
+  holds \emph{whenever} the instance discharges the class-marginal identity
+  \eqref{eq:instance-classmarginal}, and is established by this contract
+  \emph{only} there --- \emph{a fact about the instance and the channel, which
+  this part asserts of every request}. \emph{Where the request carries
+  entries}, so that the emitted list is non-empty and the licence is present,
+  the entry is then emitted, on request, as the single equality entry
+  $(\hat O,=,q_t)$ at the declared $q_t$; where the instance does not
+  discharge it the request is refused, and the entry is never emitted
+  on the strength of a branch that does not establish it;
+\item \emph{(any further entry --- the general rule)} \emph{under the same
+  hypothesis as (ii)'s emission sentence --- the request carries entries},
+  let
+  $\hat O=\sum_{v\in\Vset}\sum_{s\in\SecSet}\alpha_{v,s}\Pi_sF_v\Pi_s+Z$ with
+  declared real lattice coefficients $\alpha_{v,s}$ and $Z$ a fixed operator
+  of the declared sector decomposition (a sector projector or a combination
+  of them whose coefficients are declared lattice values, as
+  Definition~\ref{def:reduction-instance}\,(I4) requires), the form
+  \eqref{eq:instance-entry}, with a relation
+  $\bowtie$ and a declared real constant $c$.
+  \emph{Where a declared constant of modulus at most one does not satisfy
+  \eqref{eq:latinv} it is first rounded onto the lattice in the direction that
+  enlarges the feasible set for $\bowtie$} --- down for $\succeq$, up for
+  $\preceq$ --- and \emph{an equality entry whose constant is off the lattice
+  is refused rather than split into a pair}, an equality having no loosening
+  direction; \emph{a declared constant of modulus above one is refused under
+  every relation}. Suppose the certificate
+  \begin{equation}\label{eq:entrygeneral}
+    \Lambda^{\dagger}(\hat O)\ \bowtie\ c\,\idon{\Bsys}
+  \end{equation}
+  is established for the emitted numbers, at the constant $c$ so obtained, in
+  one of two ways: for an entry of the instance's own list $\CList[A']$, by
+  (I4) of the instance; for a requested entry, by a \emph{decided
+  certificate} --- a condition on the emitted numbers and the request's
+  declared constants, decided exactly from them, that a claim stated for the
+  instance proves sufficient for \eqref{eq:entrygeneral} under the instance's
+  hypotheses (H) --- that holds there. Then the entry is emitted at that $c$.
+  \emph{No other requested entry is emitted}: a requested operator of this
+  form for which no claim stated for the instance gives a decided
+  certificate, or whose decided certificate fails at the emitted numbers, is
+  refused, and no certificate is taken from the request on trust.
+\end{enumerate}
+Every entry that (i)--(iii) emit is \emph{untagged}, $(\hat O,\bowtie,c)$,
+and is read in the form of the declared source mode
+(Definition~\ref{def:licensed}).
+
+\emph{Each certificate above is discharged for the emitted numbers
+themselves}, those numbers being the family every part is read on
+(Theorem~\ref{thm:emit}\,(iii)), so no constant is shifted to pay for a
+displacement between the family a certificate is asserted of and the numbers
+its operator is assembled from. The rounding rule of (iii) applies only to a
+constant a caller declares, never to one this module or an instance
+computes. \emph{Together, (i)--(iii) cover every entry this module can
+emit}: the default carried operators of every instance, the class-marginal
+entry a caller may request, and every entry of the form
+\eqref{eq:entrygeneral} --- which includes every entry an instance carries in
+its own list, such as a flag-sector entry of a weight-preserving squasher,
+and the branch entries a branching instance inherits
+(Theorem~\ref{thm:instrument-instance},
+Corollary~\ref{cor:register-instance}). \emph{A requested operator outside
+that form, or of that form without a decided certificate that holds, is not
+emitted at some other constant; it is refused}. So the
+three parts are
+exhaustive over what is \emph{emitted}, which is what the artefact carries.
+\emph{Where the request carries no entry there is nothing for (ii)--(iii) to
+be exhaustive about}: $\CList=\varnothing$ there, whatever entries the
+instance's own list contains, and the certificate of every default carried
+operator travels with the transported set alone.
+\end{corollary}
+
+\begin{proof}
+(i) The sector projectors are determined by the declared dimensions and
+order alone (Definition~\ref{def:reduction-instance}\,(I2)); each is in the
+transported set by (I3), and its pull-back is positive semidefinite because
+$\Lambda^{\dagger}$ is a positive map --- the third consequence of
+Definition~\ref{def:reduction-instance} --- which is
+\eqref{eq:certificate} with $c=0$ and $\bowtie\,=\,\succeq$, the certificate
+case of Corollary~\ref{cor:pullback}\,(ii). A sum of distinct sector
+projectors is again a projector of the declared decomposition, with entries
+$0$ and $1$ and with the sum of their pull-backs as its own, positive by
+additivity; those sums are the remaining operators of the default carried
+set. \emph{Where each is emitted is the transported set}, which (I3) is
+about and which the artefact carries in either case with the certificate
+case per entry; nothing in this part makes it an entry of $\CList$, and
+where the request carries no entry $\CList$ is empty. A caller who asks for
+one of them \emph{as an entry} asks for an entry, and gets it at this
+constant --- the list being non-empty then, and the licence present.
+\emph{Nothing in this part uses which of the two cases holds}, so it is
+asserted of every request.
+
+(ii) By Theorem~\ref{thm:emit}\,(iii) and linearity,
+$\Lambda^{\dagger}(\hat O)=\sum_{v\in\Vset_t}\Mdec_v$, the class sum of the
+declared model (the fourth consequence of
+Definition~\ref{def:reduction-instance}). Where the instance discharges
+\eqref{eq:instance-classmarginal}, it does so for every admissible datum
+under (H), hence at $A'$ by Theorem~\ref{thm:emit}\,(iii), so the class sum
+is $q_t\idon{\Bsys}$ and \eqref{eq:entryclass} is \eqref{eq:certificate}
+with $\bowtie\,=\,=$ at $c=q_t$; the constant is declared before the run
+(Assumption~\ref{ass:constdecl}). That derivation reads the instance and the
+channel alone: \emph{nothing in it uses which of the two cases holds}, so
+\eqref{eq:entryclass} is asserted of every request, exactly as (i) is. What
+the request decides is whether the entry is \emph{emitted} --- where it
+carries entries the list is non-empty and the licence present, and the entry
+joins the list on request. That is the whole of the implication, and
+\emph{no converse is asserted}: where the instance does not discharge
+\eqref{eq:instance-classmarginal}, \eqref{eq:entryclass} may still hold of
+the device and nothing in this contract establishes it --- an
+uncharacterised branch contributes some operator between $0$ and its branch
+weight, not $q_t$ times it (Corollary~\ref{cor:flag-instance}) --- and
+emitting the entry on an undischarged identity would impose
+$\tr[\hat O\sigma]=q_t$ on reachable states for which it may be false, the
+security break of Remark~\ref{rem:unsound}; so the request is refused, which
+is the safe direction and the only one this corollary licenses.
+
+(iii) The entry is emitted at the constant its certificate is established
+at, which is the hypothesis; that the constant is declared and not observed
+is Assumption~\ref{ass:constdecl}. An instance's own entries carry their
+certificates for every admissible datum
+(Definition~\ref{def:reduction-instance}\,(I4)), hence at $A'$. A requested
+entry's decided certificate holds at the emitted numbers by hypothesis, and
+the claim that gives it proves \eqref{eq:entrygeneral} from it under (H),
+which holds of the instance at $A'$ by the stability clause of
+Definition~\ref{def:reduction-instance}, $A'$ being admissible
+(Theorem~\ref{thm:emit}\,(iii)); so \eqref{eq:entrygeneral} holds at the
+emitted numbers, and nothing about it is taken from the request. A requested
+operator without a decided certificate that holds has nothing that
+establishes \eqref{eq:entrygeneral} for it, and emitting it would impose on
+reachable states a condition that may be false of them, the security break
+of Remark~\ref{rem:unsound}; refusing it is the safe direction, nothing
+being emitted. \emph{The rounding rule}: let $c'$ be a declared constant off
+the lattice with $|c'|\le1$ and $c$ its rounding in the stated direction, so
+$c\le c'$ when $\bowtie$ is $\succeq$ and $c\ge c'$ when $\bowtie$ is
+$\preceq$; since $-1$ and $1$ are lattice values, $c$ lies in $[-1,1]$ and
+satisfies \eqref{eq:latinv}. The certificate is established at $c$, the
+constant emitted; and wherever it holds at $c'$ it holds at $c$, since
+$\Lambda^{\dagger}(\hat O)\succeq c'\idon{\Bsys}\succeq c\,\idon{\Bsys}$ in
+the first case and $\preceq$ in the second, so the rounding loses no entry
+whose certificate holds at the declared constant, while $\AttSet_{\CList}$
+only grows --- which is the safe direction, a smaller admissible set being
+the one in which Theorem~\ref{thm:licence}'s inclusion can fail. \emph{For an
+equality entry neither direction survives}, which is why such an entry is
+refused rather than rounded. A constant of modulus above one is refused under
+every relation: on its enlarging side there need be no value satisfying
+\eqref{eq:latinv} at all ($\preceq$ at $c'>1$, $\succeq$ at $c'<-1$), and
+refusing is the safe direction, nothing being emitted.
+\end{proof}

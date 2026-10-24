@@ -1,0 +1,76 @@
+% ---
+% id: meat-core/def:untrusted-choi
+% kind: def
+% title: "The program in untrusted-source mode"
+% summary: >-
+%   In untrusted-source mode the Choi step is the identity: the variables are
+%   the sector blocks of the state, coupled by the single scalar condition that
+%   their traces sum to one. At d_A = 1 this is the trusted-mode Choi program.
+% prominence: standard
+% status: accepted
+% uses: [thm:choi, def:feasible, thm:branch-formula, thm:convexity, prop:trivial-alice-system]
+% mentions: [rem:homog, req:frame-recorded, rem:basis-invariance]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+In \tref{untrusted-source mode} there is no marginal to fix, so there is
+nothing to reparametrize. The program is not obtained by substituting
+$W_{\tau}=\idon{A}$ into \eqref{eq:choi-feas}: that substitution would give
+$\sum_s\tr_{\Qsys_s}\omega_s=\idon{A}$, i.e.\ $\omega_A$ fixed to the
+\emph{unnormalized} identity --- an infeasible condition, and the operator
+form the licence does not supply (Remark~\ref{rem:homog}\,(a)). The
+degeneration runs the other way: $W_{\tau}$ is simply never introduced.
+Since part (a) below introduces no $A_0$ and no $\iota$, the declared-basis
+question of Remark~\ref{rem:basis-invariance} does not arise at all, and no
+support frame is recorded in this mode
+(Requirement~\ref{req:frame-recorded}).
+
+\begin{definition}
+\label{def:untrusted-choi}
+In untrusted-source mode the Choi step is the identity. This is the
+degenerate case of Theorem~\ref{thm:choi}, not a second program:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{The parametrization.} $\chi_{B'}=\idmap$, $J=\omega$,
+$J_s=\omega_s$; no $A_0$, no $\iota$, no $W_{\tau}$.
+\item \emph{The variables and constraints.} $\Feas$ of
+\eqref{eq:feas} is already the \tref{feasible set}, and by
+\eqref{eq:feas-modes} it reads
+\begin{equation}\label{eq:choi-feas-un}
+  \Feas=\Big\{(\omega_s)_{s\in\SecSet}:\
+  \omega_s\in\Pos{A\Qsys_s},\
+  \sum_{s\in\SecSet}\tr\omega_s=1,\
+  \sum_{s\in\SecSet}
+  \tr\big[(\idon{A}\otimes\hat O^{(s)}_k)\,\omega_s\big]
+  \bowtie_k c_k\ \forall k\Big\},
+\end{equation}
+so the coupling constraint that binds the sector blocks is the single
+\emph{scalar} equation $\sum_s\tr\omega_s=1$, in place of the operator
+equation $\sum_s\tr_{\Qsys_s}J_s=\idon{A_0}$ of
+\eqref{eq:choi-feas}.
+\item \emph{The objective.} \eqref{eq:choi-program} holds verbatim with
+$J_s$ replaced by $\omega_s$ and $P^{J}_{\hat c}$, $f^J_{\hat c,s}$,
+$K^{J}_{\hat c}$ by their state-form originals
+$P_{\hat c}$, $f_{\hat c,s}$, $K_{\hat c}$ of \eqref{eq:fK}: the
+substitution $\omega_s=\chi_{\Qsys_s}(J_s)$ that
+Theorem~\ref{thm:choi} performs is the identity here. Hence the value
+is $\hlow$ of \eqref{eq:hlow-def} by definition rather than by a
+theorem, the program is jointly convex by
+Theorem~\ref{thm:convexity} directly, and the feasible set is convex
+and compact by Definition~\ref{def:feasible}.
+\item \emph{Consistency at $d_A=1$.} There trusted-source mode admits only
+$\tau_A=[1]$, the one state on a one-dimensional $A$, and its Choi
+parametrization degenerates: $d_{A_0}=\operatorname{rank}\tau_A=1$,
+$\iota=[1]$, $W_{\tau}=[1]$, $\chi_{B'}=\idmap$ and $J_s=\omega_s$. So
+$\idon{A_0}=[1]$ and $\sum_s\tr_{\Qsys_s}J_s=\idon{A_0}$ \emph{is}
+$\sum_s\tr\omega_s=1$, the constraint rows agree because every $1\times1$
+Hermitian $\Theta_k$ is $c_k\tau_A$ with $c_k=\Theta_k$
+(Proposition~\ref{prop:trivial-alice-system}\,(iii)), and the two feasible
+sets of \eqref{eq:feas} coincide
+(Proposition~\ref{prop:trivial-alice-system}\,(i)): \eqref{eq:choi-feas}
+and \eqref{eq:choi-feas-un} are the same set, and the two modes give
+literally the same program.
+\end{enumerate}
+\end{definition}

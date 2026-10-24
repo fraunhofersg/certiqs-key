@@ -1,0 +1,126 @@
+% ---
+% id: foundations/cor:least-eigenvalue-over-enclosure
+% kind: cor
+% title: "Least eigenvalue and rank over an enclosure"
+% summary: >-
+%   A Hermitian matrix within ρ of a Hermitian M in Frobenius norm has its
+%   spectrum within ρ of M's extreme eigenvalues. An entrywise enclosure whose
+%   exactly zero rows are dropped and whose rest certifies a positive least
+%   eigenvalue fixes the rank and support of every Hermitian matrix it contains.
+% prominence: technical
+% status: implemented
+% uses: [lem:least-eigenvalue-bound, def:exact-reference]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.dyadic:enclosure_eigenvalue_bounds
+% lean:
+% ---
+
+Lemma~\ref{lem:least-eigenvalue-bound} bounds the least eigenvalue of a
+matrix known exactly. An evaluation in ball arithmetic knows a matrix only
+through an enclosure: part~(i) carries the bound across a ball in Frobenius
+norm around an exact matrix, which is Weyl's inequality at the two ends of the
+spectrum, and part~(ii) reads an \tref{entrywise enclosure} as such a ball.
+Parts~(iii) and~(iv) decide the rank of every matrix an enclosure contains at
+once: the rows the enclosure fixes at zero are removed, and the rest must be
+positive definite throughout the enclosure. Where the rest is not shown to be,
+and in particular where its centre vanishes, the enclosure decides no rank,
+and the corollary claims none.
+
+\begin{corollary}\label{cor:least-eigenvalue-over-enclosure}
+Let $n\ge1$, and for a complex $n\times n$ matrix $X$ write
+$\|X\|_{\mathrm F}\coloneqq\big(\sum_{i,l}|X_{il}|^{2}\big)^{1/2}$ and
+$\opn{X}\coloneqq\max\{\|Xx\|:x\in\mathbb{C}^{n},\ \|x\|=1\}$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{(A ball in Frobenius norm.)} Let $R$ and $M$ be Hermitian
+  $n\times n$ matrices and $\rho\ge0$ with $\|R-M\|_{\mathrm F}\le\rho$. Then
+  $\opn{R-M}\le\|R-M\|_{\mathrm F}$, and
+  \begin{equation}\label{eq:frobenius-ball}
+    \lmin(R)\;\ge\;\lmin(M)-\rho,
+    \qquad
+    \lmax(R)\;\le\;\lmax(M)+\rho,
+  \end{equation}
+  so that every eigenvalue of $R$ lies in
+  $[\lmin(M)-\rho,\lmax(M)+\rho]$. In particular $\lmin(R)\ge\ell-\rho$ for
+  every lower bound $\ell$ on $\lmin(M)$, the right-hand side of
+  \eqref{eq:least-eigenvalue-bound} for $M$ among them.
+\item \emph{(An entrywise enclosure.)} If $(C,r)$ is an entrywise enclosure of
+  $R$ (Definition~\ref{def:exact-reference}) and $\rho$ is a rational with
+  $\rho\ge0$ and $\rho^{2}\ge\sum_{i,l}r_{il}^{2}$, then
+  $\|R-C\|_{\mathrm F}\le\rho$ and (i) applies with $M=C$; whether $\rho$
+  qualifies is a comparison of rationals.
+\item \emph{(A factor form fixes the rank.)} Let $1\le k\le n$, let $E$ be a
+  $k\times n$ matrix of rank $k$ and $\widetilde X$ a positive definite
+  $k\times k$ matrix, and put $X\coloneqq E^{\dagger}\widetilde XE$. Then
+  $X\succeq0$, $\operatorname{ran}X=\operatorname{ran}E^{\dagger}$ and
+  $\operatorname{rank}X=k$.
+\item \emph{(The rank over an entrywise enclosure.)} Let $C$ be a Hermitian
+  $n\times n$ matrix with entries in $\mathbb{Q}(i)$ and $r_{il}=r_{li}\ge0$
+  rationals, and say that $(C,r)$ \emph{contains} a Hermitian $X$ when
+  $|X_{il}-C_{il}|\le r_{il}$ for all $i,l$. Let
+  $Z\coloneqq\{i:C_{il}=0\text{ and }r_{il}=0\text{ for every }l\}$, the rows
+  the pair fixes at zero, let $K$ be its complement in $\{1,\dots,n\}$ and
+  $k\coloneqq|K|$. If $k=0$, the zero matrix is the only Hermitian matrix
+  $(C,r)$ contains. If $k\ge1$, let $E$ be the $k\times n$ matrix whose rows
+  are the transposed standard basis vectors $e_i^{\transpose}$, $i\in K$, in
+  increasing order; then every Hermitian $X$ that $(C,r)$ contains satisfies
+  $X=E^{\dagger}(EXE^{\dagger})E$. If moreover $\ell_K\le\lmin(ECE^{\dagger})$
+  and a rational $\rho_K\ge0$ with $\rho_K^{2}\ge\sum_{i,l\in K}r_{il}^{2}$
+  satisfy $\ell_K-\rho_K>0$, then for every Hermitian $X$ that $(C,r)$
+  contains, $EXE^{\dagger}\succ0$, and so, by (iii), $X\succeq0$,
+  $\operatorname{ran}X=\operatorname{span}\{e_i:i\in K\}$ and
+  $\operatorname{rank}X=k$: the factor $E$, the support and the rank are the
+  same for every such $X$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+\emph{(i).} Let $A$ be a complex $n\times n$ matrix and $x$ a unit vector.
+By the Cauchy--Schwarz inequality applied to each row,
+$\|Ax\|^{2}=\sum_i\big|\sum_lA_{il}x_l\big|^{2}
+\le\sum_i\big(\sum_l|A_{il}|^{2}\big)\|x\|^{2}=\|A\|_{\mathrm F}^{2}$, so
+$\opn{A}\le\|A\|_{\mathrm F}$, and $|x^{\dagger}Ax|\le\|x\|\,\|Ax\|
+\le\|A\|_{\mathrm F}$. With $A=R-M$, for every unit $x$,
+$x^{\dagger}Rx=x^{\dagger}Mx+x^{\dagger}(R-M)x$ lies between
+$x^{\dagger}Mx-\rho$ and $x^{\dagger}Mx+\rho$, hence between
+$\lmin(M)-\rho$ and $\lmax(M)+\rho$, since the Rayleigh quotient of the
+Hermitian $M$ lies between its extreme eigenvalues. The least and the
+largest eigenvalue of the Hermitian $R$ are the minimum and the maximum of
+$x^{\dagger}Rx$ over unit $x$, which gives \eqref{eq:frobenius-ball}, and
+every eigenvalue of $R$ lies between them. The last sentence follows from
+$\lmin(M)\ge\ell$.
+
+\emph{(ii).} By \eqref{eq:entrywise-enclosure},
+$\|R-C\|_{\mathrm F}^{2}=\sum_{i,l}|R_{il}-C_{il}|^{2}\le\sum_{i,l}r_{il}^{2}
+\le\rho^{2}$, and $C$ is Hermitian by Definition~\ref{def:exact-reference}.
+The sum of the squares of finitely many rationals is rational.
+
+\emph{(iii).} For every $x$,
+$x^{\dagger}Xx=(Ex)^{\dagger}\widetilde X(Ex)\ge0$, so $X\succeq0$, and
+$x^{\dagger}Xx=0$ exactly when $Ex=0$, $\widetilde X$ being positive
+definite. For a positive semidefinite $X$, $Xx=0$ exactly when
+$x^{\dagger}Xx=0$, since $x^{\dagger}Xx=\|X^{1/2}x\|^{2}$ and
+$Xx=X^{1/2}(X^{1/2}x)$. So $\ker X=\ker E$, and, $X$ being Hermitian,
+$\operatorname{ran}X=(\ker X)^{\perp}=(\ker E)^{\perp}
+=\operatorname{ran}E^{\dagger}$, whose dimension is
+$\operatorname{rank}E=k$.
+
+\emph{(iv).} Let $X$ be Hermitian and contained in $(C,r)$. For $i\in Z$ and
+every $l$, $|X_{il}|=|X_{il}-C_{il}|\le r_{il}=0$, so row $i$ of $X$
+vanishes, and so does column $i$, $X$ being Hermitian. If $k=0$, every row
+vanishes and $X=0$, which $(C,r)$ contains. If $k\ge1$, $E^{\dagger}E$ is the
+diagonal matrix with entry $1$ at the indices of $K$ and $0$ at those of $Z$,
+so $E^{\dagger}EXE^{\dagger}E$ is $X$ with the rows and columns of $Z$ set
+to zero, which is $X$. The matrix $EXE^{\dagger}$ is the principal
+submatrix of $X$ on $K$, Hermitian, and $|(EXE^{\dagger})_{il}
+-(ECE^{\dagger})_{il}|\le r_{il}$ for $i,l\in K$, so
+$\|EXE^{\dagger}-ECE^{\dagger}\|_{\mathrm F}\le\rho_K$ as in (ii), with
+$ECE^{\dagger}$ Hermitian. By (i),
+$\lmin(EXE^{\dagger})\ge\ell_K-\rho_K>0$, so $EXE^{\dagger}$ is positive
+definite, and (iii) applies with $\widetilde X=EXE^{\dagger}$; $E$ has rank
+$k$, its rows being distinct standard basis vectors, and
+$\operatorname{ran}E^{\dagger}=\operatorname{span}\{e_i:i\in K\}$. Neither
+$E$ nor $k$ depends on $X$.
+\end{proof}

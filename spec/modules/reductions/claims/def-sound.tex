@@ -1,0 +1,48 @@
+% ---
+% id: reductions/def:sound
+% kind: def
+% title: "Reachable states and sound constraints"
+% summary: >-
+%   A squashed state is reachable when it is the squashed image of a physical
+%   input, and a family of squashed states, or a constraint, is sound when it
+%   contains every reachable state. Soundness is what keeps a constrained
+%   analysis from excluding a physical attack.
+% prominence: standard
+% status: accepted
+% uses: [thm:factorization]
+% mentions: [rem:channel-choice]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Theorem~\ref{thm:factorization} leaves exactly one thing to check, and the
+following definition names it: the squashed analysis must run over a set of
+inputs containing the squashed images of the physical ones. Everything a
+constrained squashed analysis can legitimately assume is the supply of such
+sets, and every way such an analysis can fail is a constraint some
+\emph{reachable} state violates. Both notions depend on the channel and on
+the physical inputs; Remark~\ref{rem:channel-choice} says what has to be
+watched when these are not fixed.
+
+\begin{definition}\label{def:sound}
+Let $M\dsq_{\Lambda}F$ and let $\Sph=(\Sph_E)_E$ be a family of
+\term[The input states the physical protocol is analysed over, one set per
+admissible adversary system.]{physical inputs}, one set
+$\Sph_E\subseteq\Seq{A^{n}\Bsys^{n}E}$ per admissible adversary system $E$. A
+state $\sigma\in\Seq{A^{n}\Qsys^{n}E}$ is \term[Said of a squashed state that
+is the image of some physical input under the n-fold squashing
+channel.]{reachable} if
+\begin{equation}\label{eq:reachable}
+  \sigma=\big(\idmap_{A^{n}}\otimes\Lambda^{\otimes n}\otimes\idmap_E\big)(\rho)
+  \qquad\text{for some }\rho\in\Sph_E ,
+\end{equation}
+and $\Srch_E$ denotes the set of reachable states. A family $C=(C_E)_E$ of
+subsets $C_E\subseteq\Seq{A^{n}\Qsys^{n}E}$, and any constraint whose solution
+set it is, is \term[Said of a family of squashed states, or of a constraint,
+that contains every reachable state; not the soundness of a transmitter source
+link.]{sound} if $\Srch_E\subseteq C_E$ for every admissible $E$. Both notions
+depend on $\Lambda$ and on $\Sph$, which are suppressed in the notation and
+fixed throughout any one analysis.
+\end{definition}

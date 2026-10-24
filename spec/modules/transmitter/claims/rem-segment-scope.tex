@@ -1,0 +1,50 @@
+% ---
+% id: transmitter/rem:segment-scope
+% kind: rem
+% title: "Scope of the source-segment conditions"
+% summary: >-
+%   The registry conditions decide that a link names a claim proved for its
+%   kind, carries that claim's assumptions and comes from the admitting
+%   module; they do not decide that the claim applies to these descriptors.
+%   Composing the segment with the receiver segment is stated elsewhere.
+% prominence: standard
+% status: accepted
+% uses: [def:source-segment]
+% mentions: [def:source-link, reductions/lem:precomposition, reductions/thm:two-sided, reductions/def:chain, protocol-compiler/def:chaincond]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:segment-scope}
+\emph{What (A1) to (A3) decide.} The conditions (A1) to (A3) of
+Definition~\ref{def:source-segment} decide that a link's obligation names a
+claim of this repository that was proved for its kind, that the assumptions
+that obligation carries --- the claim's closure and the attestation for its
+model --- travel in the ledger, and that the segment came from the module that
+admits it. They do not decide that the named claim's conclusion applies to
+these descriptors: family membership is asserted by the emitting module and
+recorded as the fourth component of the obligation record
+(Definition~\ref{def:source-link}\,(c2), (d)), and no consumer re-proves a
+theorem. A link's obligation thus has two halves, what a consumer decides and
+what it takes from the emitting module. The second is exactly what rests on
+the emitting module for every artefact this repository passes between
+modules, and it is the smaller half: the registry closes the case of a link
+naming a claim that proves nothing about its kind, which is the case no other
+condition reaches.
+
+\emph{What is decided elsewhere.} The definition admits a \emph{kind} as a
+type, on the strength of a claim and a registry entry, and it decides of a
+presented segment the conditions (S1) to (S4) and (A1) to (A3). It asserts of
+no specification that it declares a non-empty segment: whether one does is
+\emph{data} of the presented chain, read off the segment itself. Two things a
+non-empty segment needs are not the definition's and are named rather than
+restated: the rule by which the segment composes with a receiver segment,
+which is \xref{reductions/lem:precomposition} and
+\xref{reductions/thm:two-sided} with the admission rule of
+\xref{reductions/def:chain}, in \tref{trusted-source mode}; and the consumer that
+decides that rule on an assembled declaration, which is
+\xref{protocol-compiler/def:chaincond}. That consumer also refuses a
+non-empty segment in \tref{untrusted-source mode}.
+\end{remark}

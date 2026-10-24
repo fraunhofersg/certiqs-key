@@ -1,0 +1,277 @@
+% ---
+% id: meat-core/prop:model-pass-bound
+% kind: prop
+% title: "The pass probability of devices the declared model admits"
+% summary: >-
+%   If every round's acceptance value, given the earlier ones, follows the
+%   statistics of a feasible state, the run passes the acceptance test with
+%   probability at most 2^(−n D_min). A lower bound b at one order thus caps
+%   that probability at 2^(−n (α₀−1)/α₀ · b).
+% user_statement: >-
+%   This result bounds how often devices that behave as your declared model
+%   says would pass your acceptance test. Suppose that in every round, given
+%   what happened before, the acceptance value is distributed as the
+%   statistics of some state the declaration admits as feasible. Then the run
+%   passes the test with probability at most 2^(−n D_min), where D_min is the
+%   minimal divergence of [[prop:minimal-divergence]], and the engine's proven
+%   lower bound on D_min gives a computable cap. This is a statement about the
+%   declared model, not about your real devices and not about an attacker. If
+%   the acceptance set was fixed before the run, the cap is tiny and your
+%   real devices do pass, that is evidence at the level of the cap, not a
+%   proof, that the model does not describe them ([[statistics/ass:reach]]).
+%   A set built from the same run's frequencies passes by construction.
+% prominence: standard
+% status: implemented
+% uses: [prop:minimal-divergence, def:postprocessing-model, def:feasible, def:maps, def:dropped, def:admissible-declaration, def:admissible-acceptance-set, foundations/def:kl, foundations/lem:kernel]
+% mentions: [thm:protocol-channel, statistics/ass:reach]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.consistency:model_pass_exponent
+% lean:
+% notes: "The hypothesis on the process is a hypothesis about how devices of the declared model would behave in a run without an adversary; no claim of this contract derives it, and the security claims do not need it. The bound is the convex case of Sanov's theorem without polynomial factor; it is derived here in full because no source for it is registered."
+% ---
+
+Proposition~\ref{prop:minimal-divergence}\,(iii) says that where
+$\sfD_{\min}>0$ no single feasible state has its statistics in the acceptance
+set; it says nothing about a finite run, whose frequencies can still fall in
+$\acSet$. This proposition bounds that event. A state $\omega$ on $A\Qsys$
+put through the \tref{single-round protocol map} yields an acceptance value
+distributed as $\Phimap[\omega]$ (Theorem~\ref{thm:protocol-channel}), so the
+hypothesis below describes a run without an adversary in which the devices
+behave as the declaration says: each round prepares and measures a state of
+the \tref{feasible set}, which may depend on the earlier rounds. That is a
+hypothesis about the devices the declaration describes. It is no consequence of the
+security model: the \tref{round model} and the accumulation theorems hold
+against every attack and say nothing about how often a run passes, and the
+security claims of this contract do not use the hypothesis. Read the other way, it is a statistical test of the model, for an
+acceptance set fixed before the run: where the bound is tiny and real
+devices pass, that is evidence at the level of the bound, not a proof, that the
+declaration does not describe them, which is the reading of
+\xref{statistics/ass:reach}. An acceptance set built from the same run's
+frequencies passes by construction and supports no such reading. A round state that depends on a
+richer record of the past than the earlier acceptance values, with finitely
+many values, is covered: given the acceptance values the round's law is then
+a convex combination of statistics of feasible states, which is the
+statistics of their convex combination, a feasible state, $\Phimap$ being
+linear and $\Feas$ convex. The proof is a Chernoff bound whose exponent is
+read off a minimising pair of the divergence, with the statistics set mixed
+with the uniform distribution so that every outcome has positive probability.
+
+\begin{proposition}\label{prop:model-pass-bound}
+Let $\Decl$ and $\acSet$ satisfy the hypotheses of
+Proposition~\ref{prop:minimal-divergence}, let $\sfD_{\min}$ be as in
+\eqref{eq:dmin} and $\mathcal{D}_{\mathrm{all}}$ the \tref{dropped set} of every
+pair there, and let $n\ge1$ be an integer. Let $\Pr$ be a probability
+distribution on $\Chatset^{\,n}$, write $\Chat_1,\dots,\Chat_n$ for the
+coordinates and $\Chat_1^{t}\coloneqq(\Chat_1,\dots,\Chat_t)$, and suppose:
+\begin{description}
+\item[(H)] for every $t\in\{1,\dots,n\}$ and every $h\in\Chatset^{\,t-1}$
+  with $\Pr[\Chat_1^{t-1}=h]>0$ there is a state $\omega_t(h)\in\Feas$ with
+  \begin{equation}\label{eq:pass-hypothesis}
+    \Pr\big[\Chat_t=\hat c\ \big|\ \Chat_1^{t-1}=h\big]
+    =\Phimap[\omega_t(h)](\hat c)\qquad\text{for every }\hat c\in\Chatset ,
+  \end{equation}
+  where $\Phimap[\omega](\hat c)$ is the entry of $\Phimap[\omega]$ at
+  $\hat c$ and, for $t=1$, $h$ is the empty sequence and the left-hand side
+  is $\Pr[\Chat_1=\hat c]$.
+\end{description}
+The case of independent rounds with one state $\omega\in\Feas$ is
+$\omega_t(h)=\omega$ for all $t$ and $h$. Let
+$\OmAT=\{\operatorname{freq}_{\Chat_1^n}\in\acSet\}$ be the event of
+Definition~\ref{def:postprocessing-model}\,(i), where
+$\operatorname{freq}_{\hat c_1^n}(\hat c)\coloneqq
+\frac1n\,|\{t:\hat c_t=\hat c\}|$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(The bound.)} For every real number $\delta\le\sfD_{\min}$,
+  \begin{equation}\label{eq:pass-bound}
+    \Pr[\OmAT]\;\le\;2^{-n\delta} .
+  \end{equation}
+  In particular $\Pr[\OmAT]=0$ if $\sfD_{\min}=+\infty$.
+\item \emph{(From a bound at one order.)} Let $\alpha_0\in(1,\infty)$ and let
+  $b$ be a real number with
+  $b\le\underline{h}^{\mathcal{D}_{\mathrm{all}}}_{\alpha_0}$. Then
+  $\Pr[\OmAT]\le2^{-x}$ for every real number
+  $x\le n\,\frac{\alpha_0-1}{\alpha_0}\,b$. For every
+  $\alpha'\in(1,\infty)$ the number
+  $f(\alpha')\coloneqq\frac{\alpha'}{\alpha'-1}\cdot\frac{\alpha_0-1}{\alpha_0}\,b$
+  satisfies $\frac{\alpha'-1}{\alpha'}\,n\,f(\alpha')
+  =n\,\frac{\alpha_0-1}{\alpha_0}\,b$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\emph{Idea.} If a weight $w\ge0$ on the acceptance values has mean at most
+one under every statistics of a feasible state, the product of the weights
+of the rounds has expectation at most one, and on the acceptance event its
+logarithm is $n$ times the mean of $\log_2w$ under the observed frequency.
+Markov's inequality then bounds the event. The weight is the ratio
+$q^{*}/p^{*}$ of a minimising pair of the divergence: the first-order
+conditions of the two minimisations give the two properties. Mixing every
+statistics with a little of the uniform distribution makes every outcome
+positive, so that the derivatives exist; the mixing is removed in a limit.
+
+Write $C\coloneqq\Chatset$, a non-empty finite set, $\Delta$ for the
+probability simplex on $C$, $u$ for the uniform distribution on $C$, and
+\begin{equation*}
+  \mathcal{P}\coloneqq\{\Phimap[\omega]:\omega\in\Feas\}.
+\end{equation*}
+Every $\Phimap[\omega]$ with $\omega\in\Feas$ lies in $\Delta$, as in the
+proof of Proposition~\ref{prop:minimal-divergence}, so $\mathcal{P}\subseteq\Delta$
+and, by \eqref{eq:dmin},
+$\sfD_{\min}=\inf_{\mathbf q\in\acSet}\inf_{\mathbf p\in\mathcal{P}}
+\sfD(\mathbf q\|\mathbf p)$. The map $\Phimap$ of \eqref{eq:Phimap} is
+linear (Definition~\ref{def:maps}), hence continuous, and $\Feas$ is convex,
+compact and non-empty (Definition~\ref{def:feasible};
+Definition~\ref{def:admissible-declaration}), so $\mathcal{P}$ is convex,
+compact and non-empty. $\acSet$ is a closed convex subset of $\Delta$
+(Definition~\ref{def:admissible-acceptance-set}), hence compact. For
+$\mathbf q,\mathbf p\in\Delta$,
+$\sfD(\mathbf q\|\mathbf p)=\sum_{c\in C}d(q(c),p(c))$ with $d$ the kernel
+of \xref{foundations/lem:kernel}, whose values at vanishing arguments are the
+conventions of \xref{foundations/def:kl}; $d$ is lower semicontinuous with values in
+$(-\infty,+\infty]$, so $\sfD$, a finite sum of such functions composed with
+the continuous coordinate maps, is lower semicontinuous on $\Delta\times\Delta$ with values in
+$[0,+\infty]$ (non-negative by \xref{foundations/def:kl}).
+
+If $\acSet=\varnothing$, then $\OmAT=\varnothing$, $\Pr[\OmAT]=0$, and
+\eqref{eq:pass-bound} holds for every $\delta$. Assume from now on
+$\acSet\ne\varnothing$. Since $2^{-n\delta}\ge2^{-n\sfD_{\min}}$ for $\delta\le\sfD_{\min}$
+(with $2^{-\infty}\coloneqq0$), (i) follows from
+\begin{equation}\label{eq:pass-bound-dmin}
+  \Pr[\OmAT]\le2^{-n\sfD_{\min}} ,
+\end{equation}
+which steps 1--5 prove.
+
+\emph{Step 1 (the mixed sets).} For $\varepsilon\in(0,1)$ put
+$\mathcal{P}_{\varepsilon}\coloneqq\{(1-\varepsilon)\mathbf p+\varepsilon u:
+\mathbf p\in\mathcal{P}\}$, the image of $\mathcal{P}$ under an affine map
+of $\mathbb{R}^{C}$ into $\Delta$; it is convex, compact and non-empty, and
+every $\mathbf p'\in\mathcal{P}_{\varepsilon}$ has $p'(c)\ge\varepsilon/|C|>0$
+for every $c$. Put $D_{\varepsilon}\coloneqq\inf_{\mathbf q\in\acSet}
+\inf_{\mathbf p'\in\mathcal{P}_{\varepsilon}}\sfD(\mathbf q\|\mathbf p')$.
+On $\Delta\times\mathcal{P}_{\varepsilon}$,
+$\sfD(\mathbf q\|\mathbf p')=\sum_c\big[\eta(q(c))-q(c)\log_2p'(c)\big]$
+with $\eta(x)\coloneqq x\log_2x$ for $x>0$ and $\eta(0)\coloneqq0$,
+continuous on $[0,\infty)$,
+and $\log_2p'(c)$ continuous as $p'(c)\ge\varepsilon/|C|$; so $\sfD$ is
+finite and continuous there, and on the non-empty compact set
+$\acSet\times\mathcal{P}_{\varepsilon}$ it attains its minimum at some pair
+$(\mathbf q^{*},\mathbf p^{*})$, with $\sfD(\mathbf q^{*}\|\mathbf p^{*})
+=D_{\varepsilon}\in[0,\infty)$. Define
+\begin{equation*}
+  w(c)\coloneqq\frac{q^{*}(c)}{p^{*}(c)}\in[0,\infty),\qquad
+  S^{*}\coloneqq\{c\in C:q^{*}(c)>0\}=\{c:w(c)>0\}.
+\end{equation*}
+
+\emph{Step 2 (the acceptance side).} We show: every $\mathbf q\in\acSet$
+vanishes off $S^{*}$, and
+\begin{equation}\label{eq:pass-tilt}
+  \sum_{c\in S^{*}}q(c)\log_2w(c)\;\ge\;D_{\varepsilon}
+  \qquad\text{for every }\mathbf q\in\acSet .
+\end{equation}
+Fix $\mathbf q\in\acSet$ and put $\mathbf q_s\coloneqq\mathbf q^{*}
++s(\mathbf q-\mathbf q^{*})$ for $s\in[0,1]$, which lies in $\acSet$ by
+convexity, and $g(s)\coloneqq\sfD(\mathbf q_s\|\mathbf p^{*})$. As $p^{*}$
+has no zero, $g(s)=\sum_c\varphi_c(q_s(c))$ with
+$\varphi_c(x)\coloneqq\eta(x)-x\log_2p^{*}(c)$ on $[0,\infty)$, which is
+differentiable on $(0,\infty)$ with
+$\varphi_c'(x)=\log_2x+\log_2\mathrm e-\log_2p^{*}(c)$. By minimality of the
+pair, $g(s)\ge D_{\varepsilon}=g(0)$ for every $s\in[0,1]$.
+
+Suppose $q(c_0)>0=q^{*}(c_0)$ for some $c_0$. Consider
+$\frac{g(s)-g(0)}{s}=\sum_c\frac{\varphi_c(q_s(c))-\varphi_c(q^{*}(c))}{s}$
+as $s\downarrow0$. For $c\in S^{*}$, $q_s(c)\to q^{*}(c)>0$ and the quotient tends
+to the finite number $\varphi_c'(q^{*}(c))\,(q(c)-q^{*}(c))$. For $c\notin S^{*}$
+with $q(c)=0$, $q_s(c)=0$ and the quotient is $0$. For $c\notin S^{*}$ with
+$q(c)>0$, $q_s(c)=s\,q(c)$ and the quotient is
+$q(c)\log_2\frac{s\,q(c)}{p^{*}(c)}\to-\infty$; $c_0$ is such a $c$. So
+$\frac{g(s)-g(0)}{s}\to-\infty$, and $g(s)<g(0)$ for some $s\in(0,1]$, a
+contradiction. Hence $q(c)=0$ for every $c\notin S^{*}$.
+
+Then for $c\notin S^{*}$ the summand of $g$ is $\varphi_c(0)=0$ for all $s$, and
+for $c\in S^{*}$ and $s\in[0,1)$, $q_s(c)\ge(1-s)q^{*}(c)>0$, so $g$ has the
+right derivative
+$g'(0^{+})=\sum_{c\in S^{*}}\varphi_c'(q^{*}(c))\,(q(c)-q^{*}(c))$ at $0$, which is
+$\ge0$ because $g(s)\ge g(0)$ for $s>0$. Since $\varphi_c'(q^{*}(c))
+=\log_2w(c)+\log_2\mathrm e$ and $\sum_{c\in S^{*}}q(c)=1=\sum_{c\in S^{*}}q^{*}(c)$
+(both vanish off $S^{*}$), this reads
+$\sum_{c\in S^{*}}q(c)\log_2w(c)\ge\sum_{c\in S^{*}}q^{*}(c)\log_2w(c)
+=\sfD(\mathbf q^{*}\|\mathbf p^{*})=D_{\varepsilon}$, which is
+\eqref{eq:pass-tilt}.
+
+\emph{Step 3 (the model side).} We show
+\begin{equation}\label{eq:pass-weight}
+  \sum_{c\in C}p(c)\,w(c)\;\le\;\frac{1}{1-\varepsilon}
+  \qquad\text{for every }\mathbf p\in\mathcal{P}.
+\end{equation}
+Let $\mathbf p'\in\mathcal{P}_{\varepsilon}$, put
+$\mathbf p_s\coloneqq\mathbf p^{*}+s(\mathbf p'-\mathbf p^{*})\in
+\mathcal{P}_{\varepsilon}$ for $s\in[0,1]$ (convexity), so that
+$p_s(c)\ge\varepsilon/|C|>0$, and
+$\rho(s)\coloneqq\sfD(\mathbf q^{*}\|\mathbf p_s)
+=\sum_{c\in S^{*}}q^{*}(c)\big[\log_2q^{*}(c)-\log_2p_s(c)\big]$. Each $p_s(c)$ is
+affine in $s$ and positive, so $\rho$ is differentiable on $[0,1]$ with
+$\rho'(0)=-\log_2\mathrm e\sum_{c\in S^{*}}q^{*}(c)\frac{p'(c)-p^{*}(c)}{p^{*}(c)}$.
+By minimality of the pair, $\rho(s)\ge\rho(0)$ for $s\in[0,1]$, so $\rho'(0)\ge0$,
+that is $\sum_{c\in S^{*}}q^{*}(c)\frac{p'(c)}{p^{*}(c)}\le\sum_{c\in S^{*}}q^{*}(c)=1$.
+As $w$ vanishes off $S^{*}$, $\sum_cp'(c)w(c)\le1$ for every
+$\mathbf p'\in\mathcal{P}_{\varepsilon}$. For $\mathbf p\in\mathcal{P}$ take
+$\mathbf p'=(1-\varepsilon)\mathbf p+\varepsilon u$; since
+$\sum_cu(c)w(c)\ge0$, $(1-\varepsilon)\sum_cp(c)w(c)\le\sum_cp'(c)w(c)\le1$,
+which is \eqref{eq:pass-weight}.
+
+\emph{Step 4 (the process).} Put $Z_0\coloneqq1$ and
+$Z_t\coloneqq\prod_{s=1}^{t}w(\Chat_s)\ge0$ for $t=1,\dots,n$, and write
+$\mathbb E$ for the expectation under $\Pr$. For $t\ge1$, grouping
+$\Chat_1^{t}=(h,\hat c)$ by its first $t-1$ entries $h$, and using
+$\Pr[\Chat_1^t=(h,\hat c)]=0$ where $\Pr[\Chat_1^{t-1}=h]=0$,
+\begin{equation*}
+  \mathbb E[Z_t]
+  =\sum_{h:\,\Pr[\Chat_1^{t-1}=h]>0}\Pr[\Chat_1^{t-1}=h]
+  \prod_{s=1}^{t-1}w(h_s)\sum_{\hat c\in C}
+  \Phimap[\omega_t(h)](\hat c)\,w(\hat c)
+  \;\le\;\frac{1}{1-\varepsilon}\,\mathbb E[Z_{t-1}],
+\end{equation*}
+by \eqref{eq:pass-hypothesis} and by \eqref{eq:pass-weight} for
+$\mathbf p=\Phimap[\omega_t(h)]\in\mathcal{P}$. By induction,
+$\mathbb E[Z_n]\le(1-\varepsilon)^{-n}$. On $\OmAT$, put
+$\mathbf q\coloneqq\operatorname{freq}_{\Chat_1^n}\in\acSet$ and
+$N_c\coloneqq nq(c)$. Every value $c=\Chat_t$ has $q(c)\ge\frac1n>0$, so
+$c\in S^{*}$ by Step~2 and $w(c)>0$; hence $Z_n>0$ and
+\begin{equation*}
+  \log_2Z_n=\sum_{c:\,N_c>0}N_c\log_2w(c)
+  =n\sum_{c\in S^{*}}q(c)\log_2w(c)\;\ge\;nD_{\varepsilon}
+\end{equation*}
+by \eqref{eq:pass-tilt}, the summands of $S^{*}$ with $q(c)=0$ being $0$. So
+$\OmAT\subseteq\{Z_n\ge2^{nD_{\varepsilon}}\}$, and Markov's inequality for
+the non-negative $Z_n$ gives
+\begin{equation}\label{eq:pass-eps}
+  \Pr[\OmAT]\le2^{-nD_{\varepsilon}}\,\mathbb E[Z_n]
+  \le(1-\varepsilon)^{-n}\,2^{-nD_{\varepsilon}}
+  \qquad\text{for every }\varepsilon\in(0,1).
+\end{equation}
+
+\emph{Step 5 (the limit).} Let $\varepsilon_j\coloneqq\frac{1}{j+1}$. The
+sequence $(D_{\varepsilon_j})_j$ in $[0,\infty)$ has a subsequence, which we
+relabel, converging to some $L\in[0,+\infty]$. Then
+$(1-\varepsilon_j)^{-n}\to1$ and $2^{-nD_{\varepsilon_j}}\to2^{-nL}$, so
+\eqref{eq:pass-eps} gives $\Pr[\OmAT]\le2^{-nL}$. We show $L\ge\sfD_{\min}$,
+which gives \eqref{eq:pass-bound-dmin}. If $L=+\infty$ there is nothing to
+show. Otherwise, for each $j$ pick $\mathbf q_j\in\acSet$ and
+$\mathbf p_j\in\mathcal{P}$ with
+$\sfD(\mathbf q_j\|\mathbf p'_j)\le D_{\varepsilon_j}+\frac1j$, where
+$\mathbf p'_j\coloneqq(1-\varepsilon_j)\mathbf p_j+\varepsilon_ju$. By
+compactness of $\acSet\times\mathcal{P}$ a further subsequence has
+$(\mathbf q_j,\mathbf p_j)\to(\mathbf q,\mathbf p)\in\acSet\times\mathcal{P}$,
+and then $\mathbf p'_j\to\mathbf p$. Lower semicontinuity of $\sfD$ gives
+$\sfD_{\min}\le\sfD(\mathbf q\|\mathbf p)\le\liminf_j\sfD(\mathbf q_j\|\mathbf p'_j)
+\le\lim_j\big(D_{\varepsilon_j}+\tfrac1j\big)=L$. This proves (i); where
+$\sfD_{\min}=+\infty$, \eqref{eq:pass-bound-dmin} reads $\Pr[\OmAT]=0$.
+
+\emph{(ii).} By Proposition~\ref{prop:minimal-divergence}\,(iv),
+\eqref{eq:dmin-bracket}, $\frac{\alpha_0-1}{\alpha_0}\,b\le\sfD_{\min}$. For
+real $x\le n\frac{\alpha_0-1}{\alpha_0}b$ put $\delta\coloneqq x/n$; then
+$\delta\le\sfD_{\min}$, and (i) gives $\Pr[\OmAT]\le2^{-n\delta}=2^{-x}$. The identity
+is $\frac{\alpha'-1}{\alpha'}\cdot\frac{\alpha'}{\alpha'-1}=1$.
+\end{proof}

@@ -1,0 +1,32 @@
+% ---
+% id: reductions/req:factorised-emission
+% kind: req
+% title: "Emission of several measuring parties as factors"
+% summary: >-
+%   Where several parties measure, the engine emits one artefact per factor,
+%   each with its party label, in the declared order, together with the
+%   combination rule. It emits, declares and rounds no entry of any product
+%   element.
+% prominence: standard
+% status: implemented
+% uses: [thm:emitted-product]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.factors:reduce_factors
+% lean:
+% ---
+
+A Kronecker product of two families on the declared lattice lies in general
+only on a finer lattice, and a normalised product would declare a non-product
+measurement for separated parties; the product is therefore emitted as a
+rule, and Theorem~\ref{thm:emitted-product} states what that rule gives.
+
+\begin{requirement}\label{req:factorised-emission}
+Where several \tref{measuring parties} measure, the engine emits in
+\iface{factor_emission} the ordered list of the factors' artefacts, each with
+its party label, in the \tref{declared order} of the factors, and the combination
+rule \eqref{eq:producttarget}; it emits, declares and rounds no entry of any
+product element $F_v$ (Theorem~\ref{thm:emitted-product}).
+\end{requirement}

@@ -1,0 +1,86 @@
+% ---
+% id: meat-core/prop:trivial-alice-system
+% kind: prop
+% title: "The two source modes coincide at a trivial Alice system"
+% summary: >-
+%   At d_A = 1 the two source modes have the same feasible set, the n-round
+%   product-marginal condition holds for every normalised state, the two
+%   licensed constraint classes coincide and the source licence deletes no
+%   attack. The two modes are then one declaration.
+% prominence: standard
+% status: accepted
+% uses: [def:feasible, def:homog, def:admissible-declaration]
+% mentions: [rem:modes-da1, def:untrusted-choi, lem:product-marginal, transmitter/ass:src]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+When Alice's system is one-dimensional, $d_A=\dim\Hs{A}=1$, it admits a
+single state, and the two values of the \tref{marginal slot} differ only in
+name. The proposition says so for four objects the source mode touches: the
+feasible set, the product-marginal condition of
+Lemma~\ref{lem:product-marginal}, the licensed constraint classes and
+Assumption~A-SRC; for the Choi parametrisation it is
+Definition~\ref{def:untrusted-choi}\,(d). A condition that every
+normalized state satisfies is satisfied vacuously, which is not the same as
+violated; Remark~\ref{rem:modes-da1}\,(b) reads the proposition as an
+embedding of protocols with no trusted source.
+
+\begin{proposition}\label{prop:trivial-alice-system}
+Let $d_A=1$. Then trusted-source mode admits exactly one marginal,
+$\tau_A=[1]$, and:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item the two feasible sets of \eqref{eq:feas} coincide;
+\item the $n$-round condition $\omega_{A_1^n}=\tau_A^{\otimes n}$ of
+Lemma~\ref{lem:product-marginal}\,(ii) holds for every normalized state; it is
+satisfied vacuously;
+\item the licensed constraint classes of Definition~\ref{def:homog}
+coincide: trusted-mode $\tau_A$-homogeneity is exactly the scalar typing
+of untrusted-source mode;
+\item A-SRC (\xref{transmitter/ass:src}) is vacuous: what it
+licenses is the condition $\tr\omega=1$, satisfied by every normalized
+state, so it deletes no attack.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Since $d_A=1$, $\Seq{A}=\{[1]\}$, so trusted-source mode admits exactly one
+marginal, $\tau_A=[1]$. For $\omega\in\Pos{A\Qsys}$ the $A$-marginal is the
+$1\times1$ matrix $\tr\omega$, so $\omega_A=\tau_A$ and $\tr\omega=1$ are
+the same condition.
+
+(i) The marginal lines of \eqref{eq:feas-modes} agree: that is the
+equality of conditions just shown. The constraint lines agree as well: at
+$d_A=1$ the partial trace $\tr_{\Qsys}$ of an operator on $A\Qsys$ is its
+trace, a $1\times1$ Hermitian $\Theta_k$ is $c_k[1]=c_k\tau_A$ with
+$c_k\in\mathbb{R}$ its one entry, and $\preceq$, $=$, $\succeq$ between
+$1\times1$ matrices are $\le$, $=$, $\ge$, so the trusted line
+$\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\,\omega]\bowtie_k\Theta_k$ is the
+untrusted line $\tr[(\idon{A}\otimes\hat O_k)\,\omega]\bowtie_kc_k$. In
+the general format the lines of \eqref{eq:feas-general} agree in the same
+way, the \tref{party-local} line being the same in either mode.
+
+(ii) $A_1^n$ is one-dimensional, so $\Seq{A_1^n}$ is a singleton and the
+$A_1^n$-marginal of every normalized state is its one element
+$\tau_A^{\otimes n}$.
+
+(iii) In trusted-source mode an untagged entry of a licensed list is
+declared homogeneous, carrying $c_k\in\mathbb{R}$, and its right-hand side
+is constructed as $\Theta_k=c_k\tau_A=c_k[1]$
+(Definition~\ref{def:homog}\,(a)); in untrusted-source mode an untagged
+entry of a licensed list carries a real $c_k$
+(Definition~\ref{def:homog}\,(b)). So the two classes consist of the same
+lists of entries carrying a real scalar $c_k$, and by (i) the line of such
+an entry is in both modes the one comparison of real numbers
+$\tr[(\idon{A}\otimes\hat O_k)\,\omega]\bowtie_kc_k$. An entry declared
+\tref{general} lies in neither class: its $1\times1$ Hermitian
+$\Theta_k$ equals $c_k\tau_A$ with $c_k=\Theta_k\in\mathbb{R}$, so it
+could have been declared homogeneous with the same line, but licensing
+reads the declared form (Definition~\ref{def:homog}).
+
+(iv) What Assumption~A-SRC licenses is the marginal condition
+$\omega_A=\tau_A$, which by the equality of conditions above is
+$\tr\omega=1$; every normalized state satisfies it.
+\end{proof}

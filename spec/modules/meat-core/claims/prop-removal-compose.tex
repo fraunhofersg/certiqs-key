@@ -1,0 +1,68 @@
+% ---
+% id: meat-core/prop:removal-compose
+% kind: prop
+% title: "Deleting a set of removable sectors"
+% summary: >-
+%   Several removable sectors may be deleted together when every deleted
+%   sector's witness targets only sectors that stay. The whole set may then
+%   be deleted without changing the value of the program or its attainment.
+% prominence: standard
+% status: implemented
+% uses: [def:classes, def:feasible, thm:removal, def:keyinert, def:admissible-declaration]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.declaration.sectors:delete_sectors
+% lean:
+% ---
+
+Theorem~\ref{thm:removal} deletes one sector and moves its weight onto the
+targets of its witness. Several deletions compose when no deletion removes a
+sector that another deleted sector's weight is moved onto.
+
+\begin{proposition}
+\label{prop:removal-compose}
+Let $\Decl$ satisfy Definition~\ref{def:admissible-declaration} and let
+$\SecSet_{\mathrm{del}}\subseteq\SecSet$ be the set of sectors a run
+deletes. Suppose \emph{every $s\in\SecSet_{\mathrm{del}}$
+carries a witness in the sense of Definition~\ref{def:classes}\,(d) all of
+whose targets lie outside $\SecSet_{\mathrm{del}}$}. Then restricting the
+infimum \eqref{eq:hlow-def} to
+$\{\omega\in\Feas:\omega_s=0\ \text{for all }s\in\SecSet_{\mathrm{del}}\}$
+changes neither its value nor its attainment: the whole set
+$\SecSet_{\mathrm{del}}$ may be deleted from the variable list, and its
+rows from the generated maps, without loss.
+\end{proposition}
+
+\begin{proof}
+By induction on $|\SecSet_{\mathrm{del}}|$. The case $0$ is vacuous and
+the case $1$ is Theorem~\ref{thm:removal}. For the step, delete the
+members one at a time, in any order, and check at each step that the
+theorem applies to the \emph{reduced} declaration
+$\Decl'$ obtained by deleting the sectors removed so far.
+\emph{The sector being deleted is still state-blind, and every
+key-inertness predicate is unchanged}: both are per-sector properties of
+that sector's own declared blocks $F^{(s)}_v$, $\hat O^{(s)}_k$ and of
+$M_x$, $a$, $r$, $\varphi$, $\varsigma$ (Definitions~\ref{def:keyinert}
+and~\ref{def:classes}\,(c)), none of which deleting \emph{another} sector
+touches. \emph{Its targets are still present}, never having been in
+$\SecSet_{\mathrm{del}}$, so (W2) and (W5) read the same rows and (RM1),
+(RM3) the same numbers. \emph{And $\Decl'$ satisfies
+Definition~\ref{def:admissible-declaration}}: (iii) because $\{F_v\}$ is sector-block-diagonal
+with $\sum_vF^{(s)}_v=\idon{\Qsys_s}$ per surviving sector, so its
+restriction is a POVM on $\bigoplus_{s\notin\text{deleted}}\Hs{\Qsys_s}$,
+and likewise for $\{M_x\}$, which is untouched; (vi) because $\Theta_k$
+and $c_k$ are untouched and each $\hat O_k$ restricts to a
+sector-block-diagonal operator; (vii) because Theorem~\ref{thm:removal}'s
+own map $\omega\mapsto\hat\omega$ carries a point of $\Feas$ --- nonempty
+by (vii) for the declaration before the step --- to a feasible point with
+$\omega_{s^{*}}=0$, whose restriction is a point of the reduced feasible
+set; and (i), (ii), (iv), (v), (viii) read no sector at all. So
+Theorem~\ref{thm:removal} applies at each step and leaves the infimum and
+its attainment unchanged. Finally the theorem's modified point adds mass
+only to the targets, hence only outside $\SecSet_{\mathrm{del}}$, so no
+already deleted sector is repopulated by a later step, and the objective
+on the reduced declaration equals the restricted objective, the deleted
+sector contributing $f_{\hat c,s^{*}}(0)=0$ and
+$\Phimap_{s^{*}}[0]=0$.
+\end{proof}

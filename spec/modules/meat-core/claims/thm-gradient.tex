@@ -1,0 +1,215 @@
+% ---
+% id: meat-core/thm:gradient
+% kind: thm
+% title: "Gradient of the pinched trace power on a face"
+% summary: >-
+%   The pinched trace power is differentiable at a positive definite operator,
+%   and on the face of a singular one in split form: divided differences over
+%   the positive spectrum, pinched operators on the ambient space. A one-sided
+%   derivative is +∞ only along a direction that enlarges the support.
+% prominence: standard
+% status: implemented
+% uses: [lem:dk, cor:concavity, foundations/fact:concavity, lem:branch-maps, lem:cone-concavity, def:branch-support, lem:branch-support]
+% mentions: [meat-core/frank-wolfe/thm:firstorder, meat-core/frank-wolfe/rem:fo-nopert, meat-core/frank-wolfe/lem:fo-face, foundations/def:pinching, req:split-form-gradient, req:gradient-at-maximal-support]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.gradient:state_gradient
+% lean:
+% ---
+
+The key-active branch operators are in general singular, and their
+\tref{maximal branch support} is in general not invariant under the
+\tref{key pinching} (Lemma~\ref{lem:branch-support}\,(iv)); part~(i) is therefore
+stated so that no such invariance is needed, and
+Requirement~\ref{req:split-form-gradient} is the rule it gives an
+implementation. Part~(ii) is why gradients are taken at points of maximal
+support (Requirement~\ref{req:gradient-at-maximal-support}). At maximal
+support the split form gives the true one-sided derivative in every
+feasible direction, because there no feasible direction enlarges the
+support; that is Lemma~\ref{lem:fo-face} of the Frank--Wolfe submodule,
+where Theorem~\ref{thm:firstorder} consumes it, and
+Remark~\ref{rem:fo-nopert} explains why the explicit-perturbation route has
+no accounted instance.
+
+\begin{theorem}\label{thm:gradient}
+Let $\alpha\in(1,\infty)$, $p=1/\alpha$, let $T$ be the pinched trace
+power \eqref{eq:Tcone} on the positive semidefinite cone of a branch space
+(Lemma~\ref{lem:dk}), and let $X\succ0$. Then $T$ is Fr\'echet
+differentiable at $X$ with gradient
+\begin{equation}\label{eq:gradT}
+  \nabla T(X)
+  =\alpha\,D X^{p}\Big[\cZ\big(Y^{\alpha-1}\big)\Big],
+  \qquad Y\coloneqq\cZ(X^{p}),
+\end{equation}
+i.e.\ $\frac{\mathrm d}{\mathrm dt}T(X+tH)\big|_0=\tr[\nabla T(X)H]$,
+where $DX^{p}[\cdot]$ is the self-adjoint map \eqref{eq:dk} with
+$f(x)=x^{p}$ and $Y^{\alpha-1}$ is defined by functional calculus
+($0^{\alpha-1}\coloneqq0$; $Y$ may be singular). Explicitly, in the
+eigenbasis $X=\sum_i\lambda_iP_i$:
+\begin{equation}\label{eq:gradT-kernel}
+  \nabla T(X)=\alpha\sum_{i,j}
+  \frac{\lambda_i^{p}-\lambda_j^{p}}{\lambda_i-\lambda_j}\,
+  P_i\,\cZ\big(Y^{\alpha-1}\big)\,P_j
+  \qquad(\text{diagonal kernel }p\lambda_i^{p-1}).
+\end{equation}
+Moreover:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(faces)} Let $X\succeq0$, write
+$S\coloneqq\operatorname{supp}X$, and let $H$ be Hermitian with
+$\operatorname{supp}H\subseteq S$. Then $t\mapsto T(X+tH)$ is
+differentiable at $t=0$, and \eqref{eq:gradT}--\eqref{eq:gradT-kernel}
+hold in the following \emph{split} form:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item the divided-difference map $DX^{p}[\cdot]$ is compressed to $S$,
+equivalently, the sum in \eqref{eq:gradT-kernel} runs over the strictly
+positive eigenvalues of $X$ only, where $X$ is positive definite and the
+kernel $f^{[1]}$ is finite;
+\item $Y=\cZ(X^{p})$, $Y^{\alpha-1}$ and $\cZ(Y^{\alpha-1})$ are formed on
+the \emph{ambient} branch space and are \emph{not} compressed to $S$.
+\end{enumerate}
+The resulting $\nabla T(X)$ determines the derivative in every direction
+supported in $S$; its components outside $S$ are neither determined by
+this nor needed, support-enlarging directions being the subject of (ii).
+Compressing the \emph{whole} computation to a subspace $S'$ is licensed
+when $\sum_{j\in\Zset}Z_jS\subseteq S'$, in particular when $S\subseteq S'$
+and $S'$ is $\cZ$-invariant ($Z_jS'\subseteq S'$ for every $j\in\Zset$):
+then the ambient complement contributes $0$ to $T$, and the compressed and
+ambient computations agree. Compressing to $S$ itself is licensed
+\emph{only} when $S$ is $\cZ$-invariant; otherwise $\cZ$ transports weight
+out of $S$ and the compressed value of $T$ is strictly smaller (the proof
+gives the argument and a rank-one witness). For the branch operators $X=\cG_{\hat c,s}(\omega_s)$, whose
+faces are in general not $\cZ$-invariant, the relevant face is
+$S=W_{\hat c,s}$ of \eqref{eq:Wcs} at maximal support, and (a)--(b) is
+what makes the gradient available there.
+\item \emph{(one-sided derivatives)} For $X\succeq0$ and any Hermitian
+$H$ with $X+tH\succeq0$ for small $t>0$, the one-sided directional
+derivative $\lim_{t\downarrow0}\frac{T(X+tH)-T(X)}{t}$ exists in
+$(-\infty,+\infty]$, and can equal $+\infty$ only when $H$ strictly
+enlarges the support of $X$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} At $X\succ0$ the gradient is the chain rule through
+$X\mapsto X^{p}$ (Lemma~\ref{lem:dk}), the linear pinching and
+$Y\mapsto\tr[Y^{\alpha}]$. On a face the inner map is differentiated
+inside the support, where $X$ is positive definite, while the outer map is
+differentiable at every $Y\succeq0$ and so stays on the ambient space.
+Concavity of $T$ locates the only infinite one-sided derivatives.
+
+\emph{Step 1 (differentiability at $X\succ0$).} $X\mapsto X^{p}$ is
+Fr\'echet differentiable at $X\succ0$ (Lemma~\ref{lem:dk} with
+$f=x^{p}$ on $I=(0,\infty)$); $\cZ$ is linear; and with
+$g(y)=\max\{y,0\}^{\alpha}$ of Lemma~\ref{lem:dk}, continuously
+differentiable on $\mathbb{R}$ because $\alpha>1$, the map
+$Y\mapsto\tr g(Y)$, which is $\tr[Y^{\alpha}]$ on the positive
+semidefinite operators, is Fr\'echet differentiable at every $Y\succeq0$
+with derivative $K\mapsto\alpha\tr[Y^{\alpha-1}K]$ by
+\eqref{eq:trace-diff}. For $|t|$ small $X+tH\succ0$, so
+$T(X+tH)=\tr g\big(\cZ((X+tH)^{p})\big)$. The chain rule gives
+\begin{equation*}
+  \frac{\mathrm d}{\mathrm dt}T(X+tH)\Big|_0
+  =\alpha\tr\big[Y^{\alpha-1}\,\cZ\big(DX^{p}[H]\big)\big]
+  =\alpha\tr\big[\cZ\big(Y^{\alpha-1}\big)\,DX^{p}[H]\big]
+  =\tr\big[\alpha\,DX^{p}\big[\cZ(Y^{\alpha-1})\big]\,H\big],
+\end{equation*}
+using self-adjointness of the pinching and then of $DX^{p}$
+(Lemma~\ref{lem:dk}). \eqref{eq:gradT-kernel} is \eqref{eq:dk} written
+out.
+
+\emph{Step 2 (faces, part (i)).} Write $S=\operatorname{supp}X$ and let
+$\Pi_{S}$ be its projector. For Hermitian $H$ with
+$\operatorname{supp}H\subseteq S$ we have
+$X+tH=\Pi_{S}(X+tH)\Pi_{S}$, and $X$ is positive definite on $S$, so for
+$|t|$ small the compression $(X+tH)|_{S}$ is positive definite and
+$(X+tH)^{p}=\big((X+tH)|_{S}\big)^{p}\oplus0$ by the convention $0^{p}=0$
+of \xref{foundations/def:pinching}. Lemma~\ref{lem:dk}, applied inside
+$\Lin{S}$ with $f(x)=x^{p}$ on $I=(0,\infty)$, which contains
+$\operatorname{spec}(X|_{S})$, gives
+\begin{equation}\label{eq:face-dpow}
+  \frac{\mathrm d}{\mathrm dt}(X+tH)^{p}\Big|_{0}
+  =\!\!\sum_{i,j:\ \lambda_i,\lambda_j>0}\!\!
+  \frac{\lambda_i^{p}-\lambda_j^{p}}{\lambda_i-\lambda_j}\,P_iHP_j
+  \eqqcolon D_{S}X^{p}[H],
+\end{equation}
+a self-adjoint map on the Hermitian operators supported in $S$. No term
+with $\lambda_i=0$ or $\lambda_j=0$ occurs, which removes the divergence
+of the kernel at the origin; this is (a). The outer factor is untouched by
+that compression: with $g(y)=\max\{y,0\}^{\alpha}$ as in Step~1,
+\eqref{eq:trace-diff} makes $Y\mapsto\tr g(Y)$, which is $\tr[Y^{\alpha}]$
+on the positive semidefinite operators, differentiable at every
+$Y\succeq0$, in particular at the \emph{ambient}
+$Y=\cZ(X^{p})$, which is not supported in $S$ unless $S$ is
+$\cZ$-invariant. This is (b). Composing the two,
+\begin{equation*}
+\begin{aligned}
+  \frac{\mathrm d}{\mathrm dt}T(X+tH)\Big|_{0}
+  &=\alpha\tr\big[Y^{\alpha-1}\,\cZ\big(D_{S}X^{p}[H]\big)\big]
+  =\alpha\tr\big[\cZ\big(Y^{\alpha-1}\big)\,D_{S}X^{p}[H]\big]\\
+  &=\tr\big[\alpha\,D_{S}X^{p}\big[\cZ(Y^{\alpha-1})\big]\,H\big],
+\end{aligned}
+\end{equation*}
+by self-adjointness of the pinching and then of $D_{S}X^{p}$
+(Lemma~\ref{lem:dk} inside $\Lin{S}$; only
+$\Pi_{S}\cZ(Y^{\alpha-1})\Pi_{S}$ enters, because $H$ is supported in
+$S$).
+
+\emph{Step 3 (compression).} Put $S_{\cZ}\coloneqq\sum_{j\in\Zset}Z_jS$.
+It contains $S$, because $\sum_jZ_j=\idon{}$, and it is $\cZ$-invariant,
+because $Z_iZ_j=\delta_{ij}Z_i$; and for every $W$ supported in $S_{\cZ}$,
+$\cZ(W)=\sum_jZ_jWZ_j$ is supported in $\sum_jZ_jS_{\cZ}=S_{\cZ}$. With
+$X^{p}$ supported in $S$, therefore, $Y=\cZ(X^{p})$, $Y^{\alpha-1}$ and
+$\cZ(Y^{\alpha-1})$ are supported in $S_{\cZ}$. Let
+$S_{\cZ}\subseteq S'$, which holds in particular when $S\subseteq S'$ and
+$Z_jS'\subseteq S'$ for all $j$. Compressing the pinching to $S'$,
+$W\mapsto\Pi_{S'}\cZ(W)\Pi_{S'}$, then changes none of these operators, so
+every trace above may be taken inside $S'$ and the ambient complement
+contributes $0$: the compressed and ambient computations agree.
+
+If $S$ is not $\cZ$-invariant, compressing to $S$ itself changes $T$
+already. Then $S_{\cZ}\ne S$, and $\operatorname{supp}Y=S_{\cZ}$: a vector
+$\ket{w}$ with $\bra{w}Z_jX^{p}Z_j\ket{w}=0$ for every $j$ has
+$X^{p/2}Z_j\ket{w}=0$, hence $Z_j\ket{w}\perp S$, for every $j$, and
+conversely each $Z_jX^{p}Z_j$ has range in $Z_jS$. So $Y$ is not supported
+in $S$, and the compressed value $\tr[(\Pi_SY\Pi_S)^{\alpha}]$ is strictly
+smaller than $T(X)=\tr[Y^{\alpha}]$: for a unit eigenvector $u\in S$ of
+$\Pi_SY\Pi_S$, with eigenvalue $\mu=\bra{u}Y\ket{u}$, Jensen's inequality
+for the convex $x\mapsto x^{\alpha}$ and the spectral distribution of $Y$
+in $u$ gives $\mu^{\alpha}\le\bra{u}Y^{\alpha}\ket{u}$; summing over an
+orthonormal eigenbasis of $S$ gives
+$\tr[(\Pi_SY\Pi_S)^{\alpha}]\le\tr[\Pi_SY^{\alpha}]$, the operator
+$\Pi_SY\Pi_S$ vanishing on $S^{\perp}$; and
+$\tr[\Pi_SY^{\alpha}]<\tr[Y^{\alpha}]$, because $Y^{\alpha}\succeq0$ has the
+support of $Y$, which is not contained in $S$. Witness: let
+$\ket\eta=a\ket{j}_R\ket{u}+b\ket{j'}_R\ket{u'}$ with $j\ne j'$,
+$|a|^{2}+|b|^{2}=1$, and $X=\dyad{\eta}$, so that $X^{p}=X$ and
+$\cZ(X^{p})=|a|^{2}\dyad{j,u}+|b|^{2}\dyad{j',u'}$ has rank two while $X$
+has rank one. The ambient value is
+$T(X)=|a|^{2\alpha}+|b|^{2\alpha}$, whereas compressing to
+$S=\mathbb{C}\ket\eta$ would return
+$\big(\bra\eta\cZ(X^{p})\ket\eta\big)^{\alpha}
+=(|a|^{4}+|b|^{4})^{\alpha}$; at $|a|^{2}=|b|^{2}=\tfrac12$ these are
+$2^{1-\alpha}$ and $2^{-\alpha}$.
+
+\emph{Step 4 (branch operators).} For $X=\cG_{\hat c,s}(\omega_s)$,
+\eqref{eq:Wcs-bound} gives $S\subseteq W_{\hat c,s}$, with equality at
+maximal support, and $W_{\hat c,s}$ need not be $\cZ$-invariant
+(Lemma~\ref{lem:branch-support}\,(iv)). The split form (a)--(b) is
+therefore the operative one: it needs no $\cZ$-invariance, only
+$\operatorname{supp}H\subseteq S$. The whole computation may be
+compressed to a $\cZ$-invariant $S'\supseteq W_{\hat c,s}$, for instance
+$\sum_{j\in\Zset}Z_jW_{\hat c,s}$, which is $\cZ$-invariant because
+$Z_iZ_j=\delta_{ij}Z_i$.
+
+\emph{Step 5 (one-sided derivatives, part (ii)).} $T$ is concave on the
+positive semidefinite cone by Lemma~\ref{lem:cone-concavity}\,(b), which
+carries the concavity of \xref{foundations/fact:concavity}, in the form of
+Corollary~\ref{cor:concavity} on $\Sleq{}$, to the whole cone by the
+positive $1$-homogeneity $T(cX)=c\,T(X)$ for $c\ge0$. For a concave
+function, $t\mapsto\frac{T(X+tH)-T(X)}{t}$ is non-increasing on the
+feasible ray, so the limit exists in $(-\infty,+\infty]$. If $H$
+preserves the support, (i) gives a finite value. The scalar example
+$x\mapsto x^{p}$ at $x=0$ shows the support-enlarging derivative can be
+$+\infty$.
+\end{proof}

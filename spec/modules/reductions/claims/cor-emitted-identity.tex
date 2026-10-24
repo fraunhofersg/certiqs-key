@@ -1,0 +1,103 @@
+% ---
+% id: reductions/cor:emitted-identity
+% kind: cor
+% title: "The emitted family of the identity instance"
+% summary: >-
+%   For the identity instance the normalizer moves nothing, so the emitted
+%   family is the handed datum itself, squashed by the sector pinching with no
+%   error term on an exact link. A requested entry's certificate is the
+%   operator inequality itself, decided exactly on the emitted numbers.
+% prominence: standard
+% status: accepted
+% uses: [thm:emit, cor:identity-instance, def:emitnorm, cor:entries, prop:pinching, thm:chain, lem:exactpsd, def:reduction-instance, def:exactadm]
+% mentions: [ex:identity]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "No implements field: it is filled when the identity builder has a code symbol."
+% ---
+
+The identity instance is the one a protocol with an already-finite receiver
+would use; this corollary is Theorem~\ref{thm:emit} read at it.
+
+\begin{corollary}
+\label{cor:emitted-identity}
+Let the declared data pass every refusal rule of this module's interface, let
+$\mathcal{J}_{\mathrm{id}}$ be the identity instance of
+Corollary~\ref{cor:identity-instance} with handed datum $A$, and let $A'$ be
+the datum the normalizer of Definition~\ref{def:emitnorm} declares. Then
+Theorem~\ref{thm:emit} holds of $\mathcal{J}_{\mathrm{id}}$; the normalizer
+moves nothing, $A'=A$ and $\Delta_s=0$ for every data sector $s$; and, for
+every $v\in\Vset$,
+\begin{equation}\label{eq:emitted-identity}
+  \Lambda^{\dagger}(F_v)\;=\;\PinS(F_v)\;=\;F_v\;=\;\Mdec_v
+  \;=\;\bigoplus_{s\in\SecSet_0}A'^{(s)}_v
+  \qquad\text{exactly, on }\Bsys=\Qsys ,
+\end{equation}
+so the emitted family \emph{is} the declared datum, which is the handed
+datum, exactly admissible and decided so before emission; the emitted
+constraint list is \emph{empty where the request carries no entry} --- this
+instance's own list being empty in any case
+(Corollary~\ref{cor:identity-instance}\,(I4)) --- and where the request
+carries entries it carries, on request, the class-marginal entries
+$\big(\sum_{v\in\Vset_t}F_v,=,q_t\big)$, which the instance discharges, and
+a further requested entry $(\hat O,\bowtie,c)$ of the form
+\eqref{eq:instance-entry}, which Corollary~\ref{cor:entries}\,(iii) emits
+exactly where $\hat O\bowtie c\,\idon{\Bsys}$ holds at the constant $c$ it
+emits, this instance carrying none of its own: $\Lambda^{\dagger}(\hat O)=\hat O$, so the
+certificate \eqref{eq:entrygeneral} of such an entry is that operator
+inequality on the emitted numbers, decided exactly by finitely many field
+operations and sign comparisons, a decided certificate in the sense of
+Corollary~\ref{cor:entries}\,(iii) for every operator of that form; its
+default carried operators --- here the sector projectors and nothing else,
+the transported set being $\{\Pi_s\}_{s\in\SecSet_0}$ --- are emitted with
+the transported set at $c=0$ with $\succeq$ in either case
+(Corollary~\ref{cor:entries}\,(i)); no scalar value is emitted and no bound
+of this module's own is rounded; the chain is the identity link with
+$\textsf{status}=\textsf{exact}$. These statements are about the instance's
+link and its emitted family.
+The instance is selectable only once a declared input carries an
+already-finite POVM.
+\end{corollary}
+
+\begin{proof}
+Corollary~\ref{cor:identity-instance} makes $\mathcal{J}_{\mathrm{id}}$ a
+reduction instance, so Theorem~\ref{thm:emit} applies to it with the data
+passing every refusal rule. Its handed datum is the declared family, every
+block of which is decided exactly admissible on the declared lattice on
+entry, so every entry satisfies \eqref{eq:latinv}, and the first of the
+properties of Definition~\ref{def:emitnorm} gives $A'=A$ and every
+$\Delta_s=0$. Part (iii) of that theorem at this instance reads
+$\Lambda^{\dagger}(F_v)=M_v[A']=\bigoplus_sA'^{(s)}_v$; and $\Lambda=\PinS$ is
+self-adjoint with $\PinS(F_v)=F_v$ for the block-diagonal $F_v$
+(Proposition~\ref{prop:pinching}), which gives the two middle equalities of
+\eqref{eq:emitted-identity}. That the emitted family is exactly admissible
+and decided so is part (ii); that it is the declared datum is (I2) of the
+instance, there being no scalar sector. The default carried operators and
+the entries are Corollary~\ref{cor:entries}\,(i) and, the identity instance
+discharging the class-marginal identity, (ii). For a further requested
+entry, $\hat O$ is a real combination of the blocks $\Pi_sF_v\Pi_s$ and of
+sector projectors, hence block diagonal for $\SecSet_0$ and Hermitian, so
+$\Lambda^{\dagger}(\hat O)=\PinS(\hat O)=\hat O$ (Proposition~\ref{prop:pinching});
+its entries are formed from emitted lattice entries and declared lattice
+coefficients by finitely many field operations, so they lie in $\Fldi$; and
+the certificate \eqref{eq:entrygeneral} is then $\hat O-c\,\idon{\Bsys}\succeq0$,
+$c\,\idon{\Bsys}-\hat O\succeq0$ or an entrywise equality, the first two
+decided by \eqref{eq:psdtest} of Lemma~\ref{lem:exactpsd} and the last by
+comparing entries. The instance's (H) being empty, that condition is a decided
+certificate for every operator of the form \eqref{eq:instance-entry}, and
+Corollary~\ref{cor:entries}\,(iii) emits the entry exactly where it holds.
+Parts (ii) and (iii) are statements
+about a request that carries entries; where the request carries none the
+emitted list is empty by that corollary's rule, whatever the instance's own
+list contains --- and this instance's is empty in any case
+(Corollary~\ref{cor:identity-instance}\,(I4)) --- so the artefact then
+carries no entry and no licence, which is what the last sentence of that
+corollary says of its chain. With no scalar sector the rounding clause of
+Theorem~\ref{thm:emit}\,(iv) has nothing of this module's to round, and only
+a caller's constant can be. The chain and its status are the last sentence
+of Corollary~\ref{cor:identity-instance} with Theorem~\ref{thm:chain}\,(iv),
+now at the declared datum. The last sentence is
+Example~\ref{ex:identity}.
+\end{proof}

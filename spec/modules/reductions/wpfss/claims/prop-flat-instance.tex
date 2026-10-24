@@ -1,0 +1,201 @@
+% ---
+% id: reductions/wpfss/prop:flat-instance
+% kind: prop
+% title: "The flat instance of the post-processed receiver"
+% summary: >-
+%   The post-processed receiver family with its routed weights defines a
+%   reduction instance, with the weight-preserving target on the encoded route
+%   and the flag-state target on the licensed route. Its declared model agrees
+%   with the handed one above the cutoff and keeps every certified weight.
+% prominence: standard
+% status: implemented
+% uses: [reductions/def:reduction-instance, reductions/def:joint-family, reductions/def:exactadm, reductions/def:emitnorm, reductions/def:system-setting, def:weight-route, def:targets, prop:chain, prop:route, cor:fssinstance, lem:descent, reductions/lem:linear, reductions/cor:blockdiag, def:routes]
+% mentions: [reductions/cor:entries]
+% assumes: [A-RECV, A-PROBE, A-TSM]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.wpfss.construction:flat_instance
+% lean:
+% notes: "The physical system is C itself. The assumptions declared here are the device-independent ones (A-RECV, A-PROBE, A-TSM); the separable channel system is reductions/def:system-setting's, the adversary's finite registers are the round model's, read through reductions/lem:sep, and the receiver's own device assumptions reach it through prop:route's uses edges into receiver."
+% ---
+
+The flat instance is the \tref{reduction instance} of an optical receiver
+with no branch register: the \tref{joint family} the \tref{weight route} forms, with
+its blocks below the cutoff as the finite datum, and the blocks above the
+cutoff with the \tref{routed weights} entering only through hypotheses that
+read no entry of the datum.
+
+\begin{proposition}
+\label{prop:flat-instance}
+Let the data of Definition~\ref{def:weight-route} pass every refusal rule of
+this module's interface; let
+$\{M_v\}_{v\in\Vset}$ be the post-processed joint family of its step~2 on
+$\Chan$, with $\Hs{\Chan}=\bigoplus_{m\ge0}\Hs{\Chan_m}$, $\Hs{\Chan_{\leqN}}$
+finite-dimensional, every $M_v$ block diagonal at the cutoff $N$; let $(p_v)$
+be its routed weights with $p=\sum_vp_v<1$; and let a route, encoded or
+licensed, be declared (Definition~\ref{def:routes}). Then the \emph{flat instance}
+$\mathcal{J}_{\mathrm{flat}}$, given by
+\begin{enumerate}[label=(I\arabic*),leftmargin=3.0em]
+\item $\Bsys=\Chan$; the \tref[data sector]{data sectors} $(m)$, $0\le m\le N$, in that order,
+  with $d_m=\dim\Hs{\Chan_m}$ and the default supports $\Vset^{(m)}=\Vset$;
+  the \tref{handed datum} $A^{(m)}_v\coloneqq\blk{M}{=m}_v$, formed from the declared
+  blocks, $R^{\cg}$ and $\{q_t\}$ by steps~1--2 of
+  Definition~\ref{def:weight-route} in the \tref{bare form}, and from the
+  declared blocks and $\{q_t\}$ by step~2 alone in the
+  \tref{dark-composed form}; the \tref{hypotheses (H)}: \emph{(H1)} for
+  each $t\in\Tset$ the above-cutoff blocks $\{\blk{M}{\gtN}_{y|t}\}_{y\in\Yset}$
+  of the supplied conditional POVM form a POVM on $\Chan_{\gtN}$
+  (the supplier's fact, Assumption~\ref{ass:recv},
+  Proposition~\ref{prop:route}\,(iv)); \emph{(H2)} the routed weights are
+  certified, \eqref{eq:certroute} (Proposition~\ref{prop:route});
+  \emph{(H3)} $p<1$, decided on entry; and the \tref{model map}
+  \begin{equation}\label{eq:flat-model}
+    M_v[A']\;\coloneqq\;\bigoplus_{m\le N}A'^{(m)}_v\ \dsum\ \blk{M}{\gtN}_v,
+    \qquad
+    \blk{M}{\gtN}_{(y,t)}=q_t\sum_{y'\in\Yset}R^{\cg}_{y|y'}\blk{M}{\gtN}_{y'|t} ;
+  \end{equation}
+\item the \tref[scalar sector]{scalar sectors} $(f)$, $f\in\Vset$, in the order of $\Vset$, each of
+  dimension $1$, with
+  \begin{equation}\label{eq:flat-scalars}
+    \phi_f(v)\;\coloneqq\;p_v+(1-p)\,\delta_{vf}\quad\text{(encoded route)},
+    \qquad
+    \phi_f(v)\;\coloneqq\;\delta_{vf}\quad\text{(licensed route)},
+  \end{equation}
+  so that $\Hs{\Qsys}=\Hs{\Chan_{\leqN}}\dsum\Hs{\Flag}$ and the target
+  \eqref{eq:instance-target} is $F_v[A']=\Fwp_v$ resp.\ $\Ffss_v$ of
+  Definition~\ref{def:targets} for the model $M[A']$;
+\item $\Lambda=\PinS\circ\Lwp$ resp.\ $\PinS\circ\Lfss$ of
+  Proposition~\ref{prop:chain}, independent of the datum, with the
+  \tref{transported set} $\{\Pleq,\Pflag\}\cup\{\Pi_{(m)}\}_{m\le N}\cup
+  \{\Pi_{(f)}\}_{f\in\Vset}$ and pull-backs $\Pleq$, $\Pgt$, the
+  photon-number projectors $\Pnumon{m}{\Chan}$, and $\Mwp_f$ resp.\
+  $\blk{M}{\gtN}_f$ read as operators on $\Chan$ supported in $\Chan_{\gtN}$;
+\item an empty entry list on the encoded route, and on the
+  licensed route the flag-sector entries
+  $\big(\Ffss_o-p_o\Pflag,\succeq,0\big)$ of Corollary~\ref{cor:fssinstance}
+  for every bounded letter $o=(y_i,t)$; the \tref{class-marginal identity}
+  discharged,
+\end{enumerate}
+is a reduction instance over the \tref{joint alphabet} of
+Definition~\ref{def:weight-route}. Its \tref{handed model} $M[A]$ is the
+post-processed joint family $\{M_v\}$ itself where every $M_v$ is also block
+diagonal for the decomposition
+$\Hs{\Chan_{\leqN}}=\bigoplus_{m\le N}\Hs{\Chan_m}$, the photon-number blocks
+the datum reads, and otherwise the family's pinching onto those blocks below
+the cutoff; on the emission path the first case holds, the receiver's
+elements being block diagonal in every photon number
+(Proposition~\ref{prop:route}\,(iv)), so that there the handed model is the
+post-processed joint family itself. Its declared model, at the
+\tref{declared datum} $A'$ the normalizer of
+Definition~\ref{def:emitnorm} produces from $A$, is
+\begin{equation}\label{eq:flat-declared}
+  M'_v\;\coloneqq\;M_v[A']\;=\;\bigoplus_{m\le N}A'^{(m)}_v\ \dsum\ \blk{M}{\gtN}_v ,
+\end{equation}
+a POVM on $\Chan$ block diagonal at the cutoff, agreeing with the handed one
+above it and satisfying every certified-weight inequality \eqref{eq:certroute}
+the handed one does.
+\end{proposition}
+
+\begin{proof}
+(I1) \emph{Formation and admissibility of the handed datum.} For $v=(y,t)$,
+$A^{(m)}_v=\blk{M}{=m}_{(y,t)}=q_t\sum_{y'}R^{\cg}_{y|y'}\blk{M}{=m}_{y'|t}$
+by \eqref{eq:darkstep} and \eqref{eq:jointfamily} read block by block ---
+finitely many products and sums of declared entries in $\Fldi$. It is
+Hermitian as a real combination of Hermitian blocks; positive semidefinite as
+a combination of positive semidefinite blocks with non-negative coefficients
+($R^{\cg}\ge0$ entrywise, $q_t>0$); and \tref{class complete}:
+$\sum_{y\in\Yset}A^{(m)}_{(y,t)}=q_t\sum_{y'}\big(\sum_yR^{\cg}_{y|y'}\big)
+\blk{M}{=m}_{y'|t}=q_t\sum_{y'}\blk{M}{=m}_{y'|t}=q_t\idon{\Chan_m}$ by
+column-stochasticity of $R^{\cg}$ (Lemma~\ref{lem:descent}) and completeness
+of the conditional POVM at $t$ read on block $m$. In the dark-composed form
+$A^{(m)}_{(y,t)}=q_t\blk{\widetilde M}{=m}_{y|t}$ with the supplied blocks,
+a product of declared entries with $q_t$; it is Hermitian and positive
+semidefinite because the supplied blocks are, and
+$\sum_yA^{(m)}_{(y,t)}=q_t\idon{\Chan_m}$ because the supplied family is
+complete on its block (Definition~\ref{def:weight-route}). The default
+supports meet every class. So $A\in\mathcal{D}_{\mathrm{adm}}$ in either
+form.
+\emph{Stability.} (H1) is about the blocks $m>N$, which are not in the datum;
+(H2) is an inequality between above-cutoff blocks and scalars --- the proof
+of Proposition~\ref{prop:route} restricts to the $\gtN$ block and reads no
+preserved block; (H3) reads the weights. None reads an entry of the datum.
+\emph{The model map.} For every $A'\in\mathcal{D}_{\mathrm{adm}}$, $M_v[A']$
+is Hermitian and positive semidefinite block by block; it is complete below
+the cutoff by class completeness and $\sum_tq_t=1$ (the first consequence
+of Definition~\ref{def:reduction-instance}), and above it by (H1) and
+column-stochasticity: $\sum_{(y,t)}\blk{M}{\gtN}_{(y,t)}
+=\sum_tq_t\sum_{y'}\big(\sum_yR^{\cg}_{y|y'}\big)\blk{M}{\gtN}_{y'|t}
+=\sum_tq_t\idon{\Chan_{\gtN}}=\idon{\Chan_{\gtN}}$. It is block diagonal at
+the cutoff by construction, and $\Hs{\Chan}$ is separable
+(Definition~\ref{def:system-setting}). So $M[A']$ is a POVM on $\Chan$ under (H), for
+every \tref{admissible datum}. At the handed datum,
+$M_v[A]=\bigoplus_{m\le N}\blk{M}{=m}_v\dsum\blk{M}{\gtN}_v$ keeps the
+diagonal blocks of $M_v$ for the blocks $m\le N$ and $\gtN$ and drops its
+off-diagonal blocks, of which only those between two blocks $m\ne m'\le N$
+can be non-zero, $M_v$ being block diagonal at the cutoff. So $M_v[A]$ is the
+pinching of $M_v$ onto those blocks, and it is $M_v$ exactly where those
+off-diagonal blocks vanish. On the emission path they do: every $M_v$ is
+block diagonal in every photon number by Proposition~\ref{prop:route}\,(iv),
+read under Assumption~\ref{ass:recv}.
+
+(I2) On the encoded route every $p_v$ is a lattice value rounded
+\emph{down} from $\hat p_v$ (\eqref{eq:weightroute}, \eqref{eq:latdown}), a
+certified lower bound by (H2), and $1-p$ is recomputed from the rounded
+$p_v$ and is a lattice value as their complement; $\phi_f(v)\ge0$ because
+$p_v\ge0$ and $p<1$, and $\phi_f(v)\le p_v+(1-p)\le p+(1-p)=1$; and
+$\sum_v\phi_f(v)=p+(1-p)=1$ exactly. On the licensed route
+$\phi_f(v)=\delta_{vf}\in\{0,1\}$ with $\sum_v\delta_{vf}=1$. Reading
+\eqref{eq:instance-target} at these sectors,
+$F_v[A']=\bigoplus_{m\le N}A'^{(m)}_v\dsum\bigoplus_{f}\phi_f(v)
+=\blk{M[A']}{\leqN}_v\dsum\big(p_v\idon{\Flag}+(1-p)\dyad{v}_{\Flag}\big)$,
+the operator $p_v\idon{\Flag}+(1-p)\dyad{v}$ being diagonal in the flag basis
+with entries $\phi_f(v)$ --- that is $\Fwp_v$ of \eqref{eq:WPFSS} for the
+model $M[A']$; on the licensed route the flag block is $\dyad{v}$ and the
+target is $\Ffss_v$ of \eqref{eq:FSS}.
+
+(I3) Fix $A'\in\mathcal{D}_{\mathrm{adm}}$ under (H). By (I1), $M[A']$ is a
+POVM on $\Chan$ block diagonal at the cutoff; $(p_v)$ are \tref{certified weights}
+for it in the sense of Definition~\ref{def:targets}, because
+\eqref{eq:certweights} concerns the above-cutoff blocks only, which are the
+handed ones, and at a bounded letter it is (H2) while at every other $v$ it
+reads $\blk{M}{\gtN}_v\succeq0$; and $p<1$ by (H3). So
+Proposition~\ref{prop:chain}\,(i) applies to $M[A']$:
+$(M[A'];\Pleq,\Pgt)\dsq_{\Lwp}(\Fwp;\Pleq,\Pflag)$, resp.\ with $\Lfss$ and
+$\Ffss$. The channels \eqref{eq:Lwp} and \eqref{eq:Lfss} read $\Pleq$,
+$\Pgt$, the above-cutoff blocks and the weights, and no entry of the datum,
+so they are independent of $A'$. The sector projectors: with
+$\Pi_{(m)}=\Pnumon{m}{\Chan}\dsum0$ and $\Pi_{(f)}=0\dsum\dyad{f}$, the adjoint
+\eqref{eq:WPadjoint} gives $\Lwp^{\dagger}(\Pi_{(m)})=\Pnumon{m}{\Chan}$ and
+$\Lwp^{\dagger}(\Pi_{(f)})=\sum_v\bra{v}\dyad{f}\ket{v}\Mwp_v=\Mwp_f$, and at
+$p_v\equiv0$ the same computation gives $\blk{M}{\gtN}_f$ for $\Lfss$. Every
+transported operator is block diagonal for $\SecSet$, $\Pleq$ and $\Pflag$
+being sums of sector projectors, so Corollary~\ref{cor:blockdiag}\,(i) gives
+the relation \eqref{eq:instance-relation} for $\PinS\circ\Lwp$ resp.\
+$\PinS\circ\Lfss$ with the same pull-backs.
+
+(I4) On the encoded route the list is empty; the certificate every instance
+carries for a sector projector is not an entry of it but travels with the
+transported set (the third consequence of
+Definition~\ref{def:reduction-instance},
+Corollary~\ref{cor:entries}\,(i)). On the licensed route, for a
+bounded letter $o$, $\hat O=\Ffss_o-p_o\Pflag=\sum_{s\in\SecSet}\Pi_sF_o\Pi_s
+-p_o\sum_{f}\Pi_{(f)}$ has the form \eqref{eq:instance-entry} with
+$\alpha_{o,s}=1$ for every $s$, every other $\alpha=0$, $Z=-p_o\Pflag$ and
+the lattice coefficient $p_o$; it is a combination of transported operators;
+and its certificate is the computation of Corollary~\ref{cor:fssinstance},
+$\Lfss^{\dagger}(\hat O)=\bigoplus_{m\le N}A'^{(m)}_o\dsum
+\big(\blk{M}{\gtN}_o-p_o\idon{}\big)\succeq0$, the first summand positive by
+admissibility of $A'$ and the second by (H2) --- for every admissible datum.
+The class-marginal identity: $\sum_{v\in\Vset_t}M_v[A']
+=\bigoplus_{m\le N}q_t\idon{\Chan_m}\dsum\sum_{y}\blk{M}{\gtN}_{(y,t)}$ by
+class completeness, and $\sum_y\blk{M}{\gtN}_{(y,t)}
+=q_t\sum_{y'}\big(\sum_yR^{\cg}_{y|y'}\big)\blk{M}{\gtN}_{y'|t}
+=q_t\idon{\Chan_{\gtN}}$ by column-stochasticity and (H1) --- which is
+Lemma~\ref{lem:linear}\,(ii) read block by block; so it is discharged for
+every admissible datum.
+
+The declared model is \eqref{eq:declmodel} at the model map
+\eqref{eq:flat-model}, which is \eqref{eq:flat-declared}; it agrees with the
+\tref{handed model} above the cutoff because the normaliser touches data sectors
+only, and \eqref{eq:certroute} is a statement about those blocks alone.
+\end{proof}

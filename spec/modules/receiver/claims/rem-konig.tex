@@ -1,0 +1,36 @@
+% ---
+% id: receiver/rem:konig
+% kind: rem
+% title: "The single-mode normal-ordering identity in the literature"
+% summary: >-
+%   The single-mode step of the normal-ordered form is the published identity
+%   that the normally ordered exponential of z times the number operator is
+%   (1 + z) to the number operator, and its λ = 1 case is the perfect on/off
+%   detector. Both citations corroborate; neither is used.
+% prominence: standard
+% status: accepted
+% uses: [prop:normord, lem:fock-functor]
+% mentions: [thm:click-povm]
+% assumes: []
+% refs:
+%   - "konig2021newton, Eq. (3.23)"
+%   - "sperling2012, Eq. (6)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:konig}
+Equation \eqref{eq:singlemode} is the single-mode statement
+$\normord{e^{z\hat n}}=(1+z)^{\hat n}$ at $z=-\lambda_j$, where
+$\hat n=a^\dagger a$. That operator identity is
+\cite[Eq.~(3.23)]{konig2021newton}, which reads
+$G_f(z;\hat n)=(1+z)^{\hat n}=\normord{e^{z\hat n}}$ and is proved there
+without any assumption on the state of the field. Its $\lambda=1$ case,
+$\normord{e^{-\hat n}}=\dyad{\vac}$, is the no-click element of a perfect
+on/off detector, recorded as \cite[Eq.~(6)]{sperling2012} in the form
+$\hat\pi_0=\dyad{0}=\normord{e^{-\hat n}}$, $\hat\pi_1=\normord{\hat 1-e^{-\hat
+n}}$. Both are corroboration: \eqref{eq:singlemode} is proved in
+Proposition~\ref{prop:normord}, and Theorem~\ref{thm:click-povm} derives the
+no-click element from the projector picture of
+Lemma~\ref{lem:fock-functor}\,(iv) without using normal ordering at all.
+\end{remark}

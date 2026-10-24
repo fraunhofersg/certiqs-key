@@ -1,0 +1,11 @@
+# The oracle table of the `format` fixture, in the layout of
+# tests/oracles/claim_codes.yaml: C1 is pinned by the registry below, C2 is
+# mapped to a claim but pinned by no registry.
+registries:
+  tests/oracles/registry_core_a.py: core-a
+codes:
+  C1: [core-a/thm:bound]
+  C2: [core-a/def:object]
+no_claim: {}
+unresolved: {}
+titles: {}

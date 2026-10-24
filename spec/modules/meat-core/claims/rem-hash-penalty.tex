@@ -1,0 +1,31 @@
+% ---
+% id: meat-core/rem:hash-penalty
+% kind: rem
+% title: "One further bit for a merely two-universal family"
+% summary: >-
+%   With a privacy-amplification family that is only two-universal, collision
+%   probability at most 2^−ℓ, the key-length bound holds after tightening it
+%   by one further bit. Toeplitz hashing is ideal two-universal and needs no
+%   such bit.
+% prominence: standard
+% status: accepted
+% uses: [thm:keylength]
+% mentions: [ass:hash]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Rem. 6.1"
+%   - "tupkary2026decoy, Lemma 6.5"
+% provenance: published
+% lean:
+% ---
+
+\begin{remark}\label{rem:hash-penalty}
+The R\'enyi leftover-hashing step of Theorem~\ref{thm:keylength} is taken
+under the reading of \cite[Lemma~6.5]{tupkary2026decoy}, which requires an
+ideal two-universal family, collision probability exactly $2^{-\ell}$ for
+distinct inputs; that is Assumption~\ref{ass:hash}\,(i).
+For a family that is only two-universal, collision probability at most
+$2^{-\ell}$, the requirement can be relaxed at the cost of one bit of key
+length \cite[Rem.~6.1]{tupkary2026decoy}. Toeplitz hashing is ideal
+two-universal \cite[Rem.~6.1]{tupkary2026decoy}.
+\end{remark}

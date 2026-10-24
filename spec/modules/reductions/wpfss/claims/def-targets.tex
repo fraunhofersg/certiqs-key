@@ -1,0 +1,68 @@
+% ---
+% id: reductions/wpfss/def:targets
+% kind: def
+% title: "Certified weights and the flag-state and weight-preserving targets"
+% summary: >-
+%   Certified weights are per-outcome lower bounds on a POVM's blocks above a
+%   cutoff. Both targets keep the blocks below the cutoff; the flag-state target
+%   puts each outcome on its own flag, the weight-preserving target puts its
+%   certified weight on every flag and one minus the total weight on its own.
+% prominence: standard
+% status: accepted
+% uses: [def:weight-route]
+% mentions: [prop:chain, rem:published]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Above a photon-number cutoff the receiver is replaced by one classical flag
+per outcome, and the only device knowledge kept there is a lower bound on each
+outcome's block. The weight-preserving target keeps these bounds in its flags,
+so that the corresponding inequality holds on every squashed state
+(Proposition~\ref{prop:chain}\,(iii)); both targets are known from the
+literature (Remark~\ref{rem:published}).
+
+\begin{definition}
+\label{def:targets}
+Throughout this definition and the claims of this submodule that use it,
+$\Hs{\Bsys}=\Hs{\Bsys_{\leqN}}\dsum\Hs{\Bsys_{\gtN}}$
+is an orthogonal two-block decomposition with projections $\Pleq$ and $\Pgt$
+--- a photon-number cutoff in the optical instance, where
+$\Hs{\Bsys_{\leqN}}=\bigoplus_{m\le N}\Hs{\Chan_m}$ is finite-dimensional ---
+and every $M_v$ is block diagonal for it,
+$M_v=\blk{M}{\leqN}_v\dsum\blk{M}{\gtN}_v$. $\Hs{\Flag}=\mathbb{C}^{|\Vset|}$
+carries the orthonormal basis $\{\ket{v}\}_{v\in\Vset}$, and
+$\Hs{\Qsys}=\Hs{\Bsys_{\leqN}}\dsum\Hs{\Flag}$ with block projections
+$\Pleq$ (the same symbol on either space) and $\Pflag$.
+
+A family $(p_v)_{v\in\Vset}$ of
+\term[Non-negative numbers, one per outcome, each an operator lower bound on that outcome's POVM element above the cutoff.]{certified weights}
+for $M$ at the cutoff consists of non-negative numbers $p_v$ --- on the
+emission path, integer multiples of $2^{-\kappa}$, the $p_{(y,t)}$ of
+\eqref{eq:weightroute} --- with
+\begin{equation}\label{eq:certweights}
+  \blk{M}{\gtN}_v\;\succeq\;p_v\,\idon{\Bsys_{\gtN}}
+  \qquad\text{for every }v\in\Vset ,
+\end{equation}
+and we write $p\coloneqq\sum_vp_v$ for their
+\term[The sum of the certified weights over all outcomes.]{total weight}.
+Define
+\begin{align}
+  \Ffss_v&\coloneqq\blk{M}{\leqN}_v\dsum\dyad{v}_{\Flag},
+  \label{eq:FSS}\\
+  \Fwp_v&\coloneqq\blk{M}{\leqN}_v\dsum
+     \big(p_v\,\idon{\Flag}+(1-p)\,\dyad{v}_{\Flag}\big).
+  \label{eq:WPFSS}
+\end{align}
+$\Ffss$ is the
+\term[The target that keeps the POVM below the cutoff and replaces everything above it by one flag per outcome: the target of the flag-state squasher.]{flag-state target}
+and $\Fwp$ the
+\term[The target that keeps the POVM below the cutoff and gives each outcome a flag block carrying its certified weight on every flag and, in addition, one minus the total weight on its own flag: the target of the multi-bound weight-preserving flag-state squasher.]{weight-preserving target},
+the multi-bound weight-preserving flag-state-squasher target, with one
+certified weight per outcome. The
+\term[The weight-preserving target in which only one certified weight is non-zero.]{single-bound case}
+is the one in which only one $p_v$ is non-zero, and $\Ffss$ is the case
+$p_v\equiv0$.
+\end{definition}

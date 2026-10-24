@@ -1,0 +1,108 @@
+% ---
+% id: meat-core/thm:removal
+% kind: thm
+% title: "Sound removal of a state-blind sector"
+% summary: >-
+%   A state-blind sector may be deleted when a mixture of states on distinct
+%   other sectors, all key-inert, reproduces its responses and its constraint
+%   values. Deleting it changes neither the value of the program nor its
+%   attainment.
+% prominence: standard
+% status: implemented
+% uses: [def:feasible, def:maps, prop:exact-cancellation, cor:f-nonpos, def:classes]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.declaration.sectors:verify_removal_witness
+% lean:
+% notes: "A party-local value is an operator on the other measured factors' blocks, which the move does not preserve in general, so the theorem excludes it."
+% ---
+
+A state-blind sector answers every state alike, so its weight can be moved
+onto other sectors that reproduce its answers. When those sectors carry no
+key entropy, the move removes one non-positive deficit and changes nothing
+else.
+
+\begin{theorem}\label{thm:removal}
+Let $\CList$ carry no entry declared \tref{party-local}, let
+$s^{*}\in\SecSet$ be state-blind, and suppose there exist
+\emph{pairwise distinct} sectors
+$s_1,\dots,s_L\in\SecSet\setminus\{s^{*}\}$, states
+$\chi_i\in\Seq{\Qsys_{s_i}}$, and weights $\mu_i\ge0$ with
+$\sum_{i=1}^{L}\mu_i=1$, such that
+\begin{enumerate}[label=(RM\arabic*),leftmargin=3.0em]
+\item \emph{response match:}\quad
+$c_{v,s^{*}}=\sum_{i}\mu_i\tr\big[F^{(s_i)}_v\chi_i\big]$ for every
+$v\in\Vset$;
+\item \emph{key-inert targets:}\quad every pair $(\hat c,s_i)$ with
+$\hat c\in\Chkey$ is key-inert;
+\item \emph{constraint match} (vacuous for $\CList=\varnothing$):\quad
+$o_{k,s^{*}}=\sum_i\mu_i\tr\big[\hat O^{(s_i)}_k\chi_i\big]$ for every
+$k$.
+\end{enumerate}
+Then restricting the infimum \eqref{eq:hlow-def} to
+$\{\omega\in\Feas:\omega_{s^{*}}=0\}$ changes neither its value nor its
+attainment: the sector $s^{*}$ may be deleted from the variable list, and
+its rows deleted from the generated maps, without loss.
+\end{theorem}
+
+\begin{proof}
+Given $\omega\in\Feas$ and $\mathbf q\in\acSet$, let
+$m\coloneqq\tr_{\Qsys_{s^{*}}}\omega_{s^{*}}\in\Pos{A}$ and define
+$\hat\omega$ by
+\begin{equation*}
+  \hat\omega_{s^{*}}\coloneqq0,\qquad
+  \hat\omega_{s_i}\coloneqq\omega_{s_i}+\mu_i\,m\otimes\chi_i,\qquad
+  \hat\omega_{s}\coloneqq\omega_{s}\ \ (s\notin\{s^{*},s_1,\dots,s_L\}).
+\end{equation*}
+The three assignments are mutually consistent, which the two index
+conditions of the hypothesis ensure: no $s_i$ equals $s^{*}$, so
+the first two do not collide, and the $s_i$ are pairwise distinct, so the
+second assigns one value to each block it touches.
+\emph{Feasibility.} Each block is PSD; sector-block-diagonality is
+manifest. With Alice sectors, $\omega_s=\bigoplus_t\omega^{(t,s)}$ is block
+diagonal along $\mathbb{T}$, hence so is $m=\bigoplus_tm_t$ with
+$m_t=\tr_{\Qsys_{s^{*}}}\omega^{(t,s^{*})}$, and so is every
+$m\otimes\chi_i$: the modified point is block diagonal along the
+\tref[joint sector]{joint sectors}, and the move takes place inside each
+Alice sector separately. \emph{Normalization} --- the condition that holds
+in both source modes, and the only one in
+\tref{untrusted-source mode}:
+$\tr\hat\omega=\tr\omega-\tr m+\sum_i\mu_i\,\tr m\,\tr\chi_i
+=\tr\omega=1$, using $\tr\chi_i=1$, $\sum_i\mu_i=1$. \emph{Alice's
+marginal}, in \tref{trusted-source mode} only: the same computation at the
+level of the partial trace,
+$\tr_{\Qsys}\hat\omega
+=\tr_{\Qsys}\omega-m+\sum_i\mu_i\,m\,\tr\chi_i
+=\tr_{\Qsys}\omega=\tau_A$; the normalization statement is its trace,
+so replacing the marginal by normalization is exactly the step that
+carries this theorem into untrusted-source mode.
+\emph{Constraints.} The $s^{*}$ contribution to
+$\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\omega]$ is
+$\tr_{\Qsys_{s^{*}}}[(\idon{A}\otimes o_{k,s^{*}}\idon{})\,\omega_{s^{*}}]
+=o_{k,s^{*}}m$, and the added contribution is
+$\sum_i\mu_i\tr[\hat O^{(s_i)}_k\chi_i]\,m=o_{k,s^{*}}m$ by (RM3); all
+other sectors unchanged. In untrusted-source mode the constraint value
+is the trace of that same operator, so the identity gives
+$o_{k,s^{*}}\tr m$ on both sides.
+\emph{Statistics.} For every $(x,v)$, the $s^{*}$ term of
+\eqref{eq:Phimap} is
+$\tr[(M_x\otimes c_{v,s^{*}}\idon{})\,\omega_{s^{*}}]
+=c_{v,s^{*}}\tr[M_xm]$, and the added terms give
+$\sum_i\mu_i\tr[M_xm]\tr[F^{(s_i)}_v\chi_i]=c_{v,s^{*}}\tr[M_xm]$ by
+(RM1). Hence $\Phimap[\hat\omega]=\Phimap[\omega]$, resolved per outcome
+pair, so every $P_{\hat c}$ is unchanged.
+\emph{Objective.} The divergence terms depend on
+$(\mathbf q,\Phimap[\cdot])$ only, hence are unchanged. For
+$K_{\hat c}$: by (RM2) and Proposition~\ref{prop:exact-cancellation},
+$f_{\hat c,s_i}\equiv0$ on \emph{every} input, before and after the
+modification; $f_{\hat c,s}$ for other retained $s$ is unchanged; and the
+term $f_{\hat c,s^{*}}(\omega_{s^{*}})\le0$
+(Corollary~\ref{cor:f-nonpos}) is deleted. Hence
+$K_{\hat c}(\hat\omega)\ge K_{\hat c}(\omega)$, and by monotonicity of the
+kernel $d$ in its second argument,
+$O_{\alpha}(\mathbf q,\hat\omega)\le O_{\alpha}(\mathbf q,\omega)$.
+Therefore the restricted infimum is no larger than the unrestricted one;
+being a restriction it is also no smaller; and the map
+$\omega\mapsto\hat\omega$ carries minimizers to restricted minimizers.
+\end{proof}

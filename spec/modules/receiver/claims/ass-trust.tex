@@ -1,0 +1,45 @@
+% ---
+% id: receiver/ass:trust
+% kind: ass
+% title: "Trusted and exactly characterised receiver"
+% summary: >-
+%   The declared instrument describes the physical receiver exactly, and the
+%   receiver is under the legitimate party's control. It is the parent of most
+%   of the receiver's device assumptions, which spell out its parts.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-TRUST
+% verification: never
+% category: receiver
+% affects: [secrecy]
+% user_statement: >-
+%   The receiver you declared is the receiver you run. Its mode space, its
+%   optical layout (or the instrument or Gram matrices you supplied), the
+%   assignment of outputs to detectors, the efficiencies, the dark-count
+%   probabilities and the probe states are those of the physical device, with
+%   no uncertainty to account for. The device is under your control, and
+%   nobody else can select, tune or influence it. A characterisation
+%   uncertainty is not modelled: the result applies to the device exactly as
+%   declared.
+% lean:
+% ---
+
+The receiver is trusted and known exactly. No uncertainty set, no outer Gram
+family, no device family and no characterisation protocol is represented
+anywhere in this contract; a receiver known only up to a stated uncertainty is
+future scope (\repodoc{spec/future-scope.md}).
+
+\begin{assumption}
+\label{ass:trust}
+(i) The declared instrument describes the physical receiver \emph{exactly}:
+its mode space, its \tref{declared element graph} or the supplied
+\tref{instrument matrix} or \tref[port Gram matrices]{port Gram family}, the
+port map, the efficiencies, the dark-count probabilities and the probe states;
+(ii) the receiver is under the legitimate party's control: it is not
+selected, tuned or otherwise influenced by the adversary.
+\end{assumption}

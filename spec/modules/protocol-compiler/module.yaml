@@ -1,0 +1,350 @@
+id: protocol-compiler
+kind: core
+version: 0.24.0
+title: "Protocol compiler (protocol-compiler)"
+abstract: >-
+  This module compiles a protocol specification into the finite protocol
+  declaration the key-rate engine consumes. The specification has five
+  parts: Alice's source as the transmitter module emits it, the receiver's
+  measurement, a reduction chain in two segments (source links that replace
+  Alice's signal ensemble, then receiver links that replace Bob's
+  measurement), the public announcements with sifting and key rule, and the
+  constraint entries; the declaration comes with an index map fixing the
+  order of every alphabet and of the sectors. Operators on the measured
+  system are lists of sector blocks against a declared sector map, every
+  numerical condition is decided exactly on the declared binary64 numbers at
+  no tolerance, and the compiler passes declared data through unchanged,
+  constructing only the raw-key map, the index map and the measurement
+  families that carry the weights of public choices. Its main results are
+  three. A public choice of known bias, such as a basis choice, enters as a
+  weight inside the measurement operators and never as a separate fraction:
+  the weighted family stays a measurement, a weight that depends on no
+  private setting is reproduced exactly as the probability of its choice
+  value wherever the weighted family is the one emitted, and a weight that depends on the private setting of a measuring
+  station, of either party, is applied after that station's reduction chain
+  and commutes with it ([[thm:choice-encoding]]). Passing
+  the validator's eight checks establishes every target condition of a
+  well-formed declaration, and every check except the feasibility check is
+  complete, so a well-formed declaration is refused only when neither a
+  default candidate nor a supplied witness state is verified to be feasible
+  ([[thm:validator-soundness]]). Gates at emission decide whether a
+  well-formed declaration may back a key-length claim, and every gate failure
+  has one fixed outcome: a refusal, or an emission flagged as not eligible to
+  back such a claim ([[thm:gates]]). The compiler decides what the record of
+  the reduction chain and the transmitter's output make decidable and names
+  the rest: the soundness of each reduction link, the licence that restricts
+  the attacks considered, and the physical fidelity of the declared data are
+  obligations it records and never establishes.
+depends_on: [receiver, reductions, transmitter, foundations]   # foundations: the number model and the exact admissibility def:exact strengthens; the transmitter owns the source stage, reductions the chain, the receiver the declared coarse-graining
+notation_version: "0.4.0"   # the spec/notation.md version this module pins
+submodules: []
+reading_groups:
+- title: The protocol declaration
+  start: def:declaration
+  abstract: >-
+    The object the compiler emits is a protocol declaration: finite systems,
+    a sector map, Alice's marginal slot, the two measurement families, the
+    public maps, the raw-key map and a typed constraint list, every operator
+    on the measured system being given as the list of its sector blocks. In
+    its general format the sector map is an ordered list of factors, Alice's
+    system may carry sectors, each measured factor declares its own family
+    and no entry of their product is declared, Alice's measurement may be
+    declared in ensemble form, as positive blocks summing to her marginal,
+    and the public discussion is a transcript of messages. Declared operator
+    data are exactly admissible when five conditions hold of the declared
+    numbers, one of them that every binary64 addition forming a completeness
+    sum is exact, and the eight target conditions state when a declaration,
+    with the index map that orders its alphabets and sectors, is
+    well-formed. The consuming engine decides the same five conditions, and
+    the declarations admitted here are a subset of those it admits
+    ([[rem:engine-admission]]).
+- title: Feasible states and licensed constraints
+  start: def:feasible
+  abstract: >-
+    The feasible set holds the normalised positive block-list states that
+    meet every constraint entry and, in trusted-source mode, the declared
+    marginal, each condition read exactly; Hermiticity of the constraint
+    operators and of the state, with that of the declared right-hand sides,
+    is what makes the two sides of each constraint condition comparable
+    ([[lem:hermitian-constraint-values]]). Restricting the states to
+    sector-block-diagonal ones is a restriction in the unsafe direction that
+    the operator type carries and the consuming engine proves sound
+    ([[rem:block-restriction]]). A constraint list is licensed for
+    its source mode when every entry is declared in the form the mode admits
+    or carries the party-local tag, and licensing reads the declared tag and
+    compares no numbers. A party-local entry, whose condition holds against
+    the state's marginal on the systems other than its own factor, is sound
+    only under a certificate owed by the producer of the reduction chain,
+    which the attack-set licence of the list attests
+    ([[rem:party-local-soundness]]). The example writes out a
+    declaration for an untrusted source serving two measuring parties, with
+    a party-local entry.
+- title: Specification, compilation map and typing
+  start: def:spec
+  abstract: >-
+    A specification supplies the pieces, and the compilation map assembles
+    the declaration from them, passing declared data through unchanged and
+    constructing only the raw-key map, the index map and the weighted
+    families. A specification is well-formed when its alphabets and
+    systems are finite, its tables total, every declared measurement family,
+    the presented physical one included, exactly admissible, its weights
+    normalised and its constraint blocks Hermitian and tagged. Every
+    declaration the map
+    emits from a well-formed specification meets the typing conditions,
+    and its index map is a bijection on every alphabet it indexes
+    ([[thm:typing]]). Its declared measurement families are POVMs block by
+    block as identities of the declared numbers, per factor and, in POVM
+    form, per Alice sector in the general format, where the product family
+    and an ensemble form's denoted family are POVMs by theorem; the
+    statistics functional is a probability distribution on every normalised
+    positive block-list state ([[thm:measurements-and-statistics]]).
+- title: Public choices as measurement weights
+  start: def:weighted
+  abstract: >-
+    A public choice of known bias enters the declaration as a weight
+    multiplying a complete conditional measurement, either independently of
+    every setting or, at a measured factor of either party after its chain,
+    through a stochastic matrix read off the private setting of the station
+    that measures it. The main result, [[thm:choice-encoding]], shows
+    that the encoding keeps the family a measurement, that the
+    setting-independent form reproduces the declared weights exactly
+    wherever it is the emitted family, that
+    the setting-dependent relabelling commutes with the reduction chain, and
+    that no separate fixed fraction is ever emitted. Each declared
+    conditional family is decided before any product is formed; the remarks
+    and the example say why that decision cannot be left to the validator,
+    where the relabelling is applied, and why the outcome alphabet is chosen
+    upstream. A factor enclosure of a delivered block survives the
+    setting-dependent weighting, the weight going into its core
+    ([[lem:weighted-factor]]).
+- title: Sifting, key computability and feasibility
+  start: thm:sifting-and-key
+  abstract: >-
+    Each announcement is a function of its sender's readout and of the
+    announcements before it, sifting is determined by the announcements, and
+    the holder computes the raw key locally, for a transcript of messages as
+    for two announcement maps ([[thm:sifting-and-key]]). Feasibility is the
+    one target condition that is not a typing or a finite syntactic check: an
+    empty constraint list has an explicit product state, and otherwise the
+    compiler verifies a default candidate and, if it fails, a supplied
+    witness, and refuses when neither verifies ([[thm:feasibility]]).
+- title: The emitted validator
+  start: def:validator
+  abstract: >-
+    The validator's eight checks are decided exactly on the candidate
+    declaration. The main result, [[thm:validator-soundness]], shows that passing every check
+    establishes all eight target conditions of the declared numbers, that
+    every check except the feasibility check is complete, so that a
+    well-formed declaration can be refused only for want of a verified
+    witness, and that every decision is finite, exact and taken block by
+    block. Such a refusal means that no verified feasible state was shown,
+    not that the protocol is defective.
+- title: Consuming the reduction chain
+  start: def:chaincond
+  abstract: >-
+    The chain arrives as a record of two segments, source links and receiver
+    links, and the compiler decides what the record makes decidable:
+    descriptor agreement, the outcome correspondence, the exact admissibility
+    of the target measurement, and the pullback and source identities where
+    channels are supplied as data. A non-empty source segment adds registry
+    checks and two admission rules. [[thm:chain-consumption]] states what a verified
+    identity buys and names what is never discharged here: that each link
+    is a sound reduction and that any restricted attack set is licensed.
+    Where the reductions module discharges them is recorded, and no claim
+    here relies on that discharge ([[rem:obligations-discharged]]).
+- title: The Band-A route
+  start: def:banda
+  abstract: >-
+    On the direct route a finite measurement is declared on a single sector
+    and the chain is one identity link, given as data, that transports no
+    constraint and delivers the declared measurement unchanged, so every
+    chain condition but the exact admissibility of the declared receiver
+    family holds by inspection and the link is sound by exhibition
+    ([[thm:band-a]]). That admissibility and the other measurement
+    predicates are still decided exactly, and the residual physical content
+    of the receiver is the ideal-receiver assumption. A specification whose
+    declared data already contradict that assumption is refused
+    ([[req:band-a-ideal-receiver]]), and so is one whose link is not decided
+    on the record to be that identity link ([[req:band-a-identity-link]]).
+- title: The emission gates
+  start: def:eligible
+  abstract: >-
+    A well-formed declaration may back a key-length claim only when every
+    check passes, the transmitter's source-replacement licence record is
+    present and re-decided wherever the marginal slot is filled and Alice's
+    dimension is at least two, and a non-empty constraint list is licensed
+    and carries an attack-set licence. The main result, [[thm:gates]], shows
+    that every gate is decidable or a presence test and that every gate
+    failure has one fixed outcome, a refusal or an emission that is not
+    key-length-eligible; passing a gate asserts nothing about the apparatus
+    or about attack-set inclusion. Dropping a trusted
+    marginal, and reading homogeneous constraints as scalars, enlarges the
+    feasible set and so can only lower a minimised quantity
+    ([[prop:conservative]]); no reachable row of the gate outcome table
+    invokes it.
+- title: Assumptions
+  start: ass:spec
+  abstract: >-
+    The declared data, the declared measurements included, describe the
+    apparatus: the physical receiver measurements, in every round and with no
+    memory of the others, and, where no source-replacement certificate is
+    demanded, Alice's are the ones performed. The key rule yields a key value on every input; where no
+    certificate is demanded Alice measures as declared in every round; one declaration describes every round; public
+    choices are private coins of declared bias, and the Band-A receiver is an
+    ideal qubit measurement. The soundness of each reduction link and the
+    attack-set licence are obligations of the module that presents the chain.
+    The compiler decides every condition of a
+    well-formed specification, and its presence checks establish none of
+    these assumptions.
+- title: "Requirements: the emitted declaration"
+  start: req:declaration-keys
+  abstract: >-
+    The engine emits the declaration under its machine keys, with the index
+    map beside it, and holds every operator on the measured system as its
+    block list. It passes the declared data it reads through unchanged, forms
+    none of the derived objects of the general format as data, and decides
+    every predicate per measured factor and per Alice sector on declared
+    blocks. It reads each constraint tag off its datum or off the field it
+    arrives with, infers none, and decides nothing at a window. With the
+    declaration it passes on the transmitter's source-replacement licence
+    record where one is demanded, and records the choice weighting beside the
+    chain record. At a one-dimensional A in trusted-source mode it refuses a
+    specification whose source emission depends on the letter or whose
+    letter weights differ from Alice's measurement.
+- title: "Requirements: choice weighting"
+  start: req:conditional-family-decision
+  abstract: >-
+    The engine decides each declared conditional family, per choice value,
+    before it forms any product, and rejects a weight that is not a finite
+    binary64 number as malformed input; decimal or rational user weights may
+    be prepared as binary64 before the module boundary. It refuses a setting-dependent
+    weighting read through anything but the station's setting, decides the weight
+    list and the stochastic matrix exactly, and emits a weighted family only
+    after deciding every product representable and the emitted family
+    exactly admissible. It declares no lattice exponent, snaps nothing, and
+    never emits a fixed fraction outside the measurement operators.
+- title: "Requirements: validation, feasibility and the chain"
+  start: req:validator-refusals
+  abstract: >-
+    The engine refuses a failing check with a reason naming it, repairs
+    nothing, and reports in a check's transcript only the decisions it took.
+    It tests the default feasibility candidate before a supplied witness,
+    emits neither, and never reports a refusal for want of a witness as a
+    defect of the protocol. It decides the presented physical receiver family
+    exactly admissible on every route, and refuses a chain failing one of its
+    conditions where the chain is consumed, before a declaration exists. It
+    takes the Band-A route only for one measured factor whose receiver system,
+    and transmitted system where the source is trusted, is two-dimensional and
+    whose declared family is projective, and only where that factor's one
+    link supplies the identity channel as data, keeps the outcomes as they
+    are and delivers the declared family. It emits both segments of the chain record and both slots of every link,
+    empty or not, and omits the link-soundness row from its ledger only on
+    Band A and on a single exact instance link the reductions module emitted
+    in the same run, a provenance it never reads from the specification.
+    Where the chain carries a reference companion, it compiles a companion
+    declaration beside the declaration by the same map, decides none of its
+    family's predicates and emits it evaluation-only, with no run of its own.
+- title: "Requirements: the emission gates"
+  start: req:eligibility-flag
+  abstract: >-
+    The engine emits the eligibility flag true only for a key-length-eligible
+    declaration and produces, for each gate failure, the outcome the gate
+    outcome table fixes. It tests attestations for presence and never for
+    truth, and records a vacuous pass of the licensed-class gate as vacuous.
+order:
+  - def:declaration
+  - rem:party-label-restriction
+  - def:exact
+  - rem:summation-condition
+  - def:target
+  - rem:engine-admission
+  - def:feasible
+  - lem:hermitian-constraint-values
+  - rem:wellposed
+  - rem:block-restriction
+  - def:homog
+  - rem:party-local-soundness
+  - ex:two-party-shape
+  - def:spec
+  - def:well-formed-spec
+  - def:compile
+  - thm:typing
+  - rem:rbuilt
+  - def:phi
+  - thm:measurements-and-statistics
+  - rem:phitotal
+  - def:weighted
+  - lem:weighted
+  - lem:weighted-factor
+  - thm:choice-encoding
+  - rem:exactness
+  - rem:condfamily
+  - ex:condfamily
+  - rem:relabel
+  - rem:alphabet
+  - thm:sifting-and-key
+  - rem:sidecond
+  - rem:vacuous
+  - ex:transcript
+  - thm:feasibility
+  - rem:nosearch
+  - def:validator
+  - thm:validator-soundness
+  - rem:completeness
+  - def:chaincond
+  - rem:chaincond-reductions
+  - rem:source-segment-rules
+  - rem:chain-and-validator
+  - thm:chain-consumption
+  - rem:coarse
+  - rem:obligations-discharged
+  - def:banda
+  - thm:band-a
+  - def:eligible
+  - rem:gate-by-certificate-form
+  - def:gate-outcome-table
+  - thm:gates
+  - rem:degenerate
+  - prop:conservative
+  - rem:notfallback
+  - ass:spec
+  - ass:alice-meas
+  - ass:rhom
+  - ass:coin
+  - rem:coin-scope
+  - ass:link
+  - ass:atk
+  - ass:ideal
+  - req:declaration-keys
+  - req:operator-form
+  - req:pass-through
+  - req:derived-objects
+  - req:tag-reading
+  - req:no-window
+  - req:source-licence-passed-on
+  - req:da1-source-identity
+  - req:choice-weighting-record
+  - req:conditional-family-decision
+  - req:binary64-weights
+  - req:weight-preparation
+  - req:setting-only-weighting
+  - req:weight-list
+  - req:stochastic-weights
+  - req:weighted-family-emission
+  - req:no-lattice-exponent
+  - req:no-fixed-fraction
+  - req:validator-refusals
+  - req:validation-transcript
+  - req:feasibility-witness
+  - req:witness-refusal-meaning
+  - req:physical-family-decision
+  - req:chain-refusals
+  - req:band-a-ideal-receiver
+  - req:band-a-identity-link
+  - req:chain-record-slots
+  - req:link-row-provenance
+  - req:reference-companion-compiled
+  - req:eligibility-flag
+  - req:gate-outcomes
+  - req:attestation-presence
+  - req:vacuous-gate-report

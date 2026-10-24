@@ -1,0 +1,32 @@
+% ---
+% id: protocol-compiler/rem:chaincond-reductions
+% kind: rem
+% title: Chain conditions here and in the reductions module
+% summary: >-
+%   The compiler's (C1)–(C3) are conditions on the record's fields and differ
+%   from the reductions module's composability, tuple chaining and stage order,
+%   whose numbers they share. That module proves the chain composes; this one
+%   decides on the record what can be decided there and names the rest.
+% prominence: standard
+% status: accepted
+% uses: [def:chaincond]
+% mentions: [reductions/def:chain, reductions/def:link, reductions/thm:chain]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:chaincond-reductions}
+The two modules that meet at the chain record describe it from two sides: the
+reductions module \emph{defines} the chain and \emph{proves} that it composes
+(\xref{reductions/def:chain}, \xref{reductions/def:link},
+\xref{reductions/thm:chain}); this module \emph{decides} what it can decide
+on the presented record and \emph{names} what it cannot. Nothing is asserted
+twice: the numbered conditions of Definition~\ref{def:chaincond} are this
+module's, are stated on the record's fields alone, and are not the
+composability (C1), tuple chaining (C2) and stage order (C3) of that module's
+definition, whose numbering they happen to share --- ``(C1) of
+Definition~\ref{def:chaincond}'' and ``reductions' composability (C1)'' are
+different conditions on the same object.
+\end{remark}

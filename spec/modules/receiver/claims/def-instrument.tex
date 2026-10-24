@@ -1,0 +1,63 @@
+% ---
+% id: receiver/def:instrument
+% kind: def
+% title: "Receiver instrument"
+% summary: >-
+%   A receiver instrument is a declared mode space with its inputs split into
+%   at least one channel mode and the probe modes, disjoint detector ports and
+%   a contractive instrument matrix. Undeclared inputs carry vacuum, and a mode in no port is
+%   undetected.
+% prominence: standard
+% status: accepted
+% uses: [def:modes, def:fock]
+% mentions: [ass:vac]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Besides the channel, a receiver may be fed by its own probe source, such as the
+light source of a detector-attack countermeasure; its light enters through the
+inputs $\InpS$, whose subscript $\Prb$ is the shared notation's label for the
+probe input. The definition ends by identifying the shared notation's
+channel-input system $\Hs{\Chan}$ with the \tref{Fock space} over $\InpC$. Its
+photon-number blocks $\Hs{\Chan_n}$, grouped at a cutoff $N$ into the blocks
+below and above it, are the canonical instance of the sectors that the
+platform's security analysis declares on the receiver's space
+(\repodoc{spec/notation.md}~\S2.4).
+
+\begin{definition}\label{def:instrument}
+A \term[A declared mode space with channel and probe inputs, disjoint detector ports and a contractive instrument matrix.]{receiver instrument} is a tuple
+\begin{equation}\label{eq:instrument}
+  \Recv=\Big(\Modes;\ \Inp=\InpC\sqcup\InpS;\
+  \{\Port{k}\}_{k=1}^{K};\ \Gmat\Big)
+\end{equation}
+in which
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $\Modes$ is a \tref{declared mode space} (Definition~\ref{def:modes});
+\item $\Inp\subseteq\Modes$ is the set of \term[The modes a receiver instrument declares as inputs, the channel modes and the declared source modes; every other mode carries vacuum at the input.]{declared input modes}, split
+  into the \term[The declared input modes through which the adversary's signal enters.]{channel modes} $\InpC\neq\varnothing$ (the adversary's access) and the
+  \term[The declared input modes that carry the receiver's own probe state.]{declared source modes} $\InpS$ (the probe); every mode of
+  $\Modes\setminus\Inp$ carries vacuum at the input
+  (Assumption~\ref{ass:vac});
+\item $\Port{1},\dots,\Port{K}$ are pairwise disjoint subsets of $\Modes$, the
+  \term[The pairwise disjoint sets of modes each watched by one threshold detector.]{detector ports}, with $K\ge1$; a mode in no port is undetected;
+\item $\Gmat\in\mathbb{C}^{\Modes\times\Modes}$ is the \term[The contraction of a receiver instrument from input modes to output modes.]{instrument matrix},
+  indexed rows-by-outputs and columns-by-inputs, with
+  $\Gmat^\dagger\Gmat\preceq\id$.
+\end{enumerate}
+The basis $\{\ket{m}\}_{m\in\Inp}$ of $\mathbb{C}^{\Inp}$ is ordered with the
+channel modes $\InpC$ before the declared source modes $\InpS$, each part in
+the \tref{declared order} of $\Modes$; matrices on $\mathbb{C}^{\Inp}$ and the
+columns of a matrix with column set $\Inp$ are indexed in this order, which
+differs from the declared order of $\Modes$ exactly when some declared source
+mode precedes some channel mode in it.
+We write $\Gmat_{\Inp}\in\mathbb{C}^{\Modes\times\Inp}$ for $\Gmat$ restricted
+to the columns $\Inp$, and $\Emd{J}\coloneqq\Emd{\bigcup_{k\in J}\Port{k}}$ for
+$J\subseteq[K]$, where $[K]\coloneqq\{1,\dots,K\}$.
+The channel-input system of the shared notation is the \tref{Fock space} over
+the channel modes: $\Hs{\Chan}=\bigoplus_n\Hs{\Chan_n}$ with
+$\Hs{\Chan_n}=\Symn{n}(\mathbb{C}^{\InpC})$ and photon-number projectors
+$\Pnumon{n}{\Chan}$.
+\end{definition}

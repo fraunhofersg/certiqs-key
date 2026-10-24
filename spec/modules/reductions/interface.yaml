@@ -1,0 +1,2870 @@
+# spec/modules/reductions/interface.yaml -- the reductions CORE interface:
+# inputs, outputs, parameters, conventions, the number model, the fail-closed
+# rules and the link record of the core (spec/claim-format.md section 5).
+# The claim files under claims/ are the contract; this file authors no
+# mathematics and repeats none, and where it and a claim disagree, the claim
+# decides.
+#
+# ONE INTERFACE FILE PER MODULE. This file carries what the core states: the
+# reduction instance, the emission normalizer, the emitted family, the
+# entries, the chain with the transmitter's source segment, and the artifact.
+# A SUBMODULE'S INTERFACE CARRIES ITS OWN: its declared inputs, the rows it
+# adds to the tables below at their own `order`, the reason strings and ledger
+# entries it owns, and the conventions its route needs. NO ROW, REASON,
+# CONVENTION OR LEDGER ENTRY OF THIS FILE IS A SUBMODULE'S, and the one block
+# that names a submodule at all is `submodules_today`, which is the
+# arithmetic of the module as it stands -- so DELETING A SUBMODULE DELETES ITS
+# ENTRY THERE AND NOTHING ELSE HERE. That is what makes a submodule
+# removable.
+#
+# Where the code under src/certiqs_key/reductions/ and a row could be read
+# differently -- a row the code places in another package, a spelling no row
+# fixes, a rule this file fixes for a claim -- the place is recorded under the
+# `code_note` key at the end of this file and nowhere else.
+#
+# Every row names, in a `locator` field, the claim label it rests on. Machine
+# keys are binding for the implementation. The one output key this interface
+# deliberately does not have is under `not_carried`.
+
+module_id: reductions
+
+# ---------------------------------------------------------------------------
+# inputs
+#   The core keys. The receiver-facing rows and the device-model rows are
+#   the submodules' that declare them, and the abstract objects of
+#   def:reduction-instance have keys of their own.
+#
+#   The blanket reading, stated by def:exactadm (a): every numeric datum is
+#   binary64 and IS the dyadic rational it is; every condition below is
+#   DECIDED EXACTLY on those numbers, the sums in the declared order,
+#   rounding nowhere. THIS MODULE DECLARES NO NUMERICAL TOLERANCE and no
+#   condition below is read at one.
+# ---------------------------------------------------------------------------
+inputs:
+
+  - name: lattice_exponent
+    symbol: kappa
+    type: integer
+    presence: "always; REQUIRED, no default and no fallback"
+    domain: >-
+      The one declared exponent of the dyadic lattice EVERY DECLARED AND EVERY
+      EMITTED OPERATOR ENTRY, and every declared real scalar, lies on:
+      2^kappa x in Z, |x| <= 1, 1 <= kappa <= 53 (Eq. eq:latinv). VALIDATED
+      additionally as kappa + ceil(log2 L) <= 53 for every accumulation length
+      L this module states a sum over -- max{|V|, |Y|, |T|} in every emission
+      this module makes; the joint-outcome form of thm:instrument-instance
+      accumulates over |V| x |J|, AND NO EMISSION OF THIS MODULE USES THE
+      JOINT-OUTCOME FORM, so a request that selected one would have to be
+      validated at that length as well --
+      and refused `lattice_exponent_not_declared` otherwise. A request that
+      does not carry it is refused UNDER THE SAME REASON, BEFORE ANYTHING IS
+      CONSTRUCTED, because a defaulted lattice would decide a
+      security-relevant predicate on nobody's authority.
+    locator: "def:exactadm (b), Eq. eq:latinv; lem:latsum, Eq. eq:latsumcond"
+    what_kappa_is_not: >-
+      THE SENTENCE MOST LIKELY TO BE MISREAD AS A TOLERANCE. It fixes a SET of
+      representable numbers and DECIDES NO PREDICATE ABOUT HOW NEAR ONE NUMBER
+      IS TO ANOTHER. It is not a tolerance, nothing is admitted or refused
+      "within" kappa, and THIS MODULE CARRIES NO TOLERANCE ROW AT ALL
+      (spec/architecture.md 2.8, which gives the modules no tolerance to
+      reason with). Locator: def:exactadm (b).
+    module_neither_chooses_nor_derives_it: >-
+      It is the INSTANCE'S declaration, read here and used unchanged, and IT
+      IS THE EXPONENT THIS MODULE'S OWN EMISSION IS RE-ESTABLISHED ON
+      (def:emitnorm (2), (3)). The same key therefore binds both directions across
+      the boundary. The platform value kappa = 40 is fixed by
+      spec/architecture.md 2.9 and by no claim of this module.
+
+  - name: strict_snaps
+    symbol: "bool"
+    type: boolean run option
+    presence: "read from the run configuration; off when the run does not declare it, and recorded either way"
+    domain: >-
+      THE STRICT OPTION of foundations/req:snap-reference (iv), which refuses
+      wherever a moved block or class would rest on
+      foundations/ass:snapped-measurement (A-SNAP); no other option
+      conditions it.
+      OFF (the default): a class the emission normalizer moves is snapped by
+      def:emitnorm (2), without reviving a zero row or column, or, where no
+      element can host a component of its residue, by the LAST RESORT (3), a
+      uniform lift flagged `support_not_preserved`; either way it is
+      DISCLOSED (req:emission-record), and the run rests on A-SNAP there
+      unless it evaluates the class off its snap on the reference companion
+      (req:reference-companion). So NO CLASS IS REFUSED BY DEFAULT FOR BEING
+      MOVED. ON: where no reference companion is formed beside the artefact,
+      which with a moved class happens only where no claim of this module
+      establishes (H-REF) for the instance (req:reference-companion), every
+      moved class is refused at emission, naming the cause and the fix
+      (req:emission-refusal); where one is formed, the run refuses after its
+      search wherever a moved class is not evaluated off its snap.
+    locator: "def:emitnorm (2), (3); req:emission-refusal; req:emission-record; foundations/req:snap-reference (iv); foundations/req:support-safe-snap (iv)"
+    refusal_reasons: [emitted_family_not_admissible]
+
+  - name: detection_alphabet
+    symbol: Y
+    type: ordered label list
+    presence: always
+    domain: >-
+      Finite, non-empty, labels pairwise distinct; THE ORDER IS DECLARED and
+      is the order every sum over a class is accumulated in.
+    locator: "def:joint-family (a)"
+    cross_module_letter_note: >-
+      A NAME COLLISION ACROSS THE MODULE BOUNDARY, RESOLVED BY THE CLAIMS AND
+      RECORDED HERE SO THAT IT IS NOT RE-RESOLVED IN CODE. `receiver` calls
+      ITS emitted coarse alphabet V and writes F_v for the coarse-grained
+      PHYSICAL POVM indexed by it. This module writes M_{y|t} for that same
+      object and RESERVES F_v FOR THE SQUASHED TARGET: the supplier's emitted
+      alphabet IS this module's Y, and this module's V is the JOINT alphabet
+      Y x T. THE LETTER V MEANS DIFFERENT SETS IN THE TWO MODULES and an
+      implementation must not identify them.
+
+  - name: probe_declaration
+    symbol: "T, {q_t}"
+    type: alphabet plus weights
+    presence: always
+    domain: >-
+      T finite, non-empty and ordered; 0 < q_t <= 1 for every t; EVERY q_t AN
+      INTEGER MULTIPLE OF 2^-kappa (Eq. eq:latinv); and sum_t q_t = 1 EXACTLY,
+      THE SUM TAKEN IN THE DECLARED ORDER OVER T AND REQUIRED TO ROUND
+      NOWHERE -- which lem:latsum makes SATISFIABLE rather than a condition
+      that would refuse every declaration. EACH IS DECIDED EXACTLY and refused
+      `probe_weights_ill_formed` otherwise. The weights are the measuring
+      party's own declared randomness (A-PROBE, whose row is emitted only
+      where T has at least two values). Where no private setting is declared,
+      T is the singleton {*} with q_* = 1.
+    locator: "def:joint-family (a); ass:probe; lem:latsum"
+    three_conjuncts_are_load_bearing: >-
+      q_t <= 1 is used as an exact bound by wpfss/prop:route, and
+      sum_t q_t = 1 is what carries the per-class completeness of
+      def:emitnorm (2), (3) to completeness over V (def:reduction-instance, first
+      consequence). Neither is decorative.
+
+  - name: joint_alphabet
+    symbol: "V = Y x T with its classes {V_t} and weights {q_t}"
+    type: "ordered product set with a declared partition"
+    presence: always
+    domain: >-
+      V = Y x T, ORDERED WITH y VARYING FASTEST AND t SLOWEST (the
+      `subsystem_order` convention below); its classes V_t = Y x {t} partition
+      V, each ordered as Y is. Validated against the product set and against
+      that grouping, and NEVER CONSTRUCTED IN PLACE OF A MISSING DECLARATION;
+      a disagreement is refused `alphabet_or_order_mismatch`.
+    locator: "def:joint-family (a)"
+    why_it_has_a_key: >-
+      def:joint-family makes the alphabet WITH ITS CLASSES AND WEIGHTS the
+      object every reduction instance is stated over, so it has a key of its
+      own; the core has no receiver consumption step to build it in.
+
+  - name: sector_declaration
+    symbol: "S = S_dat + S_sc, with dimensions d_s, supports V^(s), and the order"
+    type: "ordered sector list"
+    presence: always
+    domain: >-
+      A finite ordered list of DATA sectors and SCALAR sectors, each with a
+      declared dimension d_s >= 1 and, for a data sector, a declared SUPPORT
+      V^(s) subset V THAT MEETS EVERY CLASS. THE SECTOR MAP -- the list with
+      its order, each sector's dimension and its kind -- IS THE TYPE AND NOT A
+      DESCRIPTION OF ONE: it is what a consumer compares, by comparison of
+      declared labels, and a disagreement is refused `no_block_structure`.
+      dim H(Q) = sum_s d_s is a sum of declared dimensions and carries no
+      arithmetic.
+    locator: "def:reduction-instance (I2); def:exactadm (c), condition (a)"
+    party_label: >-
+      OPTIONAL, ONE PER INSTANCE, DEFAULT BOB. The party the instance's target
+      belongs to: every factor of every H(Q_s) is that party's, and where the
+      key is absent it is Bob's. A DECLARED IDENTIFIER, COMPARED
+      AND NEVER COMPUTED; no rule below reads its value, no condition of
+      (I1)-(I4) depends on it, and it is emitted with the sector map
+      (`target_descriptor`). Locator: def:reduction-instance (I2);
+      thm:emit (ii).
+    support_note: >-
+      The elements OUTSIDE THE SECTOR SUPPORT (def:reduction-instance) are exactly
+      zero, on the lattice, and touched by no step of the normalizer -- not
+      rounded and never a host. The designation order ranges over the
+      support, which meets every class (def:emitnorm). The DEFAULT
+      support is V.
+    why_it_is_an_input: >-
+      def:reduction-instance makes the sectors declared data of the instance,
+      so they are keyed on the input side; the declared support is what keeps
+      a host of the residue from being an element outside the sector support
+      (spec/architecture.md 2.9) and what the joint-outcome form of
+      thm:instrument-instance needs.
+
+  - name: declared_datum
+    symbol: "A = {A^(s)_v}"
+    type: sector-block lists
+    presence: always
+    domain: >-
+      Per data sector s and per outcome v in V, one d_s x d_s binary64 array
+      together with the sector identifiers and their order; A^(s)_v = 0 for
+      v outside the sector's support. VALIDITY: ADMISSIBLE in the sense of
+      def:reduction-instance -- exactly Hermitian, exactly positive
+      semidefinite, and CLASS COMPLETE, sum_{v in V_t} A^(s)_v = q_t 1 exactly
+      at every class t -- and EXACTLY ADMISSIBLE when in addition every entry
+      satisfies Eq. eq:latinv, with that class sum ROUNDING NOWHERE in the
+      declared order. DECIDED EXACTLY, PER SECTOR AND PER CLASS, ON ENTRY, and
+      refused `declaration_not_exactly_admissible` otherwise, THE REFUSAL
+      NAMING WHICH CONJUNCT FAILED.
+    locator: "def:reduction-instance (I1), Eq. eq:classcomplete; def:exactadm (c), (b)"
+    this_module_repairs_nothing: >-
+      BINDING. This module DOES NOT REPAIR A BLOCK AND DOES NOT MEASURE A
+      DEFECT ON ONE: the perturbation between these numbers and whatever
+      floating-point output they were formed from WAS ABSORBED WHERE THE DATA
+      IS DECLARED, BY THE INSTANCE'S SNAP, whose record carries the pre-snap
+      defect and the displacement and whose ceiling on repair is that party's
+      declared tolerance (spec/architecture.md 2.8). THAT RECORD IS NOT AN
+      INPUT OF THIS MODULE: no row below reads it and no claim is proved from
+      it. Locator: ass:recv; def:exactadm (a).
+    type_is_the_operator_form: >-
+      THE SECTOR-BLOCK TYPE OF spec/architecture.md 2.9, AND IT CARRIES THE
+      BLOCK CLAIM: there is NO FULL-SPACE ARRAY, NO OFF-SECTOR ENTRY TO
+      DECLARE AND NONE TO VERIFY, and the structural check is A COMPARISON OF
+      THE SECTOR MAP (`no_block_structure`). An implementation that
+      materialises a dense operator to test off-sector zeros has built the
+      object the type exists to avoid. Locator: def:reduction-instance (I2).
+    receiver_blocks: >-
+      The receiver's coarse-grained photon-number blocks are not this row:
+      they are the `photon_blocks` row of `wpfss/interface.yaml`, complete
+      over Y at the constant 1, and reach a datum through the weight route.
+
+  - name: reduction_instance
+    symbol: "J = (I1)-(I4)"
+    type: "constructor record"
+    presence: always
+    domain: >-
+      The four parts of def:reduction-instance, supplied by a submodule's
+      builder or by one of the core's own three instances: (I1) the system B
+      with H(B) separable, the data sectors, the handed datum, the finite list
+      (H) of HYPOTHESES about the rest of the model, and the MODEL MAP
+      A' |-> M[A']; (I2) the sector set with the scalar values phi_s(v) and
+      the target family; (I3) the channel constructor Lambda[A'] with the
+      sector pinching in front and the transported set; (I4) the certified
+      entry list and the CLASS-MARGINAL FLAG. STABILITY CLAUSE, VALIDATED AS A
+      PROPERTY OF THE BUILDER AND NOT OF A CALL: no hypothesis in (H) reads an
+      entry of the datum, and (I2)-(I4) are established for EVERY admissible
+      datum under (H).
+    locator: "def:reduction-instance (I1)-(I4)"
+    the_three_core_instances:
+      - "identity instance (cor:identity-instance): S_sc empty, Q = B, Lambda the sector pinching. SELECTABLE ONLY ONCE A DECLARED INPUT CARRIES AN ALREADY-FINITE POVM; see `identity_link_scope` below."
+      - "flag instance (cor:flag-instance): no data sector, one scalar sector per outcome, Lambda the measure-and-prepare channel. The instance of an UNCHARACTERISED branch."
+      - "branching instance (thm:instrument-instance) with its register form (cor:register-instance): an instrument followed by branch instances, in a coarse-grained and a joint-outcome form."
+    several_measuring_parties: >-
+      A CALL DECLARES ONE INSTANCE, OR AN ORDERED LIST OF INSTANCES, ONE PER
+      MEASURING PARTY, each with its own party label, its own datum and its
+      own sector map, and each of them an instance in the sense of the four
+      parts above. ONE INSTANCE IS THE ONE-FACTOR CASE; the list is what the
+      `factor_emission` output row is about, the emission being one artefact
+      per factor plus the
+      combination rule and NEVER a product datum. The order of the list is
+      DECLARED DATA (`subsystem_order`) and is what the product alphabet and
+      the product sector map are read in. Locator: thm:emitted-product;
+      def:reduction-instance (I2).
+    what_a_submodule_supplies: >-
+      A submodule proves that ITS construction is an instance and applies
+      thm:emit to it, in its own claims and its own interface. THE CORE NAMES
+      NO CONSTRUCTION: the builder is supplied, and nothing of this file reads
+      which one it is.
+    scalar_values_note: >-
+      Each phi_s(v) in [0, 1] satisfies Eq. eq:latinv with sum_v phi_s(v) = 1
+      exactly, formed by finitely many exact operations and, where a rounding
+      onto the lattice is needed, by the DOWNWARD rounding of a quantity the
+      value is a certified lower bound of, any complementary value being
+      RECOMPUTED from the rounded ones and never rounded on its own. That is
+      condition (D-DIR) (foundations/req:rounding-direction) stated once,
+      which is what makes thm:emit (iv) generic. Locator:
+      def:reduction-instance (I2); thm:emit (iv).
+
+  - name: receiver_artifact
+    symbol: null
+    type: record
+    presence: "always for an instance that reads a supplier artifact"
+    domain: >-
+      A supplier artifact whose `module_version` resolves against the
+      caller's declared `accepted_receiver_versions` AND which carries that
+      module's own validation results; that the declared set names only
+      accepted versions of the supplying module is A-RECV (i), and the engine
+      does not decide acceptance itself. A DRAFT VERSION IS REFUSED, and so is an artifact
+      that does not say it passed its own supplier's validation
+      (`receiver_spec_not_accepted`); a machine key of the supplier's ledger
+      that the artifact does not carry is a refusal under the same reason
+      rather than a silently shortened list; a key its supplier emits only on
+      a condition would be required on that condition only, and the
+      receiver's presence rules make no key conditional
+      (wpfss/rem:receiver-imports). A-RECV.
+    locator: "ass:recv; req:supplier-version-accepted; req:supplier-ledger-refusals"
+    no_second_reason_string: >-
+      THE DECLARED CARRIER OF THREE REFUSALS, UNDER ONE STRING: the accepted
+      version, the supplier's validation results, and the inherited ledger
+      keys. No separate reason string exists for any of them AND NONE IS TO BE
+      INVENTED.
+    what_this_module_may_never_decide: >-
+      A-RECV is never verified by any code path. The conforming behaviour is
+      exactly: test that the version resolves to an accepted one, carry into
+      the emitted ledger EVERY KEY OF THE SUPPLIED LEDGER, as supplied and in
+      the supplier's order (`artifact.assumption_ledger`; this module holds no
+      list of the supplier's keys, and a key beyond those the supplier's rules
+      require is carried, not refused), refuse an artifact whose ledger lacks
+      a key THE SUPPLIER'S OWN PRESENCE RULES make present
+      (`validation.required_receiver_keys`, reading the receiver's rules from
+      the receiver package as installed where the check runs, applied by
+      `validation.rule_receiver_spec`), and NAME the artifact by version in the
+      licence record. No transcription of the supplier's keys or rules is kept,
+      and none is owed at a supplier change. The `uses` edges of the claims
+      that read the artifact say which of those assumptions the imported facts
+      rest on, and decide no key's presence. Locator: ass:recv;
+      req:supplier-ledger-pass-through; req:supplier-ledger-refusals;
+      wpfss/rem:receiver-imports; `never_verified` below.
+    keys_and_closure_are_two_answers: >-
+      WHICH claims of the supplier are imported, and which of its assumptions
+      come with them, is `wpfss/rem:receiver-imports` and the `uses` edges of
+      the claims that read them (`check_claims --assumptions
+      reductions/wpfss/cor:emitted-flat` is the authority for the closure);
+      WHICH KEYS THE EMITTED LEDGER CARRIES is the supplier's own ledger,
+      entire, as supplied, under the supplier's own presence rules (ass:recv;
+      req:supplier-ledger-pass-through). The ledger may therefore name an
+      assumption the closure is without, an assumption more and never one
+      fewer. A key in the ledger records the supplier's assertion, not that a
+      fact imported here rests on it. Locator: wpfss/rem:receiver-imports,
+      which gives the reasons.
+
+  - name: handed_reference
+    symbol: "the reference G of the declaring instance's snapped receiver blocks, per setting and block: centres C (Gaussian rationals) and radii r (rationals)"
+    type: record
+    presence: "where the declaring instance hands the reference beside its snap of the receiver blocks (foundations/def:evaluated-off-snap (i)), on every block it hands"
+    domain: >-
+      The receiver's reference of its emitted dark-composed blocks
+      (receiver/detector-imperfections/req:dark-composed-reference (iii),
+      (vi)), passed by the declaring instance beside the snapped blocks it
+      declares, unaltered, with the identity of the reference and the claims
+      that establish its enclosure, positivity and completeness. This module
+      decides nothing of it beyond reading it; it recentres its enclosures
+      (foundations/lem:recentred-enclosure) and forms the reference companion
+      from it (req:reference-companion). The snapped blocks remain the
+      handed datum of the artefact itself. A block (m, t) is handed when the
+      reference names the element of every letter at it; one named for only
+      some letters is not handed, the companion carries the snapped block for
+      every letter of it and its record counts the letters named
+      (partially_handed_letters), so that no block of G mixes the reference
+      with the snap (cor:reference-companion (H-REF)); a reference that hands
+      no block whole hands none (req:reference-companion (vi)).
+    locator: "cor:reference-companion; req:reference-companion; foundations/def:evaluated-off-snap; foundations/lem:recentred-enclosure"
+
+  - name: accepted_receiver_versions
+    symbol: null
+    type: "set of version strings"
+    presence: always
+    domain: >-
+      The set of supplier versions the caller declares acceptable, against
+      which `receiver_artifact.module_version` is resolved. A REQUEST THAT
+      DECLARES NONE RESOLVES NOTHING and its artifact is refused
+      `receiver_spec_not_accepted`; no default set exists, an implicit one
+      being an acceptance decision taken on nobody's authority.
+    locator: "req:supplier-version-accepted; ass:recv (i)"
+    whose_set_it_is: >-
+      The machine half of the rule that the artifact resolves to an ACCEPTED
+      version. The set is the caller's declaration and never this module's.
+
+  - name: receiver_provenance
+    symbol: null
+    type: "record, in memory only, beside the receiver artifact"
+    presence: >-
+      optional; passed only by the part of the engine that ran the receiver
+      module in the same run and docked its artifact into the instance, and
+      absent on every other route
+    domain: >-
+      The run's word that every supplier artifact the instance reads is a
+      receiver artifact that run obtained by running the receiver module as
+      installed on the receiver declaration it holds, handed on as emitted,
+      whose declared `module_version` is the one the installed module states,
+      and whose own assumption ledger the run's record carries
+      (req:recv-row-provenance (i)-(iii)); it names each artifact by its
+      `module_version`. It is NO
+      PART OF THE ARTIFACT and is never read from one: an artifact's version,
+      validation results and ledger are data an artifact written by hand can
+      carry as well. The engine reads it for one purpose, the presence rule of
+      A-RECV, and decides on the artifact the parts of req:recv-row-provenance
+      that are data: (ii), the version against `accepted_receiver_versions`
+      and against the installed module's own, the validation results and the
+      ledger keys of req:supplier-ledger-refusals; and (iv), the artifact's
+      exact-route record naming a model admissible exactly (not
+      `port_grams_not_enclosed`; receiver/req:exact-route-decision (iv)) and
+      its `bound_evaluation` reading `rigorous` (receiver/req:evaluation-label).
+      It emits the row where any of them fails or the record does not name
+      every artifact read. An artifact with a weight evaluated in floating
+      point, A-EIG's case among them, or admitted only within the receiver
+      tolerances, keeps the row. It is
+      no proof and no signature: a caller that constructs one asserts what the
+      run asserts.
+    locator: "req:recv-row-provenance; ass:recv; receiver/req:exact-route-decision; receiver/req:evaluation-label"
+    fixed_here: >-
+      The key name and that the record travels beside the artifact rather than
+      in it are this file's; req:recv-row-provenance binds the key, as
+      protocol-compiler/req:link-row-provenance binds `chain_provenance`.
+
+  - name: link_declarations
+    symbol: "l_1, ..., l_k"
+    type: ordered list
+    presence: always
+    domain: >-
+      Each with a stage in {source, receiver} and a kind from the vocabulary
+      below. EVERY source LINK PRECEDES EVERY receiver LINK, else refused
+      (`source_link_after_receiver_link`); a list that is not composable or
+      not tuple-chained is refused `chain_ill_formed`. A source-stage link is
+      a SOURCE LINK OF THE TRANSMITTER'S TYPE, with its witness supplied as
+      data or as a theorem constructor, its declared descriptor family and, in
+      the constructor case, its obligation record; this module declares no
+      source-stage kind and decides none of the transmitter's conditions (A1)
+      to (A3). Every artefact THIS module emits has an empty source segment; a
+      non-empty one may be presented, and it is then admitted or refused by
+      that module's conditions and by the admission rule below.
+    locator: "def:link; def:chain (C1)-(C3) and its admission rule; rem:ordering; thm:two-sided"
+    what_the_order_carries: >-
+      THE ORDER IS DECIDED, under `source_link_after_receiver_link`, and (C3)
+      is the shape of the record rather than what carries the soundness:
+      lem:precomposition establishes the inclusion AttSet^real o Gamma
+      contained in AttSet^virtual for every licensed list, and thm:two-sided
+      (i) proves that the two orders give one and the same map of strategies.
+      A CHAIN WITH A NON-EMPTY SOURCE SEGMENT IS ADMITTED ONLY WITH LICENSED
+      ENTRIES (def:chain, 'Which chains are admitted'); the rule bites where an
+      entry can be declared, which is the consuming declaration, and THIS FILE
+      HAS NO REFUSAL REASON FOR IT -- it binds that no string exists for it,
+      and every entry this module emits carries a real scalar, so no
+      artefact of this module can violate the rule.
+    stage_vocabulary: [source, receiver]
+    receiver_stage_kind_vocabulary_core: [identity, register-mixture, flags-enough, pinching, label-space]
+    kinds_implemented_core: [identity, register-mixture, flags-enough, pinching]
+    kinds_reserved_and_refused_core: [label-space]
+    family_dominating_note: >-
+      `family-dominating`, reserved in the core until its first instance was
+      stated, is the `domination` submodule's kind (its interface's
+      `link_kinds`; req:reserved-link-kinds). No requirement emits it.
+    kind_vocabulary_note: >-
+      THE VOCABULARY IS THE CORE'S KINDS PLUS THOSE A SUBMODULE'S INTERFACE
+      ADDS (def:link, in terms), so the kinds a submodule declares go away with
+      it; what each present submodule adds is `submodules_today` below.
+      `source-map` IS NOT IN THIS VOCABULARY: it is the transmitter's
+      source-stage kind, declared, reserved and refused there
+      (transmitter/def:source-link), and the refusal string `link_kind_deferred`
+      is shared by both modules for the same rule.
+    refusal_reasons: [chain_ill_formed, source_link_after_receiver_link, link_kind_deferred]
+
+  - name: carried_operators
+    symbol: "hat O_1, ..., hat O_m"
+    type: list
+    presence: "always; the DEFAULT is the instance's DEFAULT CARRIED SET"
+    domain: >-
+      The operators the relation is asked to transport, BEYOND the target POVM
+      elements. DEFAULT: THE INSTANCE'S DEFAULT CARRIED SET -- EVERY SECTOR
+      PROJECTOR {Pi_s} of the instance's sector set, which
+      def:reduction-instance (I3) puts in the transported set of every
+      instance, TOGETHER WITH THE SUMS OF SECTOR PROJECTORS THAT INSTANCE
+      TRANSPORTS BESIDES (the two cutoff projectors of a target split at a
+      cutoff; the branch projector of a branching instance) -- each admitted
+      on the trivial certificate c = 0
+      with the relation >=, its pull-back being positive for EVERY instance
+      and its entries 0 and 1 hence on the lattice at every kappa >= 1. THE
+      DEFAULT SET TRAVELS IN `transported_operators` AND IS NOT A CONSTRAINT
+      ENTRY: one of its operators becomes an entry of `constraint_list` ONLY
+      WHERE A CALLER REQUESTS IT AS AN ENTRY, which makes the list non-empty
+      and brings the licence with it (cor:entries (i)). A
+      REQUESTED operator is declared as one array -- THE ONE DENSE ARRAY THIS
+      MODULE ACCEPTS, AND ONLY AS INPUT -- and is admitted only in the form
+      hat O = sum_v sum_s alpha_{v,s} Pi_s F_v Pi_s + Z with declared real
+      lattice coefficients and Z a combination of sector projectors whose
+      coefficients are declared lattice values (def:reduction-instance (I4)), AND
+      ONLY WHERE its certificate Lambda^dagger(hat O) [relation] c 1_B is
+      DECIDED FOR THE EMITTED NUMBERS: by cor:entries (i) for a default
+      carried operator, (ii) for the class-marginal entry, and, under (iii),
+      by a DECIDED CERTIFICATE -- a condition on the emitted numbers and the
+      request's declared constants, decided exactly, that a claim stated for
+      the instance proves sufficient. A requested operator OUTSIDE that form,
+      or of that form with no decided certificate or with one that fails, is
+      REFUSED `constraint_without_certificate` rather than emitted at any
+      constant. EVERY OPERATOR OF THE ADMITTED FORM IS
+      SECTOR-BLOCK-DIAGONAL, so the declared array is SPLIT AGAINST THE SECTOR
+      MAP ONCE and the entry travels onward AS ITS SECTOR-BLOCK LIST, exactly
+      as `target_povm` does (spec/architecture.md 2.8-2.9); AN ARRAY WITH A
+      NONZERO ENTRY OUTSIDE THE BLOCKS IS REFUSED
+      `constraint_without_certificate`, naming the entry's position and the
+      two sectors it couples, RATHER THAN READ ON ITS DIAGONAL BLOCKS, which
+      would carry an operator the caller did not declare. REQUESTED LABELS
+      ARE PAIRWISE DISTINCT AND DISTINCT FROM THE LABELS OF THE ENTRIES THE
+      INSTANCE BUILDS ITSELF: the licence's per-entry discharge and the
+      companion's writing are read by label, so a request whose label
+      repeats one is REFUSED `constraint_without_certificate`, naming the
+      label, before any certificate is decided (a code-side decision on
+      caller data; the same request under a fresh label is admitted as
+      above).
+    locator: "def:reduction-instance (I3), (I4), Eq. eq:instance-entry; cor:entries (i), (iii); cor:pullback; req:transported-set-certificates; req:uncertified-operator-refused"
+    certificate_rule: >-
+      A CALLER'S CERTIFICATE IS NEVER TAKEN ON TRUST: every certificate of a
+      requested entry is decided on the emitted numbers by a claim, and no
+      ledger assumption carries a caller's word for one (cor:entries (iii);
+      req:uncertified-operator-refused). The decided certificates stated for
+      a requested entry are: a default carried operator requested as an
+      entry, at c = 0 with >=, for every instance (cor:entries (i)); the
+      class-marginal entry wherever the instance discharges the
+      class-marginal identity (cor:entries (ii)); on the
+      identity instance, every operator of the admitted form, its pull-back
+      being the operator itself (cor:emitted-identity); and on the `wpfss`
+      flat instance's licensed route, the two-sector entry Eq.
+      eq:two-sector-entry, decided by every emitted block of its outcome
+      below the cutoff clearing its first constant and its second constant
+      being at most the certified weight (wpfss/cor:two-sector-decided).
+      Every other requested operator is refused.
+    declared_constant_rounding: >-
+      Where a declared constant does not satisfy Eq. eq:latinv it is FIRST
+      ROUNDED ONTO THE LATTICE IN THE DIRECTION THAT ENLARGES THE FEASIBLE SET
+      FOR THE RELATION -- DOWN FOR >=, UP FOR <= -- and AN EQUALITY ENTRY
+      WHOSE CONSTANT IS OFF THE LATTICE IS REFUSED RATHER THAN SPLIT INTO A
+      PAIR, an equality having no loosening direction; A DECLARED CONSTANT OF
+      MODULUS ABOVE ONE IS REFUSED UNDER EVERY RELATION, before any rounding
+      (`constraint_without_certificate`); the direction taken is RECORDED PER
+      ENTRY. It bites only on a constant a CALLER declares, never on one this
+      module or an instance computes. Locator: cor:entries (iii);
+      req:caller-constant-rounding.
+
+  - name: requested_assurance
+    symbol: null
+    type: enum
+    presence: always
+    values: [estimate, first-order, certified]
+    domain: >-
+      `estimate`, `first-order` or `certified`, THE THREE TIERS of
+      foundations/def:tiers (spec/architecture.md 2.8). A REQUEST NAMING ANY
+      OTHER VALUE IS REFUSED `requested_assurance_unknown` RATHER THAN
+      SILENTLY DEMOTED, because a silent demotion is a caller receiving a
+      weaker claim than the one it asked for without being told. NO VALUE
+      CHANGES ANYTHING THIS MODULE EMITS: the artifact is the same object at
+      each, and the tier is reached where the number is computed, WHICH IS
+      NOT HERE, and is never decided by a request; `certified` in particular
+      is reached only by the run's certified evaluation
+      (meat-core/frank-wolfe/req:certified-evaluation). A request naming `certified` neither guarantees nor refuses that tier:
+      the run's `reported_tier` and its reasons say which tier it reached, and
+      a run that sets `certified_evaluation: strict` refuses where it is not
+      reported certified.
+    locator: "foundations/req:tiers; foundations/def:tiers; PRINCIPLES.md section 10"
+    which_claim_states_it: >-
+      The claim behind this row is foundations/req:tiers, which refuses a
+      request naming any tier other than the three of foundations/def:tiers.
+      The tier vocabulary is the platform's, lives in foundations/ and is not
+      this module's to state; the row exists so that a request naming a tier
+      that is not one of the live ones is refused rather than served.
+
+  - name: source_mode
+    symbol: "tau_A or nomarg"
+    type: "state or null"
+    presence: always
+    domain: >-
+      The declared source mode of the consuming declaration; it decides which
+      licensed class the emitted entries are typed in: Theta_k = c_k tau_A in
+      trusted-source mode, Theta_k = c_k in untrusted-source mode. THIS MODULE
+      EMITS A REAL SCALAR c_k IN BOTH MODES AND NO OPERATOR Theta_k.
+    locator: "def:licensed; def:attset"
+    what_the_module_emits_in_each_mode: >-
+      In trusted-source mode the entry carries the `homogeneous` form: the
+      entry declares the real c_k and the right-hand side Theta_k = c_k tau_A
+      is CONSTRUCTED BY THE CONSUMER from it and from THE CONSUMER'S OWN
+      tau_A. In untrusted-source mode the scalar form, the only one that
+      exists there, the entry reading Theta_k = c_k as a comparison of real
+      numbers. An entry carrying a Hermitian Theta_k is a `general` entry,
+      admissible input but NEVER LICENSED. Locator: def:licensed; def:attset.
+    what_the_row_reads: >-
+      The transmitter owns what a declared tau_A IS and what the certificate
+      licenses; this row reads only which of the two classes an entry is
+      typed in.
+
+  - name: declared_relations
+    symbol: "(M, F) pairs"
+    type: list
+    presence: "optional; empty by default"
+    domain: >-
+      Relations a caller declares and asks this module to accept. Each is
+      tested against the NECESSARY conditions of lem:obstructions, decided
+      exactly as rem:obstructiondecide states them, and refused
+      `declared_relation_impossible` where one fails.
+    locator: "lem:obstructions; rem:obstructiondecide; req:declared-relation-check"
+    it_is_an_early_refusal_and_not_a_warrant: >-
+      THE ONE ROW WHOSE DECISION COULD HAVE BEEN LOOSE AT NO COST TO
+      SOUNDNESS, AND IT IS EXACT ANYWAY: nothing emitted is proved from its
+      having passed, and a missed refusal would cost time rather than
+      soundness. It is vacuous on the emission path. Locator:
+      rem:obstructiondecide.
+
+  - name: post_processing_order_declaration
+    symbol: null
+    type: flag
+    presence: always
+    domain: >-
+      Whether a squashing link is requested BEFORE the classical
+      post-processing of the outcome. Classical post-processing -- A NOISE OR
+      COARSE-GRAINING MAP ON THE PHYSICAL POVM, then the joint alphabet -- is
+      applied BEFORE THE FIRST SQUASHING LINK, and a request to apply one
+      AFTER a squashing link is refused `post_processing_order_violated`. THE
+      ROW REACHES EXACTLY THOSE TWO KINDS OF MAP.
+    locator: "rem:intertwining; def:joint-family (b); req:post-processing-order"
+    what_the_row_does_not_refuse: >-
+      A STOCHASTIC RELABELLING APPLIED TO BOTH SIDES AFTER A LINK IS SOUND AND
+      IS NOT THIS ROW'S SUBJECT. Let P(f | t) depend on Bob's PRIVATE
+      component of the outcome only and never on the device outcome; then
+      {P(f|t(v)) M_v} squashes to {P(f|t(v)) F_v} by lem:linear (i) WITH THE
+      SAME CHANNEL, Eq. eq:relabel: the target space, its sector map and its
+      dimension are unchanged, every transported operator has the same
+      pull-back, and every certificate is untouched. Such a relabelling is NOT
+      A LINK (a link composes a new channel), and THIS MODULE DECLARES NO
+      KIND, NO REGISTER AND NO POSITION IN A CHAIN FOR IT: it is the
+      consumer's to apply, after the chain, by the same lemma, which the
+      module that compiles the protocol may use directly. That is what leaves
+      a round-type relabelling to the compiler. Locator: rem:intertwining,
+      the relabelling paragraph, Eq. eq:relabel; req:post-processing-order;
+      lem:linear (i); ass:tsm.
+
+  - name: declared_orders
+    symbol: null
+    type: "ordered label lists"
+    presence: always
+    domain: >-
+      The declared sector order and the declared basis order within a sector,
+      carried with the declaration and compared across artifacts. Alphabets,
+      sector order and basis order must agree across artifacts, else refused
+      `alphabet_or_order_mismatch`. THE ORDER IS A DECLARED DATUM IN EVERY ONE
+      OF THOSE PLACES: it is VALIDATED and NEVER CONSTRUCTED IN PLACE OF A
+      MISSING DECLARATION.
+    locator: "def:reduction-instance (I2); def:joint-family (a); the `subsystem_order` and `summation_order` conventions below"
+
+  - name: public_choice_applied
+    symbol: null
+    type: "boolean, or absent"
+    presence: >-
+      OPTIONAL, one per call (per station). ABSENT MEANS NOT TOLD, and is the
+      default.
+    domain: >-
+      The consumer's word whether the consuming specification applies a
+      public choice at the measured factor whose family this emission
+      describes: a choice-weighted physical family or a choice weighting of
+      that factor (protocol-compiler/def:spec (b), (b')). true, false or
+      absent.
+    consumed_by: >-
+      A-TSM's presence rule alone (req:assumption-ledger): at T = {*} the
+      A-TSM row is omitted only where the value is false; true or absent
+      keeps it, and at |T| >= 2 the value is not read. No derivation, number,
+      refusal or other row reads it.
+    not_decided_here: >-
+      This module does not hold the specification and cannot decide the
+      value. A consumer that passes false asserts it, and must hold it to the
+      specification it then builds (the run tier does, before compilation).
+    locator: "req:assumption-ledger; ass:tsm; assumption_ledger.emission_rule A-TSM"
+    fixed_here: "The key name and its three-valued reading are this file's."
+
+# ---------------------------------------------------------------------------
+# outputs
+#   The emitted artifact. SIXTEEN core keys, each under the presence rule of
+#   its row, and `factor_emission` beside them exactly where several parties
+#   measure; `wpfss` adds `wpfss_data` and the `route` it was taken on.
+#   Nothing here is a second source of truth for an input.
+# ---------------------------------------------------------------------------
+outputs:
+
+  - name: source_descriptor
+    symbol: B
+    presence: always
+    content: >-
+      The physical system the instance names, WITH ITS DECLARED STRUCTURE and
+      no single dimension: H(B) is separable and may be infinite-dimensional
+      (def:system-setting), so a finite dimension cannot carry it. A
+      submodule's instance names what it adds -- a grading, a branch register
+      -- and the core names neither.
+    locator: "def:reduction-instance (I1); def:system-setting"
+
+  - name: target_descriptor
+    symbol: "Q, S, the sector map and the party partition"
+    presence: always
+    content: >-
+      THE SECTOR MAP, AND IT IS THE TYPE RATHER THAN A DESCRIPTION OF ONE: the
+      block kind, the sector identifiers IN THE DECLARED ORDER, and the
+      per-sector dimensions, with dim H(Q) = sum_s d_s; AND THE PARTY
+      PARTITION, the default one unless the instance declares a party label.
+      NO FULL
+      dim H(Q) x dim H(Q) ARRAY IS EMITTED, HERE OR ANYWHERE IN THIS ARTIFACT.
+    locator: "def:reduction-instance (I2); def:exactadm (c), condition (a); thm:emit (ii); thm:emitted-product (i); req:party-label"
+    party_partition: >-
+      BOB HOLDS EVERY FACTOR OF EVERY H(Q_s): every sector of the target is
+      Bob's, for every instance THAT DECLARES NO OTHER LABEL, the default
+      being Bob. AN
+      INSTANCE MAY BE DECLARED WITH ANOTHER PARTY'S LABEL (the
+      `sector_declaration` input row's `party_label`), in which case every
+      factor of every H(Q_s) IS THAT PARTY'S, for the same reason: the handed
+      model lives on the system that party receives. WHERE SEVERAL PARTIES
+      MEASURE THERE IS ONE ARTEFACT PER FACTOR and each carries its own label
+      in its own copy of this row (the `factor_emission` row;
+      thm:emitted-product (i)); NO ARTEFACT CARRIES A PARTITION OF A PRODUCT
+      SPACE, because no product space is emitted. It is a DECLARED LABEL and
+      not a computation, it is EMITTED WITH THE SECTOR MAP, and it is what
+      makes the emitted tuple (Q, S, {F_v}) satisfy the well-formedness
+      conditions THE CONSUMING DECLARATION PLACES ON THAT PARTY'S SIDE, Bob's
+      by default (meat-core/def:admissible-declaration (iii), the POVM and
+      sector-block-diagonality clause, and (i), the finite-dimension clause).
+      THE PARTY LABELS THEMSELVES ARE IN NEITHER CLAUSE: a declaration names a
+      PARTY PARTITION P (meat-core/def:declaration) and meat-core/def:admissible-declaration (viii) is
+      what demands it; what is emitted here is that partition's value on the
+      target's sectors, a condition about WHO OWNS WHICH FACTOR, which the
+      five conditions of foundations/def:exact-admissibility say nothing
+      about. The assignment is the one the physical
+      model makes: the target describes WHAT REACHES THE DECLARED PARTY'S
+      RECEIVER, the instance's system B being that party's -- Bob's wherever
+      no other label is declared; a submodule that adds a register (a
+      mode register, a device label) adds sectors that are Bob's for the
+      same reason. Locator: def:reduction-instance (I2); thm:emit (ii).
+    carries_no_arithmetic: >-
+      Every quantity in this row is a declared datum or a count of declared
+      data -- the dimensions, the alphabets, the sector identifiers and their
+      order -- SO IT CARRIES NO ARITHMETIC AND ADMITS NO DEFECT. It is also
+      WHAT A CONSUMER COMPARES AGAINST ITS OWN MAP, and a disagreement is that
+      consumer's refusal.
+
+  - name: target_povm
+    symbol: "{F_v}_{v in V}"
+    presence: always
+    content: >-
+      PER OUTCOME, ONE BINARY64 ARRAY PER SECTOR BLOCK, IN THE ORDER OF THE
+      SECTOR MAP: F_v IS the list (F_v^(s))_s, and F_v = (+)_s F_v^(s) is what
+      that list MEANS, not an object the artifact carries. A data sector
+      carries the declared datum entry for entry; a scalar sector carries
+      phi_s(v) times the identity.
+    locator: "def:reduction-instance (I2), Eq. eq:instance-target; thm:emit (ii)"
+    diagonality_is_by_construction: >-
+      BINDING ON THE CODE. The construction writes ONE SECTOR BLOCK AT A TIME,
+      so there is NO OFF-SECTOR ENTRY TO WRITE AND NONE TO CHECK -- what a
+      consumer checks instead is THE SECTOR MAP. An implementation that
+      allocates a dense target and tests off-block zeros contradicts the row.
+    emitted_only_after_it_is_decided: >-
+      THE FAMILY IS EMITTED ONLY AFTER THIS MODULE HAS DECIDED, EXACTLY AND ON
+      THE NUMBERS IT IS ABOUT TO EMIT, that it satisfies the six (D-EMIT)
+      conditions (foundations/req:exact-emission); the emitted-family row
+      refuses, NAMING THE PREDICATE, when any of the six cannot be
+      established. NO DEFECT IS MEASURED ON THIS FAMILY AND NONE IS REPORTED:
+      the six conditions are DECIDED, AND A DECISION LEAVES NO RESIDUE.
+      Locator: thm:emit (ii); def:emitnorm (4); req:emission-refusal.
+    six_conditions_decided:
+      - {id: a, name: "the sector map", decided_by: "comparison of declared labels"}
+      - {id: b, name: "exact Hermiticity, entry for entry", decided_by: "entrywise equality in the Gaussian extension of the field"}
+      - {id: c, name: "exact positive semidefiniteness", decided_by: "lem:exactpsd (i), Eq. eq:psdtest, per sector block"}
+      - {id: d, name: "exact completeness per sector block", decided_by: "entrywise equality between two finite sums"}
+      - {id: e, name: "the declared-order sum rounds nowhere", decided_by: "lem:latsum, whose hypothesis eq:latsumcond is a declared input condition"}
+      - {id: lattice, name: "Eq. eq:latinv of every entry", decided_by: "integrality of 2^kappa x with |x| <= 1, two comparisons per entry"}
+    consumer_admission_rule: >-
+      A RECORD AND NOT A RULE OF THIS MODULE. The consuming engine admits a
+      declared family under five conditions -- (T) the sector map, (S) the
+      declared-order completeness sum rounding nowhere, and (H), (P), (C) --
+      and the family is exactly admissible there when (T) and (S) hold and the
+      three defects vanish. THIS MODULE DISCHARGES ALL FIVE, AT ZERO DEFECT,
+      AND REFUSES RATHER THAN EMITTING OTHERWISE. Locator: def:exactadm (c);
+      foundations/def:exact-admissibility.
+      BESIDE THEM, AND NOT THE SAME CONDITION: the emitted tuple
+      (Q, S, {F_v}) TOGETHER WITH THE PARTY PARTITION of the
+      `target_descriptor` row, the default one unless a label is declared,
+      satisfies the well-formedness conditions the consuming declaration
+      places ON THAT PARTY'S SIDE -- meat-core/def:admissible-declaration (iii) (the families
+      are POVMs and every F_v is sector-block-diagonal: Hermitian, positive,
+      complete, block diagonal for S) and (i) (all systems finite-dimensional,
+      all alphabets finite, all maps total: H(Q) finite-dimensional). EVERY
+      FACTOR THAT PARTY'S IS IN NEITHER CLAUSE -- the party labels per tensor
+      factor are the declaration's PARTY PARTITION (meat-core/def:declaration),
+      demanded through meat-core/def:admissible-declaration (viii). THE FIVE CONDITIONS ABOVE SAY NOTHING
+      ABOUT WHO OWNS WHICH FACTOR, and the protocol compiler, which builds the
+      declaration, is the consumer that needs the partition. Locator:
+      thm:emit (ii).
+    summation_order_is_part_of_the_interface: >-
+      It is what (e) is stated in, AND IT IS EMITTED WITH THE ARTIFACT. A
+      consumer re-deciding at its own gate must reach the same answer, BOTH
+      DECISIONS BEING EXACT ON THE SAME NUMBERS IN THE SAME ORDER.
+
+  - name: factor_emission
+    symbol: "the ordered factor list, with the combination rule"
+    presence: >-
+      PRESENT EXACTLY WHEN THE CALL DECLARES MORE THAN ONE INSTANCE -- one per
+      measuring party. ABSENT FOR A ONE-FACTOR EMISSION, and nothing else in
+      this file changes there.
+    content: >-
+      THE ORDERED LIST OF THE FACTORS' ARTEFACTS, ONE PER MEASURING PARTY,
+      each a complete artefact of this module with its own party label, sector
+      map, target, channel witness, transported operators, constraint list,
+      licence, chain and emission record; AND THE COMBINATION RULE, which is a
+      RULE AND NOT A DATUM:
+      F_v = (x)_f F^f_{v_f} and M^dec_v = (x)_f M^dec,f_{v_f} over the product
+      alphabet V = prod_f V^f, in THE DECLARED ORDER OF THE FACTORS, with the
+      PRODUCT SECTOR MAP (index set prod_f S^f in the product order, THE LAST
+      FACTOR VARYING FASTEST; identifiers the factors' identifiers joined in
+      that order; dimensions the products; projectors the Kronecker products)
+      and the PRODUCT CHANNEL Lambda = (x)_f Lambda_f. The product classes are
+      V_t = prod_f V^f_{t_f} and their weights q_t = prod_f q^f_{t_f}, formed
+      IN THE EXACT SUBSTRATE (def:substrate) by whoever needs one and NOT
+      EMITTED AS A NUMBER OF THIS MODULE -- AND IT COULD NOT BE: each factor
+      weight lies on that factor's declared lattice (def:exactadm (b),
+      def:joint-family (a)), and a product of two lattice numbers lies in
+      general on a FINER LATTICE ONLY and need not be a binary64 number at
+      all, exactly as for the blocks (`no_product_operator_is_emitted';
+      thm:emitted-product (iv)). The class-marginal identity holds
+      for the classes every factor discharges, and for a subset of factors in
+      the form thm:emitted-product (iv) states.
+    locator: "thm:emitted-product (i)-(vi); def:reduction-instance (I2); prop:tensor; cor:blockdiag (iii); req:factorised-emission"
+    no_product_operator_is_emitted: >-
+      BINDING, AND THE POINT OF THE ROW. NO ENTRY OF ANY F_v, OF ANY
+      M^dec_v OR OF ANY PRODUCT CONSTRAINT OPERATOR IS EMITTED, DECLARED,
+      ROUNDED OR SNAPPED: there is no product datum, so there is no second
+      emission, no second normalizer pass and no further displacement --
+      every displacement, kept or moved class and rounding
+      direction is a factor's and is recorded in that factor's
+      `emission_record` (thm:emitted-product (v)). THE REASON IS ARITHMETIC AS
+      WELL AS STRUCTURAL: a Kronecker product of two families on the 2^-kappa
+      lattice lies on the 2^-2kappa lattice, so a declared product would have
+      to be re-normalized against kappa, and a snapped joint target would
+      declare a NON-PRODUCT measurement for separated stations. A consumer
+      that needs a product block forms it from the factors' blocks, under its
+      own number model. Locator: thm:emitted-product, its hypothesis on what
+      is emitted, and (v); req:factorised-emission.
+    labels_and_order: >-
+      The party label of each factor is that factor's declared label (the
+      `sector_declaration` input row), compared and never computed; the ORDER
+      OF THE FACTORS is declared data and is the order the product alphabet,
+      the product sector map and every Kronecker product above are read in
+      (`subsystem_order`), refused `alphabet_or_order_mismatch` on a
+      disagreement. NOTHING REQUIRES TWO FACTORS TO CARRY DIFFERENT LABELS;
+      what a factor's label decides is whose side the consuming declaration
+      places its conditions on, per factor.
+    one_factor_is_todays_artefact: >-
+      At one factor the combination rule is the identity, the product sector
+      map is that factor's, the product channel is that factor's channel, and
+      every statement above is thm:emit's and thm:licence (i)-(iv)'s for that
+      instance (thm:emitted-product (vi)). SO THIS ROW ADDS NOTHING TO A
+      ONE-FACTOR ARTEFACT AND IS ABSENT FROM IT.
+
+  - name: outcome_correspondence
+    symbol: "id_V"
+    presence: always
+    content: >-
+      THE IDENTITY on V. Squashing does not relabel outcomes, and every
+      relabelling has already happened in the post-processing an instance's
+      submodule applies before the link.
+    locator: "def:joint-family (b); rem:intertwining"
+
+  - name: squashing_channel
+    symbol: "Lambda = Pin_S o Lambda_0"
+    presence: always
+    content: >-
+      THE CONSTRUCTOR AND ITS PARAMETERS, RECORDED AS ONE AND NOT AS EVALUABLE
+      DATA: the instance's constructor with the sector pinching composed last.
+      A consumer never applies it, and in general cannot: an instance's
+      constructor may read a family no artifact carries.
+    locator: "def:reduction-instance (I3); prop:pinching; cor:blockdiag (i)"
+    precomposed_note: >-
+      lem:precomposed-instance: an instance precomposed with a channel Phi
+      between two physical systems has the channel Lambda o Phi. The record
+      then carries Phi's own record under `precomposed_with`, Phi acting
+      first, and keeps the identity its entries are certified against (item
+      (i): every certificate holds of the composite at the same constant);
+      the carried pull-backs are recorded through Phi^dagger, the source
+      family is Phi^dagger of the declared model, and the reachable-set
+      statement is the composite's (items (ii), (iii)). The target, entries
+      and constants are the instance's, unchanged. Where nothing is
+      precomposed the key is absent. wpfss's normalized station is the one
+      instance precomposed today (wpfss/req:normalized-link-record).
+
+  - name: exact_identity
+    symbol: "Lambda^dagger(F_v) = M^dec_v"
+    presence: always
+    content: >-
+      The defining identity, HOLDING EXACTLY; NO bound and NO approximation is
+      ever emitted in this field. BOTH SIDES ARE OPERATORS ON B, WHICH IS
+      WHERE Lambda^dagger LANDS -- and B is the instance's physical system,
+      which for an instance with a register is NOT the data sectors' system.
+      The family the identity is asserted of is the DECLARED MODEL M[A'], the
+      handed model with the datum replaced by the declared datum as the
+      instance's model map defines it.
+    locator: "thm:emit (iii), Eq. eq:emitidentity; def:emitnorm, third property"
+    system_is_the_instances_own: >-
+      LOAD-BEARING AND EASY TO GET WRONG. The identity is on B and not on the
+      system the datum describes; where the model has parts the datum does not
+      describe, the instance's model map says how the declared datum sits
+      inside the declared model. An implementation that asserts the identity
+      on the datum's system alone has dropped a system.
+    emission_snap_disposition: >-
+      Where the normalizer acted, these numbers are THIS MODULE'S OWN
+      DECLARATION of a family near the one it constructed: exactly admissible,
+      exactly squashed by the emitted channel, with the per-sector
+      displacement Delta_s in `emission_record`. NEARNESS RELATES NOTHING,
+      and nothing else relates the declared model to the handed one
+      (thm:emit (v), rem:emitclaim): a run evaluates off the snap on the
+      reference companion (`reference_companion`), or rests on A-SNAP on the
+      moved sectors. THAT IS A SNAP OF WHAT THIS MODULE DECLARES AND NEVER OF
+      WHAT IT WAS HANDED.
+
+  - name: transported_operators
+    symbol: "(hat O_k, O_k)"
+    presence: always
+    content: >-
+      The carried tuple with Lambda^dagger(hat O_k) = O_k and, PER ENTRY, the
+      certificate case of cor:pullback that makes it usable. EACH hat O_k IS
+      CARRIED AS A SECTOR-BLOCK LIST against the sector map, exactly as
+      `target_povm` is; each O_k is a SYMBOLIC RECORD, its system being B.
+      THIS ROW IS PRESENT WHATEVER THE REQUEST CARRIES and it is where the
+      sector-projector certificate (Pi_s, >=, 0) of every instance travels;
+      the `constraint_list` row is EMPTY WHERE THE REQUEST CARRIES NO ENTRY
+      -- `wpfss`'s `encoded` route is that case -- and carries no
+      sector projector unless a caller requests one as an entry
+      (cor:entries (i)).
+    locator: "def:squashing; cor:pullback (i)-(iii); cor:transported; def:reduction-instance (I3); req:transported-set-certificates"
+    certificate_cases:
+      - {id: identity, hypothesis: "O_k = c 1_B", conclusion: "tr_Q[(hat O_k (x) 1_R) sigma] = c sigma_R", locator: "cor:pullback (i)"}
+      - {id: positivity, hypothesis: "O_k >= 0", conclusion: "tr_Q[(hat O_k (x) 1_R) sigma] >= 0", locator: "cor:pullback (ii)"}
+      - {id: spectral, hypothesis: "a 1_B <= O_k <= b 1_B", conclusion: "a sigma_R <= tr_Q[(hat O_k (x) 1_R) sigma] <= b sigma_R", locator: "cor:pullback (iii)"}
+    every_emitted_entry_is_case_i: >-
+      Case (i) of cor:transported carries the identity and inequality
+      certificates: they hold on EVERY reachable state whatever the adversary
+      is allowed to send. Case (ii) is an assumption about the input and is
+      sound only for the physical family it was assumed on; the artifact
+      records which of the two a given entry is. EVERY CONSTRAINT THIS MODULE
+      EMITS IS OF CASE (i). Locator: cor:transported; req:certified-entries-only.
+
+  - name: reachable_set_statement
+    symbol: "S^rch"
+    presence: always
+    content: >-
+      The LITERAL STATEMENT of def:sound for the emitted channel and the
+      declared family of physical inputs, together with the sound families the
+      artifact asserts.
+    locator: "def:sound; cor:sound"
+
+  - name: constraint_list
+    symbol: "CList = {(hat O_k, bowtie_k, c_k)}"
+    presence: always
+    content: >-
+      EMPTY WHERE THE REQUEST CARRIES NO ENTRY, whatever entries the
+      instance's own list contains; WHERE THE REQUEST CARRIES ENTRIES, the
+      entries the instance carries, the class-marginal entry on request, plus
+      any further entry requested
+      through `carried_operators` whose certificate a claim decides on the
+      emitted numbers (the row's `certificate_rule`). THOSE TWO
+      CASES ARE THE CORE'S OWN CONDITION AND THE CORE DECLARES NO ROUTE KEY:
+      `wpfss`'s `encoded` and `licensed` routes are THAT submodule's instance
+      of them, named here for the reader. A REQUEST CARRIES ENTRIES WHEN IT
+      SELECTS THE CASE IN WHICH THE INSTANCE'S OWN ENTRIES ARE EMITTED: in
+      `wpfss` the `licensed` route; in a core-only artifact a caller's request
+      for an entry or for the class-marginal entry (cor:entries, where a
+      request that carries entries is defined). EVERY hat O_k
+      IS SECTOR-BLOCK-DIAGONAL AND IS CARRIED AS A SECTOR-BLOCK LIST against
+      the sector map, exactly as `target_povm` is -- one square block per
+      sector and NO FULL dim H(Q) x dim H(Q) ARRAY, here as anywhere else in
+      this artifact; EVERY c_k IS A DECLARED CONSTANT, NEVER
+      OBSERVED DATA (A-CONST). The third component is A REAL SCALAR c_k AND
+      NOT AN OPERATOR Theta_k, in both source modes; the form is emitted with
+      the entry as the tag value `homogeneous` in trusted-source mode, because
+      the consumer's security gate is A TYPE CHECK ON THE DECLARED TAG AND
+      COMPARES NO NUMBERS. REQUESTING ANY ENTRY MAKES THE LIST NON-EMPTY AND
+      SO REQUIRES THE LICENCE, which is what the `licence_presence` rule
+      decides on (in `wpfss` that request is the `licensed` route). THE
+      SECTOR-PROJECTOR CERTIFICATE OF EVERY INSTANCE IS CARRIED IN EITHER
+      CASE IN `transported_operators`, PER ENTRY, AND IS NOT A CONSTRAINT
+      ENTRY THERE.
+    locator: "def:licensed; def:attset; cor:entries (i)-(iii); rem:entry-tags; req:constraint-list-by-request; req:party-local-tag; req:declared-constants-only; thm:licence (iv), (v); ass:constdecl"
+    relation_vocabulary: ["<=", "=", ">="]
+    tag_values_with_a_scope: [party_local]
+    tag_and_scope: >-
+      EVERY EMITTED ENTRY CARRIES THE READING IT IS TO BE READ IN, AS A TAG,
+      AND THE CONSUMER'S GATE IS A TYPE CHECK ON THAT TAG THAT COMPARES NO
+      NUMBERS. AN UNTAGGED ENTRY (hat O_k, bowtie_k, c_k) is read in the form
+      of its declared source mode, the accepted one, which in trusted-source
+      mode is emitted with the entry as the tag value `homogeneous` (this
+      row's `content`; def:licensed). `party_local` CARRIES A SCOPE: the LABEL
+      OF THE FACTOR f the entry is scoped to, written (hat O_k, bowtie_k, c_k; f),
+      with hat O_k AN OPERATOR ON THAT FACTOR'S Q_f ALONE, carried as a
+      sector-block list against THAT FACTOR'S sector map -- one square block
+      per sector of that factor and no full array, here as everywhere. ITS
+      READING is tr_{Q_f}[(1 (x) (hat O_k - c_k 1)) omega] bowtie_k 0 AS AN
+      OPERATOR on the systems of omega other than Q_f, equivalently
+      tr_{Q_f}[(1 (x) hat O_k) omega] bowtie_k c_k tr_{Q_f} omega: homogeneous
+      with respect to THE MARGINAL THAT IS ACTUALLY THERE, and no marginal is
+      assumed (def:licensed, Eq. eq:partylocal-entry; def:attset, Eq.
+      eq:attsetpl). IT IS LICENSED BY A CERTIFICATE ON THAT FACTOR'S OWN
+      CHANNEL Lambda_f AND BY NOTHING ELSE (thm:licence (v);
+      lem:party-local), and a certificate on the joint channel does not
+      license it (lem:party-local (iv) is the counterexample). Locator:
+      rem:entry-tags; req:party-local-tag.
+    where_the_tag_is_emitted: >-
+      THIS MODULE EMITS THE TAG ONLY WHERE THE MEASURED SYSTEM IS A DECLARED
+      PRODUCT OF PARTY-SCOPED FACTORS, which in this module is THE EMISSION OF
+      SEVERAL MEASURING PARTIES AND NOTHING ELSE (thm:emitted-product (iii);
+      req:party-local-tag; the `factor_emission` row). EVERY ENTRY OF A
+      ONE-FACTOR EMISSION IS UNTAGGED and is the entry of cor:entries, clause
+      for clause and constant for constant. The same entry is ALSO admissible
+      read as a scalar on the
+      lifted operator 1 (x) hat O_k (x) 1 at the same c_k, and a consumer that
+      does not admit the party-local form may read it that way
+      (thm:licence (v)).
+    party_local_on_a_one_factor_emission: >-
+      NOT A REFUSAL, AND NO NEW REASON STRING. THE REASON IS
+      CASE-INDEPENDENT: the untagged entry that is emitted is IMPLIED BY the
+      party-local reading of the same (hat O_k, bowtie_k, c_k) - in
+      untrusted-source mode it is that reading's TRACE (lem:party-local
+      (iii)), in trusted-source mode it is the same operator inequality under
+      the marginal condition omega_A = tau_A - and is licensed on THE SAME
+      CERTIFICATE by thm:licence (i)-(iv). So a request for the party-local form on a
+      one-factor emission is answered with THE UNTAGGED ENTRY at the same
+      operator, relation and constant. WHAT IT GIVES UP DEPENDS ON THE CASE,
+      and def:licensed states all three: in trusted-source mode under the
+      consumer's marginal condition omega_A = tau_A, and in untrusted-source
+      mode at d_A = 1, the untagged entry IS the party-local reading and
+      nothing is given up; in untrusted-source mode with d_A > 1 the
+      party-local reading is an OPERATOR INEQUALITY ON A against the marginal
+      that is actually there and the untagged entry is only its trace, so what
+      is emitted is STRICTLY WEAKER -- A RATE LOSS AND NEVER A SOUNDNESS LOSS.
+      Emitting the stronger form there would need the tag to name a scope no
+      declared product provides; widening it is an amendment of def:licensed
+      and of the consuming round model. Locator: rem:entry-tags;
+      req:party-local-tag; def:licensed, `What the tag does not change';
+      thm:emitted-product (vi).
+    the_consumer_does_not_read_the_tag_yet: >-
+      A RECORD AND NOT A RULE OF THIS MODULE. A consumer that does not know
+      the tag refuses a party-local entry at its own gate rather than reading
+      it as a scalar, the scalar reading being the producer's to emit and not
+      the consumer's to infer.
+    emitted_constants:
+      - clause: i
+        entry: >-
+          the instance's DEFAULT CARRIED OPERATORS: every sector projector
+          Pi_s, which def:reduction-instance (I3) puts in the transported set
+          of every instance, together with the sums of sector projectors that
+          instance transports besides (the cutoff projectors of a target split
+          at a cutoff; the branch projector of a branching instance).
+        relation: ">="
+        constant: "0"
+        emitted_where: >-
+          WITH THE TRANSPORTED SET, WHATEVER THE REQUEST CARRIES, as the
+          certificate case of
+          cor:pullback (ii) the `transported_operators` row records per entry.
+          AN OPERATOR OF THE DEFAULT SET BECOMES AN ENTRY OF THIS LIST ONLY
+          WHERE A CALLER REQUESTS IT AS AN ENTRY, which makes the list
+          non-empty and brings the licence with it.
+        locator: "cor:entries (i), Eq. eq:entrysector"
+        note: >-
+          Entries 0 and 1, therefore on the lattice at every kappa >= 1, with
+          an exactly positive pull-back for EVERY instance. WHERE THE REQUEST
+          CARRIES NO ENTRY THE LIST IS EMPTY and this clause puts nothing in
+          it.
+      - clause: ii
+        entry: "the class-marginal entry, hat O = sum_{v in V_t} F_v at a declared t"
+        relation: "="
+        constant: "q_t, the DECLARED class weight"
+        locator: "cor:entries (ii), Eq. eq:entryclass; req:class-marginal-entry"
+        note: >-
+          EMITTED ON REQUEST AND EXACTLY WHERE THE INSTANCE DISCHARGES THE
+          CLASS-MARGINAL IDENTITY. Where it does not, the request is REFUSED
+          `constraint_without_certificate` and the entry is never emitted on
+          the strength of a branch that does not establish it.
+      - clause: iii
+        entry: "any further entry of Eq. eq:entrygeneral's form"
+        constant_rule: >-
+          the entry is emitted at THE CONSTANT ITS CERTIFICATE IS DISCHARGED
+          AT; a caller's constant off the lattice is rounded toward the
+          enlarging side, and an equality constant off the lattice is refused
+          (the `carried_operators` row's `declared_constant_rounding`).
+        locator: "cor:entries (iii), Eq. eq:entrygeneral; req:caller-constant-rounding"
+        note: >-
+          This part covers an instance's own entries -- a flag-sector entry of
+          a weight-preserving squasher, the branch entries a branching
+          instance inherits -- and a caller request exactly where a claim
+          gives it a decided certificate that holds (the `carried_operators`
+          row's `certificate_rule`); every other caller request is refused.
+    no_constant_is_shifted: >-
+      THE HEADLINE PROPERTY OF THIS ROW. No emitted constant is shifted by a
+      declared amount to pay for a displacement between the family a
+      certificate was asserted of and the numbers the operator was assembled
+      from: UNDER EXACT ADMISSIBILITY THERE IS NO SUCH DISPLACEMENT, each
+      certificate being discharged FOR THE EMITTED NUMBERS THEMSELVES.
+      Locator: cor:entries, closing paragraph; thm:emit (iii).
+    rounding_the_other_way_is_unsafe: >-
+      It would restrict the admissible set MORE TIGHTLY THAN THE CERTIFICATE
+      LICENSES, so a physical composite attack could FALL OUTSIDE THE DECLARED
+      ADMISSIBLE SET and the inclusion thm:licence certifies WOULD FAIL.
+    exact_hermiticity_and_lattice_precondition: >-
+      Where the licence is present, EVERY EMITTED CONSTRAINT OPERATOR IS
+      DECIDED EXACTLY HERMITIAN -- hat O_ij = conj(hat O_ji) entry by entry --
+      AND EVERY ONE OF ITS ENTRIES IS DECIDED TO SATISFY Eq. eq:latinv, before
+      the artifact is emitted; refused `constraint_without_certificate`
+      otherwise.
+      IT IS THE EMITTED-FAMILY ROW'S OBLIGATION APPLIED TO THE SECOND FAMILY
+      THIS MODULE EMITS, decided the same way and refused the same way.
+      Locator: def:licensed; cor:pullback; req:licensed-entry-lattice; the
+      `licensed_hermiticity` rule.
+
+  - name: attack_set_license
+    symbol: null
+    presence: "always as a slot (req:constraint-and-licence-slots); its value is the licence record EXACTLY WHEN the constraint list is non-empty, and null otherwise"
+    content: >-
+      NAMES: the theorem (thm:licence), the hypothesis it was discharged on
+      (the certificate, PER ENTRY), PER ENTRY the claim that discharges it
+      and, where that claim reads a supplier's fact, the supplier fact
+      (A-RECV with the artifact's `module_version`), the source mode, the
+      adjoint-form set the composite attacks are asserted to lie in, AND THE
+      CONSTANTS THE ENTRIES CARRY, each exact as declared. EMITTED ONLY WITH
+      ITS CERTIFICATE.
+    locator: "thm:licence; def:attset; rem:gateweight; cor:entries; req:licence-record; req:constraint-list-by-request"
+    refusal_reasons: [licence_missing, licence_without_constraints]
+    party_local_entries: >-
+      PER ENTRY AND NEVER PER ARTEFACT. Where an entry is tagged
+      `party_local` the record names, FOR THAT ENTRY: thm:licence (v) as the
+      part that licenses it; THE FACTOR f AND THAT FACTOR'S CHANNEL WITNESS
+      Lambda_f; the certificate Lambda_f^dagger(hat O_k) bowtie_k c_k 1_{B_f}
+      DISCHARGED ON THAT FACTOR'S CHANNEL, with the supplier fact that
+      discharges it (that factor's A-RECV and artefact version) WHERE THAT
+      ENTRY'S DISCHARGE READS ONE, and none where it does not; the
+      party-local admissible set of def:attset, Eq. eq:attsetpl, as the set
+      the composed attacks are asserted to lie in; AND THE SCALAR SET THE SAME
+      ENTRY IS ALSO ADMISSIBLE IN, for the lifted operator
+      1 (x) hat O_k (x) 1 at the SAME c_k. One licence record may carry both
+      readings and entries of both kinds; the constants are exact as declared
+      in either. WHAT IS NOT NAMED IS A JOINT CHANNEL: there is none, the
+      emission being factorised (`factor_emission`), and a certificate against
+      one would not license the tag anyway (lem:party-local (iv)).
+      Locator: thm:licence (v); def:licensed; def:attset, Eq. eq:attsetpl;
+      lem:party-local.
+    what_it_does_not_license: >-
+      rem:notlicensed (a)-(f), each an item an implementation could wrongly
+      claim: (a) A TRUSTED MARGINAL -- nothing here licenses declaring tau_A;
+      (b) CONSTRAINTS ON THE PURIFYING REGISTER -- no constraint on Eve's side
+      information is expressible in this format or admitted by it;
+      (c) DATA-DEPENDENT CONSTRAINTS -- refused; (d) JOINT MULTI-ROUND
+      CONSTRAINTS -- admissibility is PER ROUND and no constraint on the joint
+      n-round state is licensed or expressible; (e) REUSE UNDER ANOTHER PROOF
+      TECHNIQUE -- the artifact NAMES THE TECHNIQUE THE LICENCE WAS ISSUED
+      FOR (req:licence-record); (f) ANYTHING ABOUT THE DEVICE -- whether the
+      receiver satisfies the certificate IS NOT PROVED HERE AND CANNOT BE: it
+      is A-RECV.
+    why_it_carries_the_whole_weight_of_the_gate: >-
+      The emitted record names the theorem, the hypothesis per entry and what
+      discharges it -- the claim, and the supplier artifact where that claim
+      reads one -- and is emitted only when every entry has them.
+      Nothing is attested that is not proved here, and nothing is proved about
+      a device. Locator: rem:gateweight; req:licence-record.
+
+  - name: reduction_chain
+    symbol: "Chain = (Chain_src, Chain_rec)"
+    presence: always
+    content: >-
+      THE PAIR: a SOURCE SEGMENT of the transmitter's type
+      (transmitter/def:source-segment) and a RECEIVER SEGMENT of typed links
+      with ALL TEN SLOTS each. ITS COMPOSITE IS THE PAIR (def:chain,
+      Eq. eq:chaincomposite) of the SOURCE COMPOSITE Xi = Xi_{L_s} o ... o Xi_1
+      and the RECEIVER COMPOSITE Lambda = Lambda_k o ... o Lambda_1. THE
+      COMPOSITION ORDER IS CARRIED AS DATA and is never inferred from artifact
+      creation time.
+    locator: "def:link; def:chain (C1)-(C3), Eq. eq:chaincomposite; thm:chain; thm:two-sided; rem:ordering"
+    the_emitted_source_segment_is_empty: >-
+      Every artefact this module emits carries an EMPTY source segment, so
+      its source composite is the identity and the emitted pair carries
+      exactly the receiver composite, SLOT FOR SLOT AND NUMBER FOR NUMBER.
+      The pair form is what a non-empty segment would be emitted in,
+      and what thm:two-sided is stated over. A specification MAY declare one;
+      that is a hypothesis of no claim here, and what this module emits does
+      not depend on it.
+
+  - name: status
+    symbol: null
+    presence: always
+    content: >-
+      `exact`. `certified_outer` and `exploratory_numeric` are NEVER EMITTED.
+      The composite status is `exact` whenever every link's is; A CHAIN
+      CONTAINING A LINK THAT IS NOT `exact` IS REFUSED rather than given a
+      composite status, because no theorem of this module converts an error
+      term into a security penalty. THAT REFUSAL IS THE MIXED-STATUS CHAIN
+      POLICY, a rule of the engine and not a converse any claim proves; the
+      reason is `approximate_squashing_unsupported`.
+    locator: "def:link (the status slot); thm:chain (iv); thm:emit (iii); req:mixed-status-chain; req:no-approximate-relations"
+    vocabulary: [exact, certified_outer, exploratory_numeric]
+    emitted_values: [exact]
+    none_of_the_three_is_a_result_tier: >-
+      BINDING. This is a LINK status: it says whether THE LINK'S DEFINING
+      IDENTITY CARRIES AN ERROR TERM, and none of its values is a result
+      tier; the `certified` result tier that PRINCIPLES.md section 10 drops
+      does not reach it. `certified_outer` is the reserved slot of the
+      approximate-squashing deferral (design.md) and IS KEPT FOR THAT REASON:
+      deleting it would remove the slot of a live and unrelated deferral.
+    what_exact_is_asserted_of: >-
+      OF THE NUMBERS THE ARTIFACT CARRIES: the pull-back identity holds with
+      no error term for the emitted family AND for the DECLARED MODEL, which
+      is what makes the value truthful of the emission rather than of a
+      construction the artifact does not carry. WHAT IT DOES NOT SAY is that
+      the declared datum is the pre-snap constructed one; where the two differ
+      the emission record carries the displacement. Locator: thm:emit (iii);
+      rem:emitclaim.
+
+  - name: verification_report
+    symbol: null
+    presence: always
+    content: >-
+      EVERY VALIDATION RULE OF `fail_closed` WITH ITS OUTCOME, and the
+      dependency identity of the supplier artifact. The rows reported are THE
+      CORE'S PLUS THE ONES THE INSTANCE'S SUBMODULE DECLARES, assembled per
+      call, so that a report never depends on which submodules happen to have
+      been imported.
+    locator: "the `fail_closed` rules below; ass:recv"
+    runtime_content_note: >-
+      Every rule is DECIDED FROM DECLARED DATA BEFORE ANYTHING IS EMITTED; a
+      failure produces a refusal with a machine-readable reason and NO
+      ARTIFACT. So the report is a record of decidable checks over DECLARED
+      data plus the supplier artifact's identity -- ONE OF WHICH, the
+      emitted-family row, IS DECIDED ON THIS MODULE'S OWN NUMBERS -- and not a
+      re-derivation of any supplier quantity.
+
+  - name: assumption_ledger
+    symbol: "A-..."
+    presence: always
+    content: >-
+      MACHINE KEYS, ON BOTH SIDES OF THE BOUNDARY: this module's own keys, each
+      with the declared value of every parameter it constrains and with the
+      direction it carries if violated; AND, FOR THE INHERITED SUPPLIER
+      ASSUMPTIONS, THE SUPPLIER'S OWN MACHINE KEYS: every key of the supplied
+      ledger, as supplied and in the supplier's order, with a key beyond those
+      the supplier's rules require carried and not refused, and an artifact
+      lacking a key the supplier's own presence rules make present refused
+      (`validation.required_receiver_keys`) -- on the A-RECV entry together
+      with that artifact's `module_version` (ass:recv;
+      req:supplier-ledger-pass-through; req:supplier-ledger-refusals;
+      wpfss/rem:receiver-imports). This module's OWN rows, and those it
+      assumes from another module, are the rows declared below, each under its
+      declared presence rule (`emit.emitted_assumption_rows` over
+      `reasons.CORE_ASSUMPTIONS`, plus a submodule instance's
+      `extra_assumptions`): A-SRC where the emitted chain's source segment is
+      non-empty and under its presence rule below, A-SNAP under its presence
+      rule below, A-CONST where the emitted constraint list is non-empty (its
+      presence rule below), A-PROBE and A-TSM under their presence rules
+      below, a submodule's row where that submodule's instance is emitted and
+      any narrower presence rule the submodule declares holds, every other
+      row always. They include every key
+      of this module, and every key listed under
+      `assumed_from_another_module`, that the closure of the claims producing
+      the artifact contains, save A-CONST at an empty constraint list, where
+      ass:constdecl holds vacuously, A-PROBE at T = {*} and A-TSM at T = {*}
+      with no public choice applied at the measurement, where ass:probe and
+      ass:tsm hold vacuously (the supplier's keys ride the A-RECV entry
+      instead, under its presence rules); a row may be present that no closure
+      contains. WHAT A CONSUMER INHERITS FROM THIS MODULE IS THIS LEDGER. The
+      soundness of the emitted constraint list is no row of it: it is a
+      conclusion of thm:chain, cor:entries and thm:licence (rem:sound-and-atk).
+      The finite dimension of the adversary's registers, which the adjoint
+      bookkeeping of lem:sep reads, is no row either: it is the round
+      model's (foundations/def:round-model), and the consuming engine carries
+      its security statement to an adversary whose memory has any dimension
+      (meat-core/cor:composed-security, through meat-core/lem:memory-lift).
+      Order 1 is unassigned.
+    locator: "ass:recv; rem:sound-and-atk; lem:sep; meat-core/lem:memory-lift; wpfss/rem:receiver-imports; req:assumption-ledger; req:supplier-ledger-pass-through; req:supplier-ledger-refusals; req:supplier-version-accepted; req:supplier-presence-rules; req:never-verified-assumptions"
+    core_rows:
+      - {id: A-MEAS, machine_key: measurement_only_receiver, never_verifiable: true, order: 2}
+      - {id: A-ROUND-SQ, machine_key: round_homogeneity_squashing, never_verifiable: true, order: 3}
+      - {id: A-RECV, machine_key: receiver_artifact_accepted, never_verifiable: true, order: 4,
+         presence: "on every emission save where req:recv-row-provenance omits it: every supplier artifact the instance read is a receiver artifact the run attests it built (`receiver_provenance`), with a model admissible exactly and the `rigorous` evaluation label, the omission being recorded in `receiver_row_omitted_on_provenance` and the supplier's keys then reaching the run's record from the artifact's own ledger"}
+      - {id: A-PROBE, machine_key: probe_setting_private, never_verifiable: true, order: 6,
+         presence: "whenever the declared setting set T has AT LEAST TWO VALUES; at T = {*}, q_* = 1, every clause of ass:probe holds of the one setting (req:assumption-ledger)"}
+      - {id: A-TSM, machine_key: test_statistics_model, never_verifiable: true, order: 7,
+         presence: "whenever T has AT LEAST TWO VALUES, or a public choice is applied at the measurement the emitted family describes, or the emission is not told whether one is; at T = {*} with no such choice ass:tsm concerns no choice (req:assumption-ledger)"}
+      - {id: A-CONST, machine_key: declared_constants, never_verifiable: true, order: 9,
+         presence: "whenever the emitted constraint list is NON-EMPTY; ass:constdecl is a condition on the constants of emitted entries and holds vacuously of an empty list (req:assumption-ledger)"}
+    core_row_count: 6
+    assumed_from_another_module:
+      - {id: A-SRC, machine_key: source_replacement_license, owner: transmitter, never_verifiable: true, order: 8,
+         presence: "whenever the emitted chain's source segment is NON-EMPTY, which is admitted ONLY IN TRUSTED-SOURCE MODE (the admission rule of def:chain and of `link_record.admission_rule`), and then exactly where its owner's own ledger carries the key (trusted-source mode at d_A at least 2; transmitter/ass:src)"}
+      - {id: A-SEQ, machine_key: sequential_round_model, owner: transmitter, never_verifiable: true, order: 11}
+      - {id: A-SNAP, machine_key: snapped_measurement, owner: foundations, never_verifiable: true, order: 13,
+         presence: "whenever the emission record names a moved class, or the declaring party's snap record a moved block, as resting on it (thm:emit (vi); req:emission-record; foundations/req:snap-reference (iii)), a class or block evaluated off its snap never among them (foundations/def:evaluated-off-snap; cor:reference-companion (v)); the row binds the resting blocks by name"}
+    no_row_for_an_empty_source_segment: >-
+      THE LEDGER HAS NO ROW SAYING THAT THE SOURCE SEGMENT IS EMPTY, on two
+      grounds, each checkable on its own: (1) NO CLAIM OF THIS MODULE RESTS ON
+      THE SEGMENT BEING EMPTY -- def:chain defines the chain at every length
+      and its composite as the pair, thm:chain (i)-(iv) read the receiver
+      composite alone, and rem:ordering states a rule whose inclusion
+      lem:precomposition proves -- and a row nothing rests on and with no
+      presence rule of its own would be a hand-maintained mirror (PRINCIPLES.md
+      section 7); the ledger is the declared row list under its presence
+      rules, and the claims' closures are what decide which rows it must
+      contain. (2) WHETHER THE SEGMENT IS EMPTY IS DATA A CONSUMER READS, not
+      an assumption it must inherit: the `reduction_chain` output carries the
+      segment itself, so a consumer that cares decides it on the artefact
+      rather than on a ledger key. Neither ground is about what other modules
+      declare: a non-empty segment is admitted or refused by decided
+      conditions (the transmitter's (A1)-(A3) and the admission rule of
+      def:chain), and a consumer that inherits no key from this module reads
+      the segment, as (2) describes.
+    rows_a_submodule_adds: >-
+      A submodule that names an assumption of its own carries the row in ITS
+      interface with its own `order`; what each present submodule adds is
+      `submodules_today` below.
+    order_note: >-
+      The `order` field is the row's place in the emitted ledger. It is what
+      lets a submodule's assumption sit between two core ones WITHOUT THE CORE
+      NAMING IT, and deleting a submodule deletes its row and leaves the order
+      of the rest alone. The core's own orders are not contiguous for exactly
+      that reason.
+    a_round_sq_key_note: >-
+      THE SHORT ID AND THE KEY ARE THIS MODULE'S OWN, AND DISTINCT ON PURPOSE.
+      Short ids and machine keys are REPOSITORY-WIDE, and `receiver` owns
+      A-ROUND with the machine key `round_homogeneity`: its own
+      round-homogeneity key is one of the supplier keys this module INHERITS
+      AND EMITS UNCHANGED, so two different assumptions would otherwise share
+      one key ACROSS A MODULE BOUNDARY. This module's is A-ROUND-SQ with the
+      key `round_homogeneity_squashing`, and nothing is namespaced: each key
+      is one assumption's own. Locator: ass:round.
+    a_prose_list_is_not_a_key: >-
+      BINDING. An inherited assumption named only by an English phrase CANNOT
+      BE MATCHED AGAINST THE SUPPLIER'S LEDGER BY A CONSUMER, so the ledger
+      EMITS THE KEYS, and a key the supplier's own presence rules make present
+      that the supplier's artifact does not carry is a refusal
+      (`receiver_spec_not_accepted`) rather than a silently shortened list,
+      as the `receiver_spec` fail-closed row states it
+      (req:supplier-ledger-refusals).
+    a_recv_omitted_note: >-
+      Where req:recv-row-provenance omits the A-RECV row, the supplier's keys
+      have no row of this ledger to ride, and none is invented for them: the
+      run that attests the artifact holds it and carries its own ledger in the
+      run's record (req:recv-row-provenance (iii)); its A-EIG row there is
+      invoked at no setting, every weight being rigorous. The refusals of
+      req:supplier-version-accepted and req:supplier-ledger-refusals still
+      apply to the artifact. This row is the only source of A-RECV in a run:
+      the protocol compiler emits none on any route
+      (protocol-compiler/interface.yaml, `assumption_ledger.a_recv_not_emitted_note`).
+
+  - name: receiver_row_omitted_on_provenance
+    symbol: null
+    type: "list of version strings, possibly empty"
+    presence: always
+    content: >-
+      Empty where the A-RECV row is emitted; where req:recv-row-provenance
+      omits it, the `module_version` of each receiver artifact the instance
+      read, so that a consumer of the artifact sees why the row is absent.
+    locator: "req:recv-row-provenance"
+
+  - name: emission_record
+    symbol: "kappa, (Delta_s)"
+    presence: "ALWAYS PRESENT"
+    content: >-
+      THE DECLARED LATTICE EXPONENT kappa; the statement that every emitted
+      operator entry is an integer multiple of 2^-kappa of modulus at most 1;
+      and THE OUTCOME OF EACH OF THE SIX CONDITIONS thm:emit (ii) DECIDES on
+      the numbers about to be emitted, SINCE OTHERWISE THERE WOULD BE NO
+      ARTIFACT. IT ALSO CARRIES WHAT THE EMISSION NORMALIZER DID, PER DATA
+      SECTOR: whether the exact construction was ALREADY ON THE LATTICE; and
+      where it was not, THE ENTRYWISE DISPLACEMENT Delta_s between the
+      declared datum and the handed one, per class whether it was KEPT or
+      MOVED, and for a moved class the step (2) or (3) that snapped it, the
+      mixing weight w taken or the fall-back of (3), the hosts of the
+      components of its residue, and the flag `support_not_preserved` of a
+      class snapped by (3); whether the run declared the strict option; the
+      REFERENCE KIND of every snap the normalizer makes, always `exact`
+      (radius zero: the handed datum is its own exact reference), so the
+      run's enclosure setting does not bear on it. The record names every
+      data sector with a moved class, with the flag of any class snapped by
+      (3), and carries A-SNAP among the assumptions the artefact may rest on
+      exactly where there is one; which of them rest on it is the run's
+      decision, a sector evaluated off its snap on the reference companion
+      never among them. A moved class is mixed only with its diagonal parts
+      (2) or, as the flagged last resort, with a multiple of the identity
+      (3).
+    locator: "def:emitnorm, Eqs. eq:lastresort and eq:displacement; thm:emit (ii), (iv), (v); rem:emitclaim; req:emission-record"
+    fields:
+      - {name: lattice_exponent, symbol: kappa, content: "the declared exponent, echoed"}
+      - {name: lattice_invariant_statement, content: "that every emitted operator entry satisfies Eq. eq:latinv"}
+      - {name: six_condition_outcomes, content: "the outcome of each of the six (D-EMIT) conditions; see `target_povm.six_conditions_decided`"}
+      - {name: per_sector_on_the_lattice_flag, content: "per data sector: whether the exact construction was already on the lattice"}
+      - {name: displacement, symbol: Delta_s, formula: "Delta_s = max_{v in V} maxnorm(A'^(s)_v - A^(s)_v)", emitted_per: "data sector", locator: "Eq. eq:displacement"}
+      - {name: kept_classes, content: "per data sector and per class: whether every element of the class was already on the lattice, so that the class was kept", locator: "def:emitnorm (1)"}
+      - {name: class_status, content: "per data sector and class: kept or moved, and for a moved class the step (2) or (3) of def:emitnorm that snapped it and the hosts of the components of its residue under (2)", locator: "def:emitnorm (1)-(3); req:emission-record"}
+      - {name: mixing_weight, content: "per moved class: the weight w of the ladder taken in (2) or (3), or that the fall-back of (3) was used", locator: "def:emitnorm (2), (3); req:emission-record"}
+      - {name: support_not_preserved, content: "per class snapped by the last resort (3): the flag; its elements may hold non-zero entries in rows or columns where the handed datum's hold none (foundations/def:snap)", locator: "def:emitnorm (3); req:emission-record; foundations/req:support-safe-snap (iv)"}
+      - {name: reference_kind, content: "exact, radius zero, for every snap the normalizer makes (the handed datum is its own exact reference); the run's enclosure setting does not bear on it", locator: "def:emitnorm; req:emission-record; foundations/req:who-snaps"}
+      - {name: strict_snaps, content: "whether the run declared the strict option of foundations/req:snap-reference (iv)", locator: "req:emission-record"}
+      - {name: snapped_measurement_assumption, content: "the data sectors with a moved class, which rest on foundations/ass:snapped-measurement (A-SNAP) unless the run evaluates them off their snap; present exactly where there is one, and provisional: the run's record decides", locator: "thm:emit (vi); req:emission-record; foundations/req:snap-reference (iii); foundations/req:who-snaps"}
+      - {name: rounding_directions, content: "the direction in which every emitted bound was rounded, bound by bound, with one sentence per bound saying why that side is safe"}
+      - {name: three_disclosures, presence: "exactly when some Delta_s > 0", content: "that THE EMITTED NUMBERS ARE A DECLARATION AND NOT THE CONSTRUCTED ONES; the measured per-sector displacement; and the rounding direction of every scalar value. Locator: rem:emitclaim; foundations/req:exact-emission (D-EMIT)"}
+    rounding_directions:
+      - bound: "each scalar value that was rounded to reach the lattice"
+        direction: down
+        why: "it is emitted as a lower bound of the quantity it certifies, and lowering such a value preserves the inequality it carries while raising it destroys it (def:reduction-instance (I2), thm:emit (iv))"
+      - bound: "every complementary value"
+        direction: recomputed_not_rounded
+        why: "a scalar sector's completeness sum_v phi_s(v) = 1 is formed from the same rounded quantities, and ROUNDING BOTH SIDES INDEPENDENTLY WOULD BREAK IT (thm:emit (ii), (iv))"
+      - bound: "a caller-requested entry whose declared constant is not a lattice number"
+        direction: enlarges_the_feasible_set_for_the_declared_relation
+        why: "A SMALLER ADMISSIBLE SET IS THE DIRECTION IN WHICH thm:licence's INCLUSION CAN FAIL (cor:entries (iii))"
+    delta_s_is_the_one_inexact_number: >-
+      THE ONE NUMBER THIS MODULE EMITS THAT IS NOT FORMED IN THE EXACT
+      SUBSTRATE: an entrywise maximum MODULUS of a complex difference, hence a
+      square root of an exact rational and in general irrational. It DECIDES
+      NO PREDICATE, no bound, constant, claim or refusal reads it, and nothing
+      is proved from its value; ITS ONLY ROLE IS TO BE VISIBLE. Emitted in
+      binary64. Locator: thm:emit (i); def:exactadm (a).
+    no_key_length_bound_note: >-
+      THE ONE THING THE RECORD MUST NOT BE READ AS ASSERTING: NO BOUND
+      RELATING A KEY LENGTH COMPUTED FROM THE DECLARED MODEL TO ONE COMPUTED
+      FROM THE HANDED MODEL, OR FROM THE SUPPLIER'S OWN OUTPUT, IS ASSERTED
+      HERE OR ANYWHERE IN THIS MODULE (thm:emit (v)). The consuming module
+      proves the same impossibility from its own side.
+
+  - name: reference_companion
+    symbol: "the instance at the datum A^ref formed from the handed reference, or at the handed datum A where no block is handed"
+    type: record
+    presence: >-
+      exactly where a claim of this module establishes (H-REF) of
+      cor:reference-companion for the instance (cor:reference-companion (iv);
+      wpfss/cor:flat-companion), and either the declaring instance hands the reference
+      on at least one block or the emission normalizer moves at least one
+      class; otherwise absent, the record saying which of the two failed
+      (req:reference-companion (vi)). Where no block is handed, the companion
+      carries the snapped block on every block, so its datum is the handed
+      datum A, the module's exact construction before the normalizer
+      (cor:reference-companion (i)): the moved classes are evaluated off their
+      snap, and the instance's moved blocks still rest on A-SNAP.
+    content: >-
+      EVALUATION-ONLY. The entrywise enclosure of the companion's datum,
+      centres in Q(i) and rational radii, formed exactly on the exact island
+      by the artefact's own construction from the recentred handed reference
+      on every handed block and from the snapped block elsewhere, and then
+      recentred itself (foundations/lem:recentred-enclosure (iv), (i)), with no
+      normalizer, no lattice condition, no rounding and no admission decision
+      (req:reference-companion (i)); the artefact's sector map, alphabet,
+      classes, weights, scalar values and party partition, equal by
+      cor:reference-companion (i); on a route with entries, the relaxed
+      entries of lem:row-relaxation, binary64 operators with their constants
+      moved outward by the exactly computed bound delta_k, an equality emitted
+      as two inequalities unless delta_k = 0, each with its certificate case,
+      its delta_k and the relaxed mark, the lattice condition of
+      req:licensed-entry-lattice not applied; among them the companion forms
+      of the entries a caller requested (`carried_operators`) whose
+      certificate is established at the companion's datum
+      (cor:reference-companion (vi)): a sum of sector projectors and the
+      class-marginal entry as the artefact carries them, delta_k = 0; the
+      operator eq:two-sector-entry of wpfss/rem:published where Eq.
+      eq:companion-two-sector of wpfss/cor:flat-companion is decided exactly on
+      the recentred enclosure of the datum; a requested entry whose
+      certificate is not so established is not formed, and is named with its
+      reason (req:reference-companion (iii), (v)); where the handed
+      reference carries factor enclosures and a claim of this module shows the
+      instance's rule of (I1) to be a non-negative combination
+      (cor:companion-factor-enclosure (iii); wpfss/cor:flat-companion), the
+      factor enclosure of every element of the datum whose combining blocks
+      all carry one, the boxes side by side unaltered and the cores
+      multiplied exactly by the coefficients, beside the datum's entrywise
+      enclosure (cor:companion-factor-enclosure (i), (ii);
+      req:reference-companion (vii)); no step of the normalizer;
+      and the record: per block,
+      handed reference or snapped block (with, on a snapped one, the letters
+      the reference named where it handed the block only in part), the kind
+      of every handed block with
+      its largest radius after recentring, the recentred entries of the
+      handed blocks and of the datum, the largest radius of the datum after
+      its recentring, each delta_k, the requested entries formed with what
+      established their certificates and those not formed with the reason,
+      and per element of the datum whether a factor enclosure is carried,
+      with its number of columns, or why none is, with the claim that shows
+      the instance's rule of (I1) to be a non-negative combination
+      (cor:companion-factor-enclosure (iii) or wpfss/cor:flat-companion).
+      It is no declaration to be solved;
+      the consumer's admission of it is meat-core/req:companion-admission.
+    locator: "cor:reference-companion; cor:companion-factor-enclosure; lem:row-relaxation; req:reference-companion; wpfss/cor:flat-companion"
+    exact_data_note: >-
+      Every entry the reference knows exactly is emitted exactly, with radius
+      zero, so a later evaluation that wants exact data, a certified one
+      among them, reads them here and needs no other path. A factor
+      enclosure (F = L W L^dagger, foundations/def:factor-enclosure) is
+      carried on an element only where the handed reference carries one on
+      every block the element combines and the instance's rule is a
+      non-negative combination (req:reference-companion (vii)); none is
+      carried through a rule that maps a data block by a conjugation.
+
+  - name: mathematical_spec_version
+    symbol: null
+    presence: always
+    content: >-
+      `reductions@<version>` of the ACCEPTED contract; AN ARTEFACT MAY NOT
+      CLAIM A DRAFT VERSION. The pin the code emits is
+      `artifact_bindings.mathematical_spec_version`. `python -m
+      harness.check_claims --status` is the authority on what each claim's
+      status is.
+    locator: "module.yaml version; PRINCIPLES.md section 6"
+
+# ---------------------------------------------------------------------------
+# not_emitted
+#   Transcribed in full because each item is something an implementation could
+#   add without noticing.
+# ---------------------------------------------------------------------------
+not_emitted:
+  note: >-
+    NO ENTROPY, NO OBJECTIVE VALUE, NO KEY LENGTH, NO ACCEPTANCE SET, NO
+    HONEST-CHANNEL STATISTICS, AND NO OBSERVED NUMBER OF ANY KIND. NO PENALTY
+    TERM AND NO ERROR PARAMETER: the transfer of thm:transfer is an EQUALITY,
+    so there is nothing to report. NO SUPPLIER QUANTITY IS RECOMPUTED: a
+    supplier's weights and blocks are referenced, transported, and never
+    re-derived or re-quantified.
+  locator: "thm:transfer; ass:recv; rem:claimscope"
+  items:
+    - entropy
+    - objective_value
+    - key_length
+    - acceptance_set
+    - honest_channel_statistics
+    - any_observed_number
+    - penalty_term
+    - error_parameter
+    - any_recomputed_supplier_quantity
+    - any_product_target_or_product_constraint_operator
+  no_product_datum_is_formed: >-
+    WHERE SEVERAL PARTIES MEASURE, WHAT IS EMITTED IS ONE ARTEFACT PER FACTOR
+    AND THE COMBINATION RULE, AND NO ENTRY OF A PRODUCT TARGET, PRODUCT
+    DECLARED MODEL OR PRODUCT CONSTRAINT OPERATOR IS EMITTED, DECLARED,
+    ROUNDED OR SNAPPED. The product is a rule read by whoever needs a block,
+    so no second emission and no further displacement exists to report.
+    Locator: thm:emitted-product, its hypothesis on what is emitted, and (v);
+    the `factor_emission` output row.
+  delta_s_is_not_a_penalty_term: >-
+    Delta_s is NOT a penalty term and NOT an error parameter in the sense of
+    this list: a penalty term would be a quantity SUBTRACTED FROM a key length
+    or an entropy, and thm:emit (v) is explicit that NO SUCH BOUND IS
+    ASSERTED. It is A RECORD OF WHAT THE EMISSION NORMALIZER DID, emitted so
+    that the residual is NAMED, ATTRIBUTED AND VISIBLE, and read by nothing.
+    Nor is it an observed number: it is computed from this module's own
+    construction and its own declaration.
+  no_defect_of_a_supplied_family_is_emitted: >-
+    The six conditions are DECIDED, AND A DECISION LEAVES NO RESIDUE. No
+    measured-defect field -- a Hermiticity defect, a negative-part witness, a
+    completeness defect -- is carried, on the declared family or on the
+    emitted one. Locator: the `target_povm` row; thm:emit (ii).
+
+# ---------------------------------------------------------------------------
+# parameters
+#   kappa is NOT a parameter in this section's sense: it is a declared INPUT.
+# ---------------------------------------------------------------------------
+parameters:
+
+  rows:
+
+  - name: units
+    value: dimensionless
+    domain: >-
+      EVERY QUANTITY IN THIS MODULE IS DIMENSIONLESS: weights, probabilities
+      and operator norms. THIS MODULE STATES NO ENTROPY; the `log_base` and
+      `entropy_units` conventions are recorded so that the artifact is
+      consumed under one declared convention rather than none.
+    logarithms_of_a_count: >-
+      THE ONLY LOGARITHMS THAT OCCUR ARE BASE-2 LOGARITHMS OF A COUNT:
+      ceil(log2 L) in Eq. eq:latsumcond for an accumulation of length L, and
+      the same expression in the `lattice_exponent` row and in the rule that
+      decides it. EACH IS THE NUMBER OF SIGNIFICAND BITS AN ACCUMULATION OF AT
+      MOST THAT MANY LATTICE VALUES CAN ADD, taken with kappa and compared
+      with 53; each is base 2 and AGREES WITH THE DECLARED `log_base`; AND
+      NONE OF THEM IS AN ENTROPY. Locator: lem:latsum.
+
+  - name: scalar_values
+    symbol: "phi_s(v)"
+    domain: >-
+      NON-NEGATIVE LATTICE VALUES in [0, 1] with sum_v phi_s(v) = 1 exactly,
+      the sum accumulated in the declared order of V and EXACT (lem:latsum),
+      SO THE NUMBER COMPARED WITH 1 IS THE REAL TOTAL. Where a rounding onto
+      the lattice is needed it is DOWNWARD and any complementary value is
+      RECOMPUTED. A declaration outside that domain is REFUSED, NOT CLIPPED.
+    locator: "def:reduction-instance (I2); thm:emit (iv)"
+
+  - name: constants
+    symbol: "c_k"
+    domain: >-
+      DECLARED BEFORE THE RUN and fixed by the device fact that certifies
+      them. An entry whose c_k encodes a statistic of the current run is
+      UNSOUND here REGARDLESS OF PROVENANCE, and is refused
+      `data_dependent_constant`; the only sanctioned carrier of observed data
+      is the acceptance set, which belongs to a different module and appears
+      nowhere in this module. Every emitted constant is either 0, or a
+      declared class weight q_t, or a declared device constant, hence EXACT AS
+      DECLARED.
+    locator: "ass:constdecl; cor:entries; rem:notlicensed (c); req:declared-constants-only"
+
+  free_numerical_parameters: none
+  tolerances: >-
+    NONE. No `declared_tolerance` row, no window on any predicate, no defect
+    functional, and no statement of this module is made "at" a number. A
+    declaration failing any condition is REFUSED with a machine-readable
+    reason naming it; it is never admitted within a margin. NO OPERATOR
+    TOLERANCE AND NO ASSUMPTION THAT THE DECLARED NUMBERS LIE WITHIN ONE:
+    what such an assumption would hypothesize is DECIDED. Locator:
+    def:exactadm; foundations/req:consumer-decides-exactly.
+
+# ---------------------------------------------------------------------------
+# conventions
+#   Declared once, used everywhere. Each is a reading the claim files take;
+#   none adds a rule.
+# ---------------------------------------------------------------------------
+conventions:
+
+  log_base: 2
+  entropy_units: bits
+  log_base_note: >-
+    Declared and fixed for the artifact this module feeds. NO CLAIM STATES AN
+    ENTROPY, so `entropy_units` IS THE CONSUMER'S VALUE AND IS NEVER READ
+    HERE. `log_base` IS read here, by the logarithms of a count the
+    representability conditions carry, none of them an entropy, SO A MIXED
+    BASE ANYWHERE IN THIS MODULE IS A DEFECT ON SIGHT.
+
+  entropy_variant: sandwiched-renyi
+  arrow: up
+  alpha_domain: "(1, 2)"
+  alpha_domain_note: >-
+    AN INTERSECTION AND NOT A CHOICE. This module states NO Renyi quantity and
+    imports NO alpha-dependent fact, so it intersects the domain with nothing
+    of its own; the recorded interval is THE INTERSECTION ALONG THE CHAIN IN
+    WHICH THE EMITTED LICENCE IS USED, whose key-length statement is confined
+    to alpha in (1, 2). NO CLAIM OF THIS MODULE MAY BE READ ON A WIDER ONE.
+
+  test_statistics_model: output_state
+  test_statistics_model_note: >-
+    BINDING. Every per-round public choice of known bias -- a private setting
+    of Bob's, and any round-type designation a consumer adds by relabelling --
+    is a COMPONENT OF THE EMITTED OUTCOME and enters only through the
+    statistics of {F_v}. NO STATE-INDEPENDENT TEST FRACTION IS ASSUMED OR
+    EMITTED ANYWHERE. `fixed_fraction` IS NOT AN ADMISSIBLE VALUE OF THIS KEY
+    and no input row carries a model selector through which one could be
+    requested; the structural reason is lem:linear (ii), the setting entering
+    as a WEIGHT INSIDE the POVM elements, so no free-standing fraction exists
+    to emit. NO REFUSAL-REASON STRING IS NAMED FOR A `fixed_fraction` REQUEST
+    AND NONE IS INVENTED. Locator: ass:tsm; def:joint-family (b);
+    req:output-state-statistics.
+
+  round_homogeneity: required
+  round_homogeneity_note: >-
+    ONE physical POVM describes every round, with no memory across rounds
+    (A-ROUND-SQ, a premise about the device). ONE declared model and ONE
+    squashing channel are emitted for every round
+    (req:round-homogeneous-emission). A round-dependent squasher IS ADMITTED
+    BY rem:variants AS A THEOREM but is NOT EMITTED: it would have to be
+    declared per round, and NO DECLARED INPUT CARRIES THAT.
+    Locator: ass:round; rem:variants; req:round-homogeneous-emission.
+
+  adjoint_convention: >-
+    Lambda^dagger is THE UNITAL COMPLETELY POSITIVE MAP FIXED BY
+    tr[X Lambda(rho)] = tr[Lambda^dagger(X) rho].
+  arrow_direction_note: >-
+    THE CONVENTION A READER COMING FROM THE MEASUREMENT-THEORY LITERATURE WILL
+    INVERT: the relation points FROM THE PHYSICAL POVM TO THE TARGET, in the
+    direction of Lambda; the literature writes the same relation the other way
+    round. The direction is worth checking before importing a statement from
+    there, AND NOTHING HERE IMPORTS ONE. Locator: rem:dictionary;
+    def:squashing.
+
+  composition_order: >-
+    LATER LINKS ACT LATER, so Lambda = Lambda_k o ... o Lambda_1 and
+    Lambda^dagger = Lambda_1^dagger o ... o Lambda_k^dagger; and EVERY
+    `source`-STAGE LINK PRECEDES EVERY `receiver`-STAGE LINK. THE ORDER IS
+    EMITTED AS DATA AND IS NEVER INFERRED FROM ARTIFACT CREATION TIME.
+    Locator: def:chain (C3); thm:chain (i); rem:ordering.
+  composition_order_is_the_record: >-
+    THE STAGE ORDER IS DECIDED, under its refusal string, and it is a record
+    rather than what carries the soundness: for a licensed list the two
+    orders give ONE AND THE SAME map of attack strategies (thm:two-sided (i)),
+    because the source composite acts at the INPUT of the first round's
+    attack and the squashing channel at the OUTPUT of each round's, and the
+    inclusion a source map needs when the attack set is already restricted is
+    lem:precomposition. So (C3) records how the artefact presents its two
+    segments, and does not carry the soundness. The refusal beside it is the
+    admission rule of def:chain -- an entry whose right-hand side is not a
+    real constant beside a non-empty source segment -- and it adds no reason
+    string here.
+
+  post_processing_order: >-
+    Classical post-processing of the outcome -- A NOISE OR COARSE-GRAINING MAP
+    on the physical POVM, then the joint alphabet -- is applied BEFORE THE
+    FIRST SQUASHING LINK. THE ROW REACHES EXACTLY THOSE TWO KINDS OF MAP and
+    nothing else: a stochastic relabelling applied to both sides AFTER a
+    link, depending on Bob's private component only, is lem:linear (i), is
+    sound, and is the consumer's to apply. Locator: rem:intertwining;
+    req:post-processing-order; the `post_processing_order_declaration` input
+    row.
+
+  subsystem_order: >-
+    A BEFORE Q. Within Q: THE DECLARED SECTOR ORDER of the instance's sector
+    set, each sector in its declared basis order. THE OUTCOME ALPHABET V IS IN
+    THE DECLARED ORDER IN WHICH y VARIES FASTEST AND t SLOWEST: writing
+    Y = {y_1, ..., y_|Y|} and T = {t_1, ..., t_|T|} in their declared orders,
+    V is enumerated as T-BLOCKS OF Y-RUNS,
+    (y_1,t_1), ..., (y_|Y|,t_1), (y_1,t_2), ..., (y_|Y|,t_|T|). A class V_t is
+    one of those runs. Locator: def:joint-family (a).
+  subsystem_order_factors: >-
+    WHERE THE CALL DECLARES MORE THAN ONE INSTANCE, one per measuring party,
+    THE ORDER OF THE FACTORS IS DECLARED and is the order in which the product
+    alphabet V = prod_f V^f, the product sector map and every Kronecker
+    product of the combination rule are read: THE LAST FACTOR VARIES FASTEST,
+    as v varies fastest within a factor. Each factor keeps its own sector and
+    basis order unchanged. A disagreement is refused
+    `alphabet_or_order_mismatch`. Locator: thm:emitted-product (i);
+    the `factor_emission` output row.
+  subsystem_order_consuming_sites:
+    - "the scalar sectors indexed by V"
+    - "the class sums of def:reduction-instance, Eq. eq:classcomplete"
+    - "the designation order of def:emitnorm, whose tie is broken by this order"
+    - "the alphabet-agreement rule `alphabet_or_order_mismatch`"
+  subsystem_order_is_declared_not_constructed: >-
+    The order is A DECLARED DATUM in every one of those places: it is
+    VALIDATED against the product set V = Y x T and against this grouping, and
+    NEVER CONSTRUCTED IN PLACE OF A MISSING DECLARATION. The refusal when it
+    disagrees is `alphabet_or_order_mismatch`.
+
+  povm_index_convention: >-
+    A COMMA denotes a JOINT outcome and A BAR a CONDITIONAL POVM. A supplier
+    supplies BARS {M_{y|t}}; this module emits THE JOINT FAMILY {F_{(y,t)}},
+    and the weights q_t are applied AT THE JOINT-ALPHABET STEP, BEFORE THE
+    FIRST SQUASHING LINK, which is what `post_processing_order` requires.
+    Locator: def:joint-family (b), Eq. eq:jointfamily.
+
+  block_restriction: >-
+    A block is an operator BLOCK, NOT A COMPRESSION: a block on a subspace is
+    not the compression of the operator to it.
+
+  summation_order: declared
+  summation_order_note: >-
+    BINDING. Wherever this module or this artifact states THE VALUE OF A
+    FINITE SUM OF DECLARED NUMBERS, the sum is accumulated IN THE ORDER FIXED
+    BY `subsystem_order`: over V and over each class in the declared order,
+    over sectors in the order of the sector map, and entrywise within a
+    sector. THIS IS NOT BOOKKEEPING. In binary64 A SUM IS NOT ASSOCIATIVE, so
+    a computed accumulation is A DETERMINATE NUMBER ONLY ONCE THE ORDER IS
+    FIXED, and the consuming module states its condition (S) ON THE ADDITIONS
+    OF EXACTLY THAT ACCUMULATION; THE ORDER IS THEREFORE PART OF THE INTERFACE
+    AND IS EMITTED WITH THE ARTIFACT. lem:latsum is what makes the condition
+    SATISFIABLE on this module's own emission rather than one that would
+    refuse every family, and thm:emit (ii) is where it is decided.
+
+  rounddown_candidates: >-
+    NOTHING IS DELEGATED HERE. def:emitnorm fixes its own steps: the
+    fidelity snap (2) rounds to nearest at 2^-kappa with ties to even and
+    mixes a class with the family of its diagonal parts, a lift per
+    coordinate, at the first weight w of 0, 2^-kappa, ..., 2^-1 that gives a
+    positive semidefinite family with a host for every component of the
+    residue; the last resort (3) mixes it with q_t/n times the identity, n
+    the number of elements in the sector's support, on the ladder 2^-kappa,
+    ..., 2^-1, and its fall-back takes, per element, the first of a
+    candidate list fixed by (3) -- the element; then, for r = kappa, ..., 1,
+    its shift by 2^-r 1 and its scaling by 1 - 2^-r, each rounded to nearest;
+    finally 0 -- that is Hermitian, on the lattice and between 0 and the
+    element in the Loewner order, decided exactly. No lift probability
+    vector is declared.
+
+  fail_closed: >-
+    EVERY FAILED VALIDATION PRODUCES A REFUSAL WITH A MACHINE-READABLE REASON
+    AND NO ARTIFACT. NO DEFAULT IS SUBSTITUTED FOR A MISSING DATUM --
+    INCLUDING THE DECLARED LATTICE EXPONENT ITSELF, WHOSE ABSENCE IS A REFUSAL
+    -- NO SCALAR VALUE IS CLIPPED INTO RANGE, AND NO LICENCE IS EMITTED
+    WITHOUT ITS CERTIFICATE. NO SUPPLIED BLOCK IS PROJECTED ONTO THE POSITIVE
+    CONE, CLAMPED, SYMMETRIZED, RENORMALIZED OR ALTERED IN ANY WAY: A RULE
+    DECIDES WHETHER A DECLARATION IS USED EXACTLY AS IT STANDS OR REFUSED, AND
+    THERE IS NO THIRD OUTCOME.
+  fail_closed_no_repair_list:
+    - "no supplied block is projected onto the positive cone"
+    - "no supplied block is clamped"
+    - "no supplied block is symmetrized"
+    - "no supplied block is renormalized"
+    - "no supplied block is altered in any way"
+    - "no default is substituted for a missing datum, kappa included"
+    - "no scalar value is clipped into range"
+  who_snaps_and_where: >-
+    WHERE A REPAIR DOES HAPPEN, AND WHY IT IS NOT A REPAIR OF ANYTHING THIS
+    MODULE WAS HANDED. Under foundations/req:who-snaps (spec/architecture.md
+    2.8) declared data is snapped BY WHOEVER DECLARES IT, ONCE, by the
+    documented table, and EVERY SNAP IS
+    RECORDED. TWO PARTIES DECLARE ON THIS BOUNDARY. THE INSTANCE declares the
+    supplier's blocks and snaps them BEFORE THIS MODULE SEES THEM; its record
+    is its own and NO RULE HERE READS IT. THIS MODULE declares the family it
+    emits, and where its own exact construction lands off the declared lattice
+    it applies THE SAME TABLE to THAT family and records what it did
+    (def:emitnorm). THE TWO NEVER OVERLAP, and that is what keeps each
+    recorded displacement A MEASUREMENT OF SOMETHING: A MODULE THAT REPAIRED
+    WHAT IT WAS HANDED WOULD MAKE THE PREVIOUS PARTY'S RECORD A MEASUREMENT OF
+    NOTHING.
+
+  numerical_model: binary64_on_the_wire_exact_rational_arithmetic_inside
+  numerical_model_note: >-
+    This is spec/architecture.md 2.8's policy read into this module AND
+    NOTHING MORE; WHERE THIS FILE AND THAT SECTION DISAGREE, THAT SECTION IS
+    RIGHT AND THIS LINE IS THE DEFECT. The model itself is `number_model`
+    below. Locator: def:exactadm (a).
+
+# ---------------------------------------------------------------------------
+# number_model
+#   def:exactadm, lem:exactpsd, def:substrate, rem:psdalgorithm, lem:latsum,
+#   def:emitnorm, thm:emit, cor:entries, rem:emitclaim, rem:claimscope and
+#   rem:exactboundary, as one piece of interface surface that the
+#   `lattice_exponent` input row, the `target_povm`, `emission_record`,
+#   `exact_identity`, `constraint_list` and `status` output rows and two
+#   fail-closed rules all point at.
+# ---------------------------------------------------------------------------
+number_model:
+
+  locator: "def:exactadm; lem:exactpsd; def:substrate; rem:psdalgorithm; lem:latsum; def:emitnorm; thm:emit"
+  input_key: lattice_exponent
+  output_key: emission_record
+  refusal_reasons:
+    - lattice_exponent_not_declared
+    - declaration_not_exactly_admissible
+    - emitted_family_not_admissible
+
+  wire_type: binary64
+  inside_type: exact_rational_arithmetic
+  model_note: >-
+    EVERY NUMERICAL DATUM THIS MODULE READS OR EMITS, THE DISPLACEMENT RECORD
+    BELOW ASIDE, IS AN IEEE-754 BINARY64 VALUE ON THE WIRE, AND IS THAT
+    VALUE: NO EXACT OBJECT IS POSITED BEHIND IT AND NONE IS APPROXIMATED BY
+    IT. A binary64 value IS A DYADIC
+    RATIONAL, and this module READS IT AS THAT RATIONAL: every predicate is
+    DECIDED, and every emitted number BUT ONE is FORMED, by finitely many
+    operations in the substrate. Locator: def:exactadm (a).
+  the_one_exception: >-
+    The recorded emission displacement Delta_s: an entrywise maximum MODULUS,
+    hence the square root of an exact rational and in general irrational,
+    emitted in `emission_record` as a binary64 rendering of a record of what
+    the emission normalizer did, in a direction nothing records, DECIDING
+    NOTHING AND READ BY NO STATEMENT OF THIS MODULE.
+  combinatorial_data_carries_no_arithmetic: >-
+    The only non-numerical data are combinatorial -- alphabets, orders, sector
+    identifiers, a coarse-graining map, a branch index set, a cutoff -- and
+    carry no arithmetic. NONE OF THESE IS A NUMBER A CONDITION COULD BE
+    DECIDED ABOUT, and a predicate on them is settled BY FINITE INSPECTION.
+    Locator: def:exactadm (a); rem:exactboundary.
+
+  lattice:
+    equation: eq:latinv
+    condition: "2^kappa x in Z, |x| <= 1, 1 <= kappa <= 53"
+    complex_entries: "a complex entry satisfies it when its real and imaginary parts do"
+    binds:
+      - "every declared operator entry"
+      - "every emitted operator entry"
+      - "every declared real scalar: the class weights q_t, any certified weight, the entries of a declared stochastic matrix, and any declared device constant"
+    it_is_a_condition_on_a_set: >-
+      It says WHICH NUMBERS MAY BE DECLARED and nothing about how near one
+      number is to another. It is condition (D-LAT)
+      (foundations/req:declared-lattice) in this module's words.
+    locator: "def:exactadm (b)"
+
+  exact_admissibility:
+    locator: "def:exactadm (c)"
+    index_set_note: >-
+      Indexed by the finite set THE INVOKING ROW NAMES -- a class V_t of the
+      datum of a reduction instance, V for the family this module emits -- and
+      the completeness identity carries THE CONSTANT THAT ROW NAMES: 1 for a
+      POVM, the class weight q_t for a class of a datum.
+    conditions:
+      - {id: a, name: the_sector_map, text: "the block kind, the identifiers and their order ARE THE ONES THE CONSUMER HOLDS -- a comparison of declared labels, DECIDED AND NEVER MEASURED", consumer_condition: "T"}
+      - {id: b, name: hermiticity, text: "A_v = A_v^dagger, ENTRY FOR ENTRY", consumer_condition: "H"}
+      - {id: c, name: positivity, text: "A_v >= 0, decided by Eq. eq:psdtest", consumer_condition: "P"}
+      - {id: d, name: completeness, text: "sum_{v in I} A_v = c 1 ON EACH BLOCK, AS AN IDENTITY OF THE ENTRIES", consumer_condition: "C"}
+      - {id: e, name: the_sum_rounds_nowhere, text: "EVERY ENTRYWISE BINARY64 ADDITION OF THAT ACCUMULATION, TAKEN IN THE DECLARED SUMMATION ORDER, IS EXACT, SO THAT THE COMPUTED SUM IS THE SUM OF (d)", consumer_condition: "S"}
+    plus_the_lattice_invariant: "and every entry satisfies Eq. eq:latinv; the six are condition (D-EMIT) of foundations/req:exact-emission"
+    why_e_is_a_condition: >-
+      A VANISHING COMPLETENESS DEFECT SAYS THE COMPUTED SUM IS THE IDENTITY
+      AND DOES NOT SAY THAT THE IDENTITY HOLDS OF THE NUMBERS, which is why
+      the condition is stated ON THE ADDITIONS. The counterexample that
+      establishes it is the consuming module's, and what this module carries
+      is THE OBLIGATION RATHER THAN THE ARGUMENT FOR IT.
+    scope:
+      available_for:
+        - "the data sectors of a reduction instance and the declared blocks they are formed from"
+        - "the declared classical scalars and matrices a submodule's route reads"
+        - "the family this module emits"
+      not_available_for:
+        - "the objects an instance's hypotheses (H) are about: an operator on a part of H(B) that no finite list of matrices presents, an above-cutoff family, a register POVM, an uncharacterised branch"
+      why_not: >-
+        THERE IS NOTHING ON THOSE TO DECIDE, and their conditions remain
+        HYPOTHESES OF THE INSTANCE. Extending an exact decision to one of them
+        would first require declaring a finite representation for it, which is
+        a widening of the model and A QUESTION FOR THE SIGNER. Locator:
+        def:exactadm (d); rem:exactboundary; def:reduction-instance (I1).
+
+  substrate:
+    locator: "def:substrate; req:exact-admission-refusal"
+    what_is_fixed: "the PREDICATE each rule decides, and that it be decided exactly"
+    what_is_not_fixed: "which ordered field F with Q subset F subset R carries the arithmetic"
+    why_the_choice_is_free: >-
+      IT CANNOT CHANGE ANY DECISION: EVERY NUMBER A RULE READS IS RATIONAL --
+      formed from the dyadic declared entries and rational constants by field
+      operations, floors and lattice roundings of rationals -- and Q IS AN
+      ORDERED SUBFIELD OF EVERY ADMISSIBLE F, so each decision is the same
+      decision taken over Q.
+    q_always_suffices: >-
+      IEEE-754 binary64 values ARE dyadic rationals, so F = Q ALWAYS SUFFICES
+      and is the choice an implementation may make without declaring anything
+      further.
+    non_representable_is_refused: >-
+      A declaration whose entries are not exactly representable in the chosen
+      field is REFUSED RATHER THAN ROUNDED INTO IT
+      (`declaration_not_exactly_admissible`); under Eq. eq:latinv no
+      conforming declaration is.
+
+  exact_decision:
+    locator: "lem:exactpsd; rem:psdalgorithm"
+    psd:
+      part: i
+      equations: [eq:charpoly, eq:psdtest]
+      statement: "X >= 0 <=> e_k(X) >= 0 for every k = 1, ..., d, the e_k the sums of the k x k principal minors"
+    operator_norm:
+      part: ii
+      equation: eq:normtest
+      statement: "||Z|| <= delta <=> delta^2 1 - Z^dagger Z >= 0"
+      has_no_client: >-
+        NO RULE OF `fail_closed` DECIDES A BOUND IN THE OPERATOR NORM, and
+        Eq. eq:normtest is accordingly CARRIED WITHOUT A CLIENT. It is correct
+        as it stands. AN IMPLEMENTATION THAT WIRES IT UP HAS ADDED A RULE.
+    algorithm_is_not_fixed: >-
+      lem:exactpsd states WHAT is decided; HOW is an implementation matter --
+      the Faddeev-Le Verrier recursion, any division-free
+      characteristic-polynomial method, or a rational LDL^dagger factorization
+      with symmetric pivoting and the zero-pivot row test, which decides the
+      same predicate in O(d^3) field operations. ANY PROCEDURE THAT DECIDES
+      Eq. eq:psdtest EXACTLY IN F CONFORMS; ONE THAT DECIDES IT APPROXIMATELY
+      DOES NOT, WHATEVER ITS ERROR BOUND -- AND A FLOATING-POINT EIGENVALUE IS
+      SUCH A PROCEDURE, which is why condition (D-EMIT) (iii)
+      (foundations/req:exact-emission) excludes one by name. Locator:
+      rem:psdalgorithm.
+
+  partial_sums:
+    locator: "lem:latsum"
+    condition: "kappa + ceil(log2 L) <= 53, L the length of the accumulation (Eq. eq:latsumcond)"
+    conclusion: >-
+      Every partial sum is exactly a binary64 number and every one of the
+      L - 1 additions forming it IS EXACT IN BINARY64; consequently a family
+      whose entries satisfy Eq. eq:latinv over an alphabet satisfying
+      Eq. eq:latsumcond MEETS CONDITION (e) BY CONSTRUCTION.
+    why_it_matters: >-
+      It is what makes (e) SATISFIABLE on this module's own emission RATHER
+      THAN A CONDITION THAT WOULD REFUSE EVERY FAMILY, and it is why the
+      `lattice_exponent` row's second inequality exists.
+
+  emission_normalizer:
+    locator: "def:emitnorm"
+    acts_on: >-
+      THE DATA SECTORS OF A REDUCTION INSTANCE, per data sector s and per
+      class t, on the elements inside the sector's declared support. Those
+      numbers ARE the data sectors of the emitted target, so they are this
+      module's own declaration to its consumer.
+    acts_on_nothing_else: >-
+      No object the hypotheses (H) are about is read, and none is repaired --
+      an operator without a finite presentation, a family on a part of H(B)
+      the datum does not describe, a register POVM. AN ELEMENT OUTSIDE THE
+      SECTOR SUPPORT IS TOUCHED BY NO STEP: not rounded and never a host.
+    steps:
+      - {id: 1, name: keep,
+         note: "a class at a sector EVERY ELEMENT OF WHICH IS ALREADY ON THE LATTICE is kept unchanged, and no further step acts on it; every other class is MOVED"}
+      - {id: 2, name: snap_for_fidelity, rounding_mode: nearest, tie_rule: half_to_even,
+         note: "for w = 0, 2^-kappa, ..., 2^-1, every element of the class is the handed one with its off-diagonal entries multiplied by 1-w (the mixture with its diagonal parts, a lift per coordinate), rounded to nearest; the class residue E = q_t 1 minus their sum is split into its COMPONENTS (indices linked by a non-zero entry of E), and each component's principal block is added to its HOST, the first element in the DESIGNATION ORDER -- largest exact trace, then THE DECLARED ORDER OF THE CLASS, over the sector's SUPPORT -- whose STRUCTURAL SUPPORT in the handed datum contains the component; the first w at which every component has a host and every element is decided positive semidefinite is taken. TIES TO EVEN BECAUSE IT IS ODD-SYMMETRIC: every matrix rounded from a Hermitian one comes out Hermitian. A downward rounding of a SCALAR onto the lattice is a DIFFERENT mechanism with a different safety argument -- it is the rule for a certified scalar value -- and an implementation that uses one function for both has merged two rules. Where no w is taken, step 3",
+         why_the_tie_is_ordinary: "the traces compared are EXACT RATIONALS, and a sector symmetric under a relabelling of the class ties every element of it, so 'largest trace' alone NAMES NO ELEMENT; the declared order is already the order in which this module reads V and is emitted with the artifact, so breaking the tie by it MAKES THE HOST A FUNCTION OF THE DECLARATION AND OF NOTHING ELSE"}
+      - {id: 3, name: last_resort,
+         note: "where step 2 yields no family, THE LAST RESORT of foundations/req:support-safe-snap (iv): B^w_v = (1-w) A_v + w (q_t/n) 1 on the n elements of the class in the sector's support (Eq. eq:lastresort; elements outside it stay zero); for w = 2^-kappa, ..., 2^-1 every element but the first in the designation order is rounded to nearest (ties to even) and the first takes q_t 1 minus the rest, the first w at which every element is decided positive semidefinite being taken; where none is, every element but the first takes the first candidate of `rounddown_candidates` below B^(1/2) and the first takes q_t 1 minus the rest, which always restores positivity. Recorded with w or the fall-back and FLAGGED `support_not_preserved`"}
+      - {id: 4, name: decide_all_six,
+         text: "ALL SIX CONDITIONS ARE DECIDED LAST, after step 2 or 3, each of which changes partial sums from the touched element onward. THE DECISION IS TAKEN ON THE NUMBERS THAT COME OUT OF THE STEPS, AND IT IS TAKEN ON ALL SIX",
+         binding_on_the_code: "snap, then decide, and never decide between steps. The refusal names the predicate that failed"}
+    strict_option: >-
+      A moved class is refused (`emitted_family_not_admissible`, naming the
+      cause and the fix) only where the run declares the strict option and
+      no reference companion is formed beside the artefact
+      (req:emission-refusal); where one is formed, the run decides after its
+      search.
+    five_properties:
+      - "FIRST: the declared datum is the handed one and every Delta_s = 0 whenever the exact construction already satisfies Eq. eq:latinv, in which case the normalizer is the identity. That is the ordinary case at a nominal declaration AND IS NOT THE GENERAL ONE: every exact step of a construction MULTIPLIES, a product of dyadics ADDS SIGNIFICAND WIDTHS, and a lattice established at the instance IS CLOSED UNDER NONE OF THEM."
+      - "SECOND: the normalizer reads data sectors and nothing else, so (H) holds of the declared model by the stability clause, the declared model is a POVM on B, and EVERY STATEMENT THE INSTANCE MAKES ABOUT ITS MODEL UNDER (H) HOLDS OF IT. For an instance whose datum is a family of preserved blocks below a cutoff, this is the statement that the declared model agrees with the handed one above the cutoff."
+      - "THIRD: what the normalizer produces is a DATUM, and the family the emitted identity is about is the MODEL the instance builds from it. Two objects, two symbols, and every statement names which it is on."
+      - "FOURTH: THIS IS A SNAP OF WHAT THIS MODULE DECLARES AND NEVER OF WHAT IT WAS HANDED, which is the condition under which foundations/req:who-snaps and foundations/req:exact-emission license a producer to apply its table at all (spec/architecture.md 2.9)."
+      - "FIFTH: NO STEP REVIVES A ZERO ROW OR COLUMN, SAVE THE FLAGGED LAST RESORT (3): outside a class snapped by (3) the structural support of every declared element lies within that of its handed element (foundations/req:support-safe-snap), the only lift outside (3) being the mixture with the diagonal parts in (2), which adds only on each element's own coordinates. NOTHING RELATES THE DECLARED MODEL TO THE HANDED ONE (thm:emit (v)): a run evaluates off the snap on the reference companion, or rests on A-SNAP on the moved sectors."
+
+  what_the_claim_is_about:
+    locator: "rem:emitclaim; rem:claimscope"
+    when_delta_is_zero: >-
+      There is nothing to say: the emitted target IS the constructed one and
+      the defining identity is about the handed declaration itself.
+    when_delta_is_positive: >-
+      There is a declared datum -- EXHIBITED RATHER THAN POSITED, and carried
+      entry by entry in the emitted target's data sectors -- admissible,
+      differing from the handed one by at most Delta_s entrywise per sector,
+      and the model the instance builds from it is a model of the same shape
+      that THE EMITTED CHANNEL SQUASHES EXACTLY, WITH NO ERROR TERM.
+    why_a_recorded_declaration_is_preferred: >-
+      NOT THAT THE DIFFERENCE IS SMALL: it is that A FAMILY THE PLATFORM CAN
+      WRITE DOWN, HAND OVER AND DECIDE IS A FAMILY EVERY DOWNSTREAM CLAIM IS
+      ABOUT, WHILE AN EXACT CONSTRUCTION THAT CANNOT BE WRITTEN IN BINARY64 IS
+      A FAMILY NOTHING DOWNSTREAM CAN CONSUME. The displacement is A MODELLING
+      ACT AND IS RECORDED AS ONE.
+    two_things_it_does_not_license:
+      - "IT DOES NOT LICENSE REPAIRING WHAT THIS MODULE WAS HANDED: the normalizer runs on the datum THIS MODULE COMPUTED, and on nothing else."
+      - "IT DOES NOT LICENSE EMITTING status = exact ABOUT A FAMILY THE IDENTITY DOES NOT HOLD OF."
+    no_residual_without_a_field: >-
+      NO RESIDUAL IS LEFT WITHOUT A FIELD TO SIT IN: the displacement has one
+      (`emission_record`), the rounding directions have one, and the
+      consumer's key length is thm:emit (v) -- NOT ESTABLISHED, AND NO ROW CAN
+      RESCUE IT.
+
+# ---------------------------------------------------------------------------
+# fail_closed
+#   NINETEEN core rows; a submodule owns the rest and lists them in its own
+#   interface (`submodules_today` has the arithmetic). The `order` field is
+#   each row's place in the one table, so a submodule's row sits between two
+#   core rows WITHOUT THE CORE NAMING IT, and deleting a submodule removes its
+#   rows and leaves the rest in order -- which is why the core's orders below
+#   are not contiguous.
+# ---------------------------------------------------------------------------
+fail_closed:
+
+  policy: >-
+    EVERY RULE BELOW IS DECIDED FROM DECLARED DATA BEFORE ANYTHING IS EMITTED;
+    a failure produces a refusal with a machine-readable reason and NO
+    ARTIFACT.
+
+  how_a_rule_is_decided: >-
+    STATED ONCE FOR THE WHOLE SET. EVERY RULE IS DECIDED EXACTLY, on the
+    declared binary64 numbers read as the dyadic rationals they are: AN
+    OPERATOR INEQUALITY -- ALWAYS ONE IN THE LOWNER ORDER -- BY Eq. eq:psdtest,
+    AN IDENTITY BY COMPARISON OF ENTRIES, A STRUCTURAL CONDITION BY COMPARISON
+    OF DECLARED LABELS, AND THE LATTICE INVARIANT BY TWO COMPARISONS PER
+    ENTRY. NO RULE DECIDES A BOUND IN THE OPERATOR NORM. NO RULE IS DECIDED AT
+    A WINDOW, NO DEFECT IS MEASURED, NO EIGENVALUE ROUTINE IS CONSULTED AND NO
+    TOLERANCE APPEARS ANYWHERE: THIS MODULE CARRIES NONE. NO RULE REPAIRS
+    ANYTHING. ONE ROW IS ABOUT NUMBERS THIS MODULE ITSELF DECLARES -- the
+    emitted-family row -- and it is THE ONLY PLACE THE EMISSION NORMALIZER IS
+    REACHED; IT TOO REPAIRS NOTHING IT WAS HANDED.
+    Locator: def:exactadm; lem:exactpsd; def:substrate; thm:emit (ii).
+
+  rows:
+
+    - rule: lattice_exponent
+      order: 1
+      checked: >-
+        The request carries the DECLARED LATTICE EXPONENT kappa, an integer
+        with 1 <= kappa <= 53 AND kappa + ceil(log2 L) <= 53 for every
+        accumulation this module states a sum over.
+      reasons: [lattice_exponent_not_declared]
+      locator: "def:exactadm (b); lem:latsum, Eq. eq:latsumcond"
+      why: >-
+        Condition (D-LAT) (foundations/req:declared-lattice): THE PRODUCER DECLARES
+        kappa, THERE IS NO DEFAULT AND NO FALLBACK, and a defaulted lattice
+        would decide a security-relevant predicate on nobody's authority. THIS
+        ROW RUNS FIRST AND REFUSES BEFORE ANYTHING IS CONSTRUCTED; the second
+        inequality is what makes every completeness sum exact and IS REFUSED
+        UNDER THE SAME REASON.
+      ordering_is_binding: >-
+        "THIS ROW RUNS FIRST" is a statement about order, not about presence.
+        An implementation that decides another row before this one has decided
+        a predicate at an undeclared lattice.
+
+    - rule: requested_assurance
+      order: 2
+      checked: "The requested assurance is one of the three tiers of foundations/def:tiers, `estimate`, `first-order` or `certified`."
+      reasons: [requested_assurance_unknown]
+      locator: "foundations/req:tiers; foundations/def:tiers; PRINCIPLES.md section 10"
+      why: >-
+        REFUSED RATHER THAN DEMOTED, a silent demotion being a caller
+        receiving a weaker claim than it asked for without being told. See the
+        `requested_assurance` input row.
+
+    - rule: receiver_spec
+      order: 3
+      checked: >-
+        The supplier artifact resolves to an ACCEPTED version, AND carries
+        that module's own validation results, AND carries every machine key
+        the supplier's own presence rules make present
+        (`validation.required_receiver_keys`, reading the installed receiver's
+        machine keys and presence rules, under which every row is emitted on
+        every artifact), AND carries no
+        machine key more than once (a repeated key is refused under the same
+        reason); a key beyond those is carried, not refused; ass:recv,
+        wpfss/rem:receiver-imports.
+      reasons: [receiver_spec_not_accepted]
+      locator: "ass:recv; req:supplier-ledger-refusals; req:supplier-ledger-pass-through"
+      why: >-
+        A draft version may not back an emitted artifact, and neither may an
+        artifact that does not say it passed its own supplier's validation.
+        THIS ROW IS THE DECLARED CARRIER OF ALL THREE REFUSALS and no separate
+        reason string exists for any of them.
+
+    - rule: block_structure
+      order: 5
+      checked: >-
+        The declared datum is presented against the instance's SECTOR MAP: a
+        block for every sector at every outcome of the sector's support, of
+        the declared dimension, over the declared alphabets and in the
+        declared orders.
+      reasons: [no_block_structure]
+      locator: "def:reduction-instance (I2); def:exactadm (c), condition (a)"
+      why: >-
+        THIS IS THE SECTOR-MAP COMPARISON OF spec/architecture.md 2.9 AND IT
+        REPLACES EVERY ZERO CHECK: the datum is a per-sector list, sector-block
+        diagonality holds BY CONSTRUCTION, there is no off-sector entry to
+        write and therefore none to test, and what CAN go wrong -- the supplier
+        and this module disagreeing about what the blocks are -- IS EXACTLY
+        WHAT THIS ROW DECIDES. A COMPARISON OF DECLARED LABELS, KINDS,
+        DIMENSIONS AND ORDERS; NO ARITHMETIC. THE NUMERICAL HALF IS THE NEXT
+        ROW.
+      a_submodule_may_narrow_this_row: >-
+        A submodule whose instance has a branch the declaration does not
+        characterise NARROWS THE SUBJECT OF THIS ROW to the branches it does:
+        an uncharacterised branch has no declared block structure to compare,
+        and none is demanded of it. THE NARROWING LIVES IN THAT SUBMODULE'S
+        INTERFACE, adds no reason string, and goes away with it; this row's
+        subject without any such narrowing is the whole declared family.
+
+    - rule: exact_admissibility
+      order: 6
+      checked: >-
+        The declared datum -- and it alone -- is EXACTLY ADMISSIBLE: exactly
+        Hermitian, exactly positive semidefinite, CLASS COMPLETE at the class
+        weight q_t at every class, with that declared-order sum rounding
+        nowhere and every entry satisfying Eq. eq:latinv.
+      reasons: [declaration_not_exactly_admissible]
+      locator: "def:reduction-instance (I1), Eq. eq:classcomplete; def:exactadm (c)"
+      subrules:
+        - "def:exactadm (b): A = A^dagger, ENTRY FOR ENTRY, per sector"
+        - "def:exactadm (c): A >= 0, decided by Eq. eq:psdtest per sector"
+        - "def:reduction-instance, Eq. eq:classcomplete: sum_{v in V_t} A^(s)_v = q_t 1, AS AN IDENTITY OF THE ENTRIES"
+        - "def:exactadm (e): every entrywise binary64 addition of that accumulation, in the declared order, IS EXACT"
+        - "Eq. eq:latinv: 2^kappa x in Z and |x| <= 1 for every real and imaginary part of every entry"
+      why: >-
+        DECIDED AND NOT MEASURED: each conjunct is an identity, an inequality
+        or an integrality condition, THE REFUSAL NAMES WHICH ONE FAILED, and
+        NO WINDOW APPEARS ANYWHERE. THE PERTURBATION THIS ROW DOES NOT SEE was
+        absorbed at the instance, before this module was reached, and its
+        record is the instance's. THIS ROW REACHES NO OTHER OPERATOR FAMILY:
+        the objects an instance's hypotheses (H) are about present no matrix
+        to decide anything on (rem:exactboundary).
+
+    - rule: emitted_family
+      order: 7
+      checked: >-
+        The EMITTED family {F_v} satisfies ALL SIX (D-EMIT) conditions --
+        the sector map, exact Hermiticity, exact positive semidefiniteness,
+        exact completeness per sector block, the declared-order sum rounding
+        nowhere, and Eq. eq:latinv of every entry -- DECIDED ON THE NUMBERS
+        ABOUT TO BE EMITTED, AFTER THE EMISSION NORMALIZER WHERE THAT ACTED.
+      reasons: [emitted_family_not_admissible]
+      locator: "thm:emit (ii); def:emitnorm (4); req:emission-refusal"
+      why: >-
+        THIS MODULE DECIDES WHAT IT IS ABOUT TO EMIT AND REFUSES RATHER THAN
+        EMITTING A FAMILY IT HAS NOT ESTABLISHED, which is what makes the
+        emitted status a statement about the artifact rather than about a
+        construction the artifact does not carry, and what lets a consumer
+        RE-DECIDE THE SAME SIX CONDITIONS AND REACH THE SAME ANSWER. THE
+        REFUSAL NAMES THE PREDICATE THAT FAILED. NOT A REPAIR OF ANYTHING
+        HANDED IN: where the exact construction lands off the declared lattice
+        what is emitted is THIS MODULE'S OWN DECLARATION, snapped by the
+        documented table and recorded, and WHERE THE LADDER OF STEP (4) CANNOT
+        RESTORE EXACT POSITIVITY, THIS ROW FIRES.
+      it_is_the_second_gate: >-
+        The one row of the set whose subject is NOT declared data. It is
+        placed after the construction and after def:emitnorm's steps (1)-(4),
+        and it decides ALL SIX -- not the three that changed.
+      the_row_is_neither_vacuous_nor_unmeetable: >-
+        A conforming declaration produces a family the six conditions hold of
+        (thm:emit (ii)'s proof), and lem:latsum gives the rounds-nowhere
+        condition from the declared kappa. The row exists for the case in
+        which the arithmetic has left the lattice and the normalizer could not
+        put it back.
+
+    - rule: probe_weights
+      order: 15
+      checked: >-
+        0 < q_t <= 1 for every t, every q_t satisfying Eq. eq:latinv, and
+        sum_t q_t = 1 EXACTLY in the declared order.
+      reasons: [probe_weights_ill_formed]
+      locator: "def:joint-family (a); ass:probe; lem:linear (ii); lem:latsum"
+      why: >-
+        ALL THREE ARE DECIDED EXACTLY, and lem:latsum is why the third is
+        SATISFIABLE rather than a condition that would refuse every
+        declaration. q_t <= 1 is used as an exact bound by wpfss/prop:route,
+        and sum_t q_t = 1 is what carries the per-class completeness of
+        def:emitnorm (3) to completeness over V.
+
+    - rule: obstructions
+      order: 16
+      checked: >-
+        Every declared relation passes the necessary conditions of
+        lem:obstructions, decided exactly as rem:obstructiondecide states
+        them.
+      reasons: [declared_relation_impossible]
+      locator: "lem:obstructions; rem:obstructiondecide; req:declared-relation-check"
+      why: >-
+        A cheap refusal before any construction is attempted. THE ONE ROW
+        WHOSE DECISION COULD HAVE BEEN LOOSE AT NO COST TO SOUNDNESS, AND IT IS
+        EXACT ANYWAY: it is AN EARLY REFUSAL AND NOT A WARRANT, nothing emitted is
+        proved from its having passed, and a missed refusal would cost time
+        rather than soundness. It is vacuous on the emission path.
+
+    - rule: chain
+      order: 17
+      checked: "The chain is composable, tuple-chained and stage-ordered."
+      reasons: [chain_ill_formed, source_link_after_receiver_link]
+      locator: "def:chain (C1)-(C3) and its admission rule; rem:ordering; lem:precomposition; thm:two-sided"
+      why: >-
+        (C3) is a rule with a reason and not a convention: a source-stage
+        link's security argument re-parameterizes the first-round attack over
+        ALL CPTP maps, while a receiver-stage link hands the analysis an
+        attack set that is a PROPER SUBSET of them (thm:licence). Applying a
+        source link after that is not free -- an inclusion must additionally
+        hold. THAT INCLUSION IS PROVED, for every channel and every LICENSED
+        list, by lem:precomposition, and thm:two-sided (i) shows the two
+        orders give one and the same map; so this row decides THE SHAPE OF
+        THE RECORD.
+      what_it_does_not_decide: >-
+        IT DOES NOT DECIDE THE ADMISSION RULE of def:chain -- that a chain with
+        a non-empty source segment carries LICENSED entries only. That rule is
+        decided where an entry can be declared, which is the consuming
+        declaration, and NO REASON STRING IS ADDED FOR IT HERE: every entry
+        this module emits carries a real scalar (thm:licence (iv)), so no
+        artefact of this module can violate it, and this file binds that no
+        string exists for it. The counterexample that makes the rule a
+        rule is lem:precomposition (iv); WHO DECIDES IT is
+        `link_record.admission_rule.who_decides_it` (rem:chain-admission).
+
+    - rule: link_kind
+      order: 18
+      checked: "The requested link kind is one this module implements, not a reserved one."
+      reasons: [link_kind_deferred]
+      locator: "def:link; req:reserved-link-kinds; the deferrals of design.md"
+      why: >-
+        `label-space` is declared, reserved and refused (design.md names
+        where the deferral attaches). `family-dominating` is the `domination`
+        submodule's kind, which no requirement emits. The same
+        string is the transmitter's for its own source-stage kind
+        `source-map`, which this module does not declare.
+
+    - rule: approximate
+      order: 19
+      checked: >-
+        No approximate relation is offered, and no chain contains a link that
+        is not `exact`.
+      reasons: [approximate_squashing_unsupported]
+      locator: "thm:transfer; thm:chain (iv); req:mixed-status-chain; req:no-approximate-relations"
+      why: >-
+        thm:transfer has NO PENALTY SLOT, so no theorem of this module
+        converts an error term into a security penalty. THE MIXED-STATUS CHAIN
+        POLICY IS THIS ROW: a chain containing a link that is not `exact` is
+        refused rather than given a composite status, WHICH IS A RULE OF THE
+        ENGINE AND NOT A CONVERSE ANY CLAIM PROVES (req:mixed-status-chain).
+      emission_snap_is_not_approximate_squashing: >-
+        A POSITIVE Delta_s DOES NOT TRIP THIS ROW AND DOES NOT SATISFY IT
+        EITHER. The emission normalizer produces a DECLARED datum that the
+        emitted channel squashes EXACTLY, with no error term; it is not an
+        approximate squashing RELATION. What the snap does NOT buy is the
+        penalty theorem this row's deferral is about (thm:emit (v)).
+
+    - rule: device_family
+      order: 20
+      checked: "No device FAMILY is declared."
+      reasons: [device_family_unsupported]
+      locator: "ass:recv"
+      why: >-
+        This module reduces ONE declared receiver (A-RECV). A continuum family
+        checked at sampled points is the deferred family reduction; the
+        `family-dominating` link of the `domination` submodule, which no
+        requirement emits, relates one declared family to another and reduces
+        no family.
+
+    - rule: constraint_certificate
+      order: 21
+      checked: >-
+        Every entry of the constraint list has a certificate and every c_k is
+        DECLARED, not observed. A requested operator outside the admitted form,
+        or of that form without a decided certificate that holds at the
+        emitted numbers, is refused under the same reason, and so is a
+        class-marginal entry requested of an instance that does not discharge
+        the class-marginal identity.
+      reasons: [constraint_without_certificate, data_dependent_constant]
+      locator: "def:reduction-instance (I4); cor:entries (ii), (iii); thm:licence; rem:notlicensed (c); ass:constdecl; rem:unsound; req:uncertified-operator-refused; req:class-marginal-entry; req:declared-constants-only"
+      why: >-
+        A constraint emitted without a discharged certificate would impose on
+        reachable states a condition that may be false of them, which is the
+        security break rem:unsound describes. THE FAILURE DIRECTION IS A
+        REFUSAL AND NEVER AN EMITTED ENTRY.
+      a_submodule_may_narrow_this_row: >-
+        A submodule whose instance carries a branch register states WHAT
+        DISCHARGES THE CLASS-MARGINAL ENTRY ACROSS ITS BRANCHES and what the
+        default is where nothing declared establishes it. THE DEFAULT IS
+        REFUSAL, THE REASON IS THIS ONE, AND NO NEW STRING IS CREATED; the
+        narrowing lives in that submodule's interface and goes away with it.
+        Without any such narrowing the row reads the instance's flag alone
+        (def:reduction-instance (I4), cor:entries (ii)).
+
+    - rule: licence_presence
+      order: 22
+      checked: "`attack_set_license` is non-null if and only if the constraint list is non-empty; the slot itself is always emitted (req:constraint-and-licence-slots)."
+      reasons: [licence_missing, licence_without_constraints]
+      locator: "def:link (the licence slot); thm:licence; rem:gateweight; req:constraint-list-by-request; req:licence-record"
+      why: >-
+        A non-empty list without a licence would carry no key-length claim,
+        and a licence without a list would attest to nothing. NO LICENCE IS
+        EVER EMITTED WITHOUT ITS CERTIFICATE.
+
+    - rule: licensed_hermiticity
+      order: 23
+      checked: >-
+        Where the licence is present: every emitted constraint operator
+        is EXACTLY Hermitian -- hat O_ij = conj(hat O_ji) entry by entry --
+        and every one of its entries satisfies Eq. eq:latinv. FOR AN ENTRY
+        TAGGED `party_local` BOTH ARE DECIDED ON THAT FACTOR'S BLOCKS, the
+        operator being an operator on that factor's Q_f and nothing wider;
+        there is no product operator to decide anything on
+        (`factor_emission`).
+      reasons: [constraint_without_certificate]
+      locator: "def:licensed; cor:pullback; cor:entries; req:licensed-entry-lattice"
+      why: >-
+        def:licensed and cor:pullback compare a real constant with
+        tr[hat O sigma], WHICH IS NOT A REAL NUMBER UNLESS hat O = hat
+        O^dagger, and `fail_closed` forbids symmetrizing one. IT IS
+        SATISFIABLE AND THE ROW IS NOT A FORMALITY: the emitted blocks are
+        exactly Hermitian and each hat O is formed from them by adding a real
+        multiple of a sector projector or by accumulating over V, both of
+        which preserve the conjugate pairing exactly; WHAT THE ROW CATCHES IS
+        A CALLER-REQUESTED OPERATOR THAT DOES NOT. IT IS THE EMITTED-FAMILY
+        ROW'S OBLIGATION APPLIED TO THE SECOND FAMILY THIS MODULE EMITS.
+      empty_list_scope: >-
+        A request that carries no entry, whose list is empty and whose
+        transported operators are the sector projectors, is unaffected: their
+        entries are 0 and 1. The core declares no route key.
+
+    - rule: constraint_channel
+      order: 25
+      checked: >-
+        Every emitted constraint entry is certified against THE CHANNEL
+        WITNESS OF ITS OWN LINK; AND AN ENTRY TAGGED `party_local` NAMES A
+        FACTOR OF THE DECLARED ORDERED FACTOR LIST, carries an operator on
+        that factor's Q_f against that factor's sector map, and is certified
+        against THAT FACTOR'S OWN CHANNEL WITNESS Lambda_f -- never against
+        another factor's and never against a joint channel.
+      reasons: [constraint_channel_mismatch]
+      locator: "def:link, Eq. eq:link; rem:channel-choice (c); thm:licence (v); lem:party-local; rem:entry-tags; req:party-local-tag; req:carried-tuple-emitted"
+      why: >-
+        Soundness is relative to the channel: a constraint sound for one
+        channel need not be sound for another, and def:link binds the two per
+        link. The artifact emits the channel witness AND the tuple, and every
+        constraint it emits is built from an operator in the tuple
+        (req:carried-tuple-emitted).
+        FOR A PARTY-LOCAL ENTRY THE CHANNEL IS THE FACTOR'S, AND THE
+        DISTINCTION IS NOT A FORMALITY: the operator reading holds because the
+        squashing channel is a PRODUCT with that factor's certificate on that
+        factor's own channel, and lem:party-local (iv) exhibits a channel that
+        satisfies the scalar bound of the same entry and VIOLATES the operator
+        one. A tag emitted on a certificate against anything else would assert
+        an operator inequality nothing proves, which is the security break
+        direction of rem:unsound.
+      one_factor_scope: >-
+        A ONE-FACTOR EMISSION HAS NO FACTOR LIST AND NO TAG TO CHECK, and a
+        party-local entry requested there is the UNTAGGED entry rather than a
+        refusal (the `constraint_list` row's
+        `party_local_on_a_one_factor_emission`); this row reaches it as the
+        untagged entry it is, against the one channel witness there is.
+
+    - rule: alphabet_order
+      order: 26
+      checked: >-
+        Alphabets, sector order and basis order agree across artifacts; AND,
+        where the call declares more than one instance, THE ORDER OF THE
+        FACTORS agrees with the order the product alphabet and the product
+        sector map are read in.
+      reasons: [alphabet_or_order_mismatch]
+      locator: "def:joint-family (a); def:reduction-instance (I2); thm:emitted-product (i); the `subsystem_order` convention"
+      why: >-
+        The order is what the summation conditions are stated in and what a
+        consumer re-decides them in. It is VALIDATED against the declared
+        product set and grouping and NEVER CONSTRUCTED IN PLACE OF A MISSING
+        DECLARATION.
+
+    - rule: post_processing_order
+      order: 27
+      checked: >-
+        A noise or coarse-graining map on the physical POVM is applied BEFORE
+        the first squashing link, never after one.
+      reasons: [post_processing_order_violated]
+      locator: "rem:intertwining, the paragraph on noise and coarse-graining maps; req:post-processing-order"
+      why: >-
+        A squasher constructed for one physical family is not a squasher to
+        the same target for the family a classical map produces from it.
+        lem:linear (i) moves such a map across a FIXED squasher only together
+        with the target, which then is not the one the chain was built and
+        certified for; and a map on a finer alphabet than the squasher's (a
+        dark-count channel on raw click patterns before the declared
+        coarse-graining) moves across only where a linear feasibility
+        problem has a solution, which it has not in general. THE ORDER IS
+        FIXED INSTEAD.
+      what_the_row_does_not_reach: >-
+        A STOCHASTIC RELABELLING APPLIED TO BOTH SIDES AFTER A LINK IS NOT
+        THIS ROW'S SUBJECT AND IS NOT REFUSED. See the
+        `post_processing_order_declaration` input row.
+
+    - rule: unsound_transplant
+      order: 28
+      checked: "No operator-form transplant of a physical identity is requested."
+      reasons: [unsound_constraint_requested]
+      locator: "rem:unsound; ass:tsm; req:class-marginal-operator-form"
+      why: >-
+        The operator identity sum_{v in V_t} F_v = q_t 1_Q on the TARGET fails
+        on every scalar sector whose values do not sum to q_t over V_t and is
+        unsound.
+        THE SOUND SQUASHED FORM IS THE EXPECTATION IDENTITY, which is the
+        class-marginal entry of cor:entries (ii).
+
+  row_count_core: 19
+  reason_slots_note: >-
+    Three rows name two reasons each (chain; constraint certificate; licence
+    presence) and ONE reason is named by TWO rows
+    (`constraint_without_certificate`, by the constraint-certificate row and
+    by the licensed-route Hermiticity row), so the row count and the string
+    count do not determine each other. NO CORE STRING BEYOND THE LIST BELOW
+    EXISTS AND NONE IS TO BE INVENTED.
+
+  refusal_reasons:
+    - lattice_exponent_not_declared
+    - requested_assurance_unknown
+    - receiver_spec_not_accepted
+    - no_block_structure
+    - declaration_not_exactly_admissible
+    - emitted_family_not_admissible
+    - probe_weights_ill_formed
+    - declared_relation_impossible
+    - chain_ill_formed
+    - source_link_after_receiver_link
+    - link_kind_deferred
+    - approximate_squashing_unsupported
+    - device_family_unsupported
+    - constraint_without_certificate
+    - data_dependent_constant
+    - licence_missing
+    - licence_without_constraints
+    - constraint_channel_mismatch
+    - alphabet_or_order_mismatch
+    - post_processing_order_violated
+    - unsound_constraint_requested
+  refusal_reason_count_core: 21
+  strings_by_owner: >-
+    THE CORE MAY NOT NAME A SUBMODULE'S STRING AND DOES NOT: a submodule's
+    strings are listed in its own interface and go away with it. What each
+    present submodule owns is `submodules_today` below.
+
+# ---------------------------------------------------------------------------
+# link_record
+#   def:link, Eq. eq:link -- the TEN slots, with the module's own count.
+# ---------------------------------------------------------------------------
+link_record:
+
+  locator: "def:link, Eq. eq:link; def:chain; thm:chain"
+  slot_count: 10
+  required_field_count: 6
+  count_note: >-
+    SIX of the ten are the required fields -- source family, target, channel
+    witness, reachable-set statement, transported constraint entries, licence
+    record -- and the remaining FOUR are `stage`, `kind`, the carried operator
+    pair, and `status`. Wherever a claim says "the six required fields" it
+    means the first group; the tuple is the whole of what an implementer
+    binds.
+
+  slots:
+    - {name: stage, group: additional, content: "stage in {source, receiver}"}
+    - {name: kind, group: additional, content: "one of the receiver-stage kinds of the `link_declarations` input row: the core's, plus those a submodule's interface adds"}
+    - {name: source_family, group: required_six, content: "(B^in, M^in) -- THE SYSTEM AND THE POVM the link starts from"}
+    - {name: target, group: required_six, content: "(B^out, M^out) -- the system and the POVM it lands on"}
+    - {name: channel_witness, group: required_six, content: "Lambda_l, with (M^in; O^in) squashing to (M^out; hat O^out)"}
+    - {name: carried_operator_pair, group: additional, content: "(hat O^out, O^in)"}
+    - {name: reachable_set_statement, group: required_six, content: "the statement of def:sound for Lambda_l and the declared family of inputs"}
+    - {name: transported_constraint_entries, group: required_six, content: "the entries (hat O_k, bowtie_k, c_k) with, PER ENTRY, the certificate case of cor:pullback that discharges it"}
+    - {name: licence, group: required_six, content: "the licence record, PRESENT EXACTLY WHEN the entry list is non-empty"}
+    - {name: status, group: additional, content: "status in {exact, certified_outer, exploratory_numeric}, with `exact` meaning the pull-back identity holds WITH NO ERROR TERM"}
+
+  chain_conditions:
+    - {id: C1, name: composable, content: "(B^out_i, M^out_i) = (B^in_{i+1}, M^in_{i+1}) for 1 <= i < k"}
+    - {id: C2, name: tuple-chained, content: "hat O^out_i = O^in_{i+1}, so that each declared operator on the final target has a pull-back AT EVERY INTERMEDIATE STAGE"}
+    - {id: C3, name: stage-ordered, content: "NO `source`-stage link follows a `receiver`-stage link"}
+  admission_rule:
+    content: >-
+      A CHAIN WITH A NON-EMPTY SOURCE SEGMENT IS ADMITTED ONLY WITH LICENSED
+      ENTRIES, AND ONLY IN TRUSTED-SOURCE MODE, thm:two-sided being stated
+      there alone: every transported constraint entry has a REAL CONSTANT as
+      its right-hand side, tagged `party_local` or untagged. A `general` entry
+      -- a Hermitian right-hand side on Alice's retained system -- is REFUSED
+      beside one, and so is a declaration pairing a non-empty source segment
+      with UNTRUSTED-SOURCE MODE, which the decider refuses rather than
+      admitting in silence. The transmitter's type does not close that second
+      gap by itself: its transmitter/def:source-spec clause (b) makes a source-model
+      declaration come with a non-empty segment and does not restrict clause
+      (b) to trusted mode, the decoy submodule restricting only itself.
+    why_it_is_not_a_fourth_numbered_condition: >-
+      (C1)-(C3) are named BY NUMBER here, in thm:chain and in rem:ordering,
+      and numbering a fourth would make those read as incomplete; and the rule
+      is applied where an entry is DECLARED rather than decided on a presented
+      chain. The transmitter's own admission paragraph is not a fifth (S)
+      condition for the same reason.
+    no_reason_string_is_added: >-
+      BINDING. Every entry this module emits carries a real scalar
+      (thm:licence (iv)), so no artefact of this module can violate the rule
+      and there is nothing here to refuse; the rule bites in the consuming
+      declaration. `refusal_reason_count_core` and the string list carry no
+      string for it, and none is to be invented (`reason_slots_note`).
+    who_decides_it: >-
+      THE CONSUMER THAT ASSEMBLES A DECLARATION'S SOURCE SEGMENT WITH ITS
+      CONSTRAINT LIST, which is the protocol compiler: its chain-condition
+      definition (protocol-compiler/def:chaincond) carries the rule as the
+      consuming side of def:chain's, with a refusal reason of its own.
+      def:chain names the decider in words; rem:chain-admission and
+      rem:ordering name its definition by id as a mention, which is a
+      pointer and no dependency.
+    both_halves_are_decided_there: >-
+      The rule is a refusal ON A PRESENTED DECLARATION, and BOTH HALVES OF IT
+      ARE DECIDED THERE: the ENTRY half (a general entry beside the segment,
+      refused as general_entry_beside_source_segment) and the MODE half (a
+      non-empty segment in untrusted-source mode, refused as
+      source_segment_in_untrusted_mode). What makes the pairing unreachable
+      as the transmitter stands is its (A3) with its trusted-source
+      declaration of the one kind it admits; the refusal does not rest on it.
+    locator: "def:chain, 'Which chains are admitted'; rem:chain-admission; lem:precomposition (iv); rem:ordering"
+  composite: >-
+    THE PAIR (Xi_Chain, Lambda_Chain) of def:chain Eq. eq:chaincomposite: the
+    SOURCE composite Xi_Chain = Xi_{L_s} o ... o Xi_1, the identity when
+    L_s = 0, and the RECEIVER composite
+    Lambda_Chain = Lambda_{l_k} o ... o Lambda_{l_1}. thm:chain (i)-(iv) read
+    the second member alone; what the pair composes to as a reduction is
+    thm:two-sided.
+
+  source_segment:
+    type: "transmitter/def:source-segment, with its interface conditions (S1)-(S4) and its admission conditions (A1)-(A3)"
+    presence: "always emitted; EMPTY in every artefact this module emits"
+    note: >-
+      What a NON-EMPTY source segment composes with the receiver segment is
+      thm:two-sided, and the inclusion it needs when the attack set is already
+      restricted is lem:precomposition; what is a refusal is the admission
+      rule above. The segment is emitted EMPTY rather than omitted, so that a
+      consumer reads a segment and not a silence.
+    that_it_is_empty_in_what_this_module_emits: >-
+      NOT AN ASSUMPTION. What a presented chain carries is data, which is what
+      this row emits; `assumption_ledger.no_row_for_an_empty_source_segment`
+      says why the ledger has no row for it.
+    locator: "def:chain, Eq. eq:chaincomposite; thm:chain, closing paragraph; thm:two-sided; rem:ordering"
+
+  identity_link_scope: >-
+    THE `identity` KIND IS DECLARED AND IS NOT REACHABLE FROM ANY DECLARED
+    INPUT. The identity instance (cor:identity-instance) needs a
+    declared input carrying an ALREADY-FINITE POVM presented as an admissible
+    datum, and NO INPUT ROW OF THIS FILE OR OF A SUBMODULE'S CARRIES ONE.
+    ADMITTING ONE IS A NEW DECLARED INPUT AND A NEW FAIL-CLOSED RULE, HENCE AN
+    AMENDMENT, NOT A DEFAULT. The kind and the example are kept because the
+    link is what the instance emits once such an input exists, and because an
+    empty chain would leave an artifact unable to say whether a reduction was
+    performed and found trivial or never considered.
+    Locator: ex:identity; req:identity-link-recorded; cor:identity-instance;
+    cor:emitted-identity.
+
+  mixed_status_chain_policy: >-
+    The composite status is `exact` whenever every link's is. A CHAIN
+    CONTAINING A LINK THAT IS NOT `exact` IS REFUSED
+    (`approximate_squashing_unsupported`) RATHER THAN GIVEN A COMPOSITE
+    STATUS, because no theorem of this module converts an error term into a
+    security penalty. IT IS A RULE OF THE ENGINE AND NOT A CONVERSE ANY CLAIM
+    PROVES, which is why thm:chain (iv) states the positive direction and
+    req:mixed-status-chain the refusal. Locator: thm:chain (iv);
+    req:mixed-status-chain. That none of the status values is a result tier
+    is the `status` output row's `none_of_the_three_is_a_result_tier`.
+
+# ---------------------------------------------------------------------------
+# not_carried
+#   The output key this interface deliberately does not have, with the
+#   reason, so that its absence is a decision and not an oversight.
+# ---------------------------------------------------------------------------
+not_carried:
+
+  - key: douglas_data
+    reason: >-
+      AN OUTPUT KEY WHOSE VALUE WOULD ALWAYS BE null, reserved only so that
+      adding a dominator later would not be a schema change. A key with no
+      content is a hand-maintained mirror of a deferral; the deferral itself
+      has its slot -- prop:common, the `family-dominating` link kind whose
+      first instance the `domination` submodule states, and its reserved
+      declared weight A-DOM -- and the planned `family-reduction` submodule
+      is where the data of a family will be declared.
+
+# ---------------------------------------------------------------------------
+# never_verified
+# ---------------------------------------------------------------------------
+assumption_ledger:
+  emission_rule:
+    A-PROBE: "at a station only where its declared setting set T has at least two values: at T = {*}, q_* = 1, every clause of ass:probe holds of the one setting drawn with weight one (req:assumption-ledger)"
+    A-TSM: "at a station only where its declared setting set T has at least two values, or where the consuming specification applies a public choice at the station's measured factor (a choice-weighted physical family or a choice weighting of that factor, protocol-compiler/def:spec (b), (b')); this module does not hold that specification, so the emission is told whether such a choice is applied, and where it is not told the row is emitted (req:assumption-ledger)"
+    A-MEAS: "on every emission, at each station. Clause (iv) is a condition on the product of the measurements at the declaration's measured factors, whichever parties carry their labels, and across the parties' parts of def:protocol; the row of each station asserts that same clause, which is vacuous at one measured factor and one measuring party, so it is read once for the run and needs no emission of its own"
+    A-CONST: "only where the emitted constraint list is non-empty, a condition on the constants of emitted entries holding vacuously of an empty list (ass:constdecl; req:assumption-ledger)"
+    A-SNAP: "whenever the run's record names a moved class of the normalizer or a moved block of the declaring party's snap as resting on it (thm:emit (vi); foundations/req:snap-reference (iii)), and never for a kept one or one evaluated off its snap (foundations/def:evaluated-off-snap): in a run whose key length is formed from a number on the reference companion (req:reference-companion; meat-core/frank-wolfe/req:bracket-on-reference), no class of the normalizer and no handed block of the instance snap rests on it, and only the moved blocks on which the companion carries the snapped block can (cor:reference-companion (v)); where it is formed instead on the searched declaration, after a withdrawn bracket (its causes, factor_enclosure_inconsistent among them, meat-core/frank-wolfe/req:bracket-on-reference (iv)) or in the certified evaluation's fallback (cause companion_not_certified, meat-core/frank-wolfe/req:certified-evaluation (i)), they rest on it. A block whose data the declaring party computes from a model not exact on it is moved even where the snap leaves that evaluation unchanged (foundations/def:snap). Each resting block or class carries its group: no usable reference, reference bracket withdrawn, reference bracket not evaluated, or last resort. A run whose every block and class is kept, as at a shipped default whose blocks are all exact on the lattice, does not engage it"
+
+never_verified:
+  core: [A-MEAS, A-ROUND-SQ, A-RECV, A-PROBE, A-TSM, A-CONST]
+  assumed_from_another_module: [A-SRC, A-SEQ, A-SNAP]
+  added_by_a_submodule: >-
+    A submodule that names an assumption about the device or the adversary
+    marks it never-verified in ITS interface; see `submodules_today`.
+  note: >-
+    Req. req:never-verified-assumptions: the engine marks as never verifiable
+    the row, in the assumption ledger, of every assumption that the engine
+    never verifies, as that assumption's verification field says, whether
+    this contract, one of its submodules or another module states it; no code
+    path decides what any of them says beyond its clauses on the declared
+    data. The engine decides by validation the conditions on the declared
+    data that the assumptions of this contract are read with, such as the
+    declared dimensions of def:system-setting and the declared class weights
+    of def:joint-family. Which assumptions are never verified is each one's
+    `verification` field (spec/claim-format.md section 3.2), and these lists
+    and the rows' flags are the ledger rows whose field is `never`; a row
+    taken from another module carries the mark its owner gives it, as
+    A-SRC and A-SEQ do. The code reads the field from the
+    claim-closure table, and tests/unit/test_never_verified_agree.py holds
+    these lists to it. The conforming behaviour for A-RECV is in the
+    `receiver_artifact` input row (req:supplier-version-accepted); for the
+    others there is nothing here to check, and the obligation is only named.
+    The engine's interface inherits A-TSM's key.
+  locator: "ass:meas; ass:round; ass:recv; ass:probe; ass:tsm; ass:constdecl; transmitter/ass:src; transmitter/ass:seq; req:never-verified-assumptions"
+
+# ---------------------------------------------------------------------------
+# submodules_today
+#   THE ONE BLOCK OF THIS FILE THAT NAMES A SUBMODULE, and it exists so that
+#   the others do not have to. Everything above states the MECHANISM -- a
+#   submodule adds rows, reasons, ledger entries and link kinds at its own
+#   `order`, in its own interface -- and this block is the arithmetic of the
+#   module AS IT STANDS. DELETING A SUBMODULE DELETES ITS ENTRY HERE AND
+#   NOTHING ELSE OF THIS FILE.
+# ---------------------------------------------------------------------------
+submodules_today:
+
+  wpfss:
+    interface: "spec/modules/reductions/wpfss/interface.yaml"
+    input_keys: 9
+    fail_closed_rows: [{rule: cutoff, order: 4}, {rule: fibre, order: 8}, {rule: column_stochastic, order: 9}, {rule: descent, order: 10}, {rule: absorbing, order: 11}, {rule: total_weight, order: 12}, {rule: high_photon_slot, order: 14}, {rule: route, order: 24}]
+    refusal_reasons: [cutoff_mismatch, bound_set_not_a_fibre, dark_counts_not_column_stochastic, dark_counts_do_not_descend, bounded_letter_not_absorbing, total_weight_not_below_one, high_photon_slot_ill_formed, route_not_single_valued]
+    ledger_rows: []
+    link_kinds: [fss, wpfss]
+    output_keys: [wpfss_data, route]
+    narrows_core_rows: []
+
+  domination:
+    interface: "spec/modules/reductions/domination/interface.yaml"
+    input_keys: 0
+    fail_closed_rows: []
+    refusal_reasons: []
+    ledger_rows: []
+    reserved_ledger_rows: [A-DOM]
+    link_kinds: [family-dominating]
+    output_keys: []
+    narrows_core_rows: []
+    note: "No requirement uses the submodule's claims: it states the domination link, kept for a declared device weight, and emits nothing."
+
+  totals_as_it_stands:
+    fail_closed_rows: 27
+    refusal_reason_strings: 29
+    ledger_rows: >-
+      the core rows of `assumption_ledger.core_rows` above under their
+      presence rules (A-CONST, A-PROBE and A-TSM conditional), the rows
+      assumed from another module (the transmitter's A-SEQ; A-SRC only
+      where the source segment is non-empty)
+      and the rows a
+      submodule adds, of which there are none. NAMED AND NOT
+      COUNTED: the emitted ledger is the declared row list under its presence
+      rules, so a count here would be a hand-maintained mirror of it
+      (spec/claim-format.md section 4).
+    note: >-
+      Counts of the module as it stands with both submodules present. Three
+      rows name two reasons each and one reason is named by two rows, so the
+      two numbers do not determine each other.
+
+# ---------------------------------------------------------------------------
+# artifact_bindings
+# ---------------------------------------------------------------------------
+artifact_bindings:
+  mathematical_spec_version: "reductions@0.21.0"
+  version_note: >-
+    THE PIN IS AN ACCEPTED CONTRACT VERSION OF THIS MODULE: the `version`
+    spec/modules/reductions/module.yaml carried when the code that emits it
+    was accepted as implemented. THE PIN MOVES AT ACCEPT-IMPLEMENTATION: the
+    code then emits the new string, and every frozen expectation that spells
+    it is edited BY HAND in the same commit and never regenerated from the
+    code; the one that pins it is tests/unit/test_reductions_artifact.py. A
+    submodule pins no version of its own.
+  artifact_type: ProofReductionArtifact
+  produces_note: >-
+    The sixteen core output keys above, each under the presence rule of its
+    row, are the payload, with `factor_emission` beside them where several
+    parties measure. A submodule may add a key of its own and may fill a generic
+    slot of one of the sixteen -- a branch
+    register inside `source_descriptor`, branch sectors inside
+    `target_descriptor` -- and what each present one adds is
+    `submodules_today`. NO OTHER SCHEMA EXTENSION IS AUTHORIZED.
+  consumes_note: >-
+    A supplier artifact at `receiver_artifact`, which must resolve to an
+    accepted version and carry its own validation results; the declaration
+    data arrive as data and have their own owning module.
+  package: "src/certiqs_key/reductions/"
+
+# ---------------------------------------------------------------------------
+# depends_on_modules
+# ---------------------------------------------------------------------------
+depends_on_modules: [receiver, transmitter]
+depends_on_modules_note: >-
+  As `module.yaml` declares. `transmitter` because def:link's source stage IS
+  a source link of the transmitter's type, def:chain's source segment IS the
+  transmitter's segment, and lem:source-transfer and thm:two-sided read that
+  module's source identity (S3), its certificate conditions (SR1)-(SR3) and
+  its transmitter/thm:certificate-sufficiency (iii).
+  `receiver` because `wpfss` consumes its artifact; the core states A-RECV
+  generically and names no receiver claim, and the submodule that reads the
+  artifact names them by id in its `uses` edges
+  (wpfss/rem:receiver-imports). The traffic runs the other way for the
+  compiler and the engine, which consume the emitted artifact.
+
+# ---------------------------------------------------------------------------
+# code_note
+#   Where the code under src/certiqs_key/reductions/ and the rows above could
+#   be read differently: a row, key or string the code places in another
+#   package than the interface does, a rule this file fixes for a claim, or a
+#   spelling no row fixes. THE CLAIMS DECIDE AND THE ROWS FOLLOW THEM; an item
+#   that records a disagreement is a place the implementation and the
+#   interface are still to be brought into one reading.
+# ---------------------------------------------------------------------------
+code_note:
+
+  - item: "who owns the receiver-facing input keys"
+    code: "reductions/inputs.py types ReceiverArtifactRows, DarkCountChannel, CoarseGraining, HighPhotonBound, BoundQuantifierDomain and ProtocolDeclaration.photon_cutoff in the CORE package."
+    interface: "those keys are `wpfss`'s (wpfss/interface.yaml), the core carrying only the generic `receiver_artifact` row of ass:recv."
+    reading: >-
+      Not a removability defect -- `wpfss` need not be removable -- but
+      the core package names objects no core claim states. The keys and their
+      domains are unchanged either way.
+
+  - item: "the `cutoff` fail-closed row (order 4)"
+    code: "registered in the core's FailClosedRule enum, and `cutoff_mismatch` is spelled in the core's RefusalReason."
+    interface: "the row is `wpfss`'s: no core claim carries a cutoff, and the echoed N is a datum of the weight route."
+    reading: "Same row, same string, same order; the disagreement is which module owns it."
+
+  - item: "the `route` row (order 24) and the Route enum"
+    code: "ReductionRequest.route and reasons.Route live in the core; the row is registered in the core's FailClosedRule."
+    interface: "the route is `wpfss`'s: wpfss/def:routes and wpfss/rem:tworoutes are wpfss claims, and the two routes are the two targets of wpfss/def:targets."
+    reading: "Same row, same string, same order; the disagreement is which module owns it."
+
+  - item: "the six weight-route reason strings"
+    code: "bound_set_not_a_fibre, dark_counts_not_column_stochastic, dark_counts_do_not_descend, bounded_letter_not_absorbing, total_weight_not_below_one and high_photon_slot_ill_formed are members of the CORE's RefusalReason enum, although wpfss/validation.py registers the rows."
+    interface: "the strings are listed under `wpfss`."
+    reading: >-
+      The rows are submodule-owned, which is what the registry mechanism is
+      for; the strings are in the core enum.
+
+  - item: "the link-kind vocabulary"
+    code: "reasons.py's LinkKind enum carries NINE kinds, `source-map` included, and LINK_KINDS_IMPLEMENTED names six."
+    interface: "the core declares five receiver-stage kinds, `wpfss` adds two, `domination` adds `family-dominating`, and `source-map` is the transmitter's."
+    reading: >-
+      The refusal of a declared `source-map` link is unchanged in either
+      reading (`link_kind_deferred`); what differs is which module's
+      vocabulary the kind belongs to.
+
+  - item: "the emission normalizer"
+    code: >-
+      normalizer.normalize keeps a class on the lattice and snaps every
+      other class for fidelity, rounding to nearest and placing the residue
+      on hosts in normalizer.designation_order, the uniform lift surviving
+      only as the flagged last resort (normalizer._last_resort).
+    interface: "def:emitnorm keeps, snaps for fidelity (2) and, failing that, takes the flagged last resort (3) (`rounddown_candidates`)."
+    reading: >-
+      AGREE once the round-down-and-absorb path and the rung of the
+      certified path are gone from the code. The support clause is
+      unchanged: the designation order ranges over V_t intersected with the
+      sector's support.
+
+  - item: "the transported set, and how a sector projector is labelled"
+    code: >-
+      Every builder emits ONE TransportedOperator PER SECTOR of its sector set
+      -- certificate_kind POSITIVITY, relation >=, constant 0, the pull-back
+      the instance's own proposition gives -- beside the sums it transports
+      besides, the sums FIRST; ReductionInstance.__post_init__ refuses an
+      instance whose transported set omits a sector projector. The emitted
+      label of a sector projector is `Pi_(<group>,<name>)`, the sector's own
+      (group, name) pair (reductions/sectors.py sector_projector_label); a sum
+      keeps its own name (`Pi_leq`, `Pi_flag`, `Pi_bl1`).
+    interface: >-
+      the `transported_operators` output row ("where the sector-projector
+      certificate (Pi_s, >=, 0) of every instance travels") and the
+      `carried_operators` input row's default, the instance's default carried
+      set -- every sector projector together with the sums the instance
+      transports besides, cor:entries (i)'s set. Neither row states a label
+      spelling.
+    reading: >-
+      AGREEMENT WITH BOTH ROWS. The LABEL SPELLING is the code's and is
+      recorded here because no row fixes it: it is the sector map's own pair,
+      so a consumer matches the row against the `target_descriptor` with no
+      dictionary.
+
+  - item: "a caller-declared hat O outside the sector blocks"
+    code: >-
+      A CList entry's hat O_k is carried as its SECTOR-BLOCK LIST, like every
+      other operator on Q, and certify_carried_operators splits the caller's
+      declared array against the sector map once. An array with a NONZERO
+      ENTRY OUTSIDE THE BLOCKS is REFUSED `constraint_without_certificate`,
+      naming the entry's position, the two sectors it couples and the
+      `target_descriptor` row; reading its diagonal blocks would emit an
+      operator the caller did not declare.
+    interface: >-
+      the `carried_operators` input row, which types a requested operator as
+      one array in the form sum_v sum_s alpha_{v,s} Pi_s F_v Pi_s + Z and
+      refuses one outside that form `constraint_without_certificate`, and
+      which STATES THE SPLIT AND THIS REFUSAL IN THOSE WORDS ("EVERY OPERATOR
+      OF THE ADMITTED FORM IS SECTOR-BLOCK-DIAGONAL, so the declared array is
+      SPLIT AGAINST THE SECTOR MAP ONCE"); the `constraint_list` row ("EVERY
+      hat O_k IS SECTOR-BLOCK-DIAGONAL AND IS CARRIED AS A SECTOR-BLOCK
+      LIST"); the `target_descriptor` row ("NO FULL dim H(Q) x dim H(Q) ARRAY
+      IS EMITTED, HERE OR ANYWHERE IN THIS ARTIFACT").
+    reading: >-
+      AGREEMENT WITH ALL THREE ROWS, recorded because the decision is taken
+      on CALLER data. Every operator of the admitted form is
+      sector-block-diagonal, so the split loses nothing and the refusal adds
+      no condition the rows do not already impose; what it adds is that the
+      condition is DECIDED rather than assumed. spec/architecture.md 2.9 has
+      no off-block zero check because such a part cannot be constructed once
+      a producer emits per sector -- true of a producer, and a caller's
+      declaration is the one path that can still present one. No refusal
+      string and no row of its own. THE TWO ROWS SAY WHICH FORM CROSSES THE
+      BOUNDARY on each side -- one array in, a sector-block list out.
+
+  - item: "a declared constant whose modulus exceeds one"
+    code: >-
+      constraints._off_lattice_constant_refusal refuses it under EVERY
+      relation, `constraint_without_certificate`, naming eq:latinv's band;
+      rounded_constant never returns a value for which on_lattice_scalar is
+      false and raises on one outside the band.
+    interface: >-
+      the `carried_operators` row's `declared_constant_rounding` refuses a
+      declared constant of modulus above one under every relation, before any
+      rounding, as cor:entries (iii) and req:caller-constant-rounding state.
+    reading: >-
+      AGREEMENT. eq:latinv has two conjuncts, and rounding onto the lattice
+      repairs only the first -- 3/2 is already an integer multiple of
+      2^-kappa, so the rounding would move nothing and the entry would be
+      emitted off eq:latinv with a direction recorded for a value nothing
+      moved; the claims, this interface and the code therefore all refuse
+      such a constant.
+
+  - item: "how a joint outcome is labelled"
+    code: >-
+      reductions/inputs.py outcome_label is the ONE join of v = (y, t) into
+      the flat label every wire indexes by -- the consumer adapter's (docking.py) target alphabet,
+      target POVM and outcome correspondence, the artefact's machine record
+      (`target_povm`, `outcome_correspondence.alphabet`,
+      `wpfss_data.flag_basis`), the flag sector names and the factor
+      families. It spells `y,t`, and spells `y` alone when the declared
+      settings are exactly {off} (receiver/def:probe's probe-off setting). A
+      reader holding an artefact reads T off its flag basis
+      (probe_settings_of), which is the declared V = Y x T.
+    interface: >-
+      the `povm_index_convention` ("A COMMA denotes a JOINT outcome") and the
+      `wpfss_data` row (the flag basis "IN THE DECLARED ORDER OF V") fix the
+      object and its order; no row fixes a label spelling.
+    reading: >-
+      AGREEMENT, recorded because no row fixes the spelling and a consumer
+      files on it. The probe setting is an add-on: at T = {off} the component
+      carries no information, so the probe component is omitted when
+      T = {off} and a probe-free receiver's labels are its detection letters.
+      V = Y x T, its order and every number indexed by it are the same either
+      way; a probe-bearing declaration keeps `y,t`.

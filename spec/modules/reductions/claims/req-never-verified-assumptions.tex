@@ -1,0 +1,41 @@
+% ---
+% id: reductions/req:never-verified-assumptions
+% kind: req
+% title: "Never-verified rows and validation of declared data"
+% summary: >-
+%   The ledger marks as never verifiable the row of every assumption the engine
+%   never verifies, as its verification field says, whichever module states it.
+%   Validation decides the declared data the assumptions are read with, and no
+%   code path decides more of a never-verified one.
+% prominence: standard
+% status: implemented
+% uses: []
+% mentions: [def:system-setting, def:joint-family, transmitter/ass:src]
+% assumes: []
+% refs: []
+% implements: certiqs_key.reductions.artifact:assumption_ledger
+% provenance: newly-derived
+% lean:
+% ---
+
+An assumption that is a statement about the physical devices, the source,
+the adversary or the run, rather than about \tref{declared data}, has a
+clause that no code path can decide; what validation decides beside that
+clause does not change its mark. Which assumptions the engine never verifies
+is recorded in each one's verification field
+(\repodoc{spec/claim-format.md#32-whether-the-engine-verifies-an-assumption}),
+which the contract prints beside the statement. A row that this module takes
+from another module carries the mark its owner gives it, as the row of the
+transmitter's retention assumption (\xref{transmitter/ass:src}) does.
+
+\begin{requirement}\label{req:never-verified-assumptions}
+The engine marks as never verifiable (\iface{never_verified}) the row, in the
+assumption ledger, of every assumption that the engine never verifies, as
+that assumption's verification field says, whether this contract, one of its
+submodules or another module states it; no code path decides what any of
+them says beyond its clauses on the declared data. The engine decides by
+validation the conditions on the declared data that the assumptions of this
+contract are read with, such as the declared dimensions of
+Definition~\ref{def:system-setting} and the declared \tref{class weights} of
+Definition~\ref{def:joint-family}.
+\end{requirement}

@@ -1,0 +1,151 @@
+% ---
+% id: reductions/lem:precomposition
+% kind: lem
+% title: "Licensed admissibility survives precomposition with a source channel"
+% summary: >-
+%   An attack channel admissible for a list of entries with real constants
+%   stays admissible when any channel is composed before it, in either source
+%   mode and for party-local entries. A Hermitian right-hand side that is not a
+%   real multiple of the identity is not preserved.
+% prominence: standard
+% status: accepted
+% uses: [def:attset, def:licensed, lem:sep]
+% mentions: [rem:ordering, thm:licence]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Current caveat: the proof of (i) to (iii) never forms the adjoint of Gamma (only the counterexample of (iv) writes one, on two-dimensional spaces); it tests the composite adjoint against states, so that the input registers need only be separable and the only finite-dimensional systems are those the adjoint's argument lives on."
+% ---
+
+A \tref[receiver-stage typed link]{receiver-stage link} hands the analysis an
+\tref{attack set} that is a subset of the channels, in general a proper one
+(Theorem~\ref{thm:licence}), while a \tref[source link]{source-stage link}
+re-parameterises the first-round attack as a composition
+with a channel; applying the source-stage link after the receiver-stage link
+needs an inclusion (Remark~\ref{rem:ordering}). The lemma proves that inclusion for every list
+whose right-hand sides are real constants, which is the form of a
+\tref{licensed} list in either source mode (Definition~\ref{def:licensed}) and of every entry
+this contract emits (Theorem~\ref{thm:licence}\,(iv)), and exhibits a
+right-hand side for which it fails.
+
+\begin{lemma}\label{lem:precomposition}
+Let $\CList=\{(\hat O_k,\bowtie_k,c_k)\}_{k=1}^{m}$ be a list of Hermitian
+$\hat O_k$, relations $\bowtie_k\in\{\preceq,=,\succeq\}$ and \emph{real}
+constants $c_k$. Let $\Hs{E_{\mathrm{pre}}}$ and $\Hs{E'}$ be separable, let
+$\Qsys$, $E''$, $A$, $R$ and $R'$ be finite-dimensional, and let
+$\Gamma\in\mathrm{CPTP}(E_{\mathrm{pre}},E')$ be \emph{any} channel. The sets
+below are the ones the displays \eqref{eq:attset}, \eqref{eq:attsetun} and
+\eqref{eq:attsetpl} of Definition~\ref{def:attset} cut out, read at these
+registers with the adjoints of Lemma~\ref{lem:sep}; where $E_{\mathrm{pre}}$
+and $E'$ are finite-dimensional they are the attack sets that definition
+names.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(\tref{trusted-source mode})} if
+  $\Aev\in\AttSet_{\CList}(E',\Qsys E'')$ of \eqref{eq:attset}, then
+  $\Aev\circ\Gamma\in\AttSet_{\CList}(E_{\mathrm{pre}},\Qsys E'')$;
+\item \emph{(\tref{untrusted-source mode})} if
+  $\Aev\in\AttSet_{\CList}(E',A\Qsys E'')$ of \eqref{eq:attsetun}, then
+  $\Aev\circ\Gamma\in\AttSet_{\CList}(E_{\mathrm{pre}},A\Qsys E'')$;
+\item \emph{(party-local entries)} let $\Qsys=\bigotimes_f\Qsys_f$ and let the
+  entry $(\hat O_k,\bowtie_k,c_k;f_k)$ carry the party-local tag
+  (Definition~\ref{def:licensed}), so that its condition on $\Aev$ is
+  \eqref{eq:attsetpl}. If $\Aev$ satisfies \eqref{eq:attsetpl} for every
+  finite-dimensional $R'$ and every $X\in\Pos{R'R\,\Qsys_{f_k^c}}$, then so does
+  $\Aev\circ\Gamma$, with $E_{\mathrm{pre}}$ in place of $E'$. Consequently the
+  admissible set of Definition~\ref{def:attset}, with \emph{any} subset of its
+  entries tagged and the rest read as scalars, is closed under precomposition
+  with a channel into its input register;
+\item \emph{(the real constant is what carries it)} replace the right-hand side
+  $c_k\,\idon{E'}$ of \eqref{eq:attset} by a Hermitian $\Theta\in\Lin{E'}$ that
+  is not a real multiple of $\idon{E'}$. Then the condition
+  $\Aev^{\dagger}(\hat O\otimes\idon{E''})\succeq\Theta$ is not preserved by
+  precomposition: take $E_{\mathrm{pre}}=E'=\Qsys=\mathbb{C}^{2}$ with declared
+  basis $\{\ket{0},\ket{1}\}$, $E''$ one-dimensional, $\Aev=\idmap$ the
+  identity channel $E'\to\Qsys$, $\hat O=\Theta=\dyad{0}$, and
+  $\Gamma(\rho)\coloneqq\tr[\rho]\,\dyad{1}$. The condition holds for $\Aev$
+  with equality, and
+  $(\Aev\circ\Gamma)^{\dagger}(\hat O)=0\not\succeq\dyad{0}=\Theta$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Two facts are used throughout, and nothing else.} First, for a channel
+$\Phi$ whose output system is finite-dimensional the adjoint $\Phi^{\dagger}$
+is the unital positive map fixed by \eqref{eq:pairing}; the composite
+$\Aev\circ\Gamma$ has the same output system as $\Aev$, so
+$(\Aev\circ\Gamma)^{\dagger}$ is defined on the same operators as
+$\Aev^{\dagger}$, and no adjoint of $\Gamma$ is formed in (i) to (iii), which
+is what lets $\Hs{E'}$ be separable and infinite-dimensional. Second, a
+bounded self-adjoint $H$ on a separable $\Hs{K}$ with $\tr[H\varrho]\ge0$ for
+every $\varrho\in\Pos{K}$ of finite trace satisfies $H\succeq0$: take
+$\varrho=\dyad{\phi}$ for a unit vector $\phi$, so that
+$\bra{\phi}H\ket{\phi}=\tr[H\dyad{\phi}]\ge0$.
+
+(i) Fix $k$, write $Z_k\coloneqq\hat O_k\otimes\idon{E''}$ and suppose
+$\bowtie_k$ is $\succeq$, so that $\Aev^{\dagger}(Z_k)\succeq c_k\,\idon{E'}$.
+Let $\varrho\in\Pos{E_{\mathrm{pre}}}$ have finite trace. By
+\eqref{eq:pairing} applied to $\Aev\circ\Gamma$, then to $\Aev$,
+\begin{equation*}
+  \tr\!\big[(\Aev\circ\Gamma)^{\dagger}(Z_k)\,\varrho\big]
+  =\tr\!\big[Z_k\,\Aev\big(\Gamma(\varrho)\big)\big]
+  =\tr\!\big[\Aev^{\dagger}(Z_k)\,\Gamma(\varrho)\big]
+  \;\ge\;c_k\,\tr\!\big[\Gamma(\varrho)\big]
+  \;=\;c_k\,\tr\varrho ,
+\end{equation*}
+the inequality because $\Aev^{\dagger}(Z_k)-c_k\idon{E'}$ is a positive bounded
+operator and $\Gamma(\varrho)$ a positive trace-class one, so their product has
+non-negative trace, and the last step because $\Gamma$ is trace preserving.
+Hence $\tr\!\big[\big((\Aev\circ\Gamma)^{\dagger}(Z_k)
+-c_k\idon{E_{\mathrm{pre}}}\big)\varrho\big]\ge0$ for every such $\varrho$, and
+the second fact gives
+$(\Aev\circ\Gamma)^{\dagger}(Z_k)\succeq c_k\,\idon{E_{\mathrm{pre}}}$.
+The right-hand side's being a real multiple of the identity is used exactly
+once, in the last step of the display: it makes the right-hand side a
+multiple of $\tr\varrho$, and therefore the same constant on the two
+registers. For $\bowtie_k\,=\,\preceq$ apply the argument to $-Z_k$ and
+$-c_k$; for $\bowtie_k\,=\,=$ both directions hold. Since $k$ was arbitrary and
+$\Aev\circ\Gamma$ is a channel from $E_{\mathrm{pre}}$ with the output system of
+$\Aev$, it lies in $\AttSet_{\CList}(E_{\mathrm{pre}},\Qsys E'')$.
+
+(ii) Identical, with $Z_k\coloneqq\idon{A}\otimes\hat O_k\otimes\idon{E''}$:
+the tested operator is the only thing that differs between \eqref{eq:attset}
+and \eqref{eq:attsetun}, and $\Gamma$ acts on the input register in both.
+
+(iii) Fix $k$, $R'$ and $X\in\Pos{R'R\,\Qsys_{f_k^c}}$, write
+$\hat D_k\coloneqq\hat O_k-c_k\,\idon{\Qsys_{f_k}}$ and
+$Z\coloneqq X\otimes\hat D_k\otimes\idon{E''}$, and suppose $\bowtie_k$ is
+$\succeq$, so that $(\idmap_{R'}\otimes\Aev)^{\dagger}(Z)\succeq0$. Since
+$\idmap_{R'}\otimes(\Aev\circ\Gamma)
+=(\idmap_{R'}\otimes\Aev)\circ(\idmap_{R'}\otimes\Gamma)$, the same two
+applications of \eqref{eq:pairing} give, for every
+$\varrho\in\Pos{R'E_{\mathrm{pre}}}$ of finite trace,
+\begin{equation*}
+  \tr\!\Big[\big(\idmap_{R'}\otimes(\Aev\circ\Gamma)\big)^{\dagger}(Z)\,
+    \varrho\Big]
+  =\tr\!\Big[(\idmap_{R'}\otimes\Aev)^{\dagger}(Z)\;
+    \big(\idmap_{R'}\otimes\Gamma\big)(\varrho)\Big]\;\ge\;0 ,
+\end{equation*}
+because $(\idmap_{R'}\otimes\Gamma)(\varrho)$ is positive and trace class. The
+second fact gives \eqref{eq:attsetpl} for $\Aev\circ\Gamma$ at that $R'$ and
+that $X$, and $R'$, $X$ were arbitrary. For $\preceq$ apply this to $-Z$; for
+$=$ both directions hold. No unitality and no constant is used here, the
+right-hand side of \eqref{eq:attsetpl} being $0$. The closure statement is (i)
+or (ii) for the untagged entries and this for the tagged ones, each entry's
+condition being a separate condition on the same channel.
+
+(iv) $\Aev=\idmap$ has $\Aev^{\dagger}=\idmap$, so
+$\Aev^{\dagger}(\hat O)=\dyad{0}=\Theta$ and the condition holds with equality,
+hence in the direction $\succeq$. The map $\Gamma$ is completely positive and
+trace preserving, and $\tr[Y\,\Gamma(\rho)]=\tr[\rho]\,\bra{1}Y\ket{1}
+=\tr\big[\big(\bra{1}Y\ket{1}\,\idon{E_{\mathrm{pre}}}\big)\rho\big]$ for every
+$Y$ and $\rho$, so $\Gamma^{\dagger}(Y)=\bra{1}Y\ket{1}\,\idon{}$; this is the
+one place in the proof where an adjoint of $\Gamma$ is written, and here both
+spaces are two-dimensional. Hence
+$(\Aev\circ\Gamma)^{\dagger}(\hat O)=\Gamma^{\dagger}(\dyad{0})
+=\braket{1}{0}\braket{0}{1}\,\idon{}=0$, while $\Theta=\dyad{0}$, and
+$0-\dyad{0}$ is not positive semidefinite. The scalar entry built from the
+same operator is not broken by the same $\Gamma$:
+$\Aev^{\dagger}(\dyad{0})=\dyad{0}\succeq0\cdot\idon{}$ is the licensed entry
+at $c=0$, and $\Gamma^{\dagger}(\dyad{0})=0\succeq0\cdot\idon{}$ holds.
+\end{proof}

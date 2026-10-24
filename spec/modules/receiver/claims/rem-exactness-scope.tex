@@ -1,0 +1,47 @@
+% ---
+% id: receiver/rem:exactness-scope
+% kind: rem
+% title: "Scope of the exactness rule"
+% summary: >-
+%   The eigenvalue-slack assumption is the one relation between a floating-point
+%   and an exact number the receiver asserts; enclosures and rigorous weights
+%   are proved. A claim outside the exception of
+%   [[thm:exact-and-evaluated]] may still mention a receiver tolerance, in a
+%   cross-reference, a remark or an example.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [ass:eig, def:pmcex, thm:exact-and-evaluated, thm:enclosed-blocks, thm:enclosed-weight, req:evaluation-label, def:evaluation-model, def:tolmap, def:bounddata, receiver/detector-imperfections/def:darkadm, receiver/detector-imperfections/rem:corrdark, rem:noslack, rem:exacteig, receiver/component-catalogue/ex:bb84exact]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:exactness-scope}
+The one relation between a floating-point number and an exact one that this
+contract does assert is Assumption~\ref{ass:eig}; it is a separate assumption
+because it is invoked only on the opt-in route of Definition~\ref{def:pmcex},
+evaluated in floating point.
+The enclosures of the photon-number blocks
+(Theorem~\ref{thm:enclosed-blocks}) relate rationals computed in exact
+arithmetic to the model, and so do the rigorously evaluated weights
+(Theorem~\ref{thm:enclosed-weight}); they are proved, not assumed.
+An artifact carries the rigorous evaluation label exactly where every weight
+it emits was evaluated rigorously, and the floating-point label otherwise; no
+path in this module produces another label
+(Theorem~\ref{thm:exact-and-evaluated}\,(iii),
+Requirement~\ref{req:evaluation-label}).
+
+Item~(i) of Theorem~\ref{thm:exact-and-evaluated} does not say that a claim
+outside its exception never \emph{mentions} a receiver tolerance: such claims
+do, in cross-references to Definition~\ref{def:tolmap} recording which
+declared number decides an exact condition in the evaluation model of
+Definition~\ref{def:evaluation-model} (Definition~\ref{def:bounddata},
+Definition~\ref{def:darkadm}, Remark~\ref{rem:corrdark}), and in remarks and
+an example that quantify the effect of a rule stated in that theorem
+(Remark~\ref{rem:noslack}, Remark~\ref{rem:exacteig},
+Example~\ref{ex:bb84exact}); a cross-reference asserts nothing. Nor does the
+item \emph{enumerate} the exceptions: the rule decides each claim by reading
+that claim's own statement.
+\end{remark}

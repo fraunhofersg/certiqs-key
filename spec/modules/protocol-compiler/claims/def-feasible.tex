@@ -1,0 +1,113 @@
+% ---
+% id: protocol-compiler/def:feasible
+% kind: def
+% title: "Feasible set"
+% summary: >-
+%   The feasible set holds the normalised positive block-list states that meet
+%   the declared marginal and every constraint entry, each read exactly. The
+%   source mode decides whether an entry is an operator or a scalar condition,
+%   and the set carries no parameter and admits no window.
+% prominence: standard
+% status: implemented
+% uses: [def:exact, def:declaration]
+% mentions: [def:homog]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.feasibility:in_feasible_set
+% lean:
+% ---
+
+\begin{definition}\label{def:feasible}
+For a declaration $\Decl$, the
+\term[The set of normalised block-list states on A and the measured system that meet the declared marginal and every constraint entry, each read exactly.]{feasible set}
+$\Feas$ is the set of $\omega$ presented as a
+\tref[block list]{sector-block list} on $A\Qsys$ --- $\omega=\bigoplus_s\omega^{(s)}$ with $\omega^{(s)}\in\Lin{A\Qsys_s}$,
+so that $(\idon{A}\otimes\Pi_s)\omega(\idon{A}\otimes\Pi_{s'})=0$ for
+$s\ne s'$ holds by the presentation and is not a condition --- such that
+\begin{equation}\label{eq:feas}
+  \omega^{(s)}\succeq0\ \ \forall s,\qquad \tr\omega=1,\qquad
+  \omega\models\Decl,\qquad \omega\models\CList ,
+\end{equation}
+each read \emph{exactly}, with $\tr\omega=\sum_s\tr\omega^{(s)}$ and with
+$\omega^{(s)}\succeq0$ carrying, as in Definition~\ref{def:exact},
+Hermiticity of the block. Here $\omega\models\Decl$ is the marginal condition,
+$\omega_A=\tau_A$ in \tref{trusted-source mode}, with
+$\omega_A=\sum_s\tr_{\Qsys_s}\omega^{(s)}$, and no condition beyond
+$\tr\omega=1$ in \tref{untrusted-source mode}; and $\omega\models\CList$ reads
+\begin{equation}\label{eq:feas-modes}
+\begin{aligned}
+  \text{trusted:}\quad&
+  \tr_{\Qsys}\!\big[(\idon{A}\otimes\hat O_k)\,\omega\big]
+  =\sum_s\tr_{\Qsys_s}\!\big[(\idon{A}\otimes\hat O^{(s)}_k)\,\omega^{(s)}\big]
+  \ \bowtie_k\ \Theta_k
+  \quad\forall k;\\
+  \text{untrusted:}\quad&
+  \tr\!\big[(\idon{A}\otimes\hat O_k)\,\omega\big]
+  =\sum_s\tr\!\big[(\idon{A}\otimes\hat O^{(s)}_k)\,\omega^{(s)}\big]
+  \ \bowtie_k\ c_k
+  \quad\forall k ,
+\end{aligned}
+\end{equation}
+where in the trusted line $\Theta_k$ is the \emph{constructed} right-hand side
+$c_k\tau_A$ for an entry declared \tref{homogeneous} and the \emph{declared}
+Hermitian matrix for one declared \tref{general}
+(Definition~\ref{def:homog}). The set carries no parameter, admits no
+tolerance window and relaxes no conjunct; in particular positivity is never
+relaxed.
+
+\emph{The general format.} For a declaration in the general format of
+Definition~\ref{def:declaration}\,(DX1)--(DX6), $\Feas$ is the set of
+$\omega$ presented as a list over the
+\tref[joint sector]{joint sectors},
+$\omega=\bigoplus_{(t,s)}\omega^{(t,s)}$ with
+$\omega^{(t,s)}\in\Lin{A_t\Qsys_s}$ and every block positive semidefinite, so
+that block diagonality along $\mathbb{T}$ and along $\SecSet$ both hold by
+the presentation, subject to the same conditions $\tr\omega=1$,
+$\omega\models\Decl$ and $\omega\models\CList$. Write
+$\hat O^{\uparrow(s)}_k\coloneqq\idon{}\otimes\hat O^{(s_{f_k})}_k\otimes\idon{}$
+for the $s$-block of the \tref{lifted operator} of an entry scoped to $f_k$
+(DX6), and for a \tref{party-local} entry scoped to $f$ split
+$s=(s_{f^c},s_f)$, with $\Qsys_{f^c,s_{f^c}}$ the product of the other
+factors' blocks. The conditions then read, block by block,
+\begin{equation}\label{eq:feas-general}
+\begin{aligned}
+  &\textstyle\sum_{(t,s)}\tr\omega^{(t,s)}=1
+  &&\text{(normalization)};\\
+  &\textstyle\sum_{s}\tr_{\Qsys_s}\omega^{(t,s)}=\tau^{(t)}_A
+  \quad\forall t
+  &&\text{(marginal, trusted-source mode)};\\
+  &\textstyle\sum_{s}\tr_{\Qsys_s}\!\big[(\idon{A_t}\otimes
+  \hat O^{\uparrow(s)}_k)\,\omega^{(t,s)}\big]\bowtie_k\Theta^{(t)}_k
+  \quad\forall t
+  &&\text{(trusted-source mode)};\\
+  &\textstyle\sum_{(t,s)}\tr\!\big[(\idon{A_t}\otimes
+  \hat O^{\uparrow(s)}_k)\,\omega^{(t,s)}\big]\bowtie_kc_k
+  &&\text{(untrusted-source mode)};\\
+  &\textstyle\sum_{s_f\in\SecSet^{f}}\tr_{\Qsys_{f,s_f}}\!\Big[\big(\idon{}
+  \otimes(\hat O^{(s_f)}_k-c_k\idon{})\big)\,
+  \omega^{(t,(s_{f^c},s_f))}\Big]\bowtie_k0
+  \quad\forall(t,s_{f^c})
+  &&\text{(party-local, either mode)},
+\end{aligned}
+\end{equation}
+the third line with $\Theta^{(t)}_k=c_k\tau^{(t)}_A$ for an entry declared
+homogeneous, the fourth for a scalar entry, and the last as an operator on
+$\Hs{A_t}\otimes\Hs{\Qsys_{f^c,s_{f^c}}}$. Each
+line is the corresponding operator condition on $A\Qsys$: the marginal
+$\omega_A$, the entry value $\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\omega]$,
+$\tau_A$ and every $\Theta_k$ are block diagonal along $\mathbb{T}$, the
+party-local value
+$\tr_{\Qsys_f}[(\idon{}\otimes(\hat O_k-c_k\idon{\Qsys_f}))\,\omega]$ is block
+diagonal along the pairs $(t,s_{f^c})$, and an equality or a semidefinite
+inequality between operators block diagonal for one decomposition holds
+exactly when it holds block by block. With $|\mathbb{T}|=1$, one
+\tref{measured factor} and no party-local entry, \eqref{eq:feas-general} is
+\eqref{eq:feas} with \eqref{eq:feas-modes}, line for line. With one measured
+factor the party-local line reads
+$\sum_s\tr_{\Qsys_s}[(\idon{A_t}\otimes(\hat O^{(s)}_k-c_k\idon{}))
+\omega^{(t,s)}]\bowtie_k0$ on $\Hs{A_t}$, that is
+$\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\omega]\bowtie_kc_k\,\omega_A$. The
+set is convex and compact: every line is an affine equality or an affine
+semidefinite or scalar inequality, and $\omega\succeq0$ with $\tr\omega=1$.
+\end{definition}

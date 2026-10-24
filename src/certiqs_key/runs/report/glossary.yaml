@@ -1,0 +1,807 @@
+# The key-rate report's glossary and the intros of its assumption groups.
+#
+# WHY THIS EXISTS. Readers get stuck on terms the report uses without
+# defining them (nc, h_lb, carried, kept, ...); the definitions have one home,
+# here, as package data. The report
+# prints only the terms that occur on its page, alphabetically, and in HTML
+# links the first label that names one.
+#
+# EVERY TEXT IS PLAIN AND MODEST: at most 400 characters, saying what the term
+# means on the page, never more than the claim it names in `see` states.
+# `see` is a claim id (the contract that defines or states it), an anchor of
+# spec/notation.md, or null. tests/unit/test_report_glossary.py checks the
+# length, that every `see` resolves, and that every label the report emits for
+# the committed examples is plain English or has an entry here.
+#
+# `optical: true` marks a term of optical receivers only (photon numbers,
+# element graphs, squashing routes): a run whose stations are all declared
+# finite POVMs leaves it out, since there it occurs only in a claim's title
+# or a not-applicable check.
+#
+# `categories` are the intros of the assumption groups (see the assumption groups): what
+# kind of evidence supports premises of that category, for a reader who maps
+# every premise to a test. A category may carry `intro_where_listed`: an intro
+# that replaces `intro` on the page of a record whose premises list the short
+# id it is keyed by, so that an older record is not told what its own premises
+# deny (an older record lists A-EVE-DIM, under which the analysis made no
+# claim about an attacker of unlimited memory).
+
+categories:
+  laboratory:
+    heading: Your laboratories
+    intro: >-
+      Premises about each party's laboratory as a whole, whatever the party
+      does in the protocol (send, measure, or both): that nothing about its
+      records leaks out and nothing reaches in except what the protocol
+      declares. Evidence for them comes from side-channel testing of each
+      laboratory: back-reflections into a source where the party sends,
+      detector back-flash where it measures, electromagnetic and power
+      emanations, and timing.
+  source:
+    heading: Your source
+    intro: >-
+      Premises about a trusted source of the quantum signals, the only kind
+      whose declared states the proof uses (with an untrusted source no
+      premise of this group applies; what may reach a laboratory from it is
+      part of A-LAB). Evidence for them comes from characterising the source
+      as built: the states it prepares, their weights and photon statistics,
+      its memory between rounds, and any side channel that could reveal a
+      signal.
+  receiver:
+    heading: Your receivers
+    intro: >-
+      Premises about the measuring stations, whichever party each belongs to.
+      Evidence for them comes from
+      characterising each receiver as built: detector efficiencies and dark
+      counts, the optical elements and the modes they act on, and tests against
+      detector-control attacks such as bright-light blinding.
+  channel-and-adversary:
+    heading: The channel and the attacker
+    intro: >-
+      Premises about the attacker and what she can do. Evidence comes from the
+      authentication scheme's specification and implementation review and, for
+      detector-control premises, from testing the receiver under attack.
+      No premise limits the size of the attacker's memory: the security
+      statement holds against an attacker with memory of any size.
+    intro_where_listed:
+      A-EVE-DIM: >-
+        Premises about the attacker and what she can do. Evidence comes from
+        the authentication scheme's specification and implementation review
+        and, for detector-control premises, from testing the receiver under
+        attack. A-EVE-DIM is a modelling convention that asks nothing of your
+        devices.
+  protocol-structure:
+    heading: The protocol's structure
+    intro: >-
+      Premises that the run follows the protocol as declared. Evidence for them
+      comes from reviewing the implementation and its recorded data against the
+      protocol description.
+  local-randomness:
+    heading: Your random number generators
+    intro: >-
+      Premises about the local randomness of the choices and hash seeds.
+      Evidence for them comes from certifying the random number generators.
+  post-processing:
+    heading: Your post-processing
+    intro: >-
+      Premises about error correction, error verification and privacy
+      amplification. Evidence for them comes from reviewing and testing that
+      software.
+  honest-model:
+    heading: The honest model
+    intro: >-
+      Premises about what an honest run looks like; each bears on completeness:
+      how often an honest run aborts, or whether a key length is reported at
+      all. One whose If it fails row says security, as A-REACH's does, bears
+      on security as well. Evidence for them comes from comparing the model's
+      expected statistics with measured data.
+  supplied-artefact:
+    heading: Artefacts supplied to the engine
+    intro: >-
+      Premises about files and certificates handed to the engine rather than
+      computed by it. Evidence for them comes from the provenance of each
+      artefact and a review of how it was produced.
+  numerical-trust:
+    heading: The engine's numerics
+    intro: >-
+      Premises about computations the engine trusts without checking, such
+      as computed block eigenvalues (A-EIG). The semidefinite solver's linear
+      minimisations are not among them: the first-order bound uses a lower
+      bound on each minimum verified in exact arithmetic. The floating-point
+      arithmetic of the first-order bound itself is covered by no premise and
+      no bound on its numerical error; a certified run forms that bound again
+      with every step
+      exact or rigorously enclosed. Evidence for them comes from numerical
+      testing and independent recomputation.
+
+terms:
+  - term: acceptance test
+    aliases: [acceptance test, Acceptance test, acceptance outcomes, acceptance outcome, Acceptance outcome, acceptance categories, Acceptance categories, acceptance category, Acceptance category, box]
+    text: >-
+      The test every run applies to its statistics: each round records one
+      acceptance value, and the run continues only if the frequency of every
+      value lies in an interval (together, the box) around the honest model's
+      prediction.
+    see: statistics/binomial-box/def:construction
+  - term: α (Rényi order)
+    aliases: [α, alpha, Rényi order, Rényi order alpha, parameters.alpha]
+    text: >-
+      A parameter of the proof, not of your device: any value in (1, 2) fixed
+      before the run gives a valid key length, and the choice changes only how
+      long the key is, never its secrecy.
+    see: meat-core/thm:keylength
+  - term: binding
+    aliases: [Binding, Bindings, binding, For this run]
+    text: >-
+      A value of this run that an assumption is about, for example the ε_auth
+      you declared for A-AUTH; shown under the assumption so that you know what
+      exactly you vouch for.
+    see: null
+  - term: budget
+    aliases: [Budgets, budgets, Budgets (the ε you choose)]
+    text: >-
+      An error probability (an ε) that you choose before the run. The secrecy,
+      error-verification and authentication budgets ε_PA, ε_EV and ε_auth make
+      up the security parameter ε. The completeness budget ε_comp is not part
+      of ε: it is the largest ε* you allow and bounds only how often an honest
+      run fails the acceptance test. The configuration keys keep the word
+      (completeness_budget).
+    see: meat-core/cor:composed-security
+  - term: Choi
+    aliases: [Choi, choi_form, Choi factor]
+    text: >-
+      A way of writing a quantum channel as one operator; the solver states
+      its optimisation over operators in that form.
+    see: null
+  - term: completeness
+    aliases: [completeness, Completeness]
+    text: >-
+      How often an honest run, with no attacker and devices behaving as
+      modelled, aborts. It never affects the security parameter ε, which holds
+      for every abort pattern.
+    see: meat-core/rem:completeness-scope
+  - term: ε* (completeness)
+    aliases: [ε*, completeness ε*, Certified completeness ε*, completeness_budget, Completeness budget]
+    text: >-
+      A bound on the chance that an honest run fails the acceptance test; it
+      covers that test only, not later aborts in error verification or
+      authentication. The completeness budget is the largest ε* you allow.
+    see: statistics/binomial-box/thm:completeness-bound
+  - term: dark count
+    aliases: [dark count, dark-click probability per round, dark_count]
+    text: >-
+      A detector click with no photon arriving. Its declared probability per
+      detector and round enters the measurement model.
+    see: null
+  - term: effective status
+    aliases: [Review status with its dependencies, Effective status, effective status, effective_status]
+    text: >-
+      The lowest review status over a claim and everything it rests on; a claim
+      accepted on its own is only as reviewed as its weakest premise.
+    see: null
+  - term: review status
+    aliases: [Review status of the claim, Review status]
+    text: >-
+      A claim's review stage, lowest first: superseded (replaced); draft (not
+      yet through an independent review, sent back by one, or substantively
+      amended since); verified (passed an AI model's adversarial review of the
+      written artefacts, not the author's reasoning; not yet accepted by a
+      person); accepted (by the project's human owner); implemented (accepted,
+      its code too). Not a hardware check.
+    see: null
+  - term: round
+    aliases: [round]
+    text: >-
+      One use of the protocol as declared, which records its own outcomes. How
+      a time-tagged system cuts its detection record into rounds (time bins,
+      coincidence windows, how the stations synchronise) is your choice, and
+      your declaration must describe it; What a round is, before the
+      protocol's steps, names premises of this run that the cut bears on.
+    see: null
+  - term: element graph
+    optical: true
+    aliases: [element graph, element-graph, element_graph]
+    text: >-
+      A receiver declared by its optical elements (beamsplitters, wave plates,
+      polarising beamsplitters) and detectors; the engine computes the
+      measurement from them.
+    see: receiver/def:compile
+  - term: emitted by
+    aliases: [Emitted by, emitted by]
+    text: >-
+      The module of the engine whose result rests on the assumption on this
+      run, with the station it was emitted at (station0, station1, ...).
+    see: null
+  - term: ε (security parameter)
+    aliases: [ε, security parameter, Security parameter]
+    text: >-
+      The bound on how far one run's output can be told from an ideal key
+      exchange: ε = ε_PA + ε_EV + 2ε_auth. It covers one execution.
+    see: meat-core/cor:composed-security
+  - term: ε_auth
+    aliases: [ε_auth, eps_auth, parameters.eps_auth]
+    text: >-
+      The error of the authentication of the classical messages, which you
+      declare, including, for a key from an earlier run, its distance from an
+      ideal key; it is counted twice in ε. Zero asserts a channel that is itself
+      authenticated.
+    see: meat-core/ass:auth
+  - term: ε_EV
+    aliases: [ε_EV, eps_ev, parameters.eps_ev]
+    text: >-
+      A bound on the chance that both parties accept the run with different
+      keys; error verification compares a hash of ⌈log₂(1/ε_EV)⌉ bits.
+    see: meat-core/lem:ev-correctness
+  - term: ε_PA
+    aliases: [ε_PA, eps_pa, parameters.eps_pa]
+    text: >-
+      The secrecy error of privacy amplification: how far the key may be from
+      uniformly random and independent of everything the attacker holds.
+    see: meat-core/thm:keylength
+  - term: estimate
+    aliases: [estimate, Estimate of h_low]
+    text: >-
+      The value of the objective at the point the solver returned. It claims no
+      bound: that point is feasible only within a window, so the estimate need
+      not lie above the true minimum h_low. No key length is computed from it.
+    see: foundations/def:tiers
+  - term: exact window
+    optical: true
+    aliases: [exact window, Exact window, exact_window]
+    text: >-
+      Above the photon cutoff N, up to a declared depth m*: the photon numbers
+      at which the multi-click bound takes the larger of the analytic bound and
+      the block's smallest eigenvalue, computed by a floating-point eigensolver
+      less a declared slack ε_eig. The computed value is trusted under A-EIG.
+    see: receiver/def:pmcex
+  - term: f_EC
+    aliases: [f_EC]
+    text: >-
+      The error-correction inefficiency used to estimate λ_EC: how many times
+      the ideal number of bits the code is assumed to leak.
+    see: null
+  - term: first-order bound
+    aliases: [first-order, first-order bound, reported tier]
+    text: >-
+      A lower bound on h_low from the tangent planes of the objective at the
+      solver's steps. Its proof is exact, and the minima it uses are bounded
+      from below in exact arithmetic, not taken from the solver; its objective
+      and gradient are computed in floating point with no bound on their
+      numerical error. Stopping early makes it looser, not invalid. The key
+      length uses it where the run is not certified.
+    see: meat-core/frank-wolfe/thm:firstorder
+  - term: certified bound
+    aliases: [certified, certified bound, certified tier, h_cert]
+    text: >-
+      The first-order bound formed again at the solver's final points from the
+      declared data, every arithmetic step exact or rigorously enclosed: a lower
+      bound on h_low that rests on the claims and the modelling premises and
+      on no premise about floating-point arithmetic. Where a run reaches it,
+      the key length is computed from it, exactly.
+    see: meat-core/frank-wolfe/cor:certified-keylength
+  - term: flag
+    optical: true
+    aliases: [flag, flag nc, flag H, flag V, flag D, flag A, flag mc]
+    text: >-
+      A one-dimensional sector of the squashed model that stands for one
+      outcome of the receiver above the photon cutoff.
+    see: reductions/wpfss/def:targets
+  - term: Frank-Wolfe gap
+    aliases: [Frank-Wolfe gap, frank_wolfe_gap]
+    text: >-
+      The objective at one solver step minus that step's tangent-plane bound (fw
+      run: the last step; candidate search: the best contributing one). A
+      convergence diagnostic: it reads the point the solver returned, which
+      nothing verifies, so it is no proven bound.
+    see: meat-core/frank-wolfe/rem:fo-interface
+  - term: h_lb
+    aliases: [h_lb, First-order lower bound h_lb, h_lb_dropped]
+    text: >-
+      The first-order lower bound on h_low: the best bound over the steps that
+      passed the first-order checks. It is proved in exact arithmetic, its
+      linear minima bounded exactly, and computed in floating point, so a
+      computed h_lb can exceed h_low. A first-order run computes its key length
+      from max{0, h_lb}; a certified run computes it from the certified bound
+      h_cert and records h_lb beside it.
+    see: meat-core/frank-wolfe/thm:firstorder
+  - term: h_low
+    aliases: [h_low]
+    text: >-
+      A lower bound on the attacker's per-round uncertainty about the raw key,
+      at the chosen α, over every attack compatible with your devices and with
+      statistics that pass the acceptance test.
+    see: meat-core/def:feasible
+  - term: honest model
+    aliases: [honest model, Honest model, honest distribution, Honest probability]
+    text: >-
+      The model of what an honest run looks like. It sets the acceptance test
+      and the expected statistics; it never affects the security parameter ε,
+      which holds for every abort pattern.
+    see: null
+  - term: k_auth
+    aliases: [k_auth, parameters.k_auth]
+    text: >-
+      The bits of pre-shared key the authentication uses per run; the net key
+      gain is ℓ − k_auth.
+    see: meat-core/ass:auth
+  - term: key bases
+    aliases: [key bases, key_bases]
+    text: >-
+      The matched bases of a generation round that give key.
+    see: null
+  - term: key length ℓ
+    aliases: [key length, ℓ]
+    text: >-
+      The number of secret key bits one run outputs, after deducting error
+      correction, error verification and the finite-size cost of secrecy.
+    see: meat-core/thm:keylength
+  - term: λ_EC
+    aliases: [λ_EC, lambda_ec, parameters.lambda_ec]
+    text: >-
+      The number of bits the error-correction transcript reveals; the key
+      length deducts it in full. You declare it; with an estimate file beside
+      the record the report shows how it was chosen.
+    see: meat-core/ass:keyreg
+  - term: machine key
+    aliases: [Machine key, machine key]
+    text: >-
+      The stable identifier under which the engine records an assumption.
+    see: null
+  - term: mc
+    aliases: [mc, mc (multi-click)]
+    text: >-
+      The outcome "more than one detector clicked" in the same round.
+    see: null
+  - term: nc
+    aliases: [nc]
+    text: >-
+      The outcome "no detector clicked".
+    see: null
+  - term: net key length
+    aliases: [net key length, Net key length]
+    text: >-
+      The key length minus the k_auth bits of pre-shared key the
+      authentication consumed: what the run gains.
+    see: meat-core/cor:composed-security
+  - term: photon cutoff N
+    optical: true
+    aliases: [photon cutoff, Photon cutoff N, photon_cutoff]
+    text: >-
+      The largest photon number the receiver model treats exactly; higher
+      photon numbers are bounded rather than modelled, so a pulse of more
+      photons is still covered, through that bound (see squashed target
+      POVM).
+    see: null
+  - term: photon-number block
+    aliases: [m=0, m=1, m=2, 0 photons, 1 photon, Photon number]
+    text: >-
+      The part of a measurement acting on pulses of exactly m photons; m=0 is
+      the vacuum, m=1 one photon.
+    see: receiver/def:fock
+  - term: POVM
+    aliases: [POVM]
+    text: >-
+      A measurement written as one positive operator per outcome; the
+      probability of an outcome is the trace of its operator times the state.
+    see: null
+  - term: QBER
+    aliases: [QBER, Expected QBER]
+    text: >-
+      The quantum bit error rate: the fraction of key rounds in which the two
+      parties' raw key bits differ.
+    see: null
+  - term: route (encoded, licensed)
+    optical: true
+    aliases: [encoded, licensed, encoded route, licensed route]
+    text: >-
+      How the reduction squashes the receiver: the encoded route keeps each
+      outcome's lower bound above the cutoff (its weight p_v) in the target and
+      adds no constraint; the licensed route uses one flag per outcome and adds
+      a licensed constraint.
+    see: reductions/wpfss/def:routes
+  - term: SDP
+    aliases: [SDP]
+    text: >-
+      A semidefinite programme: an optimisation over positive operators, the
+      kind of problem the solver's steps solve.
+    see: null
+  - term: sector
+    aliases: [sector, sectors, Data sector]
+    text: >-
+      One block of a block-diagonal operator, named by a sector map.
+    see: foundations/def:sector-map
+  - term: setting
+    aliases: [setting, Setting, setting off, off]
+    text: >-
+      A probe setting of a receiver; "off" is the setting with no probe light. A
+      receiver without a probe has this one setting only, so on such a station
+      "setting off" names its one measurement, not a switch.
+    see: receiver/def:probe
+  - term: snap
+    aliases: [snap, snaps, Measurement snaps, Instance snap]
+    text: >-
+      Before solving, the declarer (your instance, or a reduction for what it
+      emits) moves each measurement onto a grid of exact numbers of the same
+      shape. A block your model gives exactly on the grid is kept; every other
+      block is moved, and rests on A-SNAP unless it is evaluated off its snap.
+    see: foundations/def:snap
+  - term: solver status
+    aliases: [solver_status, How the solver's search stopped]
+    text: >-
+      How the solver's search for a good point stopped, not whether the bound
+      holds; the key length uses only steps that passed the first-order checks.
+    see: meat-core/frank-wolfe/req:first-order-withdrawal
+  - term: squashed target POVM
+    aliases: [Squashed target POVM, squashing, squashed]
+    text: >-
+      The finite-dimensional measurement the security proof works with; the
+      reduction proves that analysing it covers your receiver.
+    see: reductions/def:squashing
+  - term: test fraction
+    aliases: [test fraction, test_fraction]
+    text: >-
+      The probability that a round is a test round, in which both parties
+      announce their full outcome.
+    see: null
+  - term: declared tolerance τ
+    aliases: [declared tolerance, Declared tolerance τ, declared_tolerance]
+    text: >-
+      The ceiling on the defects of the run's own data that the snap may
+      repair before solving.
+    see: foundations/def:tolerance
+  - term: withdrawn step
+    aliases: [withdrawals, Withdrawn steps]
+    text: >-
+      A solver step whose first-order bound was withdrawn because a hypothesis
+      failed or was not established; it contributes no bound.
+    see: meat-core/frank-wolfe/req:first-order-withdrawal
+  - term: channel modes
+    optical: true
+    aliases: [Channel modes, channel modes]
+    text: >-
+      The input modes of a receiver that the channel, and so the attacker, can
+      populate; the photon-number blocks are over these modes.
+    see: null
+  - term: detection efficiency
+    aliases: [efficiency, detection efficiency]
+    text: >-
+      The probability that a detector clicks on a photon that reaches it.
+    see: null
+  - term: endpoint rule
+    aliases: [Endpoint rule, endpoint rule, endpoint_rule]
+    text: >-
+      How the acceptance test sets the ends of each outcome's interval: the
+      exact binomial quantile rule (exact) or the closed-form Bernstein rule
+      (bernstein).
+    see: null
+  - term: geometry (acceptance set)
+    aliases: [Geometry, PolytopeGeometry]
+    text: >-
+      The engine's name for the shape of the acceptance set it built; a box of
+      intervals is a polytope.
+    see: statistics/req:geometry-tag
+  - term: largest radius
+    aliases: [Largest radius, largest radius]
+    text: >-
+      For the reference handed beside a snap, the largest radius of the
+      rational intervals that enclose its matrix entries: zero where the
+      reference is exact.
+    see: foundations/req:who-snaps
+  - term: input radius
+    aliases: [Input radius, input radius]
+    text: >-
+      For an enclosed reference, the largest radius of the enclosures of the
+      irrational inputs (square roots, trigonometric values) from which its
+      centres were computed exactly.
+    see: foundations/req:who-snaps
+  - term: reference (snap)
+    aliases: [Reference handed, Snapped from, reference]
+    text: >-
+      Your declared receiver model, computed exactly (exact) or known through
+      rigorous rational intervals (enclosed). The snap starts from it where it
+      is exact, and the run hands it beside the snap so that the key length
+      can be computed from it.
+    see: foundations/def:exact-reference
+  - term: strict option
+    aliases: [Strict option, strict option]
+    text: >-
+      The run setting strict_snaps: on, the run refuses wherever a
+      moved block or emission sector would rest on A-SNAP, and reports no key
+      length that rests on it, and the certified evaluation does not fall back
+      to the rounded measurement where your receiver model certifies no point;
+      off, the default, such a block is disclosed.
+    see: foundations/req:snap-reference
+  - term: kept (snap block)
+    aliases: [kept, moved]
+    text: >-
+      A snap block is kept where your model gives it exactly on the grid, so
+      the snap changes nothing there; every other block is moved.
+    see: foundations/def:snap
+  - term: resting blocks
+    aliases: [Resting blocks, resting blocks]
+    text: >-
+      The moved snap blocks that rest on A-SNAP: those not evaluated off
+      their snap.
+    see: foundations/ass:snapped-measurement
+  - term: evaluated off its snap
+    aliases: [evaluated off its snap, evaluated off their snap, Evaluated off its snap, evaluated_off_snap]
+    text: >-
+      Said of a moved snap block when no number the key length is computed
+      from reads the rounded block: the bound is formed on your receiver model
+      at the points the solver found on the rounded measurement. Such a block
+      rests on your receiver model, not on A-SNAP.
+    see: foundations/def:evaluated-off-snap
+  - term: reference companion
+    aliases: [reference companion, Reference companion, reference_companion]
+    text: >-
+      Your receiver model put through the same reductions as the rounded
+      measurement, without that rounding, its rows relaxed outward by their
+      floating-point rounding and the model's intervals. A block not handed
+      is carried rounded; with none handed, it is the reduction's exact
+      construction before its own rounding. The run takes its first-order
+      bound there and never solves it.
+    see: reductions/cor:reference-companion
+  - term: source mode
+    aliases: [Source mode, source mode, untrusted, trusted]
+    text: >-
+      Whether the security analysis trusts the source. A trusted source's
+      declared states enter the proof; an untrusted source is the attacker's,
+      and its honest model only predicts the statistics.
+    see: null
+  - term: moved classes
+    aliases: [Moved classes]
+    text: >-
+      The classes of outcomes whose emitted operators the reduction moved onto
+      the grid, each with the step that moved it: the snap for fidelity, or
+      the flagged last resort.
+    see: reductions/def:emitnorm
+  - term: acceptance value label
+    aliases: ["gen:Z|X", "test:H|V"]
+    text: >-
+      An acceptance value as the protocol document names it. A document may
+      name its values freely (key, ok, err); some, BBM92's among them, write
+      the round's kind and then the two parties' announcements joined by a
+      bar, in the order the document writes them. There gen:Z|X is a
+      generation round in which the party written first announced Z and the
+      other X, so no key; the key rounds record gen.
+    see: statistics/ass:alphabet
+  - term: acceptance map
+    aliases: [acceptance map, Acceptance map, acceptance_map, pair-resolved, announcement-resolved, merged-discard]
+    text: >-
+      An input of some templates (BBM92's among them): how finely the public
+      announcements are grouped into the acceptance values the test checks.
+      Every announcement pair its own value (pair-resolved), test rounds
+      grouped by announced bases (announcement-resolved), or key rounds,
+      matched-basis test rounds as ok or error, and one discard value for
+      everything else (merged-discard).
+    see: null
+  - term: composable
+    aliases: [composable, composable criterion]
+    text: >-
+      The kind of security statement the guarantee is: no test, whatever the
+      attacker knows, tells the run's output from an ideal key exchange with
+      advantage above ε. Later uses of the key build on such a statement, but
+      this contract proves only that separate executions add their ε, not that
+      every later use of the key is covered.
+    see: meat-core/rem:repeated-executions
+  - term: eigenvalue bound used at
+    aliases: [invoked_at]
+    text: >-
+      The receiver settings, by name, whose declaration requests an exact
+      window: there the setting's multi-click weight uses computed block
+      eigenvalues and rests on A-EIG. A receiver without a probe has one
+      setting, off, the probe setting with no probe light.
+    see: receiver/ass:eig
+  - term: Frank-Wolfe
+    aliases: [Frank-Wolfe, fw]
+    text: >-
+      The solver's iterative method: each step minimises a linear approximation
+      of the objective over the feasible set and moves toward that point.
+    see: meat-core/frank-wolfe/thm:firstorder
+  - term: generation and test rounds
+    aliases: [gen, generation round, test round]
+    text: >-
+      gen is the acceptance value of a round whose announcements pass sifting,
+      so that it may give key. Where a public test coin exists (as in BBM92) it
+      makes each round a generation round (gen), which may give key, or a test
+      round (test), in which both parties announce their full outcome. Every
+      round of either kind records one acceptance value.
+    see: null
+  - term: key map and sifting
+    aliases: [key map, Sifting and key map, sifting]
+    text: >-
+      Sifting decides from the public announcements which rounds give key; the
+      key map sends each kept round's readout to a key bit.
+    see: protocol-compiler/thm:sifting-and-key
+  - term: lattice exponent
+    aliases: [lattice exponent, lattice_exponent]
+    text: >-
+      The exponent k of the exact number grid (the lattice at k) onto which the
+      snap moves declared data; a larger k is a finer grid.
+    see: foundations/req:declared-lattice
+  - term: LMO
+    aliases: [LMO, linear minimisation]
+    text: >-
+      Linear minimisation oracle: the solver step that minimises a linear
+      function over the feasible set. Its result steers the search only: the
+      first-order bound uses a lower bound on the minimum verified in exact
+      arithmetic from the solver's dual, and the engine does not trust the
+      result itself.
+    see: meat-core/frank-wolfe/lem:feasible-side-dual
+  - term: party local view
+    aliases: [party local view, Party local view, party_local_view]
+    text: >-
+      How each station's multi-click constraints enter the analysis on a
+      licensed route: as operator inequalities (operator) or only their scalar
+      consequences (licensed_scalar). It has no effect on the encoded route.
+    see: null
+  - term: p_pass
+    aliases: [p_pass]
+    text: >-
+      In a λ_EC estimate, the honest model's probability that a round passes
+      sifting and gives a raw key bit.
+    see: null
+  - term: conditional entropy of the raw key
+    aliases: ["H(R | O_nonholder, K)", "Conditional entropy per round (bits) of the key given the other party's data"]
+    text: >-
+      In a λ_EC estimate, the honest model's entropy per round of the key
+      holder's raw key given the other party's readout and the public class of
+      the round; λ_EC is estimated from it as f_EC times n times this entropy.
+    see: null
+  - term: SPDC
+    aliases: [SPDC, spdc]
+    text: >-
+      Spontaneous parametric down-conversion: a source of entangled photon pairs
+      whose emission includes multi-pair events; one of this instance's honest
+      models.
+    see: null
+  - term: temporal mode index
+    optical: true
+    aliases: [tau]
+    text: >-
+      The reserved temporal or spectral index of every optical mode label; it
+      takes a single value in a run and is not the declared tolerance τ.
+    see: receiver/def:modes
+  - term: wpfss
+    optical: true
+    aliases: [wpfss, WPFSS, L1-wpfss]
+    text: >-
+      The weight-preserving flag-state squasher: the reduction that keeps the
+      photon-number blocks up to the cutoff and replaces the rest by one flag
+      per outcome, carrying into the flags each outcome's certified weight (a
+      lower bound on its block above the cutoff). The flag-state squasher (fss)
+      is the case with all weights zero.
+    see: reductions/wpfss/def:targets
+  - term: letter
+    aliases: [letter, letters, second letter]
+    text: >-
+      The per-round value on Alice's side of the declaration (system A): in a
+      prepare-and-measure protocol, the signal she prepares. A declaration
+      with one letter uses no clause a premise makes for two or more letters.
+    see: meat-core/def:declaration
+  - term: x0
+    aliases: [x0]
+    text: >-
+      The one letter of this declaration's system A, which is one-dimensional
+      here: with the untrusted source, every measurement of this protocol is
+      made at a station, so A carries a single letter, of weight 1, that the
+      proof does not use.
+    see: transmitter/rem:da1
+  - term: Alice
+    aliases: [Alice]
+    text: >-
+      The name the report gives party A of the declaration. A party may send,
+      measure, or both: in a prepare-and-measure protocol Alice usually sends,
+      in an entanglement-based one she measures at a station; the run's record
+      says which. Where a premise speaks of Alice's letter or of system A, it
+      means the party the declaration assigns A to: Alice, unless the party
+      partition says otherwise.
+    see: meat-core/def:declaration
+  - term: Bob
+    aliases: [Bob]
+    text: >-
+      The name the report gives party B, the other of the declaration's two
+      parties. Like Alice, he may send, measure, or both; on most protocols
+      he measures at one or more stations. Which he does on this run is read
+      from its record, which also says which party holds system A.
+    see: meat-core/def:declaration
+  - term: transmitter
+    aliases: [transmitter]
+    text: >-
+      The engine module that models the source side of the protocol. With a
+      trusted source it carries the source's declared states and their
+      premises (A-ENS, A-SRC, or A-WCP for a decoy source); with an untrusted
+      source it carries no source premise. On every run it carries its part
+      of the sequential round order, A-SEQ.
+    see: null
+  - term: A (the letter)
+    aliases: [A]
+    text: >-
+      The report uses the letter A in four ways: party A of the declaration
+      (Alice); system A, the declaration's per-round letter on that party's
+      side; a detector port named A (as among BBM92's ports H, V, D and A);
+      and the prefix of a premise's short id (A-LAB, A-SPEC). Which is meant
+      follows from where it stands.
+    see: meat-core/def:declaration
+  - term: honest envelope
+    aliases: [honest envelope, declared honest envelope]
+    text: >-
+      The set of per-round outcome probabilities an honest run is declared to
+      stay within (A-HON-ENV). With a single honest model, as on most runs, it
+      is that model's one law.
+    see: statistics/ass:hon-env
+  - term: feasible state
+    aliases: [feasible state]
+    text: >-
+      A state the declaration admits: block-diagonal and normalised, with the
+      declared marginal and constraints. h_low is an infimum over the feasible
+      states whose statistics pass the acceptance test.
+    see: meat-core/def:feasible
+  - term: constraint entry
+    aliases: [constraint entry, constraint entries]
+    text: >-
+      A constraint a declaration places on the states it admits, beyond the
+      declared marginal. A run whose declaration carries an entry you declared
+      is checked by the statistics check unless that check is switched off
+      (the inputs table says whether it ran); entries the compiler or a
+      reduction derives do not by themselves call for it.
+    see: meat-core/req:unreachable-acceptance-set
+  - term: iid_honest_rounds
+    aliases: [iid_honest_rounds]
+    text: >-
+      The acceptance construction's tag for its honest model. In its
+      simplest form the honest rounds are independent and identically
+      distributed with one declared law (A-HON); A-HON-ENV, where a run lists
+      it, lets each round's law vary inside the declared envelope.
+    see: statistics/ass:hon
+  - term: catalogue entries
+    optical: true
+    aliases: [catalogue_entries, catalogue entries]
+    text: >-
+      The kinds of optical component of the receiver module's catalogue that
+      the declared receiver uses, by entry number, for example C1 beamsplitter,
+      C2 polarising beamsplitter, C3 retarder (a wave plate); the catalogue
+      lists C1 to C10.
+    see: receiver/component-catalogue/def:catalogue-entries
+  - term: digest
+    aliases: [digest, config_digest]
+    text: >-
+      A hash that identifies the content of a file, an artefact or the
+      configuration: the same digest means the same content.
+    see: null
+  - term: mathematical spec version
+    aliases: [mathematical_spec_version]
+    text: >-
+      The version of a module's contract (its claims) that the run used,
+      written module@version.
+    see: null
+  - term: oracle
+    aliases: [oracle, qics-sector-choi]
+    text: >-
+      The solver library the engine calls for each linear minimisation (QICS,
+      through its sector Choi adapter). Its answers steer the search only; see
+      LMO.
+    see: null
+  - term: Band-A route
+    aliases: [Band-A route, Band-A, Band A]
+    text: >-
+      The direct route: a finite measurement declared on one sector, with no
+      optical characterisation and no photon-number reduction. It needs an
+      ideal qubit receiver (A-IDEAL), which no real optical receiver is.
+    see: protocol-compiler/def:banda
+  - term: SR3
+    aliases: [(SR3), SR3]
+    text: >-
+      Condition (SR3) of the source-replacement certificate: the retention
+      attestation, that the retained system A stays in the laboratory of the
+      party that holds it and is acted on only by that party's declared
+      measurement. It carries no number and nothing decides it; you vouch for
+      it as A-SRC.
+    see: transmitter/def:srcert
+  - term: decimal precision
+    aliases: [Decimal precision, decimal precision]
+    text: >-
+      The number of significant decimal digits the honest model's own
+      calculation keeps. It bears on the predicted statistics only: the honest
+      model never affects the security parameter ε.
+    see: null

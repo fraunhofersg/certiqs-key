@@ -1,0 +1,1050 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fraunhofer.sg/certiqs-key/runs/report.schema.json",
+  "title": "CERTIQS-KEY key-rate report",
+  "description": "The key-rate report of one run record (kind key-rate-report) or of a sweep of run records of one instance (kind key-rate-sweep-report). A pure projection of the record: every number is read from it, assumption text is the record's snapshot of the claim headers, other claim text is the shipped closure table's. WRITTEN BY HAND, not generated from runs/report/model.py, so that a change of shape is visible in review (the house rule of runs/record.schema.json); tests/unit/test_report_schema.py validates built reports against it. No field adds a security parameter over executions or sweep points.",
+  "oneOf": [
+    {"$ref": "#/$defs/keyRateReport"},
+    {"$ref": "#/$defs/sweepReport"}
+  ],
+  "$defs": {
+    "nullableString": {"type": ["string", "null"]},
+    "points": {
+      "description": "Sweep only: where a row holds, 'all' (every completed point) or the indices of the points that carry it.",
+      "oneOf": [
+        {"const": "all"},
+        {"type": "array", "minItems": 1, "items": {"type": "integer", "minimum": 0}}
+      ]
+    },
+    "checkOutcome": {"enum": ["passed", "failed", "refused", "not-applicable", "not-reached"]},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "contractAnchor": {
+      "type": "object",
+      "description": "The contract PDF (repo-relative) and the named destination of the claim in it, claim-<claim id>.",
+      "required": ["pdf", "anchor"],
+      "additionalProperties": false,
+      "properties": {
+        "pdf": {"type": "string", "pattern": "^spec/modules/[^/]+/contract\\.pdf$"},
+        "anchor": {"type": "string", "pattern": "^claim-"}
+      }
+    },
+    "claimRef": {
+      "type": "object",
+      "description": "A linked claim with its plain title and summary, quoted, never paraphrased.",
+      "required": ["id", "kind", "kind_word", "title", "summary", "user_statement", "status", "effective_status", "contract"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string"},
+        "kind": {"type": "string"},
+        "kind_word": {"type": "string"},
+        "title": {"type": "string"},
+        "summary": {"type": "string"},
+        "user_statement": {"$ref": "#/$defs/nullableString", "description": "The claim's plain reading for a user, where it carries one (the closure table's, or the record's snapshot for an assumption)."},
+        "status": {"type": "string"},
+        "effective_status": {"type": "string"},
+        "contract": {"$ref": "#/$defs/contractAnchor"}
+      }
+    },
+    "binding": {
+      "type": "object",
+      "description": "A declared value an assumption's clauses are about: inline (value) or a named input (input); pointer is its JSON Pointer in the record where one resolves. varies appears only in a sweep's common part.",
+      "required": ["name", "emitted_by"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string"},
+        "value": true,
+        "input": {"type": "string"},
+        "pointer": {"type": "string", "pattern": "^/"},
+        "varies": {"const": true},
+        "emitted_by": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "emission": {
+      "type": "object",
+      "required": ["module", "station", "party", "machine_key", "inherited_from"],
+      "additionalProperties": false,
+      "properties": {
+        "module": {"type": "string"},
+        "station": {"type": ["integer", "null"], "minimum": 0},
+        "party": {"$ref": "#/$defs/nullableString", "description": "The party of a row emitted once per party (A-LAB), null on every other row and on a record older than 0.30.0."},
+        "machine_key": {"type": "string"},
+        "inherited_from": {"$ref": "#/$defs/nullableString"}
+      }
+    },
+    "assumptionEntry": {
+      "type": "object",
+      "required": ["short_id", "owner", "machine_key", "category", "affects", "refines", "verification", "verification_sentence", "user_statement", "bindings", "emitted_by", "about", "at_stake", "current_text", "role_notes"],
+      "additionalProperties": false,
+      "properties": {
+        "short_id": {"type": "string", "pattern": "^A-[A-Z0-9-]+$"},
+        "owner": {"$ref": "#/$defs/claimRef"},
+        "machine_key": {"type": "string"},
+        "category": {"$ref": "#/$defs/nullableString"},
+        "affects": {
+          "type": ["array", "null"],
+          "items": {"enum": ["secrecy", "correctness", "completeness"]}
+        },
+        "refines": {"$ref": "#/$defs/nullableString"},
+        "verification": {"enum": ["never", "partly", "decided", "discharged"]},
+        "verification_sentence": {"type": "string"},
+        "user_statement": {"$ref": "#/$defs/nullableString"},
+        "bindings": {"type": "array", "items": {"$ref": "#/$defs/binding"}},
+        "emitted_by": {"type": "array", "items": {"$ref": "#/$defs/emission"}},
+        "about": {"type": "string", "description": "What the premise is about, in words (runs/report/explain.py)."},
+        "at_stake": {"type": "array", "items": {"type": "string"}, "description": "What fails if the premise fails, one phrase per affected property."},
+        "current_text": {"$ref": "#/$defs/nullableString", "description": "The current closure table's text of the premise where it differs from the text frozen in the record (a record made by an older engine)."},
+        "role_notes": {"type": "array", "items": {"type": "string"}, "description": "The run-specific lines printed beside the premise: 'Not on this run: ...' for its role-conditioned clauses whose condition fails on this run (runs/roles.py ROLE_CONDITIONED_CLAUSES), and A-KEYREG's record of the key holder (runs/report/explain.py role_notes)."},
+        "points": {"$ref": "#/$defs/points"}
+      }
+    },
+    "premise": {
+      "description": "An entry of R3: a premise the engine cannot decide.",
+      "allOf": [
+        {"$ref": "#/$defs/assumptionEntry"},
+        {"properties": {"verification": {"enum": ["never", "partly"]}}}
+      ]
+    },
+    "family": {
+      "type": "object",
+      "required": ["head", "members"],
+      "additionalProperties": false,
+      "properties": {
+        "head": {"$ref": "#/$defs/premise"},
+        "members": {"type": "array", "items": {"$ref": "#/$defs/premise"}}
+      }
+    },
+    "categoryGroup": {
+      "type": "object",
+      "required": ["category", "families"],
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/nullableString",
+          "not": {"const": "numerical-trust"}
+        },
+        "families": {"type": "array", "items": {"$ref": "#/$defs/family"}}
+      }
+    },
+    "notEngaged": {
+      "type": "object",
+      "required": ["short_id", "module", "reason"],
+      "additionalProperties": false,
+      "properties": {
+        "short_id": {"type": "string"},
+        "module": {"type": "string"},
+        "reason": {"type": "string"},
+        "discharged_by": {"type": "string"},
+        "points": {"$ref": "#/$defs/points"}
+      }
+    },
+    "discrepancy": {
+      "type": "object",
+      "required": ["short_id", "kind", "emitted_by", "detail"],
+      "additionalProperties": false,
+      "properties": {
+        "short_id": {"type": "string"},
+        "kind": {"type": "string"},
+        "emitted_by": true,
+        "detail": true,
+        "points": {"$ref": "#/$defs/points"}
+      }
+    },
+    "userDeclared": {
+      "type": "object",
+      "description": "A premise the protocol document supplied itself (record payload.protocol_document.user_declared): declared in the run's protocol document (the user's own or a shipped template), not derived by the engine; the user vouches for it. text is copied from the record; assumptions are the short ids it stands under (empty for a feasibility witness); pointer is where the record holds the item.",
+      "required": ["kind", "path", "label", "text", "assumptions", "pointer"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"enum": ["constraint_entry", "attack_set_license", "feasibility_witness", "receiver_povm", "retention_attestation", "receiver_characterisation"]},
+        "path": {"type": "string"},
+        "label": {"type": "string"},
+        "text": {"type": "string"},
+        "assumptions": {"type": "array", "items": {"type": "string", "pattern": "^A-[A-Z0-9-]+$"}},
+        "pointer": {"type": "string", "pattern": "^/payload/protocol_document/user_declared/"},
+        "points": {"$ref": "#/$defs/points"}
+      }
+    },
+    "assumptionsSection": {
+      "type": "object",
+      "description": "R3, assumptions to vouch for: premises only, grouped by category in the table's order and by refines family. A-LMO and A-EIG never appear here. user_declared lists the premises the run's protocol document (the user's own or a shipped template) supplied itself, each under the assumptions it names: not derived by the engine, and vouched for by the user.",
+      "required": ["groups", "not_engaged", "discrepancies", "user_declared"],
+      "additionalProperties": false,
+      "properties": {
+        "groups": {"type": "array", "items": {"$ref": "#/$defs/categoryGroup"}},
+        "not_engaged": {"type": "array", "items": {"$ref": "#/$defs/notEngaged"}},
+        "discrepancies": {"type": "array", "items": {"$ref": "#/$defs/discrepancy"}},
+        "user_declared": {"type": "array", "items": {"$ref": "#/$defs/userDeclared"}}
+      }
+    },
+    "numericsSection": {
+      "type": "object",
+      "description": "R4, trusted engine numerics: the premises about the engine's own arithmetic (A-EIG, and A-LMO on a record of schema 0.31.0 or earlier) and the solve's diagnostics.",
+      "required": ["entries", "diagnostics", "explained", "solver_attempts", "solve_stop", "alpha_search"],
+      "additionalProperties": false,
+      "properties": {
+        "entries": {"type": "array", "items": {"$ref": "#/$defs/assumptionEntry"}},
+        "diagnostics": {"type": "object"},
+        "explained": {
+          "description": "Every diagnostic with a readable name and a one-line reading (runs/report/explain.py).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "label", "value", "explanation", "pointer"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {"type": "string"},
+              "label": {"type": "string"},
+              "value": true,
+              "explanation": {"$ref": "#/$defs/nullableString"},
+              "pointer": {"$ref": "#/$defs/nullableString"}
+            }
+          }
+        },
+        "solver_attempts": {
+          "description": "How each attempt of the candidate search stopped (search_report.attempts).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["method", "termination", "iterations", "seconds", "bound_after", "stop_reason", "resumed"],
+            "additionalProperties": false,
+            "properties": {
+              "method": {"type": "string"},
+              "termination": {"type": "string"},
+              "iterations": {"type": ["integer", "null"]},
+              "seconds": {"type": ["number", "null"]},
+              "bound_after": {"type": ["number", "null"]},
+              "stop_reason": {"type": ["string", "null"], "description": "Why a corrective probe series stopped after this probe, or null."},
+              "resumed": {"type": ["boolean", "null"], "description": "Whether the attempt resumed a stage that had stopped early; null where the record does not say."}
+            }
+          }
+        },
+        "solve_stop": {
+          "description": "How the candidate search stopped as a whole (runs/report/explain.py solve_stop); null without a search report and in a sweep's common part.",
+          "$ref": "#/$defs/nullableString"
+        },
+        "alpha_search": {
+          "description": "The run tier's outer alpha search behind the run, with every evaluation, read from the solve stage's alpha child; null for a run at one alpha and in a sweep's common part.",
+          "oneOf": [{"type": "null"}, {"$ref": "#/$defs/alphaSearchDetail"}]
+        }
+      }
+    },
+    "alphaSearchDetail": {
+      "type": "object",
+      "required": ["pointer", "rule", "reads", "settings", "chosen_alpha", "evaluations", "refinement_stopped", "no_positive_key"],
+      "additionalProperties": false,
+      "properties": {
+        "pointer": {"type": "string"},
+        "rule": {"type": ["string", "null"]},
+        "reads": {"type": ["string", "null"]},
+        "settings": {"type": "object"},
+        "chosen_alpha": {"type": ["number", "null"]},
+        "refinement_stopped": {"type": ["string", "null"], "description": "Why the refinement stopped before its steps were spent, or null."},
+        "no_positive_key": {
+          "description": "Where no alpha the search evaluated gave a positive key length, the evaluation the run reports (the largest h_low), the largest bounds the search saw as diagnostics, and why the key is 0; null otherwise.",
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["reported_alpha", "h_low", "largest_h_lb", "largest_h_lb_searched", "reason"],
+              "additionalProperties": false,
+              "properties": {
+                "reported_alpha": {"type": "number"},
+                "h_low": {"type": ["number", "null"]},
+                "largest_h_lb": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/alphaBound"}]},
+                "largest_h_lb_searched": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/alphaBound"}]},
+                "reason": {"type": "string"}
+              }
+            }
+          ]
+        },
+        "evaluations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["alpha", "phase", "key_length", "h_lb", "score", "reason", "seconds", "set_aside"],
+            "additionalProperties": false,
+            "properties": {
+              "alpha": {"type": "number"},
+              "phase": {"type": "string"},
+              "key_length": {"type": ["integer", "null"]},
+              "h_lb": {"type": ["number", "null"]},
+              "score": {"type": ["number", "null"]},
+              "reason": {"type": ["string", "null"]},
+              "seconds": {"type": "number"},
+              "set_aside": {"type": ["string", "null"], "description": "Why the search set this evaluation aside, or null."}
+            }
+          }
+        }
+      }
+    },
+    "alphaBound": {
+      "type": "object",
+      "required": ["alpha", "h_lb"],
+      "additionalProperties": false,
+      "properties": {"alpha": {"type": "number"}, "h_lb": {"type": "number"}}
+    },
+    "alphaUsed": {
+      "type": "object",
+      "description": "The Renyi order of the key length and what chose it: outer-search (the run tier's opt-in search), configuration (alpha) or declaration (parameters.alpha).",
+      "required": ["value", "chosen_by", "searched_range", "runs", "pointer", "no_positive_key"],
+      "additionalProperties": false,
+      "properties": {
+        "value": {"type": ["number", "null"]},
+        "chosen_by": {"enum": ["outer-search", "configuration", "declaration"]},
+        "searched_range": {"oneOf": [{"type": "null"}, {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}]},
+        "runs": {"type": ["integer", "null"]},
+        "pointer": {"type": ["string", "null"]},
+        "no_positive_key": {"type": ["string", "null"], "description": "Where the outer search found no alpha with a positive key length, why; value is then the alpha of the evaluation with the largest h_low, which the run reports. Null otherwise."}
+      }
+    },
+    "check": {
+      "type": "object",
+      "required": ["id", "title", "claims", "outcome", "value", "pointer"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},
+        "title": {"type": "string"},
+        "claims": {"type": "array", "items": {"$ref": "#/$defs/claimRef"}},
+        "outcome": {"$ref": "#/$defs/checkOutcome"},
+        "value": true,
+        "pointer": {"type": ["string", "null"]},
+        "value_varies": {"const": true}
+      }
+    },
+    "sweepCheck": {
+      "type": "object",
+      "description": "A check of a sweep: its one outcome, or 'varies' with every point's outcome in point order.",
+      "required": ["id", "title", "claims", "outcome", "value", "pointer"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"},
+        "title": {"type": "string"},
+        "claims": {"type": "array", "items": {"$ref": "#/$defs/claimRef"}},
+        "outcome": {"anyOf": [{"$ref": "#/$defs/checkOutcome"}, {"const": "varies"}]},
+        "value": true,
+        "pointer": {"type": ["string", "null"]},
+        "value_varies": {"const": true},
+        "point_outcomes": {"type": "array", "items": {"$ref": "#/$defs/checkOutcome"}}
+      }
+    },
+    "checksSection": {
+      "type": "object",
+      "description": "R5, checks the engine ran, the receiver route first among the stages; decided_rows are assumption rows whose verification is decided or discharged (transitional); discharged_on_route names the claim that discharges a closure member on this route.",
+      "required": ["checks", "decided_rows", "discharged_on_route"],
+      "additionalProperties": false,
+      "properties": {
+        "checks": {"type": "array", "items": {"$ref": "#/$defs/check"}},
+        "decided_rows": {"type": "array", "items": {"$ref": "#/$defs/assumptionEntry"}},
+        "discharged_on_route": {"type": "array", "items": {"$ref": "#/$defs/notEngaged"}}
+      }
+    },
+    "flag": {
+      "type": "object",
+      "description": "A run parameter at a zero default the key length does not count (lambda_ec, eps_auth, k_auth).",
+      "required": ["id", "parameter", "value", "text", "assumptions"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"enum": ["lambda_ec_zero", "eps_auth_zero", "k_auth_zero"]},
+        "parameter": {"type": "string"},
+        "value": true,
+        "text": {"type": "string"},
+        "assumptions": {"type": "array", "items": {"type": "string"}},
+        "points": {"$ref": "#/$defs/points"}
+      }
+    },
+    "refusal": {
+      "type": ["object", "null"],
+      "required": ["stage", "reason", "detail", "rule"],
+      "additionalProperties": false,
+      "properties": {
+        "stage": {"type": "string"},
+        "reason": {"$ref": "#/$defs/nullableString"},
+        "detail": {"$ref": "#/$defs/nullableString"},
+        "rule": true,
+        "plausibility": {"type": "object", "description": "The numbers a solve-stage refusal's record holds under stages.solve.plausibility (bound_name, bound, h_low); absent where it holds none."}
+      }
+    },
+    "outcome": {"enum": ["key-length", "no-key-length", "refused"]},
+    "resultSection": {
+      "type": "object",
+      "description": "R1, result and security statement. security_parameter.value is read from the record, never computed; per_execution cites what one execution's parameter covers.",
+      "required": ["outcome", "refusal", "key_length", "net_key_length", "rate_per_round", "rounds", "alpha", "reported_tier", "certified_on", "certified_fallback", "certified_premises", "key_length_reason", "key_length_reason_code", "reason_text", "security_parameter", "completeness", "statement_claims", "route_claims_below_accepted", "route_claims_accepted", "per_execution", "not_counted", "user_declared", "limitations", "statistics_check", "deductions"],
+      "additionalProperties": false,
+      "properties": {
+        "outcome": {"$ref": "#/$defs/outcome"},
+        "refusal": {"$ref": "#/$defs/refusal"},
+        "key_length": {"type": ["integer", "null"]},
+        "net_key_length": {"type": ["integer", "null"]},
+        "rate_per_round": {"type": ["number", "null"]},
+        "rounds": {"type": ["integer", "null"]},
+        "alpha": {"$ref": "#/$defs/alphaUsed"},
+        "reported_tier": {"enum": ["estimate", "first-order", "certified", null]},
+        "key_length_reason": {"$ref": "#/$defs/nullableString"},
+        "key_length_reason_code": {"$ref": "#/$defs/nullableString"},
+        "reason_text": {"$ref": "#/$defs/nullableString"},
+        "security_parameter": {
+          "type": "object",
+          "required": ["value", "terms", "auth_factor"],
+          "additionalProperties": false,
+          "properties": {
+            "value": {"type": ["number", "null"]},
+            "terms": {
+              "type": "object",
+              "description": "The three declared budgets, as the record's configuration holds them.",
+              "required": ["eps_pa", "eps_ev", "eps_auth"],
+              "additionalProperties": false,
+              "properties": {
+                "eps_pa": {"type": ["number", "null"]},
+                "eps_ev": {"type": ["number", "null"]},
+                "eps_auth": {"type": ["number", "null"]}
+              }
+            },
+            "auth_factor": {"const": 2}
+          }
+        },
+        "completeness": {
+          "type": ["object", "null"],
+          "required": ["eps_star", "claim"],
+          "additionalProperties": false,
+          "properties": {
+            "eps_star": {"$ref": "#/$defs/nullableString"},
+            "claim": {"$ref": "#/$defs/claimRef"}
+          }
+        },
+        "statement_claims": {"type": "array", "items": {"$ref": "#/$defs/claimRef"}},
+        "route_claims_below_accepted": {"type": "array", "items": {"$ref": "#/$defs/claimRef"}},
+        "route_claims_accepted": {"type": "boolean", "description": "Whether the run's assumption manifest names route theorems beyond the statement claims and the closure table carries every one at an accepted effective status; the review-status paragraph then says so."},
+        "certified_on": {"oneOf": [{"type": "null"}, {"enum": ["reference_companion", "searched"]}], "description": "On a run reported at the certified tier, the declaration its number is formed on (record certified.declaration); null otherwise."},
+        "certified_fallback": {"type": "boolean", "description": "The number is certified on the searched declaration in the fallback of meat-core/frank-wolfe/req:certified-evaluation (i), the bound on the reference companion having counted but certified no point."},
+        "certified_premises": {"type": "array", "items": {"enum": ["A-SNAP"]}, "description": "The premise at the snap the certified number rests on (record certified.premises); empty otherwise."},
+        "per_execution": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/claimRef"}},
+        "not_counted": {"type": "array", "items": {"$ref": "#/$defs/flag"}},
+        "user_declared": {"type": "array", "items": {"$ref": "#/$defs/userDeclared"}, "description": "What the protocol document declared that the engine did not derive; empty off the document route and on a 0.20.0 record."},
+        "limitations": {"type": "array", "items": {"$ref": "#/$defs/claimRef"}},
+        "deductions": {"description": "The record's key_rate.deductions term by term (meat-core/thm:keylength, Eq. eq:keylength), read and never computed; null where the run reports no key length. A term the record does not carry is null.", "type": ["object", "null"], "required": ["error_correction", "error_verification", "privacy_amplification", "added_back", "hash_penalty", "pointer"], "additionalProperties": false, "properties": {"error_correction": {"type": ["number", "null"]}, "error_verification": {"type": ["number", "null"]}, "privacy_amplification": {"type": ["number", "null"]}, "added_back": {"type": ["number", "null"]}, "hash_penalty": {"type": ["number", "null"]}, "pointer": {"type": "string"}}},
+        "statistics_check": {"description": "The check of the acceptance set against the feasible statistics (meat-core/req:unreachable-acceptance-set (iv), (v)), read from the record's statistics_consistency; null on a record that carries none or one before 0.46.0. model_pass_exponent_bits is the exponent x of meat-core/prop:model-pass-bound (ii), rounded toward -inf, with model_pass_exponent_tier the tier of b and model_pass_decision how x >= log2(1/tau) was decided (exact, enclosure, or undecided, which refuses): devices the declaration admits pass the acceptance test with probability at most 2^(-x); all three null where there is no cap, no_cap_reason then saying why. min_model_pass_probability is tau; refused is whether the run was refused under item (iv), decided on the exact x; companion_admitted whether a reference companion was admitted, the cap then being that of the declaration the solver searched.", "type": ["object", "null"], "required": ["checked", "unchecked_reason", "bound", "bound_tier", "alpha_0", "no_bound_reason", "model_pass_exponent_bits", "model_pass_exponent_tier", "model_pass_decision", "min_model_pass_probability", "no_cap_reason", "refused", "companion_admitted", "pointer"], "additionalProperties": false, "properties": {"checked": {"type": "boolean"}, "unchecked_reason": {"enum": ["out_of_scope", "opted_out", null]}, "bound": {"type": ["number", "null"]}, "bound_tier": {"enum": ["certified", "first-order", null]}, "alpha_0": {"type": ["number", "null"]}, "no_bound_reason": {"type": ["string", "null"]}, "model_pass_exponent_bits": {"type": ["number", "null"]}, "model_pass_exponent_tier": {"enum": ["certified", "first-order", null]}, "model_pass_decision": {"enum": ["exact", "enclosure", "undecided", null]}, "min_model_pass_probability": {"type": ["string", "null"]}, "no_cap_reason": {"enum": ["bound_not_positive", "no_bound_formed", null]}, "refused": {"type": "boolean"}, "companion_admitted": {"type": "boolean"}, "pointer": {"type": "string"}}}
+      }
+    },
+    "document": {
+      "type": ["object", "null"],
+      "description": "The protocol document the run was lowered from, or null off the document route (and on a 0.20.0 record).",
+      "required": ["id", "format_version", "packaged", "digest"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string"},
+        "format_version": {"type": "string"},
+        "packaged": {"type": "boolean"},
+        "digest": {"type": "string"}
+      }
+    },
+    "instance": {
+      "type": ["object", "null"],
+      "required": ["id", "title", "summary", "readme"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"type": "string"},
+        "title": {"type": "string"},
+        "summary": {"type": "string"},
+        "readme": {"type": "string"}
+      }
+    },
+    "inputRow": {
+      "type": "object",
+      "required": ["name", "section", "value", "default", "is_default", "unit", "quantity", "domain", "meaning", "applies", "station", "snapped", "pointer", "bound_by", "covered_by", "group", "label", "not_used", "prepared"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {"type": "string"},
+        "section": {"enum": ["run", "key-length", "model", "device", "solver"]},
+        "value": true,
+        "default": true,
+        "is_default": {"type": ["boolean", "null"]},
+        "unit": {"$ref": "#/$defs/nullableString"},
+        "quantity": {"$ref": "#/$defs/nullableString"},
+        "domain": true,
+        "meaning": {"$ref": "#/$defs/nullableString"},
+        "applies": {"type": ["boolean", "null"]},
+        "station": {"$ref": "#/$defs/nullableString"},
+        "snapped": {"type": ["boolean", "null"]},
+        "pointer": {"type": "string", "pattern": "^/"},
+        "bound_by": {"type": "array", "items": {"type": "string"}},
+        "covered_by": {"type": "array", "items": {"type": "string"}, "description": "The premises the report infers cover the value, kept apart from the record's bindings in bound_by: A-EXACT on a declared receiver component value (an instance parameter of a station, one a protocol document declares a station's detector, element or probe with, or one declared per detector port), where the run engages A-EXACT."},
+        "group": {"enum": ["device", "budget", "engine"], "description": "The inputs table of the row: device and channel, security budgets, engine settings."},
+        "label": {"type": "string", "description": "A readable name beside the configuration's own."},
+        "not_used": {"$ref": "#/$defs/nullableString", "description": "Why the value was not used on this run."},
+        "prepared": {"$ref": "#/$defs/nullableString", "description": "The value the run analysed where a protocol document's preparation replaced the requested value (rebind), exact p/q; null where the requested value is the analysed one."}
+      }
+    },
+    "protocolSection": {
+      "type": "object",
+      "description": "R2, protocol and your inputs: every declared input with its meaning where a table gives one, and the short ids whose bindings name it.",
+      "required": ["instance", "document", "facts", "inputs", "honest_model", "preparation", "measurement_snaps"],
+      "additionalProperties": false,
+      "properties": {
+        "instance": {"$ref": "#/$defs/instance"},
+        "document": {"$ref": "#/$defs/document"},
+        "facts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "value", "pointer"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {"type": "string"},
+              "value": true,
+              "pointer": {"type": "string", "pattern": "^/"}
+            }
+          }
+        },
+        "inputs": {"type": "array", "items": {"$ref": "#/$defs/inputRow"}},
+        "honest_model": {
+          "type": "object",
+          "required": ["note", "tag"],
+          "additionalProperties": false,
+          "properties": {"note": true, "tag": true}
+        },
+        "preparation": {
+          "type": "object",
+          "required": ["input_preparation_pointer", "snaps_pointer", "declared_tolerance", "snap_max_defect", "snap_max_displacement"],
+          "additionalProperties": false,
+          "properties": {
+            "input_preparation_pointer": {"$ref": "#/$defs/nullableString"},
+            "snaps_pointer": {"$ref": "#/$defs/nullableString"},
+            "declared_tolerance": {"type": ["number", "null"]},
+            "snap_max_defect": {"type": ["number", "null"]},
+            "snap_max_displacement": {"type": ["number", "null"]},
+            "input_max_displacement": {"type": "number", "description": "The largest move of an input family the instance moved before the run (snaps.instance.input_preparation); absent where none moved."},
+            "input_normalization_defect": {"type": ["number", "null"], "description": "The largest normalization defect of the moved input families; absent where none moved."}
+          }
+        },
+        "measurement_snaps": {
+          "description": "How every measurement-family snap of the run entered the result (runs/report/snaps.py): per block of the instance's snap whether it was kept or moved, what the snap started from, the reference handed beside it, and for a moved block resting on A-SNAP its group, cause and fix; the emission normaliser's sectors with a moved class; the strict and enclosure settings; plain-words sentences and warnings. Null where the run made no measurement snap or the record is older than 0.29.0.",
+          "oneOf": [{"type": "null"}, {"$ref": "#/$defs/measurementSnaps"}]
+        }
+      }
+    },
+    "measurementSnaps": {
+      "type": "object",
+      "required": ["settings", "sentences", "warnings", "blocks", "emission", "rests_on_a_snap", "assumption", "plain", "rows", "direct_route", "evaluated_off_snap"],
+      "additionalProperties": false,
+      "properties": {
+        "settings": {
+          "type": "object",
+          "required": ["reference_enclosure", "strict_snaps"],
+          "additionalProperties": false,
+          "properties": {
+            "reference_enclosure": {"type": ["boolean", "null"]},
+            "strict_snaps": {"type": ["boolean", "null"]}
+          }
+        },
+        "sentences": {"type": "array", "items": {"type": "string"}},
+        "warnings": {"type": "array", "items": {"type": "string"}},
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["station", "setting", "block", "status", "reference_kind", "handed_kind", "handed_radius", "input_radius", "cause", "fix", "group", "group_fix", "support_not_preserved", "rests_on_assumption", "evaluated_off_snap", "pointer"],
+            "additionalProperties": false,
+            "properties": {
+              "station": {"$ref": "#/$defs/nullableString"},
+              "setting": {"$ref": "#/$defs/nullableString"},
+              "block": {"type": "string"},
+              "status": {"enum": ["kept", "moved"]},
+              "reference_kind": {"enum": ["exact", "none"], "description": "What the snap started from: the centres of an exact reference, or the receiver's floating-point blocks."},
+              "handed_kind": {"oneOf": [{"type": "null"}, {"enum": ["exact", "enclosed"]}], "description": "The kind of the reference handed beside the snap; null where none is handed."},
+              "handed_radius": {"$ref": "#/$defs/nullableString"},
+              "input_radius": {"$ref": "#/$defs/nullableString"},
+              "cause": {"$ref": "#/$defs/nullableString"},
+              "fix": {"$ref": "#/$defs/nullableString"},
+              "group": {"oneOf": [{"type": "null"}, {"enum": ["no_usable_reference", "reference_bracket_withdrawn", "reference_bracket_not_evaluated", "last_resort"]}], "description": "The group of foundations/req:snap-reference (iii) a moved block resting on A-SNAP falls in, which a user acts on; the cause is its detail. Null for a block that rests on nothing."},
+              "group_fix": {"$ref": "#/$defs/nullableString", "description": "The group's fix; the cause's fix details it."},
+              "support_not_preserved": {"type": "boolean"},
+              "rests_on_assumption": {"type": "boolean", "description": "Whether the moved block rests on A-SNAP after the run's decision."},
+              "evaluated_off_snap": {"type": "boolean", "description": "The run evaluated the moved block off its snap (foundations/def:evaluated-off-snap): its key length is computed from the receiver model there, so the block rests on the model and never on A-SNAP. False on a kept block."},
+              "pointer": {"type": "string", "pattern": "^/"}
+            }
+          }
+        },
+        "emission": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["station", "data_sector", "moved_classes", "evaluated_off_snap", "rests_on_assumption", "group", "group_fix", "pointer"],
+            "additionalProperties": false,
+            "properties": {
+              "station": {"$ref": "#/$defs/nullableString"},
+              "data_sector": {"type": "integer", "minimum": 0},
+              "moved_classes": {"type": "array", "items": {"type": "object"}},
+              "evaluated_off_snap": {"type": "boolean", "description": "The run evaluated the sector off its snap (the reference companion carries none of the normaliser's data), so the sector rests on no premise about the snap."},
+              "rests_on_assumption": {"type": "boolean"},
+              "group": {"$ref": "#/$defs/nullableString"},
+              "group_fix": {"$ref": "#/$defs/nullableString"},
+              "pointer": {"type": "string", "pattern": "^/"}
+            }
+          }
+        },
+        "rests_on_a_snap": {"type": "boolean"},
+        "direct_route": {"$ref": "#/$defs/nullableString", "description": "The run's decision on the direct route (snaps.reference_companion.status): counted where the key length is computed from the bound on the reference companion."},
+        "evaluated_off_snap": {"type": "integer", "minimum": 0, "description": "How many moved blocks of the stations were evaluated off their snap; a kept block counts in neither list."},
+        "assumption": {"oneOf": [{"type": "null"}, {"const": "A-SNAP"}]},
+        "plain": {"type": "array", "items": {"type": "string"}, "description": "Three to five plain sentences a reader meets first: what a snap is, whether the key length depends on it, why (one clause per group), the fix the record names."},
+        "rows": {
+          "description": "One readable row per block; the raw rows are blocks.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["station", "photons", "status", "rests_on_assumption", "evaluated_off_snap", "group", "fix", "pointer"],
+            "additionalProperties": false,
+            "properties": {
+              "station": {"$ref": "#/$defs/nullableString"},
+              "photons": {"type": "string"},
+              "status": {"type": "string"},
+              "rests_on_assumption": {"type": "boolean"},
+              "evaluated_off_snap": {"type": "boolean", "description": "The block was evaluated off its snap."},
+              "group": {"$ref": "#/$defs/nullableString"},
+              "fix": {"$ref": "#/$defs/nullableString"},
+              "pointer": {"type": "string", "pattern": "^/"}
+            }
+          }
+        }
+      }
+    },
+    "matrixPart": {"type": ["string", "number"], "description": "One real part of a matrix entry: an exact rational string ('p/q', an integer) or a binary64 number, as the record holds it."},
+    "matrix": {
+      "type": "array",
+      "description": "Rows of [re, im] entries; row i, column j is <i|M|j> in the block's basis.",
+      "items": {"type": "array", "items": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"$ref": "#/$defs/matrixPart"}}}
+    },
+    "operatorBlock": {
+      "type": "object",
+      "description": "The operators of one block (a photon number, a sector), one per outcome, on a labelled basis in the record's order.",
+      "required": ["title", "basis", "column_basis", "basis_note", "elements", "exact", "pointer"],
+      "additionalProperties": false,
+      "properties": {
+        "title": {"type": "string"},
+        "basis": {"type": "array", "items": {"type": "string"}},
+        "column_basis": {"oneOf": [{"type": "null"}, {"type": "array", "items": {"type": "string"}}]},
+        "basis_note": {"$ref": "#/$defs/nullableString"},
+        "elements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["outcome", "matrix"],
+            "additionalProperties": false,
+            "properties": {"outcome": {"type": "string"}, "matrix": {"$ref": "#/$defs/matrix"}}
+          }
+        },
+        "exact": {"type": "boolean"},
+        "pointer": {"$ref": "#/$defs/nullableString"}
+      }
+    },
+    "operatorFamily": {
+      "type": "object",
+      "description": "A family of operators the record holds for a station or the source, with the run tier's one-sentence reading and the claim ids it rests on.",
+      "required": ["kind", "title", "text", "claims", "blocks", "pointer"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"enum": ["photon-blocks", "dark-composed", "target-povm", "declared-povm", "port-grams", "instrument-matrix", "source"]},
+        "title": {"type": "string"},
+        "text": {"$ref": "#/$defs/nullableString"},
+        "claims": {"type": "array", "items": {"type": "string"}},
+        "blocks": {"type": "array", "items": {"$ref": "#/$defs/operatorBlock"}},
+        "pointer": {"$ref": "#/$defs/nullableString"}
+      }
+    },
+    "setupStation": {
+      "type": "object",
+      "description": "One measuring station (stages.stations[i]) or the single receiver (stages.receiver_construction): its route, outcome alphabet with each letter explained, element list, detectors, cutoff and exact window, and the operator families the record holds.",
+      "required": ["index", "label", "party", "name", "route", "route_text", "channel_modes", "outcomes", "elements", "edges", "detectors", "photon_cutoff", "exact_window", "families", "notes", "claims", "pointer"],
+      "additionalProperties": false,
+      "properties": {
+        "index": {"type": ["integer", "null"], "minimum": 0},
+        "label": {"$ref": "#/$defs/nullableString"},
+        "party": {"$ref": "#/$defs/nullableString"},
+        "name": {"type": "string"},
+        "route": {"$ref": "#/$defs/nullableString"},
+        "route_text": {"type": "string"},
+        "channel_modes": {"type": "array", "items": {"type": "string"}},
+        "outcomes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["letter", "meaning", "patterns"],
+            "additionalProperties": false,
+            "properties": {
+              "letter": {"type": "string"},
+              "meaning": {"type": "string"},
+              "patterns": {"oneOf": [{"type": "null"}, {"type": "array", "items": {"type": "array", "items": {"type": "string"}}}]}
+            }
+          }
+        },
+        "elements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "component", "description", "modes"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {"type": "string"},
+              "component": {"$ref": "#/$defs/nullableString"},
+              "description": {"type": "string"},
+              "modes": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        },
+        "edges": {"type": "array", "items": {"type": "array", "items": {"type": "string"}}},
+        "detectors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["port", "modes", "parameters"],
+            "additionalProperties": false,
+            "properties": {
+              "port": {"type": "string"},
+              "modes": {"oneOf": [{"type": "null"}, {"type": "array", "items": {"type": "string"}}]},
+              "parameters": {"type": "object"}
+            }
+          }
+        },
+        "photon_cutoff": {"type": ["integer", "null"]},
+        "exact_window": true,
+        "families": {"type": "array", "items": {"$ref": "#/$defs/operatorFamily"}},
+        "notes": {"type": "array", "items": {"type": "string"}},
+        "claims": {"type": "array", "items": {"type": "string"}},
+        "pointer": {"$ref": "#/$defs/nullableString"}
+      }
+    },
+    "glanceItem": {
+      "type": "object",
+      "description": "One fragment of the at-a-glance box: lead in bold, the text after it, the section it links.",
+      "required": ["lead", "text", "anchor"],
+      "additionalProperties": false,
+      "properties": {"lead": {"type": "string"}, "text": {"type": "string"}, "anchor": {"$ref": "#/$defs/nullableString"}}
+    },
+    "summaryItem": {
+      "type": "object",
+      "required": ["text", "pointer", "anchor"],
+      "additionalProperties": false,
+      "properties": {"text": {"type": "string"}, "pointer": {"$ref": "#/$defs/nullableString"}, "anchor": {"$ref": "#/$defs/nullableString"}}
+    },
+    "summary": {
+      "type": "object",
+      "description": "The report's first page (runs/report/explain.py): the result in words, what the guarantee means (claim ids whose user_statement is quoted, and the epsilon table), the setup in brief, what you vouch for by object, the engine-internal premises, what is not counted, the choices that could lengthen the key, and the premises still in draft. Text carries [[...]] link tokens.",
+      "required": ["at_a_glance", "considerations", "result", "costs", "guarantee", "setup_brief", "roles", "roles_absent", "vouch", "where", "consequences", "internal", "internal_consequences", "not_counted", "levers", "tier_note", "drafts", "stale"],
+      "additionalProperties": false,
+      "properties": {
+        "at_a_glance": {"type": "array", "items": {"$ref": "#/$defs/glanceItem"}, "description": "The box at the top of the summary: the key length, the key rate, epsilon and what they are conditional on, from the record only, as terse fragments with their key part in bold."},
+        "considerations": {"type": "array", "items": {"$ref": "#/$defs/summaryItem"}, "description": "Key rate considerations, right after the box: the check of the statistics, the snaps, the tier, a refusal's explanation, the idealisations, one sentence each with its link."},
+        "result": {"type": "string"},
+        "costs": {"type": "array", "items": {"type": "string"}, "description": "What consumes key and what remains, one line each (explain.costs): the record's deductions, the key length, the authentication's pre-shared key and the net key; empty where the run reports no key length."},
+        "guarantee": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["claim", "terms", "per_execution", "completeness", "eps_star", "outside"],
+              "additionalProperties": false,
+              "properties": {
+                "claim": {"$ref": "#/$defs/nullableString"},
+                "outside": {"description": "The run's premises not beneath the claims of the review status in the claim graph; null where the closure table states no closure.", "oneOf": [{"type": "null"}, {"type": "array", "items": {"type": "string"}}]},
+                "terms": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["symbol", "value", "meaning"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "symbol": {"type": "string"},
+                      "value": {"type": ["number", "null"]},
+                      "meaning": {"type": "string"}
+                    }
+                  }
+                },
+                "per_execution": {"$ref": "#/$defs/nullableString"},
+                "completeness": {"$ref": "#/$defs/nullableString"},
+                "eps_star": {"$ref": "#/$defs/nullableString"}
+              }
+            }
+          ]
+        },
+        "setup_brief": {"type": "array", "items": {"type": "string"}},
+        "roles": {"type": "array", "items": {"type": "string"}, "description": "'Roles on this run', read off the record's role vector (runs/roles.py): who sends, each station and its party, who holds the key and from which record, where each public choice is drawn."},
+        "roles_absent": {"type": "array", "items": {"type": "string"}, "description": "The roles this run does not have (a trusted source, a private setting, a second letter), one line each."},
+        "consequences": {"type": "object", "required": ["security", "engine", "completeness"], "additionalProperties": false, "properties": {"security": {"type": "integer"}, "engine": {"type": "array", "items": {"type": "string"}}, "completeness": {"type": "integer"}}, "description": "The premises of this run counted by the consequence of their failure: security (secrecy or correctness at stake), with those about artefacts and the engine's numerics named, and only how often an honest run aborts."},
+        "where": {"type": "array", "description": "'Where each premise applies': per party laboratory and station the premises whose About names it, then those about no one station or laboratory.", "items": {"type": "object", "required": ["place", "premises"], "additionalProperties": false, "properties": {"place": {"type": "string"}, "premises": {"type": "array", "items": {"type": "string"}}}}},
+        "vouch": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["about", "entries"],
+            "additionalProperties": false,
+            "properties": {
+              "about": {"type": "string"},
+              "entries": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["short_id", "title", "consequence", "about", "refinements", "refinement_consequences", "summary"],
+                  "additionalProperties": false,
+                  "properties": {"short_id": {"type": "string"}, "title": {"type": "string"}, "consequence": {"enum": ["security", "completeness"], "description": "What the premise's failure affects, from its affects: security (secrecy or correctness) or completeness only."}, "about": {"type": "string"}, "refinements": {"type": "array", "items": {"type": "string"}}, "refinement_consequences": {"type": "array", "items": {"enum": ["security", "completeness"]}, "description": "Each refinement's consequence, in the order of refinements."}, "summary": {"type": "string", "description": "The premise's existing one-liner, its claim summary's first sentence."}}
+                }
+              }
+            }
+          }
+        },
+        "internal": {"type": "array", "items": {"type": "string"}},
+        "internal_consequences": {"type": "array", "items": {"enum": ["security", "completeness"]}, "description": "Each engine-internal premise's consequence, in the order of internal."},
+        "not_counted": {"type": "array", "items": {"$ref": "#/$defs/summaryItem"}},
+        "levers": {"type": "array", "items": {"$ref": "#/$defs/summaryItem"}, "description": "Choices that could lengthen the key: run settings that change the key length without changing the devices or the security statement."},
+        "tier_note": {"type": "string", "description": "The tier's full sentence (explain.tier_note), said under How the number was computed; the Key rate considerations hold its short form. Empty where the run reports no key length."},
+        "drafts": {"type": "array", "items": {"type": "string"}},
+        "stale": {"type": "array", "items": {"type": "string"}, "description": "The premises whose frozen text differs from the current contract's."}
+      }
+    },
+    "setupSection": {
+      "type": "object",
+      "description": "Your QKD setup, built from the record only (runs/report/setup.py): the protocol's steps, the source, every station, the acceptance test and the honest model's expected statistics; notes say what the record does not hold.",
+      "required": ["round", "protocol", "source", "stations", "acceptance", "expected", "expected_basis", "source_notes", "station_notes", "expected_notes"],
+      "additionalProperties": false,
+      "properties": {
+        "round": {
+          "description": "What a round is, said before the protocol's steps (setup.round_block): a few sentences and the engaged premises the cut of a detection record into rounds bears on, each with a short gloss of its own text. Null where the record holds no round count.",
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["text", "premises"],
+              "additionalProperties": false,
+              "properties": {
+                "text": {"type": "string"},
+                "premises": {"type": "array", "items": {"type": "object", "required": ["short_id", "gloss"], "additionalProperties": false, "properties": {"short_id": {"type": "string"}, "gloss": {"type": "string"}}}}
+              }
+            }
+          ]
+        },
+        "protocol": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "text", "pointer"],
+            "additionalProperties": false,
+            "properties": {"title": {"type": "string"}, "text": {"type": "string"}, "pointer": {"$ref": "#/$defs/nullableString"}}
+          }
+        },
+        "source": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["mode", "trusted", "text", "honest_model", "honest_parameters", "derivation", "status", "signals", "families", "pointer"],
+              "additionalProperties": false,
+              "properties": {
+                "mode": {"$ref": "#/$defs/nullableString"},
+                "trusted": {"type": ["boolean", "null"]},
+                "text": {"type": "string"},
+                "honest_model": {"$ref": "#/$defs/nullableString"},
+                "honest_parameters": {"type": "object"},
+                "derivation": {"$ref": "#/$defs/nullableString"},
+                "status": {"$ref": "#/$defs/nullableString"},
+                "signals": {"type": "array", "items": {"type": "object", "required": ["label", "weight"]}},
+                "families": {"type": "array", "items": {"$ref": "#/$defs/operatorFamily"}},
+                "pointer": {"$ref": "#/$defs/nullableString"}
+              }
+            }
+          ]
+        },
+        "stations": {"type": "array", "items": {"$ref": "#/$defs/setupStation"}},
+        "acceptance": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "required": ["rows", "outcomes", "support", "endpoint_rule", "geometry", "completeness_budget", "completeness_certified", "text", "claims", "pointer", "honest", "categories"],
+              "additionalProperties": false,
+              "properties": {
+                "rows": {"type": ["integer", "null"]},
+                "outcomes": {"type": "array", "items": {"type": "string"}},
+                "support": {"type": ["integer", "null"]},
+                "endpoint_rule": {"$ref": "#/$defs/nullableString"},
+                "geometry": {"$ref": "#/$defs/nullableString"},
+                "completeness_budget": true,
+                "completeness_certified": {"$ref": "#/$defs/nullableString"},
+                "text": {"type": "string"},
+                "claims": {"type": "array", "items": {"type": "string"}},
+                "pointer": {"$ref": "#/$defs/nullableString"},
+                "honest": {"type": "array", "items": {"type": "object", "required": ["outcome", "probability"]}, "description": "Each outcome's honest probability, what the record holds of the acceptance intervals."},
+                "categories": {"type": "array", "description": "One row per outcome of the record's acceptance box, with the honest probability, the interval [lower, upper] of the frequency as exact p/q strings and the counts it admits out of rounds, ends included (count_min, count_max; null without a round count). Empty where the record carries no box.", "items": {"type": "object", "required": ["outcome", "probability", "lower", "upper", "count_min", "count_max", "rounds"], "additionalProperties": false, "properties": {"outcome": {"type": "string"}, "probability": {"type": ["number", "null"]}, "lower": {"type": "string"}, "upper": {"type": "string"}, "count_min": {"type": ["integer", "null"]}, "count_max": {"type": ["integer", "null"]}, "rounds": {"type": ["integer", "null"]}}}}
+              }
+            }
+          ]
+        },
+        "expected": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "value", "how", "pointer"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {"type": "string"},
+              "value": {"type": ["number", "null"]},
+              "how": {"type": "string"},
+              "pointer": {"$ref": "#/$defs/nullableString"}
+            }
+          }
+        },
+        "expected_basis": {"type": "string", "description": "Which model the expected statistics come from, one sentence (explain.expected_basis): the honest model the record names and the parameters it was evaluated with, or the distribution supplied in its place; empty where no expected statistic is given."},
+        "source_notes": {"type": "array", "items": {"type": "string"}, "description": "Why the source is not described, printed where the source would stand."},
+        "station_notes": {"type": "array", "items": {"type": "string"}, "description": "Why no station is described, printed where the stations would stand."},
+        "expected_notes": {"type": "array", "items": {"type": "string"}, "description": "Why an expected statistic is not given, printed under the expected statistics."}
+      }
+    },
+    "provenanceSection": {
+      "type": "object",
+      "description": "R6, provenance and reproducibility: RunConfig.from_payload of the record's /payload/config, with the recorded engine commit, reproduces the run.",
+      "required": ["engine", "created_by", "config_digest", "record_schema_version", "report_schema_version", "report_id", "module_versions", "claim_status", "solver", "tolerances", "platform", "artefacts", "final_iterate", "reproduce"],
+      "additionalProperties": false,
+      "properties": {
+        "engine": {"type": ["object", "null"]},
+        "created_by": {"type": "string"},
+        "config_digest": {"$ref": "#/$defs/nullableString"},
+        "record_schema_version": {"type": "string"},
+        "report_schema_version": {"type": "string"},
+        "report_id": {"$ref": "#/$defs/sha256"},
+        "module_versions": {"type": "object"},
+        "claim_status": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "status", "effective_status"],
+            "additionalProperties": false,
+            "properties": {
+              "id": {"type": "string"},
+              "status": {"type": "string"},
+              "effective_status": {"type": "string"}
+            }
+          }
+        },
+        "solver": {"type": "object"},
+        "tolerances": {"type": "object"},
+        "platform": true,
+        "artefacts": {"type": "array", "items": {"type": "object"}},
+        "final_iterate": {"type": ["object", "null"]},
+        "reproduce": {
+          "type": "object",
+          "required": ["config_pointer"],
+          "properties": {"config_pointer": {"const": "/payload/config"}}
+        }
+      }
+    },
+    "index": {
+      "type": "object",
+      "description": "Every claim the report shows or links, by id, and the owning claim of every assumption id it shows or links: what a renderer resolves a [[...]] token through.",
+      "required": ["claims", "assumptions"],
+      "additionalProperties": false,
+      "properties": {
+        "claims": {"type": "object", "additionalProperties": {"$ref": "#/$defs/claimRef"}},
+        "assumptions": {"type": "object", "additionalProperties": {"type": "string"}},
+        "mentions": {"type": "object", "additionalProperties": {"$ref": "#/$defs/contractAnchor"}, "description": "A claim id carried text names that the closure table does not carry, as written ('<module>|<id>' for a bare kind:label), to its contract anchor."}
+      }
+    },
+    "keyRateReport": {
+      "type": "object",
+      "required": ["kind", "report_schema_version", "record_schema_version", "id", "sections", "index"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"const": "key-rate-report"},
+        "report_schema_version": {"type": "string"},
+        "record_schema_version": {"type": "string"},
+        "id": {"$ref": "#/$defs/sha256", "description": "sha256 of the record's canonical JSON (sorted keys, no whitespace)."},
+        "sections": {
+          "type": "object",
+          "required": ["summary", "result", "setup", "protocol", "assumptions", "numerics", "checks", "provenance"],
+          "additionalProperties": false,
+          "properties": {
+            "summary": {"$ref": "#/$defs/summary"},
+            "result": {"$ref": "#/$defs/resultSection"},
+            "setup": {"$ref": "#/$defs/setupSection"},
+            "protocol": {"$ref": "#/$defs/protocolSection"},
+            "assumptions": {"$ref": "#/$defs/assumptionsSection"},
+            "numerics": {"$ref": "#/$defs/numericsSection"},
+            "checks": {"$ref": "#/$defs/checksSection"},
+            "provenance": {"$ref": "#/$defs/provenanceSection"}
+          }
+        },
+        "index": {"$ref": "#/$defs/index"}
+      }
+    },
+    "sweepPoint": {
+      "type": "object",
+      "description": "One point: its varying inputs and its own numbers. security_parameter is this point's; nothing sums it over points.",
+      "required": ["index", "label", "record_id", "values", "outcome", "key_length", "net_key_length", "rate_per_round", "reported_tier", "security_parameter", "refusal", "route_signature", "route_differs", "route_delta", "flags", "rests_on_a_snap", "resting_blocks", "resting_sectors"],
+      "additionalProperties": false,
+      "properties": {
+        "index": {"type": "integer", "minimum": 0},
+        "label": {"$ref": "#/$defs/nullableString"},
+        "record_id": {"$ref": "#/$defs/sha256"},
+        "values": {"type": "object"},
+        "outcome": {"$ref": "#/$defs/outcome"},
+        "key_length": {"type": ["integer", "null"]},
+        "net_key_length": {"type": ["integer", "null"]},
+        "rate_per_round": {"type": ["number", "null"]},
+        "reported_tier": {"enum": ["estimate", "first-order", "certified", null]},
+        "security_parameter": {"type": ["number", "null"]},
+        "refusal": {"$ref": "#/$defs/refusal"},
+        "route_signature": {
+          "anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+        },
+        "route_differs": {"type": "boolean"},
+        "route_delta": {
+          "type": "object",
+          "required": ["added", "removed"],
+          "additionalProperties": false,
+          "properties": {
+            "added": {"type": "array", "items": {"type": "string"}},
+            "removed": {"type": "array", "items": {"type": "string"}}
+          }
+        },
+        "flags": {"type": "array", "items": {"type": "string"}},
+        "rests_on_a_snap": {"type": ["boolean", "null"], "description": "Whether this point's key length rests on a measurement snap; null where the point made none."},
+        "resting_blocks": {"type": "integer", "minimum": 0, "description": "How many of this point's snap blocks rest on A-SNAP."},
+        "resting_sectors": {"type": "integer", "minimum": 0, "description": "How many data sectors of the reduction's emission rest on A-SNAP."}
+      }
+    },
+    "sweepReport": {
+      "type": "object",
+      "required": ["kind", "report_schema_version", "record_schema_version", "id", "common", "varying", "points", "index"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"const": "key-rate-sweep-report"},
+        "report_schema_version": {"type": "string"},
+        "record_schema_version": {"type": "string"},
+        "id": {"$ref": "#/$defs/sha256", "description": "sha256 over the points' record ids, in order."},
+        "common": {
+          "type": "object",
+          "description": "What the sweep shows once. Inputs and provenance: those equal at every point. Not-counted flags, user-declared premises, assumptions, numerics, decided rows, rows not engaged or discharged on the route, discrepancies: the UNION over the completed points, each row marked with its points ('all' or the indices), a binding that differs between them marked varies. Checks: each once, 'varies' with every point's outcome where they differ.",
+          "required": ["instance", "inputs", "not_counted", "user_declared", "limitations", "per_execution", "assumptions", "numerics", "checks", "discharged_on_route", "decided_rows", "provenance", "setup", "setup_point", "guarantee"],
+          "additionalProperties": false,
+          "properties": {
+            "instance": {"$ref": "#/$defs/instance"},
+            "inputs": {"type": "array", "items": {"$ref": "#/$defs/inputRow"}},
+            "not_counted": {"type": "array", "items": {"$ref": "#/$defs/flag"}},
+            "user_declared": {"type": "array", "items": {"$ref": "#/$defs/userDeclared"}},
+            "limitations": {"type": "array", "items": {"$ref": "#/$defs/claimRef"}},
+            "per_execution": {"type": "array", "items": {"$ref": "#/$defs/claimRef"}},
+            "assumptions": {"$ref": "#/$defs/assumptionsSection"},
+            "numerics": {"$ref": "#/$defs/numericsSection"},
+            "checks": {"type": "array", "items": {"$ref": "#/$defs/sweepCheck"}},
+            "discharged_on_route": {"type": "array", "items": {"$ref": "#/$defs/notEngaged"}},
+            "decided_rows": {"type": "array", "items": {"$ref": "#/$defs/assumptionEntry"}},
+            "provenance": {"type": "object"},
+            "setup": {"description": "The setup of the first completed point, shown once.", "oneOf": [{"type": "null"}, {"$ref": "#/$defs/setupSection"}]},
+            "setup_point": {"type": ["integer", "null"], "minimum": 0},
+            "guarantee": {"description": "The guarantee the points share (each point's security parameter is its own).", "oneOf": [{"type": "null"}, {"$ref": "#/$defs/summary/properties/guarantee/oneOf/1"}]}
+          }
+        },
+        "varying": {"type": "array", "items": {"type": "string"}},
+        "points": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/sweepPoint"}},
+        "index": {"$ref": "#/$defs/index"}
+      }
+    }
+  }
+}

@@ -1,0 +1,166 @@
+% ---
+% id: meat-core/thm:branch-formula
+% kind: thm
+% title: "Branch entropy from the protocol marginal"
+% summary: >-
+%   A pure input's conditional entropy on one acceptance value is 1/(1−α) times
+%   log₂ of K/P, the ratio of a pinched trace-power quantity K to the outcome
+%   probability P, and K splits into sector deficits on block-diagonal inputs.
+%   The bounds 0 ≤ K ≤ P hold on the whole positive cone.
+% prominence: standard
+% status: implemented
+% uses: [def:maps, thm:protocol-channel, foundations/fact:pinch-id, def:branch, lem:branch-maps, foundations/lem:pinchmono]
+% mentions: [thm:reduction]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.branch:evaluate_branch
+% lean:
+% ---
+
+The right-hand side of the pinching identity of \xref{foundations/fact:pinch-id}
+depends on the state only through $\rho_Q$; this is what makes the objective of
+this module a function of the $A\Qsys$-marginal alone, and it is why purity of
+the global state must be arranged before the identity is invoked
+(Theorem~\ref{thm:reduction}).
+
+\begin{theorem}\label{thm:branch-formula}
+For $\alpha\in(1,\infty)$, $\omega\in\Pos{A\Qsys}$ and $\hat c\in\Chatset$
+define
+\begin{equation}\label{eq:fK}
+  P_{\hat c}(\omega)\coloneqq\Phimap[\omega](\hat c),\qquad
+  T_{\hat c}(\omega)\coloneqq
+  \tr\!\left[\left(\cZ\big(\cG_{\hat c}(\omega)^{1/\alpha}\big)
+  \right)^{\alpha}\right],\qquad
+  K_{\hat c}(\omega)\coloneqq
+  T_{\hat c}(\omega)+P_{\hat c}(\omega)-\tr\cG_{\hat c}(\omega),
+\end{equation}
+and, for block-diagonal $\omega=\bigoplus_s\omega_s$, the sector deficits
+\begin{equation}\label{eq:f-def}
+  f_{\hat c,s}(\omega_s)\coloneqq
+  \tr\!\left[\left(\cZ\big(\cG_{\hat c,s}(\omega_s)^{1/\alpha}\big)
+  \right)^{\alpha}\right]-\tr\cG_{\hat c,s}(\omega_s).
+\end{equation}
+Let $\alpha\in(1,\infty)$, let $\omega\in\Seq{A\Qsys\Etil}$ be \emph{pure},
+let $\nu^{\omega}=(\Mprot\otimes\idmap_{\Etil})(\omega)$, and let
+$\hat c\in\Chatset$ with $P_{\hat c}\coloneqq
+P_{\hat c}(\omega_{A\Qsys})>0$. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(the identity)}
+\begin{equation}\label{eq:c5}
+  \Hsanddown(Z|I\Etil)_{\nu^{\omega}_{|\hat c}}
+  =\frac{1}{1-\alpha}\log_2\frac{K_{\hat c}(\omega_{A\Qsys})}{P_{\hat c}};
+\end{equation}
+\item \emph{(the bounds)} $0\le K_{\hat c}(\omega_{A\Qsys})\le P_{\hat c}$, so
+the right-hand side of \eqref{eq:c5} is non-negative;
+\item \emph{(the sector form, on the whole cone)} for every
+$\hat c\in\Chatset$ and \emph{every} block-diagonal
+$\varrho=\bigoplus_s\varrho_s\in\Pos{A\Qsys}$, with none of the hypotheses
+above on $\omega$ and $P_{\hat c}$ (no purity, no normalization and no
+hypothesis $P_{\hat c}(\varrho)>0$),
+\begin{equation}\label{eq:c5-sector}
+  K_{\hat c}(\varrho)
+  =P_{\hat c}(\varrho)+\sum_{s\in\SecSet}f_{\hat c,s}(\varrho_s).
+\end{equation}
+\end{enumerate}
+The two bounds of (ii) hold on the whole cone, as a statement separate from
+the identity (i): for every $\alpha\in(1,\infty)$, every
+$\hat c\in\Chatset$ and \emph{every} $\varrho\in\Pos{A\Qsys}$, with no
+purity, no normalization, no block-diagonality and no hypothesis
+$P_{\hat c}(\varrho)>0$, one has $0\le K_{\hat c}(\varrho)\le
+P_{\hat c}(\varrho)$. We call this the theorem's \emph{cone clause}.
+\end{theorem}
+
+\begin{proof}
+\emph{The identity (i).} Write $Q_{\mathrm{tot}}\coloneqq R\,XY\,C_AC_B\,A\Qsys$ and
+$\ket{\psi}\coloneqq\Wprot\ket{\omega}_{A\Qsys\Etil}$, a pure state on
+$Q_{\mathrm{tot}}\,\Chat\,I\,\Etil$ (the isometry $\Wprot$ of
+\eqref{eq:Mprot} acts trivially on $\Etil$; $\Chat$ and $I$ are classical
+in $\psi$ in the sense that $\psi$ is invariant under their computational
+dephasings, both being controlled copies). Let
+$\ket{\psi_{\hat c}}\coloneqq
+P_{\hat c}^{-1/2}\,\bra{\hat c}_{\Chat}\ket{\psi}$, a normalized pure state
+on $Q_{\mathrm{tot}}\,I\,\Etil$; normalization holds because
+$\|\bra{\hat c}\psi\|^2=\Pr[\Chat=\hat c]=P_{\hat c}$ by
+Theorem~\ref{thm:protocol-channel}\,(iii). By construction
+$\nu^{\omega}_{|\hat c}$ on $Z\,I\,\Etil$ equals
+$\tr_{Q_{\mathrm{tot}}}[\VZ\,\dyad{\psi_{\hat c}}\,\VZ^{\dagger}]$ up to the
+retained $\Chat$ value, which is the fixed classical symbol $\hat c$ and may
+be dropped from the conditioning without change.
+
+Apply \xref{foundations/fact:pinch-id} with $Q\to Q_{\mathrm{tot}}$,
+$E\to I\Etil$, projectors $Z_j=\dyad{j}_R\otimes\idon{}$
+($j\in\Zset$; orthogonal, complete), and the pure state
+$\dyad{\psi_{\hat c}}$: hypotheses hold verbatim, and
+\begin{equation}\label{eq:c5-step1}
+  \Hsanddown(Z|I\Etil)_{\nu^{\omega}_{|\hat c}}
+  =\frac{1}{1-\alpha}\log_2
+  \tr\!\left[\left(\cZ\big(\varrho^{1/\alpha}\big)\right)^{\alpha}\right],
+  \qquad
+  \varrho\coloneqq\tr_{I\Etil}\dyad{\psi_{\hat c}}.
+\end{equation}
+Compute $\varrho$. Expanding $\Wprot$ as in the proof of
+Theorem~\ref{thm:protocol-channel}\,(ii) and projecting $\Chat$ on $\hat c$ leaves the sum
+over pairs $(x,v)$, $(x',v')$ with
+$\phi(a(x,v))=\phi(a(x',v'))=\hat c$. The register $I$ holds
+$\ket{a(x,v)}\bra{a(x',v')}$; tracing it out annihilates every term with
+$a(x,v)\ne a(x',v')$, that is, all cross-\emph{class} terms. Tracing $\Etil$
+replaces the rank-one $\dyad{\omega}$ by $\omega_{A\Qsys}$ inside each
+remaining term, since the operators $K_{\kappa}$ of \eqref{eq:kraus} act
+only on $A\Qsys$:
+$\tr_{\Etil}\big[(K_{\kappa}\otimes\idon{\Etil})\dyad{\omega}
+(K_{\kappa'}\otimes\idon{\Etil})^{\dagger}\big]
+=K_{\kappa}\,\omega_{A\Qsys}\,K_{\kappa'}^{\dagger}$, and only
+$\kappa=\kappa'$ survives. Hence
+\begin{equation}\label{eq:varrho}
+  \varrho=\frac{1}{P_{\hat c}}
+  \sum_{\kappa\in\phi^{-1}(\hat c)}K_{\kappa}\,\omega_{A\Qsys}\,
+  K_{\kappa}^{\dagger}
+  =\frac{1}{P_{\hat c}}\big(\cG_{\hat c}(\omega_{A\Qsys})
+  +\Theta_{\hat c}(\omega_{A\Qsys})\big).
+\end{equation}
+By Lemma~\ref{lem:branch-maps}\,(ii) the two summands have orthogonal supports
+($R\in\Zval$ versus $R=\perp$), so
+$\varrho^{1/\alpha}=P_{\hat c}^{-1/\alpha}
+\big(\cG_{\hat c}(\omega)^{1/\alpha}+\Theta_{\hat c}(\omega)^{1/\alpha}\big)$,
+and $\cZ$ preserves both parts, acting as the identity on the second.
+Therefore
+\begin{equation*}
+  \left(\cZ\big(\varrho^{1/\alpha}\big)\right)^{\alpha}
+  =\frac{1}{P_{\hat c}}\left[
+  \left(\cZ\big(\cG_{\hat c}(\omega)^{1/\alpha}\big)\right)^{\alpha}
+  +\Theta_{\hat c}(\omega)\right],
+\end{equation*}
+again by orthogonality of supports (the two $\alpha$-th powers act
+blockwise) and
+$(\Theta^{1/\alpha})^{\alpha}=\Theta$. Taking the trace and using
+$\tr\Theta_{\hat c}(\omega)=P_{\hat c}-\tr\cG_{\hat c}(\omega)$
+(Lemma~\ref{lem:branch-maps}\,(i)) gives
+$\tr[(\cZ(\varrho^{1/\alpha}))^{\alpha}]
+=K_{\hat c}(\omega)/P_{\hat c}$, which with \eqref{eq:c5-step1} is
+\eqref{eq:c5}.
+
+\emph{The bounds (ii) and the cone clause.} $T_{\hat c}\ge0$
+because it is the trace of a positive semidefinite operator, and
+$P_{\hat c}-\tr\cG_{\hat c}=\tr\Theta_{\hat c}\ge0$ by \eqref{eq:traces},
+which Lemma~\ref{lem:branch-maps}\,(i) states for \emph{all}
+$\omega\in\Pos{A\Qsys}$; together these give $K_{\hat c}\ge0$. And
+$T_{\hat c}\le\tr\cG_{\hat c}$ is
+\xref{foundations/lem:pinchmono}, applied at
+$\tau=\cG_{\hat c}(\varrho)$ (that lemma is stated on all of $\Pos{}$
+and consumes no trace hypothesis), giving $K_{\hat c}\le P_{\hat c}$.
+Neither step reads purity, normalization, $P_{\hat c}>0$ or
+block-diagonality; both read $\varrho\succeq0$ and nothing else, which is
+the cone clause.
+
+\emph{The sector form (iii).} By Lemma~\ref{lem:branch-maps}\,(iii),
+$\cG_{\hat c}(\varrho)=\bigoplus_s\cG_{\hat c,s}(\varrho_s)$; powers and
+$\cZ$ act blockwise on this decomposition ($\cZ$ pinches $R$, which is a
+tensor factor of every sector subspace), so
+$T_{\hat c}(\varrho)=\sum_sT_{\hat c,s}(\varrho_s)$, with
+$T_{\hat c,s}(\varrho_s)\coloneqq
+\tr[(\cZ(\cG_{\hat c,s}(\varrho_s)^{1/\alpha}))^{\alpha}]$, and
+$\tr\cG_{\hat c}(\varrho)=\sum_s\tr\cG_{\hat c,s}(\varrho_s)$; insert into
+\eqref{eq:fK} and \eqref{eq:f-def}. This reads $\varrho\succeq0$ and its
+block-diagonality and nothing else: neither purity nor $P_{\hat c}>0$.
+\end{proof}

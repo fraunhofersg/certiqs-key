@@ -1,0 +1,36 @@
+% ---
+% id: reductions/req:caller-constant-rounding
+% kind: req
+% title: "Outward rounding of a caller's constant off the lattice"
+% summary: >-
+%   A caller's inequality constant off the declared lattice is rounded onto it
+%   in the direction that enlarges the feasible set, and the direction is
+%   recorded. An equality constant off the lattice, or any constant of modulus
+%   above one, is refused rather than rounded.
+% prominence: standard
+% status: implemented
+% uses: [cor:entries]
+% mentions: [def:exactadm, foundations/req:rounding-direction]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.constraints:rounded_constant
+% lean:
+% ---
+
+Rounding toward the enlarging side keeps the certificate true at the rounded
+constant, while the other side could exclude a reachable state
+(Corollary~\ref{cor:entries}\,(iii)); an equality has no enlarging side.
+
+\begin{requirement}\label{req:caller-constant-rounding}
+Where the declared constant of a requested entry does not satisfy
+\eqref{eq:latinv}, the engine first rounds it onto the lattice in the
+direction that enlarges the feasible set for the entry's relation, down for
+$\succeq$ and up for $\preceq$, and records the direction taken per entry in
+\iface{emission_record} (\xref{foundations/req:rounding-direction}). An
+equality entry whose constant is off the lattice is refused with
+\iface{constraint_without_certificate} rather than split into a pair, and a
+declared constant of modulus above one is refused with
+\iface{constraint_without_certificate} under every relation, before any
+rounding.
+\end{requirement}

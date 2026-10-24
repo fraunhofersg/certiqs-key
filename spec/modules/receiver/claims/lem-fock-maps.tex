@@ -1,0 +1,94 @@
+% ---
+% id: receiver/lem:fock-maps
+% kind: lem
+% title: "The lift of maps between mode spaces and of direct sums"
+% summary: >-
+%   The Fock lift respects products and adjoints of maps between two mode
+%   spaces and takes contractions to contractions and isometries to
+%   isometries. On disjoint mode sets the occupation identification is
+%   unitary, and the lift of a direct sum is the tensor product of the lifts.
+% prominence: technical
+% status: accepted
+% uses: [def:fock, lem:fock-functor]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Lemma~\ref{lem:fock-functor} is stated for operators on one space. A loss in
+front of a receiver is an isometry into a larger mode space, so the same
+properties are needed for maps between two spaces, together with the
+identification of the Fock space over two disjoint mode sets with the tensor
+product of their Fock spaces.
+
+\begin{lemma}\label{lem:fock-maps}
+Let $\mathcal{K}_0,\mathcal{K}_1,\mathcal{K}_2$ be finite-dimensional, and let
+$X\colon\mathcal{K}_0\to\mathcal{K}_1$ and $Y\colon\mathcal{K}_1\to\mathcal{K}_2$
+be linear maps.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $\Fock(YX)=\Fock(Y)\Fock(X)$ and $\Fock(X)^{\dagger}=\Fock(X^{\dagger})$;
+  if $X^{\dagger}X\preceq\id$ then $\lVert\Fock(X)\rVert\le1$, and if
+  $X^{\dagger}X=\id$ then $\Fock(X)$ is an isometry.
+\item Let $S$ and $T$ be disjoint finite mode sets. The linear map
+  $\mathcal{F}(\mathbb{C}^{S})\otimes\mathcal{F}(\mathbb{C}^{T})\to
+  \mathcal{F}(\mathbb{C}^{S\sqcup T})$ defined on occupation vectors
+  (Definition~\ref{def:fock}) by
+  $\ket{\vec m_1}\otimes\ket{\vec m_2}\mapsto\ket{\vec m_1,\vec m_2}$, the
+  \emph{occupation identification},
+  is unitary, and on its $n$-photon level it is
+  $\ket{\varphi}\otimes\ket{\chi}\mapsto\binom{n}{p}^{1/2}P_n(\varphi\otimes\chi)$
+  for $\varphi\in\Symn{p}(\mathbb{C}^{S})$, $\chi\in\Symn{q}(\mathbb{C}^{T})$,
+  $p+q=n$, with $P_n$ the orthogonal projector of
+  $(\mathbb{C}^{S\sqcup T})^{\otimes n}$ onto its symmetric subspace.
+\item Under that identification, for operators $X_1$ on $\mathbb{C}^{S}$ and
+  $X_2$ on $\mathbb{C}^{T}$,
+  $\Fock(X_1\oplus X_2)=\Fock(X_1)\otimes\Fock(X_2)$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) $X^{\otimes n}$ maps $\Symn{n}(\mathcal{K}_0)$ into
+$\Symn{n}(\mathcal{K}_1)$ (Definition~\ref{def:fock}), and so does
+$(X^{\dagger})^{\otimes n}$ from $\Symn{n}(\mathcal{K}_1)$ back, both
+intertwining the permutation actions. Then $(YX)^{\otimes n}=Y^{\otimes n}X^{\otimes n}$
+restricted to $\Symn{n}(\mathcal{K}_0)$ is the product of the restrictions,
+and the restriction of $(X^{\otimes n})^{\dagger}=(X^{\dagger})^{\otimes n}$ to
+$\Symn{n}(\mathcal{K}_1)$ is the adjoint of the restriction of
+$X^{\otimes n}$, since both restrictions map between the invariant subspaces;
+summing over $n$ gives the two identities, as in
+Lemma~\ref{lem:fock-functor}\,(ii). If $X^{\dagger}X\preceq\id$ then
+$\lVert X\rVert\le1$, so every block $X^{\otimes n}$ has norm at most one, as
+in Lemma~\ref{lem:fock-functor}\,(iii). If $X^{\dagger}X=\id$, the two
+identities give $\Fock(X)^{\dagger}\Fock(X)=\Fock(X^{\dagger}X)=\Fock(\id)=\id$.
+
+(ii) For an occupation vector $\vec m$ with $|\vec m|=n$ write
+$e^{\otimes\vec m}$ for the tensor product of $m_1$ copies of the first basis
+vector, then $m_2$ of the second, and so on, and $\vec m!\coloneqq\prod_jm_j!$.
+$P_ne^{\otimes\vec m}$ is $\vec m!/n!$ times the sum of the $n!/\vec m!$
+distinct reorderings of $e^{\otimes\vec m}$, which are orthonormal, so
+$\lVert P_ne^{\otimes\vec m}\rVert^{2}=\vec m!/n!$ and the normalized
+symmetrization of Definition~\ref{def:fock} is
+$\ket{\vec m}=(n!/\vec m!)^{1/2}P_ne^{\otimes\vec m}$. Let $J_{p,q}$ be the
+displayed map on the level $p+q=n$. Since $P_n(P_p\otimes P_q)=P_n$, the
+product $P_p\otimes P_q$ averaging over a subgroup of the permutations, and a
+reordering of the factors is a permutation,
+\begin{equation*}
+  J_{p,q}\big(\ket{\vec m_1}\otimes\ket{\vec m_2}\big)
+  =\Big(\tbinom{n}{p}\tfrac{p!\,q!}{\vec m_1!\,\vec m_2!}\Big)^{1/2}
+   P_n\big(e^{\otimes\vec m_1}\otimes e^{\otimes\vec m_2}\big)
+  =\ket{\vec m_1,\vec m_2}.
+\end{equation*}
+So $\bigoplus_{p+q=n}J_{p,q}$ maps an orthonormal basis of the $n$-photon
+level of the tensor product onto one of $\Symn{n}(\mathbb{C}^{S\sqcup T})$,
+and the identification, their sum over $n$, is unitary.
+
+(iii) $(X_1\oplus X_2)^{\otimes n}$ commutes with $P_n$
+(Lemma~\ref{lem:fock-functor}\,(i)) and acts on
+$(\mathbb{C}^{S})^{\otimes p}\otimes(\mathbb{C}^{T})^{\otimes q}$ as
+$X_1^{\otimes p}\otimes X_2^{\otimes q}$, so
+$(X_1\oplus X_2)^{\otimes n}J_{p,q}(\varphi\otimes\chi)
+=J_{p,q}\big(X_1^{\otimes p}\varphi\otimes X_2^{\otimes q}\chi\big)$ for
+$\varphi\in\Symn{p}(\mathbb{C}^{S})$ and $\chi\in\Symn{q}(\mathbb{C}^{T})$,
+which is the claim on every level.
+\end{proof}

@@ -1,0 +1,45 @@
+% ---
+% id: protocol-compiler/req:weighted-family-emission
+% kind: req
+% title: "Emission decisions on the weighted products"
+% summary: >-
+%   Every product a weighting forms is decided binary64, emitted or handed on,
+%   and the emitted family exactly admissible, before anything is emitted. A
+%   failure refuses and emits nothing; an exact product that is binary64 but off
+%   the instance's lattice is emitted as it is.
+% prominence: standard
+% status: implemented
+% uses: [def:weighted, thm:choice-encoding]
+% mentions: [def:exact, def:chaincond, foundations/req:exact-emission]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.weights:decide_emission
+% lean:
+% ---
+
+A product of two binary64 numbers need not be one, and a family whose entries
+are all binary64 may still have a declared-order sum that rounds; both are
+decided before a weighted family leaves the compiler
+(\xref{foundations/req:exact-emission}).
+
+\begin{requirement}\label{req:weighted-family-emission}
+The engine forms the products $q_tN_{u|t}$ and $P(f\,|\,t(v))F_v$ of
+Definition~\ref{def:weighted} exactly, on the declared dyadic numbers, and
+takes the two emission decisions of that definition before emitting anything.
+The first, that every entry of every product it forms is a binary64 number,
+is taken on every product the map forms, whether the product is emitted or
+handed on: the intermediate families of an iterated presentation are
+products, and a presentation on Bob's side before the chain produces the
+physical family that (C2) and (C4) of Definition~\ref{def:chaincond} read and
+that, in \tref{Band A}, (C3) decides, so no condition of the chain is decided on a
+product whose entries were not decided first. The second is that the emitted
+family satisfies Definition~\ref{def:exact}. If either decision fails, the
+engine refuses --- with \iface{emitted_value_not_representable} in the first
+case and with the predicate that failed in the second --- and emits no
+declaration. \iface{emitted_value_not_representable} covers exactly an exact
+product of declared numbers that is not a binary64 number: an entry that is
+binary64 but lies off whatever lattice the \tref{instance} declared its own
+data on is emitted, and the five conditions the consumer states are decided
+on it exactly and on it alone.
+\end{requirement}

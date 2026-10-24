@@ -1,0 +1,49 @@
+% ---
+% id: reductions/rem:recv-scope
+% kind: rem
+% title: "What the supplier assumption is stated of"
+% summary: >-
+%   [[A-RECV]] is stated of the exactly admissible declaration, not of an
+%   idealisation of it, and of one declared receiver. No claim relates a key
+%   length from the declaration to one from the supplier's own floating-point
+%   output; an exact, rigorous receiver artefact the run built has its row
+%   omitted.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [ass:recv, def:exactadm, def:reduction-instance, thm:emit, thm:licence, reductions/wpfss/rem:receiver-imports, foundations/req:declared-tolerance, req:recv-row-provenance]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:recv-scope}
+Assumption~\ref{ass:recv} is stated of the declaration rather than of an
+idealisation of it: what this module is handed is \tref{exactly admissible}
+(Definition~\ref{def:exactadm}) and is decided so on entry, and what the
+assumption adds is that the device facts the supplier states are true of
+it. Where the declaration and the supplier's own floating-point output
+differ, the difference is a modelling act taken at the \tref{instance} and
+recorded there, with that party's \tref{declared tolerance} as its ceiling
+(\xref{foundations/req:declared-tolerance}); no claim of this contract
+relates a key length computed from the declaration to one computed from
+that output, exactly as Theorem~\ref{thm:emit}\,(v) says of this module's
+own emission. Every one of the imported facts is inherited here unverified,
+and a single device family, uncertainty set or characterisation protocol
+appears nowhere: this contract reduces \emph{one} declared receiver. Which
+of the supplier's claims are imported is stated where its artefact is
+consumed (for the receiver, Remark~\ref{rem:receiver-imports}).
+For a receiver artefact the run built itself, from a declaration with a
+model admissible exactly and with every weight evaluated rigorously,
+Requirement~\ref{req:recv-row-provenance} omits the row of
+Assumption~\ref{ass:recv}: both its clauses hold there by the receiver's
+theorems under the receiver's own ledger, with no premise about arithmetic.
+Assumption~\ref{ass:recv} is the assumption on which the quantitative
+content of every other reduction instance built on a supplier's numbers
+rests (it
+is part of the \tref{hypotheses (H)} of such an instance,
+Definition~\ref{def:reduction-instance}\,(I1)), and it is the reason
+Theorem~\ref{thm:licence} is stated with hypothesis \eqref{eq:certificate}
+rather than with a claim about optics.
+\end{remark}

@@ -1,0 +1,64 @@
+% ---
+% id: meat-core/lem:ev-correctness
+% kind: lem
+% title: "Correctness from error verification"
+% summary: >-
+%   In the fixed-length post-processing model the two parties accept with
+%   different keys with probability at most ε_EV, for every attack and every
+%   output length. It is the correctness half of the protocol's security.
+% user_statement: >-
+%   This is the correctness half of security. Before the key is formed, the
+%   key holder announces a ⌈log₂(1/ε_EV)⌉-bit hash of its raw key, computed
+%   with a hash function drawn at random independently of the raw keys, and
+%   the partner compares it with the hash of its own corrected copy; a
+%   mismatch aborts the run. Two different raw keys pass only through a hash
+%   collision, so the chance that both parties accept yet hold different keys
+%   is at most ε_EV, whatever the attacker does and whatever key length you
+%   choose. It needs a two-universal hash family ([[A-HASH]]), seeds
+%   independent of the raw keys ([[A-SEED]]) and an implementation that aborts
+%   as specified ([[A-CONFORM]]), and takes messages to arrive unaltered;
+%   [[cor:composed-security]] adds real authentication. It does not promise
+%   that error correction succeeds, only that a failure is caught, except with
+%   probability ε_EV.
+% prominence: standard
+% status: accepted
+% uses: [def:postprocessing-model]
+% assumes: [A-HASH, A-SEED, A-CONFORM]
+% refs:
+%   - "tupkary2025survey, Sec. 2.3.1, Def. 2.2, Eq. (4)"
+% provenance: newly-derived
+% lean:
+% ---
+
+The argument reads only the verification step of the model: two different
+raw strings pass it only if their short hashes collide, and the hash is
+chosen after, and independently of, the strings it compares.
+
+\begin{lemma}\label{lem:ev-correctness}
+Let the protocol run the \tref{fixed-length post-processing model}
+(Definition~\ref{def:postprocessing-model}) in the
+\tref{honest-authentication setting}, let Assumptions~\ref{ass:hash},
+\ref{ass:seed} and~\ref{ass:conform} hold, and let $\eev\in(0,1]$. Then for every attack and
+every output length $\ell$ the protocol is $\eev$-correct on the accepted
+state, in the sense of \cite[Sec.~2.3.1, Def.~2.2, Eq.~(4)]{tupkary2025survey}:
+\begin{equation}\label{eq:ev-correct}
+  \Pr\big[\Omega_{\mathrm{acc}}\wedge K_A\ne K_B\big]\le\eev .
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Both parties abort when the verification flag is $\mathrm{rej}$ and output
+the keys the model computes (Assumption~\ref{ass:conform}\,(iii)--(iv)). On
+$\Omega_{\mathrm{acc}}\wedge\{K_A\ne K_B\}$ the hashed keys differ, so the
+raw strings differ, yet their $\lceil\log_2\frac1{\eev}\rceil$-bit
+two-universal hashes agreed. (If the raw strings agree, $K_A=K_B$ because
+the same public $G$ is applied: in the honest-authentication setting the
+partner receives the holder's $G$ unaltered.) The verification function
+$h_{\mathrm{EV}}$ is selected by $S_{\mathrm{EV}}$, which
+Assumption~\ref{ass:seed} makes independent of the pair
+$(Z_1^n,\hat Z_1^n)$, and its family is two-universal
+(Assumption~\ref{ass:hash}\,(ii)). Conditioned on any pair of distinct
+strings, the probability that their hashes agree is therefore at most
+$2^{-\lceil\log_2(1/\eev)\rceil}\le\eev$, and averaging over the pair gives
+\eqref{eq:ev-correct}.
+\end{proof}

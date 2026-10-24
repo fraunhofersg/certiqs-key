@@ -1,0 +1,37 @@
+% ---
+% id: receiver/req:tolerance-tests
+% kind: req
+% title: "Decisions at the receiver tolerances, and refusal of failed bound data"
+% summary: >-
+%   The engine decides each exact condition of [[def:tolmap]] by the test given
+%   there, every rank by the ε₂-rank and by no other rule. Bound data failing
+%   their admission test are refused and no artifact is emitted.
+% prominence: standard
+% status: implemented
+% uses: [def:tolmap]
+% mentions: [thm:representation-independence]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.construct:construct_receiver
+% lean:
+% ---
+
+The refusal rules of the module's interface
+(\repodoc{spec/modules/receiver/interface.yaml}) tabulate no reason string
+for a bound-data failure, and this
+contract adds none: fixing a contract-verbatim key here would settle an
+interface detail that no claim of this contract consumes.
+
+\begin{requirement}\label{req:tolerance-tests}
+The engine decides each exact condition that Definition~\ref{def:tolmap} lists
+by the test given there and by no other threshold, and every rank statement
+this module decides on floating-point data by \eqref{eq:eps2rank}; no other
+rule is licensed, there or at Theorem~\ref{thm:representation-independence}\,(iv). Bound data failing
+item (iv) of Definition~\ref{def:tolmap} are a failed validation, so
+\iface{fail_closed} applies at this site: no artifact is emitted. The reason
+string is the implementer's to name, under the rule the refusal rules of the
+module's interface state for the validations they do not tabulate, none of
+the tabulated strings
+covering this check.
+\end{requirement}

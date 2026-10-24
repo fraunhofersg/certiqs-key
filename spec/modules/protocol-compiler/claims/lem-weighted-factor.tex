@@ -1,0 +1,51 @@
+% ---
+% id: protocol-compiler/lem:weighted-factor
+% kind: lem
+% title: "A factor enclosure through a setting-dependent weighting"
+% summary: >-
+%   Weighting a delivered element by its positive stochastic weight keeps a
+%   factor enclosure of each of its blocks: the same box, the core multiplied
+%   by the weight. A pair outside the support of the weighting is no outcome
+%   and carries no block.
+% prominence: technical
+% status: implemented
+% uses: [def:weighted, lem:weighted, foundations/def:factor-enclosure, foundations/def:binary64]
+% mentions: [req:reference-companion-compiled]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.companion:_weighted_factor
+% lean:
+% ---
+
+The compiler weights the family a chain delivers by a stochastic weight read
+through the setting (Definition~\ref{def:weighted}). Where a block of a
+delivered element is known through a \tref{factor enclosure}, as on a reference
+companion (Requirement~\ref{req:reference-companion-compiled}), the weight is
+a positive rational and goes into the core, and the columns are untouched.
+
+\begin{lemma}\label{lem:weighted-factor}
+With the notation of the setting-dependent form of
+Definition~\ref{def:weighted}, let $(v,f)\in\Vset_P$, let $s$ be a sector of
+$S$, and let $(L_c,\varrho,W)$ be a \tref{factor enclosure}
+(\xref{foundations/def:factor-enclosure}) of the block $F^{(s)}_v$. Then
+$(L_c,\varrho,P(f\,|\,t(v))\,W)$ is a factor enclosure of the block
+$N^{(s)}_{v,f}=P(f\,|\,t(v))\,F^{(s)}_v$, with the same
+\tref{matrix box} and the same number of columns. A pair $(v,f)\in\Vset\times\mathcal{F}$ outside
+$\Vset_P$ indexes no element of the weighted family, and so no block.
+\end{lemma}
+
+\begin{proof}
+A pair $(v,f)$ lies in $\Vset_P$ exactly when $P(f\,|\,t(v))>0$
+\eqref{eq:support}, and $P(f\,|\,t(v))$ is a binary64 number, so a positive
+dyadic rational (\xref{foundations/def:binary64}\,(i)); hence
+$P(f\,|\,t(v))\,W$ is diagonal with positive rational diagonal entries. By
+Lemma~\ref{lem:weighted}\,(ii), $N^{(s)}_{v,f}=P(f\,|\,t(v))\,F^{(s)}_v$. The
+triple $(L_c,\varrho,W)$ being a factor enclosure of $F^{(s)}_v$, there is an
+$L$ that the box $(L_c,\varrho)$ contains with $F^{(s)}_v=LWL^{\dagger}$, so
+$N^{(s)}_{v,f}=L\big(P(f\,|\,t(v))\,W\big)L^{\dagger}$ with the same $L$: the
+box and the new core make a factor enclosure of $N^{(s)}_{v,f}$, with the
+columns of the old one. The last sentence is the reading of the support in
+Definition~\ref{def:weighted}: a pair with $P(f\,|\,t(v))=0$ is not an
+outcome and indexes nothing.
+\end{proof}

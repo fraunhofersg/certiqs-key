@@ -1,0 +1,68 @@
+% ---
+% id: transmitter/decoy/rem:no-intensity-split
+% kind: rem
+% title: "Polarisation flags shared across intensities"
+% summary: >-
+%   A flag family split by intensity would still admit a label-independent
+%   tagging channel, but it would drop the relation between one photon number's
+%   behaviour at different intensities, which is the decoy content of the
+%   declaration. The emission therefore refuses it with a named refusal.
+% prominence: standard
+% status: accepted
+% uses: [def:tagged-source]
+% mentions: [prop:tagging, req:shared-flags]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Deliberate wording: the remark does not call splitting a security error, since a split declaration still admits a channel of the shape prop:tagging constructs and the source identity does not fail; it names the mechanism of the loss and its direction, and asserts no comparison of two key lengths."
+% ---
+
+\begin{remark}
+\label{rem:no-intensity-split}
+Definition~\ref{def:tagged-source}\,(T3) declares \emph{one} polarisation flag
+$f_{\mathsf{n},a}$ per photon number $N_{\mathrm{ent}}<\mathsf{n}\le
+N_{\mathrm{src}}$ and per polarisation, shared by every intensity and both
+round types. A declarer might instead declare a finer family
+$f_{\mathsf{n},a,\mu}$, one flag per intensity as well; this remark says what
+that would and would not be.
+
+\emph{The source identity would still hold.} The finer declaration admits a
+channel of the shape Proposition~\ref{prop:tagging} constructs, and with it the
+source identity, for this link \eqref{eq:tagid}: send $f_{\mathsf{n},a,\mu}$ to
+$\dyad{\mathsf{n},a}$, which is independent of $\mu$, and leave the rest as it
+is. So splitting is not excluded by the source identity and is not a security
+error of the kind this submodule is about.
+
+\emph{The decoy content would be lost.} With one shared flag, the letters
+$(a,\mu,z)$ and $(a,\mu',z')$ of the same polarisation put their weight on the
+same one-dimensional sector of $\Avirt$, so one sector of the declaration
+carries the whole of that photon number's weight across intensities and round
+types. With one flag per intensity they are different sectors, and nothing in
+the declaration relates what happens in the sector of $\mu$ to what happens in
+the sector of $\mu'$: a tagged photon number of one intensity and the same
+photon number of another intensity become unrelated parts of the declaration.
+That relation is the decoy content of the declaration, the reason for declaring
+intensities at all being that the same photon number behaves the same way
+whichever intensity produced it; so a split declaration is a declaration of a
+different protocol, one with intensities and without decoy. The same applies to
+the round type: the shared flag is why a tagged photon number of a test round
+and of a generation round are one sector, which is not an assumption added here
+but a consequence of declaring one flag.
+
+\emph{The direction of the loss.} Splitting removes a relation from the
+declaration and adds none, so a consumer of a split declaration is told less
+about the source than a consumer of the shared one. The loss would not show as
+an error but as a rate that does not improve when an intensity is added, which
+is why the emission, the step that outputs the declaration, refuses a split
+family with a named refusal (Requirement~\ref{req:shared-flags}). No claim of
+this repository compares the key lengths of two declarations, and this remark
+asserts no such comparison: it asserts which relation is present in which
+declaration. The reverse, a coarser flag than
+Definition~\ref{def:tagged-source}\,(T3) declares (for instance one flag for
+two polarisations of the same photon number), is excluded for a stricter
+reason: it is not a \tref{tagged source declaration} at all. Which vectors the flags
+are and which letters put weight on them is fixed by
+Definition~\ref{def:tagged-source}\,(T4), and Proposition~\ref{prop:tagging}
+proves the source identity for those declarations only.
+\end{remark}

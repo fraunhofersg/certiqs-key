@@ -1,0 +1,23 @@
+% ---
+% id: core-a/ass:leaf
+% kind: ass
+% title: Nonnegative second coordinate
+% summary: The second coordinate of every base object is nonnegative.
+% prominence: standard
+% status: accepted
+% uses: [def:object]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-LEAF
+% verification: never
+% category: source
+% affects: [secrecy]
+% user_statement: Every pair you declare has a nonnegative second coordinate.
+% lean:
+% ---
+
+\begin{assumption}\label{ass:leaf}
+Every \tref{base object} $(x, y)$ of Definition~\ref{def:object} has $y \ge 0$. If
+it fails, the bound on the first coordinate fails with it.
+\end{assumption}

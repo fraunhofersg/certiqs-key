@@ -1,0 +1,39 @@
+% ---
+% id: meat-core/rem:no-constraints
+% kind: rem
+% title: "Where declared constraints may enter the rate"
+% summary: >-
+%   The imported theorem fixes the inner infimum over the outputs of all
+%   attacks, so a constraint list may raise the rate only through a licensed
+%   restriction of the attack model ([[thm:constrained-accumulation]]). Device
+%   knowledge without such a licence enters through the declared measurement.
+% prominence: standard
+% status: accepted
+% uses: [fact:meat, thm:accumulated-entropy, def:homog]
+% mentions: [thm:constrained-accumulation]
+% assumes: [A-ATK]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:no-constraints}
+The inner infimum of \eqref{eq:meat-rate} is fixed by the imported
+theorem: for the unrestricted attack model of
+Theorem~\ref{thm:accumulated-entropy} it ranges over the outputs of
+\emph{all} attacks, and restricting it by a nonempty $\CList$ is not
+licensed by anything in this section. What \emph{is} licensed is a
+restriction of the attack model itself: when $\CList$ is
+licensed for the declared source mode (Definition~\ref{def:homog}) and the
+\tref{reduction chain} that produced the declaration certifies that every
+physical attack with finite registers whose first channel receives every
+transmitted system is
+represented by a $\CList$-admissible sequence (A-ATK
+(\xref{protocol-compiler/ass:atk})), the single-round rate tightens to the
+constrained $\hqkd(\CList)$ --- that is
+Theorem~\ref{thm:constrained-accumulation}, and it is the only constrained
+use this module licenses. Device and squashing knowledge that is not backed
+by such a certificate enters soundly through the declared POVM $\{F_v\}$
+itself, which needs no licence.
+\end{remark}

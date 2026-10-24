@@ -1,0 +1,68 @@
+% ---
+% id: reductions/lem:statistics
+% kind: lem
+% title: "Squashing as statistics equivalence"
+% summary: >-
+%   A squashing relation holds exactly when the physical and the squashed
+%   model give the same statistics for every POVM element and carried
+%   operator, correlations with a finite side system included. Two channels
+%   realising one relation therefore have adjoints that agree on the span of
+%   those operators.
+% prominence: standard
+% status: accepted
+% uses: [def:squashing, lem:sep]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The two lists in \eqref{eq:squashing} contain the same kind of object, an
+operator on $\Qsys$ whose pull-back is prescribed, and differ in role, not in
+type: the $F_v$ are what Bob measures and must form a POVM, while the
+$\hat O_k$ are never measured and serve only to carry statements about the
+physical device into the squashed model.
+
+\begin{lemma}\label{lem:statistics}
+Let $M,F,O,\hat O$ be as in Definition~\ref{def:squashing} and let
+$\Lambda\colon\Tcl{\Bsys}\to\Tcl{\Qsys}$ be a channel. The following are
+equivalent.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $(M;O)\dsq_{\Lambda}(F;\hat O)$.
+\item For every $\rho\in\Seq{\Bsys}$, every $v$ and every $k$,
+  $\tr[M_v\rho]=\tr[F_v\Lambda(\rho)]$ and
+  $\tr[O_k\rho]=\tr[\hat O_k\Lambda(\rho)]$.
+\item For every finite-dimensional side system $R$, every
+  $\rho\in\Seq{\Bsys R}$, every $X\in\Lin{R}$, every $v$ and every $k$, writing
+  $\sigma\coloneqq(\Lambda\otimes\idmap_R)(\rho)$,
+  \begin{equation*}
+    \tr\big[(M_v\otimes X)\rho\big]=\tr\big[(F_v\otimes X)\sigma\big]
+    \qquad\text{and}\qquad
+    \tr\big[(O_k\otimes X)\rho\big]=\tr\big[(\hat O_k\otimes X)\sigma\big].
+  \end{equation*}
+\end{enumerate}
+Moreover, two channels $\Lambda,\Lambda'$ that both realize the relation
+satisfy $\Lambda^{\dagger}=\Lambda'^{\dagger}$ on
+$\operatorname{span}\big(\{F_v\}_{v\in\Vset}\cup\{\hat O_k\}_{k=1}^{m}\big)$.
+\end{lemma}
+
+\begin{proof}
+(i)$\Rightarrow$(iii). By the tensor-adjoint identity of
+Lemma~\ref{lem:sep}\,(ii),
+$(\Lambda\otimes\idmap_R)^{\dagger}(Y\otimes X)=\Lambda^{\dagger}(Y)\otimes X$.
+Taking $Y=F_v$ and $Y=\hat O_k$ and inserting \eqref{eq:squashing} turns the
+two right-hand sides of (iii) into the two left-hand sides, by
+\eqref{eq:pairing} for $\Lambda\otimes\idmap_R$.
+
+(iii)$\Rightarrow$(ii). Take $\Hs{R}=\mathbb{C}$ and $X=1$.
+
+(ii)$\Rightarrow$(i). By \eqref{eq:pairing}, the first identity in (ii) reads
+$\tr\big[\big(\Lambda^{\dagger}(F_v)-M_v\big)\rho\big]=0$ for every
+$\rho\in\Seq{\Bsys}$, so $\Lambda^{\dagger}(F_v)=M_v$ by the separation
+property, Lemma~\ref{lem:sep}\,(i). The same argument applied to the second
+identity gives $\Lambda^{\dagger}(\hat O_k)=O_k$.
+
+For the last claim, $\Lambda^{\dagger}$ and $\Lambda'^{\dagger}$ take the same
+prescribed values on the operators $F_v$ and $\hat O_k$, hence agree on their
+span by linearity.
+\end{proof}

@@ -1,0 +1,51 @@
+% ---
+% id: reductions/rem:obstruction-scope
+% kind: rem
+% title: "Scope of the obstruction, and what it forces"
+% summary: >-
+%   A general quantum target encodes an event bound trivially; the obstruction
+%   concerns targets classical on the whole target space. Such a
+%   bound travels as a constraint entry under the licence, and merging the
+%   outcomes is no remedy when they carry key information.
+% prominence: standard
+% status: accepted
+% uses: [prop:obstruction]
+% mentions: [thm:licence, req:constraint-and-licence-slots]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:obstruction-scope}
+With a general \emph{quantum} target the encoding is trivial: take $F=M$ and
+$\Lambda=\idmap$, and the physical bound is itself an operator inequality on
+the target. The content of Proposition~\ref{prop:obstruction} is that a
+target classical on the whole of $\Qsys$ cannot in general carry an
+event-level bound, whatever the channel.
+Per-outcome bounds, by contrast, are encodable: a
+\tref[weight-preserving target]{weight-preserving flag-state target} of the flag-state submodule carries one weight per outcome
+as an operator inequality on the target. Event-level information that the
+target cannot carry must travel as a pull-back constraint, and a pull-back constraint is
+sound only on the reachable set, which is what the licence of
+Theorem~\ref{thm:licence} certifies. Three consequences follow.
+\begin{enumerate}[label=(\alph*),leftmargin=2.4em]
+\item A record without a constraint list and a licence slot excludes a class
+  of device knowledge that no classical target can carry; this is why the
+  artefact carries both even when both are empty
+  (Requirement~\ref{req:constraint-and-licence-slots}).
+\item Re-declaring the coarse-graining does not help. Merging the outcomes of
+  $\mathcal{O}_{*}$ into one letter turns the event bound into a per-outcome
+  bound and makes it encodable, but only by destroying the distinction
+  between the merged outcomes, which is precisely what ``must not be merged''
+  forbids when they carry key information (the fibre condition of the
+  flag-state submodule's \tref{weight route}).
+\item The counterexample is two-dimensional and uses only three outcomes, so it
+  is not an artefact of infinite dimension, of photon number, or of the optical
+  setting. It applies to every squashed model whose target is classical on
+  the whole of $\Qsys$, and it says nothing of a target with a block on which
+  it is not classical, which can carry the bound as the trivial encoding
+  above does.
+\end{enumerate}
+\end{remark}

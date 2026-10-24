@@ -1,0 +1,30 @@
+% ---
+% id: reductions/req:pinched-channel-witness
+% kind: req
+% title: "The pinched squashing channel as the emitted witness"
+% summary: >-
+%   The artefact's channel witness is the squashing channel followed by the
+%   sector pinching. The block-diagonality restriction and every other emitted
+%   constraint are then sound for one channel, which a block-diagonal
+%   optimisation of the emitted target needs.
+% prominence: standard
+% status: accepted
+% uses: [cor:blockdiag, rem:channel-choice]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Part (iii) of Corollary~\ref{cor:blockdiag} is what makes the emitted target
+usable by a block-diagonal optimisation, and it holds for the pinched
+channel; Remark~\ref{rem:channel-choice} requires every constraint imposed
+together to be sound for one and the same channel.
+
+\begin{requirement}\label{req:pinched-channel-witness}
+The engine emits $\PinS\circ\Lambda$, the \tref{squashing channel} followed by the
+pinching onto the sectors of Corollary~\ref{cor:blockdiag}, as the
+artefact's channel witness (output \iface{squashing_channel}), so that the
+block-diagonality restriction of that corollary's part (iii) and every other
+emitted constraint are sound for \emph{one} channel.
+\end{requirement}

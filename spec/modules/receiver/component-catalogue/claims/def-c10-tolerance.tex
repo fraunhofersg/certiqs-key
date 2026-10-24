@@ -1,0 +1,41 @@
+% ---
+% id: receiver/component-catalogue/def:c10-tolerance
+% kind: def
+% title: "Admission test of the generic block"
+% summary: >-
+%   The contractivity of the generic block C10 is decided by the route-(ii)
+%   test of [[def:tolmap]] (v), at the same widened threshold, and its lossless
+%   case, an equality, is decided two-sidedly within ε₁.
+%   Without the widening, rounding one unit above one would refuse a unitary
+%   block.
+% prominence: standard
+% status: accepted
+% uses: [receiver/def:tolmap, thm:catalogue-admissibility]
+% mentions: [ex:bb84, def:catalogue-entries]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The generic block is the one catalogue entry whose admission is a spectral
+test on a supplied matrix, and that test is evaluated in floating point. It
+is decided at $\varepsilon_1$, one of the \tref{receiver tolerances}, for the
+same reason as at route (ii): a lossless block has
+$\lmax(\Gmat_\Sigma^\dagger\Gmat_\Sigma)=1$ \emph{exactly} (the worked
+instrument \eqref{eq:bb84G} of Example~\ref{ex:bb84} is unitary), so a
+computed value one rounding unit above $1$ would refuse it.
+
+\begin{definition}
+\label{def:c10-tolerance}
+The (E1) predicate of catalogue entry C10 of
+Definition~\ref{def:catalogue-entries} is decided by the route-(ii)
+contractivity test of Definition~\ref{def:tolmap}\,(v) applied to the supplied
+block $\Gmat_\Sigma$: the block is admitted when
+$\lmax(\Gmat_\Sigma^\dagger\Gmat_\Sigma)\le1+\varepsilon_1$. C10 is the one
+entry whose (E1) is a spectral condition rather than a parameter-domain
+comparison (Theorem~\ref{thm:catalogue-admissibility}\,(iii)). Its lossless
+sub-case $\Gmat_\Sigma^\dagger\Gmat_\Sigma=\id$ is an \emph{equality} and is
+decided two-sidedly, as
+$\lVert\Gmat_\Sigma^\dagger\Gmat_\Sigma-\id\rVert\le\varepsilon_1$.
+\end{definition}

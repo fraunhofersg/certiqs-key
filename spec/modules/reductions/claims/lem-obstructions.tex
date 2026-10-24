@@ -1,0 +1,57 @@
+% ---
+% id: reductions/lem:obstructions
+% kind: lem
+% title: "Necessary conditions for a squashing relation"
+% summary: >-
+%   If M squashes to F, the spectrum of each real combination of physical
+%   elements lies between the extreme spectral values of the same combination
+%   of target elements, and the physical span is no larger and inherits every
+%   linear relation with the identity. A relation violating either is
+%   impossible.
+% prominence: standard
+% status: accepted
+% uses: [def:squashing]
+% mentions: [rem:obstructiondecide]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Not every pair $(M,F)$ admits a \tref{squashing channel}, and two necessary
+conditions are cheap enough to check by inspection. They serve to
+\emph{refuse} a declared relation, never to establish one;
+Remark~\ref{rem:obstructiondecide} says how both are decided on declared
+numbers.
+
+\begin{lemma}\label{lem:obstructions}
+Let $M\dsq F$, let $X=\sum_{v}a_{v}F_{v}$ be a real linear combination of
+target effects and let $X'\coloneqq\sum_{v}a_{v}M_{v}$. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(spectral inclusion)}
+  $\operatorname{spec}(X')\subseteq[\inf\operatorname{spec}X,\
+  \sup\operatorname{spec}X]$; in particular
+  $\operatorname{spec}(M_v)\subseteq[\inf\operatorname{spec}F_v,\
+  \sup\operatorname{spec}F_v]$ and $\|M_v\|\le\|F_v\|$ for every $v$;
+\item \emph{(span monotonicity)}
+  $\dim\operatorname{span}\{M_v\}\le\dim\operatorname{span}\{F_v\}
+  \le(\dim\Hs{\Qsys})^{2}$, and every linear relation
+  $\sum_va_vF_v=c\,\idon{\Qsys}$ forces $\sum_va_vM_v=c\,\idon{\Bsys}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Let $\Lambda$ realize the relation, so $X'=\Lambda^{\dagger}(X)$ by linearity.
+(i) With $a\coloneqq\inf\operatorname{spec}X$ and
+$b\coloneqq\sup\operatorname{spec}X$ we have
+$a\,\idon{\Qsys}\preceq X\preceq b\,\idon{\Qsys}$; applying the positive unital
+map $\Lambda^{\dagger}$ preserves both inequalities, so
+$a\,\idon{\Bsys}\preceq X'\preceq b\,\idon{\Bsys}$. Taking $X=F_v$ gives the
+inclusion for $M_v$, and the norm bound follows since
+$\|Y\|=\sup\operatorname{spec}Y$ for a positive operator.
+(ii) $M_v=\Lambda^{\dagger}(F_v)$, so
+$\operatorname{span}\{M_v\}=\Lambda^{\dagger}\big(\operatorname{span}\{F_v\}\big)$
+and the dimension cannot increase; the bound
+$(\dim\Hs{\Qsys})^{2}$ is $\dim\Lin{\Qsys}$. Unitality gives the last
+statement.
+\end{proof}

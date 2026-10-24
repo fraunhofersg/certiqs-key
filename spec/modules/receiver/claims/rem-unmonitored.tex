@@ -1,0 +1,28 @@
+% ---
+% id: receiver/rem:unmonitored
+% kind: rem
+% title: "Unmonitored output modes"
+% summary: >-
+%   Deleting the row of an output mode that no port monitors changes no port
+%   Gram and hence no POVM element; the deleted amplitude is carried by the
+%   dilation. Which modes lie in a port is a declaration with no observable
+%   content beyond the Grams it produces.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:unmonitored}
+A mode that lies in no port is undetected: the amplitude reaching it is loss.
+Nothing is lost by that convention. If a model retains an output mode that no
+port monitors, deleting the corresponding row of $\Gmat$ changes no $A_J$
+(the row does not appear in any $\Emd{J}\Gmat_{\Inp}$), hence changes no POVM
+element; the deleted amplitude is carried by the dilation instead. The
+partition into ``in some port'' and ``in no port'' is therefore a
+\emph{declaration} with no observable content beyond the $A_k$ it produces.
+\end{remark}

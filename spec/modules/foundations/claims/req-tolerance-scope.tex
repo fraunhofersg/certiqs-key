@@ -1,0 +1,49 @@
+% ---
+% id: foundations/req:tolerance-scope
+% kind: req
+% title: "Scope of the declared tolerance"
+% summary: >-
+%   The declared tolerance governs only the repair of an instance's own data.
+%   Sets defined by declared data stay exact, a window on a computed object is
+%   another declared number, and a physical bound or a slack on a supplier's
+%   evaluation is never derived from the tolerance.
+% prominence: standard
+% status: accepted
+% uses: [def:tolerance, def:declared-data]
+% mentions: [req:declared-tolerance, req:consumer-decides-exactly, req:norm-conversion, req:exact-island]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}\label{req:tolerance-scope}
+The declared tolerance governs the repair of an instance's own
+\tref{declared data} (Requirement~\ref{req:declared-tolerance}) and nothing
+else; in particular no consumer reads it
+(Requirement~\ref{req:consumer-decides-exactly}).
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item A set defined by declared data is the exact set those data define, and
+  the declared tolerance relaxes none of its defining conditions. A consumer
+  that certifies a supplied point as a member of such a set certifies
+  membership in the exact set, deciding it exactly on the declared values of
+  the point. A check of a supplied point at a window of the module's own
+  certifies no membership in such a set, and its window is a number of that
+  module, as in (ii).
+\item The declared tolerance does not govern a module's arithmetic on
+  \tref[computed object]{computed objects} (Definition~\ref{def:declared-data}):
+  a window at which a module checks a computed object, or within which it
+  repairs one, is a number that module declares and records in its own right,
+  and it is never the declared tolerance.
+\item The declared tolerance is a numerical tolerance and not a
+  device-uncertainty budget. A declared number that bounds a physical
+  quantity, such as a tail budget, is declared separately and is never derived
+  from the declared tolerance. A slack that an instance declares to a supplier
+  (Definition~\ref{def:declared-data}\,(ii)) for the supplier's own conditions
+  is a declared number of its own. One that bounds the error of the
+  supplier's floating-point evaluation of a quantity, such as a slack on a
+  computed eigenvalue (Requirement~\ref{req:exact-island}), is never derived
+  from the declared tolerance; any other is derived from it, if at all, only
+  as Requirement~\ref{req:norm-conversion} says.
+\end{enumerate}
+\end{requirement}

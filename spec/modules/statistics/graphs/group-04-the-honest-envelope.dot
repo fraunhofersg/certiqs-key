@@ -1,0 +1,16 @@
+digraph claims {
+  rankdir=LR;
+  graph [label="4 The honest envelope\nArrow: claim -> prerequisite. Solid: uses; dashed: assumes.\nDeclared dependencies, not a proof check. Mentions excluded.", labelloc=t, fontsize=13, fontname="Arial", bgcolor="white", pad=0.25, nodesep=0.3];
+  node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11, margin="0.13,0.09"];
+  edge [color="#526777", arrowsize=0.65];
+  subgraph "cluster_statistics" {
+    label="statistics"; color="#cbd5df";
+    "statistics/def:conservative-evaluation" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">statistics/def:conservative-evaluation<BR/>Exact data and conservative evaluation<BR/>implemented</TD></TR><TR><TD HREF="../claims/def-conservative-evaluation.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-statistics/def:conservative-evaluation" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled", URL="../claims/def-conservative-evaluation.tex", target="_top"];
+    "statistics/def:envelope" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">statistics/def:envelope<BR/>Honest envelope and its envelope set<BR/>implemented</TD></TR><TR><TD HREF="../claims/def-envelope.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-statistics/def:envelope" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled", URL="../claims/def-envelope.tex", target="_top"];
+    "statistics/def:taxonomy" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">statistics/def:taxonomy<BR/>Admissible geometries and the<BR/>canonical box form<BR/>implemented<BR/>BOUNDARY: further prerequisites omitted</TD></TR><TR><TD HREF="../claims/def-taxonomy.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-statistics/def:taxonomy" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled,dashed", URL="../claims/def-taxonomy.tex", target="_top"];
+    "statistics/lem:hon-degenerate" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">statistics/lem:hon-degenerate<BR/>The envelope assumption at a<BR/>degenerate envelope<BR/>accepted</TD></TR><TR><TD HREF="../claims/lem-hon-degenerate.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-statistics/lem:hon-degenerate" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../claims/lem-hon-degenerate.tex", target="_top"];
+  }
+  "statistics/def:conservative-evaluation" -> "statistics/def:envelope";
+  "statistics/def:envelope" -> "statistics/def:taxonomy";
+  "statistics/lem:hon-degenerate" -> "statistics/def:envelope";
+}

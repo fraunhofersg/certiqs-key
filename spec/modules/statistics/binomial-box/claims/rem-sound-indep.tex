@@ -1,0 +1,36 @@
+% ---
+% id: statistics/binomial-box/rem:sound-indep
+% kind: rem
+% title: "Soundness does not depend on the honest-round assumptions"
+% summary: >-
+%   The honest-round assumptions enter only the completeness statements: if
+%   honest behaviour leaves the declared envelope, ε* is void and aborts may
+%   be more frequent. Keys from accepted runs are unaffected, since the
+%   acceptance set enters the security statement only as a fixed set.
+% prominence: standard
+% status: accepted
+% uses: [thm:completeness-bound]
+% mentions: [thm:monotonicity-limits, statistics/singleton/thm:singleton-completeness, statistics/lem:hon-degenerate]
+% assumes: [A-HON-ENV, A-HON, A-TSM]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:sound-indep}
+Assumption~\ref{ass:hon-env}, and Assumption~\ref{ass:hon} which is its
+degenerate case (Lemma~\ref{lem:hon-degenerate}), are statements about the
+honest channel and are used only in the completeness statements, such as
+Theorems~\ref{thm:completeness-bound} and~\ref{thm:monotonicity-limits}, which read A-HON-ENV, and
+Theorem~\ref{thm:singleton-completeness}, which reads A-HON. Under the output-state model of the
+test statistics (\xref{reductions/ass:tsm}) the round statistics are
+state-dependent in general, so no such concentration is available against an
+adversary --- and none is needed, because completeness is a usability
+property. If the true honest behaviour leaves the declared envelope --- for a
+single declared law, if the true honest channel differs from the declared
+$\honest$ --- the figure $\varepsilon^{\star}$ is void and the protocol may
+abort more often than advertised; the key produced on the runs that
+\emph{do} accept is unaffected, because $\acSet$ enters the security
+statement only as the fixed set $\hlow$ is an infimum over. Soundness is
+unaffected in either case.
+\end{remark}

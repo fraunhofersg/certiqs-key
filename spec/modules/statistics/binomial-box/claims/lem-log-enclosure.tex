@@ -1,0 +1,130 @@
+% ---
+% id: statistics/binomial-box/lem:log-enclosure
+% kind: lem
+% title: "Rational bounds on the logarithm from integer square roots"
+% summary: >-
+%   For x > 0 and m ≥ 1, m(1 − x^(−1/m)) ≤ ln x ≤ m(x^(1/m) − 1), with an
+%   explicit slack; for rational x and m = 2^j, j integer square roots give
+%   rational bounds of any prescribed width. The Bernstein rule and the
+%   enclosure evaluation take every logarithm this way.
+% prominence: standard
+% status: implemented
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.logs:log_bounds
+% lean:
+% ---
+
+No logarithm is taken from a library: every logarithm the Bernstein rule and
+the local evaluation of the exact rule need is bounded from both sides by
+rationals. The bounds are the tangent inequality $\ln t\le t-1$ at
+$t=x^{\pm1/m}$, the identity by which Briggs tabulated logarithms through
+repeated square roots before series methods, and their slack is the
+second-order remainder of the exponential series; both are derived in full
+here.
+
+\begin{lemma}\label{lem:log-enclosure}
+Let $x>0$ be real and $m\ge1$ an integer. Then
+\begin{equation}\label{eq:log-root-bounds}
+  m\big(1-x^{-1/m}\big)\ \le\ \ln x\ \le\ m\big(x^{1/m}-1\big),
+\end{equation}
+with equality on either side if and only if $x=1$, and both slacks are bounded
+by
+\begin{equation}\label{eq:log-root-slack}
+  \max\Big\{m\big(x^{1/m}-1\big)-\ln x,\ \ \ln x-m\big(1-x^{-1/m}\big)\Big\}
+  \ \le\ \frac{(\ln x)^{2}}{2m}\,e^{|\ln x|/m}.
+\end{equation}
+Consequently, if $l,u$ are rationals with $0<l\le x^{1/m}\le u$, then
+\begin{equation}\label{eq:log-rational-bounds}
+  m\Big(1-\frac1l\Big)\ \le\ \ln x\ \le\ m\,(u-1),
+\end{equation}
+and for rational $x=a/b$ ($a,b$ positive integers) and $m=2^{j}$, such
+$l,u$ of any prescribed positive width are computed by $j$ integer square
+roots: with $\operatorname{isqrt}(N)\coloneqq\lfloor\sqrt N\rfloor$
+for an integer $N\ge0$, one has for every rational $y=c/d>0$
+\begin{equation}\label{eq:isqrt-bounds}
+  \frac{\operatorname{isqrt}(c\,d\,4^{s})}{d\,2^{s}}
+  \ \le\ \sqrt{y}\ <\
+  \frac{\operatorname{isqrt}(c\,d\,4^{s})+1}{d\,2^{s}},
+\end{equation}
+the two bounds differing by $1/(d\,2^{s})\le2^{-s}$, and iterating
+\eqref{eq:isqrt-bounds} $j$ times, the lower bound always taken from the
+previous lower bound and the upper from the previous upper, gives
+$l\le x^{1/2^{j}}\le u$ whose width $u-l$ is an explicit rational the
+caller reads off and drives below any prescribed bound by the precisions
+$s$ of the steps.
+\end{lemma}
+
+\begin{proof}
+\emph{The tangent inequality.} For $t>0$ put $f(t)\coloneqq t-1-\ln t$. Then
+$f'(t)=1-1/t$, which is negative on $(0,1)$ and positive on $(1,\infty)$, so
+$f$ attains its minimum at $t=1$, where $f(1)=0$. Hence
+$\ln t\le t-1$ for every $t>0$, with equality if and only if $t=1$.
+
+\emph{\eqref{eq:log-root-bounds}.} Apply the tangent inequality at
+$t=x^{1/m}$: $\ln x^{1/m}=(\ln x)/m\le x^{1/m}-1$, i.e.\ $\ln x\le
+m(x^{1/m}-1)$. Apply it at $t=x^{-1/m}$: $-(\ln x)/m\le x^{-1/m}-1$, i.e.\
+$\ln x\ge m(1-x^{-1/m})$. Equality holds on either side exactly when the
+argument $t$ equals $1$, that is, when $x=1$.
+
+\emph{\eqref{eq:log-root-slack}.} Put $y\coloneqq(\ln x)/m$, so
+$x^{1/m}=e^{y}$ and $x^{-1/m}=e^{-y}$. The two slacks are
+$m(e^{y}-1-y)$ and $m(e^{-y}-1+y)$. From the exponential series,
+$e^{\pm y}-1\mp y=\sum_{k\ge2}(\pm y)^{k}/k!$, and since $2/k!\le1/(k-2)!$
+for $k\ge2$,
+\begin{equation*}
+  \big|e^{\pm y}-1\mp y\big|\ \le\ \sum_{k\ge2}\frac{|y|^{k}}{k!}
+  \ =\ \frac{y^{2}}{2}\sum_{k\ge2}\frac{2\,|y|^{k-2}}{k!}
+  \ \le\ \frac{y^{2}}{2}\sum_{i\ge0}\frac{|y|^{i}}{i!}
+  \ =\ \frac{y^{2}}{2}\,e^{|y|}.
+\end{equation*}
+Multiplying by $m$ and substituting $y=(\ln x)/m$ gives
+\eqref{eq:log-root-slack}.
+
+\emph{\eqref{eq:log-rational-bounds}.} If $0<l\le x^{1/m}$ then
+$x^{-1/m}\le1/l$, so $m(1-x^{-1/m})\ge m(1-1/l)$; if $x^{1/m}\le u$ then
+$m(x^{1/m}-1)\le m(u-1)$. Combine with \eqref{eq:log-root-bounds}.
+
+\emph{\eqref{eq:isqrt-bounds}.} For $y=c/d>0$,
+$\sqrt{y}=\sqrt{c\,d\,4^{s}}\big/(d\,2^{s})$, and for the integer
+$N\coloneqq c\,d\,4^{s}$ the definition of $\operatorname{isqrt}$ gives
+$\operatorname{isqrt}(N)\le\sqrt N<\operatorname{isqrt}(N)+1$; divide by
+$d\,2^{s}$. The difference of the two bounds is $1/(d\,2^{s})\le2^{-s}$
+because $d\ge1$.
+
+\emph{The iteration.} The square root is non-decreasing on $[0,\infty)$, so
+from $l_i\le x^{1/2^{i}}\le u_i$ follows $\sqrt{l_i}\le x^{1/2^{i+1}}\le
+\sqrt{u_i}$; applying the lower bound of \eqref{eq:isqrt-bounds} to
+$y=l_i$ and the upper bound to $y=u_i$, at a precision $s_i$ of the caller's
+choice, gives rationals $l_{i+1}\le x^{1/2^{i+1}}\le u_{i+1}$ with
+$l_{i+1}>0$ whenever $l_i>0$ and $s_i$ is large enough that the lower bound
+is positive. Starting from $l_0=u_0=x$, after $j$ steps
+$l\coloneqq l_j\le x^{1/2^{j}}\le u_j\eqqcolon u$. For the width
+$w_i\coloneqq u_i-l_i$: each step's exact roots satisfy
+$\sqrt{u_i}-\sqrt{l_i}=w_i/(\sqrt{u_i}+\sqrt{l_i})$, and each of the two
+roundings moves its bound by at most $1/(d\,2^{s_i})\le2^{-s_i}$, with $d$
+the denominator of its own argument, because the two bounds of
+\eqref{eq:isqrt-bounds} enclose the root and differ by $1/(d\,2^{s_i})$: the
+lower bound satisfies $l_{i+1}>\sqrt{l_i}-2^{-s_i}$ and the upper bound
+$u_{i+1}\le\sqrt{u_i}+2^{-s_i}$. The two add at most $2\cdot2^{-s_i}$ in
+total, so
+\begin{equation*}
+  w_{i+1}\ \le\ \frac{w_i}{\sqrt{u_i}+\sqrt{l_i}}+2\cdot2^{-s_i}
+  \ \le\ \frac{w_i}{2\sqrt{l_i}}+2\cdot2^{-s_i},
+\end{equation*}
+with $w_0=0$. To bound the factors $1/(2\sqrt{l_i})$ independently of the
+precisions, write $x_i\coloneqq x^{1/2^{i}}$ and require of each $s_i$ that
+$2^{-s_i}\le(1/\sqrt2-1/2)\,x_{i+1}$, a condition on $x$ alone that every
+larger $s_i$ also meets. Then $l_i\ge x_i/2$ for every $i\le j$, by
+induction: $l_0=x$, and $l_i\ge x_i/2$ gives
+$l_{i+1}>\sqrt{l_i}-2^{-s_i}\ge x_{i+1}/\sqrt2-(1/\sqrt2-1/2)\,x_{i+1}
+=x_{i+1}/2$, using $\sqrt{x_i}=x_{i+1}$. In particular every $l_i$ is
+positive, and $1/(2\sqrt{l_i})\le1/(\sqrt2\,x_{i+1})\le K$ for $i<j$, where
+$K\coloneqq\max\{1,\max_{i<j}1/(\sqrt2\,x_{i+1})\}$ depends on $x$ and $j$
+alone. By induction
+$w_j\le\sum_{i<j}K^{\,j-1-i}\,2\cdot2^{-s_i}$: finitely many terms, each
+driven below any prescribed bound by its own $s_i$ without changing $K$. The
+achieved width is the explicit rational $u_j-l_j$ a caller reads off.
+\end{proof}

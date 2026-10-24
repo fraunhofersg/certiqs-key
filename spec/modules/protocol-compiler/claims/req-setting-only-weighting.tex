@@ -1,0 +1,34 @@
+% ---
+% id: protocol-compiler/req:setting-only-weighting
+% kind: req
+% title: "Setting-dependent weighting read through the setting only"
+% summary: >-
+%   A setting-dependent weighting presented through anything but the station's setting,
+%   such as the outcome alphabet or the device outcome, is refused by type. A
+%   value whose weight varied with the device outcome would be inferred from it
+%   and would not be a choice.
+% prominence: standard
+% status: implemented
+% uses: [def:weighted, thm:choice-encoding]
+% mentions: [ass:coin, rem:relabel]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.weights:refuse_outcome_dependent_weighting
+% lean:
+% ---
+
+A value $f$ whose weight varied with the device outcome would be inferred from
+that outcome and would not be a choice (Assumption~\ref{ass:coin},
+Remark~\ref{rem:relabel}); so the weighting reaches an outcome only through
+its \tref{setting component}, as Theorem~\ref{thm:choice-encoding}\,(viii) records.
+
+\begin{requirement}\label{req:setting-only-weighting}
+The engine refuses by type, with \iface{choice_weight_depends_on_outcome}, a
+weighting of the \tref{setting-dependent form} of
+Definition~\ref{def:weighted} that is presented indexed by the \tref[outcome alphabet]{outcome
+alphabet} $\Vset$, by the device outcome, or by any component of the outcome
+other than its setting; in the general format, one presented indexed by a
+\tref{measured factor}'s whole outcome, by another factor's outcome, or by any
+component other than that factor's setting.
+\end{requirement}

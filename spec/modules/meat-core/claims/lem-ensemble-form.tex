@@ -1,0 +1,85 @@
+% ---
+% id: meat-core/lem:ensemble-form
+% kind: lem
+% title: "The measurement an ensemble-form declaration denotes"
+% summary: >-
+%   Positive operators summing to Alice's marginal sector by sector denote a
+%   POVM, block diagonal along her sectors, that returns them between square
+%   roots of the marginal and vanishes on a sector exactly where they do.
+%   Conversely a POVM and a marginal, both block diagonal, give such operators.
+% prominence: standard
+% status: implemented
+% uses: [def:declaration, def:admissible-declaration]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.declaration.general_validation:validate_general_declaration
+% lean:
+% notes: "This lemma does not use transmitter/lem:ensemble-presentation, which proves the same of its own completion on the first letter, and chooses the completion proportional to tr N_x so that part (iii) holds, which the first-letter completion does not give when tau_A is singular on a sector."
+% ---
+
+A declaration in \tref{ensemble form} holds, in place of Alice's POVM,
+positive operators $N_x$ that sum to her marginal sector by sector,
+\eqref{eq:ensembleform}. The lemma shows that the operators
+\eqref{eq:ensemblepovm} such a declaration denotes are a POVM, so that every
+claim of this module applies to it as it stands; by part~(iii), every
+predicate asking which outcomes can occur on a sector is decided on the
+declared numbers. Part~(iv) is the converse; the operators it gives need not
+be exactly representable.
+
+\begin{lemma}\label{lem:ensemble-form}
+Let $\Hs{A}=\bigoplus_{t\in\mathbb{T}}\Hs{A_t}$, and for every $t$ let
+$\tau^{(t)}_A\in\Pos{A_t}$ be non-zero and $N^{(t)}_x\in\Pos{A_t}$,
+$x\in\Xset$, with $\sum_{x}N^{(t)}_x=\tau^{(t)}_A$. Let $P_t$ be the
+projector onto the support of $\tau^{(t)}_A$, let
+$(\tau^{(t)}_A)^{-1/2}$ be the inverse square root on that support, zero off
+it, and let $M^{(t)}_x$ be the operator of \eqref{eq:ensemblepovm},
+$M_x\coloneqq\bigoplus_tM^{(t)}_x$. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $M^{(t)}_x\succeq0$ and $\sum_xM^{(t)}_x=\idon{A_t}$ for every $t$, so
+$\{M_x\}_{x\in\Xset}$ is a POVM on $A$ and every element is block diagonal
+along $\mathbb{T}$;
+\item $(\tau^{(t)}_A)^{1/2}M^{(t)}_x(\tau^{(t)}_A)^{1/2}=N^{(t)}_x$, and in
+particular $\tr[M_x\tau_A]=\sum_t\tr N^{(t)}_x$;
+\item $M^{(t)}_x=0$ if and only if $N^{(t)}_x=0$;
+\item conversely, if $\tau_A\in\Pos{A}$ and $\{M_x\}$ is a POVM on $A$, both
+block diagonal along $\mathbb{T}$, then
+$N_x\coloneqq\tau_A^{1/2}M_x\tau_A^{1/2}$ is positive semidefinite and block
+diagonal along $\mathbb{T}$ and $\sum_xN_x=\tau_A$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Fix $t$ and drop it from the notation; write $S\coloneqq\tau_A^{-1/2}$, a
+positive semidefinite operator with $S\tau_AS=P$ and
+$\tau_A^{1/2}S=S\tau_A^{1/2}=P$, and $w_x\coloneqq\tr N_x/\tr\tau_A$, which
+is defined because $\tau_A\ne0$ is positive semidefinite, hence of positive
+trace, and satisfies $w_x\ge0$ and $\sum_xw_x=\tr\tau_A/\tr\tau_A=1$.
+
+(i) $SN_xS\succeq0$ as a conjugation of a positive semidefinite operator by
+a Hermitian one, and $w_x(\idon{}-P)\succeq0$; so $M_x\succeq0$. By
+linearity $\sum_xM_x=S\tau_AS+(\idon{}-P)=P+(\idon{}-P)=\idon{}$. Block
+diagonality of $M_x$ along $\mathbb{T}$ is its definition as a direct sum.
+
+(ii) From $0\preceq N_x\preceq\sum_{x'}N_{x'}=\tau_A$ it follows that
+$N_x$ vanishes on the kernel of $\tau_A$: for $\xi$ in that kernel
+$0\le\bra{\xi}N_x\ket{\xi}\le\bra{\xi}\tau_A\ket{\xi}=0$, and a positive
+semidefinite operator with $\bra{\xi}N_x\ket{\xi}=0$ has $N_x\ket{\xi}=0$.
+Hence $PN_xP=N_x$. Then
+$\tau_A^{1/2}M_x\tau_A^{1/2}=PN_xP+w_x\,\tau_A^{1/2}(\idon{}-P)\tau_A^{1/2}
+=N_x$, because $\tau_A^{1/2}(\idon{}-P)=0$. Taking the trace,
+$\tr[M_x\tau_A]=\tr N_x$ on the sector, and the sum over $t$ is the second
+statement.
+
+(iii) If $N_x=0$ then $w_x=0$ and both terms of $M_x$ vanish. If $N_x\ne0$
+then $N_x=PN_xP$ is a non-zero operator on the support of $\tau_A$, on which
+$S$ is invertible, so $SN_xS\ne0$; and $SN_xS$ is supported on the range of
+$P$ while $w_x(\idon{}-P)$ is supported on its complement, so their sum is
+non-zero.
+
+(iv) $N_x$ is a conjugation of $M_x\succeq0$ by the Hermitian operator
+$\tau_A^{1/2}$, which is block diagonal along $\mathbb{T}$ because
+$\tau_A$ is, the square root acting block by block; and
+$\sum_xN_x=\tau_A^{1/2}\idon{A}\tau_A^{1/2}=\tau_A$.
+\end{proof}

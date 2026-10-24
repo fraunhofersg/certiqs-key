@@ -1,0 +1,115 @@
+% ---
+% id: statistics/binomial-box/rem:guard-activation
+% kind: rem
+% title: "Regimes in which the guard acts"
+% summary: >-
+%   Four exact comparisons of the allocation with the binomial distribution
+%   function decide whether the guard acts and whether it costs more than one
+%   count. It acts even at ordinary budgets, on any outcome whose positive
+%   expected count is at most its tail budget.
+% prominence: standard
+% status: accepted
+% uses: [prop:rule-exact, lem:guard, statistics/cor:tail-forms, statistics/lem:exact-strict-tails, statistics/thm:binomial-tails, def:interval, def:endpoint-rule, def:construction, statistics/def:matched-alphabet]
+% mentions: [thm:monotonicity-limits, rem:guard, req:rule-in-force, req:request-defaults, protocol-compiler/def:spec, protocol-compiler/ass:coin]
+% assumes: [A-TSM, A-ALPHABET]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:guard-activation}
+This remark reads the guard on the exact rule of
+Definition~\ref{def:interval}, written for a single honest value
+$p_{\hat c}=\honest(\hat c)$, the degenerate envelope; for a general envelope
+every statement holds side by side, by the side-wise reading of
+Definition~\ref{def:endpoint-rule}.
+
+The four exact conditions \eqref{eq:guard-lo0}--\eqref{eq:guard-up1} of
+Proposition~\ref{prop:rule-exact}\,(vi) say where the guard acts and what it
+costs there. By \eqref{eq:guard-lo0} and \eqref{eq:guard-up0} the guard is
+entirely inert as soon as each allocated tail budget is strictly below the
+mass the count law places at or below $\lfloor np_{\hat c}\rfloor$,
+respectively at or above $\lceil np_{\hat c}\rceil$; by \eqref{eq:guard-lo1}
+and \eqref{eq:guard-up1} it costs at most one count under the correspondingly
+weaker conditions. All four are comparisons of an allocated budget against a
+value of the binomial distribution function, hence decidable exactly in the
+closed forms \eqref{eq:tails-used} of Corollary~\ref{cor:tail-forms}: each
+is the negation of a comparison of Lemma~\ref{lem:exact-strict-tails}\,(ii)
+at the count next to the one it names, or a boundary value of
+Theorem~\ref{thm:binomial-tails} where that count leaves $\{0,\dots,n\}$,
+with no machinery beyond what
+Definition~\ref{def:interval} already requires. The two
+pairs fail in different regimes, however, and are not to be read together.
+
+\emph{A cost of more than one count} --- failure of \eqref{eq:guard-lo1} or of
+\eqref{eq:guard-up1} --- requires a single outcome's single tail to carry a
+budget at least the mass the count law places up to one step beyond
+$np_{\hat c}$, that is
+$\varepsilon^{-}(\hat c)\ge\Pr[\Ncount{\hat c}\le\lfloor np_{\hat c}\rfloor+1]$
+respectively
+$\varepsilon^{+}(\hat c)\ge\Pr[\Ncount{\hat c}\ge\lceil np_{\hat c}\rceil-1]$.
+At the ends of the range that cannot happen at all: if $np_{\hat c}<1$ then
+$\lceil np_{\hat c}\rceil-1\le0$ and
+$\Pr[\Ncount{\hat c}\ge\lceil np_{\hat c}\rceil-1]=1>\varepsilon^{+}(\hat c)$,
+and if $\lfloor np_{\hat c}\rfloor\ge n-1$ then
+$\lfloor np_{\hat c}\rfloor+1\ge n$ and
+$\Pr[\Ncount{\hat c}\le\lfloor np_{\hat c}\rfloor+1]=1>\varepsilon^{-}(\hat
+c)$, both using $\varepsilon^{\pm}(\hat c)\le\ecomp<1$. In the example of
+Remark~\ref{rem:guard} the budget is indeed near-unit: $\varepsilon^{-}(\hat
+c)=\tfrac9{10}$ against $\Pr[\Ncount{\hat c}\le6]=\tfrac{53}{64}$. That is
+also the regime of the $\ecomp=\tfrac45$-on-one-outcome counterexample of
+Theorem~\ref{thm:monotonicity-limits}\,(v), and under an allocation that concentrates a
+near-unit budget on one or two constrained outcomes the enlargement is to be
+read off \eqref{eq:guard-cost}, not estimated by a rule of thumb.
+
+\emph{Activation of the guard at all} --- failure of \eqref{eq:guard-lo0} or
+of \eqref{eq:guard-up0} --- is a different matter: it is not confined to
+near-unit budgets. It occurs at ordinary budgets and under the engine's
+default \tref[uniform rule]{uniform allocation rule}, for any outcome whose expected count over
+the whole run is positive and at or below the tail budget allocated to it.
+Precisely, if $0<np_{\hat c}\le\varepsilon^{+}(\hat c)$ --- which forces
+$np_{\hat c}<1$ and hence $\lceil np_{\hat c}\rceil=1$, since
+$\varepsilon^{+}(\hat c)<1$ --- then Bernoulli's inequality
+$(1-p_{\hat c})^{n}\ge1-np_{\hat c}$ gives
+\begin{equation*}
+  \Pr\big[\Ncount{\hat c}\ge\lceil np_{\hat c}\rceil\big]
+  =1-(1-p_{\hat c})^{n}\ \le\ np_{\hat c}\ \le\ \varepsilon^{+}(\hat c),
+\end{equation*}
+so \eqref{eq:guard-up0} fails, $\kappa^{+}(\hat c)=0$, and the guard raises
+the emitted endpoint to $k^{+}(\hat c)=1$. Symmetrically, if
+$0<n(1-p_{\hat c})\le\varepsilon^{-}(\hat c)$ then $\lfloor
+np_{\hat c}\rfloor=n-1$ and $\Pr[\Ncount{\hat c}\le n-1]=1-p_{\hat c}^{\,n}\le
+n(1-p_{\hat c})\le\varepsilon^{-}(\hat c)$ --- the same inequality applied at
+$1-p_{\hat c}$ --- so \eqref{eq:guard-lo0} fails, $\kappa^{-}(\hat c)=n$, and
+the guard lowers the emitted endpoint to $k^{-}(\hat c)=n-1$. A concrete
+instance is an \tref{admissible input} with the engine's default rule and
+default allocation (Requirements~\ref{req:rule-in-force}
+and~\ref{req:request-defaults}): $\Chatset=\{\hat c_0,\hat c_1\}$, $n=10$,
+$\honest=(\tfrac{999}{1000},\tfrac1{1000})$, $\Chatcon=\Chatset$,
+$\ecomp=\tfrac1{10}$ and the uniform allocation
+$\varepsilon^{\pm}(\hat c)=\ecomp/(2|\Chatcon|)=\tfrac1{40}$; there
+$np_{\hat c_1}=n(1-p_{\hat c_0})=\tfrac1{100}<\tfrac1{40}$, so the guard is
+active on the upper side of $\hat c_1$ and on the lower side of $\hat c_0$
+--- at a budget nowhere near $1$, and with the budget spread uniformly rather
+than concentrated. Nor is this a small-$n$ artefact: at $n=10^{6}$ with
+$\ecomp=\tfrac1{10}$ and $|\Chatcon|=5$ the uniform rule allocates
+$\varepsilon^{\pm}(\hat c)=10^{-2}$, and a constrained outcome of honest
+probability $10^{-9}$ has $np_{\hat c}=10^{-3}\le\varepsilon^{+}(\hat c)$, so
+the guard forces $q^{+}(\hat c)=1/n$ where the raw quantile interval would
+have given $0$. Under A-TSM (\xref{reductions/ass:tsm}), this
+module's alphabet being that of the consuming declaration
+(Definition~\ref{def:matched-alphabet}), the acceptance alphabet is the
+joint outcome, carrying every per-round public choice: one made at a
+measuring station as a component of the outcome by A-TSM, and one on the
+letter side as a component of the letter
+(\xref{protocol-compiler/def:spec}\,(a)), drawn as declared by A-COIN
+(\xref{protocol-compiler/ass:coin}); so outcomes of
+expected count at or below one are a routine feature of a fine-grained
+$\Chatset$ rather than an exotic one. What the guard costs on them is
+nevertheless bounded, by both measures: exactly one count --- the relevant
+condition of the previous paragraph holds in each case,
+$\lceil np_{\hat c}\rceil-1\le0$ giving \eqref{eq:guard-up1} on the upper
+side and $\lfloor np_{\hat c}\rfloor+1\ge n$ giving \eqref{eq:guard-lo1} on
+the lower side --- and at most $1/n$ from the honest value by
+\eqref{eq:guard-from-p}.
+\end{remark}

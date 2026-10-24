@@ -1,0 +1,63 @@
+% ---
+% id: meat-core/lem:estimate
+% kind: lem
+% title: "Upper estimate of the value at any feasible point"
+% summary: >-
+%   The objective at any exactly feasible point, a state or the Choi operators
+%   of [[thm:choi]] that parametrise one, is at least the value h_low of the
+%   program. It warrants the estimate every run reports, a
+%   solver diagnostic and never the lower bound a key length needs.
+% prominence: standard
+% status: implemented
+% uses: [def:feasible, thm:choi, def:admissible-declaration]
+% mentions: [def:admissible-acceptance-set]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.objective:objective_value
+% lean:
+% notes: "What a run must check for the warrant to hold, membership of its point, and at which window, is the solver submodule's and is not stated here."
+% ---
+
+The number a run reports as its \tref{estimate} is the objective at the
+point its optimizer returned. What that number is worth is one line, and it
+is a property of the program, not of any method that searches it. The
+membership $x\in\acSet\times\Feas^{J}$ is exactly what must be checked for
+this warrant to hold, and which check establishes it is the solver
+submodule's claim, not the core's. Definition~\ref{def:admissible-acceptance-set} is not needed:
+nothing in the lemma reads convexity or closedness, and at an empty
+$\acSet$ the statement is vacuous. In either form the number is an \emph{upper}
+estimate of $\hlow$ and never a bound on it: nothing here says how far above
+$\hlow$ it lies.
+
+\begin{lemma}\label{lem:estimate}
+Let $\Decl$ satisfy Definition~\ref{def:admissible-declaration}, let $\acSet$ be any set
+of probability vectors on the acceptance alphabet, and let
+$\alpha\in(1,\infty)$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(State form.)} For every $(\mathbf q,\omega)\in\acSet\times\Feas$,
+\begin{equation}\label{eq:estimate}
+  O_{\alpha}(\mathbf q,\omega)\;\ge\;\hlow .
+\end{equation}
+\item \emph{(Choi form.)} Write
+$O^{J}_{\alpha}(\mathbf q,J)\coloneqq O_{\alpha}(\mathbf q,\chi_{\Qsys}(J))$
+for the objective of the Choi program \eqref{eq:choi-program} of
+Theorem~\ref{thm:choi}, with $\chi_{\Qsys}$ the map of that theorem. For
+every $x=(\mathbf q,J)\in\acSet\times\Feas^{J}$,
+\begin{equation}\label{eq:estimate-choi}
+  O^{J}_{\alpha}(x)\;\ge\;\hlow .
+\end{equation}
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) $\hlow$ is by \eqref{eq:hlow-def} the infimum of $O_{\alpha}$ over
+$\acSet\times\Feas$, and $(\mathbf q,\omega)$ is a point of that set; an
+infimum is a lower bound on every value it is taken over.
+
+(ii) By Theorem~\ref{thm:choi}, $\chi_{\Qsys}$ maps $\Feas^{J}$ onto
+$\Feas$ and the value of the Choi program is $\hlow$; so for
+$x=(\mathbf q,J)\in\acSet\times\Feas^{J}$ the pair
+$(\mathbf q,\chi_{\Qsys}(J))$ lies in $\acSet\times\Feas$ and
+$O^{J}_{\alpha}(x)=O_{\alpha}(\mathbf q,\chi_{\Qsys}(J))\ge\hlow$ by (i).
+\end{proof}

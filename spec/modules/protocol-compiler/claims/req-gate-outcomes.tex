@@ -1,0 +1,69 @@
+% ---
+% id: protocol-compiler/req:gate-outcomes
+% kind: req
+% title: "Outcome of each gate failure"
+% summary: >-
+%   A failing check or a failing certificate is refused with the check or the
+%   condition named, whatever else fails; an unlicensed list or an absent
+%   attack-set licence alone is emitted marked not key-length-eligible. The
+%   engine never supplies a missing attestation or proceeds as though it had one.
+% prominence: standard
+% status: accepted
+% uses: [thm:gates, def:eligible, def:gate-outcome-table, transmitter/req:licence-scope]
+% mentions: [def:compile, transmitter/req:marginal-fill, transmitter/req:failing-certificate, transmitter/def:source-spec, foundations/req:consumer-decides-exactly]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.gates:resolve_gates
+% lean:
+% ---
+
+The \tref{gate outcome table} (Definition~\ref{def:gate-outcome-table}) fixes which
+of the two outcomes each failure has, as Theorem~\ref{thm:gates}\,(ii) states;
+this requirement names the strings and the flag that carry them. A check that
+fails, so that no declaration is shown to be well-formed, or a certificate
+that does not verify, is a refusal; a \tref{well-formed declaration} on
+verified data whose key-length claim is unsupported is emitted and marked. The
+transmitter refuses a request whose certificate fails a condition of its form
+(\xref{transmitter/req:failing-certificate}); gate (G2) re-decides the
+conditions all the same, a consumer deciding the data it is handed
+(\xref{foundations/req:consumer-decides-exactly}).
+
+\begin{requirement}\label{req:gate-outcomes}
+For each gate failure the engine produces the outcome the gate outcome table
+(Definition~\ref{def:gate-outcome-table}) fixes for it, and no other; where
+the failures of one declaration meet the premises of a refusal row and of an
+emission row both, it produces the refusal:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item row~1, a check that fails: a refusal naming the check, which in the
+  general format covers \iface{ensemble_form_in_untrusted_mode},
+  \iface{alice_ensemble_marginal_mismatch}, \iface{alice_ensemble_sum_rounds},
+  \iface{alice_sector_marginal_zero} and
+  \iface{constraint_scope_not_a_factor};
+\item row~3, \tref{trusted-source mode} at any $d_A$ with a certificate present and
+  failing a condition of gate (G2) for its form: a refusal naming the
+  condition, an \tref{ensemble
+  presentation} beside a POVM-form declaration being refused with
+  \iface{ensemble_presentation_without_ensemble_form};
+\item rows~5 and~6, a constraint list not in the licensed class or the
+  attack-set \tref{licence record} \iface{attack_set_license} absent: an emission
+  with \iface{key_length_eligible} false.
+\end{enumerate}
+\emph{A trusted-mode specification at $d_A\ge2$ whose certificate is absent
+does not reach this module.} The mode is read off the transmitter artefact's
+\tref{marginal slot} (Definition~\ref{def:compile}), and the transmitter
+refuses a trusted-mode request at $d_A\ge2$ that carries no certificate before
+any artefact is emitted, with \iface{trusted_mode_without_certificate}
+(\xref{transmitter/req:licence-scope}; the modes are defined in
+\xref{transmitter/def:source-spec}). So an artefact in trusted mode at
+$d_A\ge2$ carries the record gate (G2) tests for, and the two rows of the
+table that describe a certificate-absent case --- rows 2 and 4, at $m=0$ and
+at $m\ge1$ --- are \emph{unreachable through the transmitter artefact}. At
+$d_A=1$ the gate demands no certificate at all, the slot holds the $[1]$ the
+transmitter filled it with (\xref{transmitter/req:marginal-fill}), and one
+supplied there and failing is refused by row 3, its scope being every $d_A$.
+Rows 2 and 4 are unreachable in the general format for the same reason, which
+reads the transmitter's refusal and no property of the general format. The
+engine never supplies a missing attestation and never proceeds as though it
+had one.
+\end{requirement}

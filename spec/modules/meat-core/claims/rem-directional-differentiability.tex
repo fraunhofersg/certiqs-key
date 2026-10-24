@@ -1,0 +1,49 @@
+% ---
+% id: meat-core/rem:directional-differentiability
+% kind: rem
+% title: "Scope of the directional differentiability of the objective"
+% summary: >-
+%   The objective of the Choi program is undefined off the positive cone and
+%   the sets [[cor:full-gradient]] quantifies over have empty interior, so only
+%   directional derivatives are well posed. Even within the affine hull, a
+%   direction off the acceptance support can have one-sided derivative −∞.
+% prominence: standard
+% status: accepted
+% uses: [cor:full-gradient]
+% mentions: [meat-core/frank-wolfe/lem:fo-khyp, meat-core/frank-wolfe/thm:firstorder]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:directional-differentiability}
+Corollary~\ref{cor:full-gradient} claims no ambient Fr\'echet
+differentiability, and the set on which it differentiates is part of its
+statement. There are two grounds, and the first is decisive on its own.
+
+\emph{First}, $O^{J}_{\alpha}$ is not defined on an ambient neighbourhood
+of the corollary's point $x$ at all, for either of two independent causes: the objective
+factors through $X\mapsto X^{p}$, which is undefined off the positive
+semidefinite cone, so an ambient neighbourhood of a singular $J_s$ leaves
+the domain; and the sets the corollary quantifies over have empty
+interior in the ambient real vector space: the affine equality
+$\sum_{\hat c}q(\hat c)=1$ that $\acSet$ carries forces that on its own,
+and on the exact $\Feas^{J}$ the coupling equality
+$\sum_s\tr_{\Qsys_s}J_s=\idon{A_0}$ forces it again. So the ambient notion
+is not well posed here, whereas the directional one is, and it is the one
+\eqref{eq:fo-subgrad} consumes.
+
+\emph{Second}, the restriction cannot be lifted even to directions inside
+that affine hull. Where the hypothesis is taken in the weakened form of
+Lemma~\ref{lem:fo-khyp}\,(iii), a coordinate $q(\hat c)$ with
+$\hat c\notin\Chacc$ sits at $0$ throughout $\acSet$, and
+$\partial_u\big(u\log_2\tfrac uv\big)=\log_2\tfrac uv+\log_2\mathrm e
+\to-\infty$ as $u\downarrow0$ for $v>0$, so a direction that raises such a
+coordinate off $0$, one that leaves $\acSet$ while preserving
+$\sum_{\hat c}q(\hat c)=1$, has one-sided derivative $-\infty$; inside
+$\acSet$ the coordinate stays $0$ identically and the term is deleted
+rather than bounded (Lemma~\ref{lem:fo-khyp}\,(ii)). Feasible directions
+are all that Step~1 of Theorem~\ref{thm:firstorder} consumes, and no
+statement of this module reads more.
+\end{remark}

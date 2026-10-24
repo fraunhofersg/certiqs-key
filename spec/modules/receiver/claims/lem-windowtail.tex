@@ -1,0 +1,106 @@
+% ---
+% id: receiver/lem:windowtail
+% kind: lem
+% title: "Window-and-tail bound on the tail infimum"
+% summary: >-
+%   The minimum of the bound function over a finite window, capped by an
+%   analytic tail term, is a valid uniform bound above the cutoff. It improves
+%   as the window widens, converges to the infimum when c < 1, and a residual
+%   gap bounds what remains.
+% prominence: standard
+% status: implemented
+% uses: [lem:collapse, def:bounddata]
+% mentions: [def:pmc]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.bound:window_floor
+% lean:
+% ---
+
+Where the hypothesis of Lemma~\ref{lem:collapse} fails, the infimum of the
+\tref{bound function} over all photon numbers above the cutoff is still
+bounded from below by a finite computation, which converges to it when
+$c<1$: evaluate $\Bnd$ on a finite window and bound the rest by a term that
+drops the non-negative all-dark contribution.
+
+\begin{lemma}\label{lem:windowtail}
+Let $\big(\gamma,\{\beta_k\},c,\{d_k\}\big)$ be admissible bound data and
+$N\ge0$. Define, for an integer $m>N$,
+\begin{equation}\label{eq:windowtail}
+  \underline{\Bnd}_{N,m}\coloneqq
+  \min\big\{\,W_{N,m},\ T_m\,\big\},\qquad
+  W_{N,m}\coloneqq\min_{N<n\le m}\Bnd(n),\qquad
+  T_m\coloneqq1-\sum_{k=1}^{K}\beta_kd_k^{\,m} .
+\end{equation}
+The window $\{n:N<n\le m\}$ is non-empty for every $m>N$; at $m=N+1$ it is the
+single index $N+1$. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $\underline{\Bnd}_{N,m}\le\inf_{n>N}\Bnd(n)$ for every $m>N$: the
+  quantity is a valid uniform bound;
+\item $\underline{\Bnd}_{N,m}$ is non-decreasing in $m$, and
+  $\lim_{m\to\infty}\underline{\Bnd}_{N,m}=\inf_{n>N}\Bnd(n)$ whenever
+  $c<1$; moreover the \emph{residual gap}
+  \begin{equation}\label{eq:resgap}
+    g_{N,m}\coloneqq\max\big\{0,\ W_{N,m}-T_m\big\}
+  \end{equation}
+  is a finite non-negative real for every $m>N$ --- at $m=N+1$ it equals
+  $(K-1)\gamma c^{\,N+1}$ --- and satisfies
+  $\inf_{n>N}\Bnd(n)-\underline{\Bnd}_{N,m}\le g_{N,m}$, so the evaluation is
+  convergent and $g_{N,m}$ bounds what widening the window could still recover;
+\item if $c=0$ then $\Bnd(n)=1-\sum_k\beta_kd_k^{\,n}$ for $n\ge1$ is
+  non-decreasing, $\underline{\Bnd}_{N,N+1}=\Bnd(N+1)$ is exact, and
+  $g_{N,N+1}=0$;
+\item the two lemmas are consistent: under the hypothesis of
+  Lemma~\ref{lem:collapse} with $\Bnd(N+1)\ge0$ \emph{and $c<1$}, (i) and (ii)
+  give $\underline{\Bnd}_{N,m}\le\Bnd(N+1)$ for every $m$ with equality in the
+  limit $m\to\infty$, so the first branch of Definition~\ref{def:pmc} is the
+  exact value the window-and-tail evaluation converges to, and using it loses
+  nothing. The hypothesis $c<1$ is needed: at $c=1$ admissibility forces
+  $d_k=1$ for every $k$, $\Bnd$ is constant, and under
+  Lemma~\ref{lem:collapse}'s hypothesis with $\Bnd(N+1)\ge0$ that constant is
+  $0$ while $T_m=1-\sum_k\beta_k=-(K-1)\gamma$ for every $m$, so the limit
+  clause fails whenever $\gamma>0$ and $K\ge2$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) For $N<n\le m$ the value $\Bnd(n)$ appears in $W_{N,m}$. For $n>m$,
+$d_k\le1$ gives $d_k^{\,n}\le d_k^{\,m}$ and $\gamma c^{\,n}\ge0$, so
+$\Bnd(n)\ge1-\sum_k\beta_kd_k^{\,n}\ge T_m$. Hence every $\Bnd(n)$ with $n>N$
+dominates $\min\{W_{N,m},T_m\}$.
+
+(ii) \emph{Monotonicity.} $W_{N,m+1}=\min\{W_{N,m},\Bnd(m+1)\}$ and
+$T_{m+1}\ge T_m$ because $d_k^{\,m+1}\le d_k^{\,m}$; and $\Bnd(m+1)\ge T_m$ by
+the computation in (i) at $n=m+1>m$. Each of $W_{N,m}$, $\Bnd(m+1)$ and
+$T_{m+1}$ is therefore at least $\min\{W_{N,m},T_m\}=\underline{\Bnd}_{N,m}$,
+and $\underline{\Bnd}_{N,m+1}$ is the minimum of those three.
+
+\emph{Limit.} $W_{N,m}$ is non-increasing in $m$ and the windows exhaust
+$\{n:n>N\}$, so $W_{N,m}\downarrow\inf_{n>N}\Bnd(n)$. Put
+$D\coloneqq\{k:d_k=1\}$; then $T_m\uparrow1-\sum_{k\in D}\beta_k$, and since
+$c<1$ also $\Bnd(n)\to1-\sum_{k\in D}\beta_k$, so
+$\lim_mT_m\ge\inf_{n>N}\Bnd(n)$. Both sequences converge, hence
+$\lim_m\min\{W_{N,m},T_m\}=\min\{\inf_{n>N}\Bnd(n),\,\lim_mT_m\}
+=\inf_{n>N}\Bnd(n)$.
+
+\emph{The residual gap.} Both $W_{N,m}$ and $T_m$ are minima of finitely many
+reals, so $g_{N,m}$ is a finite non-negative real; at $m=N+1$ the window is
+$\{N+1\}$, so $W_{N,N+1}=\Bnd(N+1)=T_{N+1}+(K-1)\gamma c^{\,N+1}$ and
+$g_{N,N+1}=(K-1)\gamma c^{\,N+1}$. For the bound, write $W=W_{N,m}$, $T=T_m$.
+If $T\le W$ then $\underline{\Bnd}_{N,m}=T$ and $\inf_{n>N}\Bnd(n)\le W$ (the
+window values are among those infimized), so the difference is at most
+$W-T=g_{N,m}$. If $W<T$ then $\underline{\Bnd}_{N,m}=W=\Bnd(n_0)$ for some
+$N<n_0\le m$, so $\inf_{n>N}\Bnd(n)\le\underline{\Bnd}_{N,m}$ and the
+difference is at most $0=g_{N,m}$.
+
+(iii) $c=0$ makes $\gamma c^{\,n}=0$ for $n\ge1$, so
+$\Bnd(n)=1-\sum_k\beta_kd_k^{\,n}$ there, and each $d_k^{\,n}$ is
+non-increasing in $n$; in particular $W_{N,N+1}=\Bnd(N+1)=T_{N+1}$, so
+$\underline{\Bnd}_{N,N+1}=\Bnd(N+1)$ and $g_{N,N+1}=0$.
+
+(iv) Under the hypothesis of Lemma~\ref{lem:collapse} with $\Bnd(N+1)\ge0$ and
+$c<1$, that lemma gives $\inf_{n>N}\Bnd(n)=\Bnd(N+1)$; then (i) reads
+$\underline{\Bnd}_{N,m}\le\Bnd(N+1)$ and (ii) gives
+$\underline{\Bnd}_{N,m}\to\Bnd(N+1)$.
+\end{proof}

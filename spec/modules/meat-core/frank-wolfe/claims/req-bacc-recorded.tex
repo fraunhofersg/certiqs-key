@@ -1,0 +1,28 @@
+% ---
+% id: meat-core/frank-wolfe/req:bacc-recorded
+% kind: req
+% title: "Record of the acceptance-side quantity in the bracket"
+% summary: >-
+%   A run that replaces the acceptance-side pairing in the bracket of the
+%   first-order bound by a certified lower bound on the minimum records which
+%   of the two it used. The substitution is exact and leaves the first-order
+%   bound valid.
+% prominence: technical
+% status: accepted
+% uses: [rem:acc-side]
+% mentions: [thm:firstorder]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A certified $\bacc$ of \eqref{eq:bacc-def} may replace $\langle\lmoq_t,v_t\rangle$ in
+\eqref{eq:hlb}, and the first-order bound stays valid
+(Theorem~\ref{thm:firstorder}\,(iv); Remark~\ref{rem:acc-side}).
+
+\begin{requirement}\label{req:bacc-recorded}
+A run that replaces $\langle\lmoq_t,v_t\rangle$ in the bracket of
+\eqref{eq:hlb} by a certified $\bacc$ of \eqref{eq:bacc-def} records which of
+the two it used.
+\end{requirement}

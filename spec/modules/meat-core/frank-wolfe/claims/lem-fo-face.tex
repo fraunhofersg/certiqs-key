@@ -1,0 +1,95 @@
+% ---
+% id: meat-core/frank-wolfe/lem:fo-face
+% kind: lem
+% title: "Every direction is admissible at maximal support"
+% summary: >-
+%   The image of every Hermitian input direction under a branch map lies in
+%   the maximal branch support, so at a branch operator with maximal support no
+%   direction leaves its support. The face derivative then covers every
+%   feasible direction, and no one-sided derivative is infinite along them.
+% prominence: standard
+% status: implemented
+% uses: [def:first-order-setting, def:relaxed-feasible-set, meat-core/thm:choi, meat-core/cor:full-gradient, meat-core/def:branch-support, meat-core/lem:branch-support, meat-core/thm:gradient, meat-core/lem:branch-maps]
+% mentions: [thm:firstorder]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.gradient:z_invariant_face
+% lean:
+% ---
+
+Theorem~\ref{thm:firstorder} pairs the gradient of the objective against
+every feasible direction. The lemma below is what makes maximal support
+of the branch operators enough for the linearisation to exist along every
+direction the theorem pairs against: a \tref{branch map} sends no
+Hermitian direction outside the \tref{maximal branch support}.
+
+\begin{lemma}\label{lem:fo-face}
+In the setting of Definition~\ref{def:first-order-setting}, let
+$\hat c\in\Chkey$ and $s\in\SecSet_K(\hat c)$, let
+$J_s\in\Pos{A_0\Qsys_s}$, and put $X\coloneqq\cG^{J}_{\hat c,s}(J_s)$.
+Then for \emph{every} Hermitian $\Delta$ on $\Hs{A_0\Qsys_s}$ the
+operator $H\coloneqq\cG^{J}_{\hat c,s}(\Delta)$ satisfies
+\begin{equation}\label{eq:fo-face}
+  \operatorname{supp}H\;\subseteq\;W_{\hat c,s}
+\end{equation}
+with $W_{\hat c,s}$ the maximal branch support \eqref{eq:Wcs}.
+Consequently, if $X$ attains maximal support,
+$\operatorname{supp}X=W_{\hat c,s}$, for which $J_s\succ0$ suffices,
+then $\operatorname{supp}H\subseteq\operatorname{supp}X$ for every such
+$\Delta$, so that:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item Theorem~\ref{thm:gradient}\,(i) applies to the pair $(X,H)$, and
+  $t\mapsto T(X+tH)$ is differentiable at $t=0$, two-sidedly, the
+  hypothesis being symmetric in $H\mapsto-H$;
+\item the $+\infty$ case of Theorem~\ref{thm:gradient}\,(ii) is
+  \emph{unreachable} from $X$ along the image of any Hermitian direction
+  $\Delta$ for which $X+t H\succeq0$ for small $t>0$. That is the class
+  that theorem is stated on and the class along which $T$ is defined at
+  all, and it contains every direction $y-x$ that
+  Theorem~\ref{thm:firstorder} pairs against, since
+  $X+t\cG^{J}_{\hat c,s}(J'_s-J_s)=\cG^{J}_{\hat c,s}\big((1-t)J_s+tJ'_s\big)
+  \succeq0$ for $t\in[0,1]$ whenever $J_s$ and $J'_s$ are positive
+  semidefinite. No such direction strictly enlarges the support of $X$,
+  because by \eqref{eq:fo-face} none leaves
+  $W_{\hat c,s}=\operatorname{supp}X$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Write $\Delta=\Delta_{+}-\Delta_{-}$ for the Jordan decomposition, with
+$\Delta_{\pm}\succeq0$ supported on orthogonal subspaces. The map
+$\cG^{J}_{\hat c,s}=\cG_{\hat c,s}\circ\chi_{\Qsys_s}$ is a composition of
+two completely positive maps, $\chi_{\Qsys_s}$ being the conjugation
+$\Delta\mapsto(W_{\tau}\otimes\idon{})\Delta(W_{\tau}^{\dagger}\otimes
+\idon{})$ of Theorem~\ref{thm:choi} and $\cG_{\hat c,s}$ being completely
+positive by Lemma~\ref{lem:branch-maps}\,(i); hence it is completely
+positive and in particular positive: $\cG^{J}_{\hat c,s}(\Delta_{\pm})\succeq0$.
+Each of $\chi_{\Qsys_s}(\Delta_{\pm})$ lies in $\Pos{A\Qsys_s}$ and is of
+the form Lemma~\ref{lem:branch-support}\,(i) considers, so
+\eqref{eq:Wcs-bound} gives
+$\operatorname{supp}\cG^{J}_{\hat c,s}(\Delta_{\pm})\subseteq W_{\hat c,s}$.
+For positive semidefinite $A,B$ one has
+$\operatorname{supp}(A-B)\subseteq\operatorname{supp}A
++\operatorname{supp}B$, since a vector orthogonal to both supports is
+annihilated by $A$ and by $B$ and hence by $A-B$, and the support of a
+Hermitian operator is the orthogonal complement of its kernel. Applying
+this to $A=\cG^{J}_{\hat c,s}(\Delta_{+})$,
+$B=\cG^{J}_{\hat c,s}(\Delta_{-})$ gives \eqref{eq:fo-face}, the
+right-hand side being a subspace and therefore closed under the sum. In
+untrusted-source mode $\chi_{\Qsys_s}=\idmap$, $\Delta$ is Hermitian on
+$\Hs{A\Qsys_s}$, and the same two steps apply with
+$\Sadm=\Hs{A}$.
+
+For (a): at maximal support \eqref{eq:fo-face} reads
+$\operatorname{supp}H\subseteq\operatorname{supp}X$, which is the
+hypothesis of Theorem~\ref{thm:gradient}\,(i) with $S=\operatorname{supp}X$;
+that part concludes differentiability of $t\mapsto T(X+tH)$ at $t=0$, and
+its hypothesis holds for $-H$ as well, so the derivative is two-sided.
+For (b): Theorem~\ref{thm:gradient}\,(ii), whose hypothesis
+$X+tH\succeq0$ for small $t>0$ is the scope clause of (b), locates the
+$+\infty$ case at directions that \emph{strictly enlarge}
+$\operatorname{supp}X$, and by \eqref{eq:fo-face} no image of a Hermitian
+direction does. That $J_s\succ0$ suffices for maximal support is the
+equality clause of Lemma~\ref{lem:branch-support}\,(i).
+\end{proof}

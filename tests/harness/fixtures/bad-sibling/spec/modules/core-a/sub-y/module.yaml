@@ -1,0 +1,9 @@
+id: sub-y
+kind: submodule
+version: 0.1.0
+title: Sub Y
+one_line: Depends on sub-x, which depends on sub-y (a cycle), and on core-z, which does not exist.
+depends_on: [sub-x, core-z]
+notation_version: "0.4.0"
+order:
+  - cor:sib

@@ -1,0 +1,208 @@
+% ---
+% id: meat-core/def:declaration
+% kind: def
+% title: "The protocol declaration as the MEAT core reads it"
+% summary: >-
+%   The declaration is the compiler's ([[protocol-compiler/def:declaration]]),
+%   in either format, admissible ([[def:admissible-declaration]]), sifting by
+%   the announcements and a raw key its holder can compute. This module adds the key-live
+%   acceptance values, its reading of the party partition, the summation order
+%   and exact admissibility.
+% prominence: standard
+% status: implemented
+% uses: [foundations/def:declared-order, protocol-compiler/def:declaration]
+% mentions: [foundations/def:pinching, foundations/def:kl, foundations/def:renyi, rem:modes-da1, protocol-compiler/def:target, protocol-compiler/def:exact, protocol-compiler/rem:block-restriction, lem:ensemble-form, thm:reduction, req:exact-admission, def:admissible-declaration, ass:lab, transmitter/ass:src]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.declaration.declaration:ProtocolDeclaration
+% lean:
+% notes: "The tuple, its components and the general format (DX1) to (DX6) are protocol-compiler/def:declaration's and are cited, not restated. The five displays of the general format stand here under this contract's labels (eq:productmap, eq:productfamily, eq:ensembleform, eq:ensemblepovm, eq:transcript) because the implementation and the tests name those labels; what they mean is the compiler's text. eq:chkey is this module's own: its sifting predicate is the one the sifting condition fixes on the realised classes, read off the declaration and set to fail on the others, while the compiler's eq:chkey reads the specification's predicate, which the emitted declaration does not carry, with the same fail on unrealised classes. On the realised classes the two predicates are both witnesses of the sifting condition wherever the specification's is one (protocol-compiler/thm:sifting-and-key (ii), under ass:spec (ii)), and a witness is fixed there, so the two sets then agree."
+% ---
+
+The operator, state and channel conventions of this contract, among them
+that every Hilbert space is finite-dimensional, are those of
+\xref{foundations/def:pinching}, and its divergences and conditional
+entropies are those of \xref{foundations/def:kl} and
+\xref{foundations/def:renyi}. In the tuple below, which is the compiler's,
+$A$ is Alice's system and $\tau_A$ the content of its \tref{marginal slot};
+$\Qsys$ is the system the family $\{F_v\}$ measures, with sectors
+$\Hs{\Qsys}=\bigoplus_{s\in\SecSet}\Hs{\Qsys_s}$; $\{M_x\}$ is the
+measurement on $A$; $\Party$ is the \tref{party partition}, with
+\tref[readout map]{readout maps} $\rd{\mathsf A},\rd{\mathsf B}$ onto the
+alphabets $\Oset{\mathsf A},\Oset{\mathsf B}$; the
+\tref[announcement map]{announcement maps} $a_A,a_B$, or in the general
+format the messages of (DX5), give each outcome pair $(x,v)$ its joint
+announcement $a(x,v)$, an announcement class; $\phi$ maps
+announcement classes to acceptance values; $r$ is the raw-key map, $\hold$
+the key holder and $\CList$ the constraint list. The definition adds two
+conditions on $r$ and names the acceptance values that can carry key, then
+says what this module reads of $\Party$, reads the summation order off the
+declaration, states exact admissibility, and gives the general format with its reading of
+exact admissibility. The
+compiler's conditions on the declaration it emits
+(\xref{protocol-compiler/def:target}) are the counterpart of
+Definition~\ref{def:admissible-declaration}, and the two lists are checked against each other
+at the interface between the two modules.
+Requirement~\ref{req:exact-admission} says what becomes of a declaration that
+is not \tref{exactly admissible}, and that restricting the states of the
+program to lists of blocks along Alice's sectors is sound is the subject of
+\xref{protocol-compiler/rem:block-restriction}, which Theorem~\ref{thm:reduction}
+discharges. The two source modes that the two values of the marginal slot
+name are compared on the program in Remark~\ref{rem:modes-da1}.
+
+\begin{definition}\label{def:declaration}
+In this module a \tref{protocol declaration} is a tuple
+\begin{equation*}
+  \Decl=\Big(A,\ \tau_A;\ \Qsys,\ \SecSet;\ \{M_x\}_{x\in\Xset};\
+  \{F_v\}_{v\in\Vset};\ \Party;\ a_A,\ a_B;\ \phi;\ r,\ \hold;\
+  \CList\Big)
+\end{equation*}
+of \xref{protocol-compiler/def:declaration}, in its \tref{basic format} or in
+its general format, (DX1)--(DX6) there, whose components satisfy the
+well-formedness conditions of Definition~\ref{def:admissible-declaration} and the two
+conditions on its raw-key map below. The two values of its
+\tref{marginal slot}, $\tau_A\in\Seq{A}$ and $\tau_A=\nomarg$, are the two
+source modes, \tref{trusted-source mode} and
+\tref{untrusted-source mode}. Write $\Kann$ for the announcement-class
+alphabet of that definition, $\CAset\times\CBset$ in the basic format and
+the product of the message alphabets of (DX5) in the general one,
+$a(x,v)\in\Kann$ for the joint announcement it assigns to an outcome pair,
+and $\kappa$ for a class. \emph{Sifting is announcement-determined}: there is
+$\varsigma:\Kann\to\{\mathrm{pass},\mathrm{fail}\}$ with
+$r(x,v)=\perp\iff\varsigma(a(x,v))=\mathrm{fail}$. \emph{The raw key is
+party-computable}: for the declared key holder
+$\hold\in\{\mathsf A,\mathsf B\}$ there is
+$r_{\hold}:\Oset{\hold}\times\Kann\to\Zset$ with
+\begin{equation}\label{eq:partycomp}
+  r(x,v)=r_{\hold}\big(\rd{\hold}(x,v),\,a(x,v)\big)
+  \qquad\text{for all }(x,v)\in\Xset\times\Vset
+\end{equation}
+(Definition~\ref{def:admissible-declaration}\,(viii)). We write
+\begin{equation}\label{eq:chkey}
+  \Chkey\coloneqq\big\{\hat c\in\Chatset:\ \exists\,\kappa\in\phi^{-1}(\hat c)
+  \text{ with }\varsigma(\kappa)=\mathrm{pass}\big\}
+\end{equation}
+for the set of
+\term[An acceptance value that some announcement class passing this module's sifting predicate maps to.]{key-live acceptance value}s,
+$\varsigma$ being the predicate of the sifting condition above. That
+condition fixes $\varsigma$ on every class some outcome pair realises, and
+on a class $\kappa\notin a(\Xset\times\Vset)$, which no outcome pair
+realises, we take $\varsigma(\kappa)=\mathrm{fail}$; so $\Chkey$ is the set
+of acceptance values to which some realised class passing sifting maps,
+and it is fixed by the declaration.
+
+\emph{What this module reads of $\Party$.} The \tref{party partition}
+$\Party$ of that definition consists of (a) its two
+\tref[readout map]{readout maps} $\rd{\mathsf A}$ and $\rd{\mathsf B}$,
+naming what each party physically observes in a round, and (b)
+\term[The party label of Alice's system and, per sector, the declared tensor factorisation with a party label per factor.]{system metadata}:
+the party label for $A$ and, for each $s\in\SecSet$, the declared tensor
+factorization $\Hs{\Qsys_s}=\bigotimes_{i}\Hs{\Qsys_{s,i}}$ with a party
+label per factor (a comma-indexed \emph{tensor} factor $\Qsys_{s,i}$, never
+the parenthesized superscript $X^{(s)}$, which this module reserves for
+\emph{sector blocks} of an operator). The \emph{default partition} is that of
+\xref{protocol-compiler/def:target}: $\rd{\mathsf A}(x,v)=x$,
+$\rd{\mathsf B}(x,v)=v$ with $A$ labelled $\mathsf A$ and every $\Qsys_s$
+labelled $\mathsf B$. Part~(a) is consumed by the derivations, through
+Definition~\ref{def:admissible-declaration}\,(viii). Part~(b) is consumed by no
+derivation; it carries an obligation of the compiler: the declaration's POVMs
+must be realizable by each party measuring the factors it is labelled with,
+so that $\rd{\mathsf A}$ and $\rd{\mathsf B}$ are what the parties can in fact
+read. Part~(b) is read by the premises that place the parties'
+laboratories: Assumption~\ref{ass:lab} takes all its labels as naming the
+parties' laboratories, and A-SRC (\xref{transmitter/ass:src}) reads the label
+of $A$; so a run attests that obligation there, and the claims that assume
+those premises rest on it through them. This module never verifies the
+obligation.
+
+\emph{The declared summation order.} The declaration fixes, as part of the
+declared alphabet $\Vset$ of outcomes, a \tref{declared order}
+$v_1\prec v_2\prec\dots\prec v_{|\Vset|}$ on it. For each sector $s$ the
+completeness sum is the \tref{sum in the declared order} of the blocks
+$F^{(s)}_v$, the \tref{sequential sum}
+\begin{equation}\label{eq:declorder}
+  \Sigma^{(s)}_0\coloneqq0,\qquad
+  \Sigma^{(s)}_i\coloneqq\Sigma^{(s)}_{i-1}+F^{(s)}_{v_i}
+  \quad(1\le i\le|\Vset|),\qquad
+  \Sigma^{(s)}\coloneqq\Sigma^{(s)}_{|\Vset|},
+\end{equation}
+formed left to right, entrywise, with no re-ordering and no
+re-association. In exact arithmetic \eqref{eq:declorder} is the unordered
+sum and the order is immaterial; in binary64 it is not
+(\xref{foundations/def:declared-order}), so the order is part of the datum and
+this module reads it off the declared alphabet rather than choosing one.
+
+\emph{Exact admissibility.} A declaration reaches this module with its
+operator data \tref{exactly admissible}: every $F_v$ exactly Hermitian and
+exactly positive semidefinite per sector block, every $\hat O_k$ exactly
+Hermitian per sector block (positivity is asked of no constraint operator
+anywhere in this module), every $M_x$ and the declared $\tau_A$ exactly
+Hermitian and exactly positive semidefinite, and the completeness sum
+\eqref{eq:declorder} of each sector exactly the identity with every addition
+\tref[rounds nowhere]{rounding nowhere}. These are the conditions the compiler decides on the
+numbers it emits (\xref{protocol-compiler/def:exact}).
+
+\emph{The general format.} The general format is that of
+\xref{protocol-compiler/def:declaration}, (DX1)--(DX6) there, and the basic
+format is its case of one Alice sector, one \tref{measured factor},
+\tref{POVM form}, two messages neither of which reads the other, and no
+party-local entry. This contract refers to five of that definition's
+displays under its own labels, each read as it is defined there: the
+product \tref{sector map} of (DX1), over the ordered set $\mathbb{F}$ of
+measured factors, factor $f$ having the sectors $s_f\in\SecSet^{f}$ with
+projectors $\Pi^{f}_{s_f}$ and block dimensions $d_{f,s_f}$,
+\begin{equation}\label{eq:productmap}
+\begin{gathered}
+  \Qsys=\bigotimes_{f\in\mathbb{F}}\Qsys_f,\qquad
+  \SecSet=\prod_{f\in\mathbb{F}}\SecSet^{f},\qquad
+  \Hs{\Qsys_s}=\bigotimes_{f}\Hs{\Qsys_{f,s_f}},\\
+  \Pi_s=\bigotimes_f\Pi^{f}_{s_f},\qquad d_s=\prod_fd_{f,s_f};
+\end{gathered}
+\end{equation}
+the product family of (DX3),
+\begin{equation}\label{eq:productfamily}
+  F_v\coloneqq\bigotimes_{f\in\mathbb{F}}F^{f}_{v_f},\qquad
+  F^{(s)}_v=\bigotimes_{f\in\mathbb{F}}F^{f,(s_f)}_{v_f}
+  \qquad\big(v=(v_f)_f,\ s=(s_f)_f\big);
+\end{equation}
+the two conditions on the declared $\{N_x\}$ of the \tref{ensemble form} of
+(DX4), whose blocks lie along the index set $\mathbb{T}$ of Alice's sectors,
+$\Hs{A}=\bigoplus_{t\in\mathbb{T}}\Hs{A_t}$, and the family of the POVM-form
+declaration an ensemble-form declaration denotes, with $P_t$ the projector
+onto the support of $\tau^{(t)}_A$ and the inverse square root taken on that
+support and zero off it,
+\begin{equation}\label{eq:ensembleform}
+  \sum_{x\in\Xset}N^{(t)}_x=\tau^{(t)}_A
+  \quad\text{and}\quad\tau^{(t)}_A\ne0
+  \qquad\text{for every }t\in\mathbb{T},
+\end{equation}
+\begin{equation}\label{eq:ensemblepovm}
+  M^{(t)}_x\coloneqq\big(\tau^{(t)}_A\big)^{-1/2}N^{(t)}_x
+  \big(\tau^{(t)}_A\big)^{-1/2}
+  +\frac{\tr N^{(t)}_x}{\tr\tau^{(t)}_A}\,\big(\idon{A_t}-P_t\big);
+\end{equation}
+and the joint announcement function a \tref{transcript protocol} of (DX5)
+derives by composition from its $L$ messages, message $m$ having the sender
+$\pi_m$, whose readout map is $\rd{\pi_m}$, the alphabet $\mathcal{C}_m$ and
+the table $a_m$,
+\begin{equation}\label{eq:transcript}
+\begin{gathered}
+  \kappa_m(x,v)\coloneqq a_m\big(\rd{\pi_m}(x,v),\,\kappa_1(x,v),\dots,
+  \kappa_{m-1}(x,v)\big),\\
+  a(x,v)\coloneqq\big(\kappa_m(x,v)\big)_{m=1}^{L}\in
+  \Kann\coloneqq\prod_{m=1}^{L}\mathcal{C}_m .
+\end{gathered}
+\end{equation}
+
+\emph{Exact admissibility in the general format.} The exact-admissibility
+paragraph above holds with these readings: the conditions on $\{F_v\}$ are
+decided per measured factor, on the family $\{F^{f}_{v_f}\}$, its blocks and
+its declared order, and on no product; the conditions on $\tau_A$, on every
+$M_x$ and on the right-hand side $\Theta_k$ of a \tref{general} entry are
+decided block by block along $\mathbb{T}$, the trace of $\tau_A$
+accumulated over the blocks in their declared order and rounding nowhere;
+and in ensemble form the conditions on $\{M_x\}$ are replaced by those of
+(DX4) on $\{N_x\}$, the denoted $\{M_x\}$ being a POVM by
+Lemma~\ref{lem:ensemble-form} and decided by nothing.
+\end{definition}

@@ -1,0 +1,66 @@
+% ---
+% id: protocol-compiler/def:gate-outcome-table
+% kind: def
+% title: "The gate outcome table"
+% summary: >-
+%   The gate outcome table gives each gate failure a refusal naming what failed
+%   or an emission that is not key-length-eligible; its two certificate-absent
+%   rows give the compiler no outcome. Where a declaration meets a refusal row
+%   and an emission row, the refusal wins.
+% prominence: standard
+% status: implemented
+% uses: [def:eligible]
+% mentions: [thm:gates, req:gate-outcomes]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.gates:resolve_gates
+% lean:
+% ---
+
+Rows 2 and 4 describe a case that does not reach the compiler: no
+\tref{protocol specification} meets their premise (Theorem~\ref{thm:gates}\,(ii)), and the
+transmitter refuses such a request before any artefact exists
+(Requirement~\ref{req:gate-outcomes}). Their cell says so; the table gives
+the compiler no outcome there.
+
+\begin{definition}\label{def:gate-outcome-table}
+The
+\term[The table that assigns to each gate failure its outcome, a refusal or an emission that is not key-length-eligible, or none for the two certificate-absent rows, the refusal taking precedence where a declaration meets both kinds of row.]{gate outcome table}
+is the following table of the failures of the gates of
+Definition~\ref{def:eligible} and their outcomes; where the failures of one declaration meet the
+premises of a refusal row and of an emission row both, the outcome is the
+refusal.
+
+\medskip
+\noindent\emph{Gate failure to emitted outcome.} No row substitutes a default
+value, drops an entry, changes the source mode or synthesizes an attestation.
+\phantomsection\label{tab:gateoutcome}
+
+\noindent{\small
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.58\textwidth}
+                  >{\raggedright\arraybackslash}p{0.36\textwidth}@{}}
+\hline
+\emph{What failed} & \emph{Outcome} \\
+\hline
+(G1): any of V1--V8 & refusal, naming the check \\
+(G2): trusted mode at $d_A\ge2$, certificate \emph{absent}, and
+$m=0$ &
+none (no outcome of the compiler) \\
+(G2): trusted mode \emph{at any $d_A$}, certificate \emph{present}
+but one
+of the five conditions of Definition~\ref{def:eligible}\,(G2) fails ---
+$\Psi$ Hermitian, $\Psi^2=\Psi$, $\tr\Psi=1$ rounding nowhere, (SR1), (SR2) &
+refusal, naming the condition \\
+(G2): trusted mode at $d_A\ge2$, certificate absent, and $m\ge1$ &
+none (no outcome of the compiler) \\
+(G3)(a): $\CList$ not in the licensed class --- some entry declared
+\tref{general} in \tref{trusted-source mode} &
+emission, not key-length-eligible \\
+(G3)(b): the attack-set licence record absent &
+emission, not key-length-eligible \\
+\hline
+\end{tabular}}
+
+\noindent The cell of rows 2 and 4 assigns the compiler no outcome.
+\end{definition}

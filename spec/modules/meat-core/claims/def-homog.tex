@@ -1,0 +1,81 @@
+% ---
+% id: meat-core/def:homog
+% kind: def
+% title: "Licensed constraint list and its two classes"
+% summary: >-
+%   A constraint list is licensed when it is licensed for the declared source
+%   mode in the sense of [[protocol-compiler/def:homog]], a type check that
+%   compares no numbers. Its classes are τ_A-homogeneous lists in trusted mode
+%   and scalar lists in untrusted mode; the general format adds party-local
+%   entries.
+% prominence: standard
+% status: implemented
+% uses: [def:declaration, protocol-compiler/def:homog]
+% mentions: [prop:trivial-alice-system, lem:range, def:roundmodel, rem:homog, rem:tagged-entries-and-accumulation, thm:constrained-accumulation, thm:keylength, protocol-compiler/rem:party-local-soundness]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.keylength:licensed_class_check
+% lean:
+% notes: "The declared forms, the licensed class in both formats, the relation-symbol clause of a party-local entry and what that tag changes case by case are protocol-compiler/def:homog's and are cited. The display eq:partylocal-entry stands here under this contract's label because the implementation and the tests name it."
+% ---
+
+The declared forms of a constraint entry and the class of licensed lists are
+the compiler's (\xref{protocol-compiler/def:homog}); this definition names the
+two classes as this module's claims read them. The security chain of this
+module, Theorems~\ref{thm:constrained-accumulation} and~\ref{thm:keylength},
+admits only licensed lists; every structural and numerical claim is stated
+and proved for arbitrary Hermitian $\Theta_k$ (trusted mode) or arbitrary real
+$c_k$ (untrusted mode). Remark~\ref{rem:homog}\,(a) exhibits, in
+\tref{untrusted-source mode}, a \tref{licensed attack set} for which imposing the operator form
+$\Theta_k=c_k\idon{A}$ would empty the \tref{feasible set}; what licenses a
+party-local entry is \xref{protocol-compiler/rem:party-local-soundness}, and
+what the constrained accumulation theorem says of it is
+Remark~\ref{rem:tagged-entries-and-accumulation}.
+
+\begin{definition}\label{def:homog}
+The declared forms of an entry of $\CList$ --- \tref{homogeneous}, carrying
+a real scalar $c_k$, \tref{general}, carrying a Hermitian $\Theta_k$ on $A$,
+and, in the general format, \tref{party-local} --- are those of
+\xref{protocol-compiler/def:homog}, and the list is \emph{licensed} when it
+is \tref{licensed for the declared source mode} there. Its two classes
+for an untagged entry are the following; in the general format an untagged
+entry is read for its \tref{lifted operator}, and the cited class also
+licenses a party-local entry in either mode (the paragraph on party-local
+entries).
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{\tref{trusted-source mode}:} every entry of $\CList$ is declared
+in the homogeneous form, carrying $c_k\in\mathbb{R}$; the right-hand side it
+denotes is then \emph{constructed} as $\Theta_k\coloneqq c_k\,\tau_A$ from the
+declared $c_k$ and the declared $\tau_A$, and such a list is a
+\term[A constraint list of trusted-source mode whose entries are all declared homogeneous, each right-hand side constructed as its scalar times Alice's declared marginal.]{$\tau_A$-homogeneous list}
+by construction;
+\item \emph{\tref{untrusted-source mode}:} $\CList$ is a
+\term[A constraint list of untrusted-source mode whose right-hand sides are all real numbers, each entry a comparison of real numbers.]{scalar list},
+i.e.\ every right-hand side is a real number $\Theta_k=c_k$ and the entry
+reads $\tr[(\idon{A}\otimes\hat O_k)\,\omega]\bowtie_k c_k$ --- a
+comparison of real numbers, with $\bowtie_k\in\{\le,=,\ge\}$.
+\end{enumerate}
+Licensing is therefore a \emph{type} check in both modes and compares no
+numbers. A general entry remains admissible input, every structural and
+numerical claim of this module being proved for it, but it is never licensed,
+so a list containing one carries no key-length claim, which is the safe
+direction. The two classes agree at $d_A=1$
+(Proposition~\ref{prop:trivial-alice-system}\,(iii)), and (b) is what the
+licensing condition \eqref{eq:attset-un} transports in untrusted-source
+mode, through \eqref{eq:transport-un}:
+\emph{the operator form $\Theta_k=c_k\idon{A}$ is not licensed}.
+
+\emph{Party-local entries.} In the general format an entry may be declared
+in the \tref{party-local form} (\xref{protocol-compiler/def:homog}); it is
+written $(\hat O_k,\bowtie_k,c_k;f)$, and its state-level reading, in either
+source mode, is
+\begin{equation}\label{eq:partylocal-entry}
+  \tr_{\Qsys_f}\!\Big[\big(\idon{}\otimes
+  (\hat O_k-c_k\,\idon{\Qsys_f})\big)\,\omega\Big]\;\bowtie_k\;0
+  \qquad\text{as an operator on the systems of }\omega
+  \text{ other than }\Qsys_f ,
+\end{equation}
+those systems being $A$ and the \tref[measured factor]{measured factors}
+$\Qsys_{f'}$, $f'\ne f$.
+\end{definition}

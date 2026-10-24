@@ -1,0 +1,78 @@
+% ---
+% id: meat-core/rem:target-conditions
+% kind: rem
+% title: "The two index conditions of the removal checklist"
+% summary: >-
+%   Without (W2) every state-blind constraint-active sector witnesses its own
+%   removal, and deleting it can overstate the value by a bit per round.
+%   Distinct targets cost no removal in exact arithmetic: repeated targets
+%   merge into one witness certifying the same identities.
+% prominence: standard
+% status: accepted
+% uses: [def:classes, thm:removal, prop:retention]
+% mentions: [rem:classes]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Condition (W2) of Definition~\ref{def:classes} asks two things of a witness
+for $s^{*}$: that it does not name $s^{*}$, and that it names no sector
+twice. Both come from the construction in the proof of
+Theorem~\ref{thm:removal}.
+
+\begin{remark}\label{rem:target-conditions}
+\emph{Without (W2), every state-blind constraint-active sector witnesses
+its own removal.} Let $s^{*}$ be state-blind and key-inert for every
+$\hat c\in\Chkey$ --- that is, state-blind and constraint-active in the
+sense of Definition~\ref{def:classes}\,(b) --- and take the
+\emph{self-witness} $L=1$, $s_1\coloneqq s^{*}$, $\mu_1\coloneqq1$, and
+$\chi_1$ any state on $\Qsys_{s^{*}}$ in the form (W4) requires --- a
+diagonal projector $\dyad{i}$ will do. Then (W1) holds by hypothesis, (W3)
+and (W4) hold by construction, (W5) holds because $s^{*}$ is itself
+key-inert for every $\hat c\in\Chkey$, and \emph{both equality families
+close exactly}: state-blindness gives
+$\tr[F^{(s^{*})}_v\chi_1]=c_{v,s^{*}}\tr\chi_1=c_{v,s^{*}}$ and
+$\tr[\hat O^{(s^{*})}_k\chi_1]=o_{k,s^{*}}\tr\chi_1=o_{k,s^{*}}$, and the
+evaluation is the product $c_{v,s^{*}}\cdot1$, which rounds nothing, so
+each residual is the datum $0$ and (W6) passes as well. Every condition
+but (W2) is met, and a checklist without (W2) would flag the sector
+removable and delete a constraint-active sector --- the one operation
+Proposition~\ref{prop:retention} proves unsound. Its counterexample is of
+exactly this shape: its sector~2 has $F^{(2)}_0=1$, $F^{(2)}_1=0$ on a
+one-dimensional block, hence is state-blind, and is key-inert, hence
+constraint-active; deleting it \emph{overstates $\hlow$ by one bit per
+round}. What forbids the self-witness is the construction in the proof of
+Theorem~\ref{thm:removal}: it sets $\hat\omega_{s^{*}}\coloneqq0$ and
+$\hat\omega_{s_i}\coloneqq\omega_{s_i}+\mu_i\,m\otimes\chi_i$
+\emph{simultaneously}, and if some $s_i=s^{*}$ those two assignments
+contradict each other, so $\hat\omega$ is not defined and no step of the
+proof is available. The theorem quantifies over
+$s_1,\dots,s_L\in\SecSet\setminus\{s^{*}\}$ for that reason, and the
+first half of (W2) is that quantifier and nothing else.
+
+\emph{Distinct targets, at no cost.} With $s_i=s_j$ for $i\ne j$ the
+proof's second assignment
+$\hat\omega_{s_i}\coloneqq\omega_{s_i}+\mu_i\,m\otimes\chi_i$ would assign
+two values to one block, the same collision the self-witness produces at
+$s_i=s^{*}$, and $\hat\omega$ would again not be defined. The theorem
+therefore quantifies over pairwise distinct targets and (W2) is that
+quantifier as well. \emph{No removal is lost by it.} A candidate witness
+with repeated targets \emph{merges}: drop every term with $\mu_i=0$, and
+replace the terms at a repeated target $s$ by the single term
+$(\bar\mu_s,\bar\chi_s)$ with $\bar\mu_s\coloneqq\sum_{i:s_i=s}\mu_i$ and
+$\bar\chi_s\coloneqq\bar\mu_s^{-1}\sum_{i:s_i=s}\mu_i\chi_i$, defined
+because $\bar\mu_s>0$ after the drop. Then $\bar\mu_s\ge0$ and
+$\sum_s\bar\mu_s=1$, so (W3) holds; $\bar\chi_s\succeq0$ with
+$\tr\bar\chi_s=1$, a convex combination of states, so (W4) holds; and
+$\bar\mu_s\tr[F^{(s)}_v\bar\chi_s]=\sum_{i:s_i=s}\mu_i\tr[F^{(s)}_v\chi_i]$
+by linearity of $X\mapsto\tr[F^{(s)}_vX]$, and likewise for
+$\hat O^{(s)}_k$, so (RM1) and (RM3) take the same values and (W6)'s
+identities are the same identities. \emph{In exact arithmetic the merged
+witness certifies exactly what the original would have.} The merged
+witness and its evaluation order must still be \emph{exhibited}, because
+(W3), (W4) and (W6) are conditions on the exhibited numbers: a merge whose
+arithmetic rounds sets no flag, which is the safe direction
+(Remark~\ref{rem:classes}).
+\end{remark}

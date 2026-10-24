@@ -1,0 +1,50 @@
+% ---
+% id: meat-core/cor:constrained-key-length
+% kind: cor
+% title: "Key length from the constrained value"
+% summary: >-
+%   Under the attack-set licence the accumulated entropy is at least n times
+%   the value of the program under the licensed list, less the
+%   acceptance-probability penalty. That is the form the key-length theorem
+%   reads, so its key length holds with the constrained value.
+% prominence: standard
+% status: implemented
+% uses: [thm:constrained-accumulation, cor:reduction-constrained, thm:keylength]
+% assumes: [A-ATK]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.keylength:key_length_permitted
+% lean:
+% ---
+
+\begin{corollary}
+\label{cor:constrained-key-length}
+Under the hypotheses of Theorem~\ref{thm:constrained-accumulation}, with
+Corollary~\ref{cor:reduction-constrained},
+\begin{equation*}
+  \Hsandup\big(Z_1^n\big|\Chat_1^nI_1^n\Ehat\big)_{\rho_{|\OmAT}}
+  \;\ge\;n\,\hlow(\CList)
+  -\frac{\alpha}{\alpha-1}\log_2\frac{1}{\Pr[\OmAT]},
+\end{equation*}
+which is the form Theorem~\ref{thm:keylength} consumes; under
+A-ATK (\xref{protocol-compiler/ass:atk}) and the remaining
+hypotheses of Theorem~\ref{thm:keylength}, the key-length statement
+of Theorem~\ref{thm:keylength} therefore holds with the constrained $\hlow$
+(its constrained branch).
+\end{corollary}
+
+\begin{proof}
+Theorem~\ref{thm:constrained-accumulation} gives
+$\Hsandup(Z_1^n|\Chat_1^nI_1^n\Ehat)_{\rho_{|\OmAT}}
+\ge n\,\hqkd(\CList)-\frac{\alpha}{\alpha-1}\log_2\frac{1}{\Pr[\OmAT]}$
+under its hypotheses, and Corollary~\ref{cor:reduction-constrained} gives
+$\hqkd(\CList)\ge\hlow(\CList)$ for the same licensed list; since $n\ge1$,
+substituting the second inequality into the first yields the display. That
+display is the accumulation bound the secrecy step of
+Theorem~\ref{thm:keylength} reads, with $\hlow(\CList)$ in the place of
+$\hlow$, so the constrained branch of that theorem applies under the
+hypotheses of Theorem~\ref{thm:constrained-accumulation}, which include A-ATK,
+together with the remaining hypotheses of Theorem~\ref{thm:keylength}: its
+post-processing model and the assumptions it names, $\alpha\in(1,2)$ and
+$\epa,\eev\in(0,1]$.
+\end{proof}

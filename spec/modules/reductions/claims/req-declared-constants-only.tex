@@ -1,0 +1,26 @@
+% ---
+% id: reductions/req:declared-constants-only
+% kind: req
+% title: "Refusal of data-dependent constants"
+% summary: >-
+%   A constraint entry whose constant is a function of a statistic observed
+%   during the run is refused, never built. Such an entry would be unsound
+%   regardless of provenance, the licence resting on constants declared before
+%   the run.
+% prominence: standard
+% status: accepted
+% uses: [rem:notlicensed]
+% mentions: [ass:constdecl]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{requirement}\label{req:declared-constants-only}
+The engine builds no constraint entry whose constant $c_k$ is a function of a
+statistic observed during the run; a request for one is refused with
+\iface{data_dependent_constant}. Such an entry would be unsound regardless of
+provenance (Remark~\ref{rem:notlicensed}\,(c)), the constants being declared
+before the run (Assumption~\ref{ass:constdecl}).
+\end{requirement}

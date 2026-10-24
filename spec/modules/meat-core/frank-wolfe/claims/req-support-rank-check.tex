@@ -1,0 +1,46 @@
+% ---
+% id: meat-core/frank-wolfe/req:support-rank-check
+% kind: req
+% title: "Rank test for maximal support"
+% summary: >-
+%   The engine decides (H-SUPP) as a rank equality, both sides computed and
+%   read with one declared cutoff relative to a spectral radius. The
+%   reference rank is computed once per acceptance value and sector from the
+%   declaration and the support frame, never from an iterate.
+% prominence: standard
+% status: implemented
+% uses: [meat-core/lem:branch-support, thm:firstorder]
+% mentions: [rem:fo-one-ruler, rem:fo-check-exposures, meat-core/def:branch-support]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.gradient:attains_the_reference_rank
+% lean:
+% ---
+
+Hypothesis (H-SUPP) of Theorem~\ref{thm:firstorder} is equivalent to the rank
+equality \eqref{eq:hsupp-check}, and no positivity test on the ambient space
+of the branch operator can decide it (Remark~\ref{rem:fo-one-ruler}). A
+direction along a singular value $\sigma$ of the stacked Kraus matrix carries
+weight of order $\sigma^2$ in the branch operator, which is why the right
+side is read at the square root of the cutoff: both sides then count with
+one ruler. The comparison discharges nothing;
+Remark~\ref{rem:fo-check-exposures} names the residual exposures it leaves.
+
+\begin{requirement}\label{req:support-rank-check}
+The engine decides (H-SUPP) as the rank equality \eqref{eq:hsupp-check},
+both sides computed and both read with the one declared threshold
+\iface{support_cutoff}:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item the left side is the count of eigenvalues of $X_{\hat c,s}$ above
+  \iface{support_cutoff}, read relative to that block's own spectral radius;
+\item the right side is $\operatorname{rank}\mathbf K_{\hat c,s}$ of
+  \eqref{eq:Kstack}, read at the square root of \iface{support_cutoff}
+  relative to that matrix's largest singular value, a window derived from
+  the same threshold and not declared beside it; equivalently the count of
+  eigenvalues of $\mathbf K_{\hat c,s}\mathbf K_{\hat c,s}^{\dagger}$ above
+  \iface{support_cutoff} relative to its spectral radius. It is computed once
+  per $(\hat c,s)$ from the declaration and $W_{\tau}$, and never from an
+  iterate.
+\end{enumerate}
+\end{requirement}

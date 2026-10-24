@@ -1,0 +1,38 @@
+% ---
+% id: protocol-compiler/rem:sidecond
+% kind: rem
+% title: "Necessity of the key-rule side condition"
+% summary: >-
+%   Without the condition that the key rule map into the key values, the
+%   specification's sifting predicate stops witnessing announcement-determined
+%   sifting. Check V5 catches only a key rule that withholds a key on part of a
+%   passing class, so the condition is a clause of [[A-SPEC]].
+% prominence: standard
+% status: accepted
+% uses: [def:spec]
+% mentions: [thm:sifting-and-key, def:declaration, def:validator, ass:spec]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:sidecond}
+Drop the requirement that $r^{0}_{\hold}$ map into $\Zval$, and
+Theorem~\ref{thm:sifting-and-key}\,(ii) fails: a key rule that returns $\perp$
+on a \emph{passing} class makes $r(x,v)=\perp$ for pairs whose announcement
+class $\varsigma$ calls $\mathrm{pass}$, so the specification's $\varsigma$ no
+longer witnesses announcement-determined sifting. The two ways this can happen
+differ in what is still decided. Where the key rule returns $\perp$ on part of
+a passing class, no predicate witnesses D(v): whether a round is sifted is not
+determined by the announcements, a sifting event becomes invisible to the
+public record, and check V5 of Definition~\ref{def:validator} refuses the
+candidate. Where it returns $\perp$ on the whole of a passing class, D(v) still
+holds, witnessed by a predicate that calls that class $\mathrm{fail}$, and V5
+passes; what is lost is that the specification's $\varsigma$ is that witness,
+and \eqref{eq:chkey} of Definition~\ref{def:declaration}, which reads the
+specification's $\varsigma$, may then count as key-live an acceptance value
+that no key-producing class reaches. This is why the condition is stated in
+the specification's type (Definition~\ref{def:spec}\,(d)) and carried as a
+clause of Assumption~\ref{ass:spec}, V5 catching only its first failure.
+\end{remark}

@@ -1,0 +1,62 @@
+% ---
+% id: meat-core/rem:witness-exactness
+% kind: rem
+% title: "Exactness of the exhibited weights and states"
+% summary: >-
+%   A witness is computed, not declared, so its weights and states can be made
+%   exact by construction; a naively summed weight vector can read 1 while
+%   its real sum exceeds 1. The diagonal form of (W4) is one exact
+%   presentation of a state, not the only one binary64 admits.
+% prominence: standard
+% status: accepted
+% uses: [def:classes, thm:removal]
+% mentions: [def:declaration]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Conditions (W3) and (W4) of Definition~\ref{def:classes} read exhibited
+\tref{binary64 numbers}, and the normalization step of Theorem~\ref{thm:removal}
+uses $\sum_i\mu_i=1$ and $\tr\chi_i=1$ as identities of reals.
+
+\begin{remark}\label{rem:witness-exactness}
+\emph{Exact by construction.} (W3) and (W4) are decided at zero defect,
+but not in the way the declared marginal $\tau_A$ is checked at admission.
+That check decides \tref{declared data}, which an \tref{instance}
+\tref[snap]{snaps} under a \tref{producer}'s obligation and a
+\tref{consumer} must take as it finds them. A witness is instead a
+\tref{computed object} that the implementation exhibits, and the
+implementation can make both conditions exact by construction --- which
+(W3) and (W4) as stated require it to. The difference is on the false-positive side, which is the
+unsafe one. A naively summed $\mu=(1,2^{-60})$ returns the datum $1.0$
+while $\sum_i\mu_i>1$ as reals, and then the normalization step of
+Theorem~\ref{thm:removal} reads
+$\tr\hat\omega=\tr\omega+(\sum_i\mu_i-1)\tr m\ne1$: the modified point is
+not feasible and the removal would have been licensed on an identity that
+does not hold. Requiring the sum in the exhibited order and verified to
+round nowhere closes that window exactly as (W6) closes it for the
+residuals, and requiring the exhibited form of (W4) closes the
+corresponding window on a computed $\lmin(\chi_i)$ or a computed
+$\tr\chi_i$. \emph{Neither leaves a residual exposure}: on the forms those
+two conditions admit, both hold of the real numbers the data denote.
+
+\emph{The diagonal form is one exact presentation among others.} Any
+presentation deciding $\chi_i\succeq0$ and $\tr\chi_i=1$ exactly by
+construction would serve, and the diagonal form is \emph{one} such
+presentation, not the only one binary64 admits. An exhibited unit vector's
+outer product $\dyad{\psi_i}$ with $\braket{\psi_i}{\psi_i}$ verified to
+round nowhere is a genuine second: on a four-dimensional $\Qsys_{s_i}$ the
+vector $\psi_i=(\tfrac12,\tfrac12,\tfrac12,\tfrac12)$ has exactly
+representable entries, its norm accumulates $0.25\to0.5\to0.75\to1.0$
+rounding nowhere, and its outer product --- every entry $\tfrac14$ --- is a
+rank-one state that is \emph{not} diagonal. (W4) does not admit it, and
+excluding an admissible presentation can only \emph{refuse} a removal. No
+impossibility is claimed here.
+
+\emph{The evaluation order of (W6).} The order in which a witness's
+residuals are formed is exhibited with the witness. This is the one
+difference from the \tref{declared order} of \eqref{eq:declorder}, which is
+part of the declaration because the datum it governs is declared.
+\end{remark}

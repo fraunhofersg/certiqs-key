@@ -1,0 +1,21 @@
+digraph claims {
+  rankdir=LR;
+  graph [label="8 Decoy-state sources and the tagging channel: The tagging channel\nArrow: claim -> prerequisite. Solid: uses; dashed: assumes.\nDeclared dependencies, not a proof check. Mentions excluded.", labelloc=t, fontsize=13, fontname="Arial", bgcolor="white", pad=0.25, nodesep=0.3];
+  node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11, margin="0.13,0.09"];
+  edge [color="#526777", arrowsize=0.65];
+  subgraph "cluster_transmitter" {
+    label="transmitter"; color="#cbd5df";
+    "transmitter/def:source-link" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/def:source-link<BR/>Source link<BR/>implemented<BR/>BOUNDARY: further prerequisites omitted</TD></TR><TR><TD HREF="../claims/def-source-link.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/def:source-link" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled,dashed", URL="../claims/def-source-link.tex", target="_top"];
+  }
+  subgraph "cluster_transmitter/decoy" {
+    label="transmitter/decoy"; color="#cbd5df";
+    "transmitter/decoy/def:tagged-source" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/decoy/def:tagged-source<BR/>Tagged virtual source: cutoffs, flags<BR/>and sector map<BR/>implemented<BR/>BOUNDARY: further prerequisites omitted</TD></TR><TR><TD HREF="../decoy/claims/def-tagged-source.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/decoy/def:tagged-source" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled,dashed", URL="../decoy/claims/def-tagged-source.tex", target="_top"];
+    "transmitter/decoy/def:wcp-model" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/decoy/def:wcp-model<BR/>Phase-randomised weak-coherent-pulse<BR/>source model<BR/>implemented<BR/>BOUNDARY: further prerequisites omitted</TD></TR><TR><TD HREF="../decoy/claims/def-wcp-model.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/decoy/def:wcp-model" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled,dashed", URL="../decoy/claims/def-wcp-model.tex", target="_top"];
+    "transmitter/decoy/prop:tagging" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/decoy/prop:tagging<BR/>Tagging channel for weights at or<BR/>below the Poisson weights<BR/>accepted</TD></TR><TR><TD HREF="../decoy/claims/prop-tagging.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/decoy/prop:tagging" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../decoy/claims/prop-tagging.tex", target="_top"];
+    "transmitter/decoy/rem:no-intensity-split" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">transmitter/decoy/rem:no-intensity-split<BR/>Polarisation flags shared across<BR/>intensities<BR/>accepted</TD></TR><TR><TD HREF="../decoy/claims/rem-no-intensity-split.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-transmitter/decoy/rem:no-intensity-split" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../decoy/claims/rem-no-intensity-split.tex", target="_top"];
+  }
+  "transmitter/decoy/prop:tagging" -> "transmitter/decoy/def:tagged-source";
+  "transmitter/decoy/prop:tagging" -> "transmitter/decoy/def:wcp-model";
+  "transmitter/decoy/prop:tagging" -> "transmitter/def:source-link";
+  "transmitter/decoy/rem:no-intensity-split" -> "transmitter/decoy/def:tagged-source";
+}

@@ -1,0 +1,167 @@
+% ---
+% id: transmitter/lem:ensemble-presentation
+% kind: lem
+% title: "Certificate defined by an ensemble presentation"
+% summary: >-
+%   A virtual ensemble in sector blocks defines, by canonical purification and
+%   a square-root measurement, a block certificate with pure blocks that
+%   exactly reproduces Alice's marginal and, under that measurement, the
+%   ensemble. Only her marginal, a transposed sum of declared blocks, is formed
+%   as numbers.
+% prominence: main
+% status: implemented
+% uses: [def:srcert, def:source-spec]
+% mentions: [thm:certificate-sufficiency]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.presentation:alice_marginal_blocks
+% lean:
+% notes: "The square roots in the statement are real-number objects of the proof and are formed by no consumer. Part (v) is what a consumer's ensemble-form declaration reads; that form is the consumer's to define and is not defined here."
+% ---
+
+The ensemble presentation of Definition~\ref{def:srcert} declares only the
+weighted virtual ensemble, in blocks along a sector structure of the virtual
+transmitted system. The lemma supplies the objects it defines and shows that
+they form a block-form certificate, so that no square root or quotient of a
+declared number ever has to be declared; of the defined objects only Alice's
+marginal is formed as numbers, that is, computed entry by entry.
+
+\begin{lemma}\label{lem:ensemble-presentation}
+Let the virtual transmitted system carry a sector structure
+$\Hs{\Avirt}\supseteq\bigoplus_{t\in\mathbb{T}}\Hs{S_t}$, each $S_t$ spanned
+by vectors $(\ket{i}_{S_t})_i$ of the declared basis, and let
+$(\sigma^{\mathrm v,(t)}_x)_{t\in\mathbb{T}}$, $x\in\Xset$, be block lists
+with $\sigma^{\mathrm v,(t)}_x\in\Pos{S_t}$ and
+$\sum_{x}\sum_t\tr\sigma^{\mathrm v,(t)}_x=1$. For every $t$ let $A_t$ be a
+copy of $S_t$ with basis $(\ket{i}_{A_t})_i$ in the same order, let
+transposition $X\mapsto X^{\transpose}$ be taken in these bases, and put
+\begin{equation}\label{eq:enspres}
+\begin{gathered}
+  \tau^{(t)}_{S}\coloneqq\sum_{x\in\Xset}\sigma^{\mathrm v,(t)}_x ,\qquad
+  \tau^{(t)}_A\coloneqq\big(\tau^{(t)}_{S}\big)^{\transpose} ,\\
+  \ket{\psi_t}\coloneqq\sum_i\ket{i}_{A_t}\otimes
+     \big(\tau^{(t)}_{S}\big)^{1/2}\ket{i}_{S_t} ,\qquad
+  \Psi_t\coloneqq\dyad{\psi_t} ,\\
+  M^{(t)}_x\coloneqq\big(\tau^{(t)}_A\big)^{-1/2}
+     \big(\sigma^{\mathrm v,(t)}_x\big)^{\transpose}
+     \big(\tau^{(t)}_A\big)^{-1/2}
+     +\delta_{x,x_0}\big(\idon{A_t}-P_t\big) ,
+\end{gathered}
+\end{equation}
+where $P_t$ is the projector onto the support of $\tau^{(t)}_A$, the inverse
+square root is taken on that support and is zero off it, and $x_0$ is the
+first letter of $\Xset$ in its declared order. Then, with
+$A\coloneqq\bigoplus_tA_t$:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(a certificate in block form)} every $\Psi_t$ is positive
+semidefinite, $\sum_t\tr\Psi_t=1$, $\{M_x\}_x$ with
+$M_x=\bigoplus_tM^{(t)}_x$ is a POVM presented as a block list,
+$\tau_A=\bigoplus_t\tau^{(t)}_A$ is a state presented as a block list, and
+both identities of \eqref{eq:srblock} hold: $(\Psi_t)_t$ satisfies every
+condition Definition~\ref{def:srcert} places on a block-form certificate
+for $(A,\mathbb{T},\tau_A,\{M_x\})$ against the virtual ensemble with
+weighted members $\sigma^{\mathrm v}_x=\bigoplus_t\sigma^{\mathrm v,(t)}_x$,
+(SR3) apart, which is an attestation;
+\item \emph{(pure blocks)} every non-zero $\Psi_t$ is
+$g_t\coloneqq\tr\tau^{(t)}_S$ times a rank-one projector, so the converse of
+Theorem~\ref{thm:certificate-sufficiency}\,(ii) holds of this certificate;
+\item \emph{(what is formed as numbers)} the entry $(i,j)$ of
+$\tau^{(t)}_A$ is the entry $(j,i)$ of the sum $\tau^{(t)}_S$ of the
+declared blocks. No
+other object of \eqref{eq:enspres} enters (i) or (ii) through its entries:
+$\Psi_t$ and $M^{(t)}_x$ contain square roots and quotients of the declared
+numbers and are, in general, not declarable;
+\item \emph{(the completion is immaterial)} the letter $x_0$ enters the
+POVM condition and nothing else: (SR1), (SR2), (ii) and (v) hold with the
+term $\idon{A_t}-P_t$ assigned to any letter, or split among the letters by
+any positive semidefinite operators on the kernel of $\tau^{(t)}_A$ that
+sum to $\idon{A_t}-P_t$;
+\item \emph{(Alice's side without a square root)}
+$\big(\tau^{(t)}_A\big)^{1/2}M^{(t)}_x\big(\tau^{(t)}_A\big)^{1/2}
+=\big(\sigma^{\mathrm v,(t)}_x\big)^{\transpose}$ for every $x$ and $t$: the
+operators $N^{(t)}_x\coloneqq(\sigma^{\mathrm v,(t)}_x)^{\transpose}$ are
+entrywise the declared numbers, and
+$\sum_xN^{(t)}_x=\tau^{(t)}_A$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Idea.} Each block is the canonical purification of the summed
+ensemble of its sector, written through the maximally entangled vector; three
+facts about transposition reduce every claim to an identity between the
+declared blocks and their sum.
+
+\emph{Preliminaries.} Fix $t$ and drop it from the notation; write
+$K\coloneqq\tau_S^{1/2}$,
+$\ket{\Omega}\coloneqq\sum_i\ket{i}_A\ket{i}_S$, so that
+$\ket{\psi}=(\idon{A}\otimes K)\ket{\Omega}$, and let $Q$ be the projector
+onto the support of $\tau_S$. Three facts are used. (a)
+$\tr_A\big[(Y\otimes\idon{S})\dyad{\Omega}\big]=Y^{\transpose}$ for
+$Y\in\Lin{A}$: with $\dyad{\Omega}=\sum_{ij}\ket{i}\!\bra{j}\otimes
+\ket{i}\!\bra{j}$ the left-hand side is $\sum_{ij}\bra{j}Y\ket{i}\,
+\ket{i}\!\bra{j}$, whose $(i,j)$ entry is $Y_{ji}$. (b)
+$(\idon{}\otimes Z)\ket{\Omega}=(Z^{\transpose}\otimes\idon{})\ket{\Omega}$,
+by comparing coefficients. (c) Transposition is linear, reverses products,
+commutes with the adjoint and maps positive semidefinite operators to
+positive semidefinite operators with the same spectrum; hence
+$f(X^{\transpose})=f(X)^{\transpose}$ for every real function $f$ on the
+spectrum of a Hermitian $X$. In particular $(\tau_A)^{1/2}=K^{\transpose}$,
+$(\tau_A)^{-1/2}=(\tau_S^{-1/2})^{\transpose}$ and $P=Q^{\transpose}$.
+
+\emph{(SR1).} By (b),
+$\Psi=(K^{\transpose}\otimes\idon{})\dyad{\Omega}
+(K^{\transpose}\otimes\idon{})^{\dagger}$, and
+$\tr_S\dyad{\Omega}=\idon{A}$, so
+$\tr_S\Psi=K^{\transpose}(K^{\transpose})^{\dagger}=(K^{\transpose})^2
+=(K^2)^{\transpose}=\tau_S^{\transpose}=\tau_A$, the operator
+$K^{\transpose}$ being Hermitian by (c).
+
+\emph{(SR2).} $\tr_A\big[(M_x\otimes\idon{})\Psi\big]
+=K\,\tr_A\big[(M_x\otimes\idon{})\dyad{\Omega}\big]K=K\,M_x^{\transpose}K$
+by (a), $K$ acting on $S$ alone. By (c),
+$M_x^{\transpose}=\tau_S^{-1/2}\sigma^{\mathrm v}_x\tau_S^{-1/2}
++\delta_{x,x_0}(\idon{S}-Q)$, and $K\tau_S^{-1/2}=Q$, $K(\idon{}-Q)=0$, so
+$K\,M_x^{\transpose}K=Q\,\sigma^{\mathrm v}_xQ$. Finally
+$0\preceq\sigma^{\mathrm v}_x\preceq\tau_S$ puts the support of
+$\sigma^{\mathrm v}_x$ inside that of $\tau_S$, so
+$Q\,\sigma^{\mathrm v}_xQ=\sigma^{\mathrm v}_x$.
+
+\emph{The remaining conditions of (i).} $\Psi=\dyad{\psi}\succeq0$ and
+$\tr\Psi=\tr\tr_S\Psi=\tr\tau_A=\tr\tau_S$, whose sum over $t$ is
+$\sum_x\sum_t\tr\sigma^{\mathrm v,(t)}_x=1$. Each $M_x$ is positive
+semidefinite: $(\sigma^{\mathrm v}_x)^{\transpose}\succeq0$ by (c), a
+conjugation by the Hermitian operator $\tau_A^{-1/2}$ preserves positivity,
+and $\idon{}-P\succeq0$. Their sum is
+$\tau_A^{-1/2}\,\tau_S^{\transpose}\,\tau_A^{-1/2}+(\idon{}-P)
+=P+(\idon{}-P)=\idon{A}$, by linearity of transposition. $\tau_A$ is
+positive semidefinite by (c), and $\sum_t\tr\tau^{(t)}_A=1$ was just shown.
+The weighted members $\bigoplus_t\sigma^{\mathrm v,(t)}_x$ of the virtual
+ensemble are block diagonal along $(S_t)_t$ by their presentation as block
+lists, with the declared blocks as their diagonal blocks, which is the
+condition the block form places on the virtual ensemble; together with
+\eqref{eq:srblock}, shown above sector by sector, this is (SR1) and (SR2) of
+$\Psi=\bigoplus_t\Psi_t$ by Definition~\ref{def:srcert}.
+
+(ii) $\Psi=\dyad{\psi}$ with $\braket{\psi}{\psi}=\tr\Psi=g$; where $g>0$,
+$\Psi/g$ is a rank-one projector. Theorem~\ref{thm:certificate-sufficiency}\,(ii) states its
+converse for exactly such block lists.
+
+(iii) is the definition of the transpose; (i) and (ii) were proved from the
+operator identities above and read no entry of $\Psi$ or of $M_x$. That
+these are not declarable in general is seen on $S$ a qubit:
+$\tau_S=\mathrm{diag}(\tfrac12,\tfrac12)$ gives $\Psi$ with every non-zero
+entry equal to $\tfrac12$, while $\tau_S=\mathrm{diag}(\tfrac34,\tfrac14)$
+gives $\Psi$ the entry $\sqrt{3/16}$, which is irrational.
+
+(iv) In the proof of (SR2) the completion term contributed
+$K(\idon{}-Q)K=0$, and the same holds of any operator supported on the
+kernel of $\tau_S$; in (SR1) and (ii) $M_x$ does not occur; in (v) below it
+contributes $\tau_A^{1/2}(\idon{}-P)\tau_A^{1/2}=0$.
+
+(v) $\tau_A^{1/2}\tau_A^{-1/2}=P$, so
+$\tau_A^{1/2}M_x\tau_A^{1/2}=P(\sigma^{\mathrm v}_x)^{\transpose}P
+=\big(Q\,\sigma^{\mathrm v}_xQ\big)^{\transpose}
+=(\sigma^{\mathrm v}_x)^{\transpose}$, using (c) and the support inclusion
+above. The sum is $\tau_S^{\transpose}=\tau_A$.
+\end{proof}

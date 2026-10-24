@@ -1,0 +1,39 @@
+% ---
+% id: protocol-compiler/rem:party-label-restriction
+% kind: rem
+% title: "Party labels in the general format"
+% summary: >-
+%   Deriving the party labels from the factor list is narrower than the basic
+%   format, which may label the tensor factors of one sector differently. Only
+%   the premises placing the laboratories read the labels; two parties inside
+%   one measured system need two measured factors.
+% prominence: standard
+% status: accepted
+% uses: [def:declaration]
+% mentions: [meat-core/ass:lab, transmitter/ass:src]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:party-label-restriction}
+The party labels that (DX1) of Definition~\ref{def:declaration} derives from
+the factor list are narrower than the party partition of the basic format at
+one measured factor: there a declared tensor factorization of $\Hs{\Qsys_s}$
+may carry different party labels on different tensor factors, while in the
+general format every tensor factor of one measured factor's block carries
+that factor's party. The narrowing is admitted and not repaired. No
+derivation of the compiler or of the consuming engine reads those labels ---
+what the derivations consume is the readout maps $\rd{\mathsf A}$,
+$\rd{\mathsf B}$ --- and correspondingly no check compares a declared label
+with a derived one. The labels are read by the premises that place the
+parties' laboratories: the consuming engine's laboratory premise
+(\xref{meat-core/ass:lab}) takes them, with the party label of $A$, as naming
+the parties' laboratories, and the source licence
+(\xref{transmitter/ass:src}) reads the party label of $A$; so the narrowing restricts which laboratory boundaries a
+general-format declaration can state, and a declaration that wants two parties inside one
+\tref{measured system} declares two measured factors instead. So the general format
+coincides with the basic format entry for entry on every component a
+derivation reads, and on the party labels it is a restriction.
+\end{remark}

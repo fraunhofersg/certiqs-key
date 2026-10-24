@@ -1,0 +1,9 @@
+id: core-b
+kind: core
+version: 0.1.0
+title: Core B
+one_line: A second core module that depends on the first.
+depends_on: [core-a]
+notation_version: "0.4.0"
+order:
+  - prop:cross

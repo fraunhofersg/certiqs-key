@@ -1,0 +1,34 @@
+# spec/modules/foundations/interface.yaml -- the foundations module's
+# interface, which holds one thing: the ledger row of the module's one
+# assumption (spec/claim-format.md section 5). The module has no inputs or
+# outputs of its own; its code is the shared numerical layer every package
+# imports, described in spec/modules/foundations/design.md, "Where the code
+# is". The claim files under claims/ are the contract; this file authors no
+# mathematics, and where it and a claim disagree, the claim decides.
+
+module_id: foundations
+
+# ---------------------------------------------------------------------------
+# assumption_ledger
+#   The machine key under which assumption ledgers and run records carry the
+#   module's assumption. A run carries it exactly where its record names
+#   blocks resting on it (req:snap-reference (iii), req:who-snaps). A block
+#   evaluated off its snap (def:evaluated-off-snap) is never so named: where
+#   a run evaluates its first-order bound on the reference companion, only the
+#   blocks that carry their snapped block there can rest on it
+#   (meat-core/frank-wolfe/req:bracket-on-reference), unless the key length
+#   is formed from a number on the searched declaration: after the bracket on
+#   the companion is withdrawn, the cause factor_enclosure_inconsistent among
+#   those of a withdrawal, or because the companion certified no point, the
+#   cause companion_not_certified; then the blocks the companion carried rest
+#   on it too, in the group reference bracket withdrawn with the cause
+#   (req:snap-reference (iii)(b); meat-core/frank-wolfe/req:certified-evaluation
+#   (i), (iv)).
+# ---------------------------------------------------------------------------
+assumption_ledger:
+
+  own_rows:
+
+    - {id: A-SNAP, machine_key: snapped_measurement, claim: ass:snapped-measurement, never_verified: true}
+
+  locator: "ass:snapped-measurement; def:evaluated-off-snap; req:snap-reference (iii), (iv); req:who-snaps; meat-core/frank-wolfe/req:bracket-on-reference (v)"

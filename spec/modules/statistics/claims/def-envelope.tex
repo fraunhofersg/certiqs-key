@@ -1,0 +1,58 @@
+% ---
+% id: statistics/def:envelope
+% kind: def
+% title: "Honest envelope and its envelope set"
+% summary: >-
+%   An honest envelope is a lower and an upper exact rational probability per
+%   outcome, and its envelope set holds every law in the simplex between them.
+%   A single honest law is the degenerate envelope, whose envelope set is that
+%   law alone.
+% prominence: standard
+% status: implemented
+% uses: [def:taxonomy]
+% mentions: [thm:geometry-validation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.construction:HonestEnvelope
+% lean:
+% notes: "The envelope set is written as a sans-serif H locally, a letter with no catalogue entry and no other use in this module. Its non-emptiness is proved where it is used, in binomial-box/thm:box-construction (iii), from thm:geometry-validation (iii); this definition does not assert it."
+% ---
+
+The honest model is a range of honest probabilities per outcome rather than a
+single law, and a single law is the special case of ranges of width zero.
+
+\begin{definition}\label{def:envelope}
+An \term[A lower and an upper exact rational probability per outcome, the
+declared range of honest probabilities.]{honest envelope} on $\Chatset$ is a pair
+${\honest}^{-},{\honest}^{+}\in\mathbb{Q}^{\Chatset}$ of exact rational
+vectors with
+\begin{equation}\label{eq:envelope}
+  0\ \le\ {\honest}^{-}(\hat c)\ \le\ {\honest}^{+}(\hat c)\ \le\ 1
+  \quad\forall\hat c\in\Chatset,
+  \qquad
+  \sum_{\hat c\in\Chatset}{\honest}^{-}(\hat c)\ \le\ 1\ \le\
+  \sum_{\hat c\in\Chatset}{\honest}^{+}(\hat c).
+\end{equation}
+Its \term[The laws on the simplex that lie between the lower and the upper
+vector of an honest envelope.]{envelope set} is
+\begin{equation}\label{eq:envelope-set}
+  \mathsf{H}\ \coloneqq\ \big\{\mathbf{p}\in\simplex{\Chatset}:\
+  {\honest}^{-}(\hat c)\le p(\hat c)\le{\honest}^{+}(\hat c)\ \
+  \forall\hat c\in\Chatset\big\},
+\end{equation}
+the set of honest laws the envelope admits. An honest envelope with
+${\honest}^{-}={\honest}^{+}$ is a \term[An honest envelope whose lower and
+upper vectors are equal, hence one honest law.]{degenerate envelope}; then
+\eqref{eq:envelope} forces the common value to be a law
+$\honest\in\simplex{\Chatset}\cap\mathbb{Q}^{\Chatset}$ and
+$\mathsf{H}=\{\honest\}$. A single honest law $\honest$ (the
+\term[The honest model given as one law rather than as an
+envelope.]{point form}) is read as the degenerate envelope
+$(\honest,\honest)$. The pair $({\honest}^{-},{\honest}^{+})$ is a
+\tref{canonical box form} in the sense of Definition~\ref{def:taxonomy}
+(rational, $0\le{\honest}^{-}\le{\honest}^{+}$), $\mathsf{H}$ is its
+denotation \eqref{eq:boxset}, and the second condition of
+\eqref{eq:envelope} is its closed-form feasibility condition
+\eqref{eq:boxfeas}.
+\end{definition}

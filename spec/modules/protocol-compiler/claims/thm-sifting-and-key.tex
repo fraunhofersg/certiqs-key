@@ -1,0 +1,138 @@
+% ---
+% id: protocol-compiler/thm:sifting-and-key
+% kind: thm
+% title: "Announcement locality, sifting and party computability"
+% summary: >-
+%   Each announcement is a function of its sender's readout and of the
+%   announcements before it, sifting is determined by the announcements, and
+%   the holder computes the raw key locally. An ensemble-form measurement slot
+%   of Alice's denotes a POVM.
+% prominence: standard
+% status: accepted
+% uses: [def:compile, def:declaration, def:target, def:spec, def:well-formed-spec, def:exact]
+% assumes: [A-SPEC]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.spec:derived_holder_key_rule
+% lean:
+% notes: "Part (v) is proved here rather than imported, so that this contract is self-contained; meat-core/lem:ensemble-form proves the same. Only A-SPEC (ii) is spent, at (ii) and (vi); A-ALICE-MEAS and A-ENS are not declared, no step reading the measurement Alice performs or the physical source ensemble."
+% ---
+
+\begin{theorem}\label{thm:sifting-and-key}
+Let $\Spec$ be a \tref{well-formed specification}
+(Definition~\ref{def:well-formed-spec}) satisfying
+Assumption~\ref{ass:spec}, so
+that in particular $r^{0}_{\hold}$ maps into $\Zval$
+(Assumption~\ref{ass:spec}\,(ii)), and let $\Decl$ be emitted by
+Definition~\ref{def:compile}. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(announcement locality)} $a_A$ is a function of
+$\rd{\mathsf A}(x,v)$ alone and $a_B$ of $\rd{\mathsf B}(x,v)$ alone, and the
+joint announcement is \eqref{eq:jointann};
+\item \emph{(D(v))} the specification's $\varsigma$ --- consumed, and not
+itself a slot of \eqref{eq:declaration} --- witnesses announcement-determined
+sifting: $r(x,v)=\perp\iff\varsigma(a(x,v))=\mathrm{fail}$;
+\item \emph{(D(viii))} $r$ is party-computable: the total map
+\begin{equation}\label{eq:rhold}
+  r_{\hold}(o,\kappa)\coloneqq
+  \begin{cases}
+    r^{0}_{\hold}(o,\kappa), & \varsigma(\kappa)=\mathrm{pass},\\
+    \perp, & \varsigma(\kappa)=\mathrm{fail},
+  \end{cases}
+  \qquad (o,\kappa)\in\Oset{\hold}\times\Kann,
+\end{equation}
+satisfies \eqref{eq:partycomp}.
+\item \emph{(\tref[transcript protocol]{transcript protocols})} if the
+announcement slot holds a transcript protocol
+(Definition~\ref{def:declaration}\,(DX5)), then for
+every $m$ the $m$-th component of $a(x,v)$ is a function of
+$\rd{\pi_m}(x,v)$ and of the components before it, and of nothing else; $a$ is
+total; and (ii) and (iii) hold with this $a$. For $L=2$,
+$\pi=(\mathsf A,\mathsf B)$ and $a_2$ independent of $\kappa_1$ this is (i);
+\item \emph{(\tref{ensemble form})} if Alice's measurement slot is declared
+in ensemble form and the conditions of Definition~\ref{def:exact} for that
+form hold, then the operators \eqref{eq:ensemblepovm} satisfy
+$M^{(t)}_x\succeq0$ and $\sum_xM^{(t)}_x=\idon{A_t}$ for every $t$, and
+$(\tau^{(t)}_A)^{1/2}M^{(t)}_x(\tau^{(t)}_A)^{1/2}=N^{(t)}_x$: the denoted
+declaration satisfies the POVM clause of D(iii) on $A$ as an identity of real
+numbers, and $\tr[M_x\tau_A]=\sum_t\tr N^{(t)}_x$.
+\item \emph{(the compiled general format)} if $\Spec$ is presented as
+Definition~\ref{def:spec}\,(a$'$)--(e$'$) and $\Decl$ is emitted by the
+general-format clauses of Definition~\ref{def:compile}, then: the
+announcement slot of $\Decl$ holds the transcript $\Spec_{\mathrm{pub}}$
+declares, message for message; the joint announcement function of $\Decl$ is
+\eqref{eq:transcript} evaluated at \emph{those} tables and is a slot of
+nothing; and Alice's measurement slot holds the form the transmitter artefact
+declares. Consequently (iv) applies to $\Decl$, hence (ii) and (iii) hold of
+it, and (v) applies to it exactly where that form is the ensemble form.
+\end{enumerate}
+Moreover, under the \tref{default party partition} these read:
+$a_A:\Xset\to\CAset$, $a_B:\Vset\to\CBset$, and $r(x,v)=r_{\mathsf A}(x,a(x,v))$
+for $\hold=\mathsf A$, respectively $r(x,v)=r_{\mathsf B}(v,a(x,v))$ for
+$\hold=\mathsf B$.
+\end{theorem}
+
+\begin{proof}
+(i) is Definition~\ref{def:spec}\,(d) together with \eqref{eq:jointann}: the
+\tref[announcement map]{announcement maps} are declared on the readout alphabets, so no other
+signature is expressible.
+
+(ii) Fix $(x,v)$ and write $\kappa=a(x,v)$. If
+$\varsigma(\kappa)=\mathrm{fail}$ then \eqref{eq:rdef} gives $r(x,v)=\perp$. If
+$\varsigma(\kappa)=\mathrm{pass}$ then
+$r(x,v)=r^{0}_{\hold}(\rd{\hold}(x,v),\kappa)\in\Zval$, and $\perp\notin\Zval$
+by $\Zset=\Zval\sqcup\{\perp\}$, so $r(x,v)\ne\perp$. The two implications are
+the two directions of the equivalence.
+
+(iii) $r_{\hold}$ of \eqref{eq:rhold} is total on $\Oset{\hold}\times\Kann$
+because $\varsigma$ is total and both branches are defined everywhere on their
+respective preimages. Fix $(x,v)$ and put $o=\rd{\hold}(x,v)$,
+$\kappa=a(x,v)$. If $\varsigma(\kappa)=\mathrm{pass}$, both sides of
+\eqref{eq:partycomp} equal $r^{0}_{\hold}(o,\kappa)$ by \eqref{eq:rdef} and
+\eqref{eq:rhold}; if $\varsigma(\kappa)=\mathrm{fail}$, both equal $\perp$.
+
+(iv) By \eqref{eq:transcript} the $m$-th component is
+$a_m(\rd{\pi_m}(x,v),\kappa_1(x,v),\dots,\kappa_{m-1}(x,v))$, and $a_m$ has
+no other argument, its domain being declared as
+$\Oset{\pi_m}\times\mathcal{C}_1\times\dots\times\mathcal{C}_{m-1}$; totality
+follows by induction on $m$ from totality of the tables and of the
+\tref[readout map]{readout maps}. The proofs of (ii) and (iii) use of $a$ only that it is a
+total map into $\Kann$ on which $\varsigma$ and $r^{0}_{\hold}$ are defined, so
+they apply unchanged. With $L=2$ and $a_2(o,\kappa_1)=a_B(o)$,
+\eqref{eq:transcript} is \eqref{eq:jointann}.
+
+(v) Fix $t$ and drop it. $\tau_A\ne0$ is positive semidefinite, so
+$\tr\tau_A>0$ and $w_x\coloneqq\tr N_x/\tr\tau_A\ge0$ with $\sum_xw_x=1$ by
+$\sum_xN_x=\tau_A$. With $S\coloneqq\tau_A^{-1/2}$ on the support, zero off
+it, and $P$ the support projector: $SN_xS\succeq0$ and
+$w_x(\idon{}-P)\succeq0$, so $M_x\succeq0$, and
+$\sum_xM_x=S\tau_AS+(\idon{}-P)=\idon{}$. From
+$0\preceq N_x\preceq\tau_A$, every vector in the kernel of $\tau_A$ is in
+the kernel of $N_x$, so $PN_xP=N_x$; then
+$\tau_A^{1/2}M_x\tau_A^{1/2}=PN_xP+w_x\tau_A^{1/2}(\idon{}-P)\tau_A^{1/2}
+=N_x$, using $\tau_A^{1/2}S=P$ and $\tau_A^{1/2}(\idon{}-P)=0$. The trace
+statement follows by taking traces and summing over $t$.
+
+(vi) The three clauses are what the general-format clauses of
+Definition~\ref{def:compile} do, and they are read off that definition and
+not inferred: the transcript is passed through verbatim, \emph{$a$ is not a
+slot} but the composition \eqref{eq:transcript} of the tables passed through,
+and Alice's measurement slot is passed through in the form the artefact
+declares, that definition converting neither form into the other. For the
+consequences: Assumption~\ref{ass:spec}\,(ii) gives $r^{0}_{\hold}$ into
+$\Zval$ and Definition~\ref{def:well-formed-spec}\,(iii) the totality of the
+declared public tables, which is all (iv) consumes
+besides the signatures, and the signatures are the ones (d$'$) of
+Definition~\ref{def:spec} declares; so (iv) applies, and (ii), (iii) with it,
+by (iv)'s last two sentences. Where the slot is the ensemble slot, the
+conditions (v) is stated under are exactly the general-format conditions
+Definition~\ref{def:exact} states for that form --- (S), (H), (P) of
+$\{N^{(t)}_x\}_x$ per Alice sector, the identity of its declared-order sum
+with $\tau^{(t)}_A$, and $\tau^{(t)}_A\ne0$ --- so (v) applies to it.
+\emph{Nothing of (i) is claimed of such a declaration}: (i) is the two-map
+case, which is $L=2$ with $a_2$ independent of $\kappa_1$, and (iv)'s last
+sentence is where the two meet.
+
+The default-partition statements follow by substituting
+$\rd{\mathsf A}(x,v)=x$ and $\rd{\mathsf B}(x,v)=v$.
+\end{proof}

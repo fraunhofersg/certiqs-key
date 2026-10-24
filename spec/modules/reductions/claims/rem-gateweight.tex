@@ -1,0 +1,37 @@
+% ---
+% id: reductions/rem:gateweight
+% kind: rem
+% title: "Weight of the licence in the consumer's gate"
+% summary: >-
+%   In untrusted-source mode, or where Alice's system has dimension one, the
+%   consumer's mechanical check of the licensed class degenerates and its gate
+%   rests entirely on the supplier's licence. The licence is therefore a
+%   theorem with a named hypothesis rather than an attestation.
+% prominence: standard
+% status: accepted
+% uses: [thm:licence]
+% mentions: [meat-core/rem:cgate, req:licence-record]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:gateweight}
+The consuming contract gates a key-length claim on a non-empty $\CList$ behind
+two checks: (i) that the list lies in the licensed class of the declared source
+mode, which is mechanical; and (ii) that the supplier's attack-set licence is
+present, which no program can verify. It also records that check (i)
+\emph{degenerates}: at $d_A=1$ every $1\times1$ Hermitian right-hand side is a
+multiple of $\tau_A$, and in untrusted-source mode the type of an entry is
+scalar by construction, so part (i) rejects nothing in untrusted-source mode
+and nothing a producer cannot trivially avoid at $d_A=1$, and in both cases
+the gate rests entirely on part (ii) (\xref{meat-core/rem:cgate}). This is the reason
+Theorem~\ref{thm:licence} is stated as a theorem with an explicit hypothesis
+rather than as an attestation: in the cases that matter, the attestation
+\emph{is} the security argument, and the only defensible form for it is a
+proof plus a named hypothesis that some other accepted contract discharges.
+The \tref{licence record} names both, and the artefact that discharges the
+hypothesis (Requirement~\ref{req:licence-record}).
+\end{remark}

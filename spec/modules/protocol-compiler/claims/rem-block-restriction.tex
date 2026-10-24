@@ -1,0 +1,60 @@
+% ---
+% id: protocol-compiler/rem:block-restriction
+% kind: rem
+% title: "Restriction of the feasible set to block-diagonal states"
+% summary: >-
+%   The feasible set ranges over sector-block-diagonal states alone, a
+%   restriction in the unsafe direction that the operator type carries. The
+%   consuming engine's master reduction proves it sound by sector dephasing.
+% prominence: standard
+% status: accepted
+% uses: [def:feasible]
+% mentions: [meat-core/thm:reduction, meat-core/cor:reduction-constrained, meat-core/prop:a-neutral]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "The condition is discharged by a theorem of the consuming engine and no claim declares it, so it is a remark and not an assumption."
+% ---
+
+\begin{remark}\label{rem:block-restriction}
+\emph{The restriction.} The consuming engine's argument is sound when its
+minimization ranges over the \emph{sector-block-diagonal} $\omega$ of
+\eqref{eq:feas} rather than over all of $\Lin{A\Qsys}$: every state that
+argument ranges over is carried into sector-block-diagonal form at no increase
+of the bound. This module states the restriction and does not discharge it.
+Its direction is the \emph{unsafe} one --- a smaller domain gives a larger
+infimum, so an unlicensed restriction overstates a key length. And it is
+carried by the operator \emph{type}: an $\omega$ \emph{is} a list of blocks
+and no expressible object has an off-sector entry
+(Definition~\ref{def:feasible}), so nothing verifies it and nothing can. The
+argument that the sectors are a symmetry of every state the security proof
+must admit belongs to the consuming engine and to the reductions module; this
+module could not make it, since it never sees the reachable set.
+Definition~\ref{def:feasible} \emph{defines} the \tref{feasible set}, and it
+is not unsound if the restriction is unlicensed.
+
+\emph{Where it is proved.} The consuming engine's master reduction
+(\xref{meat-core/thm:reduction}, step~1 of its proof, the sector dephasing,
+and \xref{meat-core/cor:reduction-constrained} for a non-empty list) proves
+the restriction: an arbitrary feasible state is dephased, feasibility and
+every constraint value survive because every $F_v$ and every $\hat O_k$ is
+sector-block-diagonal, and the rest of the proof bounds the entropy by the
+objective at the dephased state.
+
+\emph{In the general format} (Definition~\ref{def:feasible}, the set of
+\eqref{eq:feas-general}) the restriction is along the \emph{joint} sectors:
+along the sectors of the \tref{measured system} as before and along Alice's
+declared sectors. It is proved by the same step of the same theorem, which
+dephases by the joint pinching, under preconditions that hold by
+\emph{type}: Alice's measurement slot, $\tau_A$ and every right-hand side are
+\tref[block list]{block lists} against a \emph{declared} factor tagged $A$,
+as $\{F_v\}$ and every $\hat O_k$ are against the
+\tref[measured factor]{measured factors} (\xref{meat-core/thm:reduction},
+Step~1, with \xref{meat-core/prop:a-neutral} for the statement that the
+restriction along Alice's sectors changes no value). The direction is
+unchanged and so is the warning: the licence is that theorem under a declared
+factor. A producer that emits a block-diagonal $\tau_A$ or $\{M_x\}$ without
+a factor tagged $A$ has declared one Alice sector, and nothing downstream may
+read a restriction off the shape of its data.
+\end{remark}

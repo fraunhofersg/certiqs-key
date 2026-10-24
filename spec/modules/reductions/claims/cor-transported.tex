@@ -1,0 +1,75 @@
+% ---
+% id: reductions/cor:transported
+% kind: cor
+% title: "Sound constraints from transported operators"
+% summary: >-
+%   On the n-round relation, a transported operator tested on a squashed image
+%   gives what its pull-back gives on the physical input. Certified operator
+%   facts, and bounds assumed on the physical input family, therefore give
+%   sound constraints on the squashed states.
+% prominence: standard
+% status: accepted
+% uses: [cor:pullback, lem:sep, def:sound, def:certificate]
+% mentions: [rem:channel-choice, cor:sound]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Part (iii) of Corollary~\ref{cor:sound} is what a constrained analysis runs
+on: soundness is established once per constraint and never again for the
+combination, so constraints from unrelated sources --- a device property, a
+calibration bound, an assumption on Eve's input --- may be imposed
+simultaneously, \emph{provided they are sound for one and the same squashing
+channel} (Remark~\ref{rem:channel-choice}). What a squashed analysis can do is
+therefore fixed by the supply of sound constraints, and that supply is
+Corollary~\ref{cor:pullback} read on the $n$-round relation.
+
+\begin{corollary}
+\label{cor:transported}
+Let $(M;O)\dsq_{\Lambda}(F;\hat O)$, fix a family $\Sph$ of physical inputs and
+write $R\coloneqq A^{n}E$. Let $\hat O^{(n)}\in\Lin{\Qsys^{n}}$ be Hermitian
+and let $O^{(n)}\coloneqq(\Lambda^{\dagger})^{\otimes n}(\hat O^{(n)})$ be its
+pull-back. Then
+\begin{equation}\label{eq:transportn}
+  \tr_{\Qsys^{n}}\big[(\hat O^{(n)}\otimes\idon{R})\,\sigma\big]
+  =\tr_{\Bsys^{n}}\big[(O^{(n)}\otimes\idon{R})\,\rho\big]
+\end{equation}
+for every $\rho\in\Sph_E$ and its image $\sigma$, and each of the following
+families of squashed states is sound:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(certified)} for each \tref{certificate} case of
+  Corollary~\ref{cor:pullback} --- identity, positivity, spectral bounds ---
+  read with $\Bsys^{n},\Qsys^{n},\Lambda^{\otimes n},R$ in place of
+  $\Bsys,\Qsys,\Lambda,R$, the family of squashed states satisfying its
+  conclusion;
+\item \emph{(assumed)}
+  $\{\sigma:\tr[(\hat O^{(n)}\otimes X)\sigma]\bowtie c\}$ for a fixed
+  $\bowtie\,\in\{\le,=,\ge\}$, a fixed $X\in\Lin{R}$, Hermitian unless
+  $\bowtie$ is $=$, and a fixed $c$, provided
+  $\tr[(O^{(n)}\otimes X)\rho]\bowtie c$ holds for every $\rho\in\Sph_E$.
+\end{enumerate}
+Operators with a prescribed pull-back are supplied round by round: if
+$\hat O^{(n)}$ is $\hat O_k$ on $\Qsys_j$ and $\idon{\Qsys}$ on the remaining
+rounds, then $O^{(n)}$ is $O_k$ on $\Bsys_j$ and $\idon{\Bsys}$ elsewhere; and
+a product $\hat O_{k_1}\otimes\dots\otimes\hat O_{k_n}$ pulls back to
+$O_{k_1}\otimes\dots\otimes O_{k_n}$.
+\end{corollary}
+
+\begin{proof}
+$\Lambda^{\otimes n}$ is a channel $\Tcl{\Bsys^{n}}\to\Tcl{\Qsys^{n}}$ whose
+adjoint is $(\Lambda^{\dagger})^{\otimes n}$ by Lemma~\ref{lem:sep}\,(ii).
+Reordering $A^{n}\Bsys^{n}E$ as $\Bsys^{n}R$, the channel of
+\eqref{eq:reachable} is $\Lambda^{\otimes n}\otimes\idmap_R$, so
+Corollary~\ref{cor:pullback} applies with
+$\Bsys^{n},\Qsys^{n},\Lambda^{\otimes n},R$ in place of
+$\Bsys,\Qsys,\Lambda,R$ and with the single carried pair
+$(O^{(n)},\hat O^{(n)})$. Equation~\eqref{eq:transportn} is its
+\eqref{eq:transport}, and each conclusion of
+Corollary~\ref{cor:pullback}\,(i)--(iii) holds on \emph{every} reachable
+$\sigma$, which is soundness of the families in (i). For (ii), test
+\eqref{eq:transport} against $X$ and bound the right-hand side by hypothesis.
+For the round-by-round supply, $(\Lambda^{\dagger})^{\otimes n}$ acts
+factorwise and $\Lambda^{\dagger}$ is unital.
+\end{proof}

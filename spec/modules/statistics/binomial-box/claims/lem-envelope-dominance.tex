@@ -1,0 +1,116 @@
+% ---
+% id: statistics/binomial-box/lem:envelope-dominance
+% kind: lem
+% title: "Binomial dominance under bounded conditional success probabilities"
+% summary: >-
+%   A count of successes whose conditional success probability in each round,
+%   given the past, lies in [a, b] has an upper tail no heavier than the
+%   binomial law at b and a lower tail no heavier than that at a. The box can
+%   therefore be built from binomial tails without independent rounds.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [thm:completeness-bound, statistics/ass:hon-env]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "It needs no assumption: it is a statement about any adapted sequence; A-HON-ENV is what makes the per-outcome indicators of an honest run such a sequence (thm:completeness-bound)."
+% ---
+
+This is the classical stochastic dominance of a sum of adapted Bernoulli
+variables by a binomial law, derived here in full by a backward induction on
+the conditional tail. Under Assumption~\ref{ass:hon-env} the indicators of
+one outcome over the rounds of an honest run are such a sequence, with $a$
+and $b$ the envelope's two values at that outcome (Theorem~\ref{thm:completeness-bound}).
+
+\begin{lemma}\label{lem:envelope-dominance}
+Let $\mathcal{F}_0\subseteq\mathcal{F}_1\subseteq\dots\subseteq\mathcal{F}_n$
+be a filtration on a probability space, $n\ge1$, and let
+$\chi_1,\dots,\chi_n$ be $\{0,1\}$-valued random variables with $\chi_j$
+$\mathcal{F}_j$-measurable. Let $0\le a\le b\le1$ and suppose that, for every
+$j\in\{1,\dots,n\}$, almost surely
+\begin{equation}\label{eq:dominance-hyp}
+  a\ \le\ P_j\ \coloneqq\ \Pr\big[\chi_j=1\ \big|\ \mathcal{F}_{j-1}\big]\ \le\ b .
+\end{equation}
+Put $S\coloneqq\sum_{j=1}^{n}\chi_j$, and for $m\in\{0,\dots,n\}$,
+$r\in[0,1]$ and an integer $k$ write
+$G^{r}_{m}(k)\coloneqq\Pr[\mathrm{B}^{r}_{m}\ge k]$, where
+$\mathrm{B}^{r}_{m}$ is binomial with parameters $(m,r)$ ($\mathrm{B}^{r}_{0}=0$).
+Then for every integer $k$
+\begin{equation}\label{eq:dominance}
+  \Pr[S\ge k]\ \le\ \Pr\big[\mathrm{B}^{b}_{n}\ge k\big],
+  \qquad
+  \Pr[S\le k]\ \le\ \Pr\big[\mathrm{B}^{a}_{n}\le k\big],
+\end{equation}
+and equivalently
+\begin{equation}\label{eq:dominance-strict}
+  \Pr[S>k]\ \le\ \Pr\big[\mathrm{B}^{b}_{n}>k\big],
+  \qquad
+  \Pr[S<k]\ \le\ \Pr\big[\mathrm{B}^{a}_{n}<k\big].
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+\emph{Two facts about the binomial tail.} (1) For $m\ge0$ and every integer
+$k$, $G^{r}_{m}(k-1)-G^{r}_{m}(k)=\Pr[\mathrm{B}^{r}_{m}=k-1]\ge0$. (2) The
+\emph{Pascal recursion of the binomial tail}: for $m\ge0$ and every integer
+$k$,
+\begin{equation}\label{eq:pascal-tail}
+  G^{r}_{m+1}(k)\ =\ r\,G^{r}_{m}(k-1)+(1-r)\,G^{r}_{m}(k).
+\end{equation}
+Indeed $\mathrm{B}^{r}_{m+1}$ has the law of $X+Y$ with $Y$ binomial
+$(m,r)$ and $X$ Bernoulli$(r)$ independent of $Y$, and conditioning on $X$
+gives $\Pr[X+Y\ge k]=r\Pr[Y\ge k-1]+(1-r)\Pr[Y\ge k]$.
+
+\emph{The upper tail, in conditional form.} For $j\in\{0,\dots,n\}$ put
+$S_{>j}\coloneqq\sum_{i=j+1}^{n}\chi_i$ (so $S_{>0}=S$ and $S_{>n}=0$). We show
+by backward induction on $j$ that for every integer $k$, almost surely,
+\begin{equation}\label{eq:dominance-cond}
+  \Pr\big[S_{>j}\ge k\ \big|\ \mathcal{F}_j\big]\ \le\ G^{b}_{n-j}(k).
+\end{equation}
+\emph{Base $j=n$.} $S_{>n}=0$, so the left side is $\mathbf{1}\{k\le0\}
+=G^{b}_{0}(k)$.
+\emph{Step from $j$ to $j-1$}, for $j\in\{1,\dots,n\}$, with $m\coloneqq n-j$.
+Since $S_{>j-1}=\chi_j+S_{>j}$ and $\chi_j\in\{0,1\}$,
+\begin{equation*}
+  \mathbf{1}\{S_{>j-1}\ge k\}
+  =\chi_j\,\mathbf{1}\{S_{>j}\ge k-1\}+(1-\chi_j)\,\mathbf{1}\{S_{>j}\ge k\}.
+\end{equation*}
+Conditioning on $\mathcal{F}_j$, with $\chi_j$ $\mathcal{F}_j$-measurable and
+bounded, and using the induction hypothesis at $k-1$ and at $k$ together with
+$\chi_j\ge0$ and $1-\chi_j\ge0$, gives almost surely
+\begin{equation*}
+  \Pr\big[S_{>j-1}\ge k\,\big|\,\mathcal{F}_j\big]
+  \le\chi_j\,G^{b}_{m}(k-1)+(1-\chi_j)\,G^{b}_{m}(k).
+\end{equation*}
+Conditioning further on $\mathcal{F}_{j-1}\subseteq\mathcal{F}_j$ (the tower
+property, and monotonicity of conditional expectation) gives almost surely
+\begin{equation*}
+  \Pr\big[S_{>j-1}\ge k\,\big|\,\mathcal{F}_{j-1}\big]
+  \le G^{b}_{m}(k)+P_j\,\big(G^{b}_{m}(k-1)-G^{b}_{m}(k)\big)
+  \le G^{b}_{m}(k)+b\,\big(G^{b}_{m}(k-1)-G^{b}_{m}(k)\big)
+  =G^{b}_{m+1}(k),
+\end{equation*}
+the second inequality by $P_j\le b$ from \eqref{eq:dominance-hyp} and fact
+(1), the equality by \eqref{eq:pascal-tail}. As $m+1=n-(j-1)$, this is
+\eqref{eq:dominance-cond} at $j-1$. At $j=0$, taking expectations gives
+$\Pr[S\ge k]\le G^{b}_{n}(k)$, the first inequality of \eqref{eq:dominance}.
+Only the upper bound $b$ was used.
+
+\emph{The lower tail.} Put $\chi'_j\coloneqq1-\chi_j$. These are
+$\{0,1\}$-valued and adapted, and
+$\Pr[\chi'_j=1\,|\,\mathcal{F}_{j-1}]=1-P_j\le1-a$ almost surely by
+\eqref{eq:dominance-hyp}. The upper-tail statement applied to them with the
+bound $1-a$ gives, for every integer $k$,
+$\Pr[S\le k]=\Pr[\,n-S\ge n-k\,]\le\Pr[\mathrm{B}^{1-a}_{n}\ge n-k]$. Since
+$n-\mathrm{B}^{a}_{n}$ is binomial with parameters $(n,1-a)$ (it counts the
+failures), the right side is $\Pr[n-\mathrm{B}^{a}_{n}\ge n-k]
+=\Pr[\mathrm{B}^{a}_{n}\le k]$, the second inequality of
+\eqref{eq:dominance}.
+
+\emph{The strict forms.} $S$ and the binomial variables are integer-valued, so
+$\{S>k\}=\{S\ge k+1\}$ and $\{S<k\}=\{S\le k-1\}$, and likewise for
+$\mathrm{B}^{b}_{n}$ and $\mathrm{B}^{a}_{n}$; \eqref{eq:dominance} at $k+1$
+and at $k-1$ is \eqref{eq:dominance-strict}, and conversely.
+\end{proof}

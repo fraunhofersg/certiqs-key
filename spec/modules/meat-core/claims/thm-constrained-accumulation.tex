@@ -1,0 +1,74 @@
+% ---
+% id: meat-core/thm:constrained-accumulation
+% kind: thm
+% title: "Constrained accumulation under the attack-set licence"
+% summary: >-
+%   Under the attack-set licence [[A-ATK]], the accumulated entropy bound holds
+%   with the constrained single-round rate of a licensed list in place of the
+%   unconstrained rate, with the same acceptance-probability penalty. The
+%   constrained rate is never below the unconstrained one.
+% prominence: standard
+% status: implemented
+% uses: [fact:meat, def:roundmodel, lem:range, def:homog, thm:accumulated-entropy, def:hqkd-list, lem:purifier-indep]
+% mentions: [cor:composed-security]
+% assumes: [A-ATK]
+% refs:
+%   - "tupkary2026decoy, Def. 8.3, Rem. 8.4"
+%   - "tupkary2026decoy, Eq. (151)"
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.keylength:check_key_length_permitted
+% lean:
+% ---
+
+Whether an accumulation theorem admits per-round receiver-side constraints is
+settled by re-importing the accumulation at the sequential level
+(Fact~\ref{fact:meat}): the imported theorem is stated \emph{per channel
+sequence}; which attack channels Eve is granted is a modelling input outside
+the theorem (\cite[Def.~8.3, Rem.~8.4]{tupkary2026decoy}); and a declared
+constraint list that is \tref{licensed for the declared source mode} is precisely
+the state-level shadow of an attack-set restriction in the published format
+\cite[Eq.~(151)]{tupkary2026decoy} (Definition~\ref{def:roundmodel},
+Lemma~\ref{lem:range}\,(i)) --- the $\tau_A$-homogeneous entries of
+Definition~\ref{def:homog}\,(a) transported by \eqref{eq:transport}, the
+scalar entries of Definition~\ref{def:homog}\,(b) by \eqref{eq:transport-un}.
+What remains an assumption, and is never asserted here, is that the
+\tref{reduction chain} behind the declaration actually delivers such a
+restriction: A-ATK (\xref{protocol-compiler/ass:atk}), under which a
+$\CList$-admissible \tref{attack sequence} covers every attack available against the
+physical protocol with finite registers whose first channel receives every
+\tref{transmitted system}; the others are reached by a limit
+(Corollary~\ref{cor:composed-security}).
+
+\begin{theorem}\label{thm:constrained-accumulation}
+Let the hypotheses of Theorem~\ref{thm:accumulated-entropy} hold in either
+source mode, let $\CList$ be
+\tref[licensed for the declared source mode]{licensed for that mode}
+(Definition~\ref{def:homog}), let A-ATK
+(\xref{protocol-compiler/ass:atk}) hold, and let the \tref{attack sequence} be
+$\CList$-admissible (Definition~\ref{def:roundmodel}). Then for every
+$\alpha\in(1,\infty)$,
+\begin{equation}\label{eq:c17}
+  \Hsandup\big(Z_1^n\big|\Chat_1^nI_1^n\Ehat\big)_{\rho_{|\OmAT}}
+  \;\ge\;n\,\hqkd(\CList)
+  -\frac{\alpha}{\alpha-1}\log_2\frac{1}{\Pr[\OmAT]},
+\end{equation}
+with $\hqkd(\CList)$ the \tref{constrained single-round rate} of
+Definition~\ref{def:hqkd-list}, and
+$\hqkd(\CList)\ge\hqkd(\varnothing)=\hqkd$.
+\end{theorem}
+
+\begin{proof}
+The proof of Theorem~\ref{thm:accumulated-entropy} applies unchanged, with one
+refinement: Lemma~\ref{lem:range}\,(ii), invoked for the
+$\CList$-admissible sequence, gives
+$\Sigma\subseteq\Sigma^{\CList}(\Etil^{*})$, so
+Lemma~\ref{lem:range}\,(iii), the $\Chkey$ reduction of the sum (verbatim
+from the proof of Theorem~\ref{thm:accumulated-entropy}), and
+Lemma~\ref{lem:purifier-indep} bound the rate of \eqref{eq:meat-rate}
+below by $\hqkd(\CList)$. Every other hypothesis check is identical.
+No inequality of the unconstrained proof is reversed anywhere: the
+improvement over Theorem~\ref{thm:accumulated-entropy} is a restriction of
+the admissible attack model, purchased entirely by Assumption~A-ATK. The
+final inequality $\hqkd(\CList)\ge\hqkd(\varnothing)$ is
+Definition~\ref{def:hqkd-list} (the constrained inner set is smaller).
+\end{proof}

@@ -1,0 +1,43 @@
+% ---
+% id: protocol-compiler/req:physical-family-decision
+% kind: req
+% title: "Decision on the presented physical receiver family"
+% summary: >-
+%   The physical receiver family as presented is decided exactly admissible on
+%   every route, as one block on its physical receiver space, before any
+%   condition on the chain is decided. A failure is refused with its own
+%   reason, naming the first failure.
+% prominence: standard
+% status: accepted
+% uses: [def:well-formed-spec, def:exact, def:weighted]
+% mentions: [req:conditional-family-decision, def:chaincond, thm:band-a]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.compile:decide_physical_family
+% lean:
+% ---
+
+Clause~(iv) of Definition~\ref{def:well-formed-spec} reads the physical
+receiver family as presented like every other declared family, so nothing
+of its exact admissibility is left to whoever presents the chain. On the
+Band-A route the same family is the one the link delivers, emitted as it is
+unless a setting-dependent choice weighting is declared, and check V3 decides it, or its
+weighting, again (Theorem~\ref{thm:band-a}\,(ii)).
+
+\begin{requirement}\label{req:physical-family-decision}
+On every route the engine decides, on the declared numbers, the condition
+clause~(iv) of Definition~\ref{def:well-formed-spec} places on the physical
+receiver family as presented, in the general format on each
+\tref{measured factor}'s: presented directly, (S), (H), (P) and (C) of
+Definition~\ref{def:exact} on its physical receiver space as one block, in
+the \tref{declared order} of its alphabet; presented as a
+\tref{choice-weighted family}, condition~(S) on its own declared-order sum,
+after the decision of Requirement~\ref{req:conditional-family-decision} on
+its conditional families and the representability decision on the products
+formed from them. It decides it before any condition of
+Definition~\ref{def:chaincond} is decided on the chain, and refuses a failure
+with \iface{physical_family_not_admissible}, naming the measured factor, the
+predicate and the index of the first failure (for (S), the index of the
+first inexact addition). The decision stops at the first failure.
+\end{requirement}

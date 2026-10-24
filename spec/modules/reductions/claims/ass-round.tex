@@ -1,0 +1,58 @@
+% ---
+% id: reductions/ass:round
+% kind: ass
+% title: "Round homogeneity of the physical measurement"
+% summary: >-
+%   One physical POVM describes the measurement of every round, and each
+%   round's measurement acts as it describes whatever happened in other
+%   rounds: no detector memory and no drift. Nothing is assumed about the
+%   attacks being independent across rounds.
+% prominence: standard
+% status: accepted
+% uses: [foundations/def:round-homogeneity, def:protocol]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-ROUND-SQ
+% verification: never
+% category: receiver
+% affects: [secrecy]
+% refines: A-RHOM
+% user_statement: >-
+%   Each measuring device, at every measuring station of either party,
+%   performs the same measurement in every round: the same optics, detectors
+%   and dark-count behaviour, settings drawn with the same probabilities,
+%   and, where you declared detector-response modes, the same response in each mode.
+%   What a device does in one round does not depend on the inputs or outputs
+%   of other rounds. Drift of efficiency, alignment or dark counts violates
+%   this. Only parts of a run fixed before it starts, each processed as its
+%   own execution and composed under [[A-SEPARATE]], can be analysed
+%   separately; a split chosen after seeing the data is not covered. Detector
+%   memory (afterpulsing, a dead time, any dependence on earlier rounds)
+%   violates it too, and nothing here repairs that. Attacks may
+%   still correlate the rounds. The engine's finite model and squashing map
+%   are its own construction, not part of this premise.
+% lean:
+% notes: "The declared model and the squashing channel are not in this family: they are the reduction's objects, one for all rounds by the hypothesis of the theorems that read this assumption (thm:factorization fixes one target POVM and one squashing channel), and req:round-homogeneous-emission makes the engine emit that case only. Not the receiver's A-ROUND (receiver/ass:round), which fixes the receiver's instrument, probe declaration and dark-count channel: where the physical POVM is the receiver module's composite of those three, both bear on the same device, but a receiver whose POVM also holds attacker-selected branches has branches A-ROUND does not fix, and neither assumption implies the other, so both stand, each with its own short id and machine key. On Band A no reduction runs and neither assumption is emitted."
+% ---
+
+The measurement this assumption holds fixed is the physical one, the POVM by
+which the devices of the \tref{measuring parties} measure the \tref{measured
+system} of a round; where several parties measure, the assumption fixes each
+party's factor across the $n$ rounds. Rounds are not averaged, and per-round
+variation is not modelled. The \tref{declared model} and the
+\tref{squashing channel} are objects of the analysis, not of the device, and
+are not part of this assumption; neither is the round's \emph{order}, every
+message of the round after every measurement of the round.
+
+\begin{assumption}\label{ass:round}
+Let $M$ be the physical POVM: the POVM on the \tref{measured system} of a
+round that the analysis takes as the measurement the devices of the
+\tref{measuring parties} perform on it.
+The family $\{M\}$ is \tref{round-homogeneous}
+(\xref{foundations/def:round-homogeneity}) in both clauses of that
+definition:
+(i) the same $M$ describes the measurement of every round;
+(ii) a round's measurement acts as $M$ describes, whatever the inputs and
+outputs of the other rounds, with no detector memory across rounds.
+\end{assumption}

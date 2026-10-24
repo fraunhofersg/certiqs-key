@@ -1,0 +1,40 @@
+% ---
+% id: foundations/req:rounding-direction
+% kind: req
+% title: "Rounding direction of emitted bounds"
+% summary: >-
+%   An emitted scalar bound is rounded onto the lattice in the direction that
+%   weakens the claim it carries, never to nearest, and the direction is
+%   recorded. A complementary quantity is recomputed from rounded weights and
+%   never rounded on its own.
+% prominence: standard
+% status: accepted
+% uses: [def:binary64, def:declared-data]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A lower bound rounded down, or an upper bound rounded up, remains a bound of the
+same kind, so a directed rounding keeps what the bound certifies without a
+rounding-error budget.
+
+\begin{requirement}\label{req:rounding-direction}
+(D-DIR) Every emitted scalar bound is rounded onto the lattice in the direction
+that weakens the claim it carries, never to nearest: a lower bound \emph{down},
+an upper bound \emph{up}, a constraint constant in the direction that enlarges
+the feasible set for its declared relation. The direction is recorded per
+bound, and where a family's completeness depends on a rounded weight the
+complementary quantity is \emph{recomputed} from the rounded weights, never
+rounded independently.
+
+It binds every producer that declares a lattice exponent $k$
+(Definition~\ref{def:declared-data}), for each scalar bound it emits, the
+lattice being that of the lattice values at $k$
+(Definition~\ref{def:binary64}\,(iv)); the claim that states the emission names
+the direction of each such bound. A producer that declares no lattice exponent,
+and that constructs an emitted scalar bound exactly and then rounds it to a
+binary64 number, rounds it in the same direction, never to nearest.
+\end{requirement}

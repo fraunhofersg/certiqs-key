@@ -1,0 +1,146 @@
+% ---
+% id: statistics/binomial-box/def:endpoint-rule
+% kind: def
+% title: "Admissible inputs, endpoint rules and guarded endpoints"
+% summary: >-
+%   An admissible endpoint rule returns count endpoints whose binomial tails
+%   meet their budgets. On an admissible input the lower endpoint is taken at
+%   the envelope's lower value, the upper at its upper value, and a guard
+%   widens both to contain the envelope interval.
+% prominence: standard
+% status: implemented
+% uses: [statistics/def:freq, statistics/def:envelope, statistics/def:matched-alphabet]
+% mentions: [def:interval, prop:rule-exact, prop:rule-bernstein, prop:bracketed-endpoints, lem:envelope-dominance, statistics/ass:hon-env, req:rule-in-force, thm:honest-containment]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.rules:EndpointRule
+% lean:
+% notes: "The clauses of an admissible input transcribe the inputs table of the core's interface.yaml: the form of the data its types and presence rules, the conditions its domains; exact rationality, which the types also state, is a condition (clause (vii)), not part of the form. thm:honest-containment (iii) lists the negations of the conditions clause by clause. A change to one of the three is a change to the other two."
+% ---
+
+The construction turns the two tail budgets of each constrained outcome into
+an interval of counts. An endpoint rule does this for one binomial count; the
+definition fixes what every rule must guarantee, the inputs on which the
+construction runs, and the guard that widens a rule's interval to contain the
+\tref{honest envelope}. The lower endpoint is taken at the envelope's lower
+value and the upper endpoint at its upper value because, under
+Assumption~\ref{ass:hon-env}, the binomial laws at those two values bound the
+count of Definition~\ref{def:freq} from below and from above
+(Lemma~\ref{lem:envelope-dominance}). The construction and the theorems about
+it take the admissible endpoint rule $R$ as a parameter, independent of the
+choice of rule and evaluation an input carries in clause (viii), and state as
+a hypothesis any further property of $R$ they need; that choice selects the
+rule in force (Requirement~\ref{req:rule-in-force}), and a choice outside
+clause (viii) is violation (11) of
+Theorem~\ref{thm:honest-containment}\,(iii).
+
+\begin{definition}\label{def:endpoint-rule}
+Fix $n\ge1$ and let $\Ncount{}$ be binomial with parameters $(n,p)$, where
+$p\in[0,1]$ is rational. An \term[A map from a round count, a success
+probability and two tail budgets to two count endpoints whose binomial tails
+meet those budgets, with fixed values at a zero budget and at a degenerate
+mass.]{admissible endpoint rule} $R$ assigns to every
+$(n,p,\varepsilon^{-},\varepsilon^{+})$ with rational
+$\varepsilon^{-},\varepsilon^{+}\in[0,1)$ two integers
+$R^{-}=R^{-}(n,p,\varepsilon^{-})$ and $R^{+}=R^{+}(n,p,\varepsilon^{+})$
+such that
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{(admissibility)} $R^{-},R^{+}\in\{0,\dots,n\}$ and
+\begin{equation}\label{eq:rule-admissible}
+  \Pr\big[\Ncount{}<R^{-}\big]\le\varepsilon^{-},
+  \qquad
+  \Pr\big[\Ncount{}>R^{+}\big]\le\varepsilon^{+};
+\end{equation}
+\item \emph{(zero budget)} if $0<p<1$, then $R^{-}=0$ at $\varepsilon^{-}=0$
+and $R^{+}=n$ at $\varepsilon^{+}=0$;
+\item \emph{(degenerate mass)} $R^{-}=R^{+}=0$ at $p=0$ and $R^{-}=R^{+}=n$
+at $p=1$, for every $\varepsilon^{\pm}$.
+\end{enumerate}
+The rule is \term[Said of an endpoint rule whose lower endpoint never falls
+and whose upper endpoint never rises as its own tail budget
+grows.]{monotone in the allocation} when, the other arguments fixed,
+$\varepsilon^{-}\mapsto R^{-}$ is non-decreasing and
+$\varepsilon^{+}\mapsto R^{+}$ is non-increasing.
+
+An \term[The data the construction accepts: alphabet, round count, honest
+model, budget, constrained outcomes, allocation, and choice of rule and
+evaluation, the numbers exact and the alphabet and round count those of the
+consuming declaration.]{admissible input} consists of
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item a finite, non-empty acceptance alphabet $\Chatset$ with a fixed
+enumeration;
+\item a round count, an integer $n\ge1$;
+\item an honest input on $\Chatset$: exactly one of a law
+$\honest\in\simplex{\Chatset}$, the \tref{point form}, and an honest envelope
+$({\honest}^{-},{\honest}^{+})$ (Definition~\ref{def:envelope}); a law in the
+point form is read as the \tref{degenerate envelope} $(\honest,\honest)$;
+\item a completeness budget $\ecomp\in[0,1)$;
+\item a set $\Chatcon\subseteq\Chatset$ of constrained outcomes;
+\item an allocation
+$\varepsilon^{-},\varepsilon^{+}:\Chatcon\to\mathbb{Q}_{\ge0}$ with
+$\sum_{\hat c\in\Chatcon}(\varepsilon^{-}(\hat c)+\varepsilon^{+}(\hat
+c))\le\ecomp$;
+\item exactness: every coordinate of the honest input, $\ecomp$ and every
+value of the allocation is an exact rational;
+\item a choice of rule, the \tref{exact binomial quantile rule} of
+Definition~\ref{def:interval} or the Bernstein rule of
+Proposition~\ref{prop:rule-bernstein}, and a choice of one of two
+evaluations, by the closed forms or by the enclosures of
+Proposition~\ref{prop:bracketed-endpoints}, which on the exact rule decides
+its tail comparisons: by the enclosures, it gives the rule
+$R_{\mathrm{encl}}$ of that proposition in place of the exact rule;
+\item consistency with the \tref{consumer}: $\Chatset$, its enumeration and
+$n$ are those of the declaration the consumer solves, a
+\tref{matched alphabet and round count} (Definition~\ref{def:matched-alphabet}).
+\end{enumerate}
+The clauses fix the form of the data --- an enumerated set $\Chatset$, an
+integer $n$, one honest input that is a vector (the point form) or a pair of
+vectors (the envelope form), a number $\ecomp$, a set $\Chatcon$ with a pair
+of vectors indexed by it, and a named rule and evaluation --- and conditions
+on data of that form.
+
+Fix an admissible input, with its honest envelope
+$({\honest}^{-},{\honest}^{+})$. For $\hat c\in\Chatcon$ write
+$p^{-}_{\hat c}\coloneqq{\honest}^{-}(\hat c)$ and
+$p^{+}_{\hat c}\coloneqq{\honest}^{+}(\hat c)$, let $\Ncount{\hat c}^{-}$ and
+$\Ncount{\hat c}^{+}$ be binomial with parameters $(n,p^{-}_{\hat c})$ and
+$(n,p^{+}_{\hat c})$ respectively, and abbreviate
+$R^{-}\coloneqq R^{-}(n,p^{-}_{\hat c},\varepsilon^{-}(\hat c))$ and
+$R^{+}\coloneqq R^{+}(n,p^{+}_{\hat c},\varepsilon^{+}(\hat c))$: the lower
+endpoint is the rule's at the envelope's lower value, the upper endpoint the
+rule's at its upper value. The \term[A rule's two count endpoints after the
+guard: the lower one capped at the floor of n times the envelope's lower
+value, the upper one raised to at least the ceiling of n times its upper
+value.]{guarded endpoints} of $R$ at $\hat c$, after the
+\term[The widening of a rule's count interval that makes it contain n times
+the whole envelope interval of the outcome.]{honest-containment guard}, are
+\begin{equation}\label{eq:guard}
+  k^{-}(\hat c)\coloneqq\min\big\{R^{-},\ \lfloor n\,p^{-}_{\hat c}\rfloor\big\},
+  \qquad
+  k^{+}(\hat c)\coloneqq\max\big\{R^{+},\ \lceil n\,p^{+}_{\hat c}\rceil\big\}.
+\end{equation}
+With the degenerate envelope, $p^{-}_{\hat c}=p^{+}_{\hat c}=\honest(\hat c)
+\eqqcolon p_{\hat c}$, $\Ncount{\hat c}^{-}$ and $\Ncount{\hat c}^{+}$ have
+the one law of $\Ncount{\hat c}$, binomial $(n,p_{\hat c})$, and
+\eqref{eq:guard} reads $k^{-}(\hat c)=\min\{R^{-},\lfloor np_{\hat
+c}\rfloor\}$, $k^{+}(\hat c)=\max\{R^{+},\lceil np_{\hat c}\rceil\}$ with both
+rule endpoints at $p_{\hat c}$.
+
+The \term[The convention that a single-value claim of this submodule is read
+at the envelope's lower value for the lower endpoint and at its upper value
+for the upper endpoint.]{side-wise reading} is the following. By
+\eqref{eq:guard}, $k^{-}(\hat c)$ depends on the envelope only through
+$p^{-}_{\hat c}$ and $k^{+}(\hat c)$ only through $p^{+}_{\hat c}$. A claim of
+this submodule that fixes one value $p_{\hat c}$ and one count
+$\Ncount{\hat c}$ binomial $(n,p_{\hat c})$ and speaks of the guarded
+endpoints --- Definition~\ref{def:interval} and
+Propositions~\ref{prop:rule-exact}, \ref{prop:rule-bernstein} and
+\ref{prop:bracketed-endpoints} do --- states each assertion about the lower
+endpoint (one naming $k^{-}$, $R^{-}$, $\varepsilon^{-}$ and the lower tail)
+with $p_{\hat c}\coloneqq p^{-}_{\hat c}$ and
+$\Ncount{\hat c}\coloneqq\Ncount{\hat c}^{-}$, and each assertion about the
+upper endpoint with $p_{\hat c}\coloneqq p^{+}_{\hat c}$ and
+$\Ncount{\hat c}\coloneqq\Ncount{\hat c}^{+}$; with the degenerate envelope
+the two readings coincide and are the claim as written.
+\end{definition}

@@ -1,0 +1,218 @@
+% ---
+% id: receiver/detector-imperfections/req:dark-composed-reference
+% kind: req
+% title: "The emitted blocks are dark-composed and carry their reference"
+% summary: >-
+%   The emitted low-photon blocks are the dark-composed family's, the
+%   dark-count channel still emitted. For a model admissible exactly they carry
+%   sound enclosures, the handed reference, and a factor enclosure where a port
+%   dilation admits one; only exact ones where enclosed references are not used.
+% prominence: standard
+% status: implemented
+% uses: [def:dark-composed, cor:exact-dark-composed, prop:noise-floor, def:darkadm, def:darktol, receiver/def:tolmap, receiver/def:complex-enclosure, receiver/lem:enclosure-arithmetic, receiver/thm:enclosed-blocks, receiver/thm:exact-blocks, receiver/req:exact-route-decision, receiver/def:port-dilation, receiver/thm:factor-blocks, foundations/req:snap-reference, foundations/def:exact-reference, foundations/def:sector-map, foundations/def:snap, foundations/def:exact-island, foundations/def:evaluated-off-snap, foundations/def:factor-enclosure, foundations/cor:rank-over-factor-enclosure, foundations/def:tiers]
+% mentions: [receiver/component-catalogue/lem:catalogue-dilations, req:dark-channel-record, receiver/rem:blockmeaning, foundations/req:who-snaps, meat-core/frank-wolfe/req:bracket-on-reference]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.reference:dark_composed_reference
+% lean:
+% notes: "Item (v) makes photon_blocks denote, for its consumer, the dark-composed blocks rather than the bare ones. Reliance not expressible as a uses edge: for a setting family a sibling submodule constructs, items (ii) to (iv) rest on that submodule's claims that build its enclosures, make them exact and name the reciprocal cause; detector-imperfections cannot use a sibling submodule (spec/modules.yaml declares no edge between them), so such a claim names this requirement among its own mentions, and a change to it puts this requirement back in review scope; item (vii) rests likewise on receiver/component-catalogue/lem:catalogue-dilations for a component graph, listed under mentions for the same reason. Items (iii) and (iv) record the kind offered per block, which differs from the kind of the reference a snap ran on that the snap record carries (foundations req:who-snaps; exact or none, a snap never running on an enclosed reference); the enclosed kind follows the foundations wording, the largest radius of the enclosures of irrational inputs. The count of item (vii) is structural, so that the receiver forms no column of a block the factor rule could not read. A lossy multi-photon block without dark counts fails it where its loss modes are many, and where they are few it may pass the count with dependent columns, on which the factor rule then fixes no rank; either way such a block reaches the certified tier only through the certified evaluation's fallback."
+% ---
+
+The run evaluates its first-order bound on the reference handed beside the
+snap, and the noise floor of the device (Proposition~\ref{prop:noise-floor})
+belongs to the model the bound is evaluated on, not to a step after it. The
+reference offered is therefore the \tref{dark-composed family}, and the
+blocks the receiver emits are its blocks. For a \tref{setting family} a
+submodule constructs, the enclosures at each setting are those that submodule states.
+The
+enclosures cannot recover every zero of the model: an entry that vanishes
+through cancellation, in an inclusion--exclusion sum or in the composition
+with the \tref{dark-count channel}, is enclosed with a positive radius wherever its
+enclosure is not exact, and a snap then does not treat it as known to be
+zero. That happens off the \tref{exact route}, and on it as well, at the
+entries of a block $n\ge2$ between occupation vectors $\vec m,\vec m'$ with
+$\vec m!\,\vec m'!$ not a square, which
+Theorem~\ref{thm:exact-blocks} does not make exact. Item (ii) lists the zeros
+that are kept exact. An enclosure with positive radii does not fix the rank
+of a block whose rank is below its dimension and whose support no coordinate
+vectors span, such as a block of an ideal analyser at an angle whose
+projector has irrational entries; item (vii) offers such a block besides in
+factor form, read through a \tref{port dilation}
+(Theorem~\ref{thm:factor-blocks}), wherever its columns are few enough to fix
+its rank. The instance hands the reference beside its snap, and
+the run evaluates its first-order bound on it, so that item (vi) asks for it
+in every run that uses enclosed references. The emitted blocks remain a decomposition of the physical
+measurement and are not a squashing argument (Remark~\ref{rem:blockmeaning}).
+
+\begin{requirement}\label{req:dark-composed-reference}
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item The \iface{photon_blocks} entry carries, for every probe setting $t$
+  and every $n\le N$, the blocks
+  $\blk{\widetilde F}{\eqn}_{v|t}=\sum_{S'\subseteq[K]}R_{\cg^{-1}(v)|S'}\,\blk{M}{\eqn}_{S'|t}$
+  given by the formula \eqref{eq:dark-composed} for the emitted matrix $R$, in
+  floating point. They are the blocks of the \tref{dark-composed family}
+  (Definition~\ref{def:dark-composed}) when $R$ is a \tref{dark-count channel},
+  satisfying (D1) and (D2) exactly; for a declared $R$ admitted only at the
+  \tref{receiver tolerances} they are the same formula evaluated at that $R$.
+\item For a declaration with a model admissible exactly
+  (Requirement~\ref{req:exact-route-decision}) whose $R$ satisfies (D1) and
+  (D2) exactly, decided in exact arithmetic on its declared entries on the
+  \tref{declared dark-count route}, the entry also carries, for every setting
+  and every $n\le N$, a \tref{complex enclosure} with a Hermitian centre of
+  every block $\blk{\widetilde F}{\eqn}_{v|t}$
+  (Definition~\ref{def:complex-enclosure}), computed in exact rational
+  arithmetic on the \tref{exact island}
+  (\xref{foundations/def:exact-island}\,(i)) and with no binary64 value as an
+  input: from the enclosures of the port Grams of
+  Requirement~\ref{req:exact-route-decision}\,(iii), by
+  Theorem~\ref{thm:enclosed-blocks}\,(ii) for an unconditioned receiver and
+  by the enclosure of its blocks that a submodule constructing the setting
+  family states for that family, then by Corollary~\ref{cor:exact-dark-composed}\,(i) and
+  Lemma~\ref{lem:enclosure-arithmetic}\,(v). The
+  \tref[square-root enclosure]{square-root enclosures} and
+  \tref[angle enclosure]{angle enclosures} used may be any that
+  Definition~\ref{def:complex-enclosure} admits. The following entries are
+  enclosed exactly, as zero with radius zero:
+  \begin{enumerate}[label=(\alph*),leftmargin=2.0em]
+  \item every entry of a block $\blk{\widetilde F}{\eqn}_{v|t}$ such that
+    every $\blk{\widetilde M}{\eqn}_{S|t}$ with $S\in\cg^{-1}(v)$, whose sum
+    it is (Definition~\ref{def:dark-composed}), is shown to vanish: for the
+    unconditioned receiver on the \tref{generated dark-count route}, and
+    for no other receiver or route, by
+    Proposition~\ref{prop:noise-floor}\,(v), decided on its declared
+    per-port dark-count probabilities; or, for $S=\varnothing$ and $n\ge1$, by
+    Proposition~\ref{prop:noise-floor}\,(iv) at a setting whose operator
+    $B^{(t)}$ the engine has computed in exact arithmetic and found to be the
+    identity, which for the unconditioned receiver is $A_\Sigma$ computed
+    from the port Grams of
+    Requirement~\ref{req:exact-route-decision}\,(i) or (ii);
+  \item every entry whose enclosure is exact by
+    Theorem~\ref{thm:exact-blocks}\,(ii) or by the exactness of its blocks
+    that a submodule constructing the setting family states, carried through
+    Corollary~\ref{cor:exact-dark-composed}\,(i), and whose value is zero.
+  \end{enumerate}
+  No other entry is required to be enclosed as zero.
+\item The enclosures of (ii), with the family they enclose, are the
+  \tref{reference} (\xref{foundations/def:exact-reference}) that the receiver
+  offers for a snap of its emitted family
+  (\xref{foundations/req:snap-reference}), one per setting, with constant $1$
+  (Corollary~\ref{cor:exact-dark-composed}\,(ii)). The entry records the
+  \emph{offered} reference kind of every block: \emph{exact} where every
+  radius of the block is zero, and \emph{enclosed} otherwise, with the
+  largest radius of the block and the largest radius of the enclosures of
+  irrational inputs (square roots, trigonometric values) from which the
+  centres are computed exactly. The record of every snap of the family
+  carries besides the kind of the reference the snap ran on
+  (\xref{foundations/req:who-snaps}): \emph{exact} on a block whose
+  offered kind is exact, the snap running on its centres, and \emph{none}
+  on every other block, the snap running on the floating-point blocks of
+  (i). The reference is an
+  \tref{exact reference} where every block is exact. It also names the claims that establish the
+  enclosure, positive semidefiniteness and completeness of the reference,
+  which \xref{foundations/req:snap-reference}\,(i) leaves to the
+  constructing module: Corollary~\ref{cor:exact-dark-composed}\,(ii), with
+  Theorem~\ref{thm:enclosed-blocks}\,(ii) through
+  Corollary~\ref{cor:exact-dark-composed}\,(iii) for an unconditioned
+  receiver and the enclosure claim of the constructing submodule for a
+  setting family a submodule constructs. On the \tref{exact route}, with the
+  port Grams enclosed exactly, every block $n\le1$ has radius zero
+  (Theorem~\ref{thm:exact-blocks}\,(iii) for an unconditioned receiver, the
+  exactness claim of the constructing submodule for a setting family a
+  submodule constructs, and Corollary~\ref{cor:exact-dark-composed}\,(i)). The reference is read against
+  the \tref{sector map} of the floating-point blocks of (i) in the same entry
+  (\xref{foundations/def:sector-map}): the same block kind and block
+  identifiers, the photon numbers $n=0,\dots,N$ in increasing order, and
+  within each block the occupation vectors in the one order in which the
+  entry lists the floating-point blocks, which is also the order of the rows
+  and columns of every centre and radius matrix. The entries of the reference
+  that a snap treats as known to be exactly zero
+  (\xref{foundations/def:snap}) are therefore exactly those enclosed as zero
+  with radius zero.
+\item Where the declaration has no model admissible exactly, where a declared
+  $R$ fails (D1) or (D2) exactly, or where a reciprocal that the enclosure
+  of a setting family a submodule constructs forms receives no enclosure, the
+  entry carries no reference, records the offered reference kind of every
+  block as \emph{none}, and records the cause.
+\item $R$ remains emitted in \iface{dark_count_channel}
+  (Requirement~\ref{req:dark-channel-record}), where it serves the
+  high-photon weight. It is already composed into the blocks of (i)--(iii),
+  and a consumer does not compose it into them again.
+\item Items (ii) and (iii) bind every run, save one that declares that
+  enclosed references are not used
+  (\xref{foundations/req:snap-reference}\,(i)). Such a run need form no
+  enclosure of (ii) with a radius that is not zero, beyond what deciding that
+  a block is not enclosed exactly takes, and carries none: it carries the
+  reference of (iii) only on the blocks every entry of which it encloses
+  exactly, with radius zero, from port Grams enclosed exactly, each block so
+  carried being an \tref{exact reference} of that block, and records their
+  offered kind \emph{exact}; every other block it records as offered with
+  the kind \emph{none}, with the cause that enclosed references are not
+  used (\xref{foundations/req:snap-reference}\,(iii)). The reference the entry
+  carries, its centres and radii as data, is the \tref{handed reference}
+  that the instance hands beside its snap of the emitted family
+  (\xref{foundations/def:evaluated-off-snap}\,(i)), whatever the snap itself
+  uses of it: the snap uses only the centres of the exact blocks
+  (\xref{foundations/req:snap-reference}\,(ii)), and the run's first-order
+  bound reads the reference on every block it carries
+  (\xref{meat-core/frank-wolfe/req:bracket-on-reference}). Item (iv) binds
+  as stated.
+\item \emph{Factor enclosures.} Where the entry carries the reference of
+  (iii) for a receiver with $\InpS=\varnothing$, whose one setting is $\off$
+  (Corollary~\ref{cor:exact-dark-composed}\,(iii)), the engine forms
+  besides, on the blocks the count below admits and on no other, a
+  \tref{factor enclosure} (\xref{foundations/def:factor-enclosure}) of the
+  block $\blk{\widetilde F}{\eqn}_{v|\off}$: the one of
+  Theorem~\ref{thm:factor-blocks}\,(iii) at the weights
+  $w_{S'}\coloneqq R_{\cg^{-1}(v)|S'}$, rationals by
+  Corollary~\ref{cor:exact-dark-composed}\,(iv), at which the block of that
+  theorem is $\blk{\widetilde F}{\eqn}_{v|\off}$
+  (Definition~\ref{def:dark-composed}), its rows in the order of (iii), for
+  the port dilation (Definition~\ref{def:port-dilation}) formed as follows.
+  \begin{enumerate}[label=(\alph*),leftmargin=2.0em]
+  \item On the route that declares a component graph, the dilation of
+    Lemma~\ref{lem:catalogue-dilations}\,(ii), with the loss factor of
+    part (i) of that lemma for every element. A row of a loss factor, and of
+    the efficiency layer's, is formed only where the declared value that
+    scales it is decided in exact arithmetic to make it non-zero, so that
+    whether an element is lossless is read off its declared parameters and
+    never off a computed number. The loss factor of a \tref{generic block} is formed
+    from a decomposition
+    $\id_\Sigma-\Gmat_\Sigma^{\dagger}\Gmat_\Sigma=E^{\dagger}DE$ formed and
+    decided in exact rational arithmetic; where none is formed, no dilation of
+    the declaration is.
+  \item On a route that declares the port Grams or the \tref{instrument matrix}, the
+    dilation of Theorem~\ref{thm:factor-blocks}\,(iv), where the engine forms
+    decompositions $A_k=E_k^{\dagger}D_kE_k$ and $\defic=E_0^{\dagger}D_0E_0$
+    of the kind named there, formed and decided in exact rational arithmetic.
+  \end{enumerate}
+  The entries of the dilation are enclosed by the rules of
+  Lemma~\ref{lem:enclosure-arithmetic} from \tref[square-root
+  enclosure]{square-root enclosures} and \tref[angle enclosure]{angle
+  enclosures}, as Requirement~\ref{req:exact-route-decision}\,(iii) encloses
+  the elements' matrices and the $\sqrt{\eta_k}$, and the columns as
+  Theorem~\ref{thm:factor-blocks}\,(ii) encloses them, in exact rational
+  arithmetic or by a \tref{rigorously enclosed} computation
+  (\xref{foundations/def:tiers}), with no binary64 value as an input; a column
+  enclosed exactly as zero is omitted, and the core is exact. The engine forms
+  the factor enclosure of a block only where the number of occupation vectors
+  $\vec m$ of weight $n$ on the modes of the dilation whose row is not
+  enclosed exactly as zero, with $R_{\cg^{-1}(v)|S_{\vec m}}>0$, is at most
+  the block's dimension $\binom{|\Inp|+n-1}{n}$, a count it decides before it
+  computes any column: a factor enclosure with more columns than that
+  dimension fixes no rank
+  (\xref{foundations/cor:rank-over-factor-enclosure}\,(ii)). It forms none
+  for a receiver with $\InpS\neq\varnothing$, whose blocks are not formed
+  through a port dilation; none where no dilation of (a) or (b) is formed; none on a block
+  the count does not admit; and none in a run that declares that enclosed
+  references are not used (vi). A factor enclosure is carried beside the
+  entrywise enclosure of its block, which it leaves unaltered, and is handed
+  with the reference, altered by no step. The entry records per block whether
+  one is carried, with its number of columns and its largest radius, or the
+  cause where none is; and it names Theorem~\ref{thm:factor-blocks} and, on
+  the route of (a), Lemma~\ref{lem:catalogue-dilations} as the claims that
+  establish that the block is a member of its factor enclosure, which
+  \xref{foundations/req:snap-reference}\,(i) leaves to the module that
+  constructs the reference.
+\end{enumerate}
+\end{requirement}

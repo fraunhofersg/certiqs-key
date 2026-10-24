@@ -1,0 +1,54 @@
+% ---
+% id: protocol-compiler/req:validator-refusals
+% kind: req
+% title: "Refusals of the validator's checks"
+% summary: >-
+%   A candidate declaration failing a check of the validator is refused, and
+%   no declaration is emitted, with a reason naming the check and what that
+%   check names. Nothing is repaired and no table is completed with a default
+%   value.
+% prominence: standard
+% status: accepted
+% uses: [def:validator]
+% mentions: [thm:validator-soundness, foundations/req:consumer-decides-exactly]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.validation:validate
+% lean:
+% ---
+
+A pass of every check of Definition~\ref{def:validator} is what establishes
+the target conditions (Theorem~\ref{thm:validator-soundness}\,(i)), and the compiler, as a
+\tref{consumer} of what it is handed, decides and never repairs
+(\xref{foundations/req:consumer-decides-exactly}).
+
+\begin{requirement}\label{req:validator-refusals}
+The engine runs checks V1 to V8 of Definition~\ref{def:validator} on every
+candidate declaration and refuses a candidate that fails one, emitting no
+declaration, with a reason naming the failing check. It repairs nothing and completes no declared table with a default
+value. Where a check has a reason of its own, the refusal carries that reason
+and what the check names with it:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item V1: \iface{sector_map_mismatch}, naming the first position at which the
+  compared lists differ, and in the general format, for the block kind across
+  the factors, the first factor at which the kind differs;
+\item V2: \iface{alice_marginal_trace_rounds} where an addition of the
+  marginal's trace rounds; in the general format
+  \iface{alice_sector_marginal_zero}, naming the sector, where a block of the
+  marginal is zero beside a measurement slot in \tref{ensemble form};
+\item V3: \iface{alice_povm_summation_rounds}, in the general format carrying
+  the Alice sector; \iface{bob_povm_summation_rounds}, carrying the sector and
+  the outcome index at which the first inexact addition occurred, and in the
+  general format the factor as well; in the general format
+  \iface{alice_ensemble_marginal_mismatch}, carrying the sector and the first
+  differing entry, \iface{alice_ensemble_sum_rounds}, carrying the sector and
+  the index of the first inexact addition, and
+  \iface{ensemble_form_in_untrusted_mode} for a slot in ensemble form beside a
+  \tref{marginal slot} holding $\nomarg$;
+\item V6: in the general format \iface{constraint_scope_not_a_factor},
+  naming the entry;
+\item V7: \iface{no_feasibility_witness}, naming, where a supplied witness was
+  rejected on its map, the first position at which the two lists differ.
+\end{enumerate}
+\end{requirement}

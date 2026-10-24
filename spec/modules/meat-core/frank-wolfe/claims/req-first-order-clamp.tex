@@ -1,0 +1,32 @@
+% ---
+% id: meat-core/frank-wolfe/req:first-order-clamp
+% kind: req
+% title: "Clamping of the first-order bound at zero"
+% summary: >-
+%   What reaches the key length is max{0, h_lb}, and the engine reports the
+%   unclamped h_lb beside a flag recording the clamp. The clamp substitutes one
+%   valid lower bound for another and repairs nobody's data.
+% prominence: standard
+% status: implemented
+% uses: [thm:firstorder, cor:fo-keylength]
+% mentions: [rem:fo-negative-values, rem:fo-arithmetic]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.general_keyrate:key_length_from_first_order
+% lean:
+% ---
+
+A computed $\hlb$ may be negative, the linearisation being weak far from the
+optimum or the arithmetic crossing zero, and $\max\{0,\hlb\}$ is still a
+lower bound on $\hlow$ by Theorem~\ref{thm:firstorder}\,(ii),
+respectively~(iiib) (Remark~\ref{rem:fo-negative-values}); the clamp corrects
+only the low side (Remark~\ref{rem:fo-arithmetic}\,(a)). The unclamped value
+lets a reader see what was computed and not only what was used.
+
+\begin{requirement}\label{req:first-order-clamp}
+The engine passes $\max\{0,\hlb\}$ to the key length of
+Corollary~\ref{cor:fo-keylength}, and records the clamp: it emits the
+boolean \iface{first_order_clamped} beside \iface{h_lb}, and \iface{h_lb}
+carries the unclamped value.
+\end{requirement}

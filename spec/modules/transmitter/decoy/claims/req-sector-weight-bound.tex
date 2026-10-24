@@ -1,0 +1,64 @@
+% ---
+% id: transmitter/decoy/req:sector-weight-bound
+% kind: req
+% title: "Certified bound on the sector weights"
+% summary: >-
+%   Each sector weight is decided against a rational lower bound on its Poisson
+%   weight that the engine forms from the declared intensity, and a negative
+%   weight, one above that bound, or one presented as an equality is refused.
+%   No Poisson weight is compared for equality or at a tolerance.
+% prominence: standard
+% status: implemented
+% uses: [def:tagged-source, prop:tagging, lem:poisson-enclosure]
+% mentions: [def:wcp-model]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.decoy.emit:emit_decoy_declaration
+% lean:
+% ---
+
+Proposition~\ref{prop:tagging} needs the inequality \eqref{eq:weightineq} and
+nothing more: its identity holds for every family of weights at or below the
+\tref[Poisson weight]{Poisson weights}, the tail absorbing the difference. The
+right-hand side is not a number the engine can compare with, so it compares
+with the lower end of the rational enclosure of
+Lemma~\ref{lem:poisson-enclosure}, which lies at or below the Poisson weight.
+A weight between that lower end and the Poisson weight is refused as well. The
+engine fixes the summation index by one rule, so a declarer can compute the
+same lower end and declare at or below it; by parts (iii) and (iv) of that
+lemma the rule's index gives a lower end at least as large as any smaller
+index would, within $2^{-90}\mu^{\mathsf{n}}/\mathsf{n}!$ of the Poisson
+weight.
+
+\begin{requirement}\label{req:sector-weight-bound}
+The obligation \eqref{eq:weightineq} of Definition~\ref{def:tagged-source}\,(T2),
+$0\le\tilde p(\mathsf{n}\mid\mu)\le P_\mu(\mathsf{n})$ for every
+$\mathsf{n}\le N_{\mathrm{src}}$ and every intensity $\mu\in\mathrm{Int}$ of
+Definition~\ref{def:wcp-model}\,(W2), is an inequality and never an equality:
+its right-hand side is not a declared datum, and at a positive intensity,
+declared as a binary64 number, it is a transcendental number (at $\mu=0$ it is
+$1$ for $\mathsf{n}=0$ and $0$ for $\mathsf{n}\ge1$). For every such
+$(\mathsf{n},\mu)$ the engine forms, from the declared intensity $\mu$ and in
+exact rational arithmetic, the lower end
+$\underline{P}_\mu(\mathsf{n})\coloneqq\max(0,S_{K+1})\,\mu^{\mathsf{n}}/\mathsf{n}!$
+of the enclosure of Lemma~\ref{lem:poisson-enclosure}, with $S_{K+1}$ the
+partial sum \eqref{eq:expsum} at $K=K_\mu$, the least even integer
+$K\ge\mu$ with $t_{K+1}=\mu^{K+1}/(K+1)!\le2^{-90}$, which exists because
+$t_{K+1}\to0$. It records $K_\mu$ for every intensity in the artefact, and it
+reads no enclosure of $P_\mu(\mathsf{n})$ from the request. By part (iv) of
+that lemma no even $K$ with $\mu\le K<K_\mu$ gives a larger lower end, so the
+rule refuses no weight that a smaller admissible index would admit. It
+refuses, with no artefact, a declaration in which
+$\tilde p(\mathsf{n}\mid\mu)<0$ or
+$\tilde p(\mathsf{n}\mid\mu)>\underline{P}_\mu(\mathsf{n})$ at some
+$(\mathsf{n},\mu)$ (\iface{sector_weight_above_poisson}). Since
+$\underline{P}_\mu(\mathsf{n})\le P_\mu(\mathsf{n})$ by that lemma, every
+declaration violating \eqref{eq:weightineq} is refused, and every declaration
+it admits satisfies \eqref{eq:weightineq}. It refuses, with no artefact, a
+declaration presenting the obligation as an equality
+$\tilde p(\mathsf{n}\mid\mu)=P_\mu(\mathsf{n})$ to be decided
+(\iface{sector_weight_as_equality}). No condition of this submodule compares
+$\tilde p(\mathsf{n}\mid\mu)$ with $P_{\mu}(\mathsf{n})$ for equality and none
+is decided at a tolerance.
+\end{requirement}

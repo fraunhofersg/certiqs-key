@@ -1,0 +1,156 @@
+% ---
+% id: meat-core/lem:choi-marginal
+% kind: lem
+% title: "Fixed-marginal parametrisation on a support frame"
+% summary: >-
+%   On every support frame, W_τ times its adjoint is τ_A, and the Choi map
+%   carries the positive operators with identity input marginal onto the
+%   states with A-marginal τ_A. It is injective on a tight frame, and only
+%   there unless the second system is trivial; being onto, it needs no rank
+%   decided.
+% prominence: standard
+% status: implemented
+% uses: [def:support-frame, def:admissible-declaration]
+% mentions: [thm:choi]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.joint:marginal_frame
+% lean:
+% ---
+
+Whatever \tref{support frame} a run uses, every state with Alice's marginal is the
+image of a positive Choi operator on it; a tight frame makes the
+correspondence one to one. The identities (i)--(iii) are what the
+parametrisation (iv) and the Choi program of Theorem~\ref{thm:choi} use of
+$W_{\tau}$.
+
+\begin{lemma}\label{lem:choi-marginal}
+Let the declaration be in \tref{trusted-source mode}, let $\iota$ be the
+\tref{declared isometry} of a \tref{support frame}, satisfying
+\eqref{eq:iota}, and let $W_{\tau}$ be \eqref{eq:Wtau}
+(Definition~\ref{def:support-frame}). Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $\Pi_{\iota}\tau_A^{1/2}=\tau_A^{1/2}$.
+\item For every support frame, tight or not,
+\begin{equation}\label{eq:WWtau}
+  W_{\tau}W_{\tau}^{\dagger}
+  =\tau_A^{1/2}\,\Pi_{\iota}\,\tau_A^{1/2}
+  =\tau_A^{1/2}\,\tau_A^{1/2}=\tau_A .
+\end{equation}
+\item $\operatorname{ran}W_{\tau}=\operatorname{supp}\tau_A$, and the
+Moore--Penrose inverse $W_{\tau}^{+}$ satisfies
+\begin{equation}\label{eq:Wplus}
+  W_{\tau}W_{\tau}^{+}=\Pi_{\operatorname{supp}\tau_A},
+  \qquad
+  W_{\tau}^{+}W_{\tau}=P_{\iota}
+  \coloneqq\Pi_{(\ker W_{\tau})^{\perp}} ,
+\end{equation}
+where $\ker W_{\tau}=\{\xi\in\Hs{A_0}:
+\iota\xi\in(\operatorname{supp}\tau_A)^{\perp}\}$ has dimension
+$d_{A_0}-\operatorname{rank}\tau_A$. The frame is tight if and only if
+$\ker W_{\tau}=0$, i.e.\ $P_{\iota}=\idon{A_0}$, and then $W_{\tau}$ has
+full column rank and
+$W_{\tau}^{+}=(W_{\tau}^{\dagger}W_{\tau})^{-1}W_{\tau}^{\dagger}$.
+\item For any finite-dimensional system $B'$, the map
+$\chi_{B'}(J)\coloneqq(W_{\tau}\otimes\idon{B'})\,J\,
+(W_{\tau}^{\dagger}\otimes\idon{B'})$ maps
+$\{J\in\Pos{A_0B'}:\tr_{B'}J=\idon{A_0}\}$ \emph{onto}
+$\{\omega\in\Pos{AB'}:\tr_{B'}\omega=\tau_A\}$. It is \emph{injective},
+hence a bijection with inverse
+$\omega\mapsto(W_{\tau}^{+}\otimes\idon{B'})\,\omega\,
+(W_{\tau}^{+\dagger}\otimes\idon{B'})$, when the support frame is tight,
+and, if $\dim\Hs{B'}\ge2$, only then; if $\dim\Hs{B'}=1$ its domain is the
+single point $\idon{A_0}$. In general $\chi_{B'}(J)=\chi_{B'}(J')$ if and only if
+$(P_{\iota}\otimes\idon{B'})J(P_{\iota}\otimes\idon{B'})
+=(P_{\iota}\otimes\idon{B'})J'(P_{\iota}\otimes\idon{B'})$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Idea.} (i)--(iii) are linear algebra of the two conditions of
+\eqref{eq:iota}. For (iv), the image of an operator with input marginal
+$\idon{A_0}$ has $A$-marginal $W_{\tau}W_{\tau}^{\dagger}=\tau_A$;
+conversely $W_{\tau}^{+}$ pulls a state with marginal $\tau_A$ back to an
+operator with input marginal $P_{\iota}$, which a block annihilated by
+$W_{\tau}$ completes to $\idon{A_0}$.
+
+\emph{Step 1 (identity (i)).} For a positive semidefinite $X$ one has
+$\operatorname{ran}X^{1/2}=(\ker X)^{\perp}=\operatorname{ran}X$, so
+$\operatorname{ran}\tau_A^{1/2}=\operatorname{ran}\tau_A
+\subseteq\operatorname{ran}\Pi_{\iota}$ by \eqref{eq:iota}, and a
+projector acts as the identity on a subspace of its range.
+
+\emph{Step 2 (identity (ii)).} The first equality of \eqref{eq:WWtau} is
+$W_{\tau}=\tau_A^{1/2}\iota$ with $\Pi_{\iota}=\iota\iota^{\dagger}$, and
+the second is (i).
+
+\emph{Step 3 (identity (iii)).} By (ii),
+$\operatorname{ran}W_{\tau}
+=\operatorname{ran}(W_{\tau}W_{\tau}^{\dagger})
+=\operatorname{supp}\tau_A$, so the Moore--Penrose inverse $W_{\tau}^{+}$
+satisfies \eqref{eq:Wplus}. The kernel $\ker W_{\tau}$ has dimension
+$d_{A_0}-\operatorname{rank}\tau_A$ because $\iota$ is injective and
+$\operatorname{ran}\iota=\operatorname{supp}\tau_A\oplus
+\big(\operatorname{ran}\iota\cap(\operatorname{supp}\tau_A)^{\perp}\big)$.
+So $\ker W_{\tau}=0$ exactly when $d_{A_0}=\operatorname{rank}\tau_A$,
+which is tightness (Definition~\ref{def:support-frame}), and then
+$W_{\tau}$ has full column rank and
+$W_{\tau}^{+}=(W_{\tau}^{\dagger}W_{\tau})^{-1}W_{\tau}^{\dagger}$.
+
+\emph{Step 4 (the map (iv): forward).} $\chi_{B'}(J)\succeq0$, and
+$\tr_{B'}\chi_{B'}(J)=W_{\tau}(\tr_{B'}J)W_{\tau}^{\dagger}
+=W_{\tau}W_{\tau}^{\dagger}=\tau_A$ by \eqref{eq:WWtau}.
+
+\emph{Step 5 (surjectivity).} Let $\omega\succeq0$ with
+$\tr_{B'}\omega=\tau_A$ and let
+$\Pi^{\perp}\coloneqq\idon{A}-\Pi_{\operatorname{supp}\tau_A}$. Then
+$\tr[(\Pi^{\perp}\otimes\idon{B'})\,\omega]
+=\tr[\Pi^{\perp}\tau_A]=0$, and positivity forces
+$(\Pi^{\perp}\otimes\idon{})\,\omega=0$, i.e.\ $\omega$ is supported on
+$\operatorname{supp}\tau_A\otimes\Hs{B'}$. Put
+$J_0\coloneqq(W_{\tau}^{+}\otimes\idon{})\,\omega\,
+(W_{\tau}^{+\dagger}\otimes\idon{})\succeq0$; by \eqref{eq:WWtau} and
+\eqref{eq:Wplus},
+\begin{equation*}
+  \tr_{B'}J_0=W_{\tau}^{+}\tau_AW_{\tau}^{+\dagger}
+  =W_{\tau}^{+}W_{\tau}\,W_{\tau}^{\dagger}W_{\tau}^{+\dagger}
+  =P_{\iota}P_{\iota}^{\dagger}=P_{\iota},
+\end{equation*}
+and $\chi_{B'}(J_0)
+=(W_{\tau}W_{\tau}^{+}\otimes\idon{})\,\omega\,
+(W_{\tau}W_{\tau}^{+}\otimes\idon{})^{\dagger}
+=(\Pi_{\operatorname{supp}\tau_A}\otimes\idon{})\,\omega\,
+(\Pi_{\operatorname{supp}\tau_A}\otimes\idon{})=\omega$. If the frame is
+tight, $P_{\iota}=\idon{A_0}$ and $J_0$ is already in the domain. In
+general fix any state $\varphi$ on $\Hs{B'}$ and put
+$J\coloneqq J_0+(\idon{A_0}-P_{\iota})\otimes\varphi\succeq0$. Then
+$\tr_{B'}J=P_{\iota}+(\idon{A_0}-P_{\iota})=\idon{A_0}$, and the added
+term is annihilated by $\chi_{B'}$, because
+$W_{\tau}(\idon{A_0}-P_{\iota})
+=W_{\tau}-W_{\tau}W_{\tau}^{+}W_{\tau}=0$ by the Moore--Penrose identity;
+so $\chi_{B'}(J)=\chi_{B'}(J_0)=\omega$.
+
+\emph{Step 6 (the fibres).} $W_{\tau}=W_{\tau}P_{\iota}$ by the same
+identity, so for any $J$ in the domain
+$\chi_{B'}(J)=(W_{\tau}\otimes\idon{})\big[(P_{\iota}\otimes\idon{})J
+(P_{\iota}\otimes\idon{})\big](W_{\tau}^{\dagger}\otimes\idon{})$, and
+$W_{\tau}$ restricted to $\operatorname{ran}P_{\iota}
+=(\ker W_{\tau})^{\perp}$ is injective; hence $\chi_{B'}(J)$ determines,
+and is determined by, the compression
+$(P_{\iota}\otimes\idon{})J(P_{\iota}\otimes\idon{})$. That is the stated
+fibre description, and it gives injectivity when $P_{\iota}=\idon{A_0}$,
+i.e.\ when the frame is tight; the displayed inverse is then $J_0$.
+Conversely, let the frame not be tight, so that
+$\idon{A_0}-P_{\iota}\ne0$, and let $\dim\Hs{B'}\ge2$, so that $B'$ carries
+two states $\varphi\ne\varphi'$. With any state $\varphi_0$ on $B'$, the
+operators $J\coloneqq P_{\iota}\otimes\varphi_0
++(\idon{A_0}-P_{\iota})\otimes\varphi$ and
+$J'\coloneqq P_{\iota}\otimes\varphi_0
++(\idon{A_0}-P_{\iota})\otimes\varphi'$ are positive semidefinite with
+$\tr_{B'}J=\tr_{B'}J'=\idon{A_0}$, have the same compression
+$P_{\iota}\otimes\varphi_0$, hence the same image, and differ by
+$(\idon{A_0}-P_{\iota})\otimes(\varphi-\varphi')\ne0$; so $\chi_{B'}$ is
+not injective. If $\dim\Hs{B'}=1$, then $\tr_{B'}J=J$ and the domain is
+the single point $\idon{A_0}$.
+\end{proof}

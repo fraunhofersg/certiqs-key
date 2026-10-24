@@ -1,0 +1,60 @@
+% ---
+% id: receiver/def:port-dilation
+% kind: def
+% title: "Port dilation of a receiver instrument"
+% summary: >-
+%   A port dilation is an isometry from the declared inputs into a finite mode
+%   set with disjoint ports that reproduces every port Gram. Any such map
+%   carries the click statistics as the unitary dilation of the physical model
+%   does, and it may have far fewer modes.
+% prominence: standard
+% status: implemented
+% uses: [def:instrument, def:gram, def:fock]
+% mentions: [def:physmodel, thm:port-grams, thm:factor-blocks]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.factor:PortDilation
+% lean:
+% notes: "Stated on the port Grams alone, so that a declaration of port Grams or of an instrument matrix and a declared element graph all have port dilations; the map is an isometry from the declared inputs and need not extend the instrument matrix on the other modes."
+% ---
+
+The \tref{measurement isometry} of Definition~\ref{def:physmodel} applies a unitary
+on the modes and an environment to the declared inputs, and
+Theorem~\ref{thm:port-grams}\,(iii) and~(v) show that the click statistics
+read of it only the amplitudes it sends from the inputs to each port. The
+definition names the least that a map from the inputs must satisfy to carry
+the same statistics, so that a smaller isometry, into the port modes and as
+many loss modes as the instrument's loss needs, can stand in for the unitary
+dilation: Theorem~\ref{thm:factor-blocks} reads every photon-number block
+through such a map. The restriction $U\iota$ of a unitary dilation $U$ to the
+declared inputs, with the ports of the instrument, is one, since
+$(U\iota)^{\dagger}U\iota=\id_{\Inp}$ and the rows of $U\iota$ on a port are
+those of $\Gmat_{\Inp}$.
+
+\begin{definition}\label{def:port-dilation}
+Let $\Recv$ be a \tref{receiver instrument} with
+\tref[port Gram matrices]{port Grams} $\{A_k\}_{k=1}^{K}$ on
+$\mathbb{C}^{\Inp}$ (Definitions~\ref{def:instrument} and~\ref{def:gram}). A
+\term[a finite ordered mode set with disjoint ports and an isometry from the
+declared input modes into it whose Gram on each port is that port's Gram
+matrix]{port dilation} of $\Recv$ is a triple
+$(\mathbb{O};\mathbb{O}_1,\dots,\mathbb{O}_K;\Omega)$ of a finite mode set
+$\mathbb{O}$ with a fixed order, pairwise disjoint subsets
+$\mathbb{O}_1,\dots,\mathbb{O}_K$ of $\mathbb{O}$, its \emph{ports}, and a
+linear map $\Omega:\mathbb{C}^{\Inp}\to\mathbb{C}^{\mathbb{O}}$ with
+\begin{equation}\label{eq:port-dilation}
+  \Omega^{\dagger}\Omega=\id_{\Inp}
+  \qquad\text{and}\qquad
+  \Omega^{\dagger}\Emd{\mathbb{O}_k}\Omega=A_k\quad(k=1,\dots,K),
+\end{equation}
+where $\Emd{\mathbb{O}_k}$ is the coordinate projector of
+$\mathbb{C}^{\mathbb{O}}$ onto the modes of $\mathbb{O}_k$. The modes of
+$\mathbb{O}$ in no port are its \emph{loss modes}, and the \emph{row} of a mode
+$i\in\mathbb{O}$ is the row of $\Omega$ that $i$ indexes. The \emph{click
+pattern} of an occupation vector $\vec m\in\mathbb{N}_0^{\mathbb{O}}$
+(Definition~\ref{def:fock}) is
+\begin{equation}\label{eq:click-pattern-of}
+  S_{\vec m}\coloneqq\big\{k\in[K]:\ m_i\ge1\text{ for some }i\in\mathbb{O}_k\big\}.
+\end{equation}
+\end{definition}

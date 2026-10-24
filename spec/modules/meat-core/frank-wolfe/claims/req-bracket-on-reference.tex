@@ -1,0 +1,212 @@
+% ---
+% id: meat-core/frank-wolfe/req:bracket-on-reference
+% kind: req
+% title: "The first-order bound evaluated on the reference companion"
+% summary: >-
+%   Where a reference companion is admitted, the run's first-order number is
+%   the best bracket on the companion at the best points of the snapped search
+%   and of a short search continued on the companion from them, each assessed
+%   by the usual gate; the snapped bound is recorded as a diagnostic only.
+% prominence: standard
+% status: implemented
+% uses: [cor:fo-reference, thm:firstorder, cor:fo-keylength, req:first-order-withdrawal, req:iterate-checks, req:support-rank-check, req:acceptance-geometries, req:acceptance-iterate-exact, req:verified-feasible-side, req:first-order-clamp, req:bound-estimate-difference, meat-core/req:companion-admission, meat-core/prop:reference-companion, foundations/def:evaluated-off-snap, foundations/req:snap-reference]
+% mentions: [rem:fo-arithmetic, req:certified-evaluation, req:negative-estimate-refused, meat-core/prop:optol-nobound, foundations/ass:snapped-measurement]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.reference:bracket_on_reference
+% lean:
+% notes: "The second cause of (iv), factor_enclosure_inconsistent, withdraws the bracket rather than only its certification because the first-order number reads the entrywise enclosure, which an inconsistency puts in doubt; the snapped bound reads neither enclosure. The polish's share of the wall budget is set aside before the search on D begins, so that a search stopped by its budget, where the snapped statistics also slow it, still leaves the polish its time, at the cost of a shorter search on D; its points enter the certified evaluation through (i) as the search's do, which is why it forms its acceptance-side iterate on the exact island."
+% ---
+
+The search runs on the snapped declaration; the bound is formed on the
+companion. Any points at which Corollary~\ref{cor:fo-reference} holds give a
+valid bound, so the choice of points bears on its size only. The companion
+and the snapped declaration differ only in the measured families of the
+factors the companion replaces and in the entries of their last links, so the
+points the snapped bracket ranks highest are the natural candidates, and a
+few of them keep the extra oracle calls few; the last point is added because
+it is the point the search ended at. Those points can still sit badly on the
+companion. The search fits the acceptance-side component to the snapped
+statistics, and where the snap moved an entry that is small beside its
+outcome's probability, the companion's statistics at the same point differ
+from that component by a relative amount of the move's size, which the
+factor $\alpha/(\alpha-1)$ of the objective magnifies: the bracket on the
+companion can then fall far below the snapped one, though the two values are
+close. The polish, a short search continued on the companion's own program
+from the best of those points, moves the point to where the companion's
+bracket is large. Its points are points like any other, since
+Corollary~\ref{cor:fo-reference} reads of a point nothing but its
+hypotheses, and the gate decides them at each point whatever produced it:
+in exact arithmetic the points it adds can only raise a maximum of valid
+brackets. That is not the whole of it at the first-order tier. Where the
+companion carries a positive radius, its first-order bracket is formed from
+the binary64 numbers nearest the centres of its enclosure, which are
+displaced from the companion itself by an amount no claim bounds
+(Remark~\ref{rem:fo-arithmetic}, Proposition~\ref{prop:optol-nobound}); a
+search that maximises that evaluation makes it more likely that such an
+unbudgeted excess reaches the first-order number than points found on
+another declaration do. The polish's points count at the first-order tier
+all the same, as the search's do; where every radius is zero only the
+rounding of the evaluation is exposed, as at any point; and the certified
+tier, formed from the exact centres and radii
+(Requirement~\ref{req:certified-evaluation}), is unaffected. Which blocks then rest
+on no premise about the snap follows from what the companion carries, block
+by block (\xref{foundations/def:evaluated-off-snap}). It follows also from
+which number the key length is formed from: where the companion's bound
+counts but its certified evaluation certifies no point, a number certified
+on the snapped declaration may carry the key length instead
+(Requirement~\ref{req:certified-evaluation}), and the blocks the companion
+carried then rest on the snap premise after all.
+
+\begin{requirement}\label{req:bracket-on-reference}
+Where the engine has admitted a compiled reference companion
+$\Decl^{\mathrm{ref}}$ beside the declaration $\Decl$ it searched on
+(Requirement~\ref{req:companion-admission}), it forms the run's first-order
+number as follows, after the search on $\Decl$ has ended.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{The points.} It evaluates the points of two sets. The first
+  holds at most five points of the search on $\Decl$: the at most four
+  members of the index set of $\Decl$'s bound
+  (Requirement~\ref{req:first-order-withdrawal}) with the largest brackets
+  on $\Decl$, ties broken by the order of the run, and the last point the
+  search assessed; where $\Decl$'s index set is empty, the last point alone.
+  The second holds the points kept by the \emph{polish}, a search on the
+  Choi program of $\Decl^{\mathrm{ref}}$ that continues the search on
+  $\Decl$ after it has ended. The polish reads the objective, the gradient,
+  the maps and the entries of $\Decl^{\mathrm{ref}}$
+  (Requirement~\ref{req:companion-admission}\,(i)) and no map generated from
+  $\Decl$'s measured family; it starts at the point of the first set with
+  the largest bracket on $\Decl$, at the last point where $\Decl$'s index
+  set is empty, and forms its acceptance-side iterate as
+  Requirement~\ref{req:acceptance-iterate-exact} requires, from that point's
+  exact acceptance-side component. Where that component was not formed on
+  the \tref{exact island} (Requirement~\ref{req:acceptance-iterate-exact}),
+  the polish does not run, the second set is empty and the record names
+  that reason. It assesses each point it consumes by the
+  gate of (ii) and keeps the at most four of them that contribute with the
+  largest brackets on $\Decl^{\mathrm{ref}}$, ties broken by its own order,
+  and the last point it assessed; a polish that assesses no point keeps
+  none. It runs within the share \iface{reference_polish_share} of the
+  wall budget of one evaluation of the run, where the run has one, set
+  aside for it before the search on $\Decl$ begins, and ends where that
+  share is spent, where an iteration cap it records is reached or where its
+  own stopping rule holds, whichever comes first; a polish that fails or is
+  cut short keeps, as above, the points it assessed until then. The share
+  so set aside shortens the search on $\Decl$, which bears on the run's
+  estimate, on $\hlb[\Decl]$, on a number certified on $\Decl$ in the
+  fallback of Requirement~\ref{req:certified-evaluation}\,(i), and on the
+  soundness of none of them. Its objective values are not the run's
+  \tref{estimate}: none is reported, and none refuses the run
+  (Requirement~\ref{req:negative-estimate-refused} reads the estimate of the
+  search on $\Decl$ alone).
+  Each point $x_t=(\mathbf q_t,J_t)$ of either set is taken as the search
+  or the polish consumed it, $\mathbf q_t$ included, and is a point of the
+  Choi program of $\Decl^{\mathrm{ref}}$
+  (Corollary~\ref{cor:fo-reference}\,(ii)).
+\item \emph{The gate.} At each such point it forms the bracket of
+  \eqref{eq:hlb} for $\Decl^{\mathrm{ref}}$: the objective of
+  $\Decl^{\mathrm{ref}}$ at $x_t$, its gradient at $x_t$ with no
+  perturbation, the acceptance-side minimisation of
+  Requirements~\ref{req:acceptance-geometries}
+  and~\ref{req:acceptance-iterate-exact}, and the feasible side of
+  Requirement~\ref{req:verified-feasible-side}, from a fresh feasible-side
+  oracle call on the linear form of that gradient over
+  $\Decl^{\mathrm{ref}}$'s entries. It decides (H-POS) and (H-SUPP) on
+  $\Decl^{\mathrm{ref}}$'s maps (Requirement~\ref{req:support-rank-check})
+  and makes every check of Requirement~\ref{req:iterate-checks} against
+  $\Decl^{\mathrm{ref}}$'s entries, on the point; a point at which
+  Requirement~\ref{req:first-order-withdrawal} withdraws it on these terms
+  contributes no bracket, with that requirement's reason.
+\item \emph{The number.} Where some evaluated point contributes and the
+  bracket is not withdrawn by (iv), the run's
+  first-order number is $\hlb[\Decl^{\mathrm{ref}}]$, the largest bracket so
+  formed, its clamp and key length are those of
+  Requirement~\ref{req:first-order-clamp} and
+  Corollary~\ref{cor:fo-keylength} at it, with the parameters of $\Decl$'s
+  run, and its tier is \emph{first-order}. The bound on $\Decl$,
+  $\hlb[\Decl]$, is recorded beside it with its brackets as a diagnostic,
+  and no key length is formed from it. The difference
+  $\hlb[\Decl^{\mathrm{ref}}]-\hlb[\Decl]$ is recorded with its sign, as a
+  diagnostic, beside the difference of
+  Requirement~\ref{req:bound-estimate-difference}, which is taken against
+  the estimate of $\Decl$. A point of the second set that contributes
+  counts as any evaluated point does: where no point of the first set
+  contributes, it makes this item apply in place of the fallback of (iv),
+  so that the run's first-order number moves from $\hlb[\Decl]$ to the
+  companion.
+\item \emph{The bracket withdrawn.} The bracket on the companion is
+  withdrawn for one of two causes: no evaluated point contributes; or the
+  certified evaluation finds the two enclosures of a block the companion
+  carries inconsistent, the cause \iface{factor_enclosure_inconsistent}
+  (Requirement~\ref{req:certified-evaluation}\,(iv)). An inconsistency shows
+  that a module carrying the enclosures is defective, and the first-order
+  number on the companion reads its entrywise enclosure, which may be the
+  defective one; the second cause is decided after that number was formed,
+  and the run then forms its first-order number again as this item says,
+  before any key length is reported. Where the bracket is withdrawn, the
+  run's first-order number is $\hlb[\Decl]$, formed as without a
+  companion, with the reason \iface{reference_bracket_withdrawn}, its cause
+  and the reasons of every evaluated point; no block is then evaluated off its snap.
+  The record names in the group \emph{reference bracket withdrawn}, with the
+  cause (\xref{foundations/req:snap-reference}\,(iii)(b)), every moved block
+  on which a declaring instance whose link the companion replaces handed the
+  reference and every moved class of each snapped emission of such a link
+  whose normalizer the companion bypasses; it names as it does without a
+  companion every other moved block or class that rests on
+  \xref{foundations/ass:snapped-measurement}, so that a moved block on which a declaring
+  instance whose link the companion does not replace handed a reference
+  rests in the group \emph{reference bracket not evaluated}
+  (\xref{foundations/req:snap-reference}\,(iii)(c)). A run
+  that declares the strict option \iface{strict_snaps} refuses there instead
+  and reports no key length (\xref{foundations/req:snap-reference}\,(iv)).
+\item \emph{The blocks.} Where (iii) applies and the key length the run
+  reports is not formed in the fallback of
+  Requirement~\ref{req:certified-evaluation}\,(i), the record of the run names as
+  \tref{evaluated off its snap} (\xref{foundations/def:evaluated-off-snap})
+  every \tref{moved} block of the snap of each declaring instance whose
+  link the companion replaces, on which the companion carries the handed
+  reference, and every data sector of each snapped emission of such a link
+  that holds a moved class and whose normalizer the companion bypasses; a kept block or sector is named as kept and is not
+  counted among them. It names every moved block on which the companion
+  carries the snapped block as not so evaluated, so that it rests on
+  \xref{foundations/ass:snapped-measurement}
+  (\xref{foundations/req:snap-reference}\,(iii)), and a run that declares
+  \iface{strict_snaps} refuses there (\xref{foundations/req:snap-reference}\,(iv)).
+  Where (iii) applies but the key length the run reports is formed from a
+  number certified on $\Decl$ in the fallback of
+  Requirement~\ref{req:certified-evaluation}\,(i), no number formed on the
+  companion reaches that key length, and the number it is formed from reads
+  the snapped blocks: the moved blocks on which the companion carries the
+  handed reference and the data sectors whose normalizer it bypasses are
+  then not evaluated off their snap, condition (ii) of
+  \xref{foundations/def:evaluated-off-snap} failing for them. The record
+  names them as resting on \xref{foundations/ass:snapped-measurement} in
+  the group \emph{reference bracket withdrawn} with the cause
+  \iface{companion_not_certified}
+  (\xref{foundations/req:snap-reference}\,(iii)(b)), beside the moved blocks
+  on which the companion carries the snapped block, which rest as above. The
+  run decides this after the certified evaluation and before any key length
+  is reported, and no block is then named as evaluated off its
+  snap. A run that declares \iface{strict_snaps} forms no such
+  number (Requirement~\ref{req:certified-evaluation}\,(i)).
+\item \emph{The record.} The record carries, per evaluated point, the set
+  of (i) it belongs to, its bracket on $\Decl^{\mathrm{ref}}$ and the
+  withdrawal reasons there, and for a point of the first set its bracket on
+  $\Decl$; for the polish, whether it ran and, where it did not, why, the
+  point it started from, the share of the wall budget set aside for it and
+  the wall time it took, its iteration cap, the number of points it
+  assessed and the cause it stopped on; the measurements of
+  Requirement~\ref{req:companion-admission}\,(iii), the largest radius of the
+  companion's enclosure among them, which bear on the arithmetic of
+  Remark~\ref{rem:fo-arithmetic} and on nothing else; and, per block,
+  whether the companion
+  carries the handed reference or the snapped block.
+\end{enumerate}
+A run with no admitted companion forms its first-order number on $\Decl$
+alone, as the other requirements of this submodule state; a moved block on
+which a reference was handed, and a moved class of an emission beside which a
+companion that bypasses its normalizer was formed, then rest in the group
+\emph{reference bracket not evaluated}
+(\xref{foundations/req:snap-reference}\,(iii)).
+\end{requirement}

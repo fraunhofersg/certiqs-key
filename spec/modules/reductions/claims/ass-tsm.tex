@@ -1,0 +1,42 @@
+% ---
+% id: reductions/ass:tsm
+% kind: ass
+% title: "Output-state test statistics"
+% summary: >-
+%   Every per-round public choice of known bias at the measurement the
+%   emitted family describes, its private setting included where it has one,
+%   is a component of the emitted outcome and enters only through its
+%   statistics. No derivation then assumes a state-independent test fraction.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-TSM
+% verification: never
+% category: protocol-structure
+% affects: [secrecy]
+% user_statement: >-
+%   Every per-round random choice with a known bias made at this station (for
+%   example its probe setting, where it has one, or whether a round is a test
+%   round, where that is added by relabelling its outcomes) is recorded as
+%   part of that round's outcome, and it enters the analysis only through the
+%   observed statistics. No derivation of this contract then assumes a
+%   state-independent test fraction.
+% lean:
+% ---
+
+For the optical instance the private per-round setting is the probe
+setting. A choice that is a component of the outcome is analysed through the
+statistics of the emitted family like every other component, so no fraction
+of rounds of one kind is fixed independently of the state.
+
+\begin{assumption}\label{ass:tsm}
+Every per-round public choice of known bias in the physical protocol that is
+applied at the measurement the emitted family $\{F_v\}$ describes, a private
+per-round setting of that measurement and any round-type designation the
+consumer adds by relabelling its outcomes included,
+(i) is a component of the emitted outcome $v$, and
+(ii) enters the analysis only through the statistics of $\{F_v\}$.
+\end{assumption}

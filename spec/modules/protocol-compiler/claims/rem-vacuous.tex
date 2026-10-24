@@ -1,0 +1,35 @@
+% ---
+% id: protocol-compiler/rem:vacuous
+% kind: rem
+% title: "Party computability read against the readouts"
+% summary: >-
+%   Read against the joint outcome pair, party computability would hold for
+%   every raw-key map; read against the holder's readout it is a genuine
+%   restriction. It matters most where both parties' data share one outcome
+%   symbol, as when no source is trusted.
+% prominence: standard
+% status: accepted
+% uses: [def:target]
+% mentions: [def:validator, transmitter/rem:da1]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:vacuous}
+Read against the joint pair $(x,v)$ instead of against the readouts,
+\eqref{eq:partycomp} would be satisfied by \emph{every} $r$ whatsoever, since
+$r$ is by definition a function of $(x,v)$; the condition would be vacuous
+exactly for the declaration shapes that need it most --- those which place both
+parties' data in one outcome symbol, as the $d_A=1$ embedding of
+\xref{transmitter/rem:da1} does. Checked against $\rd{\hold}$, it is a genuine
+restriction: it fails as soon as two pairs with the same holder readout and the
+same announcements carry different key values (check V8 of
+Definition~\ref{def:validator}). That embedding --- Alice's measured
+components folded into the receiver-side outcome, the \tref{party partition}
+naming which components she holds --- is the shape in which a protocol with no
+trusted source is declared, and the argument above is why party computability
+is checked against the partition in that shape.
+\end{remark}

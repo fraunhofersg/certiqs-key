@@ -1,0 +1,125 @@
+% ---
+% id: meat-core/prop:frame-free-rows
+% kind: prop
+% title: "Frame-free constraint rows on a tight frame"
+% summary: >-
+%   On a tight support frame a homogeneous row of the Choi program may drop its
+%   conjugation by W_τ without changing the feasible set; on any frame the
+%   frame-free row only restricts the set, so the infimum over it is at least
+%   h_low. The same holds per Alice sector and for party-local rows.
+% prominence: standard
+% status: accepted
+% uses: [def:homog, def:support-frame, lem:choi-marginal, thm:choi, def:feasible, def:untrusted-choi]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+In the Choi program of Theorem~\ref{thm:choi} every constraint row is
+imposed conjugated by $W_{\tau}$. For a homogeneous entry the right-hand
+side $c_k\tau_A$ is itself $c_kW_{\tau}W_{\tau}^{\dagger}$
+\eqref{eq:WWtau}, so the conjugation can be taken off both sides. The
+proposition says when that changes the set $\Feas^{J}$ and in which
+direction.
+
+\begin{proposition}\label{prop:frame-free-rows}
+In (i)--(iii) let the declaration be in trusted-source mode, let $W_{\tau}$ be
+\eqref{eq:Wtau} for a support frame (Definition~\ref{def:support-frame}),
+and for an entry $k$ of $\CList$ and $(J_s)_{s\in\SecSet}$ with
+$J_s\in\Pos{A_0\Qsys_s}$ write
+$Y_k\coloneqq\sum_s\tr_{\Qsys_s}[(\idon{A_0}\otimes\hat O^{(s)}_k)J_s]$.
+For a \tref{homogeneous} entry, whose right-hand side is
+$\Theta_k=c_k\tau_A$ (Definition~\ref{def:homog}\,(a)), call the $k$-th row
+of \eqref{eq:choi-feas}, $W_{\tau}Y_kW_{\tau}^{\dagger}\bowtie_kc_k\tau_A$,
+its \emph{conjugated form}, and
+\begin{equation}\label{eq:frame-free-row}
+  Y_k\ \bowtie_k\ c_k\,\idon{A_0}
+\end{equation}
+its \emph{frame-free form}.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item If $\ker W_{\tau}=0$, that is, if the frame is \tref{tight}, the
+frame-free form of a homogeneous row holds for $(J_s)_s$ if and only if its
+conjugated form does; so imposing some homogeneous rows in the frame-free
+form leaves $\Feas^{J}$ unchanged.
+\item On every support frame the frame-free form of a homogeneous row
+implies its conjugated form. So the set obtained from $\Feas^{J}$ by
+imposing some homogeneous rows in the frame-free form is contained in
+$\Feas^{J}$, and the infimum in \eqref{eq:choi-program} taken over that set
+in place of $\Feas^{J}$ is at least $\hlow$.
+\item In the general format, with $\iota=\bigoplus_t\iota_t$ and $W_t$ as in
+Theorem~\ref{thm:choi}:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item for a homogeneous entry read through its \tref{lifted operator} and
+every $t\in\mathbb{T}$, (i) and (ii) hold for the row of sector $t$, with
+$W_t$ and $A_{0,t}$ in place of $W_{\tau}$ and $A_0$ and with the
+frame-free form
+$\sum_s\tr_{\Qsys_s}[(\idon{A_{0,t}}\otimes\hat O^{\uparrow(s)}_k)
+J_{t,s}]\bowtie_kc_k\,\idon{A_{0,t}}$;
+\item for a \tref{party-local} entry, with $Y_k$ the expression of the last
+line of \eqref{eq:feas-general} at $J$ in place of $\omega$, the
+unconjugated row $Y_k\bowtie_k0$ is equivalent to the conjugated row
+$(W_t\otimes\idon{})\,Y_k\,(W_t^{\dagger}\otimes\idon{})\bowtie_k0$ if
+$\ker W_t=0$, and implies it on every frame.
+\end{enumerate}
+\item In untrusted-source mode there is no conjugation to remove: every
+row is a condition on the state variable as written.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+\emph{Idea.} By \eqref{eq:WWtau} the right-hand side $c_k\tau_A$ is
+$c_kW_{\tau}W_{\tau}^{\dagger}$, so the conjugated form is a congruence of
+the frame-free one. A congruence preserves each of $\preceq$, $=$ and
+$\succeq$, and on a tight frame $W_{\tau}$ has a left inverse that undoes
+it.
+
+\emph{Step 1 (the conjugated form as a congruence).} By \eqref{eq:WWtau}
+(Lemma~\ref{lem:choi-marginal}\,(ii)),
+$\Theta_k=c_k\tau_A=c_kW_{\tau}W_{\tau}^{\dagger}$, so the conjugated form
+of the $k$-th row is $W_{\tau}XW_{\tau}^{\dagger}\bowtie_k0$ with
+$X\coloneqq Y_k-c_k\idon{A_0}$, and the frame-free form is
+$X\bowtie_k0$.
+
+\emph{Step 2 (a congruence keeps the relation; part (ii)).} For any linear
+map $V$, $X\succeq0$ implies $VXV^{\dagger}\succeq0$, since
+$\langle v,VXV^{\dagger}v\rangle=\langle V^{\dagger}v,XV^{\dagger}v\rangle
+\ge0$ for every $v$; $X\preceq0$ is the same statement for $-X$, and $X=0$
+gives $VXV^{\dagger}=0$. With $V=W_{\tau}$ the frame-free form implies the
+conjugated form, on every support frame. A list satisfying the frame-free
+forms of some homogeneous rows therefore satisfies their conjugated forms,
+and so lies in $\Feas^{J}$. An infimum over a subset is at least the
+infimum over the set, and the latter is $\hlow$ by \eqref{eq:choi-program}
+(Theorem~\ref{thm:choi}).
+
+\emph{Step 3 (part (i)).} If $\ker W_{\tau}=0$, then $W_{\tau}$ is
+injective and has a left inverse $L$, $LW_{\tau}=\idon{A_0}$; for instance
+$L=W_{\tau}^{+}$, by \eqref{eq:Wplus} with $P_{\iota}=\idon{A_0}$
+(Lemma~\ref{lem:choi-marginal}\,(iii)). Then
+$X=L\,(W_{\tau}XW_{\tau}^{\dagger})\,L^{\dagger}$, and Step~2 with $V=L$
+shows that the conjugated form implies the frame-free one. With Step~2 the
+two forms are equivalent row by row, so imposing either gives the same
+set.
+
+\emph{Step 4 (part (iii)).} (a) In the general format the row of sector $t$
+of a lifted-operator entry is, by Theorem~\ref{thm:choi},
+$W_t\big(\sum_s\tr_{\Qsys_s}[(\idon{A_{0,t}}\otimes\hat O^{\uparrow(s)}_k)
+J_{t,s}]\big)W_t^{\dagger}\bowtie_k\Theta^{(t)}_k$, with
+$\Theta^{(t)}_k=c_k\tau^{(t)}_A$ for a homogeneous entry
+\eqref{eq:feas-general}, and $W_tW_t^{\dagger}=\tau^{(t)}_A$ by
+\eqref{eq:WWtau} for each sector. Steps~1 to~3 apply with $W_t$ and
+$A_{0,t}$ in place of $W_{\tau}$ and $A_0$, and the value of the general
+program is $\hlow$ by the same theorem. (b) For a party-local row, Step~2
+with $V=W_t\otimes\idon{}$ shows that $Y_k\bowtie_k0$ implies the conjugated
+row on every frame. If $\ker W_t=0$, then $W_t$ has a left inverse $L_t$,
+and $L_t\otimes\idon{}$ is a left inverse of $W_t\otimes\idon{}$; Step~3
+with it gives the converse.
+
+\emph{Step 5 (part (iv)).} In untrusted-source mode the parametrisation is
+the identity and no $W_{\tau}$ is introduced
+(Definition~\ref{def:untrusted-choi}\,(a), (b)): the rows of
+\eqref{eq:choi-feas-un}, and in the general format those of
+\eqref{eq:feas-general}, are conditions on the blocks of $\omega$ as
+written.
+\end{proof}

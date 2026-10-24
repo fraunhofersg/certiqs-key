@@ -1,0 +1,41 @@
+% ---
+% id: protocol-compiler/req:choice-weighting-record
+% kind: req
+% title: "Emission of the weighted families and the weighting record"
+% summary: >-
+%   Both forms of the choice-weighted family are formed, and emitted wherever
+%   they are the emitted family. The setting-dependent weighting adds no link
+%   and no register to the chain record, which stays unchanged, and is
+%   recorded beside it, one entry per weighted factor.
+% prominence: standard
+% status: accepted
+% uses: [rem:relabel, def:weighted, def:spec]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+A relabelling composes no channel and so has no place in a chain
+(Remark~\ref{rem:relabel}); what the compiler applied is recorded beside the
+chain instead.
+
+\begin{requirement}\label{req:choice-weighting-record}
+The engine emits both forms of the \tref{choice-weighted family} of
+Definition~\ref{def:weighted}, each where it is the emitted family: the
+\tref{setting-independent form} \eqref{eq:weighted} on either party's side,
+and the \tref{setting-dependent form} \eqref{eq:weighted-t} at a measured
+system, of whichever party, after that system's \tref{receiver segment}. A
+setting-independent presentation of a measuring party's physical receiver
+family is the emitted family only where that party's receiver segment
+delivers it as its \tref[target povm]{target POVM}; in front of any other
+segment it is handed to the chain as the physical receiver family of
+Definition~\ref{def:spec}\,(b), and the emitted family is the chain's. For the
+setting-dependent relabelling it emits no link and no register
+for the choice value, and the chain record it consumes and re-emits is
+unchanged by the weighting; the weightings are recorded beside the chain in
+the emitted artefact, in \iface{choice_weighting_record}, one entry per
+\tref{measured factor} at which a weighting is applied, each entry naming
+that factor; like the setting-independent choice-weighted
+family, they are this module's own construction.
+\end{requirement}

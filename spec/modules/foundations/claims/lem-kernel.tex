@@ -1,0 +1,56 @@
+% ---
+% id: foundations/lem:kernel
+% kind: lem
+% title: "Extended divergence kernel"
+% summary: >-
+%   The divergence kernel d(u, v) = u log₂(u/v), extended to vanishing
+%   arguments, is jointly convex, lower semicontinuous and non-increasing in v.
+%   These properties keep the objective well defined at support boundaries and
+%   let it be composed with concave branch quantities.
+% prominence: main
+% status: implemented
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.kernel:divergence_kernel
+% lean:
+% notes: "The lower-semicontinuous extension at vanishing arguments is part of the claim."
+% ---
+
+\begin{lemma}\label{lem:kernel}
+Define $d:[0,\infty)\times[0,\infty)\to(-\infty,+\infty]$ by
+$d(u,v)\coloneqq u\log_2\frac uv$ for $u,v>0$, $d(0,v)\coloneqq0$ for
+$v\ge0$, and $d(u,0)\coloneqq+\infty$ for $u>0$. Then $d$ is jointly
+convex and lower semicontinuous, and non-increasing in $v$.
+\end{lemma}
+
+\begin{proof}
+$d$ is the closed perspective of $g(t)=t\log_2t$ (with $g(0)=0$), i.e.\
+$d(u,v)=v\,g(u/v)$ for $v>0$. \emph{Convexity:} let
+$(u_i,v_i)$, $i=1,2$, and $\lambda\in(0,1)$, and write
+$(u_{\lambda},v_{\lambda})$ for the convex combination. If
+$v_1,v_2>0$, then with weights
+$\mu_i\coloneqq\lambda_iv_i/v_{\lambda}$ (where
+$\lambda_1=\lambda$, $\lambda_2=1-\lambda$; $\mu_1+\mu_2=1$),
+\begin{equation*}
+  d(u_{\lambda},v_{\lambda})
+  =v_{\lambda}\,g\!\Big(\mu_1\tfrac{u_1}{v_1}+\mu_2\tfrac{u_2}{v_2}\Big)
+  \le v_{\lambda}\Big[\mu_1g\big(\tfrac{u_1}{v_1}\big)
+  +\mu_2g\big(\tfrac{u_2}{v_2}\big)\Big]
+  =\lambda d(u_1,v_1)+(1-\lambda)d(u_2,v_2)
+\end{equation*}
+by convexity of $g$. If, say, $v_2=0$ and $u_2>0$, the right-hand side is
+$+\infty$ and the inequality is trivial; if $v_2=0$ and $u_2=0$, then
+$(u_{\lambda},v_{\lambda})=\lambda(u_1,v_1)$ and
+$d(\lambda u_1,\lambda v_1)=\lambda d(u_1,v_1)$, again consistent.
+\emph{Monotonicity in $v$:} for $u>0$, $v\mapsto u\log_2(u/v)$ is
+decreasing on $(0,\infty)$ and jumps to $+\infty$ at $v=0$; for $u=0$ it is
+constant. \emph{Lower semicontinuity:} at $(u,0)$ with $u>0$, any sequence
+$(u_n,v_n)\to(u,0)$ with $v_n>0$ has
+$u_n\log_2(u_n/v_n)\to+\infty$; at $(0,v)$ with $v>0$,
+$|u_n\log_2(u_n/v_n)|\le u_n|\log_2u_n|+u_n|\log_2v_n|\to0$; at $(0,0)$,
+for $v_n\le\frac12$ eventually,
+$u_n\log_2(u_n/v_n)\ge u_n\log_2u_n\to0$, so
+$\liminf\ge0=d(0,0)$.
+\end{proof}

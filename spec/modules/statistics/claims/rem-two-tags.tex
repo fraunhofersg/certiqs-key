@@ -1,0 +1,32 @@
+% ---
+% id: statistics/rem:two-tags
+% kind: rem
+% title: "The two tags and the consumer's certified geometries"
+% summary: >-
+%   The two tags are exactly the two geometries over which the consuming engine
+%   certifies the minimum of a linear functional, and the canonical box form is
+%   a sub-form of the polytope, not a third tag. A consumer that ignores the
+%   recorded bounds still reads a well-formed polytope.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [def:taxonomy, thm:box-oracle, req:box-bounds-key, meat-core/frank-wolfe/rem:acc-side]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:two-tags}
+The two tags of Definition~\ref{def:taxonomy} correspond one to one to the two
+instantiations of \xref{meat-core/frank-wolfe/rem:acc-side}, the geometries
+for which that remark certifies the acceptance-side minimum, the minimum of a
+linear functional over the acceptance set: (a) singleton, (b)
+polytope $\{\mathbf{q}\ge0,\ \sum_{\hat c}q(\hat c)=1,\
+B\mathbf{q}\le\mathbf{b}\}$ for exact $B$ and $\mathbf{b}$. That remark
+certifies no set of any other form. The canonical box form is a
+\emph{sub-form} of $\mathrm{polytope}$, not a third tag: it adds a recorded
+pair $(\qlo,\qhi)$ (Requirement~\ref{req:box-bounds-key}) that licenses the
+closed-form oracle of Theorem~\ref{thm:box-oracle}, and a \tref{consumer} that
+ignores the recorded pair still reads a well-formed $\mathrm{polytope}$.
+\end{remark}

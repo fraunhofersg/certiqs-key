@@ -1,0 +1,38 @@
+% ---
+% id: receiver/ass:passive
+% kind: ass
+% title: "Passive linear optics"
+% summary: >-
+%   Every optical element is passive linear optics, with no gain and no mixing
+%   of creation and annihilation operators. Total photon number is then a
+%   conserved grading, on which every block statement of the module rests.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-PASSIVE
+% verification: never
+% category: receiver
+% affects: [secrecy]
+% refines: A-TRUST
+% user_statement: >-
+%   Every optical component of your receiver is passive and linear: beam
+%   splitters, wave plates, polarisers, attenuators and the like. No component
+%   amplifies light, and none is nonlinear (no frequency conversion, no
+%   squeezing). The total photon number is then never increased inside the
+%   receiver. If a component can add photons, the photon-number blocks the
+%   analysis rests on do not exist.
+% lean:
+% ---
+
+Under this assumption the total photon number is a conserved grading of the
+receiver's modes.
+
+\begin{assumption}\label{ass:passive}
+(i) Every optical element is passive linear optics: it maps annihilation
+operators to combinations of annihilation operators,
+$b_i=\sum_j\Gmat_{ij}a_j$, with $\Gmat^\dagger\Gmat\preceq\id$;
+(ii) no element mixes $a$ with $a^\dagger$, and none provides gain.
+\end{assumption}

@@ -1,0 +1,35 @@
+% ---
+% id: receiver/rem:acyc-efficiency
+% kind: rem
+% title: Where the element graph enters the efficiency theorem
+% summary: >-
+%   The claims that read only the Gram substitution of the efficiency theorem
+%   involve the terminal efficiency layer alone, a function of the port map and
+%   efficiencies, and no element graph. The theorem's items on the compiled
+%   product and its record hold only for a well-formed, hence acyclic, graph.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [def:compile, def:graph, receiver/detector-imperfections/thm:efficiency, receiver/detector-imperfections/rem:powervsclick, receiver/detector-imperfections/rem:sperlingeta, receiver/detector-imperfections/req:efficiency-convention, receiver/detector-imperfections/req:efficiency-schema, receiver/detector-imperfections/req:efficiency-record]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:acyc-efficiency}
+The two remarks that use Theorem~\ref{thm:efficiency}
+(Remarks~\ref{rem:powervsclick} and~\ref{rem:sperlingeta}) and
+Requirement~\ref{req:efficiency-convention}, which rests on the first of them,
+read only the substitution of item (i) of that theorem: they involve the
+\tref{terminal detector-efficiency layer} $D_\eta$ of
+Definition~\ref{def:compile}, which is a function of the port map and the
+per-port efficiencies alone, and no graph enters their statements or proofs.
+The same holds of items (i), (ii) and (v) of the theorem. Items (iii) and (iv)
+are statements about the compiled product of Definition~\ref{def:compile} and
+its record, which exist only for a well-formed, hence acyclic, graph
+(condition (E2) of Definition~\ref{def:graph}); so are
+Requirements~\ref{req:efficiency-schema} and~\ref{req:efficiency-record},
+which state their engine side.
+\end{remark}

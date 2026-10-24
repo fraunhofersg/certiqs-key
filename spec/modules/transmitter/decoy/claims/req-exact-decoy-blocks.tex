@@ -1,0 +1,44 @@
+% ---
+% id: transmitter/decoy/req:exact-decoy-blocks
+% kind: req
+% title: "Binary64 entries of the emitted blocks and sector sums"
+% summary: >-
+%   Every entry of an emitted block and of each sector sum must be a binary64
+%   number, and the engine refuses rather than rounds one that is not. Rounding
+%   would change which ensemble is declared, and so what the source identity is
+%   asserted of.
+% prominence: standard
+% status: implemented
+% uses: [cor:emitted-decoy, transmitter/def:srcert]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.decoy.emit:emit_decoy_declaration
+% lean:
+% ---
+
+The three conditions of an \tref{ensemble presentation}
+(Definition~\ref{def:srcert}) are: (E1) every block is Hermitian and positive
+semidefinite; (E2) the traces of a letter's blocks sum to $p_x$, and the $p_x$
+to one; (E3) for every sector the sum of the blocks over the letters,
+accumulated entry by entry in the \tref{declared order} of $\Xset$,
+\tref{rounds nowhere}. A declarer for which a product is
+not representable removes the refusal by declaring on a coarser dyadic grid
+(Corollary~\ref{cor:emitted-decoy}\,(iv)(a)).
+
+\begin{requirement}\label{req:exact-decoy-blocks}
+The engine decides (E3) of Definition~\ref{def:srcert} on the sums of the
+declared blocks of a decoy declaration, accumulated entry by entry in the
+declared order. Each entry of a block, a product of declared numbers, the
+\tref{tail weight} formed from them and a formed entry of a signal dyad
+(Corollary~\ref{cor:emitted-decoy}\,(iv)), is
+required to be a binary64 number and is refused, with no artefact, when it is
+not (\iface{formed_entry_not_declarable}). Those sums are required to round
+nowhere, so that their entries are binary64 numbers, and a declaration at a
+sector of which the accumulation rounds fails (E3) and is refused, with no
+artefact (\iface{ensemble_presentation_not_admissible}). No entry is ever
+rounded, because rounding an entry of a declared block would change which
+ensemble is declared and so which ensemble the source identity of
+Corollary~\ref{cor:emitted-decoy}\,(ii) is asserted of.
+\end{requirement}

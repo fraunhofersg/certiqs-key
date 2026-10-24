@@ -1,0 +1,64 @@
+% ---
+% id: transmitter/ass:src
+% kind: ass
+% title: "Retention of the system A in trusted-source mode"
+% summary: >-
+%   In trusted-source mode the retained system A stays in the laboratory of
+%   the party that holds it and is acted on only by that party's declared
+%   measurement, condition (SR3) of the certificate. It is what lets a declared marginal delete attacks.
+% prominence: standard
+% status: accepted
+% uses: [def:source-spec, def:srcert]
+% mentions: [protocol-compiler/def:declaration]
+% assumes: []
+% refs:
+%   - "winick2018reliable, Eqs. (36)-(39)"
+%   - "kamin2025renyi, Rem. 1"
+% provenance: newly-derived
+% short_id: A-SRC
+% verification: never
+% category: source
+% affects: [secrecy]
+% user_statement: >-
+%   The source's retained half, system A, never leaves the laboratory of the
+%   party the declaration assigns it to, and nothing acts on it except that party's own declared measurement: no other
+%   step of the protocol and no action of the adversary. In a prepare-and-measure setup
+%   A exists only in the source-replacement description, and this is the
+%   premise that the adversary has no access to that party's laboratory. Only then
+%   may you declare the source's reduced state τ_A (trusted-source mode), which
+%   removes attacks from the analysis when A has dimension at least two. If you
+%   cannot vouch for this, use untrusted-source mode: the key rate can only
+%   drop, and the result stays valid.
+% lean:
+% ---
+
+The attestation below is the premise the published trusted-source analyses
+state in words: \cite[Eqs.~(36)--(39)]{winick2018reliable} adds the marginal
+constraints to the entanglement-based statistics constraints for
+prepare-and-measure protocols on the stated ground that ``system $A$ is
+inaccessible to Eve'', and \cite[Rem.~1]{kamin2025renyi} imposes the
+$n$-round product form ``because we assume Eve has no access to Alice's
+lab''. Under it, after the source-replacement recasting, the register $A$ is
+\emph{inaccessible to the adversary} in every round and its marginal is
+$\tau_A$ whatever the adversary does; together with the independence of the
+source's rounds, or the premise a \tref{source model} declares in its place,
+it licenses that $n$-round product form. For a prepare-and-measure source the
+register $A$ exists only in the source-replacement description; what is
+attested of the apparatus is then what those analyses assume in words, that
+the adversary has no access to Alice's laboratory. (SR3) is the one part of a
+\tref{source-replacement certificate} that no declared number carries, and it
+is demanded only at $d_A\ge2$: at $d_A=1$ the marginal excludes nothing.
+
+\begin{assumption}
+\label{ass:src}
+For a \tref{source specification} (Definition~\ref{def:source-spec}) in
+\tref{trusted-source mode}, which fills the marginal slot with
+$\tau_A\in\Seq{A}$, condition~(SR3) of Definition~\ref{def:srcert} holds of
+the apparatus:
+(i) the system $A$ is retained in the laboratory of the party whose label
+the party partition of the consuming declaration
+(\xref{protocol-compiler/def:declaration}) gives $A$, and is never
+transmitted;
+(ii) no operation of the protocol or of the adversary acts on $A$ except the
+declared measurement $\{M_x\}$ of that party.
+\end{assumption}

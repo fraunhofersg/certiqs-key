@@ -1,0 +1,34 @@
+% ---
+% id: meat-core/req:acceptance-set-admission
+% kind: req
+% title: "Admission of the acceptance set"
+% summary: >-
+%   The engine admits an acceptance set only when it decides on the declared
+%   data that the set is admissible, through a geometry tag whose every
+%   well-formed datum denotes a closed convex subset of the simplex and data
+%   well formed for that tag.
+% prominence: standard
+% status: implemented
+% uses: [def:admissible-acceptance-set]
+% implements: certiqs_key.meat_core.declaration.validation:validate_acceptance_set
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Whether a declared set is closed and convex is not read off its points: it
+is carried by the form in which the set is declared. The two forms of the
+statistics module's taxonomy, a single distribution and a polytope cut out
+of the simplex by linear inequalities, denote an \tref{admissible acceptance set} whenever their data are well
+formed, so deciding admissibility is deciding the tag and the data.
+
+\begin{requirement}\label{req:acceptance-set-admission}
+The engine admits an acceptance set only if it decides, exactly and on the
+declared data, that the set is an admissible acceptance set
+(Definition~\ref{def:admissible-acceptance-set}): the set carries a geometry
+tag every well-formed datum of which denotes such a set, and its data are
+well formed for that tag. It refuses every other declared acceptance set
+(\iface{acceptance_set_ill_formed} for data ill formed for the geometry they
+claim).
+\end{requirement}

@@ -1,0 +1,31 @@
+% ---
+% id: reductions/req:supplier-presence-rules
+% kind: req
+% title: "Supplier presence rules that omit no imported premise"
+% summary: >-
+%   The supplier's presence rules, read as installed, may omit a key of the
+%   imported facts' closure only where the facts imported through it hold
+%   without it, and a change of the rules must meet this too. The pass-through
+%   then never drops a premise an imported fact rests on.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [ass:recv, req:supplier-ledger-pass-through]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The row of Assumption~\ref{ass:recv} carries the supplier's ledger under the
+supplier's own presence rules (Requirement~\ref{req:supplier-ledger-pass-through}),
+and those rules are read from the supplying module as it is installed where
+the check runs, so a change of them takes effect here without an edit.
+
+\begin{requirement}\label{req:supplier-presence-rules}
+The supplier's presence rules that the engine reads omit a key of the closure
+of the facts a \tref{reduction instance} imports from that supplier only where
+the facts imported through it hold of the declaration without it; a change
+of those rules, which takes effect in the engine's check without an edit of
+this module, must itself meet this requirement.
+\end{requirement}

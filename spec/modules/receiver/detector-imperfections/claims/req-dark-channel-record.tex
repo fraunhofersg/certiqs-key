@@ -1,0 +1,33 @@
+% ---
+% id: receiver/detector-imperfections/req:dark-channel-record
+% kind: req
+% title: "The emitted dark-count channel and the scalars of its composed bound"
+% summary: >-
+%   The artifact carries the dark-count matrix as declared or generated, its
+%   route, and r_min, rbar and δ_dc under distinct names, none modified. The
+%   inequality a downstream module composes with is that of [[prop:dark-slack-bound]].
+% prominence: standard
+% status: implemented
+% uses: [prop:dark-slack-bound]
+% mentions: [thm:dark-counts, rem:d2slack, rem:corrdark, def:darkadm]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.artifact:DarkCountRecord
+% lean:
+% ---
+
+Both $r_{\min}$ and $\bar r$ are emitted: $\bar r$ is the number the
+composition uses, while $r_{\min}$ as computed is what \eqref{eq:rmin} defines
+and is the only one from which a reader can see that a declared channel
+produced $r_{\min}>1$ at all, itself a signal that the declaration is off by
+more than rounding (Remark~\ref{rem:d2slack}\,(c)).
+
+\begin{requirement}\label{req:dark-channel-record}
+The artifact's \iface{dark_count_channel} entry carries $R$, which of the two
+routes of Definition~\ref{def:darkadm} it came from
+(Remark~\ref{rem:corrdark}), and $r_{\min}$, $\bar r$ and $\delta_{\dc}$ under
+distinct names. Nothing is clamped: $R$ is emitted as declared and $r_{\min}$
+as \eqref{eq:rmin} computes it. \eqref{eq:darkpmcslack}, \emph{not}
+\eqref{eq:darkpmc}, is the inequality a downstream module composes with.
+\end{requirement}

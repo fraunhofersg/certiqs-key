@@ -1,0 +1,37 @@
+% ---
+% id: receiver/detector-imperfections/req:efficiency-record
+% kind: req
+% title: "The efficiency record lists every declared loss parameter"
+% summary: >-
+%   The emitted efficiency record lists every declared loss parameter under its
+%   name, with the element that declares it and its position in the compiled
+%   product. Two elements with equal values are two losses and two rows.
+% prominence: standard
+% status: implemented
+% uses: [thm:efficiency]
+% mentions: [receiver/def:compile, req:normalization-record]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.efficiency:efficiency_record
+% lean:
+% ---
+
+Theorem~\ref{thm:efficiency}\,(iii) gives the detector efficiency one site in the
+compiled matrix, and item~(iv) of that theorem states the record this
+requirement obliges the engine to emit: it lists every loss site, the detector
+efficiency included.
+
+\begin{requirement}\label{req:efficiency-record}
+The emitted \iface{efficiency_record} lists every declared loss parameter
+$q_i$ that Theorem~\ref{thm:efficiency}\,(iv) names, by catalogue entry and
+parameter, with the element that declares it and its position in the compiled
+product of Definition~\ref{def:compile}. Every row names its parameter beside
+its value, which is read as that parameter: a transmittance, a reflectivity,
+or, for $y$, $y_1$ and $y_2$, a loss whose transmittance is $1-q_i$. Two
+elements may carry equal numerical values; they are still two losses and
+appear as two rows. A polarizer's pass transmittance $t$ is one such row,
+under its element; the \tref{factored loss} $t$ that the same record carries by
+Requirement~\ref{req:normalization-record} is not a row and is recorded under
+its own name.
+\end{requirement}

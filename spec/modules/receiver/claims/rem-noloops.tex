@@ -1,0 +1,28 @@
+% ---
+% id: receiver/rem:noloops
+% kind: rem
+% title: "Feedback paths outside the acyclic scope"
+% summary: >-
+%   A cavity, a ring resonator or any other feedback path is a cycle, which
+%   (E2) excludes. Compiling one would need a fixed-point solve whose
+%   contractivity must itself be certified, so such a receiver needs a new
+%   claim rather than a larger computation.
+% prominence: standard
+% status: accepted
+% uses: [def:graph]
+% mentions: [req:graph-refusal]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:noloops}
+A cycle in $\Grph$, such as a cavity, a ring resonator or any feedback path,
+is excluded by condition (E2) of Definition~\ref{def:graph}. Compiling one would require solving a fixed-point
+equation on the mode graph, and the resulting matrix is a contraction only
+under a spectral condition that would itself have to be certified. This
+contract does neither: a declared cycle leaves no finite product to compile,
+and it is refused, not solved (Requirement~\ref{req:graph-refusal}). A
+receiver that needs a feedback path is a new claim, not a bigger computation.
+\end{remark}

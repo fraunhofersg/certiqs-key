@@ -1,0 +1,31 @@
+% ---
+% id: transmitter/req:attestation-record
+% kind: req
+% title: "Pass-through of the retention attestation"
+% summary: >-
+%   Where a licence record is emitted, in trusted-source mode at dimension at
+%   least two, the retention attestation (SR3) is recorded in it exactly as
+%   supplied, never verified and never asserted of a physical apparatus. No
+%   function of the declared data decides it, so the engine can only record it.
+% prominence: standard
+% status: implemented
+% uses: [rem:boundary, thm:certificate-sufficiency, req:licence-scope]
+% mentions: [ass:src, def:srcert]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.certificate:SourceReplacementLicense
+% lean:
+% ---
+
+\begin{requirement}\label{req:attestation-record}
+Where the engine emits the licence record \iface{source_replacement_license},
+which it does only in \tref{trusted-source mode} at $d_A\ge2$, the scope in
+which the certificate is demanded (Requirement~\ref{req:licence-scope}), it
+records the (SR3) attestation it receives (Definition~\ref{def:srcert}) in that
+record, and passes it through: it never
+verifies it and never asserts it of any physical apparatus
+(Assumption~\ref{ass:src}; Remark~\ref{rem:boundary}). No consumer can
+verify it either, since no function of the declared data decides it
+(Theorem~\ref{thm:certificate-sufficiency}\,(i)).
+\end{requirement}

@@ -1,0 +1,101 @@
+% ---
+% id: reductions/wpfss/rem:darkcompose
+% kind: rem
+% title: "Composition with the supplier's dark-count bounds"
+% summary: >-
+%   This submodule composes with neither of the supplier's two dark-count
+%   inequalities and proves its own bound from R itself. Every R it admits
+%   satisfies (D1) and (D2) exactly, so the supplier's cap is inactive, its
+%   correction is slack, and its exact inequality holds as stated here.
+% prominence: standard
+% status: accepted
+% uses: [lem:descent, prop:route, def:weight-route, reductions/def:joint-family, receiver/detector-imperfections/def:darkadm, receiver/detector-imperfections/def:darktol, receiver/detector-imperfections/thm:dark-counts]
+% mentions: [reductions/ass:recv, foundations/req:norm-conversion, receiver/detector-imperfections/prop:dark-slack-bound, receiver/detector-imperfections/req:dark-channel-record, receiver/detector-imperfections/rem:d2slack, req:column-stochastic-refusal, req:descent-decided-exactly]
+% assumes: [A-RECV]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:darkcompose}
+\emph{Two supplier inequalities.} The supplier is the receiver at the version
+the artifact names (Assumption~\ref{ass:recv}\,(i)), and it separates two
+inequalities about the same object. The first, part of
+\xref{receiver/detector-imperfections/thm:dark-counts}\,(iv), reads
+$\blk{\widetilde M}{\gtN}_{\MCK}\succeq
+\big((1-r_{\min})p_{\mc}+r_{\min}\big)\id^{(>N)}$; the second, in
+\xref{receiver/detector-imperfections/prop:dark-slack-bound}\,(iii), is the
+same statement with the capped coefficient $\bar r=\min\{r_{\min},1\}$ in
+place of $r_{\min}$ and a subtracted correction $\delta_{\dc}$, both defined
+there. The supplier says which is which: the second is the inequality a
+downstream module composes with
+(\xref{receiver/detector-imperfections/req:dark-channel-record}), and the
+first is stated for an $R$ satisfying (D1) and (D2) exactly and asserted for
+no other. A consumer that used the first where the second is required would
+overstate by $(r_{\min}-\bar r)(1-p_{\mc})+\delta_{\dc}$
+(\xref{receiver/detector-imperfections/rem:d2slack}\,(e)), first order in the
+\tref{receiver tolerances} and in the \emph{unsafe} direction. Which case
+holds here is therefore a question this contract must answer rather than
+inherit.
+
+\emph{First: this module composes with neither inequality.} It consumes the
+matrix $R$ itself, forms $R^{\cg}$ by Lemma~\ref{lem:descent} and its own
+per-letter constants $r_{\min,i}=\min_{y'\ne y_i}R^{\cg}_{y_i|y'}$, and proves
+\eqref{eq:routebound} inline in Proposition~\ref{prop:route} from POVM
+positivity and completeness, the absorbing hypothesis \eqref{eq:absorbing} and
+the exact column-stochasticity of $R^{\cg}$, and from nothing else. It reads
+none of $r_{\min}$, $\bar r$ or $\delta_{\dc}$ from the artifact. Those three
+are the supplier's \emph{raw}-level scalars, minima and masses over $\MCK$;
+this module's $r_{\min,i}$ is a different object, indexed by a \emph{coarse}
+bounded letter and read across the columns $y'\ne y_i$ of $R^{\cg}$, and
+Definitions~\ref{def:joint-family} and~\ref{def:weight-route} say so.
+
+\emph{Second, and this settles the question rather than leaving it to a
+reading: every declaration this module admits satisfies (D1) and (D2)
+exactly.} \xref{receiver/detector-imperfections/def:darkadm} calls $R$ a
+dark-count channel when it is (D1) column-stochastic and (D2) monotone, and
+both are decided on the declared matrix \emph{exactly}: (D1) by the
+column-stochasticity rule (Requirement~\ref{req:column-stochastic-refusal}),
+and (D2) by the descent rule, whose monotonicity half is the implication
+$R_{S|S'}>0\Rightarrow S'\subseteq S$
+(Requirement~\ref{req:descent-decided-exactly}). The two rules are needed
+together and neither covers the other: a strictly positive entry in a
+(D2)-forbidden position fails monotonicity while leaving column-stochasticity
+untouched, and a \emph{negative} entry in such a position does the reverse, it
+satisfies the monotonicity implication vacuously and fails non-negativity.
+Consequently, on the set of declarations this module emits for,
+$R_{\MCK|S'}\le\sum_SR_{S|S'}=1$ for every column, so the supplier's minimum
+$r_{\min}$ of \xref{receiver/detector-imperfections/thm:dark-counts}\,(iv) is
+at most $1$ and the cap in $\bar r$ is inactive, $\bar r=r_{\min}$; and
+\xref{receiver/detector-imperfections/thm:dark-counts}\,(iii) holds with no
+defect, so the $\delta_{\dc}$ that contract emits is slack in a bound rather
+than a defect of the datum. The first term of the overstatement is therefore
+nil, and the second, $\delta_{\dc}$, is slack: for such an $R$ the first
+inequality holds as stated
+(\xref{receiver/detector-imperfections/thm:dark-counts}\,(iv)), so using it
+overstates nothing. That first inequality, the case of (D1) and (D2) holding
+exactly, is the statement available here.
+
+\emph{What that means route by route.} On the supplier's
+\tref{generated dark-count route}, where $R$ is its
+\tref{independent product form}, (D1) and (D2) are a theorem
+(\xref{receiver/detector-imperfections/thm:dark-counts}\,(i)) and
+$\delta_{\dc}=0$ on that route by its definition in
+\xref{receiver/detector-imperfections/prop:dark-slack-bound}, so the two
+inequalities coincide there outright. On its \tref{declared dark-count route}, where
+\xref{receiver/detector-imperfections/def:darktol} admits entries down to
+$-\varepsilon_4$ and column sums anywhere in
+$[1-\varepsilon_4,1+\varepsilon_4]$, a matrix reaches a claim of this contract
+only if it satisfies (D1) and (D2) exactly, and is \emph{refused here}
+otherwise, under whichever of the two rules it fails. Nothing in
+\eqref{eq:weightroute} is restated in $\bar r$ or $\delta_{\dc}$, and nothing
+needs to be: that formula is proved for an $R$ satisfying (D1) and (D2)
+exactly, and this module admits no other. What is \emph{not} settled here is
+the composition in general: what a consumer that admits the supplier's widened
+set must do. That question is not this contract's, and this contract does not
+answer it: it is a question about the supplier's own receiver tolerances
+$\varepsilon_2,\varepsilon_4$, which this module neither reads nor converts,
+and \xref{foundations/req:norm-conversion} puts any such conversion at the
+instance, explicitly and on that party's own authority
+(Assumption~\ref{ass:recv}).
+\end{remark}

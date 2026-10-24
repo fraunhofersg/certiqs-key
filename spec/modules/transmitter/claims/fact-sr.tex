@@ -1,0 +1,83 @@
+% ---
+% id: transmitter/fact:sr
+% kind: fact
+% title: "Source replacement for prepare-and-measure protocols"
+% summary: >-
+%   Preparing labelled signals is equivalent to preparing purifications with a
+%   shield system and measuring a retained label register. This is the
+%   entanglement-based description on which the trusted-source constraints of
+%   the module rest.
+% prominence: standard
+% status: accepted
+% uses: [def:source-spec]
+% assumes: [A-ENS, A-SEQ]
+% refs:
+%   - "tupkary2026decoy, Lemma 8.3, Eqs. (83)-(84)"
+%   - "tupkary2026decoy, Def. 8.1, Def. 8.2"
+%   - "winick2018reliable, Eqs. (37)-(39)"
+% provenance: published
+% lean:
+% ---
+
+\begin{fact}\label{fact:sr}
+\emph{(\cite[Lemma~8.3, Eqs.~(83)--(84)]{tupkary2026decoy}, with the
+protocol framing of its Def.~8.1 and Def.~8.2.)}
+Consider a protocol in which Alice first prepares the global state
+$\rho_{X_1^n(A')_1^n}=\bigotimes_{j=1}^{n}\rho^{(j)}_{X_jA_j'}$ with
+$\rho^{(j)}_{X_jA_j'}=\sum_{k=1}^{d_A}p^{(j)}_k\dyad{k}_{X_j}\otimes
+(\rho^{(j)}_k)_{A_j'}$, where $\{\ket{k}\}_{X_j}$ is the classical basis of
+$X_j$; she keeps $X_1^n$ and sends the $(A')_1^n$ systems to the adversary.
+Then the state $\rho_{X_1^n(A')_1^n}$ can equivalently be obtained by
+\emph{(1)} preparing the global state
+$\rho_{\Abar_1^n\Ahat_1^n(A')_1^n}=\bigotimes_j\rho^{(j)}_{\Abar_j\Ahat_jA_j'}$
+with
+$\rho^{(j)}_{\Abar_j\Ahat_jA_j'}=\sum_{k,i=1}^{d_A}
+\sqrt{p^{(j)}_ip^{(j)}_k}\,\ketbra{i}{k}_{\Abar}\otimes
+\ketbra{\psi^{(j)}_i}{\psi^{(j)}_k}_{\Ahat_jA_j'}$, where
+$\ket{\psi^{(j)}_k}_{\Ahat_jA_j'}$ is a purification of
+$(\rho^{(j)}_k)_{A_j'}$, $\{\ket{k}\}$ is an orthonormal basis of $\Abar$
+and $\Ahat_j$ is the \emph{shield system}; \emph{(2)} sending $(A')_1^n$ to
+the adversary; and \emph{(3)} for each $j$, measuring $\Abar_j\Ahat_j$ with
+the POVM $\{\dyad{k}_{\Abar_j}\otimes\idon{\Ahat_j}\}_{k\in\{1,\dots,d_A\}}$
+and storing the result in $X_j$.
+
+\emph{Symbol map and hypothesis check.} The source's $X_j$ is this module's
+outcome register with alphabet $\Xset$ and $k\leftrightarrow x$; its $A_j'$
+is the \tref[virtual transmitted system]{transmitted system} carrying the ensemble the lemma is applied to,
+and its $\{p^{(j)}_k,\rho^{(j)}_k\}$ is that ensemble. That ensemble is the
+virtual pair $(\Avirt,\{p_x,\rvirt_x\})$ on which the source-replacement
+certificate is stated, which is the specified pair $(\Asig,\{p_x,\rho_x\})$
+of Definition~\ref{def:source-spec} exactly when the \tref{source segment} is empty.
+This module describes one round; that every round is described by the
+same data is the consumer's round-homogeneity assumption and is not
+asserted here, and it is under that assumption that the superscript $j$ is
+dropped in what follows. The source's $\Abar_j\Ahat_j$ is this module's
+retained system $A$, and its measurement POVM is $\{M_x\}$ with
+$M_x=\dyad{x}_{\Abar}\otimes\idon{\Ahat}$. The $d_A$ of the cited lemma and
+the $d_A$ of this module are \emph{not} the same number, and the
+identification does not claim they
+are: the published index runs $k\in\{1,\dots,d_A\}$ over an orthonormal
+basis of $\Abar$, so there $d_A=\dim\Hs{\Abar}=|\Xset|$, whereas throughout
+this module $d_A=\dim\Hs{A}=\dim\Hs{\Abar}\cdot\dim\Hs{\Ahat}$; the two
+agree exactly when the shield system is trivial. The lemma's one hypothesis
+is that Alice prepares the classical-quantum source state of its
+Eq.~(83) --- this is Assumption~\ref{ass:ens} for the physical device, and
+the declared source data for the specified object. Its only timing element is
+that the global state is prepared first; it places no condition on the
+sequential structure of later operations, being an identity between the state
+of its Eq.~(83) and the measured state of its Eq.~(84). The cited work
+applies it within the protocol framing of its Def.~8.1 and Def.~8.2, and this
+module applies it to protocols with the sequential structure of
+Assumption~\ref{ass:seq}, which supplies that structure: the assumption is the
+hypothesis under which this module applies the fact, and not a hypothesis of
+the cited lemma. The
+published statement quantifies over an
+arbitrary purification $\ket{\psi_k}$, so the shield system is trivial
+exactly when every state of that ensemble is pure --- the case, for a pure
+\emph{specified} ensemble, of \cite[Eqs.~(37)--(39)]{winick2018reliable},
+which writes the source-replaced vector as
+$\ket{\psi}_{\Abar\Asig}=\sum_i\sqrt{p_i}\ket{i}_{\Abar}\ket{\varphi_i}_{\Asig}$
+and records that the resulting marginal
+$\rho_{\Abar}=\tr_{\Asig}(\dyad{\psi})$ is fixed independently of the
+adversary's attack.
+\end{fact}

@@ -1,0 +1,38 @@
+% ---
+% id: protocol-compiler/req:feasibility-witness
+% kind: req
+% title: "Default candidate before a supplied witness"
+% summary: >-
+%   At a non-empty constraint list the engine tests the default candidate
+%   first and, if it fails, a supplied witness, emits neither, and refuses
+%   exactly when the default candidate fails and no supplied witness verifies.
+% prominence: standard
+% status: implemented
+% uses: [thm:feasibility, def:validator]
+% mentions: [def:feasible]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.feasibility:check_feasibility
+% lean:
+% ---
+
+Theorem~\ref{thm:feasibility}\,(ii) reduces D(vii) at a non-empty constraint list to
+exact decisions on at most two candidates, and check V7 of
+Definition~\ref{def:validator} is where they are taken.
+
+\begin{requirement}\label{req:feasibility-witness}
+Where the constraint list is non-empty, on a candidate declaration
+satisfying D(i)--D(iii) and D(vi), which checks V1--V3 and V6 of
+Definition~\ref{def:validator} decide (a candidate failing one of them is
+refused there), the engine decides the
+conditions of
+\eqref{eq:feas}, in the general format those of \eqref{eq:feas-general},
+first on the default candidate \eqref{eq:witness-empty}, in the general format
+\eqref{eq:witness-general}, and, if it fails, on a
+supplied witness $\omega^{\star}$, read from the input
+\iface{feasibility_witness}. It forms the default candidate only to test it,
+and it emits neither candidate. It refuses with \iface{no_feasibility_witness}
+exactly when the default candidate fails and either no witness is supplied or
+the supplied one fails.
+\end{requirement}

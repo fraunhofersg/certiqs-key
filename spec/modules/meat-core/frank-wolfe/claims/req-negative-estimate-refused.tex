@@ -1,0 +1,44 @@
+% ---
+% id: meat-core/frank-wolfe/req:negative-estimate-refused
+% kind: req
+% title: "Refusal of a negative estimate"
+% summary: >-
+%   A run whose search returns a negative estimate is refused with a typed reason
+%   naming the value and the point, and the estimate is never clamped. Unlike
+%   h_lb it is no lower bound, so zero cannot stand in for it.
+% prominence: standard
+% status: implemented
+% uses: [meat-core/prop:value-range, prop:relaxed-set-properties]
+% mentions: [rem:fo-negative-values, req:bracket-on-reference, meat-core/req:unreachable-acceptance-set]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.general_keyrate:NegativeObjectiveError
+% lean:
+% ---
+
+The objective is non-negative at every point of the exact feasible set, by a
+pointwise argument (Proposition~\ref{prop:value-range}\,(i)), while at a
+point of the \tref{relaxed feasible set} it is bounded below only by
+$-\frac{\alpha}{\alpha-1}\log_2(1+d_{A_0}\varepsilon)$, where
+$d_{A_0}\varepsilon<1$, and in the state form with $d_A\varepsilon$ in
+trusted-source mode and $\varepsilon$ in untrusted-source mode in place of
+$d_{A_0}\varepsilon$
+(Proposition~\ref{prop:relaxed-set-properties}\,(c$''$)). A negative estimate
+is therefore evidence that a hypothesis does not hold of the point it was
+computed at, and unlike $\hlb$ it is no lower bound
+(Remark~\ref{rem:fo-negative-values}). No key length is emitted on a refused
+run.
+
+\begin{requirement}\label{req:negative-estimate-refused}
+The engine refuses a run whose computed \tref{estimate}, the objective at
+the point the run's search on the declaration it searches returned at an
+order the run evaluates, is negative, with the
+machine-readable reason \iface{negative_objective} naming the value and the
+point, and never clamps the estimate to zero. A bare exception is not a
+conforming implementation of this rule; the reason must be readable by the
+caller. The rule binds that search alone: the polish of
+Requirement~\ref{req:bracket-on-reference}\,(i) and the solve of
+Requirement~\ref{req:unreachable-acceptance-set}\,(i) form no estimate of
+the run, and a negative objective value of theirs refuses nothing.
+\end{requirement}

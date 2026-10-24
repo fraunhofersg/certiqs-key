@@ -1,0 +1,40 @@
+% ---
+% id: reductions/prop:pinching
+% kind: prop
+% title: "Sector pinching as a squashing"
+% summary: >-
+%   Pinching onto finitely many orthogonal sectors is a self-adjoint channel,
+%   and a target whose elements are block diagonal for those sectors squashes
+%   to itself through it. The pinching can therefore follow a squasher whose
+%   target and carried operators are block diagonal.
+% prominence: standard
+% status: accepted
+% uses: [def:squashing]
+% mentions: [foundations/def:pinching]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The sector pinching below is the pinching of
+\xref{foundations/def:pinching} on the target $\Qsys$: it deletes the
+coherences between sectors. The proposition proves the two facts the
+squashing constructions use, that it is a self-adjoint channel and that a
+block-diagonal target squashes to itself through it.
+
+\begin{proposition}\label{prop:pinching}
+Let $\{\Pi_s\}_{s\in\SecSet}$ be finitely many mutually orthogonal projections
+on $\Hs{\Qsys}$ with $\sum_s\Pi_s=\idon{\Qsys}$, and let
+$\PinS(\sigma)\coloneqq\sum_s\Pi_s\sigma\Pi_s$. Then $\PinS$ is a channel with
+$\PinS^{\dagger}=\PinS$, and if every $F_v$ is block diagonal,
+$F_v=\sum_s\Pi_sF_v\Pi_s$, then $F\dsq_{\PinS}F$.
+\end{proposition}
+
+\begin{proof}
+$\PinS$ is CP as a sum of conjugations and trace preserving by cyclicity and
+$\sum_s\Pi_s=\idon{\Qsys}$; it is self-adjoint because
+$\tr[X\sum_s\Pi_s\sigma\Pi_s]=\tr[(\sum_s\Pi_sX\Pi_s)\sigma]$. Block
+diagonality is $\PinS(F_v)=F_v$, which is
+$\PinS^{\dagger}(F_v)=F_v$.
+\end{proof}

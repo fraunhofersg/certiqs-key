@@ -1,0 +1,86 @@
+% ---
+% id: statistics/binomial-box/thm:box-construction
+% kind: thm
+% title: "Properties of the constructed box"
+% summary: >-
+%   For any admissible endpoint rule (count bounds meeting binomial tail
+%   budgets), the acceptance box has exact rational bounds and contains every
+%   law within the honest envelope's bounds. It is non-empty and compact and,
+%   by construction, an admissible acceptance set
+%   ([[meat-core/def:admissible-acceptance-set]]).
+% prominence: main
+% status: implemented
+% uses: [statistics/def:taxonomy, statistics/thm:geometry-validation, def:endpoint-rule, lem:guard, def:construction, statistics/def:envelope, statistics/def:conservative-evaluation]
+% mentions: [meat-core/def:admissible-acceptance-set]
+% assumes: [A-ALPHABET]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.construction:construct
+% lean:
+% ---
+
+Whatever admissible rule produced the endpoints, the output is a valid
+acceptance set that accepts every honest law of the envelope: the guard, not
+the rule, places the envelope inside the box.
+
+\begin{theorem}\label{thm:box-construction}
+On every admissible input (Definition~\ref{def:endpoint-rule}) and for every
+admissible endpoint rule $R$, under a \tref{conservative evaluation}
+(Definition~\ref{def:conservative-evaluation}):
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $\mathsf{Acc}_R$ is well defined, and all of its output data are exact
+rationals: each $q^{\pm}(\hat c)$ is either an integer multiple of $1/n$ or one
+of $0,1$, and the entries of $B$ lie in $\{0,\pm1\}$;
+\item $0\le\qlo\le\qhi\le\mathbf{1}$ componentwise, so the pair
+$(\qlo,\qhi)$ meets the conditions of the canonical box form of
+Definition~\ref{def:taxonomy};
+\item $\mathsf{H}\subseteq\acSet$, where $\mathsf{H}$ is the
+\tref{envelope set} \eqref{eq:envelope-set} of the input envelope: every
+honest law the envelope admits is accepted, and for the degenerate envelope
+this reads $\honest\in\acSet$. The envelope set is non-empty; consequently
+$\acSet\neq\varnothing$ and, by Theorem~\ref{thm:geometry-validation}\,(iii),
+$\sum_{\hat c}q^{-}(\hat c)\le1\le\sum_{\hat c}q^{+}(\hat c)$;
+\item $\acSet$ is a non-empty, closed, convex, compact subset of
+$\simplex{\Chatset}$; \xref{meat-core/def:admissible-acceptance-set} holds for the output of
+$\mathsf{Acc}_R$ by construction, for every admissible input and every
+admissible rule.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{(i).} Well-definedness: $R$ returns integers in $\{0,\dots,n\}$
+(Definition~\ref{def:endpoint-rule}\,(a)), so the guarded endpoints
+\eqref{eq:guard} exist and are unique, and
+\eqref{eq:boxbounds}--\eqref{eq:accset} are explicit formulas in them. The
+rationality statement is immediate: $k^{\pm}(\hat c)$ are integers in
+$\{0,\dots,n\}$ and $n\ge1$.
+
+\emph{(ii).} For $\hat c\in\Chatcon$, \eqref{eq:ordering} gives $0\le
+k^{-}(\hat c)\le k^{+}(\hat c)\le n$, hence $0\le q^{-}(\hat c)\le q^{+}(\hat
+c)\le1$. For $\hat c\notin\Chatcon$, $0\le0\le1\le1$.
+
+\emph{(iii).} Let $\mathbf{p}\in\mathsf{H}$, let $\hat c\in\Chatcon$ and
+write $p^{\mp}=p^{\mp}_{\hat c}$. By \eqref{eq:ordering} and
+\eqref{eq:envelope-set},
+$q^{-}(\hat c)=k^{-}(\hat c)/n\le\lfloor np^{-}\rfloor/n\le np^{-}/n=p^{-}
+\le p(\hat c)$ and
+$q^{+}(\hat c)=k^{+}(\hat c)/n\ge\lceil np^{+}\rceil/n\ge np^{+}/n=p^{+}
+\ge p(\hat c)$, so $q^{-}(\hat c)\le p(\hat c)\le q^{+}(\hat c)$. For
+$\hat c\notin\Chatcon$ the bounds are $0\le p(\hat c)\le1$, which hold because
+$\mathbf{p}\in\simplex{\Chatset}$. Since also
+$\mathbf{p}\in\simplex{\Chatset}$, all defining conditions of
+\eqref{eq:accset} are met and $\mathbf{p}\in\acSet$; hence
+$\mathsf{H}\subseteq\acSet$. For the degenerate envelope
+$\mathsf{H}=\{\honest\}$ (Definition~\ref{def:envelope}).
+
+Non-emptiness of $\mathsf{H}$: by Definition~\ref{def:envelope} the pair
+$({\honest}^{-},{\honest}^{+})$ is a canonical box form with denotation
+$\mathsf{H}$ whose bounds satisfy \eqref{eq:boxfeas}, so
+Theorem~\ref{thm:geometry-validation}\,(iii), by which \eqref{eq:boxfeas} and
+non-emptiness are equivalent, gives $\mathsf{H}\neq\varnothing$.
+Hence $\acSet\supseteq\mathsf{H}$ is non-empty. The box sums follow from the
+same equivalence applied to the non-empty $\acSet$, a canonical box by (ii).
+
+\emph{(iv).} Theorem~\ref{thm:geometry-validation}\,(i) applied to the geometry of (ii),
+whose \tref{validation predicate} holds by (iii).
+\end{proof}

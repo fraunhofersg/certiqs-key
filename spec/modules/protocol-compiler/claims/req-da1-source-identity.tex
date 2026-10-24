@@ -1,0 +1,72 @@
+% ---
+% id: protocol-compiler/req:da1-source-identity
+% kind: req
+% title: "Letter-independent emission at a one-dimensional trusted A"
+% summary: >-
+%   In trusted-source mode at d_A = 1 each weighted member of the source's
+%   ensemble must equal the letter's measurement weight times the summed
+%   ensemble, decided exactly, or the specification is refused. Alice's
+%   letter weights then equal the source's, and no emitted state depends on
+%   the letter.
+% prominence: standard
+% status: accepted
+% uses: [def:spec, def:declaration, def:compile, transmitter/def:srcert, transmitter/def:source-segment]
+% mentions: [ass:alice-meas, transmitter/ass:ens, transmitter/rem:da1, meat-core/def:roundmodel, meat-core/prop:trivial-alice-system]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% user_statement: >-
+%   With a trusted source and a one-dimensional retained system A, Alice's
+%   letter is local randomness that the analysis treats as independent of
+%   everything the source sends out. The engine therefore requires two things
+%   of the declaration and refuses it otherwise: Alice's letter probabilities
+%   equal the source's, number for number, and every letter of positive
+%   probability is sent as the same state. A source whose emitted state
+%   depends on the letter is declared with a retained system A of dimension
+%   two or more and a source-replacement certificate.
+% implements: certiqs_key.protocol_compiler.declared_premises:decide_da1_source_identity
+% lean:
+% notes: "The identity is (SR2) of transmitter/def:srcert at d_A = 1, where no certificate is demanded and so nothing else decides it. A one-letter specification satisfies it whenever the declared data are normalised; it is decided anyway, the rule having no exception."
+% ---
+
+At $d_A=1$ no \tref{source-replacement certificate} is demanded
+(\xref{transmitter/rem:da1}), and the consuming \tref{round model} takes Alice's
+system to be trivial (\xref{meat-core/prop:trivial-alice-system},
+\xref{meat-core/def:roundmodel}): her letter is the outcome of $\{[m_x]\}$ on
+a one-dimensional register, independent of every system the adversary holds.
+In \tref{trusted-source mode} the source premise
+(\xref{transmitter/ass:ens}, or the premise a \tref{source model} declares in
+its place) has the source emit $\rho_x$ given the letter, and those systems
+reach the adversary. The two descriptions agree only where the emission does
+not depend on the letter and the letter weights agree, which is condition
+(SR2) of \xref{transmitter/def:srcert} read at $d_A=1$: with $A$ trivial,
+$\sigma_x=p_x\rvirt_x$ and $\Psi=\sum_y\sigma_y$, the condition
+$\tr_A[(M_x\otimes\idon{\Avirt})\Psi]=\sigma_x$ reads $m_x\Psi=\sigma_x$.
+Taking the trace gives $m_x=p_x$, the identity on which
+Assumption~\ref{ass:alice-meas} and the source premise agree on the letter
+distribution; on a letter with $p_x>0$ it gives $\rvirt_x=\sum_yp_y\rvirt_y$,
+one common state. Both sides are declared numbers, so the engine decides the
+identity. In \tref{untrusted-source mode} no source premise is emitted and
+there is nothing to compare.
+
+\begin{requirement}\label{req:da1-source-identity}
+For a specification in \tref{trusted-source mode} at $d_A=1$, the engine
+decides, for every $x\in\Xset$ in the \tref{declared order} and exactly on the
+declared numbers, the identity
+\begin{equation*}
+  \sigma_x \;=\; m_x\sum_{y\in\Xset}\sigma_y ,
+\end{equation*}
+where $m_x$ is the one entry of Alice's measurement element $M_x$, read as the
+declaration carries it (Definition~\ref{def:compile}: for a
+\tref{choice-weighted family} the weighted element the engine forms; in the
+\tref{ensemble form}, $N_x$, which equals $M_x$ at $d_A=1$ by
+\eqref{eq:ensemblepovm}), and $\sigma_x=p_x\rvirt_x$ is the weighted member
+for $x$ of the \tref{virtual ensemble} the transmitter artefact emits, which
+at an empty \tref{source segment} is the specified one
+(\xref{transmitter/def:source-segment}); where the artefact emits the
+ensemble by its \tref{weighted members}, $\sigma_x$ is the declared member. Products
+and sums are formed in exact arithmetic, entry by entry. A specification for
+which the identity fails at some letter is refused, before a declaration is
+emitted, with \iface{da1_source_identity_failed}, naming the first such letter
+in the declared order and the first entry at which the two sides differ.
+\end{requirement}

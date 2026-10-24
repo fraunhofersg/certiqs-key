@@ -1,0 +1,192 @@
+% ---
+% id: meat-core/cor:full-gradient
+% kind: cor
+% title: "Gradient of the objective along feasible directions"
+% summary: >-
+%   At a point with positive probabilities and maximal branch supports, the
+%   objective of the Choi program is differentiable along every feasible
+%   direction, with an explicit gradient. The point need only be positive
+%   semidefinite block by block, so the corollary applies at relaxed iterates.
+% prominence: standard
+% status: implemented
+% uses: [def:branch-support, lem:branch-support, thm:gradient, thm:choi, def:untrusted-choi, def:maps]
+% mentions: [meat-core/frank-wolfe/def:relaxed-feasible-set, meat-core/frank-wolfe/def:first-order-setting, meat-core/frank-wolfe/lem:fo-khyp, meat-core/frank-wolfe/thm:firstorder, meat-core/frank-wolfe/lem:fo-face, meat-core/frank-wolfe/rem:fo-iterate-checks, rem:directional-differentiability]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.gradient:choi_gradient
+% lean:
+% ---
+
+The gradient of the pinched trace power on a face,
+Theorem~\ref{thm:gradient}\,(i), combines with the affine maps of the Choi
+program into the gradient of the whole objective. Of the $J$ factor of the
+point the hypothesis asks only per-block positive semidefiniteness, and no
+normalization, coupling condition or declared row, which is what lets
+Theorem~\ref{thm:firstorder}\,(iiib) apply this corollary at an iterate of
+the \tref{relaxed feasible set} $\Feas^{J}(\varepsilon)$, the only set a
+run establishes membership in (Remark~\ref{rem:fo-iterate-checks}).
+Lemma~\ref{lem:fo-khyp}\,(iii) weakens the positivity hypothesis to the
+\tref{acceptance support} $\Chacc$ of \eqref{eq:chacc-def}, and to
+$\Chkey\cap\Chacc$ for the $K$-part, which is the form
+Theorem~\ref{thm:firstorder} uses and the only one satisfiable when
+$\Chacc\subsetneq\Chatset$. Remark~\ref{rem:directional-differentiability}
+says why nothing beyond directional differentiability is claimed.
+
+\begin{corollary}\label{cor:full-gradient}
+Let $\alpha\in(1,\infty)$ and let $x=(\mathbf q,(J_s)_s)$ be a point with
+$\mathbf q\in\acSet$ and $J_s\in\Pos{A_0\Qsys_s}$ for every
+$s\in\SecSet$ --- per-block positive semidefiniteness of the $J$ factor
+and nothing else: no normalization, no coupling condition
+$\sum_s\tr_{\Qsys_s}J_s=\idon{A_0}$ and no declared row $\bowtie_k$ is
+assumed of it, so that every point of $\acSet\times\Feas^{J}(\varepsilon)$
+qualifies, at every $\varepsilon\ge0$ and the exact $\Feas^{J}$ included
+(Definition~\ref{def:relaxed-feasible-set}: per-block positive
+semidefiniteness is the one condition that family does not relax) ---
+and such that $q(\hat c)>0$, $P^{J}_{\hat c}>0$ and $K^{J}_{\hat c}>0$
+for all $\hat c$, and such that each branch operator
+$X_{\hat c,s}\coloneqq\cG^{J}_{\hat c,s}(J_s)$
+($\hat c\in\Chkey$, $s\in\SecSet_K(\hat c)$) has \emph{maximal support},
+$\operatorname{supp}X_{\hat c,s}=W_{\hat c,s}$ of \eqref{eq:Wcs}, for
+which $J_s\succ0$ suffices, so that Theorem~\ref{thm:gradient}\,(i)
+applies on that face. The displayed formulas are written for
+trusted-source mode; the untrusted-source-mode statement is at the end of
+this corollary.
+
+Then the objective $O^{J}_{\alpha}$ of \eqref{eq:choi-program} is
+differentiable at that point \emph{along every feasible direction}, and
+that is the whole of the conclusion: for every
+$y\in\acSet\times\Feas^{J}$ the one-variable map
+$t'\mapsto O^{J}_{\alpha}\big(x+t'(y-x)\big)$ is differentiable at
+$t'=0$, with derivative the pairing of $y-x$ against the gradient
+\begin{align}
+  \frac{\partial O^{J}_{\alpha}}{\partial q(\hat c)}
+  &=\begin{cases}
+  \dfrac{\alpha}{\alpha-1}\Big(\log_2\dfrac{q(\hat c)}{P^{J}_{\hat c}}
+  +\log_2\mathrm e\Big), & \hat c\notin\Chkey,\\[1.2ex]
+  \log_2\dfrac{q(\hat c)}{P^{J}_{\hat c}}+\log_2\mathrm e
+  +\dfrac{1}{\alpha-1}\Big(\log_2\dfrac{q(\hat c)}{K^{J}_{\hat c}}
+  +\log_2\mathrm e\Big), & \hat c\in\Chkey,
+  \end{cases}\label{eq:grad-q}\\[0.6ex]
+  \nabla_{J_{s'}}O^{J}_{\alpha}
+  &=-\log_2\mathrm e\!\!\sum_{\hat c\notin\Chkey}\!
+  \frac{\alpha}{\alpha-1}\,\frac{q(\hat c)}{P^{J}_{\hat c}}\,
+  \Gamma^{(s')}_{\hat c}
+  \;-\;\log_2\mathrm e\!\!\sum_{\hat c\in\Chkey}\!\left[
+  \frac{q(\hat c)}{P^{J}_{\hat c}}\,\Gamma^{(s')}_{\hat c}
+  +\frac{1}{\alpha-1}\,\frac{q(\hat c)}{K^{J}_{\hat c}}
+  \Big(\Gamma^{(s')}_{\hat c}+\Delta^{(s')}_{\hat c}\Big)\right],
+  \label{eq:grad-J}
+\end{align}
+where
+\begin{equation}\label{eq:grad-pieces}
+  \Gamma^{(s')}_{\hat c}\coloneqq
+  \sum_{(x,v):\,\phi(a(x,v))=\hat c}
+  \big(W_{\tau}^{\dagger}M_xW_{\tau}\big)\otimes F^{(s')}_v,
+  \qquad
+  \Delta^{(s')}_{\hat c}\coloneqq
+  \mathbb 1[s'\in\SecSet_K(\hat c)]\;
+  \chi_{\Qsys_{s'}}^{\dagger}\Big(
+  \cG_{\hat c,s'}^{\dagger}\big[\nabla T(X_{\hat c,s'})
+  -\idon{}\big]\Big),
+\end{equation}
+with $\cG^{\dagger}_{\hat c,s'}(Y)=\sum_{\kappa}K^{(s')\dagger}_{\kappa}
+YK^{(s')}_{\kappa}$ the Kraus adjoint and
+$\chi^{\dagger}_{\Qsys_{s'}}(A)=(W_{\tau}^{\dagger}\otimes\idon{})A
+(W_{\tau}\otimes\idon{})$. Each $\nabla T(X_{\hat c,s'})$ is read in the
+split form of Theorem~\ref{thm:gradient}\,(i): divided differences over
+the strictly positive spectrum of $X_{\hat c,s'}$, the pinched operators
+$\cZ(X^{p}_{\hat c,s'})$ and $\cZ(Y^{\alpha-1})$ on the ambient branch
+space.
+
+\emph{Untrusted-source mode.} There the \emph{state form} is primary,
+the Choi form being its pullback rather than the other way round: the
+variables are the sector blocks $\omega_{s}$ themselves
+(Definition~\ref{def:untrusted-choi}), $\chi_{\Qsys_{s'}}=\idmap$, and
+\eqref{eq:grad-q}--\eqref{eq:grad-J} hold verbatim with
+$J_{s'}\to\omega_{s'}$, $P^{J}_{\hat c}\to P_{\hat c}$,
+$K^{J}_{\hat c}\to K_{\hat c}$, $X_{\hat c,s}=\cG_{\hat c,s}(\omega_s)$
+and the pieces \eqref{eq:grad-pieces} losing their $W_{\tau}$
+conjugation:
+\begin{equation}\label{eq:grad-pieces-un}
+  \Gamma^{(s')}_{\hat c}=
+  \sum_{(x,v):\,\phi(a(x,v))=\hat c} M_x\otimes F^{(s')}_v,
+  \qquad
+  \Delta^{(s')}_{\hat c}=
+  \mathbb 1[s'\in\SecSet_K(\hat c)]\;
+  \cG_{\hat c,s'}^{\dagger}\big[\nabla T(X_{\hat c,s'})-\idon{}\big],
+\end{equation}
+Hermitian operators on $A\Qsys_{s'}$. The derivation is the proof
+below with $\chi_{\Qsys_{s'}}$ deleted; the positivity hypothesis on the
+point reads $\omega_{s}\in\Pos{A\Qsys_s}$ per block, there being no $A_0$
+in that mode; and the maximal-support hypothesis
+reads $\operatorname{supp}X_{\hat c,s'}=W_{\hat c,s'}$ with $\Sadm$
+now all of $\Hs{A}$, for which $\omega_{s'}\succ0$ suffices. In
+trusted-source mode the same formulas conjugated by $\chi$ give the
+state-form gradients, and at $d_A=1$ the two agree because
+$W_{\tau}=[1]$.
+\end{corollary}
+
+\begin{proof}
+\emph{Idea.} The objective is differentiated term by term, through affine
+maps and, for the deficits, through the chain rule of
+Theorem~\ref{thm:gradient}. Of the point $x$ the argument consumes three
+things. (a) The strict positivity clause, which keeps every logarithm and
+every denominator of \eqref{eq:grad-q}--\eqref{eq:grad-J} away from its
+singularity. (b) Maximal support of each key-active branch operator
+$X_{\hat c,s}$, which makes Theorem~\ref{thm:gradient}\,(i) applicable on
+that face; the ambient factors $\cZ(X^{p}_{\hat c,s})$ and
+$\cZ(Y^{\alpha-1})$ it forms need only $X_{\hat c,s}\succeq0$, which
+$J_s\succeq0$ and complete positivity of $\cG^{J}_{\hat c,s}$ supply.
+(c) That the $J$-component of the direction $y-x$ is Hermitian, which
+per-block positive semidefiniteness of $x$ and of $y$ supplies, a
+difference of two positive semidefinite operators being Hermitian; this
+is the hypothesis Lemma~\ref{lem:fo-face} is stated on, and it names no
+\tref{feasible set}, exact or relaxed. Normalization, the coupling condition and the declared rows
+$\bowtie_k$ are consumed nowhere: not in \eqref{eq:grad-q}, not in
+\eqref{eq:grad-J}, not in \eqref{eq:grad-pieces}, and at no step below,
+which is why the hypothesis asks for per-block positive semidefiniteness
+and not for feasibility.
+
+\emph{Step 1 (the $\mathbf q$-gradient).} Differentiate
+\eqref{eq:choi-program} term by term. In $\mathbf q$:
+$\frac{\mathrm d}{\mathrm du}\,u\log_2\frac uv
+=\log_2\frac uv+\log_2\mathrm e$.
+
+\emph{Step 2 (the divergence terms in $J$).}
+$\frac{\partial}{\partial v}\,u\log_2\frac uv=-\frac{u}{v}\log_2\mathrm
+e$ composed with the affine maps $J\mapsto P^{J}_{\hat c}$, whose
+gradients are the constant Hermitian operators
+$\Gamma^{(s')}_{\hat c}$ (expand \eqref{eq:Phimap} through
+$\chi$ as in the proof of Theorem~\ref{thm:choi} and read off the linear
+coefficient of $J_{s'}$).
+
+\emph{Step 3 (the $K$-terms).}
+$\nabla_{J_{s'}}K^{J}_{\hat c}
+=\Gamma^{(s')}_{\hat c}+\Delta^{(s')}_{\hat c}$: the $P$ part is as
+before, and the deficit part is the chain rule through the linear maps
+$\chi_{\Qsys_{s'}}$ and $\cG_{\hat c,s'}$ and
+Theorem~\ref{thm:gradient}, together with
+$\nabla_{X}\tr[X]=\idon{}$; the adjoints implement
+$\tr[Y\,\mathcal L(H)]=\tr[\mathcal L^{\dagger}(Y)H]$ for each linear
+factor.
+
+\emph{Step 4 (the chain rule at a singular branch operator).} The
+maximal-support hypothesis is what licenses that chain rule at a singular
+$X_{\hat c,s'}$: an admissible direction
+$\Delta J_{s'}=J'_{s'}-J_{s'}$ is Hermitian, both endpoints being
+per-block positive semidefinite, and it produces
+$H=\cG^{J}_{\hat c,s'}(\Delta J_{s'})$ with
+$\operatorname{supp}H\subseteq W_{\hat c,s'}
+=\operatorname{supp}X_{\hat c,s'}$ by \eqref{eq:Wcs-bound} applied to the
+positive and negative parts of $\Delta J_{s'}$ separately (the fact the
+submodule states as Lemma~\ref{lem:fo-face}, derived here and reading no
+feasible set), so Theorem~\ref{thm:gradient}\,(i) applies; and the
+components of $\nabla T(X_{\hat c,s'})$ outside that face never enter
+\eqref{eq:grad-pieces}, because
+$\chi^{\dagger}_{\Qsys_{s'}}\circ\cG^{\dagger}_{\hat c,s'}$ sandwiches its
+argument between the operators
+$K^{(s')}_{\kappa}(W_{\tau}\otimes\idon{})$ and their adjoints, whose
+ranges lie in $W_{\hat c,s'}$ by \eqref{eq:Wcs}. All compositions are
+differentiable at the stated point, so the sum rule applies.
+\end{proof}

@@ -1,0 +1,29 @@
+% ---
+% id: receiver/detector-imperfections/req:dark-route-exclusive
+% kind: req
+% title: "Refusal of a dark-count channel supplied on both routes"
+% summary: >-
+%   A request that declares a dark-count matrix R while some per-port dark-count
+%   probability is non-zero is refused. A declared R therefore comes with every
+%   per-port probability zero, and exactly one route is taken.
+% prominence: standard
+% status: implemented
+% uses: [def:darkadm]
+% mentions: [rem:corrdark, req:dark-channel-record]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.dark:check_dark_count_source
+% lean:
+% ---
+
+A request carrying both would supply the channel twice with no rule that makes
+the two agree, and the record of which route the emitted channel came from
+(Remark~\ref{rem:corrdark}, Requirement~\ref{req:dark-channel-record})
+presupposes that exactly one was taken.
+
+\begin{requirement}\label{req:dark-route-exclusive}
+The two routes of Definition~\ref{def:darkadm} are exclusive: a request
+declaring $R$ while some $p_{\dc|k}\neq0$ is refused with
+\iface{dark_count_channel_declared_twice}.
+\end{requirement}

@@ -1,0 +1,92 @@
+% ---
+% id: meat-core/def:admissible-declaration
+% kind: def
+% title: "Admissible declaration"
+% summary: >-
+%   An admissible declaration is finite with total maps, a well-formed
+%   marginal slot, block-diagonal POVMs, announcement-determined sifting,
+%   constraints typed by the source mode and a non-empty feasible set. Each
+%   party announces from its own readout and the key holder computes the raw
+%   key from its own.
+% prominence: standard
+% status: accepted
+% uses: [def:homog, def:declaration]
+% mentions: [rem:modes-da1, thm:keylength, lem:ensemble-form, protocol-compiler/rem:engine-admission, protocol-compiler/thm:feasibility, protocol-compiler/def:validator, req:declaration-admission, req:compiled-declaration-only]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Every clause is decided, (i)-(vi) and (viii) by this module's admission and (vii) by the compiler, and the engine reports a key length only on a declaration the compiler emitted (req:compiled-declaration-only), so the conditions are a definition plus requirements and no premise remains."
+% ---
+
+Condition~(viii) is stated for a declared \tref{party partition} and not
+only for the default partition, because a declaration that
+places both parties' data in $v$, as the $d_A=1$ embedding of
+Remark~\ref{rem:modes-da1}\,(b) does, satisfies the default-partition
+reading of~(viii) vacuously, with $\hold=\mathsf B$ and $r$ any function of
+$v$ at all, while guaranteeing nothing about what the key holder can in
+fact compute; (viii) is what makes the error-correction and verification
+steps of Theorem~\ref{thm:keylength} physically executable. How these
+conditions compare with the compiler's target conditions is
+\xref{protocol-compiler/rem:engine-admission}. Conditions (i)--(viii) are
+decided on the \tref{declared data} by the compiler's validator
+(\xref{protocol-compiler/def:validator}, checks V1--V8), condition~(vii)
+one-sidedly (\xref{protocol-compiler/thm:feasibility}). This module's
+admission decides every condition but~(vii) again, exactly
+(Requirement~\ref{req:declaration-admission}), and it reports a key length
+only on a declaration the compiler emitted
+(Requirement~\ref{req:compiled-declaration-only}), so that every condition
+is decided wherever a key length is reported.
+
+\begin{definition}\label{def:admissible-declaration}
+The tuple $\Decl$ of Definition~\ref{def:declaration} is an
+\term[A protocol declaration satisfying the eight conditions of this module: finite systems and total maps, a well-formed marginal slot, block-diagonal POVMs, announcement-determined sifting, constraints typed by the source mode, a non-empty feasible set and party computability.]{admissible declaration}
+when it satisfies: (i) all systems finite-dimensional, all
+alphabets finite, all maps total; (ii) the \tref{marginal slot} holds
+$\tau_A\in\Seq{A}$ (\tref{trusted-source mode}) or the value $\nomarg$
+(\tref{untrusted-source mode}); in particular $\tr\tau_A=1$ whenever a
+marginal is declared, so $\tau_A=0$ is inadmissible;
+(iii) $\{M_x\}$ and $\{F_v\}$ are POVMs and every $F_v$ and every
+$\hat O_k$ is sector-block-diagonal; (iv) $r$ maps into
+$\Zval\sqcup\{\perp\}$; (v) sifting is announcement-determined via
+$\varsigma$; (vi) $\bowtie_k\in\{\preceq,=,\succeq\}$ and each entry
+carries one of the two declared forms of Definition~\ref{def:homog}, so
+that $\Theta_k$ is Hermitian on $A$, in trusted-source mode, respectively
+$\bowtie_k\in\{\le,=,\ge\}$ and $\Theta_k=c_k\in\mathbb R$ in
+untrusted-source mode; (vii) $\Feas\neq\varnothing$; (viii)
+\emph{party computability:} the declaration names a party partition
+$\Party$ (Definition~\ref{def:declaration}) and
+\begin{itemize}[leftmargin=1.6em]
+\item each party announces a function of its own readout: $a_A$ is
+defined on $\Oset{\mathsf A}$ and $a_B$ on $\Oset{\mathsf B}$, with
+$a(x,v)=(a_A(\rd{\mathsf A}(x,v)),a_B(\rd{\mathsf B}(x,v)))$;
+\item the declared key holder $\hold\in\{\mathsf A,\mathsf B\}$
+computes the raw key from \emph{its own readout} and the announcements,
+$r(x,v)=r_{\hold}(\rd{\hold}(x,v),a(x,v))$ with $r_{\hold}$ a declared
+total function, Eq.~\eqref{eq:partycomp}.
+\end{itemize}
+Under the default partition ($\rd{\mathsf A}(x,v)=x$,
+$\rd{\mathsf B}(x,v)=v$) these conditions read:
+$a_A:\Xset\to\CAset$, $a_B:\Vset\to\CBset$, and
+$r(x,v)=r_{\mathsf A}(x,a(x,v))$ resp.\ $r_{\mathsf B}(v,a(x,v))$.
+
+\emph{In the general format} of Definition~\ref{def:declaration}\,(DX1)--(DX6)
+the same eight conditions read as follows, and at one Alice sector, one
+\tref{measured factor}, \tref{POVM form} and two messages they are the
+conditions above. (iii): every $M_x$, the declared $\tau_A$ and the
+right-hand side of every \tref{general} entry are block diagonal along
+Alice's sectors $\mathbb{T}$, \emph{by their type as
+\tref[block list]{block lists} against a declared factor tagged $A$}, and
+$\{M_x\}$ is a POVM; in \tref{ensemble form} the declared $\{N_x\}$ satisfy
+\eqref{eq:ensembleform} and $\{M_x\}$ is the family \eqref{eq:ensemblepovm},
+a POVM block diagonal along $\mathbb{T}$ by
+Lemma~\ref{lem:ensemble-form}\,(i); $\{F_v\}$ is the product family
+\eqref{eq:productfamily} of per-factor POVMs, each block diagonal for its
+factor's \tref{sector map}, and every $\hat O_k$ is block diagonal for the
+sector map of its \tref{scope}. (vi): an entry may in addition carry the
+\tref{party-local} form of Definition~\ref{def:homog}, in either mode, with
+$\bowtie_k\in\{\preceq,=,\succeq\}$ and $c_k\in\mathbb{R}$. (viii): each
+message of the transcript is a function of its sender's own readout and of
+the earlier messages, $a$ is the composition \eqref{eq:transcript}, and
+\eqref{eq:partycomp} holds with that $a$.
+\end{definition}

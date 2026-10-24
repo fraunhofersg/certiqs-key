@@ -1,0 +1,33 @@
+% ---
+% id: receiver/detector-imperfections/rem:powervsclick
+% kind: rem
+% title: "Power data and click data measure different objects"
+% summary: >-
+%   A power characterisation of the optics returns the port Grams A_k, click
+%   statistics return η_k A_k. Double counting is avoided exactly when the
+%   efficiencies enter once, and which convention the declared numbers follow
+%   cannot be read off the numbers.
+% prominence: standard
+% status: accepted
+% uses: [thm:efficiency]
+% mentions: [req:efficiency-convention]
+% assumes: [A-TRUST]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:powervsclick}
+A classical power characterisation of the optics measures intensities
+independently of the single-photon detectors and returns $A_k$; detector click
+statistics return $\eta_kA_k$. Double counting is avoided exactly when the
+efficiencies enter through \eqref{eq:etagram} once: either the Grams are
+declared from power data and then rescaled by $\eta_k$, or they are declared
+from click data and the $\eta_k$ are already inside them and must be declared as
+$1$. Which of the two a declaration means is not inferable from the numbers
+(Requirement~\ref{req:efficiency-convention} says where it is recorded).
+\emph{Characterising} the device is out of scope
+(Assumption~\ref{ass:trust}); recording which convention the declared numbers
+follow is not.
+\end{remark}

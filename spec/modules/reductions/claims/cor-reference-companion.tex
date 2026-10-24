@@ -1,0 +1,321 @@
+% ---
+% id: reductions/cor:reference-companion
+% kind: cor
+% title: "The reference companion of a reduction instance"
+% summary: >-
+%   The same instance, run on the reference in place of the snap, or on its
+%   own snapped blocks where none is handed, is a reduction instance of the
+%   emitted shape that squashes that model exactly. Its entries are enclosed
+%   from the reference, requested ones where their certificates hold there.
+% prominence: main
+% status: accepted
+% uses: [def:reduction-instance, def:substrate, cor:identity-instance, thm:instrument-instance, cor:register-instance, cor:blockdiag, thm:transfer, thm:chain, def:link, def:chain, def:squashing, thm:licence, cor:entries, def:emitnorm, receiver/lem:enclosure-arithmetic, receiver/def:complex-enclosure, foundations/def:snap, foundations/def:exact-reference, foundations/def:evaluated-off-snap]
+% mentions: [thm:emit, lem:row-relaxation, req:reference-companion, reductions/wpfss/cor:flat-companion, reductions/wpfss/rem:published]
+% assumes: [A-SNAP]
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Part (vi) is stated per writing of an entry in the form eq:instance-entry; the engine forms the companion form of a requested entry at the writing by which it recognised the entry, and a writing whose certificate at the companion is not established gives no entry of the companion."
+% ---
+
+An emission is computed on the snapped measurement a declaring instance
+states, and the normalizer may move the instance's datum once more
+(Theorem~\ref{thm:emit}). Where the declaring instance holds a reference of
+the measurement and hands it beside its snap, the same construction can be
+run on the reference instead: the instance's datum formed from the reference
+blocks, with no normalizer. Where it hands none, the same construction run on
+the snapped blocks themselves gives the producer's exact construction, the
+\tref{handed datum}, which the normalizer has not touched: the snap of the
+emission is then bypassed though the instance's own snap is not. Nothing has
+to be proved again for that, because
+every part of a \tref{reduction instance} is established at every \tref{admissible datum};
+the one thing to supply is that the datum formed from the reference is
+admissible, which is hypothesis (H-REF) below, and the substrate in which the
+construction is read, since reference entries are in general irrational.
+What results is no declaration a consumer solves in its own right
+(Requirement~\ref{req:reference-companion}); its entries, which are formed
+from the reference, are emitted in binary64 by
+Lemma~\ref{lem:row-relaxation}. Part~(iv) discharges (H-REF) for the identity
+instance and passes it through branching; the flat instance discharges it in
+Corollary~\ref{cor:flat-companion}. Part~(vi) carries to the companion the
+entries a caller requests beside the instance's own: their operators are
+formed at the companion's datum by the same formula, and their certificates
+are re-established there, since a certificate decided on the emitted
+numbers says nothing about the reference; for the operator of
+\eqref{eq:two-sector-entry} the flat instance does so in
+Corollary~\ref{cor:flat-companion}.
+
+\begin{corollary}\label{cor:reference-companion}
+Let $\mathcal{J}$ be a \tref{reduction instance}
+(Definition~\ref{def:reduction-instance}) whose \tref{handed datum} $A$ is
+formed, by the rule of its part (I1), from a family $K=\{K^{(b)}_j\}$ of
+measurement blocks, over blocks $b$ of a \tref{sector map} and outcomes $j$ of an
+alphabet (one such family per setting where the blocks are given per
+setting), that a declaring instance states as a \tref{snap}
+(\xref{foundations/def:snap}) of the measurement of a device. Let
+$G=\{G^{(b)}_j\}$ be a family over the same blocks, alphabet and dimensions,
+every block of which is Hermitian and positive semidefinite and satisfies
+exactly every completeness identity that the declaration of $K$ states of
+$K$ on that block. In the use this corollary is for, $G^{(b)}$ is the block
+of the \tref{handed reference} (\xref{foundations/def:evaluated-off-snap})
+where the declaring instance hands one, and $K^{(b)}$ elsewhere, so that
+$G=K$ where it hands none. Suppose
+\begin{itemize}[leftmargin=4.2em]
+\item[(H-REF)] $\mathcal{J}$ is a reduction instance over the substrate
+  $\Fld=\mathbb{R}$ (Definition~\ref{def:substrate}), and the rule of its
+  part (I1) forms, from every family with the properties just listed for $G$,
+  a datum in $\mathcal{D}_{\mathrm{adm}}$.
+\end{itemize}
+Let $A^{\mathrm{ref}}$ be the datum that rule forms from $G$ in place of
+$K$, and call the instance at $A^{\mathrm{ref}}$ --- the same $\Bsys$, (H),
+sectors, supports, \tref[scalar value]{scalar values}, constructor and entry rule, with
+$A^{\mathrm{ref}}$ in place of the handed datum --- the
+\emph{reference companion} of $\mathcal{J}$ at $G$. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(an admissible target over the emitted shape)}
+  $A^{\mathrm{ref}}\in\mathcal{D}_{\mathrm{adm}}$, the reference companion
+  is a reduction instance, and its target $\{F_v[A^{\mathrm{ref}}]\}_{v\in\Vset}$
+  is a POVM on $\Qsys$, sector-block-diagonal by construction. Its alphabet
+  with classes and weights, its sector map (the sector list, its order, each
+  sector's dimension and kind), its scalar values and its party partition are
+  those of the target the instance has at every admissible datum, the
+  \tref{declared datum} the normalizer produces included, and it differs
+  from such a target on the \tref[data sector]{data sectors} alone, where it
+  carries $A^{\mathrm{ref}}$. Where $G=K$, $A^{\mathrm{ref}}=A$: the
+  reference companion is $\mathcal{J}$ at its handed datum;
+\item \emph{(an exact squash of the companion's model)}
+  $\big(M[A^{\mathrm{ref}}];O[A^{\mathrm{ref}}]\big)\dsq_{\Lambda[A^{\mathrm{ref}}]}
+  \big(F[A^{\mathrm{ref}}];\hat O[A^{\mathrm{ref}}]\big)$, so that
+  $\Lambda[A^{\mathrm{ref}}]^{\dagger}(F_v[A^{\mathrm{ref}}])=M_v[A^{\mathrm{ref}}]$
+  exactly for every $v$; every certificate of the entry list
+  $\CList[A^{\mathrm{ref}}]$ is discharged, and the \tref{class-marginal identity}
+  \eqref{eq:instance-classmarginal} holds at $A^{\mathrm{ref}}$ where the
+  instance's flag says it is discharged; and Theorem~\ref{thm:transfer} and
+  Theorem~\ref{thm:chain} hold of the one-link \tref{receiver segment}
+  (Definition~\ref{def:link}) whose \tref{source family} is
+  $(\Bsys,M[A^{\mathrm{ref}}])$, whose target is
+  $(\Qsys,F[A^{\mathrm{ref}}])$ and whose \tref{channel witness} is
+  $\Lambda[A^{\mathrm{ref}}]$, with $\textsf{status}=\textsf{exact}$;
+\item \emph{(the companion is known through enclosures)} let every block of
+  $G$ be read with an \tref{entrywise enclosure}
+  (\xref{foundations/def:exact-reference}), with radius zero on every block
+  where $G^{(b)}=K^{(b)}$. Where the rule of (I1) forms each entry of the
+  datum as a finite expression in entries of the blocks and in numbers the
+  instance was handed, and every reciprocal node of that expression receives
+  an enclosure by part (iv) of \xref{receiver/lem:enclosure-arithmetic}, as
+  it does where the expression has none, the rules of that lemma applied to
+  that expression give a \tref{complex enclosure} of every element of
+  $A^{\mathrm{ref}}$ whose centre is formed by the same expression from the
+  centres and whose radius is zero at every entry whose inputs are all
+  enclosed with radius zero; part (v) of that lemma, applied element by
+  element, makes it an entrywise enclosure of $A^{\mathrm{ref}}$, whose
+  centre is the Hermitian part of that centre and whose radius is zero at an
+  entry $(i,l)$ where the radii at $(i,l)$ and $(l,i)$ both are. Every entry operator
+  $\hat O_k[A^{\mathrm{ref}}]$ of \eqref{eq:instance-entry}, a combination
+  of the blocks $\Pi_sF_v[A^{\mathrm{ref}}]\Pi_s$ with real coefficients
+  $\alpha_{k,v,s}$ plus a combination $Z_k$ of sector projectors, is then
+  enclosed entrywise by the same combination of the centres, with radius
+  $\sum_{v}|\alpha_{k,v,s}|\,R^{(s)}_{v,il}$ at the entry $(i,l)$ of each
+  data sector $s$, where $(C,R)$ is any entrywise enclosure of the datum and
+  $R^{(s)}_{v,il}$ is the radius of its element $v$ at that entry, and
+  radius zero on every \tref{scalar sector};
+\item \emph{(where (H-REF) holds)} (H-REF) holds for the identity instance of
+  Corollary~\ref{cor:identity-instance}; and it holds for the branching
+  instance of Theorem~\ref{thm:instrument-instance}, and for the register
+  instance of Corollary~\ref{cor:register-instance}, whenever it holds for
+  every branch instance whose datum is formed from blocks of $K$, the data of
+  the other branches being formed from no block of $K$;
+\item \emph{(what the companion rests on, and only there)} no part of
+  (i)--(iv) rests on \xref{foundations/ass:snapped-measurement}. Let $B$ be
+  the blocks on which $G^{(b)}=K^{(b)}$ that the record of the run names as
+  resting on that assumption. Where $B$ is empty this part asserts nothing.
+  Where it is not, let the assumption hold: then on every block in $B$ the
+  block of the measurement the device performs is the snapped block
+  $K^{(b)}$, with the entries recorded for the snap, in place of the block
+  of the declaring instance's model, so that the companion is formed there
+  from the block the device then measures; and no claim relates a key length
+  computed from the companion to that model on the blocks in $B$;
+\item \emph{(entries requested beside the instance's own)} let
+  $(\hat O,\bowtie,c)$ be an entry emitted at a request that carries entries
+  (Corollary~\ref{cor:entries}), written in the form
+  \eqref{eq:instance-entry} with coefficients $\alpha_{v,s}$ and a
+  combination $Z$ of sector projectors,
+  $\hat O=\sum_{v\in\Vset}\sum_{s\in\SecSet}\alpha_{v,s}\Pi_sF_v[A']\Pi_s+Z$
+  at the \tref{declared datum} $A'$, and call
+  $(\hat O^{\mathrm{ref}},\bowtie,c)$, with
+  \begin{equation}\label{eq:companion-form}
+    \hat O^{\mathrm{ref}}\;\coloneqq\;\sum_{v\in\Vset}\sum_{s\in\SecSet}
+      \alpha_{v,s}\,\Pi_sF_v[A^{\mathrm{ref}}]\Pi_s\;+\;Z ,
+  \end{equation}
+  its \emph{companion form} at that writing. Part~(iii) encloses
+  $\hat O^{\mathrm{ref}}$. Where $\hat O$ is a sum of sector projectors
+  (Corollary~\ref{cor:entries}\,(i)), written with every $\alpha_{v,s}=0$,
+  $\hat O^{\mathrm{ref}}=\hat O$ and
+  $\Lambda[A^{\mathrm{ref}}]^{\dagger}(\hat O)\succeq0$. Where it is the
+  class-marginal entry $\big(\sum_{v\in\Vset_t}F_v,=,q_t\big)$ of
+  Corollary~\ref{cor:entries}\,(ii), written with $\alpha_{v,s}=1$ for
+  $v\in\Vset_t$, $0$ otherwise, and $Z=0$, $\hat O^{\mathrm{ref}}=\hat O$,
+  and where the instance discharges \eqref{eq:instance-classmarginal},
+  $\Lambda[A^{\mathrm{ref}}]^{\dagger}(\hat O^{\mathrm{ref}})=q_t\,\idon{\Bsys}$
+  exactly. For any other entry this part asserts no certificate at
+  $A^{\mathrm{ref}}$. In every case, where
+  $\Lambda[A^{\mathrm{ref}}]^{\dagger}(\hat O^{\mathrm{ref}})\bowtie
+  c\,\idon{\Bsys}$ holds,
+  $\big(M[A^{\mathrm{ref}}];O[A^{\mathrm{ref}}],
+  \Lambda[A^{\mathrm{ref}}]^{\dagger}(\hat O^{\mathrm{ref}})\big)
+  \dsq_{\Lambda[A^{\mathrm{ref}}]}
+  \big(F[A^{\mathrm{ref}}];\hat O[A^{\mathrm{ref}}],\hat O^{\mathrm{ref}}\big)$,
+  and the companion form is an entry carrying the spectral certificate
+  \eqref{eq:certificate} at its constant.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+\emph{Idea.} The \tref{stability clause} of Definition~\ref{def:reduction-instance}
+was stated so that the instance at any admissible datum is again an
+instance; (H-REF) supplies an admissible datum formed from $G$, and every
+conclusion is a part of the instance read at that datum.
+
+(i) The family $G$ has the properties (H-REF) lists, so
+$A^{\mathrm{ref}}\in\mathcal{D}_{\mathrm{adm}}$, the set of admissible data
+over the substrate $\Fld=\mathbb{R}$, which Definition~\ref{def:substrate}
+admits: it leaves the field open between $\mathbb{Q}$ and $\mathbb{R}$, and
+entries of a reference may be irrational. The definition's closing sentence
+says that the instance at an admissible datum is a reduction instance
+whenever $\mathcal{J}$ is, by the stability clause: (H) reads no entry of
+the datum, so it holds of $M[A^{\mathrm{ref}}]$ as it holds of the \tref{handed
+model}, and (I2)--(I4) are established at every admissible datum. By the
+first consequence of Definition~\ref{def:reduction-instance},
+$\{F_v[A^{\mathrm{ref}}]\}$ is a POVM on $\Qsys$, its data sectors carrying
+$A^{\mathrm{ref}}$ and its scalar sectors the scalar values; it is assigned
+one sector block at a time by \eqref{eq:instance-target}, so it is
+sector-block-diagonal by construction. The alphabet, the classes and
+weights, the sector list with its order, dimensions and kinds, the scalar
+values and the declared party label are data of the instance that the
+instance at a datum keeps by definition; only the datum changes, and the
+datum occupies the data sectors alone. Where $G=K$, the rule of (I1) is
+applied to the family it formed the handed datum from, so
+$A^{\mathrm{ref}}=A$.
+
+(ii) The relation is (I3) of the reference companion, which (i) shows to be
+a reduction instance; its first clause is
+$\Lambda[A^{\mathrm{ref}}]^{\dagger}(F_v[A^{\mathrm{ref}}])
+=M_v[A^{\mathrm{ref}}]$ by Definition~\ref{def:squashing}. Every
+certificate of $\CList[A^{\mathrm{ref}}]$ and, where flagged, the
+class-marginal identity are (I4) at $A^{\mathrm{ref}}$, discharged there by
+the stability clause. Theorem~\ref{thm:transfer} needs only the relation.
+The one-link segment with source family $(\Bsys,M[A^{\mathrm{ref}}])$,
+target $(\Qsys,F[A^{\mathrm{ref}}])$, channel witness
+$\Lambda[A^{\mathrm{ref}}]$, the transported pair
+$(\hat O[A^{\mathrm{ref}}],O[A^{\mathrm{ref}}])$, the \tref{reachable-set statement}
+of that channel and the entry list $\CList[A^{\mathrm{ref}}]$ is a
+receiver-stage link of Definition~\ref{def:link} and a chain of
+Definition~\ref{def:chain} with an empty \tref{source segment}, and
+Theorem~\ref{thm:chain}\,(iv) gives it $\textsf{status}=\textsf{exact}$,
+the relation carrying no error term. The sector pinching in front of
+$\Lambda_0[A^{\mathrm{ref}}]$ changes none of this
+(Corollary~\ref{cor:blockdiag}\,(i)).
+
+(iii) Each entry of $A^{\mathrm{ref}}$ is the value of the expression the
+rule of (I1) uses, at the entries of $G$ and at the handed numbers. Those
+handed numbers that are not entries of a block are the same as for $A$ and
+are known exactly; an exactly known number is enclosed by itself with radius
+zero (\xref{receiver/def:complex-enclosure}), and an entrywise enclosure of a
+block is a complex enclosure of each of its entries. The rules (i)--(iii) of
+\xref{receiver/lem:enclosure-arithmetic} enclose sums, products, conjugates
+and, where the condition of its part (iii) is met, reciprocals of enclosed
+numbers, with centres formed by the same operation on the centres, and keep
+an enclosure exact where the inputs are; by its part (iv), applied along the
+expression under the hypothesis that every reciprocal node receives an
+enclosure, they give a complex enclosure of every entry of
+$A^{\mathrm{ref}}$, with the centre and the radii stated. Every element of
+$A^{\mathrm{ref}}$ is a Hermitian matrix, the datum being admissible (i), so
+part (v) of that lemma turns the complex enclosure of each element into an
+entrywise enclosure in the sense of \xref{foundations/def:exact-reference},
+with Hermitian centre $\tfrac12(X_c+X_c^{\dagger})$ and symmetric radii
+$\tfrac12(r+r^{\transpose})$, exact at an entry $(i,l)$ where
+$r_{il}=r_{li}=0$. For an entry
+operator, $\hat O_k[A^{\mathrm{ref}}]$ restricted to a data sector $s$ is
+$\sum_v\alpha_{k,v,s}A^{\mathrm{ref},(s)}_v$ plus the coefficient of $\Pi_s$
+in $Z_k$ times $\idon{d_s}$, exactly known; at each entry the triangle
+inequality gives $\big|\sum_v\alpha_{k,v,s}(A^{\mathrm{ref},(s)}_v
+-C^{(s)}_v)_{il}\big|\le\sum_v|\alpha_{k,v,s}|\,R^{(s)}_{v,il}$, with
+$(C,R)$ any entrywise enclosure of the datum. On a scalar sector the operator is a
+combination of the scalar values, which are the instance's and exact.
+
+(iv) For the identity instance the rule of (I1) is the identity: the datum
+is the declared family read as a sector-block list, and it is admissible
+exactly when each block is Hermitian and positive semidefinite and the class
+sums are $q_t$ times the identity, the completeness identities its
+declaration states. A family $G$ with the properties listed has them, so the
+datum it forms is admissible. That the identity instance is an instance over
+$\mathbb{R}$ is the proof of Corollary~\ref{cor:identity-instance}, which
+reads of the substrate its field operations and its order and of a datum
+only admissibility: its channel, the sector pinching, does not depend on
+the datum. For the branching and the register instances,
+$\mathcal{D}_{\mathrm{adm}}=\prod_j\mathcal{D}^{(j)}_{\mathrm{adm}}$, a
+composite datum being admissible exactly when every branch datum is (Step~1
+of the proof of Theorem~\ref{thm:instrument-instance}, which
+Corollary~\ref{cor:register-instance} applies); replacing $K$ by $G$ changes
+only the branch data formed from blocks of $K$, each admissible by (H-REF)
+for its branch, and leaves the others as they are. Both results establish
+the composite instance from its branch instances by arguments that read of
+the substrate its field operations and its order, so the composite is an
+instance over $\mathbb{R}$ when its branches are.
+
+(v) No step of (i)--(iv) reads the assumption. Where $B$ is not empty, each
+block in $B$ is a block of the declaring instance's snap of the measurement
+of a device, the data $D$ of that snap being what the instance states as
+that measurement or a reference of it, so clause (i) of
+\xref{foundations/ass:snapped-measurement} applies to it: the block of the
+measurement the device performs is the snapped family there, with the
+entries recorded for the snap, in place of the model. On such a block
+$G^{(b)}=K^{(b)}$, so the companion is formed there from that snapped block.
+A nearness of the snapped block and the model relates no key lengths, and
+no claim relates the two on a block in $B$, which is a \tref{moved} block of
+the snap, as the assumption's $B$ is defined; so no claim relates the
+companion's key length to the model there.
+
+(vi) The companion form is an operator of the form
+\eqref{eq:instance-entry} at the datum $A^{\mathrm{ref}}$, which
+(iii) encloses. Where every $\alpha_{v,s}$ is zero, \eqref{eq:companion-form}
+reads no datum, so $\hat O^{\mathrm{ref}}=Z=\hat O$; $Z$ is a sum of sector
+projectors, each in the \tref{transported set} of the companion by (I3) at
+$A^{\mathrm{ref}}$, and $\Lambda[A^{\mathrm{ref}}]^{\dagger}$ is a positive
+map (the third consequence of Definition~\ref{def:reduction-instance}), so
+$\Lambda[A^{\mathrm{ref}}]^{\dagger}(Z)\succeq0$, as
+Corollary~\ref{cor:entries}\,(i) argues at $A'$. For the class-marginal
+entry, $F_v[A]$ is sector-block-diagonal at every admissible datum (i), so
+$\sum_s\Pi_sF_v[A]\Pi_s=F_v[A]$ and
+$\hat O^{\mathrm{ref}}=\sum_{v\in\Vset_t}F_v[A^{\mathrm{ref}}]$. On a scalar
+sector $s$ the block of $\sum_{v\in\Vset_t}F_v$ is formed from the scalar
+values, which are the same at both data (i). On a data sector $s$ it is
+$\sum_{v\in\Vset_t}A^{(s)}_v$ at the datum it is read at, the elements
+\tref{outside the sector support} being zero; an admissible datum is
+\tref{class complete}, so this sum is $q_t\idon{d_s}$ at $A^{\mathrm{ref}}$,
+admissible by (i), and at $A'$, admissible as an element of
+$\mathcal{D}_{\kappa}$ (Definition~\ref{def:emitnorm}). The two operators
+therefore agree block by block, and $\hat O^{\mathrm{ref}}=\hat O$. Where
+the instance discharges \eqref{eq:instance-classmarginal}, (ii) gives that
+identity at $A^{\mathrm{ref}}$ and
+$\Lambda[A^{\mathrm{ref}}]^{\dagger}(F_v[A^{\mathrm{ref}}])
+=M_v[A^{\mathrm{ref}}]$, so by linearity
+$\Lambda[A^{\mathrm{ref}}]^{\dagger}(\hat O^{\mathrm{ref}})
+=\sum_{v\in\Vset_t}M_v[A^{\mathrm{ref}}]=q_t\idon{\Bsys}$, which is
+\eqref{eq:certificate} with $\bowtie$ the equality at $c=q_t$. For any
+other entry the certificate was established at $A'$, for the numbers
+emitted there (Corollary~\ref{cor:entries}\,(iii)), and a certificate of an operator
+formed from one datum is no statement about the operator formed from
+another; so none is asserted. A writing of $\hat O$ in the form
+\eqref{eq:instance-entry} need not be unique, and two writings may give
+different companion forms; each is an entry wherever its own certificate
+holds, which is all this part claims of it. Finally, where
+$\Lambda[A^{\mathrm{ref}}]^{\dagger}(\hat O^{\mathrm{ref}})\bowtie
+c\,\idon{\Bsys}$ holds, (ii) is a \tref{squashing relation} at
+$A^{\mathrm{ref}}$, and adjoining the pair
+$\big(\Lambda[A^{\mathrm{ref}}]^{\dagger}(\hat O^{\mathrm{ref}}),
+\hat O^{\mathrm{ref}}\big)$ to its \tref{carried operators} keeps
+\eqref{eq:squashing}, whose clause for that pair holds by the choice of its
+physical operator (Definition~\ref{def:squashing}); the certificate is then
+\eqref{eq:certificate} for the adjoined carried operator.
+\end{proof}

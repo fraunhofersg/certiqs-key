@@ -1,0 +1,78 @@
+% ---
+% id: protocol-compiler/req:band-a-ideal-receiver
+% kind: req
+% title: "Band A only within the ideal qubit receiver"
+% summary: >-
+%   A specification on the Band-A route is refused unless it has one measured
+%   factor, a two-dimensional receiver system and transmitted system, and a
+%   projective declared receiver measurement. The route then never rests on
+%   an ideal-receiver premise its own declared data contradict.
+% prominence: standard
+% status: accepted
+% uses: [def:banda, def:spec, def:weighted, thm:band-a]
+% mentions: [ass:ideal, req:physical-family-decision, req:band-a-identity-link]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% user_statement: >-
+%   The idealised Band-A route is taken only for a receiver that can be the
+%   ideal qubit measurement its premise [[A-IDEAL]] describes: one measuring
+%   station, a two-dimensional measured system and, with a trusted source, a
+%   two-dimensional transmitted system, and a declared measurement made of
+%   projectors (per basis, where a basis choice is declared). Anything else
+%   is refused rather than analysed under a premise its own numbers already
+%   contradict; such a receiver is declared through the receiver module and
+%   a squashing reduction.
+% implements: certiqs_key.protocol_compiler.declared_premises:decide_band_a_ideal_receiver
+% lean:
+% notes: "The recognition reads the shape Definition def:banda (b) gives the chain and (a)'s sector clause on the record; the clauses of (b) it leaves open, the channel supplied as data, the outcome correspondence and the target POVM, are decided by req:band-a-identity-link after this requirement's refusal. (a)'s provenance clause, that the family was declared directly with no characterisation step, is recorded by no specification and is not decided here. The link test reads every measured factor, so a specification with a joint singleton sector set and an identity-shaped factor other than the first is refused by (i) rather than emitted without any premise on that factor's idealisation. On binary64 data the rank-one qubit projectors that pass the exact test of (iii) are those of the three Pauli bases: a diagonal entry a must satisfy a(1-a) = |b|^2 with a and b dyadic, which forces a in {0, 1/2, 1}."
+% ---
+
+On the Band-A route the residual physical content is
+Assumption~\ref{ass:ideal}, an ideal projective measurement on a qubit
+(Theorem~\ref{thm:band-a}\,(iv)), while
+Theorem~\ref{thm:band-a} itself holds for any declared dimension and any
+\tref{exactly admissible} family. Part of that assumption is a property of the
+\tref{declared data}: the number of measured factors, the dimensions and the
+projectivity of the declared family. The engine decides that part, so that the
+route is never taken for a declaration that contradicts the premise it rests
+on. Exact admissibility of the same family is decided first, on every route
+(Requirement~\ref{req:physical-family-decision}). For a family presented as
+a \tref{choice-weighted family}, Assumption~\ref{ass:ideal}\,(i) is read of
+each conditional family: a public choice of known bias followed by an ideal
+projective measurement. The weighted family itself is not projective when a
+weight is below one, and the same measurement presented directly, as a
+passive basis choice, is refused on purpose: a passive choice is made by an
+optical element, which the idealisation does not describe.
+
+\begin{requirement}\label{req:band-a-ideal-receiver}
+The engine recognises the \tref{Band A} route on the record, reading the
+shape that condition (b) of Definition~\ref{def:banda} gives the chain and
+the sector clause of its (a), for a specification whose \tref{source segment} is
+empty, whose emitted \tref{sector set} (in the general format, the joint one) is a singleton, and
+in which, for some \tref{measured factor}, the \tref{receiver segment} is one
+link with status exact, equal source and
+\tref[target descriptor]{target descriptors}, a channel that, where the link
+supplies one as data, is exactly the identity map on its system, an empty
+constraint slot and an empty licence slot; it decides the link condition on
+the chain record of every measured factor. The clauses of (b) this
+recognition leaves open --- that the link supplies its channel as data, its
+outcome correspondence and its \tref[target povm]{target POVM} --- are
+decided by Requirement~\ref{req:band-a-identity-link}. It refuses such a
+specification, before a declaration is emitted, with
+\iface{band_a_outside_ideal_receiver}, naming the first clause below that
+fails and, for (iii), the choice value where there is one and the outcome
+index of the first element that is not a projector, unless
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item the specification declares exactly one measured factor;
+\item that factor's physical receiver system has dimension two and, in
+  \tref{trusted-source mode}, the \tref{transmitted system} of the
+  transmitter artefact (Definition~\ref{def:spec}\,(a)) has dimension two; and
+\item that factor's physical receiver family as presented is projective,
+  decided exactly on the declared numbers: presented directly, every element
+  satisfies $\Fph_w\Fph_w=\Fph_w$; presented as a
+  \tref{choice-weighted family}, every element of every declared conditional
+  family satisfies $N_{u|t}N_{u|t}=N_{u|t}$
+  (Definition~\ref{def:weighted}).
+\end{enumerate}
+\end{requirement}

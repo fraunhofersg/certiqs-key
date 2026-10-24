@@ -1,0 +1,170 @@
+% ---
+% id: meat-core/thm:reduction
+% kind: thm
+% title: "Reduction of the rate to the convex program"
+% summary: >-
+%   For a declaration that adds no constraints on the state (an empty
+%   constraint list), in either source mode, the value h_low of the finite
+%   convex program bounds the single-round rate from below. Every
+%   step of the reduction is an equality or lowers the bound, so the computable
+%   program is conservative.
+% prominence: main
+% status: implemented
+% uses: [def:hqkd-list, thm:protocol-channel, lem:cond-more, foundations/def:renyi, thm:branch-formula, def:declaration, def:admissible-declaration]
+% mentions: [cor:reduction-constrained, protocol-compiler/rem:block-restriction, prop:a-neutral, thm:accumulated-entropy]
+% assumes: []
+% refs:
+%   - "arqand2025meat, footnote 17"
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.objective:objective_value
+% lean:
+% notes: "Step 1 proves the restriction protocol-compiler/rem:block-restriction states; the compiler states it as a consumer obligation, and no claim declares it."
+% ---
+
+Step~1 of the proof is where the block restriction is discharged. The
+compiler states, as a consumer obligation it does not discharge, that this
+module's minimisation over the sector-block-diagonal feasible set is sound
+(\xref{protocol-compiler/rem:block-restriction}); Step~1, the dephasing of an arbitrary
+feasible state by the \emph{joint} pinching along the measured sectors and
+along Alice's declared sectors, is that statement's proof. It is proved under
+exactly the typing of Definition~\ref{def:declaration}\,(DX2), which types
+Alice's measurement slot, $\tau_A$ and every $\Theta_k$ against a declared
+factor. The restriction along $\mathbb{T}$ is licensed by this step, and
+Proposition~\ref{prop:a-neutral} adds that it costs nothing. Corollary~\ref{cor:reduction-constrained} extends the theorem to
+non-empty constraint lists.
+
+\begin{theorem}\label{thm:reduction}
+Let $\Decl$ satisfy Definition~\ref{def:admissible-declaration} with $\CList=\varnothing$,
+in either source mode, and let $\alpha\in(1,\infty)$. Then, with
+$\hqkd=\hqkd(\varnothing)$ the single-round rate of
+Definition~\ref{def:hqkd-list} at the empty list,
+\begin{equation}\label{eq:c8}
+  \hqkd\;\ge\;\hlow .
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} Five steps take the bracket of \eqref{eq:hqkd-list} at
+$\CList=\varnothing$, the rate that Theorem~\ref{thm:accumulated-entropy}
+writes out as \eqref{eq:hqkd-def}, at a state of its inner infimum to the objective at a point of $\Feas$: a joint dephasing that
+changes no output (Step~1), a purification (Step~2), the replacement of the
+up-arrow entropy by the down-arrow one (Step~3), the branch formula of
+Theorem~\ref{thm:branch-formula} (Step~4) and a rearrangement of the
+logarithms (Step~5). Every step of the proof is an equality or an inequality
+whose direction lowers the bound (conservative); no step uses $\CList$.
+
+Fix $\mathbf q\in\acSet$ and a feasible $\omega\in\Seq{A\Qsys\Etil}$ with
+$\omega\models\Decl$ (\eqref{eq:margcond}); abbreviate
+$\Phi\coloneqq\Phimap[\omega_{A\Qsys}]$. We
+lower-bound the bracket of \eqref{eq:hqkd-list} at $\CList=\varnothing$ by
+$O_{\alpha}(\mathbf q,\tilde\omega)$ for some $\tilde\omega\in\Feas$; taking
+infima then yields \eqref{eq:c8}. The divergence term of
+\eqref{eq:hqkd-list} is already the KL divergence
+$\frac{\alpha}{\alpha-1}\sfD(\mathbf q\|\Phi)$ of the import, so no
+divergence relaxation occurs anywhere in this chain.
+
+\emph{Step 1 (joint sector dephasing; exact).} Let
+$\mathcal{P}_{\mathbb{T}}(X)\coloneqq\sum_{t\in\mathbb{T}}\Pi^{A}_tX\Pi^{A}_t$ be
+the pinching along Alice's declared sectors
+(Definition~\ref{def:declaration}\,(DX1); the identity map when
+$|\mathbb{T}|=1$), $\PinS$ the pinching along $\SecSet$, for a product
+\tref{sector map} the tensor product of the
+\tref[measured factor]{measured factors}' pinchings, and
+$\omega'\coloneqq(\mathcal{P}_{\mathbb{T}}\otimes\PinS\otimes\idmap_{\Etil})(\omega)$.
+Then $\omega'$ is feasible: both pinchings are CPTP, so $\omega'$ is a
+state, and in trusted-source mode
+$\omega'_A=\mathcal{P}_{\mathbb{T}}(\omega_A)
+=\mathcal{P}_{\mathbb{T}}(\tau_A)=\tau_A$ because $\tau_A$ is block diagonal
+along $\mathbb{T}$ (Definition~\ref{def:admissible-declaration}\,(iii)). Its
+$A\Qsys$-marginal is block diagonal along the joint sectors, and
+$\nu^{\omega'}=\nu^{\omega}$: by \eqref{eq:povm-form} the output depends on
+$\omega$ only through the operators
+$\tr_{A\Qsys}[(M_x\otimes F_v\otimes\idon{\Etil})\,\omega]$, and
+$\tr_{A\Qsys}[(M_x\otimes F_v\otimes\idon{\Etil})\,\omega']
+=\tr_{A\Qsys}[(\mathcal{P}_{\mathbb{T}}(M_x)\otimes\PinS(F_v)\otimes
+\idon{\Etil})\,\omega]
+=\tr_{A\Qsys}[(M_x\otimes F_v\otimes\idon{\Etil})\,\omega]$, because both
+pinchings are self-adjoint for the trace pairing and act on the traced
+systems, every $F_v$ is block diagonal along $\SecSet$ and every $M_x$ along
+$\mathbb{T}$ (Definition~\ref{def:admissible-declaration}\,(iii)). \emph{The step is an
+equality}: $\omega'$ is another feasible point with literally the same
+output state, Eve's register included; no dilation of a pinching is handed
+to her here, and the purification is Step~2. Hence every entropy term and $\Phi$ are unchanged.
+(If $\CList\neq\varnothing$, every entry still holds at $\omega'$; this is
+Corollary~\ref{cor:reduction-constrained}.)
+
+\emph{Step 2 (purification; conservative).} Let
+$\ket{\hat\omega}\in\Hs{A\Qsys\Etil\Etil_2}$ purify $\omega'$, with
+$\Etil_2$ of dimension $\dim\Hs{A\Qsys\Etil}$. Enlarging the purifying
+register is within the scope of the import
+(\cite[footnote~17]{arqand2025meat}).
+For each $\hat c\in\Chkey$ with $q(\hat c)>0$: if $P_{\hat c}(\omega')=0$
+then $\mathbf q\not\ll\Phi$ and the divergence term of the bracket is
+already $+\infty$, so the claimed lower bound holds trivially; assume
+$P_{\hat c}>0$. Since
+$\tr_{\Etil_2}$ maps $\nu^{\hat\omega}_{|\hat c}$ to
+$\nu^{\omega'}_{|\hat c}$ (conditioning on the classical $\Chat$ commutes
+with the partial trace), Lemma~\ref{lem:cond-more} gives
+\begin{equation*}
+  \Hsandup(Z|I\Etil)_{\nu^{\omega'}_{|\hat c}}
+  \;\ge\;\Hsandup(Z|I\Etil\Etil_2)_{\nu^{\hat\omega}_{|\hat c}}.
+\end{equation*}
+
+\emph{Step 3 (arrow replacement; conservative).} By the arrow order of
+\xref{foundations/def:renyi},
+$\Hsandup(Z|I\Etil\Etil_2)_{\nu^{\hat\omega}_{|\hat c}}
+\ge\Hsanddown(Z|I\Etil\Etil_2)_{\nu^{\hat\omega}_{|\hat c}}$.
+
+\emph{Step 4 (branch formula; exact).} $\hat\omega$ is pure with
+$\hat\omega_{A\Qsys}=\omega'_{A\Qsys}\eqqcolon\tilde\omega$
+block diagonal along the joint sectors, and $\tilde\omega\in\Feas$: normalization is
+preserved by every step ($\tr\tilde\omega=\tr\omega=1$), and in
+trusted-source mode additionally
+$\tilde\omega_A=\omega_A=\tau_A$, none of Steps 1--3 having touched the
+$A\Qsys$-marginal except through the joint pinching of Step~1, which
+fixes $\tau_A$. Theorem~\ref{thm:branch-formula}, applied with
+purifying register $\Etil\Etil_2$, gives
+\begin{equation*}
+  \Hsanddown(Z|I\Etil\Etil_2)_{\nu^{\hat\omega}_{|\hat c}}
+  =\frac{1}{1-\alpha}\log_2
+  \frac{K_{\hat c}(\tilde\omega)}{P_{\hat c}(\tilde\omega)}
+  =\frac{1}{1-\alpha}\log_2\frac{K_{\hat c}(\tilde\omega)}{P_{\hat c}},
+\end{equation*}
+using $P_{\hat c}(\tilde\omega)=P_{\hat c}(\omega')=P_{\hat c}$.
+
+\emph{Step 5 (rearrangement; exact).} Collecting Steps 1--4, the bracket of
+\eqref{eq:hqkd-list} is bounded from below by
+\begin{equation*}
+  \frac{\alpha}{\alpha-1}\sfD(\mathbf q\|\Phi)
+  +\sum_{\hat c\in\Chkey}
+  \frac{q(\hat c)}{1-\alpha}\log_2
+  \frac{K_{\hat c}(\tilde\omega)}{P_{\hat c}} .
+\end{equation*}
+For each $\hat c\in\Chkey$ with $q(\hat c)>0$ and
+$P_{\hat c},K_{\hat c}>0$,
+\begin{equation}\label{eq:rearrange}
+\begin{split}
+  \frac{\alpha}{\alpha-1}\,q(\hat c)\log_2\frac{q(\hat c)}{P_{\hat c}}
+  &+\frac{q(\hat c)}{1-\alpha}\log_2\frac{K_{\hat c}}{P_{\hat c}}\\
+  &=q(\hat c)\log_2\frac{q(\hat c)}{P_{\hat c}}
+  +\frac{q(\hat c)}{\alpha-1}
+  \left[\log_2\frac{q(\hat c)}{P_{\hat c}}
+  -\log_2\frac{K_{\hat c}}{P_{\hat c}}\right]\\
+  &=q(\hat c)\log_2\frac{q(\hat c)}{P_{\hat c}}
+  +\frac{q(\hat c)}{\alpha-1}\log_2\frac{q(\hat c)}{K_{\hat c}},
+\end{split}
+\end{equation}
+an identity of real numbers. At the degenerate values the identity persists
+in the extended sense: $q(\hat c)=0$ makes all terms $0$; $P_{\hat c}=0$
+with $q(\hat c)>0$ makes both sides $+\infty$; $K_{\hat c}=0$ with
+$q(\hat c)>0$ makes both sides $+\infty$ (using $K_{\hat c}\le P_{\hat c}$
+from Theorem~\ref{thm:branch-formula}'s \emph{cone clause}, which is stated without the
+hypothesis $P_{\hat c}>0$ that the degenerate cases here violate, so the
+$+\infty$ appears on both sides through
+the $K$ term on the right and through the combination on the left, where
+$\frac{1}{1-\alpha}\log_2\frac{K}{P}\to+\infty$). Summing
+\eqref{eq:rearrange} over $\hat c\in\Chkey$ and adding the
+$\hat c\notin\Chkey$ part of $\sfD$ yields exactly
+$O_{\alpha}(\mathbf q,\tilde\omega)\ge\hlow$ after taking the infimum over
+$\Feas$ and then over $\acSet$.
+\end{proof}

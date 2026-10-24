@@ -1,0 +1,143 @@
+# Serves the contract and digest PDFs on GitHub Pages, so that a link
+#   <site>/<version>/spec/modules/<core>/contract.pdf#nameddest=claim-<full claim id>
+# opens the contract in the browser's PDF viewer at the claim.
+#
+# Motivation: GitHub's file view shows a PDF in an embedded viewer that ignores
+# #nameddest, and a raw file is served as application/octet-stream with
+# nosniff, so the browser downloads it and the fragment is lost. Pages serves
+# application/pdf. A deploy from a branch would serve the whole tree, including
+# third-party papers and internal notes, so the site is built by
+# harness/build_pages_site.py from an explicit allow-list, read from git, and
+# deployed as exactly that artifact. latest/ is main; every tag v* gets its own
+# folder, so a document citing a release keeps working after a claim rename.
+#
+# Privacy guard: a private repository must have a private site. Before
+# anything is built, the guard job reads the Pages settings through the API and
+#   - skips build and deploy (green run, a notice) when Pages is not
+#     configured or not built by Actions (Source: Deploy from a branch);
+#   - deploys when the site is built by Actions ("build_type": "workflow") and
+#     is private ("public": false), or is public where the repository
+#     variable CERTIQS_PAGES_PUBLIC is 'true' (set in the public repository
+#     only: a public site is a decision of the release);
+#   - fails, publishing nothing, on anything else: a public site without the
+#     variable, a missing field, an unreadable setting.
+# It runs on every deploy, so a private repository's site later switched to
+# public stops receiving deploys. After deploying, the alarm step fetches the
+# site without credentials and fails loudly if it is readable, unless the site
+# is public by the variable. The job runs only in the repository named in its
+# condition (the public export rewrites the name); a copy elsewhere does
+# nothing.
+
+name: Pages
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+    paths:
+      - "spec/**"
+      - "runs/report_examples/**"
+      - "harness/build_pages_site.py"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  guard:
+    if: github.repository == 'fraunhofersg/certiqs-key'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: read
+    outputs:
+      deploy: ${{ steps.settings.outputs.deploy }}
+      url: ${{ steps.settings.outputs.url }}
+    steps:
+      - name: Read the Pages settings; refuse a public site
+        id: settings
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PUBLIC_SITE: ${{ vars.CERTIQS_PAGES_PUBLIC }}
+        run: |
+          set -euo pipefail
+          status=0
+          gh api "repos/${GITHUB_REPOSITORY}/pages" > pages.json 2> err.txt || status=$?
+          if [ "$status" -ne 0 ]; then
+            if grep -q "HTTP 404" err.txt; then
+              echo "::notice::GitHub Pages is not configured for this repository; nothing is built or deployed."
+              echo "deploy=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            cat err.txt
+            echo "::error::The Pages settings could not be read; refusing to deploy."
+            exit 1
+          fi
+          public=$(jq -r '.public' pages.json)
+          build_type=$(jq -r '.build_type' pages.json)
+          url=$(jq -r '.html_url' pages.json)
+          if [ "$build_type" != "workflow" ]; then
+            echo "::notice::Pages is not built by GitHub Actions (build_type=${build_type}); nothing is built or deployed."
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "$public" = "true" ] && [ "$PUBLIC_SITE" = "true" ]; then
+            kind=Public
+          elif [ "$public" = "false" ]; then
+            kind=Private
+          else
+            echo "::error::The Pages site is not private (public=${public}) and the repository variable CERTIQS_PAGES_PUBLIC is not 'true'; refusing to deploy. Set Settings > Pages > Visibility to Private, or Source back to Deploy from a branch, None."
+            exit 1
+          fi
+          case "$url" in */) ;; *) url="${url}/" ;; esac
+          echo "${kind} Pages site: ${url}"
+          echo "deploy=true" >> "$GITHUB_OUTPUT"
+          echo "url=${url}" >> "$GITHUB_OUTPUT"
+
+  deploy:
+    needs: guard
+    if: needs.guard.outputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # main's tool builds every version, also on a tag push (a tag may
+      # predate the tool); fetch-depth 0 brings the tags.
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Build the site from the allow-list
+        run: python3 -m harness.build_pages_site --out _site --latest origin/main --tags 'v*'
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v5
+      - name: Alarm if the site is readable without credentials
+        if: vars.CERTIQS_PAGES_PUBLIC != 'true'
+        env:
+          SITE: ${{ needs.guard.outputs.url }}
+        # A fresh deploy can answer 404 for a while, so ask three times.
+        run: |
+          set -uo pipefail
+          for attempt in 1 2 3; do
+            for path in latest/index.html latest/spec/modules/meat-core/contract.pdf; do
+              code=$(curl -s -o /dev/null -w '%{http_code}' "${SITE}${path}")
+              echo "Attempt ${attempt}, unauthenticated ${SITE}${path}: HTTP ${code}"
+              if [ "$code" = "200" ]; then
+                echo "::error::The site is readable without credentials. Unpublish it now (Settings > Pages)."
+                exit 1
+              fi
+            done
+            sleep 30
+          done

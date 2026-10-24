@@ -1,0 +1,141 @@
+% ---
+% id: receiver/thm:enclosed-blocks
+% kind: thm
+% title: "Rigorous enclosures of the photon-number blocks"
+% summary: >-
+%   Enclosures of the port Grams, obtained from enclosures of square roots,
+%   cosines and sines, carry through permanents, inclusion and exclusion and
+%   the coarse-graining to enclosures of every block. With Hermitian centres
+%   they make the emitted blocks up to any cutoff a reference.
+% prominence: standard
+% status: implemented
+% uses: [def:complex-enclosure, lem:enclosure-arithmetic, lem:fock-permanent, thm:click-povm, def:coarse, thm:coarse-graining, def:compile, def:gram, def:instrument, foundations/def:exact-reference, foundations/def:sector-map]
+% mentions: [thm:compilation-well-defined, thm:exact-blocks]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% notes: "Exactness is the special case of radius zero, stated in thm:exact-blocks."
+% implements: certiqs_key.receiver.generic:element_blocks
+% lean:
+% ---
+
+Every block of the receiver's measurement is a finite expression in the
+entries of the port Grams: a permanent divided by square roots of factorials
+(Lemma~\ref{lem:fock-permanent}), combined by inclusion and exclusion and
+summed over the fibres of the coarse-graining. A compiled receiver's port
+Grams are in turn finite expressions in the entries of its elements, which are
+square roots, cosines and sines of the declared parameters. Enclosures of
+these, carried through the expressions by
+Lemma~\ref{lem:enclosure-arithmetic}, therefore enclose the blocks of the
+model at the declared parameters, whatever the parameters are, with no
+floating-point step. The enclosures depend on the order in which the products
+are formed; the value they enclose does not
+(Theorem~\ref{thm:compilation-well-defined}\,(i)). Where the enclosures are
+exact, the reference is exact (Theorem~\ref{thm:exact-blocks}).
+
+\begin{theorem}\label{thm:enclosed-blocks}
+Let $\Recv$ be a \tref{receiver instrument} with
+\tref[port Gram matrices]{port Grams} $\{A_k\}_{k=1}^{K}$ on
+$\mathbb{C}^{\Inp}$ (Definitions~\ref{def:instrument} and~\ref{def:gram}),
+$\{M_S\}_{S\subseteq[K]}$ its click-pattern POVM
+(Theorem~\ref{thm:click-povm}), $\cg$ a \tref{declared coarse-graining} onto
+$\Vset$ and $\{F_v\}_{v\in\Vset}$ the \tref{emitted POVM}
+(Definition~\ref{def:coarse}). Fix $N\ge0$, and read every block
+$\Symn{n}(\mathbb{C}^{\Inp})$, $n\le N$, in its occupation basis listed in an
+order fixed for that block. Enclosures are
+\tref[complex enclosure]{complex enclosures}
+(Definition~\ref{def:complex-enclosure}), and ``the rules'' are those of
+Lemma~\ref{lem:enclosure-arithmetic}\,(i)--(iv).
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{Port Grams of a compiled receiver.} Suppose that the
+  \tref{instrument matrix} of $\Recv$ is the
+  \tref{compiled instrument matrix} $\Gmat=D_\eta\Gmat^{\sigma}_{\Grph}$ of a
+  well-formed graph for a \tref{linear extension} $\sigma$
+  (Definition~\ref{def:compile}), and that enclosures are given of the matrix
+  $\hat\Gmat_e$ of every element $e$ and of $\sqrt{\eta_k}$ for every port
+  $k$. Enclose every other entry of $D_\eta$, and every entry of each
+  $\Emd{\{k\}}$, exactly by itself. Then the rules, applied to the products
+  \eqref{eq:compile} in the order of $\sigma$, to the restriction of
+  $\Gmat$ to the columns $\Inp$, and to \eqref{eq:gramdef}, give enclosures
+  of the $A_k$.
+\item \emph{Blocks.} Let $(C_k,r_k)$ be enclosures of the $A_k$, and for
+  every $n\le N$ and occupation vectors $\vec m,\vec m'$ of weight $n$ let
+  $(a_{\vec m\vec m'},e_{\vec m\vec m'})$ be a \tref{square-root enclosure}
+  of $1/(\vec m!\,\vec m'!)$. For $J\subseteq[K]$ enclose $\id-A_J$ by the
+  rules from the $(C_k,r_k)$, the identity being exact; enclose the entry
+  $(\vec m,\vec m')$ of $\Pvac{J}^{(n)}$ by the rules applied to the product
+  of $\operatorname{per}\big((\id-A_J)[\vec m|\vec m']\big)$ with
+  $\sqrt{1/(\vec m!\,\vec m'!)}$; enclose $\blk{M}{\eqn}_S$ by the rules
+  applied to \eqref{eq:blockMS}, the signs being exact; and enclose
+  $\blk{F}{\eqn}_v$ by the rules applied to
+  $\sum_{S\in\cg^{-1}(v)}\blk{M}{\eqn}_S$. Each enclosure so obtained is a
+  complex enclosure of the block it names.
+\item \emph{The reference.} Replace each enclosure of a block
+  $\blk{F}{\eqn}_v$ of (ii) by the one with a Hermitian centre of
+  Lemma~\ref{lem:enclosure-arithmetic}\,(v). Let $\mathfrak{m}_N$ be a
+  \tref{sector map} (\xref{foundations/def:sector-map}) whose blocks are the
+  photon numbers $n=0,\dots,N$ of the declared inputs, in increasing order,
+  of dimensions $\binom{|\Inp|+n-1}{n}$, with any block kind and block
+  identifiers, each block read in its fixed order. Then the family
+  $\{F_v\}$ restricted to the blocks $n\le N$, read with these enclosures, is
+  a \tref{reference} with constant $1$ against $\mathfrak{m}_N$ over $\Vset$
+  (\xref{foundations/def:exact-reference}); the same holds for $\{M_S\}$ over
+  the click patterns.
+\item \emph{Exactness.} An entry of an enclosure of (i)--(iii) is exact where
+  every enclosure it is computed from is exact; the reference of (iii) is an
+  \tref{exact reference} when every one of its radii is zero.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) Every entry of a product or a sum of matrices is a sum of products of
+entries, the adjoint conjugates and transposes entries, and restricting to
+the columns $\Inp$ selects entries. The matrix $D_\eta$ is diagonal with the
+entry $\sqrt{\eta_k}$ on the modes of port $k$ and $1$ elsewhere
+(Definition~\ref{def:compile}), and $\Emd{\{k\}}$ is diagonal with entries
+$0$ and $1$, so all their entries are enclosed. Each entry of
+$A_k=\Gmat_{\Inp}^{\dagger}\Emd{\{k\}}\Gmat_{\Inp}$ is thus a finite
+expression in enclosed numbers, and
+Lemma~\ref{lem:enclosure-arithmetic}\,(iv), which needs no reciprocal here,
+encloses it.
+
+(ii) By Theorem~\ref{thm:click-povm}\,(ii) and its block structure (iii),
+$\Pvac{J}=\Fock(\id-A_J)$ is block diagonal, and by
+\eqref{eq:fock-permanent} of Lemma~\ref{lem:fock-permanent}\,(i) the entry
+$(\vec m,\vec m')$ of its block $n$ is
+$\operatorname{per}\big((\id-A_J)[\vec m|\vec m']\big)\cdot
+\sqrt{1/(\vec m!\,\vec m'!)}$. The permanent is a sum of products of entries
+of $\id-A_J=\id-\sum_{k\in J}A_k$, each of which is enclosed by
+Lemma~\ref{lem:enclosure-arithmetic}\,(i); the square root is enclosed by
+hypothesis; so Lemma~\ref{lem:enclosure-arithmetic}\,(iv) encloses the entry.
+Equation \eqref{eq:blockMS} writes $\blk{M}{\eqn}_S$ as
+$\sum_{T\subseteq S}(-1)^{|T|}\Pvac{([K]\setminus S)\cup T}^{(n)}$, an
+integer combination taken entry by entry, and
+Theorem~\ref{thm:coarse-graining}\,(i) gives
+$\blk{F}{\eqn}_v=\sum_{S\in\cg^{-1}(v)}\blk{M}{\eqn}_S$; both are finite
+expressions in the enclosed entries, enclosed by the same lemma.
+
+(iii) Each $\blk{F}{\eqn}_v$ is Hermitian, being a block of the
+block-diagonal POVM element $F_v$, so
+Lemma~\ref{lem:enclosure-arithmetic}\,(v) gives an
+\tref{entrywise enclosure} with a Hermitian Gaussian-rational centre and
+rational radii. The blocks are positive semidefinite, since
+$M_S\succeq0$ (Theorem~\ref{thm:click-povm}\,(i)) and a block of a
+block-diagonal positive semidefinite operator is positive semidefinite, and
+$F_v$ is a sum of such. Completeness on every block holds because
+$\sum_SM_S=\id$ restricts to $\sum_S\blk{M}{\eqn}_S=\id$ on
+$\Symn{n}(\mathbb{C}^{\Inp})$ and the fibres of $\cg$ partition $2^{[K]}$, so
+$\sum_v\blk{F}{\eqn}_v=\id$ there. The dimension of
+$\Symn{n}(\mathbb{C}^{\Inp})$ is the number of occupation vectors of weight
+$n$ on $|\Inp|$ modes, $\binom{|\Inp|+n-1}{n}$, which the sector map
+declares, and the constant $1$ is a positive declared value. These are the
+conditions of a reference. Nothing depends on the block kind or the
+identifiers; the enclosures were formed in each block's fixed order, which is
+the order in which the sector map reads the block. The statement for
+$\{M_S\}$ is the same argument without the fibre sums.
+
+(iv) Lemma~\ref{lem:enclosure-arithmetic}\,(iv) gives an exact enclosure at
+every node whose operands are exactly enclosed, and (v) of the same lemma
+keeps an entry exact where it and its transposed entry are. A reference all
+of whose radii are zero is an exact reference by definition.
+\end{proof}

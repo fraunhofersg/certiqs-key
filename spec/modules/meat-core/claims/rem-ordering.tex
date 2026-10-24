@@ -1,0 +1,57 @@
+% ---
+% id: meat-core/rem:ordering
+% kind: rem
+% title: "Ordering convention and channel reading"
+% summary: >-
+%   In trusted-source mode each Choi block J_s is the Choi operator of a
+%   completely positive branch from A₀ to the sector, input factor first, and
+%   only the branches' sum preserves trace. The reading is fixed only up to a
+%   unitary relabelling of the input, set by the declared isometry.
+% prominence: standard
+% status: accepted
+% uses: [lem:choi-marginal, thm:choi]
+% mentions: [rem:basis-invariance, def:support-frame, req:choi-convention, req:frame-recorded]
+% assumes: []
+% refs:
+%   - "kamin2025renyi, Eqs. (82)-(83) and (85)-(86)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:ordering}
+In trusted-source mode each $J_s$ is the (unnormalized) Choi operator of a
+CP branch $\mathcal{E}_s:A_0\to\Qsys_s$ in the convention with the
+\emph{input} factor $A_0$ first and trace over the \emph{output} equal to
+the identity on the input, $\sum_s\tr_{\Qsys_s}J_s=\idon{A_0}$; the induced
+action is
+$\mathcal E_s(\varrho)=\tr_{A_0}[(\varrho^{\transpose_{A_0}}
+\otimes\idon{\Qsys_s})J_s]$ with the transpose taken in the declared basis
+of $A_0$, i.e.\ in the columns of the declared isometry $\iota$ of
+\eqref{eq:iota}. This matches the convention of
+\cite[Eqs.~(82)--(83) and (85)--(86)]{kamin2025renyi}. The reading is
+interpretive only: the parametrisation of Lemma~\ref{lem:choi-marginal} and
+the program of Theorem~\ref{thm:choi} do not use it. It is relative
+to the declared $\iota$: replacing $\iota$ by $\iota U$ for a unitary $U$
+on $A_0$ replaces the block representing a given $\omega_s$ by
+$J'_s=(U^{\dagger}\otimes\idon{})J_s(U\otimes\idon{})$
+(Remark~\ref{rem:basis-invariance}\,(b)), and since
+$\tr_{A_0}[(\varrho^{\transpose}\otimes\idon{})J'_s]
+=\tr_{A_0}[((U\varrho^{\transpose}U^{\dagger})\otimes\idon{})J_s]$ by
+cyclicity in the traced factor, while
+$(U\varrho^{\transpose}U^{\dagger})^{\transpose}
+=\overline{U}\,\varrho\,\overline{U}^{\dagger}$, the branch reads
+$\mathcal E'_s(\varrho)
+=\mathcal E_s(\overline{U}\,\varrho\,\overline{U}^{\dagger})$ with
+$\overline{U}$ the entrywise complex conjugate of $U$ in the declared
+basis. The channel is therefore pinned down only up to that unitary
+relabelling of its input, while every quantity this module outputs is
+invariant (Remark~\ref{rem:basis-invariance}\,(d)); the declared $\iota$ is
+recorded with any reported $J_s$ (Requirement~\ref{req:frame-recorded}),
+and Requirement~\ref{req:choi-convention} fixes the factor order and the
+transpose basis. The branches are generally
+trace-non-increasing; only their sum is trace-preserving, which is what
+couples the sector blocks through the single constraint in
+\eqref{eq:choi-feas}. All declared sectors, including one-dimensional
+classical (flag-type) sectors, are treated uniformly as output sectors of
+this parametrized channel.
+\end{remark}

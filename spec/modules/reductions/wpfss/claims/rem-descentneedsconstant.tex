@@ -1,0 +1,44 @@
+% ---
+% id: reductions/wpfss/rem:descentneedsconstant
+% kind: rem
+% title: "Necessity of the constancy clause"
+% summary: >-
+%   With four ports and independent dark counts, one coarse-graining injective
+%   off the multiclick set that splits that set over two letters has two
+%   columns in one fibre with different fibre sums, so R^cg is undefined. The
+%   constancy clause of [[lem:descent]] cannot be left unchecked.
+% prominence: standard
+% status: accepted
+% uses: [lem:descent]
+% mentions: [req:descent-decided-exactly]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:descentneedsconstant}
+The constancy clause of \eqref{eq:canonicalcg} cannot be dropped: without it
+the conclusion of Lemma~\ref{lem:descent} fails. Take $K=4$, independent
+per-port dark counts of common probability $p\in(0,1)$ (the
+\tref{independent product form} with the same probability at every port), and
+let $\cg$ send $\{1,2\},\{1,2,4\},\{1,2,3,4\}\mapsto y_a$, every other
+multiclick pattern to $y_b$, and be injective with distinct fresh letters off
+$\MCK$. Then $\cg$ is injective on $2^{[K]}\setminus\MCK$ and
+$\cg^{-1}(\{y_a,y_b\})=\MCK$, and $R$ is monotone, but
+\begin{equation*}
+  P\big(y_a\,\big|\,\{1,2\}\big)=(1-p)^2+p(1-p)+p^2=1-p+p^2,
+  \qquad
+  P\big(y_a\,\big|\,\{1,2,4\}\big)=(1-p)+p=1,
+\end{equation*}
+two columns with the same $\cg$-image and different values, so $R^{\cg}$ is not
+well defined. The first count is over the supersets of $\{1,2\}$ lying in
+$\cg^{-1}(y_a)$, namely $\{1,2\}$ itself, $\{1,2,4\}$ and $\{1,2,3,4\}$; the
+second over the supersets of $\{1,2,4\}$ there, namely itself and
+$\{1,2,3,4\}$. The canonical declaration maps all of $\MCK$ to the single
+letter $\mc$ and is unaffected; what the counterexample rules out is testing
+the other two clauses of \eqref{eq:canonicalcg} in place of the descent
+property itself
+(Requirement~\ref{req:descent-decided-exactly}).
+\end{remark}

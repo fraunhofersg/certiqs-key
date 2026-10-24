@@ -1,0 +1,110 @@
+% ---
+% id: receiver/detector-imperfections/thm:dark-counts
+% kind: thm
+% title: "Dark counts on a photon-number block-diagonal POVM"
+% summary: >-
+%   A dark-count channel keeps the photon-number block-diagonal POVM structure
+%   and never moves weight out of the multiclick set. It raises the multiclick
+%   bound p_mc to (1 − r_min)p_mc + r_min, where r_min is the least multiclick
+%   mass over every non-multiclick column, the no-click column included.
+% prominence: main
+% status: implemented
+% uses: [def:darkadm, receiver/thm:click-povm, receiver/def:setting-family]
+% mentions: [prop:dark-slack-bound, rem:d2slack]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.dark:compose_blocks
+% lean:
+% ---
+
+The theorem is stated for a channel that satisfies (D1) and (D2) exactly. For
+a channel admitted at the receiver tolerances,
+Proposition~\ref{prop:dark-slack-bound} states what holds in place of items
+(iii) and (iv), and Remark~\ref{rem:d2slack}\,(f) states what remains of
+item (ii). Of the POVM it uses only that it is a POVM whose elements commute
+with the photon number, so it holds at every setting of a \tref{setting family}, the
+click-pattern POVM being the one setting of a receiver without a probe.
+
+\begin{theorem}\label{thm:dark-counts}
+Let $R$ be a dark-count channel, let $\{M_S\}_{S\subseteq[K]}$ be the
+click-pattern POVM of Theorem~\ref{thm:click-povm} or, at a setting $t$ of a
+\tref{setting family} of $K$ ports, its POVM $\{M_{S|t}\}_{S\subseteq[K]}$
+(Definition~\ref{def:setting-family}\,(a)), written $\{M_S\}$, and put
+$\widetilde{M}_S\coloneqq\sum_{S'\subseteq[K]}R_{S|S'}M_{S'}$.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{The product form is admissible.} \eqref{eq:darkR} satisfies (D1)
+  and (D2).
+\item \emph{Structure is preserved.} $\{\widetilde M_S\}_{S\subseteq[K]}$ is a
+  POVM, every $\widetilde M_S$ is block diagonal in the photon number with
+  $\blk{\widetilde M}{\eqn}_S=\sum_{S'}R_{S|S'}\blk{M}{\eqn}_{S'}$, and $R$ acts
+  on the outcome label alone: it commutes with every operation on the optical
+  modes.
+\item \emph{Multiclick absorption.} (D2) implies
+  $R_{\MCK|S'}=1$ for every $S'\in\MCK$: dark counts never move weight out of
+  the \tref{multiclick set}.
+\item \emph{The bound improves.} With
+  \begin{equation}\label{eq:rmin}
+    r_{\min}\coloneqq\min_{S'\in2^{[K]}\setminus\MCK}R_{\MCK|S'} ,
+  \end{equation}
+  the minimum running over \emph{every} non-multiclick column, the no-click
+  column $S'=\varnothing$ included,
+  one has, writing $\widetilde M_{\MCK}=\sum_{S\in\MCK}\widetilde M_S$,
+  \begin{equation}\label{eq:darkimprove}
+    \widetilde M_{\MCK}\ \succeq\ (1-r_{\min})\,M_{\MCK}+r_{\min}\,\id ,
+  \end{equation}
+  and consequently, if $\blk{M}{\gtN}_{\MCK}\succeq\pmc\,\id^{(>N)}$, then
+  \begin{equation}\label{eq:darkpmc}
+    \blk{\widetilde M}{\gtN}_{\MCK}\ \succeq\
+    \big((1-r_{\min})\,\pmc+r_{\min}\big)\,\id^{(>N)} ,
+  \end{equation}
+  which is $\ge\pmc$ since $\pmc\le1$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) Non-negativity is clear. Fix $S'$ and write $S=S'\sqcup W$ with
+$W\subseteq[K]\setminus S'$; then
+$\sum_SR_{S|S'}=\sum_{W\subseteq[K]\setminus S'}
+\prod_{k\in W}p_{\dc|k}\prod_{k\in[K]\setminus S'\setminus W}(1-p_{\dc|k})
+=\prod_{k\notin S'}\big(p_{\dc|k}+(1-p_{\dc|k})\big)=1$, the middle equality
+being the expansion of the product. (D2) is the indicator in
+\eqref{eq:darkR}.
+
+Of $\{M_S\}$ the proof uses only that it is a POVM and that every element
+commutes with the photon number: for the click-pattern POVM these are
+Theorem~\ref{thm:click-povm}\,(i) and~(iii), and at a setting of a setting
+family they are Definition~\ref{def:setting-family}\,(a).
+
+(ii) $\widetilde M_S\succeq0$ as a non-negative combination of positive
+operators, and, by (D1) and the completeness of $\{M_S\}$,
+\begin{equation}
+  \sum_S\widetilde M_S=\sum_{S'}\Big(\sum_SR_{S|S'}\Big)M_{S'}
+  =\sum_{S'}M_{S'}=\id .
+\end{equation}
+Block diagonality is inherited
+from each $M_{S'}$; the coefficients are
+scalars, so they commute with everything.
+
+(iii) If $S'\in\MCK$ and $R_{S|S'}>0$ then $S\supseteq S'$ by (D2), so
+$|S|\ge|S'|\ge2$ and $S\in\MCK$. Hence every non-zero entry of the column $S'$
+lies in $\MCK$, and column-stochasticity gives $R_{\MCK|S'}=1$.
+
+(iv) Split the sum over columns:
+\begin{align}
+  \widetilde M_{\MCK}
+  &=\sum_{S'\in\MCK}R_{\MCK|S'}M_{S'}
+   +\sum_{S'\notin\MCK}R_{\MCK|S'}M_{S'}
+  \ \ \overset{\text{(iii)}}{=}\ \
+   M_{\MCK}+\sum_{S'\notin\MCK}R_{\MCK|S'}M_{S'}\nonumber\\
+  &\succeq M_{\MCK}+r_{\min}\sum_{S'\notin\MCK}M_{S'}
+   =M_{\MCK}+r_{\min}\big(\id-M_{\MCK}\big)
+   =(1-r_{\min})M_{\MCK}+r_{\min}\id ,
+\end{align}
+using $M_{S'}\succeq0$ and $R_{\MCK|S'}\ge r_{\min}$ in the inequality and
+the completeness of $\{M_S\}$ in the last line. All operators are block diagonal
+in the photon number, so the inequality restricts to the $>N$ blocks; since
+$1-r_{\min}\ge0$, substituting the assumed bound gives \eqref{eq:darkpmc}. The
+final comparison is
+$(1-r_{\min})\pmc+r_{\min}-\pmc=r_{\min}(1-\pmc)\ge0$.
+\end{proof}

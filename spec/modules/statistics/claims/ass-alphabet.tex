@@ -1,0 +1,38 @@
+% ---
+% id: statistics/ass:alphabet
+% kind: ass
+% title: "An acceptance value recorded in every round"
+% summary: >-
+%   In every one of the n rounds of the run an acceptance value of the
+%   alphabet is recorded. The counts and the frequency vector then describe the
+%   whole run, normalised by its round count.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-ALPHABET
+% verification: never
+% category: protocol-structure
+% affects: [secrecy, completeness]
+% user_statement: >-
+%   Every one of the n rounds of your run records an acceptance value from the
+%   declared acceptance alphabet: no round counted in n is missing from the
+%   record. If rounds go missing (for example through lost time tags), the
+%   counts are normalised against the wrong number of rounds and the acceptance
+%   test does not describe the run. A round missing from the record also
+%   puts security at stake: the acceptance test must be
+%   evaluated on the acceptance values of all n rounds ([[A-CONFORM]]), and a
+%   measured round the record drops is a sifting step the declaration does
+%   not describe ([[A-SPEC]]). Where the engine builds the acceptance set, it
+%   checks that the alphabet, its order and n are those of your protocol
+%   declaration; a set carried in the declaration is read in the
+%   declaration's order, so writing it in that order is yours to check.
+% lean:
+% ---
+
+\begin{assumption}\label{ass:alphabet}
+(i) In every one of the $n$ rounds of the run, an acceptance value in
+$\Chatset$ is recorded.
+\end{assumption}

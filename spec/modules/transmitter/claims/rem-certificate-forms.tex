@@ -1,0 +1,69 @@
+% ---
+% id: transmitter/rem:certificate-forms
+% kind: rem
+% title: "Purity and exact declarability of the certificate forms"
+% summary: >-
+%   Only the converse in part (ii) of [[thm:certificate-sufficiency]] depends on purity. A
+%   certificate vector, a globally pure operator over sectors and a pure block
+%   over non-orthogonal states can all need irrational entries, which is why
+%   the certificate is an operator with a block form and an ensemble form.
+% prominence: standard
+% status: accepted
+% uses: [def:srcert]
+% mentions: [thm:certificate-sufficiency, cor:noncanonical, lem:ensemble-presentation, def:source-spec]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:certificate-forms}
+\emph{What purity adds.} A pure-form certificate satisfies every condition of
+the block form at the one-sector structure and one condition more
+(Definition~\ref{def:srcert}). Every statement this module proves of the
+block form therefore holds of the pure form, and
+Theorem~\ref{thm:certificate-sufficiency}\,(ii) is the only statement whose \emph{conclusion}
+depends on the additional condition: in pure form a source/POVM mismatch of
+the kind (ii) describes is a detected defect and not a silent one, while in
+block form it is the POVM condition of Definition~\ref{def:source-spec},
+decided on its own, that excludes it. Part (i) of the theorem lists purity as
+a condition of the pure form, and a consumer that demands purity of every
+certificate re-decides it and therefore refuses a block form. Everything
+Corollary~\ref{cor:noncanonical} exhibits is admitted in block form as well.
+Not every block-form certificate is pure: already at one sector the block
+form admits a positive semidefinite operator of unit trace and rank above
+one, which the pure form refuses.
+
+\emph{Why the certificate is an operator and not a vector.} No binary64
+number $a$ satisfies $a^2=\tfrac12$, so a declared vector with entries
+$\mathrm{fl}(1/\sqrt2)$ yields $\dyad{\psi}$ with entries
+$\mathrm{fl}(1/\sqrt2)^2\ne\tfrac12$, and (SR1) fails exactly \emph{for the
+certificate as an instance declares it} --- $\ket{\Phip}$ in that
+instance's own computational basis, whose amplitudes are $1/\sqrt2$. The
+\emph{operator} $\dyad{\Phip}$, by contrast, has every entry equal to
+$\tfrac12$, which is a binary64 number; and every quantity (SR1), (SR2)
+and Theorem~\ref{thm:certificate-sufficiency} read off the certificate is a function of
+$\Psi$ and never of a vector. In pure form the purity conditions ---
+$\Psi^2=\Psi$ with $\tr\Psi=1$ --- are what recover the vector where an
+argument needs one (Theorem~\ref{thm:certificate-sufficiency}\,(ii)), and they are two exact
+identities on the declared matrix. Whether a given declaration of the
+canonical data of Corollary~\ref{cor:noncanonical} is admissible is decided,
+not assumed: the canonical $\Psi$ must be declared as a binary64 rank-one
+projector, and a declaration whose entries do not satisfy $\Psi^2=\Psi$
+exactly is refused.
+
+\emph{Why a block form and an ensemble presentation.} Exact purity is not
+declarable for a source that draws a sector and then prepares a state in it.
+A globally pure $\Psi$ over sectors of weights $g_t$ carries cross-sector
+amplitudes $\sqrt{g_tg_{t'}}$, which need not be dyadic rationals, and a
+pure block whose marginal has the spectrum $(\tfrac12,\tfrac14,\tfrac14)$
+carries the entry $\sqrt{1/8}$, which is not one. The direct sum of positive
+blocks is exactly declarable, it is the state of the source that first draws
+$t$ with probability $\tr\Psi_t$ and then prepares $\Psi_t/\tr\Psi_t$, and
+the sufficiency statement, Theorem~\ref{thm:certificate-sufficiency}\,(iii), reads purity
+nowhere. Where even the blocks are not declarable --- a pure block over
+non-orthogonal signal states carries square roots of their weights --- the
+ensemble presentation is the form to use: it has the purity
+(Lemma~\ref{lem:ensemble-presentation}\,(ii)) and declares none of the
+numbers, which is what it exists for.
+\end{remark}

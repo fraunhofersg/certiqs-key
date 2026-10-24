@@ -1,0 +1,76 @@
+% ---
+% id: foundations/def:exact-admissibility
+% kind: def
+% title: "Exact admissibility of a declared operator family"
+% summary: >-
+%   A declared operator family is exactly admissible for a sector map with
+%   constant c when (T) its own sector map agrees, (H) every block is exactly
+%   Hermitian, (P) positive, (C) it sums to c times the identity and (S) its
+%   declared-order sum rounds nowhere. Each is a property of the declared
+%   numbers.
+% prominence: main
+% status: implemented
+% uses: [def:sector-map, def:declared-order, def:binary64, lem:exact-accumulation]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.exact_admission:admit_family_exact
+% notes: "The bound symbol decides (H), (P), (C) at the declared constant and (S); (T), the agreement of the sector maps, is decided by its caller (certiqs_key.foundations.blocks:SectorStructure.disagreement)."
+% lean:
+% ---
+
+The five conditions (T), (H), (P), (C) and (S) of the definition are the
+part that every module's admission of a declared operator family shares. A
+module may impose further conditions of its own, such as a declared lattice
+or conditions on other declared objects. A
+module may also carry the dimension clause of (T) by the type of its family:
+where each block is typed as a $d_s\times d_s$ matrix for the dimension $d_s$
+of the consumer's block $s$, comparing block kind, identifiers and order is the
+whole of (T).
+
+\begin{definition}\label{def:exact-admissibility}
+Let $\mathfrak{m}$ be a sector map with blocks $s\in\mathsf{S}$ of
+dimensions $d_s$ (Definition~\ref{def:sector-map}), let $J$ be a finite
+non-empty alphabet with a \tref{declared order}, let $c$ be a declared value,
+and let
+$\{a_j\}_{j\in J}$ be a family of block lists against a sector map
+$\mathfrak{m}'$ whose entries are declared values
+(Definition~\ref{def:binary64}\,(iii)). The family is
+\term[said of a declared operator family whose sector map agrees with the
+given one, whose blocks are exactly Hermitian and positive semidefinite, and
+whose sum in the declared order equals the constant times the identity on
+every block and rounds nowhere; the constant is one where none is
+named]{exactly admissible} for $\mathfrak{m}$ with constant $c$ when
+\begin{itemize}[leftmargin=2.6em]
+\item[(T)] \emph{(sector map)} $\mathfrak{m}'$ agrees with $\mathfrak{m}$;
+\item[(H)] \emph{(Hermiticity)} $a^{(s)}_j=a^{(s)\dagger}_j$ for every
+  $j\in J$ and $s\in\mathsf{S}$;
+\item[(P)] \emph{(positivity)} $a^{(s)}_j\succeq0$ for every $j\in J$ and
+  $s\in\mathsf{S}$;
+\item[(C)] \emph{(completeness)} $\sum_{j\in J}a^{(s)}_j=c\,\idon{d_s}$ for
+  every $s\in\mathsf{S}$, as an identity of the declared numbers;
+\item[(S)] \emph{(the sum \tref{rounds nowhere})} for every
+  $s\in\mathsf{S}$, the sum of $\{a^{(s)}_j\}_{j\in J}$ in the declared order
+  of $J$ rounds nowhere (Definition~\ref{def:declared-order}).
+\end{itemize}
+The family is exactly admissible for $\mathfrak{m}$ when it is so with
+constant $c=1$; it is then a positive operator-valued measure on
+$\bigoplus_{s}\mathbb{C}^{d_s}$, by the block-by-block reading of
+Definition~\ref{def:sector-map}. Since the block $s$ of a block list against
+$\mathfrak{m}'$ is a square matrix of the dimension $\mathfrak{m}'$ gives $s$,
+(T) holds if and only if $\mathfrak{m}'$ has the block kind and the
+identifiers of $\mathfrak{m}$, in the same order, and every block $a^{(s)}_j$
+is a $d_s\times d_s$ matrix, $J$ being non-empty. A family on a system without a declared sector
+decomposition is read against the one-block map of that system's dimension,
+and (T) then reduces to the agreement of that dimension with the size of the
+family's matrices.
+
+Each condition is a property of the declared values themselves and involves no
+threshold and no norm: (T) compares declared labels and dimensions, (H) and (C)
+are identities between exactly represented numbers, (P) is a property of
+matrices with dyadic entries, and (S) is a property of the binary64 additions
+that form the declared-order sum. Under (S) the computed
+\tref{sum in the declared order} is the exact sum
+(Lemma~\ref{lem:exact-accumulation}), so (C) holds if and only if that
+computed sum equals $c\,\idon{d_s}$ on every block.
+\end{definition}

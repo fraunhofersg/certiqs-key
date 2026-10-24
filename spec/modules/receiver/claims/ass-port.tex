@@ -1,0 +1,42 @@
+% ---
+% id: receiver/ass:port
+% kind: ass
+% title: "Mode-insensitive port response"
+% summary: >-
+%   A port clicks exactly when the modes it collects carry at least one
+%   photon, whatever their distribution over those modes. It is the multimode
+%   form of [[A-THRESH]], and it gives a detector that collects several modes
+%   a meaning.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [ass:thresh]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-PORT
+% verification: never
+% category: receiver
+% affects: [secrecy]
+% refines: A-THRESH
+% user_statement: >-
+%   Each detector port clicks exactly when at least one photon arrives in any
+%   of the modes it collects, whatever their distribution over those modes. A
+%   detector whose click probability depends on the spatial, spectral or
+%   temporal mode of the arriving photon (efficiency mismatch) violates this.
+%   Such a mismatch has to be declared as mode-dependent loss in front of the
+%   port.
+% lean:
+% ---
+
+This is the multimode form of Assumption~\ref{ass:thresh}. It is easily left
+implicit, but without it ``a detector that collects several modes'' is
+undefined. Under it the click decision is invariant under any passive unitary
+acting inside the port, since such a unitary preserves the total photon number
+of the port's modes.
+
+\begin{assumption}\label{ass:port}
+(i) Port $k$ clicks if and only if the total photon number in the modes
+$\Port{k}$ is nonzero; equivalently, its no-click element is the joint vacuum
+projector $\Pi^0_k=\Fock(\id-\Emd{\{k\}})$ on those modes.
+\end{assumption}

@@ -1,0 +1,146 @@
+% ---
+% id: reductions/domination/cor:dom-chain
+% kind: cor
+% title: "A squashing link followed by a domination link"
+% summary: >-
+%   If an exact datum dominates another datum, the instance's squashing link
+%   at the exact datum followed by the domination link is an exact chain from
+%   the model at the exact datum to the other target with flags. Security of
+%   that target transfers to the model with the same ε.
+% prominence: standard
+% status: accepted
+% uses: [def:domination-link, thm:noise-channel, foundations/def:domination, reductions/def:reduction-instance, reductions/def:link, reductions/def:chain, reductions/thm:chain, reductions/thm:transfer, reductions/thm:factorization, reductions/thm:licence, reductions/cor:pullback]
+% mentions: [reductions/req:post-processing-order, reductions/rem:intertwining]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% notes: "No requirement uses this corollary: no run emits a domination link. It is the relation a declared device weight (A-DOM, spec/future-scope.md section 13) would use."
+% lean:
+% ---
+
+This is Theorem~\ref{thm:chain} for a chain of two receiver-stage links: the
+squashing link of a \tref{reduction instance} at an exact datum, and the
+\tref{domination link} from its target to the target at another datum. Where the
+exact datum is formed from a reference by trusted classical post-processing
+--- the dark counts and the \tref{class weights} --- and the domination is
+established after that post-processing, every map
+on the physical outcome acts before the first squashing link, and the
+domination link is a squashing link on the target system with an exact
+identity, not a post-processing map on an outcome; the order of
+Requirement~\ref{req:post-processing-order} is therefore kept
+(Remark~\ref{rem:intertwining}). Hypothesis (a) below is the existence
+theorem (I3) of the instance where the exact datum is admissible, with
+$M^{\circ}=M[A^{\circ}]$ and $\Lambda^{\circ}=\Lambda[A^{\circ}]$; it is
+stated on its own so that an exact datum whose entries are not in the
+substrate, such as a reference with square-root entries, can be used where an
+instance proves the relation for it directly.
+
+\begin{corollary}\label{cor:dom-chain}
+Let $\mathcal{J}$ be a reduction instance with \tref{sector set}
+$\SecSet=\SecSet_{\mathrm{dat}}\sqcup\SecSet_{\mathrm{sc}}$, \tref{target family}
+$F[\cdot]$ and \tref{model map} $M[\cdot]$
+(Definition~\ref{def:reduction-instance}), and let $A^{\circ}$ and $A'$ be
+data for its \tref[data sector]{data sectors} such that
+\begin{enumerate}[label=(\alph*),leftmargin=2.4em]
+\item $A'\in\mathcal{D}_{\mathrm{adm}}$; the blocks $A^{\circ(s)}_v$ are
+  Hermitian, positive semidefinite and \tref{class complete}, so that the
+  \tref{target family} $F[A^{\circ}]$ of \eqref{eq:instance-target} is a POVM
+  on $\Qsys$; and there are a POVM $M^{\circ}$ on $\Bsys$, a channel
+  $\Lambda^{\circ}\colon\Tcl{\Bsys}\to\Tcl{\Qsys}$ and a finite set
+  $\hat O^{\circ}$ of operators on $\Qsys$ containing every sector projector,
+  with pull-backs $O^{\circ}$, such that
+  $\big(M^{\circ};O^{\circ}\big)\dsq_{\Lambda^{\circ}}
+  \big(F[A^{\circ}];\hat O^{\circ}\big)$;
+\item $A^{\circ}$ dominates $A'$ at weights
+  $\vartheta_s\in[0,1)$, $s\in\SecSet_{\mathrm{dat}}$:
+  $A^{\circ(s)}_v-(1-\vartheta_s)A'^{(s)}_v\succeq0$ for every $v\in\Vset$
+  (\xref{foundations/def:domination}).
+\end{enumerate}
+Put $\vartheta_s\coloneqq0$ on every \tref{scalar sector}. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $F[A^{\circ}]$ dominates $F[A']$ at the \tref{domination weights}
+  $\vartheta=(\vartheta_s)_{s\in\SecSet}$, as POVMs on $\Qsys$ block diagonal for
+  the sectors.
+\item Let $\Lnk_{\mathrm{dom}}$ be the domination link
+  (Definition~\ref{def:domination-link}) with \tref{source family}
+  $(\Qsys,F[A^{\circ}])$ and target family $F[A']$, with added flag sectors
+  (case (a) of that definition), or with shared flag sectors (case (b)) where
+  $F[A']$ has \tref{indicator sectors} among its scalar sectors; write $F^{\mathrm{dom}}$ and $\Phi$ for its target and \tref{channel
+  witness}. Let $\Lnk_1$ be the receiver-stage link with source family
+  $(\Bsys,M^{\circ})$, target $(\Qsys,F[A^{\circ}])$, channel witness
+  $\Lambda^{\circ}$ and target-side \tref{carried operators} the pull-backs
+  under $\Phi$ of the carried operators of $\Lnk_{\mathrm{dom}}$, with
+  $\textsf{status}=\textsf{exact}$. Then $(\Lnk_1,\Lnk_{\mathrm{dom}})$ is a
+  composable and tuple-chained \tref{receiver segment}, and with an empty source
+  segment a \tref{reduction chain} (Definition~\ref{def:chain}).
+\item Its \tref{receiver composite} $\Phi\circ\Lambda^{\circ}$ satisfies
+  $M^{\circ}\dsq_{\Phi\circ\Lambda^{\circ}}F^{\mathrm{dom}}$ exactly,
+  its composite status is $\textsf{exact}$, and
+  Theorem~\ref{thm:factorization} and Theorem~\ref{thm:transfer} apply to
+  it: the protocol whose measurement is $M^{\circ}$ and the \tref{squashed
+  protocol} with target $F^{\mathrm{dom}}$ have the same output state, and
+  security of the squashed protocol over analysed inputs that contain the
+  composite's image transfers to the protocol with $M^{\circ}$ with the
+  same $\varepsilon$.
+\item An entry $(\hat O,\bowtie,c)$ declared on $F^{\mathrm{dom}}$ is sound for
+  the composite, and Theorem~\ref{thm:licence} applies to the list of such
+  entries with the composite channel, when
+  $(\Lambda^{\circ})^{\dagger}\big(\Phi^{\dagger}(\hat O)\big)\bowtie
+  c\,\idon{\Bsys}$. Every projector onto a sector of the target has a
+  positive semidefinite composite pull-back.
+\item Where $\sum_{v\in\Vset_t}M^{\circ}_v=q_t\idon{\Bsys}$ for every
+  $t\in\Tset$, the \tref{class-marginal identity}
+  \eqref{eq:instance-classmarginal} of $M^{\circ}$, the composite pulls
+  $\sum_{v\in\Vset_t}F^{\mathrm{dom}}_v$ back to $q_t\idon{\Bsys}$ for every
+  $t\in\Tset$, so the class-marginal entry of
+  Definition~\ref{def:reduction-instance}\,(I4) is certified for the
+  composite.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(i) Both families are POVMs on $\Qsys$, $F[A^{\circ}]$ by (a) and $F[A']$ by
+the first consequence of Definition~\ref{def:reduction-instance}, and both
+are block diagonal by \eqref{eq:instance-target}. On a \tref{data sector} $s$ the
+blocks are $A^{\circ(s)}_v$ and $A'^{(s)}_v$, and \eqref{eq:dom-link} at $s$ is
+(b). On a scalar sector both blocks are $\phi_s(v)\idon{d_s}$, the \tref[scalar value]{scalar
+values} reading no datum, so the difference at weight $0$ is zero.
+
+(ii) Composability (C1): the target of $\Lnk_1$ is the source family of
+$\Lnk_{\mathrm{dom}}$. Tuple chaining (C2): by
+Theorem~\ref{thm:noise-channel}\,(ii) and (iii) the pull-back under $\Phi$ of
+every carried operator of $\Lnk_{\mathrm{dom}}$ (Definition~\ref{def:domination-link})
+is a real linear combination of sector projectors of $\Qsys$, namely
+$(1-\vartheta_s)\Pi_s$, $\sum_s\vartheta_s\Pi_s$ or $\Pflag+\sum_s\vartheta_s\Pi_s$;
+every sector projector is in the \tref{transported set} of (I3), and by the last
+sentence of (I3), read for the relation of (a), such a combination is
+transported by $\Lambda^{\circ}$ to the same combination of the pull-backs
+of the sector projectors, by linearity of $(\Lambda^{\circ})^{\dagger}$. So
+$\Lnk_1$ carries exactly the operators $\Lnk_{\mathrm{dom}}$ needs on its
+source side, and its relation, which is (a) with those operators, carries no
+error term. Both links are receiver-stage links of
+Definition~\ref{def:link}: $\Lnk_1$ by (a), $\Lnk_{\mathrm{dom}}$ by
+Definition~\ref{def:domination-link} and Theorem~\ref{thm:noise-channel}.
+Stage order (C3) is structural, the source segment being empty.
+
+(iii) Theorem~\ref{thm:chain}\,(i) gives the relation for the composite,
+with $(\Phi\circ\Lambda^{\circ})^{\dagger}
+=(\Lambda^{\circ})^{\dagger}\circ\Phi^{\dagger}$; both links are exact, so
+Theorem~\ref{thm:chain}\,(iv) gives the composite status \textsf{exact}; and
+Theorem~\ref{thm:chain}\,(ii) is the application of
+Theorem~\ref{thm:factorization} and Theorem~\ref{thm:transfer}.
+
+(iv) is Theorem~\ref{thm:chain}\,(iii) with the composite pull-back of (iii).
+For a sector projector $\Pi$ of the target, $\Phi^{\dagger}(\Pi)\succeq0$
+because the adjoint of a channel is a positive map, and
+$(\Lambda^{\circ})^{\dagger}$ is positive for the same reason; so the
+certificate $(\Pi,\succeq,0)$ of Corollary~\ref{cor:pullback}\,(ii) holds for
+the composite.
+
+(v) The domination link relates $F[A^{\circ}]$ to $F^{\mathrm{dom}}$ exactly,
+$\Phi^{\dagger}(F^{\mathrm{dom}}_v)=F_v[A^{\circ}]$, so by linearity
+$\Phi^{\dagger}\big(\sum_{v\in\Vset_t}F^{\mathrm{dom}}_v\big)
+=\sum_{v\in\Vset_t}F_v[A^{\circ}]$, and by (a)
+$(\Lambda^{\circ})^{\dagger}$ of that is $\sum_{v\in\Vset_t}M^{\circ}_v$,
+which is $q_t\idon{\Bsys}$ by hypothesis.
+\end{proof}

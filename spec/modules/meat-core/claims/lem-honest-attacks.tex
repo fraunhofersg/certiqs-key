@@ -1,0 +1,172 @@
+% ---
+% id: meat-core/lem:honest-attacks
+% kind: lem
+% title: "Adversaries of the honest-authentication setting as round attacks"
+% summary: >-
+%   Whatever an adversary does in the honest-authentication setting, adaptively and with a memory of any dimension, the output state is that of an all-at-once attack of [[lem:memory-lift]] followed by her own processing of her register.
+% prominence: standard
+% status: accepted
+% uses: [lem:memory-lift, def:postprocessing-model, foundations/lem:register-compression, reductions/def:protocol]
+% mentions: [cor:composed-security]
+% assumes: [A-SEQ, A-LAB, A-CONFORM, A-ALICE-MEAS]
+% refs:
+%   - "tupkary2026decoy, Lemma 8.1"
+%   - "tupkary2026decoy, Sec. 8.1.1, Protocol 2"
+% provenance: newly-derived
+% lean:
+% notes: "The identification Corollary composed-security needs to apply tupkary2026decoy Thm. 5.1 as stated. Every signal is handed to the first channel, as in the timing modification of tupkary2026decoy Lemma 8.1, so no schedule depends on the adversary's adaptive choices. The round order of the measurements is A-SEQ (v), the measurement part of the timing condition of the published Protocol 2 (its Bob's measurement times increasing), read for each measuring party."
+% ---
+
+An adversary of the \tref{honest-authentication setting} is not bound to
+act once per round: she may act at any time, decide adaptively when to deliver
+which system, hold the signals she receives, read her copies of the messages
+when they reach her, and process her memory after the last round. The lemma
+shows that none of this leaves the all-at-once attacks of
+Lemma~\ref{lem:memory-lift}\,(b), up to a final processing of her own register,
+as the timing modification of \cite[Lemma~8.1]{tupkary2026decoy} does for the
+published analysis: she is handed every signal at the start and ignores each
+until it would have reached her. That needs every party to measure in round
+order, A-SEQ\,(v), the measurement part of the timing condition of
+\cite[Sec.~8.1.1, Protocol~2]{tupkary2026decoy}, read for each measuring
+party. Corollary~\ref{cor:composed-security} uses the
+lemma to state its bound at every output state of the setting.
+
+\begin{lemma}\label{lem:honest-attacks}
+Let the run be as in Lemma~\ref{lem:memory-lift}\,(a), with A-ALICE-MEAS
+(\xref{protocol-compiler/ass:alice-meas})\,(i) for Alice's measurement where
+no \tref{source-replacement certificate} is demanded, and let A-SEQ
+(\xref{transmitter/ass:seq}), its clause (v) included,
+Assumption~\ref{ass:lab} (A-LAB) at each of the two parties and
+Assumption~\ref{ass:conform} (A-CONFORM) hold. Let an adversary act on the run in the honest-authentication setting
+(Definition~\ref{def:postprocessing-model}) by any operations, at any times,
+each chosen given the classical outcomes of her earlier ones, on her own
+registers, of any dimension, on each transmitted system once the source has
+released it and on her copies of the public messages once she holds them,
+delivering the measured system of each round, and in untrusted-source mode
+Alice's system, for the round's measurements. Then there are an all-at-once
+attack in the sense of Lemma~\ref{lem:memory-lift}\,(b), with output state
+$\rho$, and a channel $\Phi=\sum_m\dyad{m}\otimes\Phi_m$ that applies a
+channel $\Phi_m$ to her register $E'_n$ given the value $m$ of the run's
+public messages and keeps them, such that the state of the run's output
+registers, its public messages and the adversary's final register is
+$(\idmap\otimes\Phi)(\rho)$.
+\end{lemma}
+
+\begin{proof}
+\emph{Idea.} Every signal is handed to her at the start and passed on
+untouched until she would have received it; her operations between the
+deliveries that complete consecutive rounds, with their classical branches,
+form one channel; every measurement of a round is made, in the
+representation, right after the delivery that completes it; and neither the timing of message
+delivery nor the time a signal is prepared changes anything.
+
+\emph{Step 1 (what each side acts on).} By Assumption~\ref{ass:lab}\,(ii) at
+each party, the adversary acts on a laboratory only through the systems
+delivered into it, as its declared measurements receive them, and through the
+public messages it is delivered, and by (i) she learns nothing of its records
+except through the systems handed out of it and the public messages. So every
+operation of hers acts on her registers, on transmitted systems the source has
+released, on her copies of public messages, and on a system before she
+delivers it; once delivered, a system is acted on only by the measurement
+that receives it. Every operation of the run acts on its own registers and on
+the systems delivered to it. In the honest-authentication setting every
+classical message reaches its recipient exactly as sent, in the order sent and
+after it was sent, and the adversary receives a copy. By
+Assumption~\ref{ass:conform}\,(ii) the messages after the rounds are those of
+Definition~\ref{def:postprocessing-model}, and by (i), (iii) and (iv) the run
+applies that model's processing.
+
+\emph{Step 2 (what the run does not depend on).} The run's quantum
+operations, the preparations of the states $\rho_i$, which depend on nothing
+else, the one measurement channel of every round
+(\xref{reductions/def:protocol}) and, in untrusted-source mode, Alice's
+measurement of $A_j$ in the round's processing, the same in every round and
+on that round's $A_j$ alone by A-ALICE-MEAS\,(i), read no message. Its classical operations
+compute functions of its records and of the contents of the messages it has
+received, and a message arrives unaltered and in order. So the run's
+registers at its end, and the content of every public message, are the same
+whenever each message is delivered before the operation that reads it, which
+the run waits for, and whenever each $\rho_i$ is prepared before its signal
+is touched and its letter read.
+
+\emph{Step 3 (the cuts $s_j$).} The measurements of round $j$ are those of
+every party that measures in it, Alice's measurement of $A_j$ in
+untrusted-source mode among them (A-SEQ\,(i)). For $j=1,\dots,n$ let $s_j$ be
+the latest delivery, among the adversary's operations, of a system that a
+measurement of a round $i\le j$ receives. It is an operation of hers, so it is
+fixed by the branch of her classical outcomes: each of the finitely many
+systems of the rounds $i\le j$ is delivered exactly once on every branch, so
+at each of her operations her branch so far decides whether it is the last
+such delivery. And $s_{j-1}$ precedes or is $s_j$. Every public message of a round $j'\ge j$ is sent after $s_j$: the
+system delivered at $s_j$ is received by the measurement of a round $i\le j$
+of some party $\mathsf P$, which completes after the delivery; by A-SEQ\,(v)
+$\mathsf P$'s measurement of round $j'$ completes no earlier, $\mathsf P$
+measuring in every round (\xref{reductions/def:protocol}); and by
+A-SEQ\,(i) every message of round $j'$ follows that measurement. So a message
+the adversary holds before $s_j$ is one of a round $j'<j$.
+
+\emph{Step 4 (moving the measurements to the cuts).} Every measurement of
+round $j$ receives its system at or before $s_j$, and its outcome is read by
+nothing before the messages of round $j$, which follow $s_j$ (Step~3). By
+Step~1 the adversary does not touch the system once delivered, and by
+Assumption~\ref{ass:lab}\,(i) none of her operations depends on the outcome
+before those messages; every operation of the run between the measurement and
+$s_j$ acts on other systems and reads nothing it outputs. Moving the
+measurement to just after $s_j$, whether it was made before or after,
+therefore changes no later state, operations on disjoint systems commuting
+(\xref{foundations/lem:register-compression}\,(iv)), with the extensions of
+part (v) of that lemma. From now on every measurement of round $j$ is made
+right after $s_j$, on the systems delivered for round $j$.
+
+\emph{Step 5 (the attack).} Hand the adversary every transmitted system at the
+start: by Step~2 preparing $\rho_i$ there changes nothing, and she passes
+each on untouched, her operations extended by the identity on it
+(\xref{foundations/lem:register-compression}\,(v)), until the operation at
+which she received it. Let $\zeta$ be the state of her registers before the
+run starts. For $j=1,\dots,n$, let $\Aev_j$ be the composite of her operations
+after $s_{j-1}$ ($s_0$ the start) and up to $s_j$: on each branch of her
+classical outcomes the composite of the operations on that branch, the record
+of the branch kept in her memory, summed over the branches; it is a channel,
+every operation being one and her branching being on recorded classical
+outcomes. It acts on her memory, on the signals she holds and on her copies
+of messages, which by Step~3 are of rounds before $j$, those she has not yet
+received being passed on unread. The time at which a copy reaches her is set
+by the run and may depend on its devices' timing; she records each arrival
+as a classical outcome of hers, so it is part of her branch. By
+Assumption~\ref{ass:lab}\,(ii) at each party, a party's devices, and so the
+timing of its messages, are influenced by nothing but the systems and
+messages delivered to it, whose delivery times are in her branch; any
+further dependence on the quantum systems in its laboratory passes through a
+measurement, whose outcome is a record. So, given her branch, the timing is
+a function of the parties' records and local randomness, and by
+Assumption~\ref{ass:lab}\,(i) at each party, the timing of the parties'
+messages carrying no information about their records, the arrival times are
+independent, given her branch, of every register other than her branch: her
+quantum memory, the signals she holds and the parties' systems and records.
+Their law given her branch is therefore a fixed function of that branch;
+$\Aev_j$ samples them from that law with randomness of its own, which leaves
+the joint law of every register unchanged. It outputs the measured systems of round
+$j$, those she delivered before $s_{j-1}$ having been kept untouched in her
+memory until then, Alice's system $A_j$ among them in untrusted-source mode
+(Step~3), together
+with her memory $E'_j$, which holds everything she still passes on. With
+$k_1=n$, $(\zeta,(\Aev_j)_j)$ is an all-at-once attack in the sense of
+Lemma~\ref{lem:memory-lift}\,(b). By A-SEQ\,(ii) the post-processing follows
+the $n$ rounds; let $\Phi$ be the composite of her operations after $s_n$,
+which deliver nothing and act on her register and on her copies of the public
+messages;
+the public messages are classical, so $\Phi$ applies, given their value $m$,
+a channel $\Phi_m$ to her register and keeps them, the arrival of each copy
+it reads being sampled inside $\Phi_m$ as inside the $\Aev_j$.
+
+\emph{Step 6 (the same output).} The given execution, with its measurements
+moved as in Step~4, and the run under the attack of Step~5 followed by $\Phi$
+consist of the same channels, of the run and of the adversary. They differ in
+the order of channels acting on disjoint systems, which commute
+(\xref{foundations/lem:register-compression}\,(iv)); in the time at which
+each message reaches the run and each $\rho_i$ is prepared, which changes
+nothing by Step~2; and in the time at which the adversary holds a signal, a
+delivered system or a copy, which the passing on of Step~5 leaves without
+effect, the arrival of each copy being sampled inside the $\Aev_j$ and
+$\Phi$ as Step~5 says. So the two output states agree.
+\end{proof}

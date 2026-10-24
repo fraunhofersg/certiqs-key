@@ -1,0 +1,291 @@
+% ---
+% id: protocol-compiler/def:declaration
+% kind: def
+% title: "Protocol declaration"
+% summary: >-
+%   A protocol declaration fixes the systems, sector map, marginal slot, both
+%   measurements, public maps, raw-key map and a typed constraint list,
+%   operators on the measured system being block lists. The general format
+%   adds factors, Alice sectors, an ensemble form, a transcript and scoped
+%   entries.
+% prominence: standard
+% status: implemented
+% uses: []
+% mentions: [def:target, def:exact, thm:band-a, def:homog, def:spec, thm:sifting-and-key, foundations/def:sector-map, rem:block-restriction, req:pass-through, meat-core/def:declaration]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.declaration:CandidateDeclaration
+% lean:
+% notes: "The completion of the denoted POVM on the kernel of tau_A in eq:ensemblepovm is split among the letters in proportion to tr N_x and not put on the first letter as in transmitter/lem:ensemble-presentation, so that M_x vanishes on a sector exactly when N_x does and key-inertness stays decidable on declared data; part (iv) of that lemma says every such split serves."
+% ---
+
+The key-rate engine consumes a protocol declaration. We state it here as this
+contract's own definition, with its conditions in
+Definitions~\ref{def:exact} and~\ref{def:target}, so that every theorem of
+this contract is proved from text inside it. Whether restricting a state
+to the \tref[block list]{block lists} of the general format is sound is the subject of
+Remark~\ref{rem:block-restriction}. How an entry's form reaches the emitted
+declaration is Requirement~\ref{req:pass-through}.
+
+\begin{definition}\label{def:declaration}
+A \term[The finite object the compiler emits and the key-rate engine consumes: systems, sector map, marginal slot, measurement families, public maps, raw-key map and constraint list.]{protocol declaration}
+is a tuple
+\begin{equation}\label{eq:declaration}
+  \Decl=\Big(A,\ \tau_A;\ \Qsys,\ \SecSet;\ \{M_x\}_{x\in\Xset};\
+  \{F_v\}_{v\in\Vset};\ \Party;\ a_A,\ a_B;\ \phi;\ r,\ \hold;\
+  \CList\Big),
+\end{equation}
+with components as follows. $A$ and $\Qsys$ are finite-dimensional systems,
+$\Hs{\Qsys}=\bigoplus_{s\in\SecSet}\Hs{\Qsys_s}$ with a finite index set
+$\SecSet$ of sectors, sector projectors $\Pi_s$ and dimensions
+$d_s=\dim\Hs{\Qsys_s}$, $d_{\Qsys}=\sum_sd_s$, $d_A=\dim\Hs{A}$. The
+\tref{sector map} $\Smap$ is the ordered list
+$\big((s,d_s)\big)_{s\in\SecSet}$ of block identifiers with their dimensions,
+together with its block kind, a label naming what the identifiers mean
+(\xref{foundations/def:sector-map}). It is one object, carried with the
+declaration beside the slot $\Qsys,\SecSet$ of \eqref{eq:declaration}, and it
+is what fixes $\SecSet$, its total order and $(d_s)_s$.
+The
+\term[The slot of a declaration that holds Alice's marginal state, or the value marking untrusted-source mode.]{marginal slot}
+holds either a state $\tau_A\in\Seq{A}$, in \tref{trusted-source mode}, or
+the value $\nomarg$, in \tref{untrusted-source mode}.
+$\{M_x\}_{x\in\Xset}$ is a POVM on $A$, given as one matrix per $x$, since $A$
+carries no sector decomposition. The words ``state'' and ``POVM'' in the two
+sentences above name the intended objects, and they are also exactly the
+conditions this contract decides: what a declaration is required to satisfy
+is D(i)--D(viii) of Definition~\ref{def:target}, every operator predicate of
+which is decided \emph{exactly} on the declared \tref{binary64 numbers},
+together with the summation condition of Definition~\ref{def:exact}, without
+which a computed sum would not be the sum it is read as.
+
+\emph{Operators on $\Qsys$ are \tref[block list]{block lists}.} An operator
+on $\Qsys$ is given as one array $F^{(s)}\in\Lin{\Qsys_s}$ per
+$s\in\SecSet$, against the sector map $\Smap$, and that list is the
+operator: it is a block list against $\Smap$, the operator it denotes is
+$\bigoplus_{s}F^{(s)}$, and the
+declaration holds no array larger than a single sector block. Where
+$|\SecSet|=1$, say $\SecSet=\{s_0\}$, that one block \emph{is} the whole of
+$\Qsys$ and is held and emitted as such, $d_{s_0}=d_{\Qsys}$, as on the
+\tref[Band A]{Band-A} route (Theorem~\ref{thm:band-a}\,(i)). Sector block-diagonality is therefore a
+property of the \emph{type}: there is no off-sector entry an operator of this
+form could carry, and correspondingly nothing to verify. So
+$\{F_v\}_{v\in\Vset}$ is a family of such block lists over a finite alphabet,
+one list per $v$; $F_v^{(s)}$ denotes its $s$-block. A state $\omega$ on
+$A\Qsys$ is likewise a list, one array $\omega^{(s)}\in\Lin{A\Qsys_s}$ per
+$s$, and $\omega=\bigoplus_s\omega^{(s)}$ in the same sense. $\Party$ is a
+\term[The readout maps of the two parties, with a party label for Alice's system and for each tensor factor of every sector.]{party partition}:
+two total maps $\rd{\mathsf A}:\Xset\times\Vset\to\Oset{\mathsf A}$ and
+$\rd{\mathsf B}:\Xset\times\Vset\to\Oset{\mathsf B}$ onto declared finite
+alphabets, each a
+\term[A total map from the outcome pairs to one party's declared finite alphabet, saying what that party reads.]{readout map},
+together with a party label for $A$ and, for each $s$, a declared tensor
+factorization of $\Hs{\Qsys_s}$ with a party label per factor.
+$a_A:\Oset{\mathsf A}\to\CAset$ and $a_B:\Oset{\mathsf B}\to\CBset$, each an
+\term[A map from one party's readout alphabet to the alphabet of what that party announces.]{announcement map},
+are written jointly
+\begin{equation}\label{eq:jointann}
+  a(x,v)\coloneqq\big(a_A(\rd{\mathsf A}(x,v)),\,a_B(\rd{\mathsf B}(x,v))\big)
+  \in\Kann\coloneqq\CAset\times\CBset ,
+\end{equation}
+$\phi:\Kann\to\Chatset$ is the acceptance-statistic map,
+$r:\Xset\times\Vset\to\Zset$ the raw-key map with
+$\Zset=\Zval\sqcup\{\perp\}$ and $\Zval=\{0,\dots,d_Z-1\}$,
+$\hold\in\{\mathsf A,\mathsf B\}$ the declared key holder, and
+$\CList=\{(\hat O_k,\bowtie_k,\mathrm{rhs}_k)\}_{k=1}^{m}$, $m\ge0$, a finite
+constraint list, each entry an operator $\hat O_k$, a relation symbol
+$\bowtie_k$ and a right-hand side $\mathrm{rhs}_k$ (which symbols a
+well-formed declaration admits is D(vi) of Definition~\ref{def:target}),
+with every $\hat O_k$ a block list against the same $\Smap$, Hermitian block
+by block.
+
+\emph{The right-hand side of an entry carries a declared tag, and the tag is
+part of the datum rather than a property measured of it.} In trusted-source
+mode an entry is declared either \tref{homogeneous}, carrying a real scalar
+$c_k$, from which the right-hand side it denotes is \emph{constructed} as
+$\Theta_k\coloneqq c_k\tau_A$, or \tref{general}, carrying a Hermitian matrix
+$\Theta_k$ on $A$. In untrusted-source mode only the scalar form exists and
+the right-hand side is a real number $\Theta_k=c_k$. So an entry is written
+$(\hat O_k,\bowtie_k,c_k)$ exactly when it is declared homogeneous or is
+untrusted-mode, and $(\hat O_k,\bowtie_k,\Theta_k)$ when it is declared
+general (Definition~\ref{def:homog}). For these two forms the tag
+is the type of the right-hand-side datum, a real scalar or a Hermitian
+matrix, which is why Definition~\ref{def:homog} calls them the untagged
+forms; the third form, party-local, exists only in the general format below
+and is declared by its tag (DX6). We write $\kappa=(c_A,c_B)\in\Kann$, a
+value of the joint announcement \eqref{eq:jointann}, for an announcement
+class and
+\begin{equation}\label{eq:chkey}
+  \Chkey\coloneqq\big\{\hat c\in\Chatset:\ \exists\,\kappa\in\phi^{-1}(\hat c)
+  \text{ with }\varsigma(\kappa)=\mathrm{pass}\big\}
+\end{equation}
+for the
+\term[Said of an acceptance value that some announcement class passing sifting maps to.]{key-live}
+acceptance values. Here $\varsigma$ is the sifting predicate of the
+specification's public part (Definition~\ref{def:spec}\,(d)), read as
+$\varsigma(\kappa)=\mathrm{fail}$ on every class
+$\kappa\notin a(\Xset\times\Vset)$, which no outcome pair realises; on the
+realised classes it is, under the hypotheses of
+Theorem~\ref{thm:sifting-and-key}, a witness of D(v) of
+Definition~\ref{def:target}
+(Theorem~\ref{thm:sifting-and-key}\,(ii)). It is \emph{not} a slot of
+\eqref{eq:declaration}, so \eqref{eq:chkey} is the set of acceptance values
+to which some realised class passing sifting maps, fixed by the
+specification and not by the declaration; the key-live set of the consuming
+engine, \xref{meat-core/def:declaration}, takes the same convention on the
+classes no outcome pair realises.
+
+\emph{The general format.} Everything above is written for the format in
+which $A$ carries one sector, one system is measured, Alice's measurement is
+declared as the POVM $\{M_x\}$, the public discussion is two messages neither
+of which reads the other, and no entry is declared \tref{party-local}; we
+call it the
+\term[The format with one Alice sector, one measured system, Alice's measurement as a POVM, two messages neither reading the other, and no party-local entry.]{basic format}.
+It is the case $|\mathbb{T}|=1$, $|\mathbb{F}|=1$, POVM form, $L=2$ of the
+following one, \emph{entry for entry} on every component a derivation reads:
+at those values every such object defined in (DX1)--(DX6) is the object of
+the same name above, and nothing else is declared. On the party labels of the
+tensor factors of each sector block, which no derivation of this module reads
+and which the consuming engine's laboratory premise reads as naming the
+parties' laboratories, the general format is narrower than the basic one. In general a declaration is the
+tuple above with its slots read as follows.
+\begin{enumerate}[label=(DX\arabic*),leftmargin=3.2em]
+\item \emph{(factorised sector map)} The sector map is an ordered list, each
+entry of which is a
+\term[One entry of a factorised sector map: a system tag, a party label and a sector map of its own.]{factor}.
+Each factor carries a
+\term[The label A or Q of a factor, saying whether it is Alice's system or a measured system.]{system tag},
+$A$ or $\Qsys$, a party label, and a sector map of its own, an ordered list of
+block identifiers with their dimensions; all factors carry one block kind. At
+most one factor is tagged $A$, and where there is one it is the first of the
+list; at least one factor is tagged $\Qsys$. The factor tagged $A$ fixes a
+finite ordered index set $\mathbb{T}$ and a decomposition
+$\Hs{A}=\bigoplus_{t\in\mathbb{T}}\Hs{A_t}$ into subspaces spanned by vectors
+of the declared basis of $A$, with projectors $\Pi^{A}_t$ and dimensions
+$d_{A_t}$, $d_A=\sum_td_{A_t}$; where no factor is tagged $A$, the system
+$A$ is still present and is one Alice sector, $\mathbb{T}=\{t_0\}$ and
+$A_{t_0}=A$. A factor tagged $\Qsys$ is a
+\term[A factor tagged Q: a system one party measures, with its own sector map, alphabet and family.]{measured factor},
+and the measured factors form the ordered set $\mathbb{F}$;
+factor $f$ fixes a system $\Qsys_f$ with
+$\Hs{\Qsys_f}=\bigoplus_{s_f\in\SecSet^{f}}\Hs{\Qsys_{f,s_f}}$, projectors
+$\Pi^{f}_{s_f}$ and dimensions $d_{f,s_f}$, and for $s=(s_f)_{f}$
+\begin{equation}\label{eq:productmap}
+  \Qsys=\bigotimes_{f\in\mathbb{F}}\Qsys_f,\qquad
+  \SecSet=\prod_{f\in\mathbb{F}}\SecSet^{f},\qquad
+  \Hs{\Qsys_s}=\bigotimes_{f}\Hs{\Qsys_{f,s_f}},\qquad
+  \Pi_s=\bigotimes_f\Pi^{f}_{s_f},\qquad d_s=\prod_fd_{f,s_f},
+\end{equation}
+all products in the order of $\mathbb{F}$, and $\SecSet$ ordered with the
+last factor fastest, a product identifier being the factors' identifiers
+joined in that order. Each pair $(t,s)\in\mathbb{T}\times\SecSet$ is a
+\term[A pair of an Alice sector and a sector of the measured system; the joint sectors are ordered with the Alice sector slowest.]{joint sector};
+the joint sectors are ordered with $t$ slowest, and
+$\Hs{A\Qsys}=\bigoplus_{(t,s)}\Hs{A_t}\otimes\Hs{\Qsys_s}$, the $A$ index
+first inside a block. The party partition labels $A$ with the party of the
+factor tagged $A$, where there is one, and otherwise with the party label it
+declares for $A$, as in the basic format; and it labels every tensor factor of
+$\Hs{\Qsys_{f,s_f}}$ with the party of $f$.
+\item \emph{(Alice's data and $\omega$ are block lists)} $\tau_A$, every
+operator of Alice's measurement slot (DX4) and the right-hand side $\Theta_k$
+of a general entry are lists of one array on $\Hs{A_t}$ per
+$t\in\mathbb{T}$, and the list is the operator:
+$\tau_A=\bigoplus_t\tau_A^{(t)}$, $M_x=\bigoplus_tM_x^{(t)}$,
+$\Theta_k=\bigoplus_t\Theta_k^{(t)}$. A state $\omega$ on $A\Qsys$ is a list
+of one array $\omega^{(t,s)}\in\Lin{A_t\Qsys_s}$ per joint sector,
+$\omega=\bigoplus_{(t,s)}\omega^{(t,s)}$. Block diagonality along
+$\mathbb{T}$ is a property of the type: no off-sector entry can be written.
+By itself this typing licenses nothing; whether restricting $\omega$ to such
+lists is sound is not settled by this definition.
+\item \emph{(factorised family)} The \tref{outcome alphabet} is the product
+$\Vset=\prod_{f\in\mathbb{F}}\Vset^{f}$ of the factors' ordered alphabets, in
+the product order, the last factor fastest. What is declared is one family of
+block lists $\{F^{f}_{v_f}\}_{v_f\in\Vset^{f}}$ per measured factor, against
+that factor's own sector map, together with the rule
+\begin{equation}\label{eq:productfamily}
+  F_v\coloneqq\bigotimes_{f\in\mathbb{F}}F^{f}_{v_f},\qquad
+  F^{(s)}_v=\bigotimes_{f\in\mathbb{F}}F^{f,(s_f)}_{v_f}
+  \qquad\big(v=(v_f)_f,\ s=(s_f)_f\big).
+\end{equation}
+No entry of a product is declared. That $\{F_v\}_{v\in\Vset}$ is then a
+POVM on $\Qsys$, block diagonal for the product sector map with the blocks of
+\eqref{eq:productfamily}, follows for the exact numbers the factors declare:
+a tensor product of Hermitian positive semidefinite operators is Hermitian
+and positive semidefinite,
+$\sum_{v}\bigotimes_fF^{f}_{v_f}=\bigotimes_f\sum_{v_f}F^{f}_{v_f}
+=\idon{\Qsys}$ by multilinearity, and the tensor product distributes over the
+direct sums $F^{f}_{v_f}=\bigoplus_{s_f}F^{f,(s_f)}_{v_f}$.
+\item \emph{(the two forms of Alice's measurement slot)} In
+\term[The form of Alice's measurement slot that holds the POVM itself.]{POVM form}
+the slot holds $\{M_x\}_{x\in\Xset}$. In
+\term[The trusted-source form of Alice's measurement slot that holds positive blocks summing to the marginal, and denotes a POVM-form declaration.]{ensemble form},
+which exists in trusted-source mode only, it holds a family
+$\{N_x\}_{x\in\Xset}$ of block lists along $\mathbb{T}$, every block
+Hermitian and positive semidefinite, with
+\begin{equation}\label{eq:ensembleform}
+  \sum_{x\in\Xset}N^{(t)}_x=\tau^{(t)}_A
+  \quad\text{and}\quad\tau^{(t)}_A\ne0
+  \qquad\text{for every }t\in\mathbb{T},
+\end{equation}
+the sum formed entrywise in the \tref{declared order} of $\Xset$ and
+rounding nowhere, and the second condition a comparison of declared entries with the
+datum $0$. An ensemble-form declaration \emph{denotes} the POVM-form
+declaration with the same remaining slots and
+\begin{equation}\label{eq:ensemblepovm}
+  M^{(t)}_x\coloneqq\big(\tau^{(t)}_A\big)^{-1/2}N^{(t)}_x
+  \big(\tau^{(t)}_A\big)^{-1/2}
+  +\frac{\tr N^{(t)}_x}{\tr\tau^{(t)}_A}\,\big(\idon{A_t}-P_t\big),
+\end{equation}
+where $P_t$ is the projector onto the support of $\tau^{(t)}_A$ and the
+inverse square root is taken on that support and is zero off it. The
+operators \eqref{eq:ensemblepovm} are defined and in general irrational; every statement made of an
+ensemble-form declaration is made of the declaration it denotes. For a
+POVM-form declaration in trusted-source mode put
+$N_x\coloneqq\tau_A^{1/2}M_x\tau_A^{1/2}$; for the declaration an ensemble
+form denotes, this returns the declared $N_x$.
+\item \emph{(transcript protocol)} The announcement slot holds a
+\term[The announcement slot of the general format: an ordered list of messages, each a function of its sender's readout and of the earlier messages.]{transcript protocol},
+an ordered list of $L\ge1$ entries, each a
+\term[One entry of a transcript protocol: a sender, a finite alphabet and a total table.]{message},
+message $m$ carrying a sender $\pi_m\in\{\mathsf A,\mathsf B\}$, a finite
+alphabet $\mathcal{C}_m$ and a total table
+$a_m:\Oset{\pi_m}\times\mathcal{C}_1\times\dots\times\mathcal{C}_{m-1}
+\to\mathcal{C}_m$. The joint announcement function is \emph{derived} from the
+tables by composition,
+\begin{equation}\label{eq:transcript}
+  \kappa_m(x,v)\coloneqq a_m\big(\rd{\pi_m}(x,v),\,\kappa_1(x,v),\dots,
+  \kappa_{m-1}(x,v)\big),\qquad
+  a(x,v)\coloneqq\big(\kappa_m(x,v)\big)_{m=1}^{L}\in
+  \Kann\coloneqq\prod_{m=1}^{L}\mathcal{C}_m ,
+\end{equation}
+and the acceptance-statistic map $\phi$, the sifting predicate $\varsigma$ of
+\eqref{eq:chkey} and the holder's key map $r_{\hold}$ of D(viii) of
+Definition~\ref{def:target} are maps on this $\Kann$. The two
+maps $a_A$, $a_B$ of the basic format are the transcript protocol with $L=2$,
+$\pi=(\mathsf A,\mathsf B)$, $\mathcal{C}_1=\CAset$, $\mathcal{C}_2=\CBset$,
+$a_1=a_A$ and $a_2(o,\kappa_1)=a_B(o)$. A message is a function of its
+sender's readout and of the earlier messages of the same round, and of
+nothing else. No measurement of a round depends on a message of that round,
+the measurements being the fixed families of (DX3) and (DX4); processing
+across rounds is not a round message.
+\item \emph{(party-scoped entries)} Each entry of $\CList$ carries the label
+of one measured factor, its
+\term[The measured factor that an entry of the constraint list is declared on.]{scope}
+$f_k$, and its operator $\hat O_k$ is a block list against that factor's own
+sector map, Hermitian block by block. Unless the entry is declared
+\tref{party-local} it denotes the
+\term[The operator on the whole measured system that a scoped entry's operator denotes: the identity on every other factor.]{lifted operator}
+$\idon{}\otimes\hat O_k\otimes\idon{}$ on $\Qsys$, with $\hat O_k$ on the
+tensor factor $\Qsys_{f_k}$, whose $s$-block is
+$\idon{}\otimes\hat O_k^{(s_{f_k})}\otimes\idon{}$, and it is read in the forms stated
+above for that lifted operator. With one measured factor the scope is that
+factor and the lifted operator is $\hat O_k$ itself. An entry may instead be
+declared party-local, in either source mode, carrying a real $c_k$; its
+reading is the third form of Definition~\ref{def:homog}.
+\end{enumerate}
+
+\emph{What this module decides of the general format} is
+Definition~\ref{def:exact} for the operator data and D(i)--D(viii) of
+Definition~\ref{def:target} for the rest; that the family denoted by an
+ensemble form is a POVM is Theorem~\ref{thm:sifting-and-key}\,(v).
+\end{definition}

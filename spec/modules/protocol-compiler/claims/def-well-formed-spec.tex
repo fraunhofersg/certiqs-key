@@ -1,0 +1,70 @@
+% ---
+% id: protocol-compiler/def:well-formed-spec
+% kind: def
+% title: "Well-formed specification"
+% summary: >-
+%   A specification is well-formed when its declared data are as declared:
+%   finite alphabets and systems, total tables, exactly admissible measurement
+%   families, the presented physical one included, normalised weights and
+%   Hermitian, tagged constraint blocks. The compiler decides every clause.
+% prominence: standard
+% status: accepted
+% uses: [def:spec, def:exact, def:weighted]
+% mentions: [def:validator, def:chaincond, req:validator-refusals, req:conditional-family-decision, req:physical-family-decision, req:weight-list, req:stochastic-weights, req:tag-reading]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Every clause below is a condition the compiler decides on the declared
+numbers and refuses when it fails, so a specification that is not well-formed
+yields a refusal and not a declaration. Clauses (i)--(iii) are decided by
+check V1 of Definition~\ref{def:validator} on the emitted data and by the
+input types on the consumed tables, and the sector-map half of (vii) by check
+V1; the
+measurement families of (iv) by check V3 and condition~(C3) of
+Definition~\ref{def:chaincond}, the conditional families of a
+choice-weighted presentation by Requirement~\ref{req:conditional-family-decision},
+and the physical receiver family as presented by
+Requirement~\ref{req:physical-family-decision};
+(v) by Requirement~\ref{req:weight-list}; (vi) by
+Requirement~\ref{req:stochastic-weights}; the Hermiticity in (vii) by check
+V3 and the tag by check V6 (Requirement~\ref{req:tag-reading}); a failing
+check is refused (Requirement~\ref{req:validator-refusals}). The physical
+receiver space carries no sector map this module holds, so the physical
+family is read on it as one block, as Alice's data are read on $A$.
+
+\begin{definition}\label{def:well-formed-spec}
+A protocol specification $\Spec$ (Definition~\ref{def:spec}) is a
+\term[A protocol specification with finite alphabets and systems, total tables, exactly admissible declared families, the presented physical one included, normalised weights and Hermitian, tagged constraint blocks.]{well-formed specification}
+when its \tref{declared data} are as declared:
+(i) all alphabets are finite and non-empty;
+(ii) all systems are finite-dimensional with the declared dimensions;
+(iii) all tabulated maps are total on their stated domains;
+(iv) all declared POVM families are \tref{exactly admissible}: every family
+other than the physical receiver family $\{\Fph_w\}_{w\in\Vph}$ as presented,
+block by block in the sense of Definition~\ref{def:exact}; and the physical
+receiver family as presented (in the general format, each
+\tref{measured factor}'s, on that factor's physical receiver system), on its
+physical receiver space read as one block, condition~(T) being empty for it
+as Definition~\ref{def:exact} reads Alice's data: where it is presented
+directly, (S), (H), (P) and (C) of that definition hold of it in the
+\tref{declared order} of its alphabet; where it is presented as a
+\tref{choice-weighted family} (Definition~\ref{def:weighted}), its
+conditional families are exactly admissible, block by block against the map
+they carry, and condition~(S) holds of its own declared-order sum. A
+choice-weighted family whose conditional families carry a sector map is a
+block list against that map, and reading it as that block list or as one
+block decides the same (S), (H), (P) and (C), its off-block entries being
+exact zeros;
+(v) all public-choice weights are strictly positive --- a domain condition on
+a declared scalar (Definition~\ref{def:weighted}) --- and sum to one;
+(vi) every setting-dependent weighting, at whichever \tref{measured system} or
+measured factor it is declared, is a stochastic matrix, its
+entries non-negative and its rows summing to one exactly (the
+\tref{setting-dependent form} of Definition~\ref{def:weighted});
+(vii) every constraint operator is a \tref{block list} against the upstream
+module's \tref{sector map} and Hermitian block by block, and every entry
+carries its declared right-hand-side tag.
+\end{definition}

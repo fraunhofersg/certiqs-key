@@ -1,0 +1,58 @@
+% ---
+% id: foundations/def:pinching
+% kind: def
+% title: "Operator conventions and pinching"
+% summary: >-
+%   Operator, state and channel conventions, and the pinching of a complete
+%   family of orthogonal projectors, which deletes the coherences between their
+%   ranges. A pinching is a self-adjoint, idempotent, unital mixture of unitary
+%   conjugations whose fixed points are the block-diagonal operators.
+% prominence: standard
+% status: implemented
+% uses: []
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.linalg:pinch
+% lean:
+% ---
+
+\begin{definition}\label{def:pinching}
+All Hilbert spaces are finite-dimensional. For a system label $A$,
+$\Lin{A}$ is the space of linear operators on $\Hs{A}$, $\Pos{A}$ its
+positive semidefinite operators, and $\Seq{A}$ and $\Sleq{A}$ the
+normalized and the subnormalized states, of trace equal to one and at most
+one. A channel is a CPTP map; an instrument branch is a CP
+trace-non-increasing (CPTNI) map. For $X\in\Pos{A}$ and $p>0$, the power
+$X^{p}$ is defined by functional calculus on the support of $X$ and by $0^p=0$
+on its kernel; in particular $X^{p}$ is block-diagonal for any orthogonal
+decomposition for which $X$ is.
+
+For a family of orthogonal projectors $\{\Pi_j\}_{j}$ on $\Hs{Q}$ with
+$\sum_j\Pi_j=\idon{Q}$, the associated \emph{pinching} is the channel
+$\tau\mapsto\sum_j\Pi_j\tau\Pi_j$. A pinching is CPTP, self-adjoint as a
+superoperator ($\tr[Y\,\mathcal{E}(W)]=\tr[\mathcal{E}(Y)\,W]$), idempotent,
+and unital. An operator $X$ is a fixed point iff it is block-diagonal,
+$X=\sum_j\Pi_jX\Pi_j$; functional calculus of a block-diagonal PSD operator
+acts blockwise, so a pinching commutes with taking powers of its fixed
+points. Each of these properties is a one-line computation from the form
+$\sum_j\Pi_j(\cdot)\Pi_j$ and orthogonality of the $\Pi_j$;
+self-adjointness is
+$\tr[Y\sum_j\Pi_jW\Pi_j]=\tr[\sum_j\Pi_jY\Pi_j\,W]$ by cyclicity.
+
+A pinching is a uniform mixture of unitary conjugations. Enumerate the
+projectors as $\Pi_1,\dots,\Pi_m$, put $\zeta\coloneqq e^{2\pi i/m}$ and
+$U_k\coloneqq\sum_{j=1}^{m}\zeta^{jk}\Pi_j$ for $k\in\{0,\dots,m-1\}$; each
+$U_k$ is unitary, $U_kU_k^{\dagger}=\sum_j|\zeta^{jk}|^2\Pi_j=\idon{Q}$ by
+orthogonality, and
+\begin{equation}\label{eq:pinch-unitary-mixture}
+  \sum_{j}\Pi_j X\Pi_j=\frac1m\sum_{k=0}^{m-1}U_kXU_k^{\dagger}
+  \qquad\text{for every }X\in\Lin{Q},
+\end{equation}
+since the right-hand side is
+$\sum_{j,j'}\big(\frac1m\sum_k\zeta^{(j-j')k}\big)\Pi_jX\Pi_{j'}$ and the
+inner average is $1$ for $j=j'$ and $0$ otherwise. In particular a pinching
+does not increase the operator norm, a mixture of unitary conjugates of $X$
+having norm at most $\|X\|$.
+\end{definition}

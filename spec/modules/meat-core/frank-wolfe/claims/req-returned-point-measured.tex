@@ -1,0 +1,36 @@
+% ---
+% id: meat-core/frank-wolfe/req:returned-point-measured
+% kind: req
+% title: "Measurement of the returned point"
+% summary: >-
+%   Every run applies the three iterate checks once more to the point it
+%   returned and records whether that point passes, with the three quantities
+%   measured. Neither the bound, nor the tier, nor the key length rests on
+%   that measurement.
+% prominence: standard
+% status: implemented
+% uses: [thm:firstorder, req:iterate-checks]
+% mentions: [rem:fo-returned-point]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.joint_driver:run_joint_frank_wolfe
+% lean:
+% ---
+
+The checks of Requirement~\ref{req:iterate-checks} are made on the point
+consumed at each iterate, and the point a run returns, at which its
+\tref{estimate} is taken, need not be one of those: a run that stops at its
+iteration limit returns a point formed after the last point it consumed.
+What the measurement establishes of that point, the $J$ factor of the
+estimate's premise and no more, is Remark~\ref{rem:fo-returned-point}.
+
+\begin{requirement}\label{req:returned-point-measured}
+Every run applies the three checks of Requirement~\ref{req:iterate-checks}
+once more, at the end of the run, to the point it returned: per-block
+positivity at exactly $0$, the coupling residual at \iface{iterate_coupling}
+and each $\bowtie_k$ residual at \iface{constraint_rows}. It records whether
+that point passes all three, together with the three quantities measured,
+in \iface{optimizer_certificate}. The measurement enters neither the
+first-order bound, nor the tier, nor the key length.
+\end{requirement}

@@ -1,0 +1,94 @@
+% ---
+% id: receiver/def:setting-family
+% kind: def
+% title: "Setting family"
+% summary: >-
+%   A setting family gives, per setting, a photon-number block-diagonal POVM
+%   whose joint no-click elements have the prefactor form of the multiclick
+%   bound, and a flag that reads exact only where every prefactor is one by
+%   construction. The high-photon weights are stated on it.
+% prominence: standard
+% status: accepted
+% uses: [def:fock, def:clickalphabet, thm:multiclick-bound, def:bounddata, lem:collapse, lem:exactbasic]
+% mentions: [cor:unconditioned-family, def:residuals]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Eq. eq:family-mc is the combinatorial half of thm:click-povm (iv), reproved here from eq:family-elements alone so that a setting family need not come from thm:click-povm."
+% ---
+
+The weights built on the multiclick bound
+(Theorem~\ref{thm:multiclick-bound} onwards) and the residuals of
+Definition~\ref{def:residuals} are stated per \emph{setting}: a receiver
+without a probe has one setting, a receiver with a probe has one per declared
+probe setting, and in both cases the object they are stated on is the same. This definition names that object once, so that the emitted value and
+its guarantee are proved for it and each instance is established separately.
+The core constructs the unconditioned receiver as an instance
+(Corollary~\ref{cor:unconditioned-family}, one setting); a submodule that
+constructs another, such as a receiver conditioned on its own probe with one
+setting per declared probe setting, proves there that it is one.
+
+\begin{definition}\label{def:setting-family}
+Let $D\ge1$ and write $\mathcal{F}_D\coloneqq\mathcal{F}(\mathbb{C}^{D})$ for
+the \tref{Fock space} of Definition~\ref{def:fock} over a $D$-dimensional
+\term[The D-dimensional space whose Fock space a setting family acts on.]{channel input space},
+with photon-number projectors $\Pi_n$ onto $\Symn{n}(\mathbb{C}^{D})$. A
+\term[A finite set of settings, each with a photon-number block-diagonal POVM whose joint no-click elements have the prefactor form, and an exact flag.]{setting family}
+of $K\ge1$ ports on $\mathcal{F}_D$ is a finite non-empty set $\Tset$ of
+\emph{settings} together with, for every $t\in\Tset$:
+\begin{enumerate}[label=(\alph*),leftmargin=2.6em]
+\item a POVM $\{M_{S|t}\}_{S\subseteq[K]}$ on $\mathcal{F}_D$ every
+  element of which commutes with the photon number, so that
+  $M_{S|t}=\bigoplus_{n\ge0}\blk{M}{\eqn}_{S|t}$ with $\blk{M}{\eqn}_{S|t}$
+  acting on $\Symn{n}(\mathbb{C}^{D})$. Its
+  \term[For a set J of ports, the sum of the POVM elements of every outcome in which no port of J clicks.]{joint no-click elements}
+  and its
+  \term[The sum of the POVM elements of every outcome in which at least two ports click.]{multiclick element}
+  are
+  \begin{equation}\label{eq:family-elements}
+    \Pvac{J}^{(t)}\coloneqq\sum_{S\subseteq[K]\setminus J}M_{S|t}
+    \quad(J\subseteq[K]),\qquad
+    M_{\mc|t}\coloneqq\sum_{S\in\MCK}M_{S|t},
+  \end{equation}
+  with $\MCK$ the \tref{multiclick set} of Definition~\ref{def:clickalphabet};
+\item Hermitian operators $B^{(t)},B^{(t)}_1,\dots,B^{(t)}_K$ on
+  $\mathbb{C}^{D}$ and scalars $\gamma^{(t)},\beta^{(t)}_1,\dots,
+  \beta^{(t)}_K\in(0,1]$ satisfying the hypotheses of
+  Theorem~\ref{thm:multiclick-bound}, namely \eqref{eq:bbkhyp} and
+  $\gamma^{(t)}\le\beta^{(t)}_k$ for every $k$, such that the joint
+  no-click elements have the prefactor form \eqref{eq:prefactorform},
+  \begin{equation}\label{eq:family-prefactor}
+    \Pvac{[K]}^{(t)}=\gamma^{(t)}\,\Fock\big(\id-B^{(t)}\big),\qquad
+    \Pvac{[K]\setminus\{k\}}^{(t)}=\beta^{(t)}_k\,\Fock\big(\id-B^{(t)}_k\big);
+  \end{equation}
+\item a flag $\chi^{(t)}\in\{\mathrm{exact},\mathrm{general}\}$, the
+  setting's
+  \term[The flag of a setting, exact or general; it may read exact only where every prefactor is one by construction.]{exact flag},
+  which may be $\mathrm{exact}$ only if $\gamma^{(t)}=\beta^{(t)}_k=1$ for
+  every $k$ holds \emph{exactly, by the construction that produced the
+  setting}, read off the declaration with no arithmetic performed, so that
+  at an exact setting \eqref{eq:collapsehyp} reads $K\ge K$ and holds with
+  equality by construction.
+\end{enumerate}
+The
+\term[The admissible bound data built from a setting's prefactors and the extreme eigenvalues of its operators B.]{bound data of the setting}
+are $\big(\gamma^{(t)},\{\beta^{(t)}_k\},c^{(t)},\{d^{(t)}_k\}\big)$ with
+$c^{(t)}\coloneqq1-\lmax(B^{(t)})$ and $d^{(t)}_k\coloneqq1-\lmin(B^{(t)}_k)$
+as in \eqref{eq:cd}; they are \tref{admissible bound data}
+(Definition~\ref{def:bounddata}) by Theorem~\ref{thm:multiclick-bound}, and
+$\Bnd^{(t)}$ denotes their \tref{bound function} \eqref{eq:beta}.
+
+Two consequences are used throughout. First, the multiclick element has the
+inclusion--exclusion form
+\begin{equation}\label{eq:family-mc}
+  M_{\mc|t}=\id+(K-1)\,\Pvac{[K]}^{(t)}-\sum_{k=1}^{K}\Pvac{[K]\setminus\{k\}}^{(t)} ,
+\end{equation}
+because completeness gives $M_{\mc|t}=\id-M_{\varnothing|t}-\sum_kM_{\{k\}|t}$
+while \eqref{eq:family-elements} gives $M_{\varnothing|t}=\Pvac{[K]}^{(t)}$
+and $M_{\{k\}|t}=\Pvac{[K]\setminus\{k\}}^{(t)}-\Pvac{[K]}^{(t)}$; so
+Theorem~\ref{thm:multiclick-bound} applies to every setting, with
+$\lmin(\blk{M}{\eqn}_{\mc|t})\ge\Bnd^{(t)}(n)$ for every $n\ge0$. Second,
+$M_{\mc|t}$ is a sum of elements of a POVM, so hypothesis \eqref{eq:mcpos}
+of Lemma~\ref{lem:exactbasic}, $M_{\mc|t}\succeq0$, holds at every setting.
+\end{definition}

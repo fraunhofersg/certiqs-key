@@ -1,0 +1,119 @@
+% ---
+% id: transmitter/decoy/lem:poisson-enclosure
+% kind: lem
+% title: "Rational enclosure of the Poisson weights"
+% summary: >-
+%   For a rational intensity μ ≥ 0 and an even integer K ≥ μ, two consecutive
+%   partial sums of the exponential series, scaled by μ^n/n!, enclose the Poisson
+%   weight between rationals. The enclosure narrows monotonically to zero width
+%   as K grows, so the bound on the sector weights is decided exactly.
+% prominence: technical
+% status: implemented
+% uses: [def:wcp-model]
+% mentions: [def:tagged-source]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.transmitter.decoy.enclosure:poisson_enclosures
+% lean:
+% notes: "The lemma holds at every even K at least mu; which K an implementation stops at changes the width of the enclosure and never its soundness. At mu = 0 the enclosure is exact, zeros included, so that case needs no separate rule."
+% ---
+
+The inequality \eqref{eq:weightineq} of Definition~\ref{def:tagged-source}\,(T2)
+compares a declared number with $P_\mu(\mathsf{n})$, which at a positive
+intensity is transcendental. A declared intensity is a binary64 number, hence a
+dyadic rational, and the exponential series at a negative rational argument is
+alternating with terms that decrease from some index on, so two consecutive
+partial sums bracket $e^{-\mu}$. Multiplied by the rational factor
+$\mu^{\mathsf{n}}/\mathsf{n}!$ they bracket the Poisson weight, and every
+number involved is a rational formed from $\mu$ in finitely many steps.
+
+\begin{lemma}\label{lem:poisson-enclosure}
+Let $\mu\ge0$ be a rational number. For integers $k\ge0$ put
+$t_k\coloneqq\mu^k/k!$, with $\mu^0\coloneqq1$, and for integers $K\ge0$
+\begin{equation}\label{eq:expsum}
+  S_K\;\coloneqq\;\sum_{k=0}^{K}(-1)^k\,t_k .
+\end{equation}
+Let $K$ be an even integer with $K\ge\mu$, and let $\mathsf{n}\ge0$ be an
+integer. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(the enclosure)} with the \tref{Poisson weight}
+$P_\mu(\mathsf{n})=e^{-\mu}\mu^{\mathsf{n}}/\mathsf{n}!$ of
+Definition~\ref{def:wcp-model}\,(W4),
+\begin{equation}\label{eq:poisson-enclosure}
+  \max\big(0,S_{K+1}\big)\,t_{\mathsf{n}}
+  \;\le\;P_\mu(\mathsf{n})\;\le\;S_K\,t_{\mathsf{n}} ;
+\end{equation}
+\item \emph{(rational ends)} both ends of \eqref{eq:poisson-enclosure} are
+rational numbers, formed from $\mu$ by finitely many additions, subtractions,
+multiplications and divisions by positive integers, and a comparison of
+either end with a binary64 number is an exact comparison of two rationals;
+\item \emph{(the width)} $S_K-S_{K+1}=t_{K+1}$, so the two ends of
+\eqref{eq:poisson-enclosure} differ by at most $t_{K+1}t_{\mathsf{n}}$, and
+$t_{K+1}\to0$ as $K\to\infty$ through the even integers. At $\mu=0$ both ends
+equal $P_0(\mathsf{n})$, which is $1$ for $\mathsf{n}=0$ and $0$ for
+$\mathsf{n}\ge1$.
+\item \emph{(monotone in $K$)} over the even integers $K\ge\mu$ the lower end
+$\max(0,S_{K+1})\,t_{\mathsf{n}}$ is non-decreasing and the upper end
+$S_K\,t_{\mathsf{n}}$ is non-increasing: for even $K\le K'$ with $K\ge\mu$,
+the enclosure at $K'$ lies inside the enclosure at $K$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Idea.} The tail of the exponential series beyond $K$ is alternating with
+non-increasing terms, so grouping it in consecutive pairs fixes its sign.
+
+\emph{Step 1 (the series).} The exponential series
+$e^{-\mu}=\sum_{k\ge0}(-\mu)^k/k!=\sum_{k\ge0}(-1)^kt_k$ converges absolutely,
+$\sum_{k\ge0}t_k=e^{\mu}$ being finite. Hence for every $K'\ge0$
+\begin{equation*}
+  e^{-\mu}-S_{K'}=\sum_{k>K'}(-1)^kt_k ,
+\end{equation*}
+and this tail may be summed in consecutive pairs of terms: the partial sums of
+the paired series are partial sums of the tail, which converge to its value.
+
+\emph{Step 2 (the tail decreases).} For $k\ge K+1$,
+$t_{k+1}=t_k\,\mu/(k+1)$ with $0\le\mu\le K<k+1$, so $0\le t_{k+1}\le t_k$.
+
+\emph{Step 3 (the upper end).} $K$ is even, so the first term of the tail of
+$S_K$ is $(-1)^{K+1}t_{K+1}=-t_{K+1}$, and pairing gives
+\begin{equation*}
+  e^{-\mu}-S_K=-\sum_{j\ge0}\big(t_{K+1+2j}-t_{K+2+2j}\big)\le0 ,
+\end{equation*}
+every bracket being non-negative by Step~2. So $e^{-\mu}\le S_K$.
+
+\emph{Step 4 (the lower end).} $K+2$ is even, so the first term of the tail of
+$S_{K+1}$ is $t_{K+2}$, and pairing gives
+\begin{equation*}
+  e^{-\mu}-S_{K+1}=\sum_{j\ge0}\big(t_{K+2+2j}-t_{K+3+2j}\big)\ge0 ,
+\end{equation*}
+again by Step~2. So $S_{K+1}\le e^{-\mu}$, and since $e^{-\mu}>0$ also
+$\max(0,S_{K+1})\le e^{-\mu}$.
+
+\emph{Step 5 (the Poisson weight).} $P_\mu(\mathsf{n})=e^{-\mu}t_{\mathsf{n}}$
+with $t_{\mathsf{n}}\ge0$, and multiplying the inequalities of Steps 3 and 4 by
+the non-negative number $t_{\mathsf{n}}$ preserves them. This is (i).
+
+(ii) $t_0=1$ and $t_k=t_{k-1}\,\mu/k$ for $k\ge1$, so every $t_k$ is a rational
+formed from $\mu$ by multiplications and divisions by positive integers; $S_K$
+and $S_{K+1}$ are finite sums and differences of them, and the maximum of two
+rationals is one of them. A binary64 number is a dyadic rational, so the
+comparison is one of two rationals.
+
+(iii) $S_K-S_{K+1}=-(-1)^{K+1}t_{K+1}=t_{K+1}$, $K+1$ being odd. The upper end
+minus the lower end is
+$\big(S_K-\max(0,S_{K+1})\big)t_{\mathsf{n}}\le(S_K-S_{K+1})t_{\mathsf{n}}
+=t_{K+1}t_{\mathsf{n}}$. The $t_k$ are the terms of the convergent series of
+Step~1, so $t_k\to0$. At $\mu=0$, $t_k=0$ for $k\ge1$, so the width
+$t_{K+1}t_{\mathsf{n}}$ is zero and both ends equal $P_0(\mathsf{n})$; and
+$S_K=S_{K+1}=1$, so the common value is $t_{\mathsf{n}}$, which is $1$ for
+$\mathsf{n}=0$ and $0$ for $\mathsf{n}\ge1$.
+
+(iv) It suffices to compare $K$ with $K+2$, both even and at least $\mu$. By
+\eqref{eq:expsum}, $S_{K+3}-S_{K+1}=t_{K+2}-t_{K+3}\ge0$ and
+$S_{K+2}-S_K=-t_{K+1}+t_{K+2}\le0$, both by Step~2, which applies from the
+index $K+1$ on. So $S_{K+1}$ does not decrease and $S_K$ does not increase
+from $K$ to $K+2$; $\max(0,\cdot)$ preserves the first, and multiplying by
+$t_{\mathsf{n}}\ge0$ preserves both.
+\end{proof}

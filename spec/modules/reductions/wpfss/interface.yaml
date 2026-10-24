@@ -1,0 +1,1002 @@
+# spec/modules/reductions/wpfss/interface.yaml -- the `wpfss` submodule's
+# interface: the weight route's inputs, its refusals, its conventions and the
+# flat emission's bindings (spec/claim-format.md section 5). The claim files
+# under claims/ are the contract; this file authors no mathematics and repeats
+# none, and where it and a claim disagree, the claim decides.
+#
+# WHAT IS HERE AND WHAT IS NOT. This submodule is where a receiver artifact is
+# consumed: the coarse-grained photon-number blocks, the dark-count channel,
+# the declared coarse-graining, the certified high-photon weights, the cutoff
+# and the route. The core states the number model, the emission obligation,
+# the chain and the artifact and names no receiver object
+# (`../interface.yaml`); this file adds rows to the core's tables and changes
+# none of them. Every row names, in a `locator` field, the claim label it
+# rests on; a bare label is this submodule's, a label prefixed `reductions/`
+# is the core's, and a label prefixed `receiver/` is the supplier's.
+#
+# Where the code and a row could be read differently, the place is in
+# `code_note` at the end of this file and nowhere else.
+
+module_id: wpfss
+parent_module: reductions
+
+# ---------------------------------------------------------------------------
+# inputs
+#   NINE keys: eight rows a receiver artifact supplies, and the route. The
+#   core's generic
+#   `receiver_artifact` row is what decides that the artifact may be read at
+#   all (reductions/ass:recv); these rows are what is read out of it.
+#
+#   The blanket reading is the core's: every numeric datum is binary64 and IS
+#   the dyadic rational it is, every condition below is DECIDED EXACTLY, and
+#   THIS SUBMODULE DECLARES NO NUMERICAL TOLERANCE.
+# ---------------------------------------------------------------------------
+inputs:
+
+  - name: photon_blocks
+    symbol: "blk M^{=m}_{y|t}, 0 <= m <= N"
+    type: sector-block lists
+    presence: always
+    domain: >-
+      The COARSE-GRAINED blocks the supplier emits, AS THE INSTANCE DECLARES
+      THEM: per emitted letter y in Y and per setting t in T, ONE BINARY64
+      ARRAY PER CHANNEL PHOTON-NUMBER BLOCK m <= N TOGETHER WITH THE BLOCK
+      IDENTIFIERS AND THEIR ORDER; in the form `photon_blocks_form` declares,
+      BARE (before the dark-count channel) or DARK-COMPOSED (after it).
+      VALIDITY: EXACTLY ADMISSIBLE in the sense of reductions/def:exactadm --
+      exactly Hermitian, exactly positive semidefinite, exactly complete over
+      Y at each (t, m) with that sum ROUNDING NOWHERE in the declared order,
+      and every entry an integer multiple of 2^-kappa of modulus at most 1 --
+      DECIDED EXACTLY, PER BLOCK, ON ENTRY, and refused
+      `declaration_not_exactly_admissible` otherwise; presented against the
+      declared block identifiers and orders, and refused `no_block_structure`
+      otherwise.
+    locator: "def:weight-route (the supplied data); reductions/def:exactadm (c); prop:route (iv) (receiver/thm:click-povm (iii), receiver/thm:coarse-graining)"
+    refusal_reasons: [no_block_structure, declaration_not_exactly_admissible]
+    where_they_become_a_datum: >-
+      These blocks are NOT the datum of the flat instance. The datum is what
+      steps 1-2 of def:weight-route produce from them in the bare form, and
+      step 2 alone in the dark-composed form -- the post-processed
+      preserved blocks of the joint family -- and THAT is what the core's
+      exact-admissibility row is read on once the instance is built; the
+      declared blocks are decided on entry by the same row, at the constant 1
+      over Y at each (t, m), which is the conditional POVM's completeness.
+      Locator: def:weight-route, steps 1-2 and the two input forms;
+      prop:flat-instance (I1); prop:precomposed-blocks.
+    this_submodule_repairs_nothing: >-
+      BINDING. It DOES NOT REPAIR A BLOCK AND DOES NOT MEASURE A DEFECT ON
+      ONE: the perturbation between these numbers and the receiver's own
+      floating-point output WAS ABSORBED WHERE THE DATA IS DECLARED, BY THE
+      INSTANCE'S SNAP, whose record is the instance's and is NOT AN INPUT OF
+      THIS SUBMODULE. Locator: reductions/ass:recv; reductions/rem:recv-scope.
+
+  - name: photon_blocks_form
+    symbol: "bare | dark_composed"
+    type: enum
+    presence: "always; NO DEFAULT -- an artefact that does not state the form is refused"
+    domain: >-
+      BARE: the supplied preserved blocks are those of the conditional POVM
+      before the dark-count channel, and step 1 of def:weight-route acts on
+      them. DARK-COMPOSED: they are a declared family, Hermitian, positive
+      semidefinite and complete on each block, that the model takes below
+      the cutoff after the dark counts -- typically the declaring party's
+      composition of its model with the descended dark-count channel R^cg of
+      the SAME declared R, made before its snap so that the noise floor is
+      in place when the snap is made, and then possibly snapped; step 1 is
+      NOT applied to them. Where no snap intervened they equal R^cg applied
+      to the bare blocks (prop:precomposed-blocks (ii)); where one did, no
+      such relation is asserted, and only the per-block properties are
+      read. In either form R^cg is formed and decided as before, Eq.
+      eq:darkstep defines the family above the cutoff, and the routed
+      weights read R^cg (r_min and the absorbing condition) as they stand.
+      Which form
+      the blocks are in is a statement of the supplier's artefact, held
+      under reductions/ass:recv like every other supplier fact; it is not
+      decided here.
+    equal_in_exact_arithmetic: >-
+      Composing before or after forms the same flat instance wherever no
+      snap moves a block (prop:precomposed-blocks (ii)); with a snap the
+      data differ, and the composed reference is a reference
+      (prop:precomposed-blocks (iii)).
+    locator: "def:weight-route (the two input forms); prop:flat-instance (I1); prop:precomposed-blocks"
+    refusal_reasons: [no_block_structure]
+
+  - name: high_photon_bounds
+    symbol: "{(O_i, (p_i^(t))_{t in T})}_{i=1}^{r}"
+    type: list
+    presence: always
+    domain: >-
+      The supplier's strengthening slot, taken in the PER-SETTING form that
+      contract states: pairwise disjoint outcome sets O_i and, per entry, ONE
+      WEIGHT p_i^(t) FOR EVERY SETTING t IN T -- THE SAME T AS THE SUPPLIED
+      photon_blocks AND THE CLASS WEIGHTS q_t -- with the sum over O_i of the
+      above-cutoff blocks AT SETTING t at least p_i^(t) times the identity,
+      for every t in T and every i. VALIDATED: p_i^(t) >= 0 for every i and
+      t, and sum_i p_i^(t) <= 1 at every t; a slot whose settings are not
+      exactly T is ill formed too. Refusal `high_photon_slot_ill_formed` in
+      each case. A probe-free supplier has T = {off} and supplies one weight
+      per entry.
+    locator: "def:weight-route; prop:route, with (iv) for receiver/thm:emitted-bound, receiver/def:slot and receiver/prop:slotvalid; rem:minweight; req:supplier-version"
+    refusal_reason: high_photon_slot_ill_formed
+    lattice_invariant: >-
+      Every p_i^(t) is a declared REAL SCALAR and therefore satisfies
+      Eq. eq:latinv (reductions/def:exactadm (b), which names any certified
+      weight among the declared real scalars the lattice binds).
+    per_setting_weights_are_consumed: >-
+      The weight route forms the weight of the joint outcome (y_i, t) from
+      p_i^(t), the weight of ITS OWN SETTING (Eq. eq:weightroute), and reads
+      the per-setting weights because the supplier states them as claims
+      (receiver/thm:emitted-bound Eq. eq:pmcsetting; receiver/def:slot with a
+      weight per entry and setting; receiver/prop:slotvalid per setting): A
+      HYPOTHESIS DISCHARGED BY A LOCATOR THAT DOES NOT STATE IT IS NOT
+      DISCHARGED. THIS SUBMODULE TAKES NO MINIMUM OF ITS OWN AND COMPUTES NO
+      WEIGHT THE SUPPLIER DID NOT STATE. Consuming the supplier's uniform
+      weight min_t p_i^(t) at every setting instead would be sound and weakly
+      smaller at every joint outcome (rem:minweight). At T = {off} the one
+      weight is the uniform one, and the per-setting and the uniform readings
+      emit the same numbers (rem:minweight, last paragraph). Locator:
+      rem:minweight; prop:route (iv); req:supplier-version.
+    requires_a_receiver_version_stating_them: >-
+      THE PER-SETTING READ REQUIRES A RECEIVER VERSION THAT STATES THE
+      PER-SETTING WEIGHTS: the artifact's module_version must resolve to an
+      accepted receiver version whose receiver/thm:emitted-bound carries
+      Eq. eq:pmcsetting and whose receiver/def:slot carries a weight per entry
+      and setting. The per-setting values an artifact of another version
+      reports beside the minimum are the content of no claim at that
+      version, so they discharge no hypothesis of prop:route and are not read
+      per setting. The high_photon_slot row refuses, under
+      high_photon_slot_ill_formed, EVERY artifact whose module_version is not
+      one stating the per-setting weights -- a probe-free one included, and
+      never by reading its uniform weight at every setting instead. The
+      version fact is the supplier's, read from
+      certiqs_key.receiver.artifact.FIRST_VERSION_STATING_THE_PER_SETTING_WEIGHTS
+      and not copied here (wpfss/validation.py:
+      receiver_version_states_the_per_setting_weights); the refusal is tested
+      in tests/golden/test_per_setting_floors_against_registry.py. Locator:
+      req:supplier-version; reductions/ass:recv.
+    the_slot_row_is_not_the_total_weight_row: >-
+      THE WHOLE REASON THE ROW EXISTS. The total-weight row tests the ROUTED
+      weights p = sum_v p_v, WHICH EQUAL THE q-AVERAGE sum_t q_t sum_i p_i^(t)
+      ONLY WHEN EVERY r_min,i = 0 AND NO DOWNWARD ROUNDING BITES -- a
+      positive r_min,i makes the routed total the larger number, the downward
+      rounding the smaller -- so a negative p_i^(t) can be masked in the
+      routed total whenever r_min,i > 0. Such a declaration is NOT A SECURITY
+      BREAK -- the routed bound at p_i^(t) < 0 is WEAKER than at
+      p_i^(t) = 0 -- but it CONTRADICTS THE SUPPLIER'S OWN SLOT GUARANTEE
+      (A-RECV) and is refused rather than consumed. cor:oneabsorbing is why
+      r_min,i > 0 can occur only at r = 1.
+
+  - name: bound_quantifier_domain
+    symbol: "N, T"
+    type: record
+    presence: always
+    domain: >-
+      The literal statement "for all m > N and all t in T". The N echoed here
+      must equal `photon_cutoff`; A MISMATCH IS REFUSED `cutoff_mismatch`.
+    locator: "def:weight-route; prop:route (iv)"
+    refusal_reason: cutoff_mismatch
+    combinatorial_not_numerical: >-
+      The cutoff N is COMBINATORIAL RATHER THAN NUMERICAL: it is not a number
+      a condition could be decided about, and a predicate on it is settled by
+      finite inspection. Locator: reductions/rem:exactboundary.
+
+  - name: dark_count_channel
+    symbol: R
+    type: stochastic matrix
+    presence: always
+    domain: >-
+      EXACTLY column-stochastic -- every entry >= 0 and every column summing
+      to 1 -- and MONOTONE (a strictly positive entry only where the source
+      pattern is contained in the target one), WITH EVERY ENTRY AN INTEGER
+      MULTIPLE OF 2^-kappa OF MODULUS AT MOST 1; MUST DESCEND THROUGH the
+      declared coarse-graining (lem:descent); and its descended matrix R^cg
+      must be ABSORBING AT EVERY BOUNDED LETTER, R^cg_{y_i|y_i} = 1 for each
+      i, which is what prop:route needs and what rem:absorbneeded shows cannot
+      be dropped. The per-letter constants r_min,i, the minimum of R^cg over
+      the columns y' != y_i, are formed with it, ONE PER BOUNDED LETTER, with
+      the convention r_min,i := 0 when that minimum is over the EMPTY SET.
+      Composed BEFORE squashing, at step 1 of def:weight-route.
+    locator: "def:weight-route, Eq. eq:darkstep and Eq. eq:weightroute; lem:descent; prop:route, with (iv) for receiver/detector-imperfections/def:darkadm (D1), (D2) and receiver/detector-imperfections/thm:dark-counts; rem:absorbneeded; req:column-stochastic-refusal; req:descent-decided-exactly; req:absorbing-bounded-letters"
+    refusal_reasons: [dark_counts_not_column_stochastic, dark_counts_do_not_descend, bounded_letter_not_absorbing]
+    two_type_conditions_have_two_rows: >-
+      EACH OF THE TWO IS DECIDED BY ITS OWN ROW, under
+      `dark_counts_not_column_stochastic` and `dark_counts_do_not_descend`
+      RESPECTIVELY, AND BOTH ARE DECIDED EXACTLY. Neither covers the other: a
+      strictly positive entry in a forbidden position fails monotonicity while
+      leaving column-stochasticity untouched, and A NEGATIVE ENTRY IN SUCH A
+      POSITION DOES THE REVERSE -- it satisfies the monotonicity implication
+      VACUOUSLY and fails non-negativity. Locator: rem:colstoch;
+      rem:darkcompose.
+    descended_matrix_is_a_theorem_not_a_second_check: >-
+      R^cg INHERITS COLUMN-STOCHASTICITY AS A THEOREM RATHER THAN AS A SECOND
+      CHECK: lem:descent regroups one finite sum, and IN THE EXACT SUBSTRATE A
+      REGROUPED SUM IS THE SUM IT REGROUPS. SO ONE MATRIX IS DECIDED, NOT
+      TWO. An implementation that re-tests R^cg has written a check the
+      claims state is redundant; it is not a defect, but it is not a rule of
+      this file and MUST NOT CARRY A REFUSAL REASON. Locator: rem:colstoch;
+      lem:descent; req:column-stochastic-refusal.
+    descent_is_tested_directly: >-
+      Descent is TESTED DIRECTLY, NOT VIA THE SUFFICIENT CONDITION
+      Eq. eq:canonicalcg. rem:descentneedsconstant exhibits a monotone R and a
+      coarse-graining meeting two of that condition's three clauses for which
+      R^cg is NOT WELL DEFINED, and records that the shortcut is only a
+      shortcut that must itself be checked in full. Locator:
+      req:descent-decided-exactly.
+    supplier_admission_is_not_imported: >-
+      The supplier's own
+      admission procedure is NOT imported: the receiver decides its (D1) and
+      (D2) for a declared matrix AT ITS OWN TOLERANCES and carries what that
+      widening costs; this submodule decides them EXACTLY and refuses
+      everything else, so every declaration reaching a claim here is
+      admissible in the supplier's sense outright. Locator:
+      rem:receiver-imports; rem:darkcompose.
+
+  - name: outcome_coarse_graining
+    symbol: cg
+    type: "total map from the raw click patterns onto Y"
+    presence: always
+    domain: >-
+      Surjective onto the declared detection alphabet Y; EACH BOUNDED SET O_i
+      MUST BE EXACTLY A FIBRE, O_i = cg^{-1}(y_i) for distinct letters y_i,
+      else refused `bound_set_not_a_fibre`.
+    locator: "def:weight-route; lem:descent; rem:fibre; req:fibre-equality"
+    refusal_reason: bound_set_not_a_fibre
+    surjectivity_is_decided_upstream: >-
+      IT IS A POINTER AND NOT A ROW. Totality and surjectivity of cg are
+      COMBINATORIAL predicates on a finite map -- NO ARITHMETIC, SO NO
+      TOLERANCE CAN REACH THEM -- and are decided by finite inspection in the
+      supplier's own module, so the condition is DISCHARGED UPSTREAM and
+      reaches this submodule through A-RECV and the core's receiver-spec row.
+      UNLIKE COLUMN-STOCHASTICITY, WHICH IS A STATEMENT ABOUT NUMBERS and
+      therefore needs a row of its own. NO ROW, NO RULE AND NO REFUSAL REASON
+      IS ADDED FOR IT, and an implementation that invents one has decided
+      something the claims deliberately routed upstream. Locator:
+      rem:colstoch; reductions/ass:recv.
+    why_the_fibre_condition_cannot_be_dropped: >-
+      The certified quantity is the SUM over the bounded set, and a bound on a
+      sum of positive operators says nothing about the individual summands.
+      Two failures follow, in opposite directions: A SPLIT fibre leaves no
+      letter with a bound, and A MERGED one leaves the weight attached to a
+      letter whose fibre is larger than the certified set. This submodule
+      requires EQUALITY, validates it at input, and REFUSES otherwise.
+      Locator: rem:fibre; req:fibre-equality.
+
+  - name: bound_evaluation
+    symbol: null
+    type: enum
+    presence: always
+    domain: >-
+      `rigorous` or `floating_point`, PROPAGATED UNCHANGED from the supplier
+      artifact, with the supplier's per-setting record of which evaluation
+      formed each weight (receiver/req:evaluation-label,
+      receiver/req:rigorous-weight (vi)); NEVER UPGRADED HERE: this submodule
+      forms no weight of its own that a rigorous evaluation could replace,
+      and the downward rounding of the routed weights keeps a bound a bound
+      either way. A run reads it to decide whether a weight on its
+      declaration was evaluated in floating point
+      (meat-core/frank-wolfe/req:certified-evaluation (vii) (b)).
+    locator: "rem:receiver-imports; reductions/ass:recv; reductions/def:exactadm (a); receiver/req:evaluation-label"
+    the_inheritance_is_about_provenance: >-
+      The weights p_i^(t) it consumes were evaluated upstream, rigorously or
+      in floating point as the supplier records. Where one was evaluated in
+      floating point it holds of the device only as A-RECV (ii) attests it,
+      and where that contract's declaration carries an exact-window depth at
+      such a setting the weight emitted for that setting also rests on its
+      eigenvalue-slack assumption; a weight evaluated rigorously is a bound by
+      the supplier's receiver/thm:enclosed-weight. All of this reaches this
+      submodule through A-RECV, and IT CAN VERIFY OR IMPROVE
+      NONE OF IT. WHAT THIS SUBMODULE DOES WITH THOSE NUMBERS IS
+      NEVERTHELESS EXACT: a declared p_i^(t) IS the dyadic rational it is, and
+      every use of it is a use of that rational. THE INHERITANCE IS ABOUT
+      WHERE THE NUMBER CAME FROM, NOT ABOUT HOW IT IS READ. Locator:
+      rem:receiver-imports (the A-EIG paragraph); req:supplier-eig-record.
+
+  - name: factored_loss
+    symbol: t
+    type: "exact rational in (0, 1]"
+    presence: always
+    domain: >-
+      The factored loss the receiver artefact's efficiency_record carries
+      (receiver/detector-imperfections/req:normalization-record), read from
+      the artefact and never declared here. Where t < 1 the supplied blocks,
+      weights and dark-count data are those of the receiver's NORMALIZED
+      STATION, and the reduction of the receiver is the flat instance
+      precomposed with the pure-loss channel of transmittance t
+      (cor:normalized-flat): every emitted number is the flat instance's, and
+      the link records the loss (req:normalized-link-record). An artefact
+      embedding the flat instance as a branch refuses t < 1
+      (req:normalized-branch-refusal; the `normalized_branch` row).
+    locator: "cor:normalized-flat; req:normalized-link-record; req:normalized-branch-refusal; receiver/detector-imperfections/prop:efficiency-normalization"
+    rows_built_by_hand: >-
+      Rows built from a receiver artefact carry its t; rows built by hand
+      default to t = 1, which is what supplying a receiver's own blocks means.
+
+  - name: photon_cutoff
+    symbol: N
+    type: int
+    presence: always
+    domain: >-
+      N >= 0; a declared protocol parameter. THIS SUBMODULE NEITHER CHOOSES
+      NOR OPTIMIZES IT. It fixes the preserved blocks of the flat instance's
+      datum and the quantifier domain m > N of every certified weight, and it
+      must equal the N the receiver artifact echoes (`cutoff_mismatch`).
+    locator: "def:weight-route; prop:flat-instance (I1); def:targets"
+    why_it_is_this_submodules: >-
+      NO CORE CLAIM CARRIES A CUTOFF -- reductions/def:reduction-instance has
+      data sectors and no cutoff -- so the key is this submodule's.
+
+  - name: route
+    symbol: null
+    type: enum
+    presence: always
+    values: [encoded, licensed]
+    default: encoded
+    refused_value: both
+    domain: >-
+      EXACTLY ONE VALUE PER REQUEST: `encoded` (DEFAULT; the weights go into
+      the target's scalar sectors and THE CONSTRAINT LIST IS EMPTY) or
+      `licensed` (the weights travel as the flag-sector entries under the
+      attack-set licence). `both` IS REFUSED
+      `route_not_single_valued`. A caller wanting both issues TWO REQUESTS and
+      receives two self-contained artifacts.
+    locator: "def:routes; rem:tworoutes; def:targets, Eqs. eq:FSS and eq:WPFSS; prop:flat-instance (I2), Eq. eq:flat-scalars; req:one-route-per-artifact"
+    refusal_reason: route_not_single_valued
+    unsoundness_witness: >-
+      Eq. eq:crosspairing: pairing the licensed entry with the encoded route's
+      channel gives an operator whose flag block is NOT implied positive by
+      the certified-weight inequality -- at the tight end it equals minus the
+      weight times the identity, strictly negative for a positive weight. So
+      that pairing would impose a constraint some reachable state violates,
+      voiding reductions/thm:transfer. Since the emitted payload is
+      single-valued and each link's entry list is bound to THAT LINK'S channel
+      witness, the structural remedy is one route per artifact.
+    when_each_is_available: >-
+      The encoded route is preferable wherever it is available, because it
+      requires no attestation a program cannot check. IT IS NOT ALWAYS
+      AVAILABLE: reductions/prop:obstruction exhibits a device fact -- a bound
+      on a UNION of outcomes that must not be merged -- that no target
+      classical on the whole of the target space can carry and that the
+      weight-preserving target, one weight per outcome, does not carry, and for
+      which the licensed route is the only route. That is why the constraint
+      slot and the licence slot are on every artefact
+      (reductions/req:constraint-and-licence-slots). Locator: rem:tworoutes;
+      reductions/prop:obstruction.
+
+# ---------------------------------------------------------------------------
+# receiver_artifact_consumption
+#   def:weight-route, whose order of steps is part of the interface: steps 1-2
+#   are classical post-processing of the physical outcome and happen BEFORE
+#   the first squashing link (reductions/req:post-processing-order).
+# ---------------------------------------------------------------------------
+receiver_artifact_consumption:
+
+  locator: "def:weight-route; reductions/rem:intertwining; reductions/def:joint-family (b)"
+
+  granularity_fact: >-
+    ONE GRANULARITY FACT DECIDES THE WHOLE OF THIS SECTION. The supplier emits
+    the COARSE-GRAINED blocks, one per emitted letter, together with a
+    dark-count channel R that acts on RAW click patterns and weights p_i^(t),
+    one per setting, certified for RAW outcome sets. A consumer holding only
+    the coarse blocks cannot in general apply R to them, because the
+    coarse-graining is many-to-one and R need not respect it. This submodule
+    therefore REQUIRES R to DESCEND through cg and VALIDATES that
+    requirement (req:descent-decided-exactly); a declaration failing
+    it is REFUSED rather than approximated. The case cg = id, in which the
+    emitted blocks are the raw ones, satisfies the requirement trivially.
+
+  steps:
+    - step: 1
+      name: dark_counts_on_the_emitted_alphabet
+      formula: "M~_{y|t} = sum_{y' in Y} R^cg_{y|y'} M_{y'|t}"
+      licensed_by: >-
+        reductions/lem:linear (i) -- post-processing by a column-stochastic
+        matrix, so the result is a conditional POVM at each t with the same
+        photon-number block structure -- and lem:descent, which shows it
+        equals the coarse-graining of the raw-level composition.
+      locator: "def:weight-route, step 1, Eq. eq:darkstep"
+    - step: 2
+      name: joint_alphabet
+      formula: "M_{(y,t)} = q_t M~_{y|t} on V = Y x T"
+      licensed_by: >-
+        reductions/def:joint-family (b) and reductions/lem:linear (ii), with
+        the weights Bob's own (A-PROBE). The class-marginal identity holds of
+        it BLOCK BY BLOCK, which is what discharges the flat instance's flag.
+      locator: "def:weight-route, step 2; reductions/def:joint-family (b)"
+      the_preserved_blocks_are_the_datum: >-
+        The preserved blocks of the joint family, m <= N, ARE the datum of the
+        flat instance and hence the data sectors of the emitted target.
+    - step: 3
+      name: the_instance
+      formula: "the flat instance of prop:flat-instance, and its emission"
+      licensed_by: "prop:flat-instance; cor:emitted-flat; reductions/thm:emit"
+      locator: "def:weight-route, step 3"
+
+  exactness: >-
+    STEPS 1 AND 2 ARE WRITTEN ON THE DECLARED NUMBERS AND THEIR POVM
+    CONCLUSIONS HOLD EXACTLY OF THEM. The declared R^cg is exactly
+    column-stochastic with non-negative entries and the class weights are
+    exactly a probability distribution -- both decided on entry -- and the
+    combination is formed in the exact substrate, so both families ARE POVMs
+    and every claim reads them as such.
+  what_the_two_steps_can_do: >-
+    THEY CAN LEAVE THE LATTICE: a product of two dyadic rationals ADDS
+    SIGNIFICAND WIDTHS, so the post-processed blocks need not be binary64
+    numbers even though every factor is. THAT IS THE ONE PLACE IN THIS
+    SUBMODULE WHERE EXACT ARITHMETIC OUTRUNS THE REPRESENTATION, it is where
+    the core's emission normalizer acts, and IT ACTS ON NUMBERS THIS MODULE
+    COMPUTED AND IS ABOUT TO DECLARE -- NEVER ON NUMBERS IT WAS HANDED.
+    Locator: def:weight-route; reductions/def:emitnorm.
+
+  weight_route:
+    equation: eq:weightroute
+    formula: >-
+      hat p_{(y_i,t)} := q_t ( (1 - r_min,i) p_i^(t) + r_min,i ), with
+      p_i^(t) THE SUPPLIER'S WEIGHT OF ENTRY i AT THE SETTING t OF THE JOINT
+      OUTCOME ITSELF (never the minimum over T, never another setting's), THEN
+      p_{(y_i,t)} := lat(hat p_{(y_i,t)}) = 2^-kappa floor(2^kappa hat
+      p_{(y_i,t)}) (Eq. eq:latdown, THE DOWNWARD ROUNDING ONTO THE DECLARED
+      LATTICE), with r_min,i the minimum of R^cg over the columns y' != y_i
+      (:= 0 when that minimum is over the empty set); and p_{(y,t)} := 0 for
+      EVERY OTHER (y,t), with p := sum_v p_v. The certified bound then reads
+      blk M^{>N}_{(y_i,t)} >= p_{(y_i,t)} 1 (Eq. eq:certroute).
+    locator: "def:weight-route, Eqs. eq:weightroute, eq:latdown, eq:certroute; prop:route"
+    two_symbols_not_one: >-
+      BINDING ON THE CODE. hat p (the exact rational) and p (the rounded
+      lattice value) are DIFFERENT NUMBERS and the claims carry both symbols.
+      THE EMITTED WEIGHT IS p AND NOT hat p, and the direction of that
+      rounding is the whole of what makes it safe: it is THE ONE EMITTED
+      NUMBER OF THIS SUBMODULE THAT A DOWNSTREAM INEQUALITY CONSUMES AS A
+      BOUND, the certified-weight inequality IS PRESERVED WHEN A CERTIFIED
+      WEIGHT IS LOWERED AND DESTROYED WHEN ONE IS RAISED, and the rounding
+      ONLY LOWERS.
+    rounding_direction: down
+    rounding_direction_locator: "def:weight-route, Eq. eq:latdown; prop:route; rem:weightfree; prop:weight-monotone (i); condition (D-DIR), foundations/req:rounding-direction"
+    it_is_not_the_normalizer: >-
+      A DOWNWARD ROUNDING OF A CERTIFIED WEIGHT AND THE EMISSION NORMALIZER'S
+      ROUNDING OF ITS MATRICES ARE TWO MECHANISMS WITH TWO SAFETY ARGUMENTS.
+      This one is a FLOOR of a scalar and has no tie to break; the
+      normalizer rounds the entries of each matrix to nearest with ties to
+      even and then decides what its step asks of the result. An
+      implementation that uses one function for both has merged two rules.
+      Locator: reductions/def:emitnorm (2), (3).
+    non_negativity_needs_no_clamp: >-
+      p_{(y_i,t)} >= 0 NEEDS NO CLAMP: hat p is a product of non-negative
+      declared numbers, and the largest lattice number at most a non-negative
+      rational is itself non-negative. AN IMPLEMENTATION THAT WRITES max(0, .)
+      HERE HAS ADDED A CLAMP THE CONVENTIONS FORBID. Locator:
+      def:weight-route (d).
+    preconditions: >-
+      Fixed entry i whose bounded set is EXACTLY A FIBRE and whose letter is
+      ABSORBING; BOTH ARE DECLARED INPUT VALIDITY CONDITIONS and both are
+      decided exactly.
+    four_load_bearing_facts:
+      - "(a) r_min is INDEXED BY THE BOUNDED LETTER: it is a property of one row of R^cg read across the other columns, and one entry's value is not another's."
+      - "(b) The absorbing condition is A HYPOTHESIS, NOT A CONSEQUENCE, and rem:absorbneeded shows that without it the route is FALSE IN THE UNSAFE DIRECTION."
+      - "(c) A positive r_min,i can occur ONLY AT r = 1 (cor:oneabsorbing), so for r >= 2 EVERY entry contributes the un-improved weight lat(q_t p_i^(t)) -- sound, merely not an improvement. THE ROUNDING IS INSIDE THE UN-IMPROVED CASE TOO."
+      - "(d) The non-negativity needs no clamp; see above."
+    proved_from: >-
+      prop:route proves the certified bound from the declared validity
+      conditions of the inputs table TOGETHER WITH the absorbing hypothesis
+      those conditions impose, AND FROM NOTHING ELSE.
+    any_smaller_weight_is_also_valid: >-
+      Any smaller non-negative choice is also valid and the artifact RECORDS
+      WHICH WAS USED; this submodule takes the largest the route supplies,
+      rounded down. Locator: rem:weightfree; prop:weight-monotone (i);
+      req:largest-certified-weight.
+    weights_survive_the_emission_normalizer: >-
+      The declared model AGREES WITH THE HANDED ONE ABOVE THE CUTOFF -- the
+      normalizer touches only the preserved blocks -- so IT SATISFIES EVERY
+      CERTIFIED-WEIGHT INEQUALITY THE HANDED ONE DOES, those being statements
+      about the above-cutoff blocks alone. Locator: prop:flat-instance,
+      Eq. eq:flat-declared; cor:emitted-flat (iii); reductions/def:emitnorm,
+      second property.
+    total_and_complement: >-
+      p = sum_v p_v is accumulated in the declared order over V and is EXACT
+      (reductions/lem:latsum), SO THE NUMBER COMPARED WITH 1 IS THE REAL
+      TOTAL; the complement 1 - p is RECOMPUTED from the rounded weights and
+      NEVER ROUNDED ON ITS OWN, which is what closes the flag sectors'
+      completeness exactly. Locator: cor:emitted-flat (i), (iv);
+      reductions/thm:emit (iv).
+
+# ---------------------------------------------------------------------------
+# outputs
+#   This submodule adds ONE key to the core's sixteen and records the route it
+#   was taken on. Everything else the artifact carries is the core's.
+# ---------------------------------------------------------------------------
+outputs:
+
+  rows:
+
+  - name: wpfss_data
+    symbol: "{p_v}, flag basis, N, p = sum_v p_v"
+    presence: "always, for an artifact emitted from the flat instance"
+    content: >-
+      The per-outcome routed weights, the flag basis IN THE DECLARED ORDER OF
+      V, the cutoff, the total, and WHICH WEIGHTS WERE USED (rem:weightfree;
+      req:largest-certified-weight). VALIDATED p_v >= 0 and p < 1.
+    locator: "def:targets, Eq. eq:certweights; def:weight-route, Eq. eq:weightroute; lem:ple1; rem:peqone; rem:weightfree; req:largest-certified-weight; req:total-weight-refusal"
+    refusal_reason: total_weight_not_below_one
+    weights_are_lattice_values: >-
+      NON-NEGATIVE LATTICE VALUES with p < 1, the sum accumulated in the
+      declared order of V and EXACT, SO THE NUMBER COMPARED WITH 1 IS THE REAL
+      TOTAL and the two readings -- the binary64 accumulation and the real
+      sum def:targets and prop:chain read -- ARE ONE NUMBER.
+    flag_basis_order: "the declared order of V, y fastest and t slowest (the core's `subsystem_order`)"
+
+  - name: route
+    symbol: null
+    presence: "always, for an artifact emitted from the flat instance"
+    content: "the single value the request carried, `encoded` or `licensed`."
+    locator: "def:routes; rem:tworoutes; prop:flat-instance (I2); req:one-route-per-artifact"
+
+  emitted_target_note: >-
+    The core's `target_povm`, `target_descriptor`, `exact_identity`,
+    `transported_operators` and `constraint_list` rows are the ones that
+    carry this submodule's emission; what this submodule fixes about them is
+    `artifact_bindings.flat_emission` below.
+
+  normalized_link_note: >-
+    req:normalized-link-record. Where the receiver artefact carries a
+    factored loss t < 1, the emitted artefact is that of the flat instance
+    precomposed with the pure-loss channel Lambda^loss_t
+    (cor:normalized-flat; reductions/lem:precomposed-instance), and FOUR
+    SLOTS of its link, and of the core's `squashing_channel` row, change:
+    (i) the channel witness carries the flat instance's witness with the
+    pure-loss channel's witness under `precomposed_with`, acting first, its
+    record carrying t exactly under `factored_loss`; the witness keeps the
+    identity its entries are certified against (lem:precomposed-instance
+    (i)); (ii) the source family is the receiver's measurement, the
+    pull-back of the normalized station's; (iii) each pull-back of the
+    carried tuple is written Lambda^loss_t^dagger( ... ) of the flat
+    instance's; (iv) the reachable-set statement is the composite channel's,
+    which is also the artefact's `reachable_set_statement`. The target,
+    routed weights, transported operators, entries, constants, certificate
+    cases and licence are those emitted for the normalized station,
+    unchanged. The reference companion's record carries the same
+    `precomposed_with`. At t = 1 no key is added.
+
+# ---------------------------------------------------------------------------
+# parameters
+# ---------------------------------------------------------------------------
+parameters:
+  weights:
+    symbol: "p_v"
+    domain: >-
+      NON-NEGATIVE LATTICE VALUES with p = sum_v p_v < 1, THE SUM ACCUMULATED
+      IN THE DECLARED ORDER OF V AND EXACT, SO THE NUMBER COMPARED WITH 1 IS
+      THE REAL TOTAL. This submodule takes them from the weight route,
+      ROUNDED DOWN ONTO THE DECLARED LATTICE; ANY SMALLER NON-NEGATIVE CHOICE
+      IS ALSO VALID AND THE ARTIFACT RECORDS WHICH WAS USED. A declaration
+      with p >= 1 is REFUSED, NOT CLIPPED.
+    locator: "def:targets; def:weight-route; rem:weightfree; prop:weight-monotone (i); req:largest-certified-weight; rem:peqone; req:total-weight-refusal"
+  free_numerical_parameters: none
+  tolerances: >-
+    NONE, as in the core. The supplier's own residual budgets are DIFFERENT
+    DECLARED NUMBERS and this submodule reads none of them: they are stated in
+    the spectral norm and decided against the supplier's own tolerances, while
+    every condition here is decided at exactly zero and there is no number to
+    compare them with. NO CONVERSION BETWEEN THE TWO IS PERFORMED HERE AND
+    NONE IS NEEDED; an instance that sizes a supplier budget performs one
+    explicitly, with its dimension factor written down, on its own authority.
+    Locator: rem:receiver-imports; spec/architecture.md 2.8.
+
+# ---------------------------------------------------------------------------
+# conventions
+#   The readings this submodule takes that the core's conventions do not fix.
+#   Everything else -- the number model, the summation order, the subsystem
+#   order, fail_closed, who snaps -- is the core's and is not repeated.
+# ---------------------------------------------------------------------------
+conventions:
+
+  descended_matrix_representative: >-
+    THE REPRESENTATIVE IS DECLARED, NOT CHOSEN. R^cg_{y|y'} is read at THE
+    FIRST ELEMENT of the fibre cg^{-1}(y') IN THE DECLARED ORDER OF THE RAW
+    CLICK PATTERNS, so that the descended matrix is a determinate object and
+    not one of several. The descent condition -- that the value agrees at
+    every element of the fibre -- is decided first, and the representative is
+    read only after it holds. Locator: lem:descent.
+
+  raw_pattern_order: >-
+    The raw click patterns are enumerated BY SIZE, THEN LEXICOGRAPHICALLY, in
+    the declared port order. That is the order the representative above is
+    read in and the order a declared R is presented in; it is a declared datum
+    and is validated, never constructed in place of a missing declaration
+    (`alphabet_or_order_mismatch`, the core's row).
+
+  per_setting_weights: >-
+    The weights consumed are the supplier's PER-SETTING ones, the weight of
+    the joint outcome (y_i, t) formed from p_i^(t) of its own setting; the
+    supplier's uniform weight is their special case and at T = {off} their
+    only case. Locator: rem:minweight; req:supplier-version.
+
+  post_processing_order: >-
+    The core's convention, instantiated: the dark-count channel, then the
+    coarse-graining the supplier already applied, then the joint alphabet --
+    all BEFORE the first squashing link. Locator: def:weight-route;
+    reductions/rem:intertwining.
+
+# ---------------------------------------------------------------------------
+# fail_closed
+#   EIGHT rows of the table of twenty-seven. The `order` field is each row's
+#   place in that table; the core owns nineteen. The policy
+#   and the "how a rule is decided" paragraph are the core's and are not
+#   repeated: every rule below is decided EXACTLY, from declared data, before
+#   anything is emitted, with a refusal and NO ARTIFACT.
+# ---------------------------------------------------------------------------
+fail_closed:
+
+  rows:
+
+    - rule: cutoff
+      order: 4
+      checked: "The declared cutoff N equals the receiver's echoed N."
+      reasons: [cutoff_mismatch]
+      locator: "def:weight-route; prop:flat-instance (I1); def:targets"
+      why: >-
+        The quantifier domain of every certified weight is m > N. Two
+        different cutoffs would put the certified bound and the preserved
+        blocks on different sides of one boundary.
+
+    - rule: fibre
+      order: 8
+      checked: "Each bounded set is EXACTLY a fibre of the coarse-graining, for distinct letters."
+      reasons: [bound_set_not_a_fibre]
+      locator: "rem:fibre; def:weight-route; req:fibre-equality"
+      why: >-
+        The certified quantity is the SUM over the bounded set, and a bound on
+        a sum of positive operators says nothing about the individual
+        summands. A split fibre leaves no letter with a bound; a merged one
+        attaches the weight to a letter whose fibre is larger than the
+        certified set.
+
+    - rule: column_stochastic
+      order: 9
+      checked: >-
+        The declared dark-count matrix R is EXACTLY column-stochastic: every
+        entry >= 0, and every column summing to 1.
+      reasons: [dark_counts_not_column_stochastic]
+      locator: "def:weight-route; lem:descent; rem:colstoch; req:column-stochastic-refusal"
+      subrules:
+        - "every entry >= 0 (non-negativity)"
+        - "every column sums to 1 (unit columns)"
+      why: >-
+        DECIDED ON R ALONE, AND THAT SETTLES R^cg AS WELL: lem:descent's
+        carrying of the property to the descended matrix regroups one finite
+        sum, and in the exact substrate a regrouped sum is the sum it
+        regroups. AN IMPLEMENTATION THAT ADDS A SECOND ROW ON R^cg HAS ADDED A
+        RULE THE CLAIMS DO NOT STATE.
+      what_reads_the_property:
+        - "prop:route: 0 <= r_min,i <= 1, so the route's coefficient 1 - r_min,i >= 0"
+        - "reductions/lem:linear (i) at step 1: post-processing yields a POVM only because the coefficients are non-negative and each column sums to one"
+        - "cor:oneabsorbing, whose proof reads a column of R^cg as a probability vector"
+      supplier_admissibility_consequence: >-
+        THE ONE PLACE THE ROW IS LOAD-BEARING BEYOND DIAGNOSIS: with it and
+        the descent row, EVERY ADMITTED R IS EXACTLY ADMISSIBLE IN THE
+        SUPPLIER'S SENSE, so the supplier's dark-count theorem applies to it
+        verbatim (rem:darkcompose).
+
+    - rule: descent
+      order: 10
+      checked: >-
+        R is monotone and DESCENDS through the coarse-graining -- TESTED
+        DIRECTLY, NOT VIA THE SUFFICIENT CONDITION Eq. eq:canonicalcg.
+      reasons: [dark_counts_do_not_descend]
+      locator: "lem:descent; rem:descentneedsconstant; rem:colstoch; req:descent-decided-exactly"
+      why: >-
+        Without descent a consumer holding only the coarse blocks cannot apply
+        R to them at all. THE MONOTONICITY HALF IS AN IMPLICATION AND NOTHING
+        MORE: an entry that is zero in a forbidden position satisfies it
+        vacuously, and a NEGATIVE one is refused by the row above instead.
+        rem:descentneedsconstant is why the shortcut may not replace the test.
+
+    - rule: absorbing
+      order: 11
+      checked: >-
+        EVERY bounded letter is absorbing, R^cg_{y_i|y_i} = 1, and each
+        r_min,i is computed over EVERY column y' != y_i.
+      reasons: [bounded_letter_not_absorbing]
+      locator: "def:weight-route, Eq. eq:weightroute (b); prop:route; rem:absorbneeded; req:absorbing-bounded-letters"
+      why: >-
+        Without it the weight route is FALSE IN THE UNSAFE DIRECTION
+        (rem:absorbneeded). THE DOMINANCE HALF NEEDS NO ROW: at
+        R^cg_{y_i|y_i} = 1 with entries in [0, 1], every r_min,i <= 1 is a
+        theorem (rem:colstoch).
+
+    - rule: total_weight
+      order: 12
+      checked: >-
+        p_v >= 0 and p = sum_v p_v < 1, ON THE EMITTED weights and IN THE
+        DECLARED SUMMATION ORDER -- an EXACT COMPARISON BETWEEN LATTICE
+        VALUES.
+      reasons: [total_weight_not_below_one]
+      locator: "def:targets; lem:ple1; rem:peqone; prop:chain; req:total-weight-refusal"
+      why: >-
+        The weight-preserving construction divides by 1 - p on the `encoded`
+        route. On the `licensed` route the witness performs no such division,
+        SO THERE THE TEST IS STRICTER THAN THE MATHEMATICS REQUIRES; this
+        submodule applies it ON BOTH ROUTES DELIBERATELY -- one validity rule rather
+        than two, fail-closed and conservative -- and by rem:peqone the
+        excluded boundary is recoverable by lowering one weight
+        infinitesimally. p_v < 0 is impossible, and so is p > 1 WHEN THE
+        ABOVE-CUTOFF SPACE IS NON-TRIVIAL (lem:ple1); where that block is
+        trivial the certified-weight condition is vacuous and this test is the
+        only thing constraining p, WHICH IS WHY IT RUNS UNCONDITIONALLY.
+      the_two_readings_are_one_number: >-
+        Every p_v is an integer multiple of 2^-kappa, so by
+        reductions/lem:latsum THE ACCUMULATION THIS ROW DECIDES IS THE REAL
+        SUM def:targets and prop:chain read.
+      not_the_slot_row: >-
+        Its subject is the ROUTED p_v and their total, formed from the class
+        weights, r_min,i and p_i^(t) and then rounded down. See the
+        `high_photon_slot` row.
+
+    - rule: high_photon_slot
+      order: 14
+      checked: "The receiver artifact's version states the per-setting weights (req:supplier-version), and the supplier's strengthening slot is well formed: its per-setting weights are indexed by exactly the settings T of the supplied blocks, p_i^(t) >= 0 for every i and t, and sum_i p_i^(t) <= 1 at every t."
+      reasons: [high_photon_slot_ill_formed]
+      locator: "def:weight-route; prop:route (iv) (receiver/def:slot, receiver/prop:slotvalid); reductions/ass:recv; req:supplier-version"
+      why: >-
+        NOT COVERED BY THE TOTAL-WEIGHT ROW, which tests the ROUTED total: the
+        two agree only when every r_min,i = 0 (cor:oneabsorbing) and no
+        downward rounding bites, and where r_min,i > 0 A NEGATIVE p_i^(t) IS
+        INVISIBLE IN THE ROUTED TOTAL. Such a declaration is not a security
+        break -- the routed bound at p_i^(t) < 0 is WEAKER than at
+        p_i^(t) = 0 -- but it CONTRADICTS THE SUPPLIER'S OWN SLOT GUARANTEE
+        (A-RECV) and is refused rather than consumed. THE SETTINGS CLAUSE:
+        Eq. eq:weightroute reads at (y_i, t) the weight of that setting, so a
+        slot missing a setting of
+        T leaves a joint outcome without its weight and a slot with a setting
+        outside T carries a weight no joint outcome reads; the supplier emits
+        blocks and slot from one setting family, so either is a malformed
+        artifact, and it is refused under this row's reason rather than
+        repaired by a default. At T = {off} the clause reads one weight per
+        entry, which every probe-free artifact supplies. THE VERSION CLAUSE:
+        a slot of a receiver version that does not state eq:pmcsetting is the
+        content of no claim
+        this submodule imports, so the artifact is refused rather than read at
+        its uniform weight.
+
+    - rule: route
+      order: 24
+      checked: "`route` carries EXACTLY ONE value; `both` is refused."
+      reasons: [route_not_single_valued]
+      locator: "rem:tworoutes, Eq. eq:crosspairing; reductions/rem:channel-choice (c); req:one-route-per-artifact"
+      why: >-
+        The payload is single-valued and the two routes run on DIFFERENT
+        CHANNELS; the cross-channel pairing is UNSOUND, and each link's entry
+        list is bound to that link's channel witness.
+
+    - rule: normalized_branch
+      order: 29
+      checked: "An artefact that embeds the flat instance as a branch of a branching instance, the register instance included, reads a receiver artefact whose efficiency_record carries the factored loss t = 1."
+      reasons: [normalized_receiver_in_branch]
+      locator: "req:normalized-branch-refusal; cor:normalized-flat; reductions/thm:instrument-instance; reductions/cor:register-instance"
+      decided_by: >-
+        every builder that embeds the flat instance as a branch; the flat path
+        declares no such row,
+        since the flat instance absorbs the loss (cor:normalized-flat).
+      why: >-
+        cor:normalized-flat moves the factored loss in front of the flat
+        instance on the channel system; beside other branches, which need not
+        be the pull-back of anything through a loss on the channel modes, no
+        claim moves it, so a normalized receiver is refused rather than read
+        as the device. Added after the freeze at the next free order; a run
+        whose receiver is such a branch declares efficiency_normalization = 1
+        to the receiver.
+
+  refusal_reasons:
+    - cutoff_mismatch
+    - bound_set_not_a_fibre
+    - dark_counts_not_column_stochastic
+    - dark_counts_do_not_descend
+    - bounded_letter_not_absorbing
+    - total_weight_not_below_one
+    - high_photon_slot_ill_formed
+    - route_not_single_valued
+    - normalized_receiver_in_branch
+  refusal_reason_count: 9
+  strings_are_this_submodules: >-
+    All nine are this submodule's and are listed here rather than in the
+    core's table.
+  rows_it_does_not_own: >-
+    This submodule adds NO rule to the core's nineteen and narrows none of
+    them. Its declared blocks are decided by the core's `block_structure` and
+    `exact_admissibility` rows, its artifact by the core's `receiver_spec`
+    row, and its emitted family by the core's `emitted_family` row.
+
+# ---------------------------------------------------------------------------
+# link_kinds
+# ---------------------------------------------------------------------------
+link_kinds:
+  added_by_this_submodule: [fss, wpfss]
+  implemented: [fss, wpfss]
+  locator: "def:targets, Eqs. eq:FSS and eq:WPFSS; prop:chain; reductions/def:link"
+  note: >-
+    Two receiver-stage kinds, one per target. `fss` is the flag-state squasher
+    (the case of all weights zero) and `wpfss` the multi-bound
+    weight-preserving one; the route decides which of the two the flat
+    instance builds. Deleting this submodule removes both kinds and leaves the
+    core's vocabulary intact.
+
+# ---------------------------------------------------------------------------
+# artifact_bindings
+# ---------------------------------------------------------------------------
+artifact_bindings:
+  mathematical_spec_version: "reductions@0.21.0"
+  version_note: >-
+    A SUBMODULE DOES NOT PIN A VERSION OF ITS OWN: the artifact names the
+    core's pin, the core interface's `artifact_bindings.mathematical_spec_version`,
+    whose `version_note` says when the pin moves and names the hand-edited
+    frozen expectation.
+
+  flat_emission:
+    locator: "prop:flat-instance; cor:emitted-flat; reductions/thm:emit"
+    physical_system: >-
+      THE CHANNEL SYSTEM ITSELF. The defining identity of the flat instance is
+      an identity ON THE CHANNEL SYSTEM and not on an ampliation
+      (cor:emitted-flat (iii)); AN ARTIFACT WITH A BRANCH REGISTER IS A
+      DIFFERENT ARTIFACT ON A DIFFERENT SYSTEM, and a declaration that
+      declares no branch register selects THIS instance.
+    data_sectors: "the photon-number blocks m <= N of the joint family, in increasing m, with the default support V"
+    scalar_sectors: >-
+      one per outcome f in V, in the order of V, of dimension 1, with the
+      value p_v + (1 - p) delta_{vf} on the `encoded` route and delta_{vf} on
+      the `licensed` route (Eq. eq:flat-scalars)
+    hypotheses_H:
+      - "(H1) at each setting the above-cutoff blocks of the supplied conditional POVM form a POVM on the above-cutoff space (the supplier's fact, A-RECV)"
+      - "(H2) the routed weights are certified (prop:route)"
+      - "(H3) the total weight is below one, decided on entry"
+    transported_set: >-
+      the two cutoff projectors of the target, the per-sector projectors of
+      the data sectors, and the flag sector projectors. The pull-backs are the
+      two cutoff projectors on the channel system and the photon-number
+      projectors on both routes; THE FLAG-SECTOR PULL-BACK DIFFERS BY ROUTE.
+      On the `licensed` route it is the ABOVE-CUTOFF ELEMENT blk M^{>N}_f read
+      as an operator on the channel system supported in C_{>N}. On the
+      `encoded` route it is the MODIFIED POVM
+      M^WP_f = (blk M^{>N}_f - p_f 1) / (1 - p), read there in the same way --
+      not the above-cutoff element, the weights having been subtracted and the
+      remainder renormalised by the complement of the total. Locator:
+      prop:flat-instance (I3); prop:chain, Eq. eq:WPadjoint.
+    emitted_entries: >-
+      EMPTY ON THE `encoded` ROUTE, that route carrying no entry and no
+      licence. ON THE `licensed` ROUTE: the flag-sector entries of
+      cor:fssinstance at c = 0, UNSHIFTED, under that route's licence; on
+      request the class-marginal entries at
+      the declared class weight, WHICH THE FLAT INSTANCE DISCHARGES (a theorem
+      of the construction, reductions/lem:linear (ii) read block by block, and
+      not a hypothesis); on request, a default carried operator AS AN ENTRY
+      (reductions/cor:entries (i)); and, on request, the two-sector entry Eq.
+      eq:two-sector-entry where its decided certificate holds at the emitted
+      numbers (cor:two-sector-decided), every other further request being
+      refused (reductions/cor:entries (iii)).
+      THE INSTANCE'S DEFAULT CARRIED OPERATORS -- the sector projectors AND
+      the two cutoff projectors Pi_leq and Pi_flag it transports besides --
+      ARE NOT ENTRIES OF THIS LIST UNLESS REQUESTED AS ONE: they travel in
+      `transported_operators` at c = 0 with >=, per entry, on both routes,
+      and one of them becomes an entry only where a caller requests it AS AN
+      ENTRY, which selects the `licensed` route.
+      Locator: cor:emitted-flat, closing paragraph; cor:fssinstance;
+      reductions/cor:entries (i).
+    the_exact_list_this_instance_adds: >-
+      To the core's list of numbers computed exactly (reductions/thm:emit (i))
+      this instance adds: the descended matrix R^cg, the constants r_min,i,
+      the exact weights hat p_v, the total p and its complement 1 - p. The
+      emission displacement per preserved block is the one emitted number that
+      is not on the list. Locator: cor:emitted-flat (i).
+
+  package: "src/certiqs_key/reductions/wpfss/"
+  produces_note: >-
+    The core's artifact with `wpfss_data` and the route added. NO OTHER KEY.
+  consumes_note: >-
+    A ReceiverMeasurementArtifact, through the core's `receiver_artifact` row.
+
+# ---------------------------------------------------------------------------
+# depends_on_modules
+# ---------------------------------------------------------------------------
+depends_on_modules: ["receiver/detector-imperfections"]
+depends_on_modules_note: >-
+  As `module.yaml` declares, and INHERITED from the core for everything else:
+  the weight route consumes the dark-count admission of the supplier's
+  detector-imperfections submodule.
+  WHICH claims are imported, and which of the
+  supplier's assumptions the imported facts rest on, is rem:receiver-imports,
+  whose `uses` edges compute that closure -- not a prose list restated here.
+  Which keys the emitted ledger inherits is `inherited_supplier_keys_note`.
+inherited_supplier_keys_note: >-
+  The emitted `assumption_ledger` carries, on its A-RECV entry, THE
+  SUPPLIER'S OWN LEDGER, ENTIRE: every key the supplied ledger carries, as
+  supplied and in the supplier's order, a key beyond those the supplier's
+  rules require being carried and not refused. A key the supplier's own
+  presence rules make present that the artifact does not carry is a refusal
+  (`receiver_spec_not_accepted`; core `validation.required_receiver_keys`,
+  which reads those rules from the installed receiver) rather than a silently
+  shortened list. The core holds no list of the supplier's keys and no copy
+  of its rules (reductions/req:supplier-ledger-pass-through; core
+  `receiver_artifact.what_this_module_may_never_decide`). THE CLOSURE OF THE
+  `uses` EDGES of rem:receiver-imports and prop:route is which of those
+  assumptions the imported facts rest on, and decides no key's presence;
+  no key the imported facts rest on at the declaration is missing, because
+  the supplier's rules emit every row on every artifact. THE
+  EIGENVALUE-SLACK KEY IS INVOKED CONDITIONALLY: the supplier's assumption
+  is asserted only at a setting whose declaration carries an exact-window
+  depth, and a caller that wants it out of the chain declares no exact
+  window; its invocation record travels with its key
+  (req:supplier-eig-record); its row is present on every artifact, with
+  that record possibly empty. Locator:
+  rem:receiver-imports; reductions/req:supplier-ledger-refusals.
+
+# ---------------------------------------------------------------------------
+# code_note
+#   Where the code under src/certiqs_key/reductions/ and the rows above could
+#   be read differently, as in the core interface's `code_note`.
+# ---------------------------------------------------------------------------
+code_note:
+
+  - item: "where the input types live"
+    code: >-
+      ReceiverArtifactRows, DarkCountChannel, CoarseGraining, HighPhotonBound,
+      BoundQuantifierDomain and ProtocolDeclaration.photon_cutoff are typed in
+      reductions/inputs.py, the CORE package; wpfss/ holds only weights.py,
+      construction.py, validation.py and api.py.
+    interface: "the seven receiver-supplied keys, the cutoff and the route are this submodule's."
+    reading: >-
+      Not a removability defect -- `wpfss` need not be removable -- but
+      the core package names objects no core claim states. The keys and their
+      domains are the same in both readings.
+
+  - item: "the `cutoff` and `route` rows"
+    code: "registered in the core's FailClosedRule enum at orders 4 and 24, with their strings in the core's RefusalReason."
+    interface: "both rows are this submodule's: no core claim carries a cutoff, and rem:tworoutes is a wpfss claim."
+    reading: "Same rows, same strings, same orders; the disagreement is which module owns them."
+
+  - item: "the six weight-route strings"
+    code: >-
+      bound_set_not_a_fibre, dark_counts_not_column_stochastic,
+      dark_counts_do_not_descend, bounded_letter_not_absorbing,
+      total_weight_not_below_one and high_photon_slot_ill_formed are members
+      of the core's RefusalReason enum, although wpfss/validation.py registers
+      the rows that produce them.
+    interface: "the strings are this submodule's."
+    reading: >-
+      The rows are submodule-owned through the registry; the strings are in
+      the core enum, which an extension of the same registry mechanism would
+      move.
+
+  - item: "the `normalized_branch` row and its string"
+    code: >-
+      normalized_receiver_in_branch is a member of the core's RefusalReason
+      enum; wpfss/validation.py registers the row (order 29) and spells
+      rule_normalized_branch, and a builder that embeds the flat instance as
+      a branch declares and decides it, the flat builder not.
+    interface: "the row and the string are this submodule's (req:normalized-branch-refusal)."
+    reading: >-
+      As for the six weight-route strings. The row is decided by whichever
+      builder embeds the flat instance as a branch, which is why the flat
+      path reports one row fewer than a branching one.
+
+  - item: "the raw-pattern order"
+    code: "inputs.patterns() enumerates the click patterns by size, then lexicographically."
+    interface: "the `raw_pattern_order` convention states the same order, because lem:descent's representative rule needs a declared one."
+    reading: >-
+      AGREEMENT, recorded because lem:descent delegates the representative to
+      this file and a reader must be able to find where the order was fixed.
+
+  - item: "the per-sector half of the transported set"
+    code: >-
+      construction.flat_sector_transport emits one entry per sector of the
+      flat instance's sector set, with the pull-back expression
+      P^Chan_m on a data sector and Mwp_f -- blk M^{>N}_f on the `licensed`
+      route -- on a flag sector, none of them a matrix; flat_instance puts
+      them after the transported pair.
+    interface: >-
+      the core's `transported_operators` row carries the set, and
+      `flat_emission.transported_set` names the pair the two routes differ in.
+    reading: >-
+      AGREEMENT with prop:flat-instance (I3), which spells the set out as
+      {Pi_leq, Pi_flag} u {Pi_(m)} u {Pi_(f)} and gives exactly these
+      pull-backs in its proof, the licensed-route form being the same
+      computation at p_v = 0. No pull-back is materialised, and none can be:
+      P^Chan_m is an operator
+      on the Fock space H(C) and Mwp_f is built from the above-cutoff blocks
+      the supplier does not emit.

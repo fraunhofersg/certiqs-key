@@ -1,0 +1,87 @@
+% ---
+% id: protocol-compiler/req:link-row-provenance
+% kind: req
+% title: "Omission of the link-soundness row only on a proved chain"
+% summary: >-
+%   The ledger omits [[A-LINK]] only on Band A and where every measured
+%   factor's receiver segment is the single exact instance link of a
+%   reductions artefact of the same run, with the identity outcome
+%   correspondence. That provenance is the run's, never read from the
+%   specification.
+% prominence: standard
+% status: implemented
+% uses: [rem:obligations-discharged, reductions/thm:emit, reductions/thm:chain, reductions/thm:transfer, reductions/thm:licence, reductions/cor:entries, reductions/thm:emitted-product, reductions/lem:linear]
+% mentions: [ass:link, thm:band-a, thm:chain-consumption, def:spec, def:chaincond, def:banda, def:weighted, rem:relabel, req:band-a-ideal-receiver, req:band-a-identity-link, reductions/domination/def:domination-link]
+% assumes: [A-MEAS]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.compile:link_row_discharged
+% lean:
+% notes: "Route (i)'s warrant, thm:band-a (v) with req:band-a-ideal-receiver and req:band-a-identity-link, is named by mentions and not uses: a uses edge would bring A-IDEAL, the Band-A route's own premise, into the closure of every omission, route (ii)'s included, and the A-IDEAL row is emitted on route (i) anyway. Route (ii)'s warrant is used, the theorems it rests on carrying no premise the omission is about."
+% ---
+
+Theorem~\ref{thm:chain-consumption}\,(v) names the soundness of each link as
+an obligation of the chain's producer, and Remark~\ref{rem:obligations-discharged}
+records the chains for which the producer's own theorems discharge it. A
+specification is a record (Definition~\ref{def:spec}\,(c)): its link types
+and status tags are data that a specification written by hand can carry
+equally, so whether a chain is one the reductions module emitted cannot be
+read off it. Condition~(ii) below is the shape that the theorems this
+requirement uses discharge. An instance link followed by a further link
+squashes another model (a link of \xref{reductions/domination/def:domination-link}),
+and on such a chain the row stays. At several
+\tref[measured factor]{measured factors} whose segments are each that
+factor's instance link alone, the joint transfer is
+\xref{reductions/thm:emitted-product}\,(ii) and~(iii), the apparatus
+measuring the product of the factors' families by A-MEAS
+(\xref{reductions/ass:meas})\,(iv). A setting-dependent weighting applied
+after a factor's segment leaves the chain record as it is
+(Remark~\ref{rem:relabel}), so such a factor meets condition~(ii) as an
+unweighted one does, and the weighted relation is
+\xref{reductions/lem:linear}\,(i). At Band A the discharge is
+Theorem~\ref{thm:band-a}\,(v), whose hypothesis, Definition~\ref{def:banda}\,(b),
+is decided on the record (Requirement~\ref{req:band-a-identity-link}).
+
+\begin{requirement}\label{req:link-row-provenance}
+The engine omits the row of Assumption~\ref{ass:link} from the assumption
+ledger of a compilation only
+(i) on the \tref{Band A} route, for a declaration whose record satisfies
+Definition~\ref{def:banda}\,(b) as Requirements~\ref{req:band-a-ideal-receiver}
+and~\ref{req:band-a-identity-link} decide it --- the one link the identity,
+supplied as data, its outcome correspondence the identity and its target
+POVM, by the decided (C4), the presented physical family --- where
+Theorem~\ref{thm:band-a}\,(v) proves every clause of it; or
+(ii) where the \tref{source segment} is empty and, for every
+\tref{measured factor} of the specification, all of the following hold: its
+\tref{receiver segment} consists of one link, the instance link of an
+artefact that the reductions module emitted in the same run, with status
+\emph{exact} and no channel supplied as data; the outcome correspondence of
+the segment is the identity on that factor's target alphabet; and that
+factor's physical receiver family as presented is exactly the compression
+$\{\iota^{\dagger}\Mdec_v\iota\}_v$ of that artefact's \tref{declared model}
+onto the presented physical receiver space, $\iota$ its isometric inclusion
+into the physical system, or the declared model itself. At several measured
+factors the omission rests in addition on A-MEAS
+(\xref{reductions/ass:meas})\,(iv), that the round's physical measurement is
+the product of the factors' measurements. On either route, at a factor
+whose delivered family is weighted after its segment, in the
+\tref{setting-dependent form} of Definition~\ref{def:weighted}, the omission
+rests in addition on \xref{reductions/lem:linear}\,(i): the weighting of the
+family the segment's link delivers and the identically weighted physical
+family stand in the \tref{squashing relation} under the same channel, so the
+transfer applies to the weighted protocol as to the unweighted one; on
+route~(i) the channel is the identity and the two weighted families are the
+same matrices (Theorem~\ref{thm:band-a}\,(v)).
+That each link is that artefact's instance link and that each presented
+family is that compression is established by the part of the engine that ran
+the reductions module and docked its artefacts, only for an instance for which
+Remark~\ref{rem:obligations-discharged} names the claim showing the docked
+family to be that compression, and is passed to the compiler
+beside the specification (\iface{chain_provenance}); the compiler never reads
+it from the specification. The compiler decides, on the presented chain, the
+parts of~(ii) that are data: for every measured factor the length of its
+segment, the status tag, the channel slot and the outcome correspondence
+(Definition~\ref{def:chaincond}, (C2)), and the length of the source segment.
+Where condition~(ii) is not passed, or a part of it decided on the chain
+fails, the row is emitted.
+\end{requirement}

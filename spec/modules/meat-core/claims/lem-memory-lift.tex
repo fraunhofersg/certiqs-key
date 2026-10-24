@@ -1,0 +1,263 @@
+% ---
+% id: meat-core/lem:memory-lift
+% kind: lem
+% title: "Approximating an attack by all-at-once attacks with finite memory"
+% summary: >-
+%   Every attack on a run, its memory of any dimension and its signals taken in any order, is approximated in trace norm by attacks with finite memory that take every signal at the start. A trace-distance bound that holds for those therefore holds for every attack with the same ε.
+% prominence: standard
+% status: accepted
+% uses: [foundations/lem:register-compression, def:postprocessing-model, reductions/def:protocol]
+% mentions: [def:roundmodel, thm:keylength, cor:composed-security, reductions/lem:source-transfer, reductions/rem:why-exact]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Thm. A.1, Rem. A.2"
+%   - "tupkary2026decoy, Def. 8.2"
+%   - "tupkary2026decoy, Sec. 8.2"
+%   - "tupkary2026decoy, Lemma 8.1"
+% provenance: newly-derived
+% lean:
+% notes: "Deliberately applied to the physical run, before the reductions, where tupkary2026decoy applies its Thm. A.1 to the analysed protocol after the source map and the squasher, under the finite-dimensional Alice and Bob of its Rem. A.2: compressing only the adversary's registers and the signals in her hands needs no finite dimension of the measured or the transmitted system, and the reductions and the accumulation theorem keep their finite-dimensional registers. The release schedule covers every order in which the source may release its signals, k_j = j being one signal per round and k_1 = n the all-at-once type of reductions/lem:source-transfer. The lemma reads no security claim, so the claims that state the bounds can use it."
+% ---
+
+The bound of Theorem~\ref{thm:keylength} is proved for the attacks the
+\tref{round model} of Definition~\ref{def:roundmodel} represents: their
+registers are finite-dimensional, as every register of that model is, and in
+\tref{trusted-source mode} their first channel receives every transmitted
+signal, the type the reductions transfer
+(\xref{reductions/lem:source-transfer}) and the timing the published analysis
+moves to \cite[Lemma~8.1]{tupkary2026decoy}. A physical adversary may keep a
+memory of any dimension and receives the signals as the source releases
+them; where a signal lives in an infinite-dimensional space, a finite memory
+cannot hold it for a later round. The lemma closes that gap by a limit, the
+route of \cite[Def.~8.2, Sec.~8.2, Thm.~A.1, Rem.~A.2]{tupkary2026decoy}:
+compressing the adversary's registers, and each signal released after the
+first round, onto finite-dimensional subspaces
+(\xref{foundations/lem:register-compression}) turns every attack into one of
+the analysed type whose output state is as close as wanted, and a bound on a
+trace distance, which no dimension enters, passes to the limit.
+Corollary~\ref{cor:composed-security} applies it. The compression touches
+neither the \tref{measured system} nor the \tref{transmitted system} in
+transit, so no finite dimension of either is needed; that is why the limit is
+taken at the physical run rather than at the analysed protocol. Unlike the
+transfers of the reductions module, which hold for every criterion because
+they are exact (\xref{reductions/rem:why-exact}), the limit needs a criterion
+continuous in the output state, and the trace distances of the security
+statement are.
+
+\begin{lemma}\label{lem:memory-lift}
+Read a run of the protocol and its attacks as follows.
+\begin{enumerate}[label=(\alph*),leftmargin=2.4em]
+\item \emph{(the run)} Its quantum phase is an $n$-round protocol of
+  \xref{reductions/def:protocol}, whose measured system $\Bsys_j$ of round $j$
+  is separable and of any dimension, followed by the
+  \tref{fixed-length post-processing model} of
+  Definition~\ref{def:postprocessing-model} in the
+  \tref{honest-authentication setting}. In trusted-source mode its source
+  releases, for $i=1,\dots,n$, a separable transmitted system
+  $\Asig_i$ of any dimension, prepared together with Alice's letter register
+  $X_i$ in a state $\rho_i$ on $X_i\Asig_i$ that depends on nothing else, and
+  the run reads $X_i$ from round $i$ on; in \tref{untrusted-source mode} there
+  are no $X_i$ and no $\Asig_i$. Every system of the run other than the
+  $\Bsys_j$ and the $\Asig_i$ is finite-dimensional, and its public messages
+  are classical registers it keeps.
+\item \emph{(attacks)} An \emph{attack} consists of a release schedule
+  $0=k_0\le k_1\le\dots\le k_n=n$ with $k_j\ge j$ for every $j$, a state
+  $\zeta$ on the adversary's initial register $E_0$, and channels, in the
+  sense of \xref{foundations/lem:register-compression},
+  \begin{equation}\label{eq:lift-attack}
+    \Aev_j\in
+    \begin{cases}
+      \mathrm{CPTP}\big(\Asig_{k_{j-1}+1}\cdots\Asig_{k_j}E_{j-1},\
+        \Bsys_jE'_j\big), & \text{trusted-source mode},\\[0.3ex]
+      \mathrm{CPTP}\big(E_{j-1},\ A_j\Bsys_jE'_j\big),
+        & \text{untrusted-source mode},
+    \end{cases}
+  \end{equation}
+  for $j=1,\dots,n$, where $E'_j$ is the adversary's memory after round $j$,
+  $E_j$ is $E'_j$ together with a copy of the public messages of round $j$,
+  and $\Hs{E_0}$ and every $\Hs{E'_j}$ are Hilbert spaces of any dimension.
+  Under the attack the run starts from $\zeta$ and its own registers, prepares
+  $\rho_i$ in round $j$ for $k_{j-1}<i\le k_j$ before $\Aev_j$ acts, takes
+  $\Bsys_j$, and in untrusted-source mode Alice's system $A_j$, from the
+  output of $\Aev_j$, and places a copy of the public messages of round $j$ in
+  $E_j$. Its \emph{output state} is the state of the run's
+  \tref{output registers}, its public messages and $E'_n$. The attack is
+  \emph{all-at-once} if $k_1=n$, and has \emph{finite registers} if $E_0$ and
+  every $E'_j$ are finite-dimensional.
+\end{enumerate}
+Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{(approximation)} for every attack and every $\eta>0$ there is an
+  all-at-once attack with finite registers whose memory after round $n$ is a
+  subspace of $\Hs{E'_n}$, such that the output states $\rho$ and
+  $\rho^{\circ}$ of the two attacks satisfy
+  $\|\iota(\rho^{\circ})-\rho\|_1\le\eta$, with $\iota$ the inclusion of that
+  subspace into $\Hs{E'_n}$, acting as the identity on every other register;
+\item \emph{(trace-distance criteria)} let $L_1$ and $L_2$ be completely
+  positive maps, not increasing the trace, from the run's output registers
+  and public messages to a finite-dimensional system, put $L\coloneqq
+  L_1-L_2$, and for a state $\sigma$ of those registers and the adversary's
+  memory after round $n$ put
+  $f(\sigma)\coloneqq\frac12\|(L\otimes\idmap)(\sigma)\|_1$; if
+  $f(\rho^{\circ})\le\varepsilon$ at the output state $\rho^{\circ}$ of every
+  all-at-once attack with finite registers, then $f(\rho)\le\varepsilon$ at
+  the output state $\rho$ of every attack;
+\item \emph{(processing by the adversary)} let, in (ii), each $L_t$ keep the
+  public messages and act on the other registers given their value $m$,
+  $L_t(\dyad{m}\otimes x)=\dyad{m}\otimes L_{t,m}(x)$, and let
+  $\Phi=\sum_m\dyad{m}\otimes\Phi_m$ act on a state that is classical on the
+  public messages by a channel $\Phi_m$ on the adversary's register, given
+  their value $m$, keeping them. Then $f((\idmap\otimes\Phi)(\sigma))\le
+  f(\sigma)$ for every state $\sigma$ classical on the public messages.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Idea.} Written as a sequence of channels, the run is compressed at
+finitely many points: the adversary's initial register, her memory after each
+of her channels, and every signal released after the first round, as soon as
+it is released. The compressions cost at most $\eta$ in trace norm
+(\xref{foundations/lem:register-compression}\,(ii), (iii)), and the compressed
+run is the run under an all-at-once attack with finite registers: the
+adversary takes every signal at the start, compresses those she would have
+received later and keeps them, compressed, in her memory until their round.
+A trace distance of the output state moves by at most the distance of the
+states, which gives (ii); a channel on the adversary's side commutes past the
+criterion's maps and does not increase a trace norm, which gives (iii).
+
+\emph{Step 1 (the run as a sequence of channels).} Fix an attack. The run's
+own registers are finite-dimensional and start in fixed states, which we take
+as written by the channels that first write them. Round $j$ is the composite
+of three channels: the preparation $\mathcal{Q}_j$, which appends
+$\bigotimes_{k_{j-1}<i\le k_j}\rho_i$ (the identity in untrusted-source mode);
+$\Aev_j$, extended by the identity on the run's registers; and the round map
+$\Grnd_j$ of \xref{reductions/def:protocol}, extended by the identity on
+$E'_j$. After round $n$ the run applies $\Kfin$, which includes the
+post-processing, extended by the identity on $E'_n$. These extensions are
+channels acting on products as the named map tensored with the identity. A
+channel extended by the identity on a finite-dimensional register applies it
+to every entry of a block matrix, which is a channel by complete positivity.
+$\Grnd_j$ is the \tref{measurement channel} of the measured system followed
+by processing of finite-dimensional registers; the measurement channel
+$\tau\mapsto\sum_v\tr[M_v\tau]\dyad{v}$ extends to
+$\tau\mapsto\sum_v\dyad{v}\otimes\tr_{\Bsys_j}\big[(\sqrt{M_v}\otimes\idon{})
+\tau(\sqrt{M_v}\otimes\idon{})\big]$, a sum of conjugations followed by
+partial traces and the appending of states, and a completely positive map
+$\Psi$ between finite-dimensional systems is a finite sum
+$\sum_tK_t(\cdot)K_t^{\dagger}$, which extends to
+$\sum_t(K_t\otimes\idon{})(\cdot)(K_t\otimes\idon{})^{\dagger}$. The
+output state is the result of these channels applied in order to $\zeta$.
+
+\emph{Step 2 (the compressions).} The compression points are: $E_0$ before
+round one; $E'_j$ right after $\Aev_j$, for every $j$; and, for every $i>k_1$,
+the transmitted system $\Asig_i$ right after the preparation $\mathcal{Q}_j$
+that appends $\rho_i$, before $\Aev_j$ receives it, one signal at a time with
+identity channels between. There are at most $2n+1$ of them. At each point,
+\xref{foundations/lem:register-compression}\,(ii), applied to the run's state
+there under the given attack, gives a non-zero finite-dimensional subspace of
+the register at which the bound of that part, $2\sqrt{\delta}+\delta$, is at
+most $\eta/(2n+1)$; we write $E_0^{\circ}$, $E_j^{\prime\circ}$ and
+${\Asig_i}^{\circ}$ for them. Inserting at each point the compression onto its
+subspace, and the identity at every other point, part (iii) of that lemma
+gives $\|\rho^{\mathcal{C}}-\rho\|_1\le\eta$ for the output
+$\rho^{\mathcal{C}}$ of the run so compressed.
+
+\emph{Step 3 (the compressed run under an attack with finite registers).}
+Write each compression as $\iota\circ\mathcal{P}$
+(\xref{foundations/lem:register-compression}\,(i)). Each inclusion $\iota$ of
+$E'_{j}$ commutes with the maps that follow it up to $\Aev_{j+1}$, the round
+map $\Grnd_j$, the preparations of round $j+1$ and the compressions of the
+signals they release, all of which act on other registers: for the channels
+this is part (iv) of that lemma, and for an appended state $\rho$ it is
+$\iota(y)\otimes\rho=(\iota\otimes\idmap)(y\otimes\rho)$, the product form of
+part (i). Likewise the inclusion of $E_0$ moves to $\Aev_1$, the inclusion of
+each ${\Asig_i}^{\circ}$ to the channel $\Aev_j$ that receives $\Asig_i$, and
+the inclusion of $E_n^{\prime\circ}$ past $\Grnd_n$ and $\Kfin$ to the end.
+Each projection $\mathcal{P}$ stays where it acts: after $\Aev_j$ it joins
+it, and after the preparation of $\rho_i$ it gives
+$\rho_i^{\circ}\coloneqq(\idmap_{X_i}\otimes\mathcal{P})(\rho_i)$, by the
+product form $\mathcal{P}_{R_1R_2}(x\otimes y)=x\otimes\mathcal{P}_{R_2}(y)$
+of part (i) with $R_2=X_i$ and $R_1$ the other systems. So
+$\rho^{\mathcal{C}}=\iota(\rho^{\mathrm{fs}})$, where $\rho^{\mathrm{fs}}$ is
+the output state of the run that prepares $\rho_i$ for $i\le k_1$ and
+$\rho_i^{\circ}$ for $i>k_1$, on $X_i{\Asig_i}^{\circ}$, in the round of the
+schedule, against the initial state $\mathcal{P}(\zeta)$ on $E_0^{\circ}$ and
+the channels
+\begin{equation*}
+  \Aev^{\circ}_1\coloneqq\mathcal{P}\circ\Aev_1\circ\iota,
+  \qquad
+  \Aev^{\circ}_j\coloneqq\mathcal{P}\circ\Aev_j\circ\iota\ \ (j\ge2),
+\end{equation*}
+the projection being that of $E'_j$, and the inclusion that of $E_0$ for
+$j=1$ and of $E'_{j-1}$ and every ${\Asig_i}^{\circ}$ received in round $j$ for
+$j\ge2$, each acting as the identity on the other registers. Each
+$\Aev^{\circ}_j$ is a channel between finite-dimensional adversary's
+registers, with the signals of the schedule and $\Bsys_j$, and $A_j$ in
+untrusted-source mode, as before.
+
+\emph{Step 4 (an all-at-once attack with the same output).} Put
+$E^{\star}_j\coloneqq E_j^{\prime\circ}{\Asig_{k_j+1}}^{\circ}\cdots
+{\Asig_n}^{\circ}$, finite-dimensional, so that $E^{\star}_n=E_n^{\prime\circ}$.
+The all-at-once attack has the initial state $\mathcal{P}(\zeta)$, the first
+channel
+\begin{equation*}
+  \mathcal{A}^{\star}_1\coloneqq
+  \big(\Aev^{\circ}_1\otimes\idmap_{{\Asig_{k_1+1}}^{\circ}\cdots{\Asig_n}^{\circ}}\big)
+  \circ\mathcal{P}_{\Asig_{k_1+1}}\circ\dots\circ\mathcal{P}_{\Asig_n}
+  \in\mathrm{CPTP}\big(\Asig_1\cdots\Asig_nE_0^{\circ},\ \Bsys_1E^{\star}_1\big),
+\end{equation*}
+each $\mathcal{P}_{\Asig_i}$ the projection of $\Asig_i$ onto
+${\Asig_i}^{\circ}$ with the identity on the other systems, and, for $j\ge2$,
+$\mathcal{A}^{\star}_j\coloneqq\Aev^{\circ}_j\otimes
+\idmap_{{\Asig_{k_j+1}}^{\circ}\cdots{\Asig_n}^{\circ}}$, from $E^{\star}_{j-1}$
+with the public messages of round $j-1$ to $\Bsys_jE^{\star}_j$; the input
+of $\Aev^{\circ}_j$ is a factor of that register. In untrusted-source mode it
+is the attack of Step~3 itself. Its run prepares
+$\rho_1\otimes\dots\otimes\rho_n$ at the start, and $\mathcal{A}^{\star}_1$
+turns each factor $\rho_i$ with $i>k_1$ into $\rho_i^{\circ}$, by the product
+form of part (i). From then on no map acts on $X_i{\Asig_i}^{\circ}$ before
+the round that reads $X_i$, which is not earlier than the round of the
+schedule since $k_i\ge i$, or before the channel that receives
+${\Asig_i}^{\circ}$; every map before them acts on other registers, and a map
+$\Psi$ extended by the identity on the finite-dimensional
+$X_i{\Asig_i}^{\circ}$ takes $y\otimes\rho_i^{\circ}$ to
+$\Psi(y)\otimes\rho_i^{\circ}$. Appending $\rho_i^{\circ}$ at the start or in
+its round of the schedule therefore leaves every later state the same, and
+the output state $\rho^{\circ}$ of the all-at-once attack is
+$\rho^{\mathrm{fs}}$. With Steps~2 and~3,
+$\|\iota(\rho^{\circ})-\rho\|_1=\|\rho^{\mathcal{C}}-\rho\|_1\le\eta$, which
+is (i).
+
+\emph{Step 5 (part (ii)).} The maps $L_1\otimes\idmap$ and $L_2\otimes\idmap$
+are completely positive and do not increase the trace, by the Kraus form of
+Step~1, so each contracts the trace norm of a Hermitian operator: for
+$Z=Z^{+}-Z^{-}$, $\|(L_t\otimes\idmap)(Z)\|_1\le\tr(L_t\otimes\idmap)(Z^{+})
++\tr(L_t\otimes\idmap)(Z^{-})\le\|Z\|_1$. Hence for two states $\sigma$,
+$\sigma'$,
+\begin{equation*}
+  |f(\sigma)-f(\sigma')|\le\tfrac12\big\|(L\otimes\idmap)(\sigma-\sigma')\big\|_1
+  \le\tfrac12\sum_{t=1,2}\big\|(L_t\otimes\idmap)(\sigma-\sigma')\big\|_1
+  \le\|\sigma-\sigma'\|_1 .
+\end{equation*}
+Given an attack and $\eta>0$, take the all-at-once attack of (i). By part
+(iv) of \xref{foundations/lem:register-compression}, with $G=L$,
+$(L\otimes\idmap_{E'_n})\circ\iota=\iota\circ(L\otimes\idmap_{E_n^{\prime\circ}})$,
+and $\iota$ preserves the trace norm, so $f(\iota(\rho^{\circ}))=f(\rho^{\circ})
+\le\varepsilon$. So $f(\rho)\le\varepsilon+\eta$ for every $\eta>0$.
+
+\emph{Step 6 (part (iii)).} Write $\sigma=\sum_m\dyad{m}\otimes\sigma_m$, with
+$\sigma_m$ positive on the other registers and the adversary's. Then
+\begin{equation*}
+  (L_t\otimes\idmap)\big((\idmap\otimes\Phi)(\sigma)\big)
+  =\sum_m\dyad{m}\otimes(L_{t,m}\otimes\Phi_m)(\sigma_m)
+  =\Phi'\big((L_t\otimes\idmap)(\sigma)\big),
+\end{equation*}
+with $\Phi'\coloneqq\sum_m\dyad{m}\otimes\Phi_m$ acting on the output of
+$L_t$, which keeps the public messages: both sides apply $L_{t,m}$ to the run's
+registers and $\Phi_m$ to the adversary's in each block, which commute by
+part (iv) of \xref{foundations/lem:register-compression}. So
+$(L\otimes\idmap)(\idmap\otimes\Phi)(\sigma)=\Phi'((L\otimes\idmap)(\sigma))$,
+and $\Phi'$ is a positive trace-preserving map on block-diagonal operators,
+which contracts the trace norm of the Hermitian $(L\otimes\idmap)(\sigma)$ as
+in Step~5. Halving gives the claim.
+\end{proof}

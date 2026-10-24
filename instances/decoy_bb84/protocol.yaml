@@ -1,0 +1,519 @@
+# The decoy_bb84 instance as a protocol document: the packaged template.
+#
+# It IS the instance: instances/decoy_bb84/surface.py loads it. Its
+# descriptor, parameter table, presets, default_config, tagged source
+# declaration and preparation record, lowered receiver and reduction requests,
+# preparation and run records are held equal by the equivalence gate
+# (tests/integration/test_declared_equivalence.py). The source is a `wcp_decoy` block
+# (phase-randomised coherent pulses at three intensities, tagged by photon
+# number), the receiver a passive four-detector element graph, the public
+# part a transcript.
+#
+# PACKAGED, so it may write the instance's own identity strings: the id
+# decoy_bb84, its readme, the record_label decoy_bb84, the source's
+# record_site decoy and record_label instances.decoy_bb84.source, the
+# retention attestation's attested_by instances.decoy_bb84, and the
+# station's declared_by instances.decoy_bb84.declare. Only a document loaded
+# from instances/<id>/protocol.yaml is packaged
+# (instances.declared.load_packaged), and only a packaged document is bounded
+# by its own parameter domains alone: a custom copy is also held to the work
+# bounds of instances/declared/limits.py (a receiver window of at most 9 at
+# four detectors, among others).
+#
+# TO START A CUSTOM PROTOCOL FROM IT (the MCP server serves it as
+# get_reference("template", name="decoy_bb84")): copy it, give identity a new
+# id, title and summary, delete identity.readme, identity.record_label,
+# source.record_site, source.record_label and stations[0].declared_by, write
+# who attests the retention as source.retention_attestation.attested_by (the
+# report lists the attestation as yours to vouch for) or delete the
+# attestation, edit what differs, and check it with
+# describe_instance(document=...). The format guide is
+# instances/declared/README.md.
+format: certiqs-key/protocol-document
+format_version: '1'
+identity:
+  id: decoy_bb84
+  title: Decoy-state BB84 with a passive optical receiver
+  summary: Phase-randomized coherent pulses, signal and decoy intensity tests, tagged
+    source sectors and a characterized four-detector receiver.
+  readme: instances/decoy_bb84/README.md
+  record_label: decoy_bb84
+parameters:
+  model_absent: refuse
+  device_absent: refuse
+  table:
+  - name: gamma
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 1/4
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+      lower_open: true
+      upper_open: true
+    snapped: true
+    meaning: Probability that a round is a test round; generation rounds use the signal
+      intensity in the Z basis
+  - name: mu_signal
+    section: device
+    kind: fraction
+    quantity: mean_photon_number
+    default: 4/5
+    domain:
+      form: interval
+      lower: 0
+      upper: 10
+    snapped: true
+    meaning: Mean photon number of the signal pulses, sent in every generation round
+      and in signal test rounds
+  - name: mu_weak
+    section: device
+    kind: fraction
+    quantity: mean_photon_number
+    default: 1/5
+    domain:
+      form: interval
+      lower: 0
+      upper: 10
+    snapped: true
+    meaning: Mean photon number of the weak decoy pulses, sent in test rounds only
+  - name: mu_vacuum
+    section: device
+    kind: fraction
+    quantity: mean_photon_number
+    default: 0
+    domain:
+      form: interval
+      lower: 0
+      upper: 10
+    snapped: true
+    meaning: Mean photon number of the vacuum decoy pulses, sent in test rounds only;
+      normally 0
+  - name: test_signal
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 1/2
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: true
+    meaning: Probability that a test round uses the signal intensity; the three test
+      probabilities sum to one
+  - name: test_weak
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 1/4
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: true
+    meaning: Probability that a test round uses the weak intensity; the three test
+      probabilities sum to one
+  - name: test_vacuum
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 1/4
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: true
+    meaning: Probability that a test round uses the vacuum intensity; the three test
+      probabilities sum to one
+  - name: transmittance
+    section: model
+    kind: fraction
+    quantity: transmittance
+    default: 1
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: true
+    meaning: Probability that a photon of the honest channel reaches Bob's receiver
+  - name: misalignment
+    section: model
+    kind: fraction
+    quantity: probability
+    default: 0
+    domain:
+      form: interval
+      lower: 0
+      upper: 1/2
+    snapped: false
+    meaning: Squared sine of the polarization rotation in the honest channel; 0 is
+      no rotation
+  - name: entropy_cutoff
+    section: device
+    kind: int
+    quantity: photon_number
+    default: 1
+    domain:
+      form: interval
+      lower: 0
+      upper: 2
+    snapped: true
+    meaning: Source photon numbers up to this value enter the entropy bound as quantum
+      states; at most 2 and at most source_cutoff
+  - name: source_cutoff
+    section: device
+    kind: int
+    quantity: photon_number
+    default: 6
+    domain:
+      form: interval
+      lower: 0
+      upper: 100
+    snapped: true
+    meaning: Source photon numbers up to this value keep a sector of their own; higher
+      ones share one tail flag per polarization and intensity
+  - name: photon_cutoff
+    section: device
+    kind: int
+    quantity: photon_number
+    default: 1
+    domain:
+      form: interval
+      lower: 0
+      upper: 20
+    snapped: true
+    meaning: 'Photon cutoff N of the receiver: photon numbers up to N are modelled
+      exactly and higher ones are bounded'
+  - name: exact_window
+    section: device
+    kind: int
+    quantity: photon_number
+    default: 2
+    domain:
+      form: interval
+      lower: 0
+      upper: 30
+    snapped: true
+    meaning: 'Exact-window depth m* of the receiver: photon numbers N+1 to m* are
+      evaluated exactly when bounding the high-photon part; must exceed photon_cutoff'
+  - name: efficiency_normalization
+    section: device
+    kind: fraction
+    quantity: transmittance
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+      lower_open: true
+    snapped: false
+    meaning: 'Factored loss t: the detector efficiencies are divided by t and the
+      common loss t is moved into the channel, which leaves the observed statistics
+      unchanged; between the largest efficiency and 1, where 1 turns it off, and
+      empty uses the largest efficiency divided by 99/100, or 1 where that
+      efficiency is at least 99/100'
+  - name: basis_split
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 1/2
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: true
+    meaning: Transmittance of the receiver's basis beamsplitter, which is the probability
+      that a photon is measured in the Z basis
+  - name: half_wave_angle
+    section: device
+    kind: fraction
+    quantity: angle_pi
+    unit: pi
+    default: 1/8
+    domain:
+      form: interval
+      lower: 0
+      upper: 2
+    snapped: true
+    meaning: Angle of the half-wave plate in the receiver's X arm, in units of pi;
+      1/8 (22.5 degrees) measures the diagonal basis
+  - name: pbs_leak_transmitted
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 0
+    domain:
+      form: interval
+      lower: 0
+      upper: 1/2
+    snapped: true
+    meaning: Fraction of the vertical polarization each polarizing beamsplitter
+      transmits instead of reflecting; it clicks the transmitted-path detector (H, or D
+      behind the plate), which watches both polarizations of its path; 0 is perfect
+      separation, 1/2 is none
+  - name: pbs_leak_reflected
+    section: device
+    kind: fraction
+    quantity: probability
+    default: 0
+    domain:
+      form: interval
+      lower: 0
+      upper: 1/2
+    snapped: true
+    meaning: Fraction of the horizontal polarization each polarizing beamsplitter
+      reflects instead of transmitting; it clicks the reflected-path detector (V, or A
+      behind the plate), which watches both polarizations of its path; 0 is perfect
+      separation, 1/2 is none
+  - name: efficiency
+    section: device
+    kind: per_port_fraction
+    quantity: efficiency
+    default: 1
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: true
+    meaning: Detection efficiency of each of the receiver's four detectors
+    per_port_of: bob
+  - name: dark_count
+    section: device
+    kind: per_port_fraction
+    quantity: probability
+    default: 0
+    domain:
+      form: interval
+      lower: 0
+      upper: 1
+    snapped: true
+    meaning: Dark-click probability per round of each of the receiver's four detectors
+    per_port_of: bob
+  - name: route
+    section: device
+    kind: choice
+    quantity: choice
+    default: encoded
+    domain:
+      form: choices
+      options:
+      - value: encoded
+        meaning: Weight-preserving flag reduction, no constraints
+      - value: licensed
+        meaning: Flag reduction with a multi-click constraint
+      - value: licensed+two-sector
+        meaning: As licensed, plus a stronger within-cutoff constraint
+    snapped: false
+    meaning: Photon-number reduction of the receiver, mapping any number of incoming
+      photons to a finite system; the physics is the same on every route
+  - name: acceptance_map
+    section: device
+    kind: choice
+    quantity: choice
+    default: announcement-resolved
+    domain:
+      form: choices
+      options:
+      - value: merged-discard
+        meaning: Test ok/error per intensity and basis; the rest one value
+      - value: announcement-resolved
+        meaning: Also no click, multi-click and mismatch per intensity
+      - value: pair-resolved
+        meaning: Every test announcement pair its own value
+    snapped: false
+    meaning: How finely the public announcements are grouped into the statistics the
+      protocol checks; the physics is the same under every map
+presets:
+- name: two-decoy
+  note: Signal plus weak and vacuum decoy intensities.
+- name: one-decoy
+  note: Signal plus one weak decoy intensity.
+  device:
+    test_signal: 1/2
+    test_weak: 1/2
+    test_vacuum: 0
+- name: vacuum
+  note: All intensities zero, for the vacuum-sector check.
+  device:
+    mu_signal: 0
+    mu_weak: 0
+    mu_vacuum: 0
+snap:
+  lattice_exponent: 24
+  groups: [[test_signal, test_weak, test_vacuum]]
+run_defaults:
+  rounds: 100000000
+  endpoint_rule: bernstein
+  completeness_budget: 1/1000000
+  declared_tolerance: 1e-10
+  parameters: {alpha: 1.05, eps_pa: 2^-30, eps_ev: 2^-30, lambda_ec: 0}
+  solver: {max_iterations: 2000}
+  sections: merge
+  derived: {exact_window: photon_cutoff + 1}
+  derived_timing: unless_supplied
+alphabets:
+  bob_m2:
+    enum:
+      - nc
+      - {label: H, basis: Z, bit: 0}
+      - {label: V, basis: Z, bit: 1}
+      - {label: D, basis: X, bit: 0}
+      - {label: A, basis: X, bit: 1}
+      - mc
+      - Z
+      - X
+source:
+  kind: wcp_decoy
+  polarisations:
+    - {label: H, part: H, attrs: {basis: Z, bit: 0}}
+    - {label: V, part: V, attrs: {basis: Z, bit: 1}}
+    - {label: plus, part: "+", attrs: {basis: X, bit: 0}}
+    - {label: minus, part: "-", attrs: {basis: X, bit: 1}}
+  intensities:
+    - {name: signal, mu: {param: mu_signal}}
+    - {name: weak, mu: {param: mu_weak}}
+    - {name: vacuum, mu: {param: mu_vacuum}}
+  generation: {intensity: signal, polarisations: [H, V]}
+  test:
+    coin: {param: gamma}
+    intensity_probabilities:
+      signal: {param: test_signal}
+      weak: {param: test_weak}
+      vacuum: {param: test_vacuum}
+    polarisations: [H, V, plus, minus]
+  entropy_cutoff: {param: entropy_cutoff}
+  source_cutoff: {param: source_cutoff}
+  lattice_exponent: 24
+  record_site: decoy
+  record_label: instances.decoy_bb84.source
+  retention_attestation:
+    attested_by: instances.decoy_bb84
+    statement: "The retained virtual system stays in Alice's laboratory; only the declared public transcript is disclosed."
+stations:
+  - id: bob
+    party: B
+    declared_by: instances.decoy_bb84.declare
+    measurement:
+      kind: optical
+      modes:
+        - {path: Z, polarization: H}
+        - {path: Z, polarization: V}
+        - {path: X, polarization: H}
+        - {path: X, polarization: V}
+        - {path: Zr, polarization: H}
+        - {path: Zr, polarization: V}
+        - {path: Xr, polarization: H}
+        - {path: Xr, polarization: V}
+      channel_modes: [Z_H, Z_V]
+      route: element_graph
+      elements:
+        - name: bs
+          component: beamsplitter
+          params: {transmittance: {param: basis_split}, phase_pi: 0, loss_1: 0, loss_2: 0}
+          support: [Z_H, Z_V, X_H, X_V]
+        - name: hwp
+          component: half_wave
+          params: {angle_pi: {param: half_wave_angle}, loss: 0}
+          support: [X_H, X_V]
+        - name: pbs_z
+          component: polarizing_beamsplitter
+          params:
+            transmittance_h: {expr: 1 - pbs_leak_reflected}
+            transmittance_v: {param: pbs_leak_transmitted}
+            phase_h_pi: 0
+            phase_v_pi: 0
+            loss_1: 0
+            loss_2: 0
+          support: [Z_H, Z_V, Zr_H, Zr_V]
+        - name: pbs_x
+          component: polarizing_beamsplitter
+          params:
+            transmittance_h: {expr: 1 - pbs_leak_reflected}
+            transmittance_v: {param: pbs_leak_transmitted}
+            phase_h_pi: 0
+            phase_v_pi: 0
+            loss_1: 0
+            loss_2: 0
+          support: [X_H, X_V, Xr_H, Xr_V]
+      edges: [[bs, hwp], [bs, pbs_z], [hwp, pbs_x]]
+      ports:
+        - {label: H, modes: [Z_H, Z_V]}
+        - {label: V, modes: [Zr_H, Zr_V]}
+        - {label: D, modes: [X_H, X_V]}
+        - {label: A, modes: [Xr_H, Xr_V]}
+      detectors:
+        - {port: H, efficiency: {param: efficiency, port: H}, dark_count: {param: dark_count, port: H}}
+        - {port: V, efficiency: {param: efficiency, port: V}, dark_count: {param: dark_count, port: V}}
+        - {port: D, efficiency: {param: efficiency, port: D}, dark_count: {param: dark_count, port: D}}
+        - {port: A, efficiency: {param: efficiency, port: A}, dark_count: {param: dark_count, port: A}}
+      coarse_graining:
+        letters:
+          - {label: nc, class: nc}
+          - {label: H, class: Z, basis: Z, bit: 0}
+          - {label: V, class: Z, basis: Z, bit: 1}
+          - {label: D, class: X, basis: X, bit: 0}
+          - {label: A, class: X, basis: X, bit: 1}
+          - {label: mc, class: mc}
+        map:
+          - {when: {count: "0"}, value: nc}
+          - {when: {count: "1"}, value: "{port}"}
+          - {value: mc}
+      photon_cutoff: {param: photon_cutoff}
+      exact_window: {param: exact_window}
+      efficiency_normalization: {param: efficiency_normalization}
+    reduction:
+      switch: route
+      cases:
+        encoded: {links: [{kind: wpfss}], route: encoded}
+        licensed: {links: [{kind: fss}], route: licensed}
+        licensed+two-sector:
+          links: [{kind: fss}]
+          route: licensed
+          carried_operators: [{library: two_sector_floor}]
+public:
+  partition: default
+  transcript:
+    messages:
+      - id: m1
+        sender: A
+        alphabet: derived
+        table:
+          - {when: {r.round: gen}, value: {label: gen-Z, attrs: {round: gen}}}
+          - value:
+              label: "test-{r.intensity}-{r.polarisation}"
+              attrs: {round: test, intensity: "{r.intensity}", basis: "{r.basis}", bit: "{r.bit}"}
+      - id: m2
+        sender: B
+        alphabet: bob_m2
+        table:
+          - {when: {m1.round: gen, r.letter: [H, V, D, A]}, value: "{r.basis}"}
+          - {value: "{r.letter}"}
+  sifting: [{when: {m1: gen-Z, m2: Z}, value: pass}, {value: fail}]
+  key: {holder: A, alphabet: [0, 1], rule: [{when: {o.polarisation: V}, value: 1}, {value: 0}]}
+  acceptance:
+    map:
+      switch: acceptance_map
+      cases:
+        merged-discard:
+          - {when: {m1: gen-Z, m2: Z}, value: gen}
+          - {when: {m1: gen-Z}, value: disc}
+          - {when: {m2: [nc, mc]}, value: disc}
+          - {when: {m2.basis: {eq: m1.basis}, m2.bit: {eq: m1.bit}}, value: "test-{m1.intensity}-{m1.basis}-ok"}
+          - {when: {m2.basis: {eq: m1.basis}}, value: "test-{m1.intensity}-{m1.basis}-error"}
+          - {value: disc}
+        announcement-resolved:
+          - {when: {m1: gen-Z, m2: Z}, value: gen}
+          - {when: {m1: gen-Z}, value: "gen-{m2}"}
+          - {when: {m2: [nc, mc]}, value: "test-{m1.intensity}-{m2}"}
+          - {when: {m2.basis: {eq: m1.basis}, m2.bit: {eq: m1.bit}}, value: "test-{m1.intensity}-{m1.basis}-ok"}
+          - {when: {m2.basis: {eq: m1.basis}}, value: "test-{m1.intensity}-{m1.basis}-error"}
+          - {value: "test-{m1.intensity}-mismatch"}
+        pair-resolved:
+          - {when: {m1: gen-Z, m2: Z}, value: gen}
+          - {when: {m1: gen-Z}, value: "gen-{m2}"}
+          - {value: "{m1}-{m2}"}
+honest:
+  library: coherent_pulses
+  bind: {transmittance: {param: transmittance}, misalignment: {param: misalignment}}
+channel_interface: {variant: mode_intensity}

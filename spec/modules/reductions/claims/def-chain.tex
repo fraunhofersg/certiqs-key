@@ -1,0 +1,99 @@
+% ---
+% id: reductions/def:chain
+% kind: def
+% title: "Reduction chain"
+% summary: >-
+%   A reduction chain pairs a source segment with composable, tuple-chained
+%   receiver-stage links, and its composite is the pair of their composites. A
+%   declaration with a non-empty source segment and constraints is admitted only
+%   with licensed entries and in trusted-source mode.
+% prominence: standard
+% status: implemented
+% uses: [def:link, def:licensed, def:attset, transmitter/def:source-segment, transmitter/def:source-link]
+% mentions: [rem:ordering, thm:chain, lem:precomposition, thm:two-sided]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.links:Chain
+% lean:
+% ---
+
+Remark~\ref{rem:ordering} gives the reason for the stage order (C3), and for
+the admission rule of the definition the reason it gives is
+Lemma~\ref{lem:precomposition} and its counterexample.
+
+\begin{definition}\label{def:chain}
+A
+\term[A pair of a source segment and a receiver segment of typed links.]{reduction chain}
+is a pair $\redChain=(\redChain_{\mathrm{src}},\redChain_{\mathrm{rec}})$ of
+a \tref{source segment} and a
+\term[The list of receiver-stage typed links of a reduction chain.]{receiver segment}.
+The source segment
+$\redChain_{\mathrm{src}}=(\Xi_1,\dots,\Xi_{L_{\mathrm s}})$, $L_{\mathrm s}\ge0$,
+is a source segment in the sense of \xref{transmitter/def:source-segment}
+(written $\Chsrc$ there): a list of \tref[source link]{source links}
+(\xref{transmitter/def:source-link}) satisfying that definition's
+\tref{interface conditions} (S1)--(S4) --- descriptor match, index
+preservation, the source identity where checkable, and the slots --- every
+descriptor of which is Alice-side. The receiver segment
+$\redChain_{\mathrm{rec}}=(\Lnk_1,\dots,\Lnk_k)$, $k\ge1$, is a list of
+receiver-stage typed links (Definition~\ref{def:link}) that is
+\begin{enumerate}[label=(C\arabic*),leftmargin=3.0em]
+\item
+  \term[Said of a receiver segment in which each link's target is the next link's source family.]{composable}:
+  $(\Bsys^{\mathrm{out}}_i,M^{\mathrm{out}}_i)
+  =(\Bsys^{\mathrm{in}}_{i+1},M^{\mathrm{in}}_{i+1})$ for $1\le i<k$;
+\item
+  \term[Said of a receiver segment in which each link's target-side carried operators are the next link's source-side ones.]{tuple-chained}:
+  $\hat O^{\mathrm{out}}_i=O^{\mathrm{in}}_{i+1}$ for
+  $1\le i<k$, so that each declared operator on the final target has a
+  pull-back at every intermediate stage;
+\item
+  \term[Said of a chain in which every source-stage link precedes every receiver-stage link.]{stage-ordered}:
+  every \textsf{source}-stage link precedes every \textsf{receiver}-stage
+  link, which the pair form makes structural.
+\end{enumerate}
+Its
+\term[The pair of a chain's source composite and receiver composite.]{composite}
+is the \emph{pair}
+\begin{equation}\label{eq:chaincomposite}
+  \big(\Xi_{\redChain},\ \Lambda_{\redChain}\big),
+  \qquad
+  \Xi_{\redChain}\coloneqq\Xi_{L_{\mathrm s}}\circ\dots\circ\Xi_1 ,
+  \qquad
+  \Lambda_{\redChain}\coloneqq\Lambda_{\Lnk_k}\circ\dots\circ\Lambda_{\Lnk_1},
+\end{equation}
+of the
+\term[The composition of a chain's source links, the identity when the source segment is empty.]{source composite}
+--- the composite the transmitter's (S3) writes $\Xi$, the identity when
+$L_{\mathrm s}=0$ --- and the
+\term[The composition of the channel witnesses of a chain's receiver segment.]{receiver composite}.
+The two act on different systems and no condition above relates them:
+$\Xi_{\redChain}$ carries the \tref{virtual transmitted system} to the
+transmitted one, on Alice's side, and $\Lambda_{\redChain}$ the
+\tref{measured system} to the target, on the receiver's. What the pair
+composes to \emph{as a reduction} is Theorem~\ref{thm:two-sided}, and
+Theorem~\ref{thm:chain} is what the receiver composite alone delivers.
+
+\emph{Which chains are admitted.} The rule is a condition on a
+\emph{declaration} that carries both a non-empty source segment and a
+constraint list: such a declaration is
+\term[Said of a declaration with a non-empty source segment and a constraint list that meets the admission rule: licensed entries only, in trusted-source mode.]{admitted}
+only where every entry of the list is \tref{licensed} in the sense of
+Definition~\ref{def:licensed} --- a real constant $c_k$ as the right-hand
+side, the entry tagged or untagged --- \emph{and only in
+\tref{trusted-source mode}}, Theorem~\ref{thm:two-sided} being stated there
+alone, so that a declaration pairing a non-empty source segment with
+\tref{untrusted-source mode} is refused rather than admitted in silence. An
+entry declaring a Hermitian right-hand side on Alice's retained system, a
+\emph{general} entry in the sense of Definition~\ref{def:attset}, is
+\emph{refused} beside one. The rule
+is decided by the consumer that assembles those two.
+
+\emph{Where the source segment is empty}, $L_{\mathrm s}=0$, the source
+composite is the identity, $\Avirt=\Asig$, the \tref{virtual ensemble} is the
+specified one, and the pair \eqref{eq:chaincomposite} carries exactly the
+receiver composite: Alice's declared states are the ones the security
+statement is about, and the receiver segment is the whole of the chain's
+content (Theorem~\ref{thm:chain}).
+\end{definition}

@@ -1,0 +1,28 @@
+% ---
+% id: protocol-compiler/rem:rbuilt
+% kind: rem
+% title: "The raw-key map built from sifting and the key rule"
+% summary: >-
+%   Built from the sifting predicate and the holder's key rule, the raw-key map
+%   meets D(v) and D(viii) by construction. The only residual obligation is that
+%   the key rule map into the key values, a typing condition on one function
+%   table that [[A-SPEC]] carries.
+% prominence: standard
+% status: accepted
+% uses: [def:compile]
+% mentions: [thm:sifting-and-key, ass:spec, rem:sidecond]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:rbuilt}
+A specification that supplied $r$ directly would have to be \emph{checked}
+for D(v) and D(viii). Built as \eqref{eq:rdef}, $r$ satisfies both by
+construction (Theorem~\ref{thm:sifting-and-key}), and the only residual obligation is the
+side condition that $r^{0}_{\hold}$ maps into $\Zval$ rather than into
+$\Zset$, which is a typing condition on the specification, decidable by
+inspection of one function table and carried as a clause of
+Assumption~\ref{ass:spec} (Remark~\ref{rem:sidecond}).
+\end{remark}

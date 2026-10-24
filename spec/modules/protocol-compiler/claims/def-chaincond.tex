@@ -1,0 +1,232 @@
+% ---
+% id: protocol-compiler/def:chaincond
+% kind: def
+% title: "Interface conditions on a chain"
+% summary: >-
+%   A presented chain must match descriptors, map physical outcomes onto
+%   emitted ones, deliver an exactly admissible target measurement and, where
+%   channels are data, satisfy the pullback and source identities exactly. A
+%   non-empty source segment adds registry checks and two admission rules.
+% prominence: standard
+% status: implemented
+% uses: [def:declaration, def:validator, def:exact, transmitter/def:source-segment]
+% mentions: [thm:chain-consumption, def:gate-outcome-table, def:spec, def:homog, reductions/def:chain, reductions/rem:ordering, reductions/thm:emitted-product, transmitter/def:srcert, reductions/lem:precomposition, reductions/thm:two-sided, rem:source-segment-rules, req:chain-refusals, foundations/req:exact-island, foundations/req:who-snaps, ass:link]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Rem. 9.2"
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.chain:check_chain
+% lean:
+% notes: "reductions/def:chain is a mention and not a use: the conditions are stated in this module's words on the presented record, and a uses edge would carry the producer's definitional ledger into thm:chain-consumption, thm:band-a and thm:gates. The transmitter edge is a use: (S1)-(S4) are decided here as that definition states them, and it assumes nothing."
+% ---
+
+The chain is the compiler's third input. A \emph{squashing} link replaces
+Bob's measurement and therefore acts on the receiver space; a
+\tref{source link} replaces Alice's signal ensemble and therefore acts on the
+\tref{transmitted system} $\Asig$, not on the receiver space at all. Every
+link carries two descriptors, of what it starts from and of what it
+produces: for a source link these are the transmitter's
+\tref{source descriptor} and \tref{target descriptor}; for a receiver link
+they are receiver-side, and the last receiver link produces the emitted
+system with its \tref{sector map}. One list of links cannot carry both kinds,
+and a single descriptor rule cannot type both, so the record is a pair of
+segments with a condition set each, and the composition-order rule is a
+property of the pair rather than a tag. The warrant for that order is the
+published one, \cite[Rem.~9.2]{tupkary2026decoy}, and on the module side
+\xref{reductions/rem:ordering}, which states why a source link after a
+receiver link is not free; this module types the record and states neither.
+
+That the identity decided at (C4) and (S3) is the identity written is
+\xref{foundations/req:exact-island} at work, and a producer repairs its own
+emission under \xref{foundations/req:who-snaps}. (C1)--(C5), (S1)--(S4),
+the licensed-only rule and the source-mode rule are decided where the chain
+is consumed, before a declaration exists, so a failure produces a refusal and
+no declaration (Requirement~\ref{req:chain-refusals}), and the \tref{gate outcome
+table} of Definition~\ref{def:gate-outcome-table} needs no row for them. The grounds of the
+licensed-only rule and of the source-mode rule are
+Remark~\ref{rem:source-segment-rules}.
+
+\begin{definition}\label{def:chaincond}
+A \tref{reduction chain} $\pcChain=(\Chsrc,\Chrec)$ presented to the compiler, with
+$\Chsrc=(\Xi_1,\dots,\Xi_{L_{\mathrm s}})$ and
+$\Chrec=(\Lambda_1,\dots,\Lambda_L)$, satisfies the
+\term[The conditions a reduction chain presented to the compiler must satisfy, on each of its two segments and between them.]{interface conditions on a chain}
+when the following hold.
+
+\emph{\tref[receiver segment]{Receiver segment}.}
+\begin{enumerate}[label=(C\arabic*),leftmargin=3.0em]
+\item \emph{(descriptor match)} the target descriptor of $\Lambda_i$ equals the
+source descriptor of $\Lambda_{i+1}$ for $1\le i<L$; the source descriptor of
+$\Lambda_1$ is the physical receiver space of $\Spec_{\mathrm{rec}}$; and the
+target descriptor of $\Lambda_L$ is $(\Qsys,\Smap)$ --- that is, the last
+link's target descriptor \emph{is} the sector map. That equality is
+decided by the same four-component comparison V1 makes on the map of a
+declared $\Qsys$-operator family (Definition~\ref{def:validator});
+\item \emph{(outcome correspondence)} the declared outcome correspondence is a
+tabulated total surjection $\gamma:\Vph\to\Vset$ from the \emph{physical}
+alphabet onto the \emph{emitted} one --- the coarse-graining direction, of
+which a bijection is the special case;
+\item \emph{(\tref[target povm]{target POVM})} $\{F_v\}_{v\in\Vset}$ is a family of
+\tref[block list]{block lists} against $\Smap$ --- \emph{typing}, held by the
+emitted form and not checked --- and for each $s$ the block family
+$\{F_v^{(s)}\}_v$ is a POVM on $\Qsys_s$, decided \emph{exactly} on the
+emitted blocks themselves: $F_v^{(s)}$ Hermitian and positive semidefinite
+for each $v$, $\sum_vF_v^{(s)}=\idon{\Qsys_s}$, and the declared-order sum
+forming it rounding nowhere (Definition~\ref{def:exact}). This condition is
+check V3 restricted to $\{F_v\}$ and states the same list of conjuncts
+(Theorem~\ref{thm:chain-consumption}\,(ii));
+\item \emph{(pullback, where checkable)} if every link of $\Chrec$ supplies its
+channel as data then, with
+$\Lambda\coloneqq\Lambda_L\circ\dots\circ\Lambda_1$,
+\begin{equation}\label{eq:pullback}
+  \Lambda^{\dagger}(F_v)=\sum_{w\in\gamma^{-1}(v)}\Fph_w
+  \qquad\text{for every }v\in\Vset ,
+\end{equation}
+an \emph{exact} matrix identity, decided entry by entry on the emitted matrices
+and on the supplied channel data, with the fibre sum accumulated in the
+\tref{declared order} of $\Vph$. Where some link supplies no channel as data,
+only a theorem that constructs one, the identity is not decidable from the
+emitted data and is carried instead as an obligation of the chain's
+\tref{producer}, Assumption~\ref{ass:link};
+\item \emph{(slots)} each link carries its constraint entries and its licence
+slot, both possibly empty, and its status tag.
+\end{enumerate}
+
+\emph{\tref[source segment]{Source segment}.} The source segment satisfies the
+\tref{interface conditions} (S1)--(S4) of
+\xref{transmitter/def:source-segment} --- descriptor match with the
+\tref{virtual transmitted system} $\Avirt$ as the source descriptor of
+$\Xi_1$, on which the certificate of \xref{transmitter/def:srcert} is
+written, and every descriptor Alice-side; index preservation; the source
+identity $\Xi(\rvirt_x)=\rho_x$ for every $x$, that definition's equation
+(S3), where every link supplies its channel as data; and the slots ---
+\emph{decided by this module on the presented data}, exactly as that
+definition states them. When $L_{\mathrm s}=0$ the segment is empty, $\Xi$ is
+the identity, $\Avirt=\Asig$ and $\rvirt_x=\rho_x$, so (S3) holds by
+inspection.
+
+\emph{Between the segments.}
+\begin{enumerate}[label=(X\arabic*),leftmargin=3.0em]
+\item \emph{(order)} the chain is composed source segment first and receiver
+segment second. This is not a tag and is not checked: it is the shape of the
+record. A source-map link has no slot in $\Chrec$ to be written into, and a
+link presented in the wrong segment fails that segment's descriptor rule ---
+(C1) for a source map, since $\Asig$ is not the physical receiver space, and
+(S1) for a squashing map, since $\Qsys$ is not an Alice-side descriptor.
+\end{enumerate}
+
+\emph{At which reading (C4) and (S3) are decided.} Both are \emph{matrix
+equalities on \tref{declared data}} --- a composite channel supplied as
+binary64 data, applied to binary64 POVM elements on one side and to binary64
+signal states on the other --- and both are decided \emph{exactly}, entry by
+entry, on the numbers the compiler holds. \emph{The composite, the adjoint
+and the fibre sum are formed in exact arithmetic as well}, so the identity
+decided is the identity written; that
+the operands are binary64 is not what makes the decision exact, a product of
+two \tref{binary64 numbers} need not be one. Exactness here is an obligation of
+the chain's producer (Assumption~\ref{ass:link}): a producer whose composite
+lands off the identity by a rounding has not delivered the reduction the
+interface asks for, and repairs its own emission; no window is opened here. Everything else
+in this definition --- descriptors, alphabets, fibres, slots, segments --- is
+combinatorial and is read exactly, as D(vi)'s relation symbols are.
+
+\emph{The general format: one receiver segment per \tref{measured factor}.}
+For a chain presented as Definition~\ref{def:spec}\,(c$'$), with
+$\Chrec=(\pcChain^{f}_{\mathrm{rec}})_{f\in\mathbb{F}}$, the conditions
+(C1)--(C5) are decided \emph{of each segment separately, and of nothing
+across two segments}. (C1): within segment $f$ the target descriptor of a link
+is the source descriptor of the next, the source descriptor of
+$\Lambda^{f}_1$ is factor $f$'s physical receiver system, and the target
+descriptor of $\Lambda^{f}_{L_f}$ is
+$(\Qsys_f,\SecSet^{f},(d_{f,s_f})_{s_f})$ --- \emph{that factor's own sector
+map, and not the product map}, which is derived by
+Definition~\ref{def:declaration}\,(DX1) and is the target descriptor of
+nothing; the same four-component comparison decides it. (C2): one tabulated total surjection
+$\gamma_f$ from factor $f$'s physical alphabet onto the alphabet factor $f$'s
+last link delivers. (C3): the \tref{target family} $\{F^{f}_{v_f}\}$ is a family of
+block lists against factor $f$'s map and, for each $s_f$, a POVM on
+$\Qsys_{f,s_f}$ decided exactly on that factor's blocks --- which is check V3
+restricted to that factor, conjunct for conjunct, in its general-format
+reading. (C4): where every link of segment $f$ supplies its channel as data,
+with $\Lambda_f\coloneqq\Lambda^{f}_{L_f}\circ\dots\circ\Lambda^{f}_1$,
+\begin{equation}\label{eq:pullback-factor}
+  \Lambda_f^{\dagger}\big(F^{f}_{v_f}\big)
+  =\sum_{w_f\in\gamma_f^{-1}(v_f)}F^{\mathrm{ph},f}_{w_f}
+  \qquad\text{for every }v_f ,
+\end{equation}
+an exact matrix identity on that factor's matrices, the fibre sum accumulated
+in the declared order of that factor's physical alphabet. \emph{The product
+composite $\bigotimes_f\Lambda_f$ and the product identity on $\{F_v\}$ are
+formed and decided by no one}: the identity
+$\big(\bigotimes_f\Lambda_f\big)^{\dagger}(F_v)
+=\bigotimes_f\Lambda_f^{\dagger}(F^{f}_{v_f})$ is a consequence of
+\eqref{eq:pullback-factor} and of the product rule
+\eqref{eq:productfamily} --- it is \xref{reductions/thm:emitted-product}\,(ii),
+named here and decided here by nothing --- and (C4) is the per-factor
+identity and nothing wider. (C5) is per link, as above. Where some link of
+segment $f$ supplies no channel as data, only a theorem that constructs one,
+\eqref{eq:pullback-factor}
+for \emph{that} segment is not decidable from the emitted data and is carried
+as Assumption~\ref{ass:link}, exactly as above and per factor.
+
+\emph{A non-empty source segment, and the conditions it brings.} \emph{A
+presented chain may carry one.} The rule by which a non-empty source segment
+composes with a receiver segment is a theorem of the reductions module
+(\xref{reductions/lem:precomposition}, \xref{reductions/thm:two-sided}, with
+\xref{reductions/def:chain}), in
+\tref{trusted-source mode}; and the module that admits source-link kinds may
+emit an artefact carrying a link of an admitted kind. What follows is what
+this module decides of such a segment, on the presented data and exactly;
+whether a presented chain carries one is data of the record and is asserted
+here of no artefact.
+\begin{itemize}[leftmargin=2.6em]
+\item \emph{(S1)--(S4) as \xref{transmitter/def:source-segment}
+states them}, which is what the source-segment paragraph above already says;
+and within (S3), \emph{the split by kind of witness}: for a link supplying its
+channel as data the per-link identity is decided here, entry by entry, with
+the composite formed in exact arithmetic; for a link supplying a
+\tref{theorem constructor} it is \emph{not decided here at all} but is the conclusion of the
+claim that link's \tref{obligation record} names, and the composite identity
+is the composition of the per-link ones. So what this module decides of (S3)
+is the data links' share of it, and the constructor links' share travels as
+the obligation Assumption~\ref{ass:link} names ---
+Theorem~\ref{thm:chain-consumption}\,(iv), (v) --- and is discharged nowhere in this
+contract.
+\item \emph{(A1)--(A3) of that definition, which are decided on data and are
+not part of (S1)--(S4)}: that the triple a link's obligation record carries
+--- its kind, the claim id it names, and the assumption short ids it names ---
+appears \emph{entry by entry} in the \tref{soundness registry} the artefact
+carrying the segment emits, both components of that registry entry's
+assumption list compared, so that a record naming a claim's closure and
+omitting the \tref{source model}'s attestation fails as one naming neither
+does; that every assumption of that entry is in the artefact's assumption
+ledger; and that the segment is presented inside an artefact of the module
+that admits its links. These are comparisons of finitely many declared
+strings and of a finite list against a finite list, and \emph{they are decided
+here because they are decidable on the presented record}, which is why they
+are named beside (S1)--(S4) rather than left to Assumption~\ref{ass:link}.
+\emph{What they do not decide} is that the named claim's conclusion applies to
+these descriptors --- family membership is the emitting module's assertion and
+no consumer re-proves a theorem --- and a link supplying its channel as data
+carries no obligation record and is decided by (S3) instead.
+\item \emph{the licensed-only rule.} Beside a non-empty source segment
+\emph{every} entry of the emitted $\CList$ is required to carry a real scalar
+as its right-hand side --- homogeneous, party-local, or an untrusted-mode
+scalar (Definition~\ref{def:homog}).
+\item \emph{the declared source mode.} \emph{A declaration carrying a
+non-empty source segment is in trusted-source mode}: the rule fails
+where the \tref{marginal slot} of \eqref{eq:declaration} holds $\nomarg$
+(Definition~\ref{def:declaration}), the \tref{untrusted-source mode}, while
+$L_{\mathrm s}\ge1$.
+\end{itemize}
+\emph{(X1) in the general format.} The order rule is unchanged and is still
+the type of the record: a source-map link has no slot in any receiver segment
+to be written into, and a link presented in the wrong list fails that list's
+descriptor rule --- (C1) of the factor whose segment it was written into, or
+(S1). In the reductions module the composite of a chain is a pair, and the
+reason a source link may not follow a receiver link is a theorem of that
+module (\xref{reductions/lem:precomposition},
+\xref{reductions/thm:two-sided}) beside the published warrant
+\cite[Rem.~9.2]{tupkary2026decoy}; this module types the record, decides the
+descriptors, and states neither.
+\end{definition}

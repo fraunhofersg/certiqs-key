@@ -1,0 +1,74 @@
+% ---
+% id: receiver/prop:res5
+% kind: prop
+% title: "Properties of the Hermiticity-and-positivity defect"
+% summary: >-
+%   The defect of a matrix vanishes exactly when it is Hermitian and positive
+%   semidefinite, and bounds how far its expectation values stray below zero or
+%   off the real axis. Every emitted block before the dark counts has defect
+%   zero exactly, so the fifth residual measures the evaluation alone.
+% prominence: standard
+% status: implemented
+% uses: [def:residuals, thm:coarse-graining, def:setting-family]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.numerics:hermiticity_positivity_defect
+% lean:
+% ---
+
+\begin{proposition}\label{prop:res5}
+Let $X$ be a complex $D\times D$ matrix and $\varrho(X)$ its
+\tref{Hermiticity-and-positivity defect} \eqref{eq:rhodef}.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $\varrho(X)=0$ if and only if $X=X^\dagger$ and $X\succeq0$.
+\item If $X=X^\dagger$ then $\varrho(X)=\big(-\lmin(X)\big)_+$, which is the
+  form \eqref{eq:res2} takes on a Gram.
+\item For every unit vector $\ket{\psi}$,
+  $\Re\bra{\psi}X\ket{\psi}\ge-\varrho(X)$ and
+  $\big|\Im\bra{\psi}X\ket{\psi}\big|\le\tfrac12\varrho(X)$. Hence
+  $\varrho(X)\le\varepsilon$ bounds every diagonal expectation of $X$ away from
+  the negative reals by $\varepsilon$ and off the real axis by
+  $\varepsilon/2$.
+\item Every block $\blk{M}{\eqn}_{v|t}$ of the coarse-grained elements, before
+  any dark-count channel, that the artifact emits satisfies $\varrho=0$
+  \emph{exactly}: for
+  each $v$, $n$ and $t$, $\blk{M}{\eqn}_{v|t}$ is a diagonal block of the
+  positive operator $F_{v|t}$ (Definition~\ref{def:setting-family}\,(a) and
+  Theorem~\ref{thm:coarse-graining}), and a diagonal block --- the compression $\Pi X\Pi$ of a positive
+  operator $X$ by an orthogonal projector $\Pi$, read on the range of $\Pi$ ---
+  is Hermitian and positive semidefinite. So $r_5$ is a residual in exactly the
+  sense of the other five: the exact value is $0$, and what is emitted is the
+  floating-point evaluation.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+Write $H\coloneqq\tfrac12(X+X^\dagger)$ and $S\coloneqq X-X^\dagger$, so that
+$X=H+\tfrac12S$ with $H$ Hermitian and $S$ skew-Hermitian.
+
+(i) If $\varrho(X)=0$ then $\lVert S\rVert=0$, so $X=X^\dagger$ and $H=X$; and
+$(-\lmin(X))_+=0$ gives $\lmin(X)\ge0$, i.e.\ $X\succeq0$. Conversely if
+$X=X^\dagger\succeq0$ then $S=0$ and $\lmin(X)\ge0$, so both entries of the
+maximum vanish.
+
+(ii) $S=0$ gives $\lVert S\rVert=0$ and $H=X$, so the maximum is its second
+entry.
+
+(iii) $\bra{\psi}X\ket{\psi}=\bra{\psi}H\ket{\psi}
++\tfrac12\bra{\psi}S\ket{\psi}$. The first term is real, with
+$\bra{\psi}H\ket{\psi}\ge\lmin(H)\ge-\varrho(X)$ by the definition of
+$\varrho$; the second is purely imaginary, because $iS$ is Hermitian and
+therefore $\bra\psi S\ket\psi\in i\mathbb{R}$, with modulus at most
+$\tfrac12\lVert S\rVert\le\tfrac12\varrho(X)$. Splitting into real and
+imaginary parts gives both inequalities.
+
+(iv) A POVM element is positive semidefinite, and so is any sum of them, so
+$F_{v|t}=\sum_{S\in\cg^{-1}(v)}M_{S|t}\succeq0$. Each $F_{v|t}$ is block
+diagonal in the photon number (Definition~\ref{def:setting-family}\,(a) and
+Theorem~\ref{thm:coarse-graining}), so $\blk{M}{\eqn}_{v|t}$ is the compression
+$\Pi_nF_{v|t}\Pi_n$ read on the range of $\Pi_n$. For any $Y\succeq0$ and any
+orthogonal projector $\Pi$, $\Pi Y\Pi$ is Hermitian and
+$\bra{\psi}\Pi Y\Pi\ket{\psi}=\bra{\Pi\psi}Y\ket{\Pi\psi}\ge0$, so the
+compression is Hermitian positive semidefinite. Now apply (i).
+\end{proof}

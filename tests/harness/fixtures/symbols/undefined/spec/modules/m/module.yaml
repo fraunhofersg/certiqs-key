@@ -1,0 +1,6 @@
+id: m
+kind: core
+version: 0.1.0
+title: Fixture module
+order:
+  - def:base

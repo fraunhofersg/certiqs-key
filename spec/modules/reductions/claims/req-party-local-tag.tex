@@ -1,0 +1,41 @@
+% ---
+% id: reductions/req:party-local-tag
+% kind: req
+% title: "The party-local tag and its scope"
+% summary: >-
+%   Every emitted entry carries its reading as a tag: untagged in the form of
+%   the source mode, or party-local with a factor scope only on a declared
+%   product with a certificate on that factor's channel. A party-local request
+%   on a one-factor emission gets the untagged entry.
+% prominence: standard
+% status: implemented
+% uses: [rem:entry-tags, thm:emitted-product]
+% mentions: [def:licensed, thm:licence]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.constraints:party_local_entry
+% lean:
+% ---
+
+The tag makes a consumer's gate a type check that compares no numbers, and a
+party-local reading is covered by the licence only through a certificate on
+its own factor's channel (Remark~\ref{rem:entry-tags}).
+
+\begin{requirement}\label{req:party-local-tag}
+The engine emits every constraint entry with the reading it is to be read in.
+An entry is emitted untagged, as $(\hat O,\bowtie,c)$, and is read in the
+form of the declared source mode (Definition~\ref{def:licensed}); or, only
+where the \tref{measured system} is a declared product
+$\Qsys=\bigotimes_f\Qsys_f$ of party-scoped factors and the entry's
+certificate is discharged on that factor's own channel $\Lambda_f$
+(Theorem~\ref{thm:licence}\,(v)), it is emitted with the tag
+\iface{party_local} and a scope, as $(\hat O,\bowtie,c;f)$, with $\hat O$ an
+operator on $\Qsys_f$ alone carried as a sector-block list against that
+factor's \tref{sector map}. In this module the tag is emitted only with the
+entries of several \tref{measuring parties}
+(Theorem~\ref{thm:emitted-product}\,(iii)).
+A request for the \tref{party-local form} on a one-factor emission is answered
+with the untagged entry, at the same operator, relation and constant, and is
+not refused.
+\end{requirement}

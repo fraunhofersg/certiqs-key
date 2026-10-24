@@ -1,0 +1,67 @@
+% ---
+% id: foundations/def:declared-data
+% kind: def
+% title: "Declared data and the parties to a module boundary"
+% summary: >-
+%   Declared data are what an instance states, a supplier's output included,
+%   and what a producer emits as its own declaration. A consumer reads declared data
+%   across a module boundary; a point a module computes itself is never declared.
+% prominence: standard
+% status: accepted
+% uses: [def:binary64]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% notes: "Item (iii) restates the exception of req:consumer-decides-exactly; edit the two together."
+% lean:
+% ---
+
+\begin{definition}\label{def:declared-data}
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item An \term[the party that fixes one protocol's device data, protocol data
+  and run configuration]{instance} is the party that fixes one protocol's
+  device data, protocol data and run configuration. The data it states are
+  \term[the data an instance states and the data a producer emits as its own
+  declaration, with the sets such data define]{declared data}, and it is their
+  \term[the party whose declaration declared data are: the instance that states
+  them or the producer that emits them]{declarer}.
+\item A module is a \term[a module whose own claims decide their conditions on
+  the data it reads or emits in floating point, at slacks an instance declares
+  to it, rather than exactly]{supplier} when its own claims decide their
+  conditions on the data it reads or emits in floating point, at slacks an
+  instance declares to it, rather than exactly. A floating-point evaluation of
+  a device model is an example. Its numerical output is not
+  declared data until an instance states it as its own declared data, and the
+  instance is then its declarer. Numbers of a supplier's output that reach
+  another module in a run are declared by the instance that fixed the run:
+  those it rounds and states, and those it passes on unchanged, whether in a
+  declaration of its own or by handing the supplier's output on untouched.
+\item A module other than a supplier that emits numerical data to another
+  module as its own declaration, constructed from declared data it read, is a
+  \term[a module other than a supplier that emits numerical data, constructed
+  from declared data it read, to another module as its own
+  declaration]{producer} of those data; they are declared data, and the
+  producer is
+  their declarer. Declared data that a module passes on unchanged keep their
+  declarer, and the module is not their producer. A scalar bound that a
+  producer emits and that a consumer has replaced by its rounding to a
+  binary64 number, in a direction that the producer's own claims license as
+  weakening it, is read, at its replaced value, as its producer's declaration
+  of that bound, and keeps its producer as declarer; a set defined by such
+  bounds is then declared data by (v).
+\item A module other than a supplier that reads declared data is a
+  \term[a module other than a supplier that reads declared data]{consumer} of
+  them. The passage of declared data from their declarer to a consumer is a
+  \term[the passage of declared data from their declarer to a
+  consumer]{module boundary}.
+\item A set defined by declared data, such as a feasible set or an acceptance
+  set, is declared data. An object that a module computes itself in the course
+  of a computation, such as an iterate of an optimiser or the return of an
+  oracle, is a \term[an object a module computes itself in the course of a
+  computation, such as an iterate of an optimiser; it is not declared
+  data]{computed object} and is not declared data.
+\item Every entry of declared operator data is a \tref{declared value}
+  (Definition~\ref{def:binary64}\,(iii)).
+\end{enumerate}
+\end{definition}

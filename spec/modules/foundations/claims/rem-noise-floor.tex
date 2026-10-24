@@ -1,0 +1,165 @@
+% ---
+% id: foundations/rem:noise-floor
+% kind: rem
+% title: "What domination controls, and why it needs a noise floor"
+% summary: >-
+%   A weight at which a model dominates a lattice family shows that the family
+%   adds no support, not how far it lowers an element. An element with no
+%   rational direction in its support forces a weight of at least its top
+%   eigenvalue over the constant; noise in the model removes that bound.
+% prominence: standard
+% status: accepted
+% uses: [def:domination, lem:domination, lem:rational-obstruction, lem:absorbing-domination, def:exact-reference]
+% mentions: []
+% assumes: []
+% refs:
+%   - "nahar2025imperfect, Thm. 3, Eq. (20)"
+% provenance: newly-derived
+% notes: "No requirement uses this remark. It explains the limits of domination for a declared device weight (spec/future-scope.md section 13) and why a snap is not related to its model by domination."
+% lean:
+% ---
+
+No requirement of the engine relates a snapped family to its model by
+domination: a run evaluates the numbers its key length rests on with the
+model in place of the snap where it holds one, and rests on a named premise
+elsewhere. The remark says what domination would control if a weight were
+declared or established, and why an idealised model could not be related to
+a lattice family that way at a small weight. Reductions other than domination
+that could reduce an idealised model exactly, and a declared device weight,
+are future scope (\repodoc{spec/future-scope.md}~\S13).
+
+\begin{remark}\label{rem:noise-floor}
+Let $G$ be a \tref{reference} (Definition~\ref{def:exact-reference}) and $F$
+a family of the same shape whose entries are \tref[lattice value]{lattice
+values}, both complete at $c$, with $G$ dominating $F$ at a weight $q<1$
+(Definition~\ref{def:domination}). The relation bounds every element of $F$
+from above by its reference element, $(1-q)F_j\preceq G_j$. What that bound
+controls, and what it does not, comes first. Three facts then decide when the
+weight can be small, and together they explain when an idealised model whose
+elements are rank-deficient dominates no lattice family at a small weight,
+what a declaration should do instead, and why that obstruction belongs to
+domination and not to every reduction.
+
+\emph{What domination controls.} The relation of
+Definition~\ref{def:domination} is the hypothesis under which the reference
+is a noise channel followed by $F$, together with classical flags of
+weight at most $q_s$ on block $s$ \cite[Thm.~3, Eq.~(20)]{nahar2025imperfect}.
+Domination bounds each element of $F$ from above and not from below: $F$
+may lower the probability of an outcome, and may remove support, making
+impossible an outcome that the model makes possible, at a weight below the
+lattice step. For one block of dimension one with $c=1$,
+$G_1=2^{-k}/3$ and $G_2=1-2^{-k}/3$, the only lattice value at $k$ in
+$[0,2^{-k}/3]$ is $0$, and the family $F_1=0$, $F_2=1$ that rounds $G_1$
+down and lets $G_2$ take the rest is dominated at every $q\ge2^{-k}/3$,
+since $G_1-(1-q)F_1=G_1\succeq0$ and $G_2-(1-q)F_2=q-2^{-k}/3$, although
+outcome~$1$ has become impossible.
+
+\emph{Support.} At a weight below one, an element of $F$ has no support
+outside that of its reference element (Lemma~\ref{lem:domination}\,(ii)): for
+$x$ in the kernel of $G_j$,
+$0\le\langle x,(G_j-(1-q)F_j)x\rangle=-(1-q)\langle x,F_jx\rangle$, so
+$F_jx=0$. An outcome that the model makes impossible on some direction stays
+exactly impossible there, so an element of $F$ must fit inside the support of
+its reference element, and that is what a lattice family can fail to do at a
+small weight.
+
+\emph{Rationality.} A lattice family has Gaussian-rational entries in the
+basis in which it is declared, so the support of each of its elements is
+spanned by Gaussian-rational vectors. A dominated element therefore lies in
+the largest rational subspace $\mathcal{R}_j$ of the support of $G_j$
+(Lemma~\ref{lem:rational-obstruction}\,(iii)), and completeness turns this
+into the lower bound $q\ge\lmax(P_jG_jP_j)/c$, with $P_j$ the projector onto
+the orthogonal complement of $\mathcal{R}_j$
+(Lemma~\ref{lem:rational-obstruction}\,(iv)). The bound depends on the basis
+in which the lattice family is declared and not on the lattice exponent: a
+finer lattice still has Gaussian-rational entries, so no refinement of the
+lattice lowers it.
+
+\emph{An example at two photons.} Take two orthogonal polarisation modes $H$
+and $V$ and the two-photon block in the orthonormal occupation basis
+$\ket{2,0},\ket{1,1},\ket{0,2}$. With the diagonal mode created by
+$a_D^{\dagger}=(a_H^{\dagger}+a_V^{\dagger})/\sqrt2$, the state with both
+photons in that mode is
+\begin{equation*}
+  \ket{DD}=\tfrac{1}{\sqrt2}\big(a_D^{\dagger}\big)^{2}\ket{0,0}
+  =\tfrac12\ket{2,0}+\tfrac{1}{\sqrt2}\ket{1,1}+\tfrac12\ket{0,2},
+\end{equation*}
+since $(a_H^{\dagger})^{2}\ket{0,0}=\sqrt2\ket{2,0}$ and
+$a_H^{\dagger}a_V^{\dagger}\ket{0,0}=\ket{1,1}$. For an ideal, lossless
+analyser in the diagonal basis without dark counts, the element of the
+outcome in which only the detector of $D$ clicks is $\dyad{DD}$ on this block.
+Every non-zero vector on that ray has second coordinate $\sqrt2$ times its
+first, so none has Gaussian-rational coordinates, $\mathcal{R}_j=\{0\}$, and
+Lemma~\ref{lem:rational-obstruction}\,(v) gives $q\ge\tr\dyad{DD}/c=1/c$:
+with $c=1$ no lattice family declared in this basis is dominated by the
+model at a weight below one, whatever the lattice exponent. Such irrational
+directions are common in photon-number blocks of two or more photons,
+because the occupation basis carries factors $1/\sqrt{n}$; the diagonal basis
+already produces one.
+
+\emph{A noise floor removes the obstruction.} A physical detector has loss and
+dark counts. In a model that includes both in every port, no outcome is
+impossible on a photon-number block, and, under conditions that the module
+modelling the detector states, every element is positive definite on every
+block. Supports are then no obstruction: let every element of $F$ but one
+lie between zero and its reference element and let the remaining one, chosen
+positive definite in the reference, take what completeness leaves; the
+reference then dominates $F$ at a weight of at most $\delta/(\lambda+\delta)$,
+where $\delta$ is the norm of the residue the remaining element absorbs and
+$\lambda$ the least eigenvalue of the reference element at that outcome, not
+of the element of $F$, which the residue raises above it
+(Lemma~\ref{lem:absorbing-domination}\,(iv)).
+When the other elements stay within a few lattice steps of their reference
+elements, $\delta$ is of the order of the lattice step times the number of
+outcomes and the dimension, and the weight is of the order of that over
+$\lambda$. Loss alone or dark counts alone need not suffice: what matters is
+that no element is rank-deficient on a block, and a model in which some
+outcome is still impossible on some block keeps the obstruction for that
+element.
+
+\emph{Declaring the floor.} A weight relates $F$ to the model $G$ and says
+nothing about whether $G$ describes the device; that is the premise of the
+declaration's own model. A larger floor makes $\lambda$ larger and the
+weight smaller, which is a temptation and not a licence: a floor above the
+noise the device has makes the model wrong, an error no weight can show. The
+floor to declare is the smallest loss and dark-count rates one is sure the
+device has.
+
+\emph{Rank deficiency alone is no obstruction.} A block whose elements are
+rank-deficient but have supports spanned by Gaussian-rational vectors may be
+dominated by its model at a weight of the order of the lattice step. For one
+block of dimension two with $c=1$ and
+$G_1=\mathrm{diag}(3/5,0)$, $G_2=\mathrm{diag}(2/5,0)$,
+$G_3=\mathrm{diag}(0,1)$, put $a\coloneqq\lfloor2^{k}\cdot3/5\rfloor\,2^{-k}$
+and $F_1=\mathrm{diag}(a,0)$, $F_2=\mathrm{diag}(1-a,0)$, $F_3=G_3$. Then
+$G_1-(1-q)F_1$ and $G_3-(1-q)F_3$ are positive semidefinite for every
+$q\in[0,1)$, and $G_2-(1-q)F_2\succeq0$ exactly when
+$q\ge(3/5-a)/(1-a)$, which is below $\tfrac52\,2^{-k}$ because
+$0\le3/5-a<2^{-k}$ and $1-a>2/5$, although no element is positive definite.
+Where the support of some element contains no non-zero Gaussian-rational
+vector, no lattice family is dominated below the bound of
+Lemma~\ref{lem:rational-obstruction}\,(v) at any lattice exponent; there it
+is the noise floor, not a finer lattice, that makes a small weight possible.
+
+\emph{What the obstruction does not say.} Domination compares the reference
+with $F$ element by element on the same block, and the channel it yields acts
+on each block as the identity followed by a branching into $F$ and flags. A
+unitary applied to both families preserves domination; what fixes the basis
+is the lattice family, Gaussian-rational in the basis in which it is
+declared. Lemma~\ref{lem:rational-obstruction} bounds the domination of such
+a family and nothing else. A reduction that first applies another channel can
+map some idealised models exactly onto a family with Gaussian-rational
+entries, with no direction to snap at all. An ideal analyser whose analysed
+polarisation $\cos\alpha\ket{H}+\sin\alpha\ket{V}$ has an irrational
+$\tan\alpha$, so that its one-photon element has no Gaussian-rational
+direction in its support, is the image, under one unitary applied to the
+input of every outcome, of the same analyser at an angle at which its
+elements are lattice values, such as $\alpha=0$. On the block of $m$ photons
+in two modes, the isometry from that block into the $m$-fold tensor power of
+$\mathbb{C}^{2}$, which maps $\ket{2,0}$, $\ket{1,1}$ and $\ket{0,2}$ to
+$\ket{HH}$, $(\ket{HV}+\ket{VH})/\sqrt2$ and $\ket{VV}$, carries $\ket{DD}$ of
+the example above to $\tfrac12(\ket{HH}+\ket{HV}+\ket{VH}+\ket{VV})$, which
+has rational coordinates, at dimension $2^{m}$ instead of $m+1$. Such
+reductions are not claims of this module; an idealised model that dominates
+no lattice family at a small weight may still be reducible exactly by them.
+\end{remark}

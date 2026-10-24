@@ -1,0 +1,69 @@
+% ---
+% id: meat-core/def:joint-sectors
+% kind: def
+% title: "Joint-sector deficits and the joint key-active index set"
+% summary: >-
+%   With Alice sectors, the branch maps, statistics and deficit restrict to each
+%   joint sector, and a joint pair is key-inert when the raw key is constant on
+%   the outcomes that can occur on it, decided on declared data. With one Alice
+%   sector these are the sector notions.
+% prominence: standard
+% status: implemented
+% uses: [def:declaration, def:branch, thm:branch-formula, def:keyinert, lem:ensemble-form, def:keyactive]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.joint:is_key_inert
+% lean:
+% notes: "def:branch, lem:branch-maps (iii), thm:branch-formula, cor:f-nonpos, def:keyinert, prop:exact-cancellation and def:keyactive hold verbatim on the cone of one measured sector tensored with all of A; this definition and lem:joint-sectors add the refinement along Alice's sectors."
+% ---
+
+Every sector notion of this section is stated on the cone of one measured
+sector tensored with all of $A$. Along Alice's declared sectors each of them
+restricts to a subcone, and the joint objects below are those restrictions;
+nothing about the objective is defined anew.
+
+\begin{definition}\label{def:joint-sectors}
+Let $\Decl$ be a declaration in the general format of
+Definition~\ref{def:declaration}, with Alice sectors $t\in\mathbb{T}$ and
+\tref[joint sector]{joint sectors} $(t,s)\in\mathbb{T}\times\SecSet$. Regard
+$\Pos{A_t\Qsys_s}$ as the subcone of $\Pos{A\Qsys_s}$ of operators supported
+on $\Hs{A_t}\otimes\Hs{\Qsys_s}$. For $\hat c\in\Chatset$ the
+\emph{joint-sector} maps, statistics and deficit are the restrictions of the
+sector objects of Definition~\ref{def:branch} and of \eqref{eq:f-def} to that
+subcone,
+\begin{equation}\label{eq:joint-deficit}
+  \cG_{\hat c,(t,s)}\coloneqq\cG_{\hat c,s}\big|_{\Pos{A_t\Qsys_s}},\qquad
+  P_{\hat c,(t,s)}(\sigma)\coloneqq P_{\hat c}(\sigma),\qquad
+  f_{\hat c,(t,s)}(\sigma)\coloneqq f_{\hat c,s}(\sigma)
+  \qquad(\sigma\in\Pos{A_t\Qsys_s}),
+\end{equation}
+so that on such a $\sigma$ the Kraus operators \eqref{eq:kraus} act through
+$\sqrt{M^{(t)}_x}\otimes\sqrt{F^{(s)}_v}$. For
+$\hat c\in\Chkey$ and a pass class $\kappa\in\Kann_{\mathrm{pass}}(\hat c)$
+the \emph{effective outcome set on the joint sector} is
+\begin{equation}\label{eq:joint-effective}
+  E^{(t,s)}_{\kappa}\coloneqq\big\{(x,v)\in a^{-1}(\kappa):\
+  M^{(t)}_x\ne0,\ F^{(s)}_v\ne0\big\}\subseteq E^{(s)}_{\kappa},
+\end{equation}
+and the pair $(\hat c,(t,s))$ is \emph{key-inert} if $r$ is constant on
+$E^{(t,s)}_{\kappa}$ for every $\kappa\in\Kann_{\mathrm{pass}}(\hat c)$. The
+\term[The joint sectors that are not key-inert with a given acceptance value.]{joint key-active index set}
+is $\mathbb{J}_K(\hat c)\coloneqq\{(t,s):(\hat c,(t,s))\text{ is not
+key-inert}\}$.
+
+Key-inertness of a joint pair is decided on \tref{declared data}. In
+\tref{POVM form} $M^{(t)}_x\ne0$ is a comparison of the declared block with
+the zero block. In \tref{ensemble form} it is $N^{(t)}_x\ne0$, by
+Lemma~\ref{lem:ensemble-form}\,(iii), again a comparison of a declared block
+with zero. For a factorised family
+$F^{(s)}_v=\bigotimes_fF^{f,(s_f)}_{v_f}$ is non-zero exactly when every
+factor block $F^{f,(s_f)}_{v_f}$ is, a tensor product of matrices vanishing
+exactly when one of them does; so the predicate is decided per factor and no
+product is formed. With $|\mathbb{T}|=1$ one has
+$E^{(t_0,s)}_{\kappa}=E^{(s)}_{\kappa}$, and the pair $(\hat c,(t_0,s))$ is
+key-inert exactly when $(\hat c,s)$ is in the sense of
+Definition~\ref{def:keyinert}, with
+$\mathbb{J}_K(\hat c)=\{t_0\}\times\SecSet_K(\hat c)$.
+\end{definition}

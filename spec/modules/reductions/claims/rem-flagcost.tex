@@ -1,0 +1,31 @@
+% ---
+% id: reductions/rem:flagcost
+% kind: rem
+% title: "Rate cost of a flag-extended target"
+% summary: >-
+%   Replacing the unpopulated block by an arbitrary POVM gives a cleaner
+%   target, which hands the adversary more and costs rate. What it buys is one
+%   target, independent of the device, for a branch that is unknown or
+%   adversarially chosen; an infinite-dimensional branch takes the flag PVM.
+% prominence: standard
+% status: accepted
+% uses: [cor:monotone, cor:flagsenough, lem:top]
+% mentions: [cor:flag-instance]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:flagcost}
+The replacement of Corollary~\ref{cor:flagsenough} is not free in rate: by
+Corollary~\ref{cor:monotone} the target of \eqref{eq:flagsenough} is cleaner
+than the source, so it hands the adversary more, and every squashed state it
+admits is a flag state as far as the $\Bsys_0$ block is concerned. What it
+buys is that $G$ appears nowhere in the target: a branch whose device is
+unknown or adversarially chosen is covered by one target that does not depend
+on the device, and an infinite-dimensional branch by the finite flag PVM of
+Lemma~\ref{lem:top}. The instance of such a branch is the flag instance of
+Corollary~\ref{cor:flag-instance}, on which by construction nothing is
+assumed and nothing may be.
+\end{remark}

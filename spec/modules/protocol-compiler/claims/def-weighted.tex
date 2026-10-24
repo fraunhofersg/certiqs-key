@@ -1,0 +1,272 @@
+% ---
+% id: protocol-compiler/def:weighted
+% kind: def
+% title: "Choice-weighted families"
+% summary: >-
+%   A public choice enters as a weight on a complete conditional measurement:
+%   one declared weight per choice value, or, at a measured factor after its
+%   chain, a stochastic weight read through its station's setting. Weights and
+%   families are binary64 numbers read exactly; products are formed exactly.
+% prominence: standard
+% status: implemented
+% uses: [def:compile, def:exact, def:declaration]
+% mentions: [lem:weighted, rem:relabel, thm:choice-encoding, ass:coin, def:spec, def:chaincond, rem:condfamily, ex:condfamily, reductions/def:joint-family, foundations/req:declared-order, req:derived-objects]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.weights:decide_conditional_families
+% lean:
+% notes: "The alphabets T and the choice alphabet are written inline as \\mathcal{T} and \\mathcal{F}; the macros \\Tset and \\Fset of spec/macros.tex are the optical instance's alphabets and are not used for the generic setting and choice."
+% ---
+
+A per-round public choice of known bias --- a basis choice, a choice between
+test and generation rounds, a probe setting --- is encoded as a weight inside
+the measurement operators and never as a separate fraction. There are two
+constructions: one declared weight per choice value, independent of every
+setting, and, at a \tref{measured factor} after the \tref{reduction chain}, a weight
+that depends on the private setting of the station that measures it.
+
+Assumption~\ref{ass:coin} and Remark~\ref{rem:relabel} are why a
+setting-dependent weight is read through the station's setting and through
+nothing else, and Remark~\ref{rem:relabel} and Theorem~\ref{thm:choice-encoding} why
+that form is sound after the chain and is not a link of it. Which conditions
+of the weighted family do and do not follow from the decision on the
+conditional families, and why that decision is taken here rather than among
+the target conditions, is Remark~\ref{rem:condfamily}; that the weighted
+family can satisfy all five while none of the conditional families it was
+built from is a POVM is Example~\ref{ex:condfamily}. The order in which the
+weights are summed is declared with the public-choice record, as
+\xref{foundations/req:declared-order} requires of every summed predicate, and
+a presentation indexed by a product alphabet is refused under
+Requirement~\ref{req:derived-objects}.
+
+\begin{definition}\label{def:weighted}
+Let $S$ be a finite-dimensional system, $\Tpub$ a finite non-empty
+\term[The finite alphabet of values of a per-round public choice of known bias, each value with a declared positive weight.]{public-choice alphabet}
+with declared weights $q_t>0$, $\sum_{t\in\Tpub}q_t=1$, and for each
+$t\in\Tpub$ a POVM $\{N_{u|t}\}_{u\in\Uset_t}$ on $S$. The
+\term[The measurement whose elements are declared measurement elements multiplied by the declared weight of a public choice value.]{choice-weighted family}
+is indexed by the disjoint union
+$\Vset\coloneqq\bigsqcup_{t\in\Tpub}\Uset_t\times\{t\}$ and defined by
+\begin{equation}\label{eq:weighted}
+  N_{u,t}\coloneqq q_t\,N_{u|t},\qquad (u,t)\in\Vset .
+\end{equation}
+Several independent choices compose by iterating \eqref{eq:weighted}; the
+resulting weight is the product of the individual weights. \emph{What is
+declared, and therefore what is decided, is the innermost family and each
+weight list}: an iterated presentation declares $\{N_{u|t}\}_u$ for each value
+of each choice together with one weight list per choice, the decision on the
+conditional families is taken on those, and the intermediate
+families are this module's own products, which inherit admissibility by
+Lemma~\ref{lem:weighted}\,(i) at each step and carry no second declared
+condition; the representability decision is taken on every product the map
+forms, the intermediate ones included. This is the
+\term[The choice-weighted family whose weights are one declared number per choice value, the same in every round.]{setting-independent form}:
+the weight of a choice value is one declared number, the same in every round
+and whatever else either party's apparatus did.
+
+\emph{A weighting that depends on a station's setting.} Let
+$\{F_v\}_{v\in\Vset}$ be a POVM on $S$ over a finite alphabet $\Vset$ with a
+\tref{declared order} --- the \tref{target family} of the last link of $\Chrec$, as
+Definition~\ref{def:compile} takes it --- and let
+$t:\Vset\to\mathcal{T}$ be a declared total map onto a finite non-empty
+\term[The finite alphabet of the private per-round setting of the station that measures the family, onto which the declared setting map sends each outcome.]{setting alphabet},
+the
+\term[The value of the measuring station's private setting that an outcome records, read by the declared setting map.]{setting component}
+of the outcome: the value of the private per-round setting of the measuring
+apparatus that the outcome $v$ records. Where the chain was emitted by the reductions module, $t$ is the
+class map of that module's \tref{joint alphabet}
+(\xref{reductions/def:joint-family}\,(a): $\Vset=\mathcal{Y}\times\mathcal{T}$
+with classes $\Vset_t$); where the family is declared directly, $t$ is
+declared with it, the singleton $\mathcal{T}=\{\ast\}$ being the case of no
+setting. Let $\mathcal{F}$ be a finite non-empty
+\term[The finite alphabet, with a declared order, of a public choice whose weight depends on the private setting of the station that measures the family.]{choice alphabet}
+with a declared order and let $P(f\,|\,t)$,
+$(t,f)\in\mathcal{T}\times\mathcal{F}$, be a \emph{stochastic matrix}:
+$P(f\,|\,t)\ge0$ and $\sum_{f\in\mathcal{F}}P(f\,|\,t)=1$ for every
+$t\in\mathcal{T}$. The
+\term[The pairs of an outcome and a choice value whose weight under the declared stochastic matrix is positive.]{support of the weighting}
+is
+\begin{equation}\label{eq:support}
+  \Vset_P\coloneqq\big\{(v,f)\in\Vset\times\mathcal{F}:\ P(f\,|\,t(v))>0\big\},
+\end{equation}
+ordered by the product order --- $v$ in the declared order of $\Vset$ and,
+within each $v$, $f$ in the declared order of $\mathcal{F}$, the pairs off
+the support omitted --- and the choice-weighted family in its
+\term[The choice-weighted family of a measured system after its chain: each delivered element times a stochastic weight read through the measuring station's setting.]{setting-dependent form}
+is
+\begin{equation}\label{eq:weighted-t}
+  N_{v,f}\coloneqq P(f\,|\,t(v))\,F_v,\qquad (v,f)\in\Vset_P .
+\end{equation}
+The setting-independent form is the case $P(f\,|\,t)=q_f$ for every $t$, in
+which \eqref{eq:weighted-t} is \eqref{eq:weighted} with
+$\Tpub=\mathcal{F}$ and $N_{v|f}=F_v$ for every $f$ --- one conditional
+family, weighted by a choice that does not see the setting; conversely,
+\eqref{eq:weighted} with conditional families that differ with the choice is
+not of the form \eqref{eq:weighted-t}, and the two forms are two constructions
+overlapping in that case. \emph{In the overlap the two constructions do not
+agree on an order, and the order is a property of the presentation and not of
+the family}: the alphabet the first form produces is
+$\bigsqcup_f\Uset_f\times\{f\}$, listed choice-major, while the support
+\eqref{eq:support} of the second is listed outcome-major, so the two are
+transposes of one another and one family declared through the two records has
+its condition~(S) decided in two different orders. (S) is order-dependent by
+construction (Definition~\ref{def:exact}), and the two orders are not
+reconciled: what fixes the order is the record that was declared, and a
+\tref{declarer} that declares the same family both ways must expect the
+decision its own record's order gives. \emph{$P$ is read through the setting
+and through nothing else.} It is declared on $\mathcal{T}\times\mathcal{F}$
+and reaches an outcome only through $t(v)$. Zero entries of $P$ are admitted, and the support
+is what they are for: a pair $(v,f)$ with $P(f\,|\,t(v))=0$ is not an outcome,
+is not emitted and indexes nothing, so every emitted element of
+\eqref{eq:weighted-t} carries a strictly positive weight, exactly as $q_t>0$
+requires of every element of \eqref{eq:weighted}. Which choice values a given
+setting admits is therefore declared by the zero pattern of $P$ and not by a
+zero-weight outcome. The
+form is applied by the compiler \emph{after} the reduction chain, to the
+family the last link delivered (Definition~\ref{def:compile}).
+
+\emph{The reading of each declared condition.} The weights are
+\tref{binary64 numbers} and the conditional families binary64 matrices. So
+$\sum_tq_t=1$ is decided
+\emph{exactly}, with the sum accumulated in the declared order of $\Tpub$ ---
+the order in which the declared public-choice record lists $\Tpub$, fixed
+there because $\idxm$ does not index $\Tpub$
+(Definition~\ref{def:compile}) --- and
+required to \tref[rounds nowhere]{round nowhere}; and ``$\{N_{u|t}\}_u$ is a
+POVM on $S$'' is exact admissibility in the sense of
+Definition~\ref{def:exact}, per block where $S$ carries sectors: (H), (P) and
+(C) per block; (S) on the completeness sum $\sum_{u\in\Uset_t}N_{u|t}$,
+accumulated in the order stated below and required to round nowhere; and (T)
+as the agreement --- in block kind, in block identifiers, in their order and in
+their dimensions --- of the maps \emph{the conditional families of one
+presentation themselves carry}: there is one such map for the presentation,
+and the family the weighting produces is a \tref{block list} against
+\emph{it}. On a system carrying no sector decomposition, Alice's $A$, (T) is
+empty. This condition is decided of each $t\in\Tpub$ separately, on the
+declared numbers.
+
+\emph{In which order (S) is read on a conditional family.} The family the
+weighting produces is indexed by one alphabet, and that alphabet carries one
+order: $\Xset$ where the presentation is Alice's, which arrives with its
+declared order (Definition~\ref{def:spec}\,(a)); the physical receiver
+alphabet where it is a measuring party's, which is the order the fibre sum of
+Definition~\ref{def:chaincond}\,(C4) is accumulated in and, in \tref{Band A}, is
+the emitted alphabet's own. Condition~(S) on the conditional family
+$\{N_{u|t}\}_u$ is decided in the \emph{restriction of that order} to the
+elements the choice value $t$ contributes --- a total order on $\Uset_t$
+whatever the presentation listed, so no compatibility of the record's listing
+with it is required and none is decided. Where a declared order arrives with
+that alphabet the compiler takes it, by the binding rule of
+Definition~\ref{def:compile}, to which this definition adds nothing; where
+none arrives, the choice the compiler makes and emits is the record's own
+listing, $t$ in the order it lists $\Tpub$ in and, within each $t$, $u$ in the
+order it lists $\Uset_t$ in. \emph{No presentation is refused for an order}:
+what is fixed here is which order a decision is read in, not what a declarer
+may declare.
+
+\emph{The remaining declared conditions, at the same reading.} The strict
+inequality $q_t>0$ is a domain condition on a declared real scalar, decided by
+its sign, and Definition~\ref{def:exact} carries no
+strict-inequality row because none is wanted --- $q_t\ne0$ is what
+Lemma~\ref{lem:weighted}\,(ii) needs, and a negative $q_t$ would reverse the
+sign of an element of the emitted family, which no public choice of known bias
+can mean. For the setting-dependent form the same reading applies to $P$: each
+entry is a binary64 number, $P(f\,|\,t)\ge0$ is decided by sign, each row sum
+$\sum_fP(f\,|\,t)=1$ is decided exactly in the declared order of
+$\mathcal{F}$ and required to round nowhere, the support \eqref{eq:support}
+is decided by the sign of each entry, and ``$\{F_v\}$ is a POVM on $S$'' is
+the exact admissibility the chain's (C3) already decided of the family the
+last link delivered. \emph{This form has no second conditional family to
+decide}: the choice value is drawn after the measurement, $\{F_v\}$ is the
+whole of what the decision on the conditional families has as its subject
+here, and (C3) is where it was taken.
+
+\emph{What this module constructs, and the two emission decisions.} The
+products $q_tN_{u|t}$ of \eqref{eq:weighted} and $P(f\,|\,t(v))F_v$ of
+\eqref{eq:weighted-t} are formed \emph{exactly} on the declared dyadic
+numbers. A product of two binary64 numbers need not be one, so the compiler
+decides, before emitting anything, that every entry of every $N_{u,t}$,
+respectively of every $N_{v,f}$, is a binary64 number --- on every product
+this map forms, whether the product is emitted or handed on --- and that the
+emitted family satisfies Definition~\ref{def:exact} --- (H), (P), (C) and, on
+its own declared-order sum over $\Vset$, respectively over $\Vset_P$ in its
+product order, (S). These are the two \emph{emission decisions}.
+
+\emph{The lattice of the products.} Let the arriving entries be integer
+multiples of $2^{-k}$ of modulus at most $1$, and let each $q_t$ be an
+integer multiple of $2^{-k_q}$; then every entry of $q_tN_{u|t}$ is an integer
+multiple of $2^{-(k+k_q)}$ of modulus at most $1$, so the constructed family
+lies on a lattice $k_q$ steps finer than the one it was handed and is exactly
+binary64 whenever $k+k_q\le53$. Where a $q_t$ is not a power of two the finer
+lattice can leave binary64 altogether: the decimal literal $0.9$ is an integer
+multiple of $2^{-53}$ and of no coarser one, so $k+k_q>53$ for every $k\ge1$
+and the exact product of a declared entry by it need not be a binary64
+number. The same arithmetic governs $P(f\,|\,t(v))F_v$ with the exponent
+$k_P$ of the entries of $P$ in place of $k_q$: a $P$ whose non-zero entries
+are dyadic with small exponent --- $\tfrac12$, $\tfrac14$, $1$ --- composes
+with any family the chain delivers at $k\le53-k_P$, and a decimal literal in
+$P$ can leave binary64 exactly as a decimal $q_t$ can.
+
+\emph{The general format.} In the general format of
+Definition~\ref{def:declaration}\,(DX1)--(DX6) both forms above are read
+\emph{on the system of the party that declares them}, and nothing else of
+this definition changes. At one \tref{measured factor}, in \tref{POVM form}
+and with no factor tagged $A$, the readings below are the text above,
+sentence for sentence.
+
+\emph{Which system $S$ is.} For a presentation of Alice's it is $A$, and (T)
+is \emph{not empty where a factor is tagged $A$}: the conditional families
+are then block lists along $\mathbb{T}$ and (T) is the four-component
+agreement of the maps they carry with that factor's map, as on any other
+sectored system. For a presentation of a measuring party's it is that party's
+\emph{own} measured factor: one presentation per factor, decided against that
+factor's own map; \emph{a presentation indexed by a product alphabet has no
+declared system to be a family on} --- the product is the rule
+\eqref{eq:productfamily} and is no datum (Definition~\ref{def:compile}, the
+general format). So the decision ``$\{N_{u|t}\}_u$ is
+a POVM on $S$'' and the products this module forms are per factor, and the
+representability decision keeps exactly the subject it has: the products
+\emph{these two constructions} form, and no product block of
+\eqref{eq:productfamily}.
+
+\emph{The \tref{ensemble form} of Alice's slot.} Where Alice's measurement slot
+is declared in ensemble form (DX4), a choice-weighted presentation of it
+declares, for each $t\in\Tpub$, a family $\{N_{x|t}\}_{x\in\Xset}$ of block
+lists along $\mathbb{T}$ with every block Hermitian and positive
+semidefinite, and \emph{in place of the POVM condition} the ensemble
+condition of \eqref{eq:ensembleform}: for every Alice sector $t'$,
+$\sum_{x}N^{(t')}_{x|t}=\tau^{(t')}_A$, the sum accumulated in the order
+stated above and rounding nowhere. That condition is decided \emph{of each
+$t$ separately and on the declared numbers}, with (H), (P) per block, that
+identity in place of (C), and (T) as above. \emph{Why the
+construction is the same construction.} With $N_{x,t}\coloneqq q_tN_{x|t}$ of
+\eqref{eq:weighted}, the exact real numbers the data denote satisfy
+\begin{equation}\label{eq:weighted-ensemble}
+  \sum_{(x,t)\in\Vset}N^{(t')}_{x,t}
+  =\sum_{t\in\Tpub}q_t\sum_{x\in\Xset}N^{(t')}_{x|t}
+  =\Big(\sum_{t\in\Tpub}q_t\Big)\tau^{(t')}_A=\tau^{(t')}_A
+\end{equation}
+for every $t'$, by the decision just taken and by $\sum_tq_t=1$; so a
+choice-weighted presentation in ensemble form whose conditional ensembles are
+admitted denotes a weighted family with the ensemble identity of
+\eqref{eq:ensembleform}. \emph{That is a consistency statement and not a
+substitute for the decision on the emitted family}: the emitted family's own
+(S), (H), (P) and its identity with the declared $\tau_A$ are decided at check
+V3, on the emitted blocks and in the emitted order, and neither condition
+implies the other: \eqref{eq:weighted-ensemble} is an identity of real
+numbers and the emitted decision is about the additions that compute it. In
+\tref{untrusted-source mode} there is no ensemble form and this paragraph has
+no subject.
+
+\emph{The setting-dependent form, per measured factor.} It is applied by the
+compiler after \emph{that factor's} \tref{receiver segment}, to the family that
+factor's last link delivered, with that factor's own setting map, support
+\eqref{eq:support} and product order; the setting component read is a
+component of \emph{that factor's} outcome, the private per-round setting of
+the station that measures that factor, whichever party's label the factor
+carries. This form has no second
+conditional family here either, per factor: (C3) of
+Definition~\ref{def:chaincond}, read for that factor, is where the delivered
+family was decided.
+\end{definition}

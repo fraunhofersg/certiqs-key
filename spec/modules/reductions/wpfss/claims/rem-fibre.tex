@@ -1,0 +1,42 @@
+% ---
+% id: reductions/wpfss/rem:fibre
+% kind: rem
+% title: "Necessity of the fibre condition"
+% summary: >-
+%   A certified bound on a sum of positive operators says nothing about its
+%   summands, so a certified set split over two letters gives neither a bound,
+%   and one merged with other outcomes attaches the weight to a larger fibre.
+%   Each certified set must therefore be exactly one fibre of the
+%   coarse-graining.
+% prominence: standard
+% status: accepted
+% uses: [prop:route]
+% mentions: [reductions/prop:obstruction, req:fibre-equality]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:fibre}
+Proposition~\ref{prop:route} needs the certified set to be \emph{exactly} a
+fibre, $\mathcal{O}=\cg^{-1}(y_{*})$. The reason is that the certified quantity
+is the \emph{sum} $\sum_{S\in\mathcal{O}}M_{S|t}$, and a bound on a sum of
+positive operators says nothing about the individual summands. Two failures
+follow, in opposite directions. If $\cg$ \emph{splits} $\mathcal{O}$ across two
+emitted letters, neither letter inherits a bound, and the natural repair,
+bounding each piece, is unavailable because the supplier certified only the
+sum. If $\cg$ merges $\mathcal{O}$ with outcomes \emph{outside} it, the bound
+still holds for the merged letter (adding positive operators only helps), but
+the coarse blocks the supplier emits no longer let this module recover
+$\sum_{S\in\mathcal{O}}M_{S|t}$ separately, so the emitted weight is attached
+to a letter whose fibre is larger than the certified set: sound, and
+recorded as such, but only if the containment
+$\mathcal{O}\subseteq\cg^{-1}(y_{*})$ is validated rather than assumed.
+Equality is therefore required, and decided at input
+(Requirement~\ref{req:fibre-equality}). Where the pieces carry key
+information and must not be merged, the fact does not become encodable by
+re-declaring $\cg$; it becomes an event-level bound, and
+Proposition~\ref{prop:obstruction} shows that a target classical on the
+whole of $\Qsys$ cannot in general encode it.
+\end{remark}

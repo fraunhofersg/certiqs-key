@@ -1,0 +1,66 @@
+% ---
+% id: receiver/def:exact-route
+% kind: def
+% title: "Gaussian-rational port Grams and the exact route"
+% summary: >-
+%   A declaration is on the exact route when the port Grams its declared data
+%   determine, computed exactly, have Gaussian-rational entries and are an
+%   admissible Gram family exactly, and its probe is of the Gaussian tier. A
+%   declaration of Grams or of an instrument matrix admissible exactly is one.
+% prominence: standard
+% status: implemented
+% uses: [def:instrument, def:gram, def:probe, def:tolmap, thm:representation-independence, foundations/def:binary64]
+% mentions: [thm:exact-blocks, thm:enclosed-blocks]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.reference:ExactRouteDecision
+% lean:
+% ---
+
+The receiver's blocks are enclosed for every declaration
+(Theorem~\ref{thm:enclosed-blocks}). Where the port Grams are
+Gaussian-rational, many entries of the blocks, every entry of a block of at
+most one photon among them, are Gaussian rationals that can be known exactly
+(Theorem~\ref{thm:exact-blocks}), and a snap can keep such a block at weight
+zero only if it is known exactly. The route is decided on the Grams and not
+on the instrument matrix: a half-wave plate at $\pi/8$ has entries
+$\pm1/\sqrt2$, yet behind an ideal polarizing beamsplitter the port Grams it
+produces are rational.
+
+\begin{definition}\label{def:exact-route}
+Let $\Recv$ be a \tref{receiver instrument} with
+\tref[port Gram matrices]{port Grams} $\{A_k\}_{k=1}^{K}$ on
+$\mathbb{C}^{\Inp}$ (Definitions~\ref{def:instrument} and~\ref{def:gram}),
+and write $\mathbb{Q}(i)=\{x+iy:x,y\in\mathbb{Q}\}$. A declaration of a
+receiver is on the
+\term[the declarations whose declared data determine, exactly, an admissible
+family of port Grams with Gaussian-rational entries, with a probe of the
+Gaussian tier]{exact route} when (i) the port Grams $\{A_k\}$ that its
+\tref{declared data} determine, computed in exact arithmetic, have entries in
+$\mathbb{Q}(i)$, are Hermitian, and are an \tref{admissible Gram family}
+exactly (Definition~\ref{def:gram}), that is,
+\begin{equation}\label{eq:exact-admissible}
+  A_k\succeq0\quad(k=1,\dots,K)
+  \qquad\text{and}\qquad
+  \id-A_{[K]}\succeq0 ,
+\end{equation}
+conditions on Gaussian-rational matrices; and (ii) its
+\tref{probe declaration}, where it has one, is of the \tref{Gaussian tier}
+(Definition~\ref{def:probe}), whose mean photon numbers $\bar n^{(t)}_m$ are
+declared values and so rationals (\xref{foundations/def:binary64}\,(iii)).
+Under (i) the port Grams are those of a receiver instrument
+(Theorem~\ref{thm:representation-independence}\,(ii)), and every receiver
+instrument with these port Grams induces the same click-pattern POVM
+(Theorem~\ref{thm:representation-independence}\,(i)); where the
+\tref{instrument matrix} $\Gmat$, declared or compiled, satisfies
+$\Gmat^\dagger\Gmat\preceq\id$ exactly, the declared instrument is one of
+them. A declared family admitted only at the \tref{receiver tolerances}
+(Definition~\ref{def:tolmap}) and not admissible exactly is not on the exact
+route. A port Gram family or an instrument matrix declared directly has
+entries that are dyadic rationals (\xref{foundations/def:binary64}\,(iii));
+its port Grams then have entries in $\mathbb{Q}(i)$, by \eqref{eq:gramdef}
+for a declared instrument matrix, and such a declaration satisfies (i)
+exactly when its port Grams are Hermitian, as they always are for a declared
+instrument matrix, and admissible exactly.
+\end{definition}

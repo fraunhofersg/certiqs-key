@@ -1,0 +1,261 @@
+% ---
+% id: reductions/def:reduction-instance
+% kind: def
+% title: "Reduction instance"
+% summary: >-
+%   A reduction instance is a handed model with a finite datum and hypotheses
+%   about the rest, a target built block by block from the datum and scalar
+%   values, a squashing relation with a transported set, and certified
+%   entries, all holding at every admissible datum. Exact emission is proved
+%   once over it.
+% prominence: standard
+% status: implemented
+% uses: [def:joint-family, def:squashing, def:exactadm, lem:exactpsd, prop:pinching, cor:blockdiag, cor:pullback, thm:licence, def:certificate]
+% mentions: [def:system-setting, def:emitnorm, thm:emit, cor:entries, cor:identity-instance, cor:flag-instance, thm:instrument-instance, cor:register-instance, rem:unsound, def:link, def:chain, foundations/req:rounding-direction, receiver/thm:emitted-bound]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.reductions.instance:ReductionInstance
+% lean:
+% notes: "Assumes nothing: separability of B and finiteness of Q are data of the definition, and def:system-setting, which states them for every instance, is mentioned and not used."
+% ---
+
+The emission theorem of this module (Theorem~\ref{thm:emit}) is stated over
+the object defined here, in the way the receiver states its emitted bound
+over a \tref{setting family} (\xref{receiver/thm:emitted-bound}). The object
+packages what every construction this module or a submodule emits has in
+common: a handed model on $\Bsys$ with a finite datum, a finite target built
+from that datum and from scalar values, an existence theorem giving the
+\tref{squashing relation} with a transported set, and a list of certified
+entries.
+The obligation of exact emission is then proved once, and each construction
+is shown to be an instance where it lives. Because every part is established
+at every admissible datum, the emission theorem can apply the existence
+theorem to the datum the normalizer declares
+(Definition~\ref{def:emitnorm}, Theorem~\ref{thm:emit}\,(iii)) without
+re-proving anything, the role the \tref{exact flag} plays for the receiver's
+setting family. The core establishes three instances a protocol needs
+regardless of device: the identity instance
+(Corollary~\ref{cor:identity-instance}), the flag instance of an
+uncharacterised branch (Corollary~\ref{cor:flag-instance}) and the branching
+instance (Theorem~\ref{thm:instrument-instance}) with its register form
+(Corollary~\ref{cor:register-instance}); a squasher submodule proves that its
+construction is an instance and applies Theorem~\ref{thm:emit}. The downward
+rounding of a scalar value in (I2) is the rounding direction of
+\xref{foundations/req:rounding-direction}, and Remark~\ref{rem:unsound} shows
+that the operator form of the \tref{class-marginal identity} on the target, which
+the fourth consequence below sets aside, is unsound.
+
+\begin{definition}\label{def:reduction-instance}
+Fix the declared \tref{lattice exponent} $\kappa$ of
+Definition~\ref{def:exactadm}\,(b) and a \tref{joint alphabet} with
+\tref{classes} and \tref{class weights} $\big(\Vset,\{\Vset_t\}_{t\in\Tset},\{q_t\}\big)$
+(Definition~\ref{def:joint-family}\,(a)). Let $\SecSet_{\mathrm{dat}}$ be a
+finite ordered list of
+\term[A sector of a reduction instance's target whose blocks are the datum's matrices.]{data sector}s,
+each $s$ with a declared dimension $d_s\ge1$ and a declared
+\term[The subset of the alphabet on which a data sector's elements may be nonzero; it meets every class.]{support}
+$\Vset^{(s)}\subseteq\Vset$ that meets every class. A
+\term[A family of square matrices, one per data sector and outcome, with entries in the substrate and zero off each sector's support.]{datum}
+for these sectors is a family
+$A=\{A^{(s)}_v\}_{s\in\SecSet_{\mathrm{dat}},\,v\in\Vset}$ of $d_s\times d_s$
+matrices with entries in $\Fldi$ and $A^{(s)}_v=0$ for
+$v\notin\Vset^{(s)}$: these elements lie
+\term[Said of the elements of a datum at outcomes outside a data sector's support: exactly zero, and read, rounded or repaired by no step.]{outside the sector support},
+and no step of this contract reads, rounds or repairs them. It is an
+\term[A datum that is Hermitian, positive semidefinite and class complete in every data sector; the set D_adm.]{admissible datum},
+written $A\in\mathcal{D}_{\mathrm{adm}}$, when for every $s$:
+(a) $A^{(s)}_v=(A^{(s)}_v)^{\dagger}$ entry for entry; (b)
+$A^{(s)}_v\succeq0$, decided by \eqref{eq:psdtest}; (c) it is
+\term[Said of a datum whose elements in each class sum exactly to the class weight times the identity, in every data sector.]{class complete},
+\begin{equation}\label{eq:classcomplete}
+  \sum_{v\in\Vset_t}A^{(s)}_v\;=\;q_t\,\idon{d_s}
+  \qquad\text{exactly, for every }t\in\Tset ;
+\end{equation}
+and it is an
+\term[An admissible datum every entry of which satisfies the lattice condition of the number model; the set D_κ.]{exactly admissible datum},
+written $A\in\mathcal{D}_{\kappa}$, when in addition (d) every entry
+satisfies \eqref{eq:latinv}. These are conditions (b)--(d) of
+Definition~\ref{def:exactadm}\,(c) and the lattice invariant, read per data
+sector with the class weight $q_t$ as the constant of the completeness
+identity.
+
+A
+\term[A handed model with a finite datum and hypotheses about the rest, a target built from the datum and scalar values, a squashing relation with a transported set, and certified entries, all established for every admissible datum.]{reduction instance}
+$\mathcal{J}$ over $\big(\Vset,\{\Vset_t\},\{q_t\}\big)$ consists of the
+following four parts.
+\begin{enumerate}[label=(I\arabic*),leftmargin=3.0em]
+\item \emph{(the handed model and its datum)} A system $\Bsys$ with
+  $\Hs{\Bsys}$ separable (Definition~\ref{def:system-setting}); data sectors
+  $\SecSet_{\mathrm{dat}}$ with their declared dimensions and supports; a
+  \term[The admissible datum a reduction instance is handed, formed exactly from the numbers it was given.]{handed datum}
+  $A\in\mathcal{D}_{\mathrm{adm}}$, every entry of which is formed from the
+  numbers the instance was handed by finitely many operations in $\Fldi$; a
+  finite list of
+  \term[The finite list of hypotheses a reduction instance makes about the parts of the model its datum does not describe.]{hypotheses (H)}
+  about the rest of the model (operators without a finite presentation,
+  facts about a part of $\Hs{\Bsys}$ the datum does not describe, a register
+  POVM), each of which is either decided exactly on \tref{declared data}, the
+  request being refused where it fails, or carried as an assumption of the
+  emitted ledger; and a
+  \term[The map assigning to every admissible datum a POVM on the instance's system, under its hypotheses (H).]{model map}
+  $A'\mapsto M[A']=\{M_v[A']\}_{v\in\Vset}$ that assigns to every admissible
+  datum $A'\in\mathcal{D}_{\mathrm{adm}}$ a POVM on $\Bsys$ over $\Vset$,
+  under (H). The
+  \term[The model map of a reduction instance at its handed datum.]{handed model}
+  is $M[A]$, the model map at the handed datum. The
+  \term[The requirement that no hypothesis in (H) read an entry of the datum and that parts (I2) to (I4) hold at every admissible datum.]{stability clause}
+  requires that no hypothesis in (H) read an entry of the datum, so that (H)
+  holds of $M[A']$ for every $A'\in\mathcal{D}_{\mathrm{adm}}$ as soon as it
+  holds of the handed model; and that parts (I2)--(I4) be established
+  for \emph{every} $A'\in\mathcal{D}_{\mathrm{adm}}$ under (H), not only at
+  the handed datum.
+\item \emph{(the target)} A finite ordered
+  \term[The finite ordered list of a reduction instance's target sectors, data and scalar, each with a declared dimension.]{sector set}
+  $\SecSet=\SecSet_{\mathrm{dat}}\sqcup\SecSet_{\mathrm{sc}}$, the second
+  summand the
+  \term[A sector of a reduction instance's target on which every target element is a scalar value times the identity.]{scalar sector}s,
+  each $s\in\SecSet$ with a declared dimension $d_s\ge1$; for each scalar
+  sector $s$ and each $v\in\Vset$ a
+  \term[The number in the unit interval, satisfying the lattice condition, that a scalar sector assigns to an outcome; the values of a sector sum exactly to one.]{scalar value}
+  $\phi_s(v)\in[0,1]$ satisfying \eqref{eq:latinv} with
+  $\sum_{v\in\Vset}\phi_s(v)=1$ exactly, each formed from the numbers the
+  instance was handed by finitely many operations in $\Fld$ and, where a
+  rounding onto the lattice is needed, by the \emph{downward} rounding of a
+  quantity the value is a certified lower bound of, any complementary value
+  being recomputed from the rounded ones and never rounded on its own; the
+  target space $\Hs{\Qsys}\coloneqq\bigoplus_{s\in\SecSet}\mathbb{C}^{d_s}$
+  with sector projectors $\Pi_s$, so that $\dim\Hs{\Qsys}=\sum_sd_s$; and the
+  \term[The target POVM of a reduction instance at a datum, assigned one sector block at a time from the datum and the scalar values.]{target family}
+  \begin{equation}\label{eq:instance-target}
+    F_v[A']\;\coloneqq\;\bigoplus_{s\in\SecSet}F^{(s)}_v[A'],
+    \qquad
+    F^{(s)}_v[A']\;\coloneqq\;
+    \begin{cases}
+      A'^{(s)}_v & s\in\SecSet_{\mathrm{dat}},\\[2pt]
+      \phi_s(v)\,\idon{d_s} & s\in\SecSet_{\mathrm{sc}},
+    \end{cases}
+  \end{equation}
+  assigned one sector block at a time, so that $F_v[A']$ is
+  sector-block-diagonal \emph{by construction}: no off-sector entry is
+  written and none is to be verified. The \tref{sector map} of the instance
+  is the list $\SecSet$ with its order, each sector's dimension and its kind
+  (data or scalar), and it is what a consumer compares
+  (Definition~\ref{def:exactadm}\,(c), condition (a)). The
+  \term[The assignment of every factor of every target sector to Bob, the party whose system the handed model lives on.]{default party partition}
+  of the target assigns every factor of every $\Hs{\Qsys_s}$,
+  $s\in\SecSet$, to \emph{Bob}: \emph{every sector of the target is Bob's}.
+  That is the assignment the physical model makes: the target describes what
+  reaches Bob's receiver, the handed model living on his system $\Bsys$. An
+  instance may in addition be declared with \emph{another party's label},
+  one label for the whole instance, and then the same assignment is made
+  with that label in its place: every factor of every $\Hs{\Qsys_s}$ is that
+  party's, because the handed model lives on the system \emph{that} party
+  receives. Where no label is declared the label is Bob's. Nothing else in
+  the instance depends on the label: it is a declared identifier, compared
+  and never computed, and no condition of (I1)--(I4) reads it.
+\item \emph{(the existence theorem)} A channel
+  $\Lambda[A']=\PinS\circ\Lambda_0[A']\colon\Tcl{\Bsys}\to\Tcl{\Qsys}$,
+  given by a constructor and recorded as one, with $\PinS$ the sector
+  pinching of Proposition~\ref{prop:pinching} for $\{\Pi_s\}_{s\in\SecSet}$;
+  and a finite
+  \term[The finite set of sector-block-diagonal Hermitian operators on the target, every sector projector among them, that a reduction instance transports with their pull-backs.]{transported set}
+  $\hat O[A']$ of sector-block-diagonal Hermitian operators on $\Qsys$
+  containing every sector projector $\Pi_s$, with
+  \tref[pull-back]{pull-backs} $O[A']$; such that
+  \begin{equation}\label{eq:instance-relation}
+    \big(M[A'];\,O[A']\big)\ \dsq_{\Lambda[A']}\ \big(F[A'];\,\hat O[A']\big)
+    \qquad\text{for every }A'\in\mathcal{D}_{\mathrm{adm}}\text{ under (H)}.
+  \end{equation}
+  By linearity of $\Lambda[A']^{\dagger}$, every real linear combination of
+  transported operators is transported to the same combination of their
+  pull-backs.
+\item \emph{(the certified entries)} A finite list
+  $\CList[A']=\{(\hat O_k,\bowtie_k,c_k)\}_{k}$ of
+  \term[The constraint entries of a reduction instance, each a lattice combination of transported operators whose certificate is discharged at every admissible datum.]{certified entries},
+  each $\hat O_k$ a real linear combination of transported operators of the
+  form
+  \begin{equation}\label{eq:instance-entry}
+    \hat O_k\;=\;\sum_{v\in\Vset}\sum_{s\in\SecSet}
+      \alpha_{k,v,s}\,\Pi_sF_v[A']\Pi_s\;+\;Z_k ,
+  \end{equation}
+  with real coefficients $\alpha_{k,v,s}$ \emph{on the lattice}, each an
+  integer multiple of $2^{-\kappa}$, and $Z_k$ a real combination of sector
+  projectors with coefficients of the same kind, $\bowtie_k\in\{\preceq,=,\succeq\}$
+  and $c_k$ a declared constant on the lattice, whose \tref{certificate}
+  \eqref{eq:certificate},
+  $\Lambda[A']^{\dagger}(\hat O_k)\bowtie_kc_k\,\idon{\Bsys}$, is
+  \emph{discharged} for every $A'\in\mathcal{D}_{\mathrm{adm}}$ under (H); and
+  a
+  \term[The flag of a reduction instance recording whether its construction establishes the class-marginal identity of the model at every admissible datum.]{class-marginal flag}
+  recording whether the \tref{class-marginal identity}
+  \begin{equation}\label{eq:instance-classmarginal}
+    \sum_{v\in\Vset_t}M_v[A']\;=\;q_t\,\idon{\Bsys}
+    \qquad\text{for every }t\in\Tset
+  \end{equation}
+  is \emph{discharged}, that is, established by the construction for every
+  $A'\in\mathcal{D}_{\mathrm{adm}}$ under (H), or not.
+  The modulus bound of \eqref{eq:latinv} is not imposed on a coefficient:
+  $|x|\le1$ is a condition on a declared or emitted \emph{entry} (a value of
+  the datum, a scalar value, a declared scalar or constant), where a POVM
+  element and a completeness identity give it, and not on the coefficients
+  of a linear combination, which a branching instance forms as the
+  difference $\beta_s-c_k$ of two lattice multiples
+  (Theorem~\ref{thm:instrument-instance}), again a lattice multiple;
+  \emph{being on the lattice is all that is asked of a coefficient}. What
+  \eqref{eq:latinv} does bind is the entries of the operator the combination
+  produces (Corollary~\ref{cor:entries}\,(iii)).
+\end{enumerate}
+The instance \emph{at} a datum $A'\in\mathcal{D}_{\mathrm{adm}}$ is the same
+$\Bsys$, (H), sectors, supports, scalar values, constructor and entry rule
+with $A'$ in place of the handed datum; by the stability clause it is a
+reduction instance whenever $\mathcal{J}$ is.
+
+\emph{Five consequences, each immediate.} \emph{First}, for every
+$A'\in\mathcal{D}_{\mathrm{adm}}$ the target $\{F_v[A']\}_{v\in\Vset}$ is a
+POVM on $\Qsys$: every sector block is Hermitian and positive semidefinite,
+by (a) and (b) on a data sector and by $\phi_s(v)\in[0,1]$ on a scalar one;
+and it is complete, on a data sector because
+$\sum_{v\in\Vset}A'^{(s)}_v=\sum_{t}\sum_{v\in\Vset_t}A'^{(s)}_v
+=\sum_tq_t\idon{d_s}=\idon{d_s}$ by \eqref{eq:classcomplete} and
+$\sum_tq_t=1$, on a scalar sector because $\sum_v\phi_s(v)=1$. Its data
+sectors \emph{are} the datum, entry by entry, so the emitted target carries
+the datum and nothing else of the model. \emph{Second}, every $F_v[A']$,
+every $\Pi_s$ and every transported operator is sector-block-diagonal, so
+Corollary~\ref{cor:blockdiag}\,(i) applies: a relation established for
+$\Lambda_0[A']$ holds for $\PinS\circ\Lambda_0[A']$ with the same target,
+the same transported set and the same pull-backs, which is why (I3) may be
+stated with the pinching in front, and the squashed analysis may be
+restricted to block-diagonal states without excluding a reachable one
+(Corollary~\ref{cor:blockdiag}\,(iii)). \emph{Third}, the pull-back of every
+sector projector is positive semidefinite, $\Lambda[A']^{\dagger}(\Pi_s)
+\succeq0$, because the adjoint of a channel is a positive map, and
+$\sum_s\Lambda[A']^{\dagger}(\Pi_s)=\idon{\Bsys}$ by unitality; so
+$(\Pi_s,\succeq,0)$ carries the certificate of
+Corollary~\ref{cor:pullback}\,(ii) for \emph{every} instance and needs no
+part of (I4) to say so. \emph{That certificate travels with the transported
+set, whatever the request carries}, which is where (I3) puts every sector
+projector and where the artefact records the certificate case per entry; it
+becomes an \emph{entry} of $\CList$ only where a caller requests it \emph{as
+an entry} (Corollary~\ref{cor:entries}\,(i)), the emitted list being empty
+where the request carries no entry. \emph{Fourth}, the relation pulls a class
+sum of the target back to the class sum of the model,
+$\Lambda[A']^{\dagger}\big(\sum_{v\in\Vset_t}F_v[A']\big)
+=\sum_{v\in\Vset_t}M_v[A']$, by linearity; so
+\eqref{eq:instance-classmarginal} holds of the model exactly when the
+pull-back identity $\Lambda[A']^{\dagger}\big(\sum_{v\in\Vset_t}F_v[A']\big)
+=q_t\idon{\Bsys}$ does, which is the expectation-form entry
+Corollary~\ref{cor:entries}\,(ii) emits where the flag says it is discharged,
+and never the operator identity
+$\sum_{v\in\Vset_t}F_v[A']=q_t\idon{\Qsys}$, which fails on every scalar
+sector whose values do not sum to $q_t$ over $\Vset_t$. \emph{Fifth},
+$\dim\Hs{\Qsys}=\sum_sd_s$ is a sum of declared dimensions, finite, and the
+sector map is a comparison of declared labels; both are read off the
+declaration with no arithmetic performed.
+
+The link of Definition~\ref{def:link} an instance produces is the relation
+\eqref{eq:instance-relation} at the \tref{declared datum}, with the transported set
+and the entry list as its slots, and its chain (Definition~\ref{def:chain})
+is that link preceded by whatever post-processing the instance's submodule
+applies before it.
+\end{definition}

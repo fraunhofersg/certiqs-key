@@ -1,0 +1,39 @@
+% ---
+% id: receiver/ass:vac
+% kind: ass
+% title: "Vacuum on undeclared input modes"
+% summary: >-
+%   Undeclared input modes and dilation modes start in vacuum. A mode that can
+%   carry light to a detector is declared, as a channel mode if the adversary
+%   can populate it and as a source mode if the legitimate party does.
+% prominence: standard
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-VAC
+% verification: never
+% category: receiver
+% affects: [secrecy]
+% refines: A-TRUST
+% user_statement: >-
+%   Every optical input of your receiver that you did not declare as an
+%   input, and every
+%   internal loss or ancilla mode, receives no light. A mode that can carry
+%   light to a detector is declared: as a channel mode if an attacker could
+%   put light into it, and as a source mode if your own equipment, for example
+%   a probe laser, does.
+% lean:
+% ---
+
+Vacuum on every undeclared input is what lets the receiver be described by
+the columns of its declared inputs alone.
+
+\begin{assumption}\label{ass:vac}
+(i) Every mode of $\Modes\setminus\Inp$, and every mode of the dilation
+$\Env$, carries the vacuum state at the input;
+(ii) every mode that can carry a non-vacuum state and can couple to a port is
+declared in $\Inp$: in $\InpC$ if the adversary can populate it, in $\InpS$
+if the legitimate party does.
+\end{assumption}

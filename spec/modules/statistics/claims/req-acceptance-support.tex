@@ -1,0 +1,33 @@
+% ---
+% id: statistics/req:acceptance-support
+% kind: req
+% title: "The emitted acceptance support"
+% summary: >-
+%   For a canonical box the engine emits the outcomes with a positive upper
+%   bound, a superset of the acceptance support that is never substituted for
+%   it; for a singleton it emits the support of the vector, which is the
+%   acceptance support itself.
+% prominence: standard
+% status: implemented
+% uses: [thm:box-oracle]
+% mentions: [meat-core/frank-wolfe/def:first-order-setting]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.taxonomy:acceptance_support
+% lean:
+% ---
+
+Theorem~\ref{thm:box-oracle}\,(i) shows that the outcomes with a positive upper bound
+contain the support of every point of the box, and that they can contain more
+than the union of those supports.
+
+\begin{requirement}\label{req:acceptance-support}
+The engine emits under \iface{acceptance_support} the set
+$\Chatset^{+}=\{\hat c\in\Chatset:q^{+}(\hat c)>0\}$ of
+Theorem~\ref{thm:box-oracle}\,(i) for a geometry in \tref{canonical box form}, and
+the set $\operatorname{supp}\mathbf{q}^{\ast}$ for a $\mathrm{singleton}$
+geometry. For a box the emitted set is a superset of the acceptance support
+$\Chacc$ of \xref{meat-core/frank-wolfe/def:first-order-setting} and is never to be
+substituted for it; for a singleton the emitted set and $\Chacc$ coincide.
+\end{requirement}

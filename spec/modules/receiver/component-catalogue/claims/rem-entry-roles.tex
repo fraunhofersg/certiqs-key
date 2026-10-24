@@ -1,0 +1,45 @@
+% ---
+% id: receiver/component-catalogue/rem:entry-roles
+% kind: rem
+% title: "Physical roles of the catalogue entries"
+% summary: >-
+%   The mirror's handedness flip is a choice of frame, the phase shifter is the
+%   interferometer's control knob, and fibre, coupling, filter and connector
+%   losses are loss entries at different sites. Route (ii) is the special case
+%   of route (iii) with one generic block spanning the receiver.
+% prominence: standard
+% status: accepted
+% uses: [thm:catalogue-admissibility]
+% mentions: [receiver/detector-imperfections/thm:efficiency, def:catalogue-entries]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:entry-roles}
+Read physically, the entries of Definition~\ref{def:catalogue-entries} play
+the following roles.
+\begin{itemize}[leftmargin=1.6em]
+\item \emph{C2.} Entry C2 is the polarization-dependent beamsplitter of
+  entry C1 with its per-output losses, written in the mode order
+  $(p_1H,p_1V,p_2H,p_2V)$; its ideal preset $t_H=1$, $t_V=0$ is the extreme
+  case, the polarizing beamsplitter.
+\item \emph{C3.} The preset $\mathrm{HWP}(\pi/8)$ is the $22.5^{\circ}$
+  plate that maps the rectilinear basis to the diagonal one.
+\item \emph{C5.} The handedness flip is a declared choice of coordinate frame,
+  not a physical claim.
+\item \emph{C6.} This is the interferometric receiver's control knob.
+\item \emph{C7.} This is the loss primitive: fibre attenuation, coupling
+  efficiency, spectral-filter insertion loss and connector loss are all C7 at
+  different \emph{sites}, and the sites are what Theorem~\ref{thm:efficiency} is
+  about.
+\item \emph{C8.} It is contractive and not unitary unless $t=t_\perp=1$: the
+  blocked polarization is loss.
+\item \emph{C10.} This entry makes route (ii) a special case of route (iii).
+  A user with a measured \tref{instrument matrix}, or with a component the
+  catalogue does not have, declares one block, and a route-(ii) declaration
+  is recovered as the route-(iii) declaration of exactly one C10 block
+  spanning the whole receiver.
+\end{itemize}
+\end{remark}

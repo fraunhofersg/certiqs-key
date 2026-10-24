@@ -1,0 +1,60 @@
+% ---
+% id: receiver/prop:normord
+% kind: prop
+% title: "Normal-ordered form of a lifted no-click operator"
+% summary: >-
+%   The lift of 1 − A equals the normally ordered exponential of minus the
+%   quadratic form of A in the mode operators, a series that is a finite sum on
+%   each photon-number block. It is the form of the optics literature; no proof
+%   of this contract uses it.
+% prominence: standard
+% status: accepted
+% uses: [lem:fock-functor, lem:fock-block-spectrum]
+% mentions: [rem:whyprojector]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Remark~\ref{rem:whyprojector} says why the derivations of this contract do
+without this form.
+
+\begin{proposition}\label{prop:normord}
+For $0\preceq A\preceq\id$ on $\mathcal{K}_0$,
+\begin{equation}\label{eq:normordform}
+  \Fock(\id-A)=\normord{\exp\!\big(-\vec a^\dagger A\vec a\big)}
+  \coloneqq\sum_{p\ge0}\frac{(-1)^p}{p!}
+  \sum_{i_1\dots i_p}\sum_{j_1\dots j_p}
+  \Big(\prod_{r=1}^{p}A_{i_rj_r}\Big)
+  a_{i_1}^\dagger\cdots a_{i_p}^\dagger a_{j_1}\cdots a_{j_p},
+\end{equation}
+the series acting on each photon-number block as a finite sum.
+\end{proposition}
+
+\begin{proof}
+Both sides are unchanged in form under $A\mapsto UAU^\dagger$ combined with
+conjugation by $\Fock(U)$: for the left side by
+Lemma~\ref{lem:fock-functor}\,(ii), for the right side because
+Lemma~\ref{lem:fock-functor}\,(v) maps creation operators to combinations of
+creation operators and annihilation operators to combinations of annihilation
+operators, so no creator crosses an annihilator and the normal-ordered form
+survives with $A$ replaced by $UAU^\dagger$. It therefore suffices to prove
+\eqref{eq:normordform} for diagonal $A=\Lambda$. For diagonal $\Lambda$ only
+the terms with $i_r=j_r$ survive, operators of distinct modes commute, and
+collecting the $p!/\vec p\,!$ tuples with a given multiplicity vector $\vec p$
+(where $\vec p\,!\coloneqq\prod_jp_j!$) turns the right side into
+$\prod_j\sum_{p_j\ge0}\frac{(-\lambda_j)^{p_j}}{p_j!}
+a_j^{\dagger p_j}a_j^{p_j}$. On an occupation vector, the standard identity
+$a_j^{\dagger p}a_j^{p}\ket{\vec m}=\frac{m_j!}{(m_j-p)!}\ket{\vec m}$ for
+$p\le m_j$ and $0$ otherwise gives, by the binomial theorem,
+\begin{equation}\label{eq:singlemode}
+  \sum_{p\ge0}\frac{(-\lambda_j)^{p}}{p!}a_j^{\dagger p}a_j^{p}\ket{\vec m}
+  =\sum_{p=0}^{m_j}\binom{m_j}{p}(-\lambda_j)^p\ket{\vec m}
+  =(1-\lambda_j)^{m_j}\ket{\vec m} ,
+\end{equation}
+so the right side of \eqref{eq:normordform} acts on $\ket{\vec m}$ as
+$\prod_j(1-\lambda_j)^{m_j}$ --- which is exactly the action of
+$\Fock(\id-\Lambda)$ computed in the proof of Lemma~\ref{lem:fock-block-spectrum}.
+Both sides agree on an orthonormal basis, hence are equal.
+\end{proof}

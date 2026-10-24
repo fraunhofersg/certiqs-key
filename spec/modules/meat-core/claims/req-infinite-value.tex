@@ -1,0 +1,37 @@
+% ---
+% id: meat-core/req:infinite-value
+% kind: req
+% title: "Propagation of an infinite value"
+% summary: >-
+%   The engine carries h_low = +∞ as a value of its extended-real output and
+%   clamps it to no finite range. At +∞ it emits no key length and reports the
+%   mismatch between the declaration and the acceptance set.
+% prominence: standard
+% status: accepted
+% uses: [prop:value-range, thm:keylength]
+% mentions: [rem:hlow-range, def:feasible, def:admissible-declaration, meat-core/frank-wolfe/thm:firstorder]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The value has no finite a-priori ceiling, and it is $+\infty$ when the
+declared acceptance set is infeasible against the declaration
+(Proposition~\ref{prop:value-range}\,(iii), (iv)); on such a declaration no
+attack the declared list admits is accepted and no run produces a key
+(Remark~\ref{rem:hlow-range}). It is $+\infty$ as well when the
+\tref{feasible set} itself is empty, \eqref{eq:hlow-def} being then an infimum
+over nothing; on an \tref{admissible declaration} that cannot happen
+(Definition~\ref{def:admissible-declaration}\,(vii)), and the bounds of
+Theorem~\ref{thm:firstorder}\,(v) cover it where condition (vii)
+is not decided.
+
+\begin{requirement}\label{req:infinite-value}
+The engine propagates $\hlow=+\infty$, the infeasibility of the declared
+acceptance set, rather than clamping it to any finite range; its output
+\iface{h_low} has the extended-real domain $[0,+\infty]$. If $\hlow=+\infty$
+reaches Theorem~\ref{thm:keylength}, the engine emits no key-length claim and
+no numeric key length, and reports the mismatch between the declaration and
+the acceptance set (\iface{infeasible_acceptance_set}).
+\end{requirement}

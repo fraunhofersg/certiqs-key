@@ -1,0 +1,42 @@
+% ---
+% id: reductions/rem:criteria
+% kind: rem
+% title: Correctness, secrecy and completeness as criteria
+% summary: >-
+%   Correctness and secrecy in the composable sense are functions of the output
+%   state, so equality of output states transfers them. Completeness compares
+%   the protocol against an honest reference channel, is not of that form and
+%   is not transferred.
+% prominence: standard
+% status: accepted
+% uses: [def:criterion]
+% mentions: [def:licensed, thm:transfer, rem:completeness]
+% assumes: [A-MEAS]
+% refs:
+%   - "portmann2022security, Eqs. (13)-(14)"
+%   - "portmann2022security, Eq. (9)"
+%   - "portmann2022security, Eq. (15)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:criteria}
+Correctness and secrecy in the composable sense ---
+$\Pr[K_A\neq K_B]\le\varepsilon_{\rm cor}$ and
+$(1-p_{\mathrm{abort}})\,D(\rho_{AE},\pi_A\otimes\rho_E)\le
+\varepsilon_{\rm sec}$ of \cite[Eqs.~(13)--(14)]{portmann2022security}, in
+which $\pi_A$ is the \emph{fully mixed key state} (that source writes $\tau_A$
+for it; it is \emph{not} the trusted marginal $\tau_A$ of
+Definition~\ref{def:licensed}, and the two never occur in one formula here)
+--- are both functions of the output state in the sense of
+Definition~\ref{def:criterion}, because the ideal object each compares
+against is a fixed channel applied to the protocol's own output. What is
+\emph{not} of that form, and is therefore not transferred by
+Theorem~\ref{thm:transfer}, is a statement comparing the protocol against an
+\emph{honest reference channel}: the completeness criterion of
+\cite[Eq.~(9)]{portmann2022security} --- the second construction condition,
+evaluated against a blank adversarial interface, from which that paper derives
+robustness at its \cite[Eq.~(15)]{portmann2022security} --- and completeness
+generally. Those are the concern of a different module, and
+Remark~\ref{rem:completeness} records why no gap opens.
+\end{remark}

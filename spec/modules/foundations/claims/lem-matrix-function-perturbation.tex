@@ -1,0 +1,241 @@
+% ---
+% id: foundations/lem:matrix-function-perturbation
+% kind: lem
+% title: "Perturbation bounds for matrix functions"
+% summary: >-
+%   On Hermitian matrices with spectra in an interval, a function with
+%   derivative bounded by L moves at most L times the perturbation in Frobenius
+%   norm, and the divided-difference map of x^p at most p(1−p)a^(p−2) times it
+%   above a floor a. Close arguments get a second-order bound.
+% prominence: technical
+% status: implemented
+% uses: [cor:least-eigenvalue-over-enclosure]
+% mentions: [meat-core/lem:dk, meat-core/thm:gradient]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.balls:deriv_power
+% lean:
+% ---
+
+The gradient of the pinched trace power is built from powers of positive
+definite matrices and from the divided-difference map of $x\mapsto x^{p}$
+(\xref{meat-core/lem:dk}, \xref{meat-core/thm:gradient}). An evaluation in
+ball arithmetic has such a matrix only as an exactly unitary $U$ and an exact
+diagonal $\Lambda$ with $U^{\dagger}NU=\Lambda+E$ and $E$ small; the lemma
+says how far each quantity can move under $E$. Part~(i) bounds the values
+and traces of a function, part~(ii) moves them through $U$, and part~(iii)
+bounds the divided-difference map by an integral representation of
+$x\mapsto x^{p}$, whose constant comes out exactly without being computed.
+Part~(iv) encloses a divided difference of two close arguments without the
+cancellation of the quotient.
+
+\begin{lemma}\label{lem:matrix-function-perturbation}
+Let $n\ge1$, write $\|\cdot\|_{\mathrm F}$ and $\opn{\cdot}$ as in
+Corollary~\ref{cor:least-eigenvalue-over-enclosure}, and let $P$, $Q$ be
+Hermitian $n\times n$ matrices. For a real function $f$ defined on a set
+containing the spectrum of $P$, with $P=\sum_a\mu_a\Pi_a$ its spectral
+decomposition into distinct eigenvalues $\mu_a$ and spectral projectors
+$\Pi_a$, put $f(P)\coloneqq\sum_af(\mu_a)\Pi_a$. For real $x\ne y$ put
+$f^{[1]}(x,y)\coloneqq(f(x)-f(y))/(x-y)$, and $f^{[1]}(x,x)\coloneqq f'(x)$
+where $f$ is differentiable at $x$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{(Values and traces.)} Let $I$ be an interval containing the
+  spectra of $P$ and $Q$, let $f$ be continuous on $I$ and differentiable in
+  its interior, and let $|f'|\le L$ there. Then
+  \begin{equation}\label{eq:mf-lipschitz}
+    \|f(P)-f(Q)\|_{\mathrm F}\le L\,\|P-Q\|_{\mathrm F},
+    \qquad
+    \big|\tr f(P)-\tr f(Q)\big|\le\sqrt n\,L\,\|P-Q\|_{\mathrm F},
+  \end{equation}
+  and every entry of $f(P)-f(Q)$ has modulus at most
+  $L\,\|P-Q\|_{\mathrm F}$. For $f(x)=x^{s}$ on $I=[a,b]$ with $0<a\le b$,
+  one may take $L=s\,a^{s-1}$ if $0<s\le1$ and $L=s\,b^{s-1}$ if $s\ge1$.
+\item \emph{(Unitary covariance.)} For every unitary $U$,
+  $f(UPU^{\dagger})=Uf(P)U^{\dagger}$, and
+  $\|UXU^{\dagger}\|_{\mathrm F}=\|X\|_{\mathrm F}$ for every $X$.
+\item \emph{(The divided-difference map of a power.)} Let $0<p<1$ and
+  $f(x)=x^{p}$ on $(0,\infty)$. For a positive definite $P=\sum_a\mu_a\Pi_a$
+  and every complex $n\times n$ matrix $H$ put
+  \begin{equation}\label{eq:dd-map}
+    \mathrm{D}_P[H]\coloneqq\sum_{a,b}f^{[1]}(\mu_a,\mu_b)\,\Pi_aH\Pi_b .
+  \end{equation}
+  \begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+  \item $J_p\coloneqq\int_0^{\infty}u^{p-1}(1+u)^{-1}\,\mathrm du$ is finite
+    and positive, and with $c_p\coloneqq1/J_p$,
+    \begin{equation}\label{eq:dd-integral}
+      \mathrm{D}_P[H]=c_p\int_0^{\infty}t^{p}\,(P+t)^{-1}H(P+t)^{-1}\,\mathrm dt,
+    \end{equation}
+    the integral taken entry by entry, each entry's integrand absolutely
+    integrable.
+  \item If $Q$ is positive definite as well and $0<a\le\min\{\lmin(P),
+    \lmin(Q)\}$, then
+    \begin{equation}\label{eq:dd-lipschitz}
+      \big\|\mathrm{D}_P[H]-\mathrm{D}_Q[H]\big\|_{\mathrm F}
+      \;\le\;p(1-p)\,a^{p-2}\,\opn{P-Q}\,\|H\|_{\mathrm F}
+      \;\le\;p(1-p)\,a^{p-2}\,\|P-Q\|_{\mathrm F}\,\|H\|_{\mathrm F}.
+    \end{equation}
+  \item For every unitary $U$,
+    $\mathrm{D}_{UPU^{\dagger}}[H]=U\,\mathrm{D}_P[U^{\dagger}HU]\,U^{\dagger}$;
+    and if $P=\operatorname{diag}(d_1,\dots,d_n)$, the $d_k>0$ not
+    necessarily distinct, then
+    $\mathrm{D}_P[H]_{kl}=f^{[1]}(d_k,d_l)\,H_{kl}$ for all $k,l$.
+  \end{enumerate}
+\item \emph{(Close arguments.)} Let $y\le x$, let $f$ be three times
+  continuously differentiable on an open interval containing $[y,x]$, and put
+  $m\coloneqq(x+y)/2$ and $d\coloneqq x-y$. Then
+  \begin{equation}\label{eq:dd-close}
+    \big|f^{[1]}(x,y)-f'(m)\big|\;\le\;\frac{d^{2}}{24}\,
+    \max_{\xi\in[y,x]}|f'''(\xi)| .
+  \end{equation}
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{(i).} Let $\{u_i\}$ and $\{v_j\}$ be orthonormal eigenbases of $P$ and
+$Q$, with $Pu_i=p_iu_i$ and $Qv_j=q_jv_j$, and let $U$ and $V$ be the unitary
+matrices with these columns. For every matrix $A$, $U^{\dagger}AV$ has the
+entries $u_i^{\dagger}Av_j$, and
+$\|U^{\dagger}AV\|_{\mathrm F}^{2}=\tr[V^{\dagger}A^{\dagger}UU^{\dagger}AV]
+=\tr[A^{\dagger}A]=\|A\|_{\mathrm F}^{2}$, so
+$\|A\|_{\mathrm F}^{2}=\sum_{i,j}|u_i^{\dagger}Av_j|^{2}$. Since
+$u_i^{\dagger}f(P)=f(p_i)u_i^{\dagger}$ and $f(Q)v_j=f(q_j)v_j$,
+\begin{equation*}
+  u_i^{\dagger}\big(f(P)-f(Q)\big)v_j=\big(f(p_i)-f(q_j)\big)u_i^{\dagger}v_j,
+  \qquad
+  u_i^{\dagger}(P-Q)v_j=(p_i-q_j)\,u_i^{\dagger}v_j .
+\end{equation*}
+Both $p_i$ and $q_j$ lie in the interval $I$, and so does the segment between
+them; if $p_i\ne q_j$, the mean value theorem on that segment gives
+$|f(p_i)-f(q_j)|\le L|p_i-q_j|$, and if $p_i=q_j$ both sides vanish. Hence
+$|u_i^{\dagger}(f(P)-f(Q))v_j|\le L|u_i^{\dagger}(P-Q)v_j|$ for all $i,j$,
+and summing the squares gives the first inequality of
+\eqref{eq:mf-lipschitz}. Every entry of a matrix $A$ has modulus at most
+$\|A\|_{\mathrm F}$, and
+$|\tr A|=|\sum_kA_{kk}|\le\sqrt n\,(\sum_k|A_{kk}|^{2})^{1/2}
+\le\sqrt n\,\|A\|_{\mathrm F}$ by the Cauchy--Schwarz inequality, which with
+$A=f(P)-f(Q)$ gives the rest. For $f(x)=x^{s}$, $f'(x)=s\,x^{s-1}$, which is
+non-increasing on $[a,b]$ if $s\le1$ and non-decreasing if $s\ge1$, so its
+maximum there is $s\,a^{s-1}$, respectively $s\,b^{s-1}$.
+
+\emph{(ii).} The matrices $U\Pi_aU^{\dagger}$ are orthogonal projectors,
+mutually orthogonal and summing to the identity, and
+$UPU^{\dagger}=\sum_a\mu_aU\Pi_aU^{\dagger}$, so they are the spectral
+projectors of $UPU^{\dagger}$ and
+$f(UPU^{\dagger})=\sum_af(\mu_a)U\Pi_aU^{\dagger}=Uf(P)U^{\dagger}$. And
+$\|UXU^{\dagger}\|_{\mathrm F}^{2}=\tr[UX^{\dagger}U^{\dagger}UXU^{\dagger}]
+=\tr[X^{\dagger}X]$.
+
+\emph{(iii)(a), Step 1 (the constant).} The integrand of $J_p$ is positive
+and continuous on $(0,\infty)$, at most $u^{p-1}$ on $(0,1]$, integrable
+there since $p>0$, and at most $u^{p-2}$ on $[1,\infty)$, integrable there
+since $p<1$; so $0<J_p<\infty$. For $x>0$ the substitution $t=xu$ gives
+\begin{equation*}
+  \int_0^{\infty}t^{p-1}\frac{x}{x+t}\,\mathrm dt
+  =\int_0^{\infty}x^{p-1}u^{p-1}\frac{x}{x(1+u)}\,x\,\mathrm du
+  =x^{p}J_p,
+  \qquad\text{that is,}\qquad
+  x^{p}=c_p\int_0^{\infty}t^{p-1}\frac{x}{x+t}\,\mathrm dt .
+\end{equation*}
+
+\emph{Step 2 (two integrals).} Integration by parts on $[\varepsilon,R]$,
+$0<\varepsilon<R$, gives
+\begin{gather*}
+  \int_{\varepsilon}^{R}\frac{u^{p-1}}{1+u}\,\mathrm du
+  =\Big[\frac{u^{p}}{p(1+u)}\Big]_{\varepsilon}^{R}
+  +\frac1p\int_{\varepsilon}^{R}\frac{u^{p}}{(1+u)^{2}}\,\mathrm du,\\
+  \int_{\varepsilon}^{R}\frac{u^{p}}{(1+u)^{3}}\,\mathrm du
+  =\Big[-\frac{u^{p}}{2(1+u)^{2}}\Big]_{\varepsilon}^{R}
+  +\frac p2\int_{\varepsilon}^{R}\frac{u^{p-1}}{(1+u)^{2}}\,\mathrm du .
+\end{gather*}
+The boundary terms tend to $0$ as $\varepsilon\to0$ and $R\to\infty$, since
+$0<p<1$, and the integrals on the right converge, their integrands being
+bounded by $u^{p}$ or $u^{p-1}$ near $0$ and by $u^{p-2}$ or $u^{p-3}$ at
+infinity. So $\int_0^{\infty}u^{p}(1+u)^{-2}\,\mathrm du=pJ_p$. Since
+$u^{p-1}(1+u)^{-2}=u^{p-1}(1+u)^{-1}-u^{p}(1+u)^{-2}$, the numerator of the
+difference being $u^{p-1}\big((1+u)-u\big)$,
+$\int_0^{\infty}u^{p-1}(1+u)^{-2}\,\mathrm du=J_p-pJ_p=(1-p)J_p$, and so
+\begin{equation*}
+  \int_0^{\infty}\frac{u^{p}}{(1+u)^{2}}\,\mathrm du=p\,J_p,
+  \qquad
+  \int_0^{\infty}\frac{u^{p}}{(1+u)^{3}}\,\mathrm du
+  =\frac{p(1-p)}{2}\,J_p .
+\end{equation*}
+
+\emph{Step 3 (divided differences).} Let $x,y>0$. If $x\ne y$, then
+$\frac{x}{x+t}-\frac{y}{y+t}=\frac{t(x-y)}{(x+t)(y+t)}$, and the two
+integrals of Step~1 converge separately, so
+$f^{[1]}(x,y)=c_p\int_0^{\infty}t^{p}\,(x+t)^{-1}(y+t)^{-1}\,\mathrm dt$.
+If $x=y$, the substitution $t=xu$ and Step~2 give
+$c_p\int_0^{\infty}t^{p}(x+t)^{-2}\,\mathrm dt
+=c_p\,x^{p-1}\int_0^{\infty}u^{p}(1+u)^{-2}\,\mathrm du=p\,x^{p-1}=f'(x)$.
+So in either case
+\begin{equation*}
+  f^{[1]}(x,y)=c_p\int_0^{\infty}\frac{t^{p}}{(x+t)(y+t)}\,\mathrm dt .
+\end{equation*}
+
+\emph{Step 4 (the map).} For $t\ge0$, $P+t$ is positive definite with
+$(P+t)^{-1}=\sum_a(\mu_a+t)^{-1}\Pi_a$, so
+$t^{p}(P+t)^{-1}H(P+t)^{-1}=\sum_{a,b}t^{p}(\mu_a+t)^{-1}(\mu_b+t)^{-1}
+\Pi_aH\Pi_b$, a finite sum whose scalar coefficients are integrable by
+Step~3. Integrating term by term and using Step~3 gives
+\eqref{eq:dd-integral}.
+
+\emph{(iii)(b).} Put $A_t\coloneqq(P+t)^{-1}$ and $B_t\coloneqq(Q+t)^{-1}$
+for $t\ge0$. The eigenvalues of $A_t$ are $(\mu+t)^{-1}$ for the eigenvalues
+$\mu\ge a$ of $P$, so $\opn{A_t}\le(a+t)^{-1}$, and likewise
+$\opn{B_t}\le(a+t)^{-1}$. From
+$A_t-B_t=A_t\big((Q+t)-(P+t)\big)B_t=A_t(Q-P)B_t$ and the
+submultiplicativity of the operator norm,
+$\opn{A_t-B_t}\le\opn{P-Q}(a+t)^{-2}$. For matrices $X$, $Y$, $W$,
+$\|XYW\|_{\mathrm F}\le\opn{X}\,\|Y\|_{\mathrm F}\,\opn{W}$: column by
+column, $\|XY\|_{\mathrm F}^{2}=\sum_l\|Xy_l\|^{2}\le\opn{X}^{2}
+\|Y\|_{\mathrm F}^{2}$ for the columns $y_l$ of $Y$, and
+$\|YW\|_{\mathrm F}=\|W^{\dagger}Y^{\dagger}\|_{\mathrm F}
+\le\opn{W}\,\|Y\|_{\mathrm F}$, the operator norm being invariant under the
+adjoint. Since $A_tHA_t-B_tHB_t=(A_t-B_t)HA_t+B_tH(A_t-B_t)$,
+\begin{equation*}
+  \|A_tHA_t-B_tHB_t\|_{\mathrm F}\le2\,\opn{P-Q}\,\|H\|_{\mathrm F}\,(a+t)^{-3}.
+\end{equation*}
+By (a), $\mathrm{D}_P[H]-\mathrm{D}_Q[H]$ is the entrywise integral of
+$\Phi(t)\coloneqq c_pt^{p}(A_tHA_t-B_tHB_t)$. For such an integral
+$\Delta=\int_0^{\infty}\Phi(t)\,\mathrm dt$ with
+$\int_0^{\infty}\|\Phi(t)\|_{\mathrm F}\,\mathrm dt<\infty$,
+$\|\Delta\|_{\mathrm F}\le\int_0^{\infty}\|\Phi(t)\|_{\mathrm F}\,\mathrm dt$:
+if $\Delta\ne0$, put $W\coloneqq\Delta/\|\Delta\|_{\mathrm F}$; then
+$\|\Delta\|_{\mathrm F}=\operatorname{Re}\tr[W^{\dagger}\Delta]
+=\int_0^{\infty}\operatorname{Re}\tr[W^{\dagger}\Phi(t)]\,\mathrm dt
+\le\int_0^{\infty}\|\Phi(t)\|_{\mathrm F}\,\mathrm dt$, by linearity of the
+entrywise integral and the Cauchy--Schwarz inequality for
+$(X,Y)\mapsto\tr[X^{\dagger}Y]$. Hence, substituting $t=au$ and using
+Step~2,
+\begin{equation*}
+  \|\mathrm{D}_P[H]-\mathrm{D}_Q[H]\|_{\mathrm F}
+  \le2c_p\,\opn{P-Q}\,\|H\|_{\mathrm F}\int_0^{\infty}\frac{t^{p}}{(a+t)^{3}}\,\mathrm dt
+  =2c_p\,a^{p-2}\,\frac{p(1-p)}{2}\,J_p\,\opn{P-Q}\,\|H\|_{\mathrm F},
+\end{equation*}
+which is the first inequality of \eqref{eq:dd-lipschitz}, as $c_pJ_p=1$. The
+second is $\opn{P-Q}\le\|P-Q\|_{\mathrm F}$
+(Corollary~\ref{cor:least-eigenvalue-over-enclosure}\,(i)).
+
+\emph{(iii)(c).} By the argument of (ii), the spectral projectors of
+$UPU^{\dagger}$ are the $U\Pi_aU^{\dagger}$, with the same eigenvalues, so
+$\mathrm{D}_{UPU^{\dagger}}[H]=\sum_{a,b}f^{[1]}(\mu_a,\mu_b)\,
+U\Pi_aU^{\dagger}HU\Pi_bU^{\dagger}=U\,\mathrm{D}_P[U^{\dagger}HU]\,U^{\dagger}$.
+If $P$ is diagonal, $\Pi_a=\sum_{k:\,d_k=\mu_a}e_ke_k^{\dagger}$, so
+$(\Pi_aH\Pi_b)_{kl}=H_{kl}$ when $d_k=\mu_a$ and $d_l=\mu_b$ and $0$
+otherwise; summing over $a$ and $b$ leaves
+$f^{[1]}(d_k,d_l)H_{kl}$ at $(k,l)$.
+
+\emph{(iv).} If $d=0$, then $f^{[1]}(x,y)=f'(x)=f'(m)$. Otherwise put
+$h\coloneqq d/2>0$. Taylor's theorem with the Lagrange remainder gives
+$\xi_{+}\in(m,m+h)$ and $\xi_{-}\in(m-h,m)$ with
+\begin{equation*}
+  f(m\pm h)=f(m)\pm hf'(m)+\frac{h^{2}}2f''(m)\pm\frac{h^{3}}6f'''(\xi_{\pm}),
+\end{equation*}
+so $f(x)-f(y)=2hf'(m)+\frac{h^{3}}6\big(f'''(\xi_{+})+f'''(\xi_{-})\big)$.
+Dividing by $d=2h$,
+$f^{[1]}(x,y)-f'(m)=\frac{h^{2}}{12}\big(f'''(\xi_{+})+f'''(\xi_{-})\big)$,
+whose modulus is at most $\frac{h^{2}}6\max_{[y,x]}|f'''|
+=\frac{d^{2}}{24}\max_{[y,x]}|f'''|$.
+\end{proof}

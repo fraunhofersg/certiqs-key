@@ -1,0 +1,32 @@
+% ---
+% id: statistics/singleton/req:singleton-budget-record
+% kind: req
+% title: "The completeness budget of a declared singleton"
+% summary: >-
+%   An instance that declares a singleton acceptance set records the least
+%   completeness budget of [[thm:singleton-completeness]], or, where the honest run can never
+%   meet the set, that no admissible budget exists and never a budget of one.
+%   It claims no completeness the set does not have.
+% prominence: standard
+% status: accepted
+% uses: [thm:singleton-completeness]
+% mentions: [rem:singleton-honest]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The \tref{construction map} never emits a singleton
+(Remark~\ref{rem:singleton-honest}), but an \tref{instance} may declare one,
+and Theorem~\ref{thm:singleton-completeness} gives its completeness exactly.
+
+\begin{requirement}\label{req:singleton-budget-record}
+An instance that declares a singleton acceptance set $\{\mathbf{q}^{\ast}\}$
+records the completeness budget $\ecomp$ of \eqref{eq:singleton-budget}, or,
+in the degenerate case of Theorem~\ref{thm:singleton-completeness}\,(ii) where the accept
+probability is exactly $0$, records that \emph{no} admissible completeness
+budget exists rather than a budget of $1$, which is the honest reading of a
+geometry the honest run can never satisfy. In either case it claims no
+completeness the set does not have.
+\end{requirement}

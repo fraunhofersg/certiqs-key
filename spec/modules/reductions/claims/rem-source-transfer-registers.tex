@@ -1,0 +1,75 @@
+% ---
+% id: reductions/rem:source-transfer-registers
+% kind: rem
+% title: "The released signals as systems in transit"
+% summary: >-
+%   The transmitted systems enter the first-round attack as systems in transit,
+%   not as registers of the adversary, and the virtual one is finite-dimensional.
+%   A round-by-round attack with a memory of any dimension is reached from this
+%   type by a limit ([[meat-core/lem:memory-lift]]).
+% prominence: standard
+% status: accepted
+% uses: [lem:source-transfer]
+% mentions: [def:system-setting, def:roundmodel, thm:two-sided, transmitter/def:source-spec, transmitter/ass:seq, meat-core/lem:memory-lift]
+% assumes: []
+% refs:
+%   - "tupkary2026decoy, Lemma 9.1, Eq. (140)"
+%   - "tupkary2026decoy, Rem. 8.4"
+%   - "tupkary2026decoy, Thm. A.1, Rem. A.2"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:source-transfer-registers}
+\emph{What the released signals are.} The first round's input register in
+\eqref{eq:srcstrategy} is $\Asig^{n}\otimes E_0$, of which \emph{only $E_0$}
+is one of the adversary's registers, finite-dimensional as every register of
+the round model of Definition~\ref{def:roundmodel} is. The
+transmitted systems are named beside it because they are systems \emph{in
+transit}: each is an intermediate system of one channel, produced by the
+trusted preparation, consumed by $\Aev_1$, and held by no party at the end of
+the round. That is the standing the measured system $\Bsys$ has on the
+receiver's side, which is why Definition~\ref{def:system-setting} names
+$\Bsys$ separately as separable, and neither it nor the round model names the
+transmitted system at all. Neither is read more widely than it is written:
+every finiteness that
+Lemma~\ref{lem:source-transfer} and Theorem~\ref{thm:two-sided} use, of
+$E_0$, of each $E'_j$, of $\Qsys$ and of $\Avirt$, is hypothesised where it is
+used, and every claim they apply at a register is applied only where that
+claim's own typing holds.
+
+\emph{Which attacks the type covers.} Where $\Hs{\Asig}$ is
+finite-dimensional, a strategy that receives all $n$ signals before the first
+round subsumes one that receives them round by round: the adversary may hold
+the later ones untouched in a finite-dimensional $E'_1$ large enough to hold
+them and pass them on, through $E_1,\dots,E_{j-1}$, to the round $j$ that
+releases them. A-SEQ
+(\xref{transmitter/ass:seq}) orders the round's \emph{messages} after the
+round's \emph{measurements} and says nothing about when a signal is released.
+Where $\Hs{\Asig}$ is infinite-dimensional, as the transmitted system of a
+\tref{source model} is, a finite-dimensional $E'_1$ cannot hold the later
+signals untouched, and a round-by-round attack in which $\Asig_j$ arrives in
+transit at round $j$ is not a strategy of the type \eqref{eq:srcstrategy}
+with finite registers. The type is the one the published source map makes:
+its first attack channel receives all $n$ signals
+\cite[Lemma~9.1, Eq.~(140)]{tupkary2026decoy}, and each $E'_j$ has a fixed
+finite dimension \cite[Rem.~8.4]{tupkary2026decoy}. Every other attack is
+reached by a limit over the dimensions of the adversary's registers, taken
+in the consuming engine (\xref{meat-core/lem:memory-lift}), as the published
+analysis takes it \cite[Thm.~A.1, Rem.~A.2]{tupkary2026decoy}: compressing
+the adversary's memory, and each signal released after the first round, onto
+finite-dimensional subspaces turns a round-by-round attack with a memory of
+any dimension into a strategy of this type with finite registers whose output
+state is as close as wanted, and the trace distances of the security
+statement pass to the limit. Lemma~\ref{lem:source-transfer} and
+Theorem~\ref{thm:two-sided} are exact about the type they name and transfer
+every criterion; the limit is taken for the trace distances alone.
+
+\emph{The virtual transmitted system is finite-dimensional.} It is so in both
+cases of \xref{transmitter/def:source-spec}: trivially where the ensemble is
+declared as matrices, and by its clause (b) where the specified system is
+separable, ``what a consumer receives is never the model but the virtual
+ensemble, which is finite dimensional''. So the virtual presentation's
+first-round input register is finite-dimensional even where the specified one
+is not, which is the hypothesis Theorem~\ref{thm:two-sided}\,(ii) spends.
+\end{remark}

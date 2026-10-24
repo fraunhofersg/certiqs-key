@@ -1,0 +1,251 @@
+id: meat-core/frank-wolfe
+kind: submodule
+version: 0.19.0
+title: "Frank-Wolfe first-order bound"
+abstract: >-
+  The Frank-Wolfe submodule supplies the first-order lower bound on the core's
+  value h_low, and its main results are that bound, its forms for the dropped
+  program and for the reference companion, and the key length from its
+  certified form. At a point of the Choi program where the relevant
+  probabilities are positive and every key-active branch operator has maximal
+  support, the objective is differentiable along every feasible direction, and
+  convexity turns its linearisation into a lower bound on h_low once lower
+  bounds on the linear minima over the acceptance set and over the feasible
+  set are supplied ([[thm:firstorder]]); the same holds for the dropped
+  program, with maximal support asked only of the kept pairs
+  ([[cor:fo-dropped]]). The acceptance-side minimum is computed exactly on the
+  exact island, and the feasible-side minimum is bounded from below in exact
+  arithmetic from any multipliers, the solver's dual among them, with the
+  rounding of the frame the rows are built with charged, so no bound trusts
+  a solver's optimality ([[lem:feasible-side-dual]]). Iterates need
+  only lie in a relaxed feasible set read at declared windows, both minima
+  being taken over the exact sets, and reading the set at a window can only
+  lower the value. The theorem holds at any admissible points, wherever they
+  came from, so a run that holds a reference of its snapped measurement forms
+  the bound on the reference companion at the points its search on the
+  snapped declaration produced and at those of a short search continued on
+  the companion from them ([[cor:fo-reference]]). The resulting bound
+  feeds the core's key-length corollary; the objective at the returned point
+  remains an estimate, and for the first-order number the objective, the
+  gradient and the data the engine computes from the declaration are
+  evaluated in binary64 with no rounding-error certificate. At the run's final
+  points the bound is formed again from enclosures of the gradient alone, the
+  objective's homogeneity making a bracket the sum of its two lower bounds,
+  every step from the declaration's data exact or rigorously enclosed; the
+  best certified bracket gives the key length at the certified tier, a run
+  whose companion certifies no point can be certified on its searched
+  declaration under the snap premise instead, unless it declares
+  strict_snaps, and a run that certifies no
+  point keeps its first-order number with the reasons
+  ([[lem:certified-bracket]], [[cor:certified-keylength]]).
+depends_on: []               # it inherits meat-core's list; no sibling submodule and no foreign module of its own
+notation_version: "0.5.0"    # the spec/notation.md version this module pins
+reading_groups:
+- title: The relaxed feasible set
+  start: def:relaxed-feasible-set
+  abstract: >-
+    A run establishes membership of its iterates only up to declared windows
+    on computed residuals, so the feasible set is read at a window: the
+    marginal or coupling condition and the declared rows are relaxed, the
+    normalisation with them, and positivity and the block structure not at
+    all ([[def:relaxed-feasible-set]]). Every hypothesis of this module that
+    names the feasible set survives on the relaxed set, and reading the set
+    at a window can only lower the value
+    ([[prop:relaxed-set-properties]]). What does not survive is the
+    non-negativity of the objective, which falls below zero there by at most
+    an explicit floor.
+- title: Admissible directions
+  start: def:first-order-setting
+  abstract: >-
+    The first-order argument runs on the Choi program, pairs acceptance
+    vectors over the acceptance support, the outcomes that some accepted
+    distribution charges, and names the two linear-minimisation inequalities
+    it reads ([[def:first-order-setting]]). Positivity of the
+    probabilities is needed only there ([[lem:fo-khyp]]), and at a branch
+    operator of maximal support no Hermitian direction leaves its support, so
+    the face derivative covers every feasible direction ([[lem:fo-face]]).
+- title: The first-order lower bound
+  start: thm:firstorder
+  abstract: >-
+    The section's main results are [[thm:firstorder]], which in exact real
+    arithmetic bounds h_low from below by the best linearisation over the
+    iterates when positivity, maximal support and an unperturbed gradient
+    hold and the two linear minima over the exact sets are bounded from
+    below, by the pairing with a valid minimiser or by any lower bound, with
+    iterates in the relaxed set, and [[cor:fo-dropped]], the same
+    bound for the dropped program with maximal support asked only of the kept
+    key-active joint pairs. Read for the reference companion at points a
+    search on the snapped declaration found, the theorem bounds the
+    reference model's value ([[cor:fo-reference]]). The key length follows from the core's corollary
+    ([[cor:fo-keylength]]). The remarks show that a failure of maximal
+    support falls on the unsafe side, that a perturbed gradient bounds
+    another function, and that the theorem holds as written in the general
+    format.
+- title: The verified feasible side
+  start: lem:feasible-side-dual
+  abstract: >-
+    The feasible-side minimum is bounded from below by weak duality: the
+    coupling condition fixes the total trace of every feasible point, so any
+    multipliers, feasible for the dual or not, give a valid bound once the
+    least eigenvalue of the residual operator is bounded from below
+    ([[lem:feasible-side-dual]]). The bound reads no point a solver returned,
+    and with a one-dimensional coupling and no rows it is the minimum itself.
+    Rows built with a computed frame in place of the exact one cost a
+    deduction linear in the row multipliers and in the frame's error, after
+    which the bound holds over the exact set again.
+- title: The certified bracket
+  start: lem:certified-bracket
+  abstract: >-
+    The objective is positively homogeneous of degree one, so at a point with
+    positive definite blocks the gradient paired with the point is the
+    objective there, and a bracket is the sum of its two lower bounds alone
+    ([[lem:certified-bracket]]). Those bounds need only enclosures of the
+    gradient: an entrywise one on the acceptance side, and on the feasible
+    side a ball around an exact residual, the frame of the rows enclosed with
+    it. Over a reference companion known through enclosures, entrywise or,
+    for an element of rank below its dimension, through an enclosed factor,
+    one enclosure serves the companion itself where every element the
+    gradient reads has its zero pattern and its rank fixed throughout
+    ([[lem:certified-bracket-enclosed]]). The best certified bracket
+    gives the key length as any first-order bound does
+    ([[cor:certified-keylength]]), on a companion for the protocol it
+    declares ([[cor:certified-keylength-reference]]).
+- title: The two minimisations and the arithmetic
+  start: ass:lmo
+  abstract: >-
+    The assumption that a solver's feasible-side return reached the minimum
+    ([[A-LMO]]) is superseded, and no claim rests on it: the feasible side is
+    bounded by [[lem:feasible-side-dual]]. The acceptance-side minimisation
+    is a hypothesis of the bound that is discharged exactly on the exact
+    island, for a singleton or a polytope acceptance set ([[rem:acc-side]]).
+    The remarks show that pairing over the acceptance support loses nothing
+    and say what exact real arithmetic means for a printed bound, and which
+    of its terms a run still computes in binary64. A certified number rests on
+    the claims, the declaration's modelling premises and the correctness of
+    the implementation, and on no premise about arithmetic
+    ([[rem:certified-scope]]).
+- title: The reported numbers and the runtime checks
+  start: rem:fo-interface
+  abstract: >-
+    These remarks give the mathematics behind the reporting rules. A run
+    reports its estimate and, where the hypotheses held, the first-order bound,
+    and withdrawal never weakens what the bound means ([[rem:fo-interface]]).
+    The iterate checks decide the relaxed feasible set on the Choi factor only
+    and serve the membership hypothesis and the estimate's premise
+    ([[rem:fo-iterate-checks]]); maximal support is a rank equality read with
+    one ruler ([[rem:fo-one-ruler]]); and the checks, computed in binary64,
+    leave one-sided exposures that no claim bounds. A repaired oracle return
+    is a step of the search and enters no bracket, a repaired iterate is a
+    construction step, and a negative bound is clamped while a negative
+    estimate is refused.
+- title: "Requirements: reported numbers and withdrawal"
+  start: req:first-order-withdrawal
+  abstract: >-
+    A run reports its estimate and, where the hypotheses held, the
+    first-order bound; an iterate at which a hypothesis fails or is not
+    established adds no bracket to the bound, with a reason, and with no
+    iterate left the engine withdraws the bound. The backend's return and
+    status withdraw nothing. Where a reference companion
+    is admitted, the run's number is the bracket on the companion at the best
+    iterates of the search and its last and at the points of a short search
+    continued on the companion, the bound on the searched declaration a
+    diagnostic beside it. It clamps the bound at zero
+    with a flag, refuses a negative estimate, and imports no penalty from
+    another formulation. It measures the returned point once more and records the
+    difference between the bound and the estimate, resting nothing on either.
+- title: "Requirements: checks and repairs of the iterates"
+  start: req:iterate-checks
+  abstract: >-
+    The engine checks every condition of the relaxed feasible set on each
+    consumed point, decides maximal support by one rank comparison, repairs a
+    block only within a declared window and records every repair, an oracle
+    return's repair serving the search alone. In the general format it
+    decides the coupling condition per Alice sector.
+- title: "Requirements: the acceptance side"
+  start: req:acceptance-geometries
+  abstract: >-
+    The engine solves the acceptance-side minimisation exactly for a
+    singleton or a polytope acceptance set and admits no other acceptance
+    set. It forms the acceptance
+    iterate exactly on the exact island and records, per iterate, whether it
+    did; a run that replaces the acceptance-side pairing by a certified bound
+    records which of the two the bracket used.
+- title: "Requirements: the feasible side"
+  start: req:verified-feasible-side
+  abstract: >-
+    The feasible side of every bracket is the verified lower bound of
+    [[lem:feasible-side-dual]] over the exact feasible set, formed in exact
+    rational arithmetic from the gradient as computed, the declared rows and
+    the backend's dual, less a deduction for the rounding of the frame, with
+    zero multipliers where the backend returned none and zero row
+    multipliers where the frame's error is not bounded. The oracle's primal
+    pairing, the dual gap and the deduction are recorded beside it.
+    Beside it stands the superseded requirement that paired the gradient with
+    the oracle's return, which no run follows.
+- title: "Requirements: the certified evaluation"
+  start: req:certified-evaluation
+  abstract: >-
+    By default the engine forms the bracket again at the points of the run's
+    first-order number from the declaration's exact data, the maps in factor
+    form and every step exact or rigorously enclosed, and reports the best
+    certified bracket at the certified tier ([[req:certified-evaluation]]). An
+    element of a companion's measured family whose rank neither its entrywise
+    enclosure nor an enclosed factor fixes, or a block not shown positive
+    definite, leaves a point uncertified. Where a companion certifies no
+    point, the evaluation runs once more on the searched declaration, and a
+    number certified there is reported at the certified tier, the blocks the
+    companion carried resting on the snap premise; a run with no certified
+    point keeps its first-order number with the reasons, or refuses under the
+    strict option.
+order:
+  - def:relaxed-feasible-set
+  - prop:relaxed-set-properties
+  - rem:feas-tol
+  - def:first-order-setting
+  - lem:fo-khyp
+  - lem:fo-face
+  - thm:firstorder
+  - rem:iterate-relaxed-oracle-exact
+  - rem:fo-danger
+  - rem:fo-nopert
+  - cor:fo-keylength
+  - cor:fo-dropped
+  - cor:fo-reference
+  - rem:fo-general-format
+  - lem:feasible-side-dual
+  - lem:certified-bracket
+  - lem:certified-bracket-enclosed
+  - cor:certified-keylength
+  - cor:certified-keylength-reference
+  - ass:lmo
+  - rem:acc-side
+  - rem:pairing-on-acceptance-support
+  - rem:fo-arithmetic
+  - rem:certified-scope
+  - rem:fo-interface
+  - rem:fo-iterate-checks
+  - rem:fo-returned-point
+  - rem:fo-one-ruler
+  - rem:fo-reachability
+  - rem:fo-check-exposures
+  - rem:fo-oracle-repair
+  - rem:fo-iterate-repair
+  - rem:fo-negative-values
+  - req:first-order-withdrawal
+  - req:returned-point-measured
+  - req:first-order-clamp
+  - req:negative-estimate-refused
+  - req:bound-estimate-difference
+  - req:no-imported-penalty
+  - req:bracket-on-reference
+  - req:iterate-checks
+  - req:support-rank-check
+  - req:oracle-repair
+  - req:iterate-repair
+  - req:per-sector-coupling
+  - req:acceptance-geometries
+  - req:acceptance-iterate-exact
+  - req:bacc-recorded
+  - req:verified-feasible-side
+  - req:primal-pairing
+  - req:certified-evaluation

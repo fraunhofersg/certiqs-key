@@ -1,0 +1,66 @@
+% ---
+% id: receiver/def:evaluation-model
+% kind: def
+% title: "The evaluation model: floating point, enclosures and rigour"
+% summary: >-
+%   The claims are exact statements about exactly declared data, evaluated in
+%   binary64 with diagnostic residuals, while the blocks are enclosed and, where
+%   the port Grams are enclosed, the weights evaluated rigorously, in exact
+%   rational arithmetic. The restriction asserts nothing a run could violate.
+% prominence: standard
+% status: accepted
+% uses: [def:exact-route, def:complex-enclosure, def:enclosed-weight, def:setting-family]
+% mentions: [ass:eig, def:residuals, foundations/def:binary64, thm:enclosed-blocks, thm:exact-blocks, lem:enclosure-arithmetic, receiver/detector-imperfections/cor:exact-dark-composed, def:pmc, def:pmcex, foundations/lem:least-eigenvalue-bound, foundations/cor:least-eigenvalue-over-enclosure]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{definition}
+\label{def:evaluation-model}
+The claims of this contract are exact statements about exactly declared data
+(\xref{foundations/def:binary64}\,(iii)). This contract \emph{evaluates} them
+in binary64 floating-point arithmetic (\xref{foundations/def:binary64}),
+reports those of the six \tref{residuals} of Definition~\ref{def:residuals}
+that exist on the input route taken and for the evaluation requested, and
+asserts no rigorous enclosure of any quantity it computes in floating point
+(Assumption~\ref{ass:eig} is the one exception): this is its
+\emph{floating-point evaluation}. For a declaration whose
+model is an admissible receiver exactly it moreover computes, in exact
+rational arithmetic, \tref[complex enclosure]{complex enclosures}
+(Definition~\ref{def:complex-enclosure}) of the photon-number blocks of the
+emitted family: those of Theorem~\ref{thm:enclosed-blocks}, and in the
+submodules those of the setting families a submodule constructs, each
+enclosed by that submodule, and of their composition with the dark counts
+(Corollary~\ref{cor:exact-dark-composed}). They are exact where
+the declaration is on the \tref{exact route}
+(Definition~\ref{def:exact-route}) and the entry is known exactly
+(Theorem~\ref{thm:exact-blocks}). From the same enclosures of the port Grams
+it computes, in exact rational arithmetic, at every setting at which the rules
+of Lemma~\ref{lem:enclosure-arithmetic} give them, complex enclosures of the
+setting's operators $B^{(t)}$, $B^{(t)}_k$ and prefactors $\gamma^{(t)}$,
+$\beta^{(t)}_k$ (Definition~\ref{def:setting-family}) and, at a setting
+carrying an exact-window depth, of its blocks $\blk{M}{\eqn}_{\mc|t}$ in the
+window; from these, an upper bound $u$ on $\lmax(B^{(t)})$ and lower bounds
+$\ell_k$ on $\lmin(B^{(t)}_k)$ and $\lambda_n$ on the least eigenvalue of
+each window block, by the least-eigenvalue bounds over an enclosure
+(\xref{foundations/lem:least-eigenvalue-bound},
+\xref{foundations/cor:least-eigenvalue-over-enclosure}), and a lower bound $g$
+on $\gamma^{(t)}$ and upper bounds $b_k$ on $\beta^{(t)}_k$, each the real
+part of a centre less or plus its radius; from these, the reals
+$g,b_k,1-u,1-\ell_k$ each intersected with $[0,1]$ and
+$\max\{0,\lambda_n\}$; and from those, by the formulas of
+Definition~\ref{def:enclosed-weight}\,(iii), a weight: this is its
+\emph{rigorous evaluation} of the weights. A weight emitted at a setting is
+the weight so formed where the rigorous evaluation is formed there, and
+otherwise the floating-point evaluation of Definition~\ref{def:pmc}
+or~\ref{def:pmcex}.
+These enclosures and bounds are not evaluations, and a decision taken on
+them is exact; their interval arithmetic is proved in this contract
+(Lemma~\ref{lem:enclosure-arithmetic}) and their eigenvalue bounds in the
+foundations contract, and no interval-arithmetic assumption is imported. This
+\term[The arithmetic of this contract: its exact claims evaluated in binary64 with diagnostic residuals and no rigorous enclosure of a floating-point number beyond the eigenvalue-slack assumption, beside exact rational enclosures of the blocks and a rigorous evaluation of the weights.]{evaluation model}
+is a \emph{restriction} this contract places on itself and asserts nothing a
+run could violate.
+\end{definition}

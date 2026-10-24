@@ -1,0 +1,261 @@
+% ---
+% id: meat-core/thm:accumulated-entropy
+% kind: thm
+% title: "Accumulated entropy bound under adaptive attacks"
+% summary: >-
+%   On acceptance, the raw key's Rényi entropy given the adversary's
+%   information is at least n times the single-round rate less
+%   α/(α−1)·log₂(1/Pr[accept]), for any adaptive attack with a
+%   finite-dimensional memory. Trusted-source mode reads the product marginal
+%   of [[lem:product-marginal]]; untrusted mode needs none.
+% prominence: main
+% status: implemented
+% uses: [def:roundmodel, def:hqkd-list, lem:purifier-indep, fact:meat, thm:protocol-channel, lem:range, foundations/def:renyi, lem:branch-maps, foundations/def:kl, def:admissible-declaration, def:admissible-acceptance-set, lem:product-marginal]
+% mentions: [rem:accumulation-scope, thm:keylength, ass:conform, lem:memory-lift, cor:composed-security]
+% assumes: [A-SRC, A-ENS, A-SEQ, A-SEED, A-LAB, A-RHOM]
+% refs:
+%   - "arqand2025meat, Thm. 4.2a"
+%   - "arqand2025meat, Def. 4.2, Eq. (98)"
+%   - "arqand2025meat, footnote 17"
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.keylength:key_length
+% lean:
+% ---
+
+The imported accumulation theorem, applied to the round channels the
+declaration generates, bounds the entropy of the accepted raw key from below
+by $n$ times the single-round rate \eqref{eq:hqkd-def}, the rate of
+Definition~\ref{def:hqkd-list} at the empty constraint list, less a penalty in
+the acceptance probability. The theorem is a statement about attack
+sequences of the round model, whose registers are finite-dimensional. That
+every physical attack with finite-dimensional registers whose first channel
+receives every transmitted signal is such a sequence, with $E_n$ the
+adversary's whole information about the rounds, is the mapping of the
+physical protocol onto the model; it rests on the \tref{reduction chain} from which
+the declaration was compiled, hypothesis (H-CHAIN) of
+Theorem~\ref{thm:keylength}, and, for the round structure, on A-SEQ
+(\xref{transmitter/ass:seq})\,(i), (ii) and~(iv), Assumption~\ref{ass:lab}
+at each of the two parties and Assumption~\ref{ass:conform}\,(ii), and is made
+where the key length is stated (Theorem~\ref{thm:keylength}). The security
+of the key extends from these attacks to every physical attack, whatever the
+dimension of the adversary's memory, by Corollary~\ref{cor:composed-security}
+through Lemma~\ref{lem:memory-lift}.
+Remark~\ref{rem:accumulation-scope} says which attacks the bound covers and
+what untrusted-source mode costs.
+
+\begin{theorem}\label{thm:accumulated-entropy}
+Let $\Decl$ satisfy Definition~\ref{def:admissible-declaration}, let
+$\acSet$ satisfy Definition~\ref{def:admissible-acceptance-set}, and let
+Assumption~A-RHOM (\xref{protocol-compiler/ass:rhom}) hold; in
+trusted-source mode let A-SRC
+(\xref{transmitter/ass:src}), A-ENS (\xref{transmitter/ass:ens}), A-SEQ
+(\xref{transmitter/ass:seq}), \ref{ass:seed} (A-SEED) and
+\ref{ass:lab} (A-LAB) at the party to which the \tref{party partition}
+assigns $A$ hold as well, and, at $d_A\ge2$, let the declaration's $A$,
+$\tau_A$ and $\{M_x\}$ be those of a \tref{source specification} carrying a
+\tref{source-replacement certificate} against its \tref{virtual ensemble},
+with a \tref{source segment} satisfying the source identity, as
+Lemma~\ref{lem:product-marginal} states them; together with these, the
+adversary's initial register being finite-dimensional as every register of
+the round model is, the five assumptions are the hypotheses of
+Lemma~\ref{lem:product-marginal}, so that by that lemma the
+protocol's $n$-round input in that mode has the marginal below (in
+untrusted-source mode the lemma is not invoked and none of the hypotheses
+named for that mode is used here). Let $(\Aev_j)_{j=1}^{n}$ be an
+\emph{arbitrary} attack sequence (Definition~\ref{def:roundmodel}; no
+admissibility restriction; its registers $E_0$ and $E'_j$ finite-dimensional,
+of any dimensions, as every register of that model is), let
+\begin{equation*}
+  \rho_{Z_1^n\Chat_1^nI_1^n\Ehat}
+  =\big(\Mprot_n\circ\dots\circ\Mprot_1\big)\big[\omega^{0}\big],
+  \qquad
+  \omega^{0}\in\Seq{A_1^nE_0}\ \text{with}\
+  \omega^{0}_{A_1^n}=\tau_A^{\otimes n}
+  \ \ \text{(trusted mode)},
+\end{equation*}
+respectively $\omega^{0}\in\Seq{E_0}$ arbitrary (untrusted mode, where
+the round channels take no $A$ input),
+with $\Mprot_j$ the round channels \eqref{eq:roundchannel} and Eve's
+final register written $E_n=I_1^n\Ehat$
+(Definition~\ref{def:roundmodel}), and let $\OmAT$, the acceptance event, be
+the event that the frequency vector $\operatorname{freq}_{\hat c_1^n}$ of the
+acceptance values of the $n$ rounds lies in $\acSet$, with $\Pr[\OmAT]>0$.
+Then for
+every $\alpha\in(1,\infty)$,
+\begin{equation}\label{eq:c3}
+  \Hsandup\big(Z_1^n\big|\Chat_1^nI_1^n\Ehat\big)_{\rho_{|\OmAT}}
+  \;\ge\;n\,\hqkd-\frac{\alpha}{\alpha-1}\log_2\frac{1}{\Pr[\OmAT]},
+\end{equation}
+with $\hqkd=\hqkd(\varnothing)$ the single-round rate of
+Definition~\ref{def:hqkd-list} at the empty list, which reads
+\begin{equation}\label{eq:hqkd-def}
+\begin{gathered}
+  \hqkd=\inf_{\mathbf q\in\acSet}\
+  \inf_{\substack{\omega\in\Seq{A\Qsys\Etil}\\ \omega\models\Decl}}
+  \left(\frac{\alpha}{\alpha-1}\,
+  \sfD\!\left(\mathbf q\,\middle\|\,\Phimap[\omega_{A\Qsys}]\right)
+  +\sum_{\hat c\in\Chkey}
+  q(\hat c)\,\Hsandup(Z|I\Etil)_{\nu^{\omega}_{|\hat c}}\right),\\
+  \nu^{\omega}\coloneqq(\Mprot\otimes\idmap_{\Etil})(\omega),
+\end{gathered}
+\end{equation}
+with $\omega\models\Decl$ as in \eqref{eq:margcond} --- so the inner
+infimum is over states with $\omega_A=\tau_A$ in trusted-source mode
+and over \emph{all} normalized states on $A\Qsys\Etil$ in
+untrusted-source mode. It ranges over all (not necessarily pure) such
+states, with
+$\dim\Hs{\Etil}\ge\dim\Hs{A}\cdot\dim\Hs{\Qsys}$
+(Lemma~\ref{lem:purifier-indep}: the value is independent of that
+choice).
+\end{theorem}
+
+\begin{proof}
+\emph{Idea.} The bound is Fact~\ref{fact:meat} applied to the round
+channels \eqref{eq:roundchannel}. Step~1 instantiates the source's marginal
+register by the declared source mode, Step~2 checks the hypotheses of the
+import, and Steps~3 and~4 bound the imported rate \eqref{eq:meat-rate} from
+below by $\hqkd$: Step~3 through the range inclusion of
+Lemma~\ref{lem:range}, Step~4 by reducing the sum over acceptance values to
+the key-live ones.
+
+\emph{Step 1 (the marginal register).} Apply Fact~\ref{fact:meat} to the
+round channels \eqref{eq:roundchannel}, with the identifications
+$S_j\to Z_j$, $S_{\Omega}\to\acSet$, and the source's marginal register
+$A_{j-1}$ instantiated by the declared source mode:
+\begin{itemize}[leftmargin=1.6em]
+\item[] \emph{Trusted-source mode:} $A_{j-1}$ is the round-$j$ copy of
+$A$ and $\sigma^{(j-1)}\to\tau_A$ (off-by-one indexing;
+Fact~\ref{fact:meat}, locator note (v));
+$\Mprot_j\in\mathrm{CPTP}(A\,E_{j-1},\,Z\,\Chat\,E_j)$.
+\item[] \emph{Untrusted-source mode:} $A_{j-1}$ is \emph{trivial}
+($\dim=1$) and $\sigma^{(j-1)}\to[1]$, the unique state on it;
+$\Mprot_j\in\mathrm{CPTP}(E_{j-1},\,Z\,\Chat\,E_j)$, which is the same
+map read with a trivial tensor factor adjoined to its input. That
+instantiation is admissible: neither
+\cite[Thm.~4.2a]{arqand2025meat} nor
+\cite[Def.~4.2, Eq.~(98)]{arqand2025meat} places any dimension or rank
+hypothesis on $A_{j-1}$, and the source's standing convention imposes
+no bound on system dimensions
+(Fact~\ref{fact:meat}, locator note (vii), where all three are quoted).
+\end{itemize}
+
+\emph{Step 2 (the hypotheses of the import).}
+\begin{itemize}[leftmargin=1.6em]
+\item Each $\Mprot_j$ is CPTP with $\Chat_j$ classical: composition and
+tensoring of the CPTP maps $\Mprot$ (Theorem~\ref{thm:protocol-channel}\,(i), which
+also makes $\Chat$ classical) and $\Aev_j$, followed by the output
+regrouping $E_j=E'_jI_j$. The import takes every system
+finite-dimensional and places no bound and no other structural
+requirement on the $E_{j-1}$ registers (Fact~\ref{fact:meat}, locator
+note (vii)); the round model of Definition~\ref{def:roundmodel} supplies
+exactly that for the adversary's registers, with no bound on their
+dimensions, and the bound uses none, which is what lets
+Corollary~\ref{cor:composed-security} reach a memory of any dimension through
+Lemma~\ref{lem:memory-lift}; no generality is lost by $\Qsys$ carrying a
+sector decomposition.
+\item Product marginal constraint on $A_1^n$: in trusted-source mode
+this is the condition on $\omega^{0}$ in the statement, which
+Lemma~\ref{lem:product-marginal}\,(ii) establishes for the protocol's
+$n$-round input under its hypotheses, which are those the statement names
+for that mode with the finite dimension of the adversary's initial
+register, and at $d_A=1$ for every state. In
+untrusted-source mode
+$A_1^n$ is one-dimensional, $\Seq{A_1^n}$ is a singleton, and the
+condition
+$\omega^{0}_{A_1^n}=\sigma^{(0)}\otimes\dots\otimes\sigma^{(n-1)}$
+holds for every normalized $\omega^{0}$ --- it discharges
+\emph{vacuously}, which is a satisfied hypothesis and not a waived one.
+Correspondingly
+Lemma~\ref{lem:product-marginal} is not invoked in that mode and nothing
+in this proof appeals to it.
+\item Conditioning registers: the imported bound \eqref{eq:meat}
+conditions on $\Chat_1^nE_n$, and the physical attack is represented
+so that $E_n=I_1^n\Ehat$ (Definition~\ref{def:roundmodel}: the
+announcements are classical and public, so the sequence that retains
+all of them is available for every physical attack and produces the
+same protocol run). This yields exactly the left-hand side of
+\eqref{eq:c3}, the form Theorem~\ref{thm:keylength} uses, where Eve is
+granted the announcement transcript and the $\Chat$ copies.
+\item Round structure: all rounds use the same declaration, hence the
+same $\Mprot$, the same source mode, and (in trusted-source mode) the
+same $\tau_A$
+(A-RHOM (\xref{protocol-compiler/ass:rhom})); Eve's channels $\Aev_j$ are \emph{not}
+assumed identical across rounds. No $\Sigma=\Sigma_1$ collapse is
+available or used --- the round channels $\Mprot_j$ are genuinely
+non-isomorphic (the registers $E_{j-1}$ differ across $j$) --- and the
+homogeneity of the declaration enters only through the common target
+set of Lemma~\ref{lem:range}\,(ii). It is
+$\Mprot$, not the trustedness of $\tau_A$, that supplies the sharing:
+in untrusted-source mode the target sets
+$\Sigma_j\subseteq\Sigma^{\CList}(\Etil^{*})$ are contained in a common
+set for the same reason, with the marginal clause of
+\eqref{eq:margcond} empty.
+\item Purifying register: the import requires $\Etil$ large enough to
+purify $A_{j-1}\,E_{j-1}$ --- a proof-internal requirement, discharged
+by enlargement (\cite[footnote~17]{arqand2025meat}) and only weakened
+when $A_{j-1}$ is trivial; the defining
+optimization \eqref{eq:hqkd-def} needs only
+$\dim\Hs{\Etil}\ge\dim\Hs{A\Qsys}$
+(the dimension condition in the statement, with
+Lemma~\ref{lem:purifier-indep}).
+\item Acceptance: $\acSet$ is convex (Definition~\ref{def:admissible-acceptance-set}) and by
+definition of $\OmAT$ every frequency with nonzero probability in
+$\rho_{|\OmAT}$ lies in $\acSet$; $p_{\Omega}=\Pr[\OmAT]>0$.
+\item $\alpha$ domain: the import supplies $(1,\infty]$; this
+module invokes it on $(1,\infty)$, where
+\xref{foundations/def:renyi} defines the entropies
+(Fact~\ref{fact:meat}, locator note (vi)); no other import is used in
+this claim.
+\end{itemize}
+
+\emph{Step 3 (the imported rate is at least $\hqkd$).} It remains to bound
+the rate \eqref{eq:meat-rate} from below by $\hqkd$. By
+Lemma~\ref{lem:range}\,(ii) with $\CList=\varnothing$ --- in either source
+mode ---
+$\Sigma\subseteq\Sigma^{\varnothing}(\Etil^{*})$ for a common register
+$\Etil^{*}$, so by Lemma~\ref{lem:range}\,(iii) the rate is bounded
+below by the value of \eqref{eq:meat-rate} over
+$\Sigma^{\varnothing}(\Etil^{*})$, whose elements are
+$\nu^{\sigma}=(\Mprot\otimes\idmap_{\Etil^{*}})(\sigma)$ with
+$\sigma\models\Decl$; for these,
+$\boldsymbol{\nu}_{\Chat}=\Phimap[\sigma_{A\Qsys}]$ and the
+conditioning register regroups as $E\Etil=I\,(E'\Etil)$
+(Lemma~\ref{lem:range}\,(ii)), so the bracket is bounded from below by
+that of \eqref{eq:hqkd-list} at $\CList=\varnothing$, the $\hat c$-sum
+reduced to $\Chkey$ (Step~4), and Lemma~\ref{lem:purifier-indep} converts the purifier
+$\Etil^{*}$ to the $\Etil$ of \eqref{eq:hqkd-def} --- choosing $\Etil$ in the
+application of Fact~\ref{fact:meat} large enough that
+$\dim\Hs{E'_j\Etil}\ge\dim\Hs{A\Qsys}$ for every $j$, so that the
+lemma's hypothesis holds for $\Etil^{*}$;
+\cite[footnote~17]{arqand2025meat} permits the enlargement, which
+only grows $\Sigma$ and weakens the bound in the safe direction.
+
+\emph{Step 4 (reduction of the sum to the key-live values).} Fix
+$\hat c\notin\Chkey$ with $q(\hat c)>0$ and
+$\boldsymbol{\nu}_{\Chat}(\hat c)>0$. By Lemma~\ref{lem:branch-maps}\,(iv) and
+\eqref{eq:povm-form}, every outcome pair contributing to $\hat c$ has
+$r(x,v)=\perp$, so $Z=\perp$ deterministically in
+$\nu^{\sigma}_{|\hat c}$: the conditional state is
+$\dyad{\perp}_Z\otimes\nu'$, with $\nu'$ normalized. For a deterministic
+classical $Z$, $\Hsandup(Z|\cdot)\ge0$: the divergence in the definition of
+$\Hsandup$ (\xref{foundations/def:renyi}) evaluates on
+$\dyad{\perp}\otimes\nu'$ against $\idon{Z}\otimes\sigma'$, and
+$\Dsand(\dyad{\perp}\otimes\nu'\|\idon{Z}\otimes\sigma')
+=\Dsand(\nu'\|\sigma')$, since the sandwich is
+$\dyad{\perp}\otimes\sigma'^{\gamma}\nu'\sigma'^{\gamma}$ with
+$\gamma=\frac{1-\alpha}{2\alpha}$; the state $\sigma'=\nu'$ is admissible in
+the infimum and gives
+$\Dsand(\nu'\|\nu')=\frac{1}{\alpha-1}\log_2\tr\nu'=0$, so the infimum is at
+most $0$. Hence those terms are non-negative, and dropping them lowers the
+sum: the sum over $\operatorname{supp}(\boldsymbol{\nu}_{\Chat})$ is at least
+the sum over $\Chkey$, in the extended sense of \xref{foundations/def:kl}: a
+term with
+$\hat c\in\Chkey\setminus\operatorname{supp}(\boldsymbol{\nu}_{\Chat})$
+and $q(\hat c)=0$ is $0$ by the $0\log_2\frac0v=0$ convention (the
+undefined conditional state is multiplied by zero), while $q(\hat c)>0$
+for such a $\hat c$ means $\mathbf q\not\ll\boldsymbol{\nu}_{\Chat}$, so
+the divergence term is $+\infty$ and the bracket equals $+\infty$ on
+both sides regardless of the convention adopted for the undefined
+entropy term. Since Step~3 bounds the imported rate from below, a sum
+bounded from below by the one over $\Chkey$ is all it needs.
+\end{proof}

@@ -1,0 +1,30 @@
+% ---
+% id: reductions/rem:reading-master
+% kind: rem
+% title: "The operator form of the branch-weight constraint"
+% summary: >-
+%   The branch weights of [[lem:master]] (iv) are the only constraint the
+%   branching rule produces, and the operator form is the one to impose: it
+%   fixes each block's weight conditioned on everything Alice and Eve hold,
+%   while its trace alone admits a block index perfectly correlated with Eve.
+% prominence: standard
+% status: accepted
+% uses: [cor:transported, lem:master]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:reading-master}
+Part~(iv) of Lemma~\ref{lem:master} is the only place the branching rule
+produces a constraint, and the operator form is the one worth imposing: it
+says the weight of block $j$ is $q_j$ \emph{conditioned on everything Alice
+and Eve hold}, and Corollary~\ref{cor:transported}\,(i) turns it into a sound
+constraint, one per round. The scalar $\tr[\Pi_j\sigma]=q_j$ is only its trace
+and is strictly weaker: it still admits a squashed state whose block index is
+perfectly correlated with Eve's register. Nothing is averaged anywhere in the
+rule, because averaging over $j$ before squashing would lose the branch
+structure and with it the relation.
+\end{remark}

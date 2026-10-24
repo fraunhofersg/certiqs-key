@@ -1,0 +1,56 @@
+% ---
+% id: meat-core/frank-wolfe/rem:fo-nopert
+% kind: rem
+% title: "A perturbed gradient bounds another function"
+% summary: >-
+%   A gradient taken at a perturbed operator is the gradient of a different
+%   function, and no statement here relates the two, so the explicit
+%   perturbation route has no accounted instance. Every path here
+%   differentiates on a face at maximal support; an iterate with a perturbed
+%   gradient adds no bracket.
+% prominence: standard
+% status: accepted
+% uses: [meat-core/thm:gradient, thm:firstorder]
+% mentions: [meat-core/req:split-form-gradient, meat-core/req:gradient-at-maximal-support, req:first-order-withdrawal]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:fo-nopert}
+The rules drawn from Theorem~\ref{thm:gradient}\,(i) and~(ii), the face
+rule of Requirement~\ref{req:split-form-gradient} and the one-sided
+rule of Requirement~\ref{req:gradient-at-maximal-support}, are the rule of
+every path this module specifies, without exception, and there is no
+second path: no numerical lower-bound certificate is specified here, so no
+route perturbs into the strictly positive cone instead of differentiating
+on a face, and neither rule is another path's concern. Requirement~\ref{req:gradient-at-maximal-support} names
+two routes to a usable gradient: keep the support maximal, ``for instance
+after an explicit perturbation''. Only the first is available to
+Theorem~\ref{thm:firstorder}, and (H-NOPERT) says so; it is the only route
+this module supplies an accounting for.
+
+A perturbation is not unsound in principle; a gradient taken at a
+perturbed operator is the gradient of a \emph{different function}, and
+this module states no relation between the two. Concretely: replacing $X$
+by $X^{(\delta)}=(1-\delta)X+\delta\,\sigma$ for some $\sigma\succ0$ and
+evaluating $\nabla T$ there yields the linearisation of an objective
+$O^{(\delta)}_{\alpha}$ built from the perturbed branch operators. To
+conclude anything about $\hlow=\inf O^{J}_{\alpha}$ from a bound on
+$\inf O^{(\delta)}_{\alpha}$ one needs a \emph{domination} statement,
+$O^{(\delta)}_{\alpha}\le O^{J}_{\alpha}$ pointwise or an explicit
+two-sided error, and this module proves none. The phrase ``after an
+explicit perturbation'' in
+Requirement~\ref{req:gradient-at-maximal-support} therefore has no
+accounted instance anywhere in this module. It stands there as a statement
+about what a solver may do to keep a gradient defined, which is true and
+is all it says.
+
+The consequence for a run is a \emph{withdrawal}, not a weakening: an
+iterate whose gradient was taken after a perturbation contributes no
+bracket to $\hlb$ (Requirement~\ref{req:first-order-withdrawal}), so a run
+that perturbs the gradient at every iterate reports no $\hlb$ at all. Reporting a perturbed
+bracket as a \tref{first-order} bound would be reporting a bound on a
+function nobody asked about.
+\end{remark}

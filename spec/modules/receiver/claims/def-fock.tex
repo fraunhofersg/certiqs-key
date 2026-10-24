@@ -1,0 +1,49 @@
+% ---
+% id: receiver/def:fock
+% kind: def
+% title: "Fock space and the second-quantization functor"
+% summary: >-
+%   The Fock space over a finite-dimensional space is the direct sum of its
+%   symmetric photon-number sectors, and a linear map lifts to it sector by
+%   sector. Every photon-number block of the receiver's measurement is
+%   assembled from blocks of such lifts.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [lem:fock-functor, def:physmodel]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The lift is written for a map between two spaces as well as for an operator on
+one; the two-space form is used for coordinate inclusions of mode spaces,
+among them the inclusion of the \tref{declared input modes} into the dilated
+mode space (Definition~\ref{def:physmodel}).
+
+\begin{definition}
+\label{def:fock}
+For a finite-dimensional Hilbert space $\mathcal{K}_0$ the \term[The direct sum over n of the symmetric n-photon subspaces of a finite-dimensional mode space.]{Fock space} is
+$\mathcal{F}(\mathcal{K}_0)=\bigoplus_{n\ge0}\Symn{n}(\mathcal{K}_0)$, where
+$\Symn{n}(\mathcal{K}_0)\subseteq\mathcal{K}_0^{\otimes n}$ is the subspace
+invariant under every permutation of the $n$ tensor factors and
+$\Symn{0}(\mathcal{K}_0)=\mathbb{C}\ket{\vac}$. For a linear operator $X$ on
+$\mathcal{K}_0$ put
+\begin{equation}\label{eq:fockfunctor}
+  \Fock(X)\coloneqq\bigoplus_{n\ge0}\big(X^{\otimes n}\big)\big|_{\Symn{n}},
+  \qquad \Fock(X)\big|_{\Symn{0}}=1 .
+\end{equation}
+This is well defined because $X^{\otimes n}$ commutes with every permutation of
+the factors and therefore preserves $\Symn{n}(\mathcal{K}_0)$
+(Lemma~\ref{lem:fock-functor}). The same formula defines
+$\Fock(X):\mathcal{F}(\mathcal{K}_0)\to\mathcal{F}(\mathcal{K}_1)$ for a linear
+map $X:\mathcal{K}_0\to\mathcal{K}_1$ between two spaces, because
+$X^{\otimes n}$ intertwines the permutation actions and therefore carries
+$\Symn{n}(\mathcal{K}_0)$ into $\Symn{n}(\mathcal{K}_1)$. Occupation vectors
+$\vec m\in\mathbb{N}_0^{\dim\mathcal{K}_0}$ with $|\vec m|=n$ index the
+orthonormal basis $\{\ket{\vec m}\}$ of $\Symn{n}(\mathcal{K}_0)$ obtained by
+symmetrizing and normalizing $\ket{e_1}^{\otimes m_1}\otimes\cdots$ in a fixed
+orthonormal basis $\{\ket{e_j}\}$ of $\mathcal{K}_0$; $a_j$ and $a_j^\dagger$
+denote the annihilation and creation operators of $\ket{e_j}$.
+\end{definition}

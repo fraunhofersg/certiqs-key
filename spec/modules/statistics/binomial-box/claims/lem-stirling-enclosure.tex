@@ -1,0 +1,187 @@
+% ---
+% id: statistics/binomial-box/lem:stirling-enclosure
+% kind: lem
+% title: "Robbins' Stirling bounds with Wallis's product"
+% summary: >-
+%   Robbins' bounds enclose ln m! between Stirling's approximation plus
+%   1/(12m + 1) and plus 1/(12m), and Wallis's partial products enclose 2π by
+%   rationals of any width. With rational bounds on ln m and ln(2π) this
+%   encloses ln m! by rationals of explicit width.
+% prominence: technical
+% status: implemented
+% uses: [lem:log-enclosure]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.logs:log_factorial_bounds
+% lean:
+% notes: "The lower bound on the difference uses only the first term of the series, which suffices for every m >= 1 (the cross-multiplication in Step 3), a simplification of Robbins' own two-term estimate."
+% ---
+
+A binomial mass point is a ratio of factorials, and the local evaluation of
+the exact rule needs $\ln m!$ from both sides without a library logarithm.
+Part~(i) is Stirling's formula with the two-sided error bounds of Robbins,
+and part~(ii) is Wallis's product for $\pi/2$, which makes the constant
+$\tfrac12\ln(2\pi)$ computable in exact rational arithmetic; both are derived
+in full here, the constant being identified through the central binomial
+coefficient.
+
+\begin{lemma}\label{lem:stirling-enclosure}
+Put $C\coloneqq\tfrac12\ln(2\pi)$.
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(Robbins' bounds)} For every integer $m\ge1$,
+\begin{equation}\label{eq:robbins}
+  \Big(m+\frac12\Big)\ln m-m+C+\frac{1}{12m+1}
+  \ <\ \ln m!\ <\
+  \Big(m+\frac12\Big)\ln m-m+C+\frac{1}{12m},
+\end{equation}
+equivalently
+$\sqrt{2\pi m}\,(m/e)^{m}\,e^{1/(12m+1)}<m!<\sqrt{2\pi m}\,(m/e)^{m}\,e^{1/(12m)}$.
+\item \emph{(Wallis's product)} For every integer $M\ge1$, the rational
+\begin{equation}\label{eq:wallis-partial}
+  P_M\ \coloneqq\ \prod_{k=1}^{M}\frac{(2k)^{2}}{(2k-1)(2k+1)}
+\end{equation}
+satisfies
+\begin{equation}\label{eq:wallis-bounds}
+  P_M\ <\ \frac{\pi}{2}\ <\ P_M\,\frac{2M+1}{2M},
+  \qquad\text{hence}\qquad
+  4P_M\ <\ 2\pi\ <\ 4P_M\Big(1+\frac{1}{2M}\Big),
+\end{equation}
+so that $2C=\ln(2\pi)$ is enclosed, through
+Lemma~\ref{lem:log-enclosure} applied to the two rationals in
+\eqref{eq:wallis-bounds}, by rationals of any prescribed width.
+\item \emph{(rational enclosure of $\ln m!$)} Let $m\ge1$ and let
+$\lambda^{-}\le\ln m\le\lambda^{+}$ and $c^{-}\le\ln(2\pi)\le c^{+}$ be
+rationals. Then
+\begin{equation}\label{eq:lnfact-enclosure}
+  \Big(m+\frac12\Big)\lambda^{-}-m+\frac{c^{-}}{2}+\frac{1}{12m+1}
+  \ <\ \ln m!\ <\
+  \Big(m+\frac12\Big)\lambda^{+}-m+\frac{c^{+}}{2}+\frac{1}{12m},
+\end{equation}
+an enclosure by rationals whose width is at most
+$(m+\tfrac12)(\lambda^{+}-\lambda^{-})+\tfrac12(c^{+}-c^{-})
++\tfrac{1}{12m(12m+1)}$. For $m=0$, $\ln 0!=0$ exactly.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{Idea.} The sequence $d_m=\ln m!-(m+\tfrac12)\ln m+m$ has differences
+given by a series in $1/(2m+1)$. Bounding that series from both sides makes
+$d_m-\frac{1}{12m}$ increasing and $d_m-\frac{1}{12m+1}$ decreasing, with a
+common limit, and Wallis's product, proved from the sine-power integrals,
+identifies the limit as $\tfrac12\ln(2\pi)$ through the central binomial
+coefficient.
+
+\emph{Step 1 (a series).} For real $|x|<1$,
+\begin{equation}\label{eq:atanh-series}
+  \ln\frac{1+x}{1-x}\ =\ 2\sum_{k\ge0}\frac{x^{2k+1}}{2k+1}.
+\end{equation}
+Indeed both sides vanish at $x=0$, and their derivatives agree:
+$\frac{\mathrm{d}}{\mathrm{d}x}\ln\frac{1+x}{1-x}=\frac{1}{1+x}+\frac{1}{1-x}
+=\frac{2}{1-x^{2}}=2\sum_{k\ge0}x^{2k}$, the geometric series converging
+uniformly on $|x|\le\rho$ for every $\rho<1$, so it may be integrated
+termwise from $0$ to $x$.
+
+\emph{Step 2 (the differences of $d_m$).} For $m\ge1$ put
+$d_m\coloneqq\ln m!-(m+\tfrac12)\ln m+m$. Then
+\begin{equation*}
+  d_m-d_{m+1}
+  =\ln m!-\ln(m+1)!-\Big(m+\frac12\Big)\ln m+\Big(m+\frac32\Big)\ln(m+1)-1
+  =\Big(m+\frac12\Big)\ln\frac{m+1}{m}-1,
+\end{equation*}
+using $\ln(m+1)!-\ln m!=\ln(m+1)$. Put $x\coloneqq1/(2m+1)\in(0,\tfrac13]$;
+then $(1+x)/(1-x)=(2m+2)/(2m)=(m+1)/m$ and $m+\tfrac12=1/(2x)$, so by
+\eqref{eq:atanh-series}
+\begin{equation}\label{eq:dm-series}
+  d_m-d_{m+1}=\frac{1}{2x}\cdot2\sum_{k\ge0}\frac{x^{2k+1}}{2k+1}-1
+  =\sum_{k\ge0}\frac{x^{2k}}{2k+1}-1=\sum_{k\ge1}\frac{x^{2k}}{2k+1}.
+\end{equation}
+
+\emph{Step 3 (two bounds on the difference).} Every term of
+\eqref{eq:dm-series} is positive, so keeping the first,
+\begin{equation*}
+  d_m-d_{m+1}\ >\ \frac{x^{2}}{3}=\frac{1}{3(2m+1)^{2}}
+  \ >\ \frac{1}{12m+1}-\frac{1}{12m+13}=\frac{12}{(12m+1)(12m+13)},
+\end{equation*}
+where the last inequality is, after cross-multiplication,
+$(12m+1)(12m+13)>36(2m+1)^{2}$, i.e.\
+$144m^{2}+168m+13>144m^{2}+144m+36$, i.e.\ $24m>23$, true for $m\ge1$.
+Bounding each term by $1/3$ times the geometric series,
+\begin{equation*}
+  d_m-d_{m+1}\ <\ \frac{x^{2}}{3}\sum_{k\ge0}x^{2k}=\frac{x^{2}}{3(1-x^{2})}
+  =\frac{1}{3\big((2m+1)^{2}-1\big)}=\frac{1}{12m(m+1)}
+  =\frac{1}{12m}-\frac{1}{12(m+1)}.
+\end{equation*}
+
+\emph{Step 4 (two monotone sequences with a common limit).} Put
+$a_m\coloneqq d_m-\frac{1}{12m}$ and $b_m\coloneqq d_m-\frac{1}{12m+1}$. By
+the upper bound of Step 3,
+$a_{m+1}-a_m=-(d_m-d_{m+1})+\frac{1}{12m}-\frac{1}{12(m+1)}>0$, so $(a_m)$
+is strictly increasing; by the lower bound,
+$b_{m+1}-b_m=-(d_m-d_{m+1})+\frac{1}{12m+1}-\frac{1}{12m+13}<0$, so $(b_m)$
+is strictly decreasing. Since $a_m<b_m$ for every $m$, $(a_m)$ is bounded
+above by $b_1$ and $(b_m)$ below by $a_1$, so both converge, and
+$b_m-a_m=\frac{1}{12m}-\frac{1}{12m+1}\to0$ forces a common limit $C_0$.
+Strict monotonicity gives $a_m<C_0<b_m$ for every $m\ge1$, that is,
+\begin{equation}\label{eq:robbins-C0}
+  C_0+\frac{1}{12m+1}\ <\ d_m\ <\ C_0+\frac{1}{12m}\qquad(m\ge1).
+\end{equation}
+
+\emph{Step 5 (Wallis's product).} For an integer $n\ge0$ put
+$I_n\coloneqq\int_0^{\pi/2}\sin^{n}x\,\mathrm{d}x$, so $I_0=\pi/2$ and
+$I_1=1$. For $n\ge2$, integration by parts with $u=\sin^{n-1}x$ and
+$\mathrm{d}v=\sin x\,\mathrm{d}x$ gives
+$I_n=\big[-\sin^{n-1}x\cos x\big]_0^{\pi/2}
++(n-1)\int_0^{\pi/2}\sin^{n-2}x\cos^{2}x\,\mathrm{d}x
+=(n-1)(I_{n-2}-I_n)$, whence $I_n=\frac{n-1}{n}I_{n-2}$. Iterating,
+\begin{equation*}
+  I_{2M}=\frac{\pi}{2}\prod_{k=1}^{M}\frac{2k-1}{2k},
+  \qquad
+  I_{2M+1}=\prod_{k=1}^{M}\frac{2k}{2k+1}\qquad(M\ge0).
+\end{equation*}
+On $(0,\pi/2)$ one has $0<\sin x<1$, so $\sin^{n+1}x<\sin^{n}x$ there and
+$0<I_{n+1}<I_n$ for every $n$. Hence, for $M\ge1$,
+$I_{2M+1}<I_{2M}<I_{2M-1}$. Now
+$I_{2M}/I_{2M+1}=\frac{\pi}{2}\prod_{k=1}^{M}\frac{(2k-1)(2k+1)}{(2k)^{2}}
+=\frac{\pi/2}{P_M}$, and $I_{2M+1}<I_{2M}$ gives $P_M<\pi/2$. Further
+$I_{2M-1}=\prod_{k=1}^{M-1}\frac{2k}{2k+1}=I_{2M+1}\cdot\frac{2M+1}{2M}$, so
+$I_{2M}<I_{2M-1}$ gives $\frac{\pi/2}{P_M}<\frac{2M+1}{2M}$, i.e.\
+$\pi/2<P_M\frac{2M+1}{2M}$. Multiplying by $4$ gives the second display of
+\eqref{eq:wallis-bounds}; this is (ii), and Lemma~\ref{lem:log-enclosure}
+applied to the two rationals $4P_M$ and $4P_M(1+1/(2M))$ encloses
+$\ln(2\pi)=2C$ by rationals, of width at most the sum of the root-bound
+widths and $\ln(1+1/(2M))\le1/(2M)$, hence of any prescribed width for $M$
+and the root precision large enough.
+
+\emph{Step 6 (the constant).} We identify $C_0=C$. From
+$\ln m!=d_m+(m+\tfrac12)\ln m-m$,
+\begin{equation*}
+  \ln\binom{2M}{M}=\ln(2M)!-2\ln M!
+  =d_{2M}-2d_M+\Big(2M+\frac12\Big)\ln(2M)-2M-(2M+1)\ln M+2M
+  =d_{2M}-2d_M+2M\ln2+\frac12\ln2-\frac12\ln M,
+\end{equation*}
+so $\binom{2M}{M}=e^{\,d_{2M}-2d_M}\,4^{M}\sqrt{2/M}$ and
+\begin{equation}\label{eq:central-binomial}
+  \Big(\frac{4^{M}}{\binom{2M}{M}}\Big)^{2}=e^{\,2(2d_M-d_{2M})}\,\frac{M}{2}.
+\end{equation}
+On the other hand $P_M$ is expressible through the same coefficient:
+$\prod_{k=1}^{M}(2k)^{2}=4^{M}(M!)^{2}$,
+$\prod_{k=1}^{M}(2k-1)=\frac{(2M)!}{2^{M}M!}$ and
+$\prod_{k=1}^{M}(2k+1)=\frac{(2M+1)!}{2^{M}M!}$, so
+\begin{equation*}
+  P_M=\frac{4^{M}(M!)^{2}\cdot4^{M}(M!)^{2}}{(2M)!\,(2M+1)!}
+  =\frac{16^{M}(M!)^{4}}{\big((2M)!\big)^{2}(2M+1)}
+  =\frac{1}{2M+1}\Big(\frac{4^{M}}{\binom{2M}{M}}\Big)^{2}
+  =e^{\,2(2d_M-d_{2M})}\,\frac{M}{2(2M+1)} .
+\end{equation*}
+As $M\to\infty$, $2d_M-d_{2M}\to2C_0-C_0=C_0$ by Step 4 and
+$M/(2(2M+1))\to1/4$, while $P_M\to\pi/2$ by \eqref{eq:wallis-bounds}.
+Hence $\pi/2=e^{2C_0}/4$, i.e.\ $e^{2C_0}=2\pi$ and $C_0=\tfrac12\ln(2\pi)=C$.
+With this, \eqref{eq:robbins-C0} is \eqref{eq:robbins}, and exponentiating
+gives the product form. This proves (i).
+
+\emph{Step 7 (part (iii)).} In \eqref{eq:robbins} replace $\ln m$ by its bounds
+(the coefficient $m+\tfrac12$ is positive) and $C=\tfrac12\ln(2\pi)$ by
+$\tfrac12c^{\mp}$; the width is the sum of the two widths so introduced plus
+$\frac{1}{12m}-\frac{1}{12m+1}=\frac{1}{12m(12m+1)}$. At $m=0$, $0!=1$.
+\end{proof}

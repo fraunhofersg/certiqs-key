@@ -1,0 +1,42 @@
+% ---
+% id: reductions/cor:monotone
+% kind: cor
+% title: "Monotonicity of the worst-case criterion along the pre-order"
+% summary: >-
+%   If one target squashes to a cleaner one, its worst-case criterion over a
+%   family of inputs equals the cleaner target's over the family's image under
+%   the connecting channel, and is at most the cleaner target's over any larger
+%   family. Moving up the pre-order can only raise the worst case.
+% prominence: standard
+% status: accepted
+% uses: [thm:factorization]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Composing squashers costs nothing in soundness; the corollary says in which
+direction it costs tightness. Moving \emph{up} the pre-order, to a cleaner
+target, hands the adversary more.
+
+\begin{corollary}\label{cor:monotone}
+For a POVM $G$ and a family $S$ of inputs write
+$\varepsilon^{*}(G,S)\coloneqq\sup_E\sup_{\sigma\in S_E}
+\Crit(\Eprot_G,\sigma)$. Let $F_2\dsq_{\Lambda_{12}}F_1$ and let both
+\tref[squashed protocol]{squashed protocols} use the same processing $\bar{\Grnd}_j$ and $\Kfin$. Then for
+every family $S$,
+\begin{equation*}
+  \varepsilon^{*}(F_2,S)
+  =\varepsilon^{*}\big(F_1,(\idmap\otimes\Lambda_{12}^{\otimes n}\otimes\idmap_E)(S)\big)
+  \;\le\;\varepsilon^{*}(F_1,S_1)
+  \quad\text{for every }S_1\supseteq
+  (\idmap\otimes\Lambda_{12}^{\otimes n}\otimes\idmap_E)(S).
+\end{equation*}
+\end{corollary}
+
+\begin{proof}
+The equality is Theorem~\ref{thm:factorization} applied with $(F_2,F_1)$ in
+place of $(M,F)$, pointwise in $\sigma$ and then in the suprema; the inequality
+is monotonicity of a supremum in the set.
+\end{proof}

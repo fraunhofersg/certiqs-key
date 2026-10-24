@@ -1,0 +1,43 @@
+% ---
+% id: receiver/component-catalogue/rem:out
+% kind: rem
+% title: "Elements outside the catalogue"
+% summary: >-
+%   Active elements, modulators and switches driven by a party's random choice,
+%   cavities and feedback paths, and mode-shape-dependent effects are outside
+%   the catalogue, each for a stated reason. A spectral filter reduced to a
+%   scalar transmittance is a loss entry and is in scope.
+% prominence: standard
+% status: accepted
+% uses: [receiver/def:graph]
+% mentions: [receiver/def:setting-family, reductions/def:joint-family, receiver/def:modes]
+% assumes: [A-PASSIVE, A-THRESH, A-MODES]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Each exclusion from the catalogue follows from an assumption of the receiver
+or from where the protocol declaration puts classical data. The interface records that placement in its
+test-statistics model (\repodoc{spec/modules/receiver/interface.yaml}).
+
+\begin{remark}\label{rem:out}
+Squeezers, parametric amplifiers and any active element are excluded by
+Assumption~\ref{ass:passive}: their Bogoliubov map mixes $a$ with
+$a^\dagger$, so $\Gmat^\dagger\Gmat\preceq\id$ fails, total photon number is
+not conserved, and the photon-number block structure on which the receiver's
+analysis rests does not exist. Modulators and optical switches driven by a
+party's random choice are excluded because a classical choice belongs in the
+protocol declaration as a weight, not in the mode algebra: the receiver
+states its measurement per setting (Definition~\ref{def:setting-family}), and
+the weights of the settings enter only downstream, as the class weights of
+\xref{reductions/def:joint-family}. Cavities and feedback paths are excluded by
+condition (E2) of Definition~\ref{def:graph}. Anything mode-shape-dependent is outside the
+declared-mode model, in which each label of Definition~\ref{def:modes} is one
+mode: dispersion and frequency conversion would act on the reserved temporal
+and spectral index, which Definition~\ref{def:modes} fixes to a single value
+that no element reads, and a mode-profile mismatch would carry light into
+modes the declaration does not contain, which Assumption~\ref{ass:modes}
+excludes; a spectral filter reduced to a scalar transmittance is C7 and is in
+scope.
+\end{remark}

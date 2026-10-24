@@ -1,0 +1,36 @@
+% ---
+% id: protocol-compiler/req:tag-reading
+% kind: req
+% title: "Reading the tag of a constraint entry"
+% summary: >-
+%   The tag of an untagged entry is read off the type of its datum, and an
+%   arriving tag field is checked against that type; the party-local tag is
+%   read off the field it arrives with. No tag is inferred and none is taken
+%   on the upstream module's word.
+% prominence: standard
+% status: implemented
+% uses: [def:homog, def:validator]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.protocol_compiler.validation:check_v6
+% lean:
+% ---
+
+For the two untagged forms of Definition~\ref{def:homog} the tag is the type
+of the right-hand side; the \tref{party-local form} is the one form the type does
+not separate from another.
+
+\begin{requirement}\label{req:tag-reading}
+The engine reads the tag of an entry of one of the two untagged forms of
+Definition~\ref{def:homog} off the type of its right-hand-side datum. Where
+such an entry arrives carrying a tag field, check V6 of
+Definition~\ref{def:validator} compares that field with the type of the
+datum it names and refuses a disagreement; the tag is never taken on the
+upstream module's word against the object the entry holds. An entry is read
+as \tref{party-local} exactly when it arrives carrying that tag; check V6
+then requires its right-hand-side slot to hold a real scalar and its scope to
+name a measured factor of the emitted sector map, and refuses otherwise. No
+tag is inferred: an entry arriving without the party-local tag is never read
+party-locally, whatever module emitted it.
+\end{requirement}

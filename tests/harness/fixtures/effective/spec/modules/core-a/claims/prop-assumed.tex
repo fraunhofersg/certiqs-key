@@ -1,0 +1,22 @@
+% ---
+% id: core-a/prop:assumed
+% kind: prop
+% title: A bound resting on an assumption
+% summary: A bound resting on an assumption, as the checker's tests need it.
+% prominence: standard
+% status: accepted
+% uses: [def:base]
+% assumes: [A-SHAKY]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{proposition}\label{prop:assumed}
+Under Assumption~\ref{ass:shaky}, a base object of
+Definition~\ref{def:base} has $y \le 1$.
+\end{proposition}
+
+\begin{proof}
+By \eqref{eq:base}.
+\end{proof}

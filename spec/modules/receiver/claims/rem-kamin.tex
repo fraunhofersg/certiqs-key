@@ -1,0 +1,36 @@
+% ---
+% id: receiver/rem:kamin
+% kind: rem
+% title: "Relation to a published multiclick weight bound"
+% summary: >-
+%   A published construction bounds a photon-number subspace weight from an
+%   observed multiclick rate, for one row per detector. [[thm:multiclick-bound]] is
+%   instead an operator inequality for every input state and ports of any rank;
+%   no step here depends on the citation.
+% prominence: standard
+% status: accepted
+% uses: [thm:multiclick-bound]
+% assumes: []
+% refs:
+%   - "kamin2024improved, Thm. 1, Eq. (58)"
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:kamin}
+A published route to a related quantity is
+\cite[Thm.~1, Eq.~(58)]{kamin2024improved}, which writes a multiclick POVM
+element as $M^{\mathrm{mult}}(G)=\id-\dyad{0}-\sum_iF_{\mathrm{sic}}$ for a
+passive linear-optical setup with mode transformation $G$, and then bounds the
+weight of a photon-number subspace using an \emph{observed} multiclick rate
+together with constants obtained by partitioning the rows of $G$. That is a
+different object from \eqref{eq:mcbound}: it is a statement about a measured
+statistic and a subspace weight, whereas Theorem~\ref{thm:multiclick-bound} is an
+operator inequality on each photon-number block that holds for every input
+state and is used as a device fact rather than as an observation. The
+construction is also less general in the direction that matters here: it is
+written for a one-row-per-detector transformation, whereas
+Theorem~\ref{thm:multiclick-bound} is proved for arbitrary port Grams, hence for ports
+of arbitrary rank. The citation is for orientation, and no step of this
+contract depends on it.
+\end{remark}

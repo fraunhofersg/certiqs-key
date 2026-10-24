@@ -1,0 +1,126 @@
+% ---
+% id: receiver/lem:collapse
+% kind: lem
+% title: "Collapse of the tail infimum to the first photon number"
+% summary: >-
+%   If the bound function is at most zero at zero photons, it cannot decrease
+%   from any n ≥ 1 at which it is non-negative. The non-negative part of its
+%   infimum above a cutoff is then that of its value at the next photon number.
+% prominence: standard
+% status: implemented
+% uses: [def:bounddata]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.bound:collapse_slack
+% lean:
+% ---
+
+A squashing argument consumes not $\Bnd(N+1)$ but the infimum
+$\inf_{n>N}\lmin\big(\blk{M}{\eqn}_{\mc}\big)$, and a squashing request whose
+bounds are not uniform over \emph{all} photon numbers above the cutoff
+fails (\repodoc{spec/architecture.md#54-failure-policy}). The
+\tref{bound function} is not monotone in general: it is the sum of a
+non-increasing term $(K-1)\gamma c^n$ and a non-decreasing term
+$-\sum_k\beta_kd_k^n$. The lemma shows that the non-monotone regime is
+confined to where the bound is useless anyway.
+
+\begin{lemma}\label{lem:collapse}
+Let $\big(\gamma,\{\beta_k\},c,\{d_k\}\big)$ be admissible bound data
+satisfying
+\begin{equation}\label{eq:collapsehyp}
+  \sum_{k=1}^{K}\beta_k\ \ge\ 1+(K-1)\gamma
+  \qquad\text{(equivalently, }\Bnd(0)\le0\text{)}.
+\end{equation}
+Then for every $n\ge1$,
+\begin{equation}\label{eq:collapsestep}
+  \Bnd(n)\ge0\ \Longrightarrow\ \Bnd(n+1)\ \ge\ \Bnd(n) .
+\end{equation}
+Consequently, for every cutoff $N\ge0$,
+\begin{equation}\label{eq:collapseinf}
+  \max\Big\{0,\ \inf_{n>N}\Bnd(n)\Big\}\;=\;\max\big\{0,\ \Bnd(N+1)\big\} ,
+\end{equation}
+and if $\Bnd(N+1)\ge0$ then $\Bnd$ is non-decreasing on $\{N+1,N+2,\dots\}$ and
+$\inf_{n>N}\Bnd(n)=\Bnd(N+1)$. Hypothesis \eqref{eq:collapsehyp} holds
+automatically when $\gamma=\beta_k=1$, where it reads $K\ge K$.
+\end{lemma}
+
+\begin{proof}
+\emph{Idea.} The increment $\Bnd(n+1)-\Bnd(n)$ is non-negative exactly when
+a weighted sum over the ports dominates the all-dark term. After the
+substitution $u_k=\beta_kd_k^{\,n}$ each port's contribution is a concave
+function of $u_k$, so it lies above its chord; the constraint
+$\Bnd(n)\ge0$ bounds $\sum_ku_k$, and the hypothesis at zero photons closes
+the gap. An induction then turns the step into the statement about the
+infimum.
+
+\emph{Step 1 (reduction to one inequality).} Fix $n\ge1$ and assume
+$\Bnd(n)\ge0$, that is
+\begin{equation}\label{eq:constraint}
+  \sum_{k=1}^{K}\beta_kd_k^{\,n}\ \le\ T\coloneqq1+(K-1)\gamma c^{\,n} .
+\end{equation}
+Since
+$\Bnd(n+1)-\Bnd(n)=\sum_k\beta_kd_k^{\,n}(1-d_k)-(K-1)\gamma c^{\,n}(1-c)$,
+the implication \eqref{eq:collapsestep} is exactly the statement
+\begin{equation}\label{eq:target}
+  \sum_{k=1}^{K}\beta_kd_k^{\,n}(1-d_k)\ \ge\ (K-1)\gamma\,c^{\,n}(1-c)
+\end{equation}
+under the constraint \eqref{eq:constraint} and $c\le d_k\le1$.
+
+\emph{Step 2 (the case $c=1$).} If $c=1$ then $d_k=1$ for every $k$ and both
+sides of \eqref{eq:target} vanish. Assume therefore $c<1$, so that
+$c^{\,n}<1$ for $n\ge1$.
+
+\emph{Step 3 (the chord bound).} Substitute $u_k\coloneqq\beta_kd_k^{\,n}$, a strictly increasing bijection from
+$d_k\in[c,1]$ onto $u_k\in[\beta_kc^{\,n},\beta_k]$ (for $\beta_k>0$; a
+$\beta_k=0$ contributes $0$ to both sides of the chord bound below and may be
+dropped). Under it
+\begin{equation}\label{eq:psi}
+  \beta_kd_k^{\,n}(1-d_k)=\psi_k(u_k),\qquad
+  \psi_k(u)\coloneqq u-\beta_k^{-1/n}\,u^{1+1/n},
+\end{equation}
+because $\beta_k^{-1/n}u^{1+1/n}=\beta_k^{-1/n}
+(\beta_kd_k^{\,n})^{1+1/n}=\beta_kd_k^{\,n+1}$. Two values and one convexity
+fact are all that is needed:
+\begin{equation}\label{eq:psivalues}
+  \psi_k(\beta_k)=0,\qquad
+  \psi_k(\beta_kc^{\,n})=\beta_kc^{\,n}(1-c),\qquad
+  \psi_k''(u)=-\beta_k^{-1/n}\Big(1+\tfrac1n\Big)\tfrac1n\,u^{1/n-1}\le0 ,
+\end{equation}
+so $\psi_k$ is concave on $[0,\beta_k]$ and therefore lies \emph{above} the
+chord joining its values at the two endpoints of
+$[\beta_kc^{\,n},\beta_k]$. Writing a point of that interval as
+$u=\lambda\beta_kc^{\,n}+(1-\lambda)\beta_k$ with
+$\lambda=(\beta_k-u)/\big(\beta_k(1-c^{\,n})\big)\in[0,1]$, the chord bound is
+\begin{equation}\label{eq:chord}
+  \psi_k(u)\ \ge\ \lambda\,\psi_k(\beta_kc^{\,n})+(1-\lambda)\,\psi_k(\beta_k)
+  \ =\ \frac{c^{\,n}(1-c)}{1-c^{\,n}}\,\big(\beta_k-u\big).
+\end{equation}
+Summing \eqref{eq:chord} over $k$ and using $\sum_ku_k\le T$ from
+\eqref{eq:constraint} together with $\frac{c^{\,n}(1-c)}{1-c^{\,n}}\ge0$,
+\begin{equation}\label{eq:sumchord}
+  \sum_{k=1}^{K}\beta_kd_k^{\,n}(1-d_k)
+  =\sum_{k=1}^{K}\psi_k(u_k)
+  \ \ge\ \frac{c^{\,n}(1-c)}{1-c^{\,n}}
+    \Big(\sum_{k}\beta_k-\sum_ku_k\Big)
+  \ \ge\ \frac{c^{\,n}(1-c)}{1-c^{\,n}}
+    \Big(\sum_{k}\beta_k-T\Big).
+\end{equation}
+
+\emph{Step 4 (the hypothesis at zero photons).} Hypothesis
+\eqref{eq:collapsehyp} gives
+\begin{equation}\label{eq:gap}
+  \sum_k\beta_k-T\ \ge\ \big(1+(K-1)\gamma\big)-1-(K-1)\gamma c^{\,n}
+  \ =\ (K-1)\gamma\big(1-c^{\,n}\big)\ \ge\ 0 ,
+\end{equation}
+and substituting \eqref{eq:gap} into \eqref{eq:sumchord} cancels the factor
+$1-c^{\,n}>0$ and yields exactly \eqref{eq:target}.
+
+\emph{Step 5 (from \eqref{eq:collapsestep} to \eqref{eq:collapseinf}).} The induction
+runs over $n\ge N+1\ge1$, which is where \eqref{eq:collapsestep} was proved. If
+$\Bnd(N+1)\ge0$ then, inductively, $\Bnd(n+1)\ge\Bnd(n)\ge\Bnd(N+1)\ge0$ for
+every $n\ge N+1$, so $\Bnd$ is non-decreasing on $\{N+1,N+2,\dots\}$ and
+$\inf_{n>N}\Bnd(n)=\Bnd(N+1)$, which gives \eqref{eq:collapseinf}. If
+$\Bnd(N+1)<0$ then $\inf_{n>N}\Bnd(n)\le\Bnd(N+1)<0$ and both sides of
+\eqref{eq:collapseinf} equal $0$.
+\end{proof}

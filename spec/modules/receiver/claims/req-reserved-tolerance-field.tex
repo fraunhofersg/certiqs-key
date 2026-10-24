@@ -1,0 +1,29 @@
+% ---
+% id: receiver/req:reserved-tolerance-field
+% kind: req
+% title: "Refusal of a non-zero parameter tolerance"
+% summary: >-
+%   The reserved tolerance field of a declared parameter is admitted only
+%   when absent or exactly zero and is refused otherwise. An ignored tolerance
+%   would be a silent claim that the device is exact ([[A-EXACT]]).
+% prominence: standard
+% status: implemented
+% uses: []
+% mentions: [ass:exact]
+% assumes: []
+% refs: []
+% implements: certiqs_key.receiver.validation:check_parameter_tolerances
+% provenance: newly-derived
+% lean:
+% ---
+
+Assumption~\ref{ass:exact} makes every declared parameter exact, and a
+tolerance silently ignored would be a claim of exactness that was not made;
+the field is therefore validated and never ignored. Its place in the
+declaration is the parameters table of the interface
+(\repodoc{spec/modules/receiver/interface.yaml}).
+
+\begin{requirement}\label{req:reserved-tolerance-field}
+The engine validates the reserved \iface{tolerance} field of every declared
+parameter as absent or exactly zero, and refuses it otherwise.
+\end{requirement}

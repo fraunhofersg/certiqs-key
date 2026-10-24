@@ -1,0 +1,36 @@
+% ---
+% id: receiver/rem:whyprojector
+% kind: rem
+% title: "Derivations without normal ordering"
+% summary: >-
+%   The normal-ordered form is stated for comparison and used in no proof.
+%   Every operator identity from the port Grams to the emitted weight follows
+%   from the functoriality of the Fock lift and vacuum elimination, block by
+%   block in finite dimension, with no convergence question.
+% prominence: standard
+% status: accepted
+% uses: [prop:normord, lem:fock-functor]
+% mentions: [lem:vacelim, thm:port-grams, thm:representation-independence, thm:click-povm, thm:coarse-graining, thm:multiclick-bound, thm:emitted-bound, receiver/detector-imperfections/thm:efficiency]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:whyprojector}
+Proposition~\ref{prop:normord} is stated because it is the form in which these
+operators appear in the optics literature and in every numerical
+implementation, and because it makes the efficiency substitution of
+Theorem~\ref{thm:efficiency} transparent. It is not used in the proof of any claim.
+Every operator identity of the sections from the port Grams to the emitted
+weight is obtained from Lemma~\ref{lem:fock-functor}\,(i)--(iv) and from the
+vacuum elimination of Lemma~\ref{lem:vacelim}, which involve only
+finite-dimensional linear algebra on each photon-number block: no unbounded
+operator, no operator-valued series and no convergence question arises
+anywhere in
+Theorems~\ref{thm:port-grams}, \ref{thm:click-povm}, \ref{thm:representation-independence}, \ref{thm:coarse-graining},
+\ref{thm:multiclick-bound} and~\ref{thm:emitted-bound}. A submodule whose
+closed forms need series or integrals, as conditioning on a probe state can,
+says so where it uses them.
+\end{remark}

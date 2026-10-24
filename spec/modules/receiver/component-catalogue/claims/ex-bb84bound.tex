@@ -1,0 +1,55 @@
+% ---
+% id: receiver/component-catalogue/ex:bb84bound
+% kind: ex
+% title: "Analytic multiclick weight of the BB84 receiver"
+% summary: >-
+%   The channel-only BB84 receiver has a closed-form analytic multiclick bound,
+%   and its one setting is exact, so the emitted weight is the positive part of
+%   the bound at the first block above the cutoff, with no tail window. At
+%   balanced bases the
+%   cutoffs N = 2 and N = 3 give 1/2 and 3/4.
+% prominence: standard
+% status: accepted
+% uses: [receiver/def:compile, receiver/lem:vacelim, receiver/def:probe, receiver/def:pmc, receiver/lem:collapse]
+% mentions: [ex:bb84, receiver/rem:flag-instances, receiver/req:window-declaration, receiver/cor:unconditioned-family]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The rank-one Grams of the BB84 receiver make every quantity of the analytic
+multiclick bound explicit, and its single setting shows the collapse branch at
+work.
+
+\begin{example}\label{ex:bb84bound}
+Take the \emph{channel-only} receiver of the last paragraph of
+Example~\ref{ex:bb84} (the probe off and its $\Prb$ columns eliminated,
+Lemma~\ref{lem:vacelim}), which declares $\InpS=\varnothing$ and therefore
+has $\Tset=\{\off\}$ by Definition~\ref{def:probe}. Then $\gamma=\beta_k=1$
+and the Grams are \eqref{eq:bb84grams} with $A_\Sigma=\id_2$, so
+$c=1-\lmax(A_\Sigma)=0$, and
+\begin{equation}
+  A_\Sigma-A_H=\id-p_Z\dyad{H}\ \Rightarrow\ \lmin=1-p_Z=p_X\ \Rightarrow\
+  d_H=p_Z,
+\end{equation}
+and likewise $d_V=p_Z$, $d_+=d_-=p_X$. Hence, for $n\ge1$,
+\begin{equation}\label{eq:bb84beta}
+  \Bnd(n)=1-2p_Z^{\,n}-2p_X^{\,n}.
+\end{equation}
+This receiver declares no probe modes, so its one setting is flagged
+$\mathrm{exact}$ (Corollary~\ref{cor:unconditioned-family}) and predicate~(X)
+of Definition~\ref{def:pmc} holds, \eqref{eq:collapsehyp}
+holds with equality ($\gamma=\beta_k=1$), branch~1 is taken, and no tail
+window is declared or required (Remark~\ref{rem:flag-instances},
+Requirement~\ref{req:window-declaration}). Since $\Tset=\{\off\}$, the minimum over
+$\Tset$ in Definition~\ref{def:pmc} is over that one setting, so what is
+computed here is the emitted $\pmc$ and not one of several per-setting values.
+Hence $\pmc=\max\{0,\Bnd(N+1)\}$ exactly. At $p_Z=p_X=\tfrac12$ this is
+$\Bnd(n)=1-2^{2-n}$: $\Bnd(1)=-1$, $\Bnd(2)=0$, $\Bnd(3)=\tfrac12$,
+$\Bnd(4)=\tfrac34$, non-decreasing from the first non-negative index, as
+Lemma~\ref{lem:collapse} requires. A cutoff $N=2$ therefore yields
+$\pmc=\tfrac12$, and $N=3$ yields $\pmc=\tfrac34$. Note that $\pmc\to1$
+exponentially exactly when $\max(p_Z,p_X)<1$, i.e.\ when no single basis
+absorbs the whole input.
+\end{example}

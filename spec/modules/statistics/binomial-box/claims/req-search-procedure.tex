@@ -1,0 +1,31 @@
+% ---
+% id: statistics/binomial-box/req:search-procedure
+% kind: req
+% title: "One fixed search for the enclosure evaluation"
+% summary: >-
+%   On the enclosure evaluation of the exact rule the engine finds every
+%   bracketed endpoint by one fixed, total and deterministic search with fixed
+%   parameters, the procedure the interface records. Fixing it is what makes
+%   the evaluation an endpoint rule.
+% prominence: standard
+% status: implemented
+% uses: [prop:bracketed-endpoints, rem:local-evaluation]
+% mentions: [def:endpoint-rule]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.enclosure:bracketed_upper_endpoint
+% lean:
+% ---
+
+Proposition~\ref{prop:bracketed-endpoints} holds for every bracketed
+endpoint, whatever procedure found it; fixing the procedure, with its
+parameters, is what makes the evaluation a rule in the sense of
+Definition~\ref{def:endpoint-rule} (Remark~\ref{rem:local-evaluation}).
+
+\begin{requirement}\label{req:search-procedure}
+On the enclosure evaluation of the exact rule, the engine finds every
+bracketed endpoint of Proposition~\ref{prop:bracketed-endpoints}, upper and
+lower, by one fixed search procedure, total and deterministic, with fixed
+parameters: the procedure \iface{search_procedure} records.
+\end{requirement}

@@ -1,0 +1,100 @@
+% ---
+% id: foundations/cor:rank-over-factor-enclosure
+% kind: cor
+% title: "Rank over a factor enclosure"
+% summary: >-
+%   A factor enclosure with no column holds only the zero matrix. One whose
+%   Gram matrix L*L has a positive floor over its box fixes, at every member,
+%   the rank, its number of columns, and the support, the span of that
+%   member's columns.
+% prominence: technical
+% status: implemented
+% uses: [def:factor-enclosure, cor:least-eigenvalue-over-enclosure]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.reference:fixes_rank
+% lean:
+% ---
+
+Corollary~\ref{cor:least-eigenvalue-over-enclosure}\,(iv) fixes the rank of
+the matrices an entrywise enclosure contains where they are positive definite
+on the rows it does not fix at zero. A \tref{factor enclosure} fixes it where
+the columns of its factors are linearly independent throughout the box, which
+a positive floor under their Gram matrix shows: every member then has as many
+independent columns as the triple has, and its support is the span of its own
+columns. The support moves with the member, its dimension does not, and each
+member has a factor form whose factor lies in a box and whose core is the same
+exact matrix for all. Part~(iii) gives one floor that is a comparison of
+rationals.
+
+\begin{corollary}\label{cor:rank-over-factor-enclosure}
+Let $(L_c,t,W)$ be a triple of a \tref{matrix box} $(L_c,t)$ of complex
+$d\times k$ matrices and a diagonal $k\times k$ matrix $W$ with positive
+rational diagonal entries, as in Definition~\ref{def:factor-enclosure}, and
+call a matrix $L$ that the box contains a \emph{factor} and $LWL^{\dagger}$ a
+\emph{member}.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \emph{(No column.)} If $k=0$, every member is the zero $d\times d$
+  matrix.
+\item \emph{(A Gram floor fixes the rank.)} Let $k\ge1$, let $G$ be a
+  Hermitian $k\times k$ matrix and $\rho\ge0$ with
+  $\|L^{\dagger}L-G\|_{\mathrm F}\le\rho$ for every factor $L$, the Frobenius
+  norm of Corollary~\ref{cor:least-eigenvalue-over-enclosure}, and let
+  $\ell\le\lmin(G)$ with $\ell-\rho>0$. Then for every factor $L$,
+  $L^{\dagger}L\succ0$, so that $k\le d$ and $\operatorname{rank}L=k$; and the
+  member $X\coloneqq LWL^{\dagger}$ satisfies $X=E^{\dagger}WE$ with
+  $E\coloneqq L^{\dagger}$ a $k\times d$ matrix of rank $k$, $X\succeq0$,
+  $\operatorname{ran}X=\operatorname{ran}L$, the span of the columns of $L$,
+  and $\operatorname{rank}X=k$; in particular $X\neq0$.
+\item \emph{(One such floor.)} Let $k\ge1$, put
+  $a_{im}\coloneqq|\operatorname{Re}(L_c)_{im}|+|\operatorname{Im}(L_c)_{im}|$
+  and
+  \begin{equation}\label{eq:gram-radius}
+    s_{ml}\;\coloneqq\;\sum_{i=1}^{d}\big(a_{im}t_{il}+t_{im}a_{il}
+    +t_{im}t_{il}\big)\qquad(1\le m,l\le k),
+  \end{equation}
+  rationals. Then $G\coloneqq L_c^{\dagger}L_c$ is Hermitian with entries in
+  $\mathbb{Q}(i)$, and every rational $\rho\ge0$ with
+  $\rho^{2}\ge\sum_{m,l}s_{ml}^{2}$ satisfies
+  $\|L^{\dagger}L-G\|_{\mathrm F}\le\rho$ for every factor $L$; whether $\rho$
+  qualifies, and whether $\ell-\rho>0$ for a rational $\ell$, is a comparison
+  of rationals.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+\emph{(i).} For $k=0$ a factor $L$ is $d\times0$ and $W$ is $0\times0$, so
+every entry $(LWL^{\dagger})_{il}=\sum_{m=1}^{k}L_{im}W_{mm}\overline{L_{lm}}$
+is an empty sum, $0$.
+
+\emph{(ii).} Let $L$ be a factor. $L^{\dagger}L$ is a Hermitian $k\times k$
+matrix, and Corollary~\ref{cor:least-eigenvalue-over-enclosure}\,(i) with
+$R\coloneqq L^{\dagger}L$ and $M\coloneqq G$ gives
+$\lmin(L^{\dagger}L)\ge\lmin(G)-\rho\ge\ell-\rho>0$. So for $y\ne0$,
+$\|Ly\|^{2}=y^{\dagger}L^{\dagger}Ly>0$: $L$ is injective, its rank is $k$,
+and $k\le d$, the rank of a $d\times k$ matrix being at most $d$. The adjoint
+$E=L^{\dagger}$ has the same rank $k$, and $E^{\dagger}WE=LWL^{\dagger}=X$
+with $W$ positive definite, its diagonal entries being positive.
+Corollary~\ref{cor:least-eigenvalue-over-enclosure}\,(iii), with $E$ and
+$\widetilde X\coloneqq W$, gives $X\succeq0$,
+$\operatorname{ran}X=\operatorname{ran}E^{\dagger}=\operatorname{ran}L$ and
+$\operatorname{rank}X=k\ge1$, so $X\ne0$.
+
+\emph{(iii).} The entries $(L_c^{\dagger}L_c)_{ml}=\sum_i
+\overline{(L_c)_{im}}(L_c)_{il}$ are sums of products of Gaussian rationals,
+so they lie in $\mathbb{Q}(i)$, and
+$\overline{(L_c^{\dagger}L_c)_{lm}}=(L_c^{\dagger}L_c)_{ml}$. Let $L$ be a
+factor and $\Delta\coloneqq L-L_c$, so $|\Delta_{im}|\le t_{im}$. Then
+\begin{equation*}
+  (L^{\dagger}L-L_c^{\dagger}L_c)_{ml}
+  =\sum_{i=1}^{d}\Big(\overline{(L_c)_{im}}\,\Delta_{il}
+  +\overline{\Delta_{im}}\,(L_c)_{il}+\overline{\Delta_{im}}\,\Delta_{il}\Big),
+\end{equation*}
+and $|(L_c)_{im}|\le a_{im}$, since $|x+iy|\le|x|+|y|$ for real $x,y$; by the
+triangle inequality the modulus of the left-hand side is at most $s_{ml}$.
+Hence $\|L^{\dagger}L-G\|_{\mathrm F}^{2}=\sum_{m,l}|(L^{\dagger}L-G)_{ml}|^{2}
+\le\sum_{m,l}s_{ml}^{2}\le\rho^{2}$. The $a_{im}$ and $s_{ml}$ are sums and
+products of rationals, and so is $\sum_{m,l}s_{ml}^{2}$.
+\end{proof}

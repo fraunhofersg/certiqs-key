@@ -1,0 +1,45 @@
+% ---
+% id: meat-core/cor:concavity
+% kind: cor
+% title: "Concavity of the branch quantities on subnormalised states"
+% summary: >-
+%   For α > 1 the pinched trace power is concave on subnormalised operators,
+%   so every sector deficit is concave on subnormalised sector states and each
+%   K is concave on the feasible set. It is the imported concavity result read
+%   at the parameter 1/α.
+% prominence: standard
+% status: accepted
+% uses: [thm:branch-formula, foundations/fact:concavity, lem:branch-maps]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{corollary}
+\label{cor:concavity}
+For $\alpha\in(1,\infty)$, the map
+$X\mapsto\tr[(\cZ(X^{1/\alpha}))^{\alpha}]=Q_{1/\alpha}(X)$ is concave on
+$\Sleq{}$ of its space; consequently, for every $\hat c$, $s$, the deficit
+$f_{\hat c,s}$ of \eqref{eq:f-def} is concave on
+$\{\sigma\in\Pos{A\Qsys_s}:\tr\sigma\le1\}$, and
+$K_{\hat c}$ is concave on $\Feas$.
+\end{corollary}
+
+\begin{proof}
+$1/\alpha\in(0,1)$, so \xref{foundations/fact:concavity} applies at parameter
+$\alpha'=1/\alpha$ and gives concavity of $Q_{1/\alpha}$ (this is
+exactly the substitution the source itself performs in its Cor.~27, which
+states concavity of $Q_{1/\alpha}\circ\mathcal{G}_{\delta}$ for
+$\alpha\in[1,\infty)$). The map $\cG_{\hat c,s}$ is linear and maps the
+stated domain into $\Sleq{}$ (Lemma~\ref{lem:branch-maps}\,(i)), and precomposition
+of a concave function with a linear map preserves concavity; subtracting
+the linear term $\tr\cG_{\hat c,s}(\cdot)$ preserves concavity. For
+$K_{\hat c}=P_{\hat c}+\sum_sf_{\hat c,s}$: $P_{\hat c}$ is affine and a
+sum of concave functions is concave. The hypothesis check for
+\xref{foundations/fact:concavity}: our $\cZ$ is a pinching from the complete
+orthogonal family $\{Z_j\}_{j\in\Zset}$ extended by identity factors, which
+is again such a family; the arguments $\cG_{\hat c,s}(\sigma)$ are
+subnormalized PSD operators, inside the source's stated domain
+$\Sleq{Q}$.
+\end{proof}

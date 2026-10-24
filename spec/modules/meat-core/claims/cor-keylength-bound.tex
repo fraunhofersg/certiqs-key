@@ -1,0 +1,96 @@
+% ---
+% id: meat-core/cor:keylength-bound
+% kind: cor
+% title: "Key length from any lower bound on the value"
+% summary: >-
+%   Any h ≤ h_low may replace h_low in the key-length bound through max{0, h},
+%   with the same security statement. This is where every solver obtains its
+%   key length; a bound h ≤ 0 yields no positive key when ε_EV < 1.
+% prominence: main
+% status: implemented
+% uses: [thm:keylength, lem:ev-correctness, cor:composed-security, lem:memory-lift, lem:honest-attacks, prop:monotone, prop:value-range]
+% mentions: [def:max-key-length, def:feasible]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.keylength:key_length_from_bound
+% lean:
+% notes: "Clause (b) is stated for eps_ev < 1; the corner eps_ev = eps_pa = 1, lambda_EC = 0 carries no security claim."
+% ---
+
+This corollary is where a solver obtains its key length, and the only
+place: a solver submodule establishes a lower bound $h\le\hlow$ for the $h$
+it computes, under its own trust root and in its own claims, and the
+Frank--Wolfe linearisation bound, with both linear minima bounded from
+below, is the instance this repository carries. The core asserts nothing about how
+$h$ was obtained, in what arithmetic, or how close it lies to $\hlow$.
+
+\begin{corollary}\label{cor:keylength-bound}
+Let $\alpha\in(1,2)$, let the hypotheses of Theorem~\ref{thm:keylength}
+hold in its unconstrained or its constrained branch, the run as in
+Lemma~\ref{lem:memory-lift}\,(a) and hypothesis (H-CHAIN) included, at every
+all-at-once attack with finite registers, A-SEQ with its clause (v) among
+them, and let those of Lemma~\ref{lem:ev-correctness} hold. Let
+$h\in\mathbb{R}\cup\{-\infty\}$ satisfy
+\begin{equation}\label{eq:lower-bound-h}
+  h\;\le\;\hlow ,
+\end{equation}
+with $\hlow$ the exact value \eqref{eq:hlow-def} of the declaration (for
+the constrained branch: with $\Feas$ carrying the declared $\CList$). If the
+output length satisfies
+\begin{equation}\label{eq:keylength-h}
+  \ell\;\le\;n\,\max\{0,h\}-\lEC-\Big\lceil\log_2\frac1{\eev}\Big\rceil
+  -\frac{\alpha}{\alpha-1}\log_2\frac1{\epa}+1,
+\end{equation}
+then the protocol is $\epa$-secret and $\eev$-correct on the accepted
+state, hence, for $\ell\ge1$, $(\epa+\eev)$-secure in the
+\tref{honest-authentication setting}; under the further hypotheses of
+Corollary~\ref{cor:composed-security}\,(iii) it is
+$(\epa+\eev+2\varepsilon_{\mathrm{auth}})$-secure over the classical channel
+of that part, with net key gain $\ell-k_{\mathrm{auth}}$ when both parties
+output a key. The secrecy and the security statements hold at every output
+state, whatever the dimension of the adversary's registers and the order in
+which the source releases its signals, as
+Corollary~\ref{cor:composed-security} states them, and the correctness
+statement at every attack. Moreover:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item if $h$ depends on none of $(\lEC,\eev,\epa)$, the four conclusions of
+  Proposition~\ref{prop:monotone} hold verbatim for the maximal key length
+  (Definition~\ref{def:max-key-length}) built from \eqref{eq:keylength-h},
+  with $\max\{0,h\}$ in place of $\hlow$;
+\item if $h\le0$ and $\eev<1$ then no positive $\ell$ satisfies
+  \eqref{eq:keylength-h} and no key is claimed (at $\eev=1$ the correctness
+  statement is empty and the corner carries no security claim).
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+\eqref{eq:keylength-h} is \eqref{eq:keylength} with $\hlow$ replaced by
+$\max\{0,h\}$ and \emph{nothing else changed}: no additional subtrahend,
+no floor beyond the one $\max\{0,\cdot\}$ already supplies, no arithmetic
+requirement of any kind. By \eqref{eq:lower-bound-h} and $\hlow\ge0$
+(Proposition~\ref{prop:value-range}\,(i)) one has
+$\max\{0,h\}\le\hlow$; the right-hand side of \eqref{eq:keylength} is
+non-decreasing in $\hlow$ and $n\ge1$; so \eqref{eq:keylength-h} implies
+\eqref{eq:keylength} and Theorem~\ref{thm:keylength} applies unchanged, as
+does Corollary~\ref{cor:composed-security}, whose hypotheses are those of
+that theorem at an $\ell$ satisfying \eqref{eq:keylength} and those of
+Lemma~\ref{lem:ev-correctness}, which holds for every $\ell$ and every
+attack; the corollary states the secrecy and its three security statements at
+every output state, whatever the adversary's memory.
+(a) Under the stated independence, the proof of
+Proposition~\ref{prop:monotone} carries over word for word with
+$\max\{0,h\}$ in place of $\hlow$: the only property of $\hlow$ that proof
+reads is that it does not depend on $(\lEC,\eev,\epa)$. (b) If $h\le0$ then
+$\max\{0,h\}=0$ and the right-hand side of \eqref{eq:keylength-h} is
+$1-\lEC-\lceil\log_2\frac1{\eev}\rceil-\frac{\alpha}{\alpha-1}\log_2\frac1{\epa}$,
+and for $\eev<1$ the ceiling is at least $1$ and the other two subtrahends
+are non-negative, so the right-hand side is at most $0$ and no positive
+$\ell$ satisfies \eqref{eq:keylength-h} --- the conservative outcome. The
+hypothesis $\eev<1$ is not removable: at $\eev=1$, $\epa=1$ and $\lEC=0$,
+all inside the hypotheses of Theorem~\ref{thm:keylength}, the right-hand
+side equals $1$ and $\ell=1$ satisfies \eqref{eq:keylength-h} under a
+$(\epa+\eev)$-security statement that is empty; the corner carries no
+security claim, which is why the clause excludes it rather than claiming
+it.
+\end{proof}

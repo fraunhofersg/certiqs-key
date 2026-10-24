@@ -1,0 +1,59 @@
+% ---
+% id: reductions/rem:entry-tags
+% kind: rem
+% title: "Party-local tags and the one-factor emission"
+% summary: >-
+%   The licence covers a party-local entry only through a certificate on its
+%   own factor's channel; a joint one can hold while the operator inequality
+%   fails. On a one-factor emission the untagged entry is implied by the
+%   party-local reading, and rate is lost only in untrusted-source mode at
+%   d_A > 1.
+% prominence: standard
+% status: accepted
+% uses: [cor:entries, def:licensed, lem:party-local, thm:licence]
+% mentions: [thm:emitted-product, req:party-local-tag]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The entries of Corollary~\ref{cor:entries} are untagged; the party-local tag
+exists for a \tref{measured system} that is a declared product of party-scoped
+factors (Requirement~\ref{req:party-local-tag}). This remark says what
+licenses the tagged reading and what a one-factor emission gives up by
+emitting the untagged one.
+
+\begin{remark}\label{rem:entry-tags}
+An entry \tref{scoped to a factor} $f$ of a declared product
+$\Qsys=\bigotimes_f\Qsys_f$ is read as the operator inequality
+\eqref{eq:partylocal-entry} on the other systems of $\omega$, with $\hat O$
+an operator on $\Qsys_f$ alone. \emph{What licenses that reading is a
+certificate discharged on the factor's own channel} $\Lambda_f$, which is the
+hypothesis of Theorem~\ref{thm:licence}\,(v); a certificate on the joint
+channel does not license it, and does not almost license it,
+Lemma~\ref{lem:party-local}\,(iv) exhibiting a channel that satisfies the
+scalar bound and violates the operator one.
+
+\emph{On a one-factor emission the untagged entry is safe, whatever the
+case}: it is \emph{implied} by the
+\tref[party-local form]{party-local reading} of the same
+$(\hat O,\bowtie,c)$ --- in
+\tref{untrusted-source mode} it is that reading's trace
+(Lemma~\ref{lem:party-local}\,(iii)), and in \tref{trusted-source mode} it is
+the same operator inequality under the marginal condition $\omega_A=\tau_A$
+--- and the licence covers it on the very same certificate, by
+Theorem~\ref{thm:licence}\,(i)--(iv). \emph{What it gives up does depend on
+the case, and Definition~\ref{def:licensed} states all three}: in
+trusted-source mode under the consumer's marginal condition
+$\omega_A=\tau_A$, and in untrusted-source mode at $d_A=1$, the untagged entry
+\emph{is} the party-local reading and nothing is given up; in untrusted-source
+mode with $d_A>1$ the party-local reading is an operator inequality on $A$
+against the marginal that is actually there, of which the untagged entry is
+only the trace, so what is emitted is strictly weaker --- a rate loss and
+never a soundness loss. Emitting the stronger form there would need a tag
+naming a scope that no declared product provides; widening it is an amendment
+of Definition~\ref{def:licensed} and of the consuming \tref{round model}.
+Theorem~\ref{thm:emitted-product}\,(vi) says the same of the one-factor
+emission as a whole.
+\end{remark}

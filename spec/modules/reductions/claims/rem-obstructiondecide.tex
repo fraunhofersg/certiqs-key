@@ -1,0 +1,60 @@
+% ---
+% id: reductions/rem:obstructiondecide
+% kind: rem
+% title: "Exact decision of the necessary conditions"
+% summary: >-
+%   On declared numbers the spectral condition is decided exactly in operator
+%   form on rational enclosures, and the span condition by exact ranks and
+%   linear relations. A loose decision would refuse more or less than the
+%   lemma says, which is safe: nothing emitted rests on the check having
+%   passed.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [lem:obstructions, lem:exactpsd, rem:psdalgorithm, def:reduction-instance, req:declared-relation-check]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:obstructiondecide}
+Lemma~\ref{lem:obstructions} is an exact statement about an arbitrary
+relation. Applied to \emph{declared} numbers, both of its parts are decided
+\emph{exactly} in the substrate of Lemma~\ref{lem:exactpsd}, each in a form
+that differs from the lemma's wording.
+\emph{(i)} The spectral enclosure is decided in its \emph{operator} form,
+which is what a refusal needs and what \eqref{eq:psdtest} decides: for
+rationals $a\le b$ the pair $a\idon{\Qsys}\preceq X\preceq b\idon{\Qsys}$ is
+decided exactly, by any of the exact procedures of
+Remark~\ref{rem:psdalgorithm}, and where it holds the same pair is decided
+for $X'$. \emph{The lemma's $\inf\operatorname{spec}X$ and
+$\sup\operatorname{spec}X$ are in general algebraic and not rational}, so the
+decision tests the rational enclosures the declaration exhibits rather than
+the extreme values themselves; it refuses a subset of what the lemma forbids,
+and no eigenvalue is computed anywhere.
+\emph{(ii)} The span dimension is the \emph{exact} rank over $\Fldi$ of the
+matrix whose columns are the vectorized declared elements, decided by
+elimination in the field. A floating-point rank is a threshold decision, and
+this one is not. The linear relations are decided the same way: the
+solutions $(a,c)$ of $\sum_va_vF_v=c\,\idon{\Qsys}$ form a subspace, an exact
+basis of which elimination in the field produces, and testing
+$\sum_va_vM_v=c\,\idon{\Bsys}$ on each basis solution tests it on every
+solution, the condition being linear in $(a,c)$.
+
+\emph{A loose decision would have been safe here.} A rank read at a threshold
+may count a nearly dependent family as independent, and an enclosure read at
+a window may fail to notice a violation just inside it. Made on the target's
+elements, either error refuses \emph{less} than the lemma forbids; made on the
+physical elements, a loose decision can refuse a relation that exists.
+Neither can produce a wrong artefact, because of what the check is for: it
+is a cheap early refusal, not a warrant. Nothing this module emits is
+proved from the check's having passed; what the emitted artefact rests on are
+the constructions themselves, which either produce a channel or do not. A
+missed refusal costs the construction's time and produces no artefact, and a
+spurious one produces none either; neither can produce a wrong one. The check is exact all the same
+(Requirement~\ref{req:declared-relation-check}). \emph{It is also vacuous on
+this module's own emission path}, where the request declares no relation of
+its own and the only relation in play is the one the reduction instance
+constructs (Definition~\ref{def:reduction-instance}\,(I3)).
+\end{remark}

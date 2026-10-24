@@ -1,0 +1,68 @@
+% ---
+% id: foundations/def:tiers
+% kind: def
+% title: "The tiers of a reported key rate"
+% summary: >-
+%   A reported key rate carries one of three tiers: estimate, a returned
+%   point's objective, claiming no bound; first-order, a lower bound on the
+%   minimum under named hypotheses; or certified, such a bound with every step
+%   from the data exact or rigorously enclosed, no hypothesis about arithmetic.
+% prominence: standard
+% status: implemented
+% uses: []
+% mentions: [meat-core/lem:estimate, meat-core/frank-wolfe/thm:firstorder, meat-core/frank-wolfe/lem:certified-bracket]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.foundations.assurance:Assurance
+% lean:
+% ---
+
+In this repository the estimate is the objective value of
+\xref{meat-core/lem:estimate}, and the first-order number is the linearisation
+bound of the Frank--Wolfe solver, \xref{meat-core/frank-wolfe/thm:firstorder},
+whose hypotheses include lower bounds on the two linear minima it reads. A
+run evaluates that bound in binary64, so a first-order number rests, beside
+the hypotheses of the theorem, on arithmetic that no claim bounds. The
+certified number is the same bound formed again at a run's final points from
+enclosures of the gradient
+(\xref{meat-core/frank-wolfe/lem:certified-bracket}), every step from the
+declaration's data exact or carried out in an arithmetic that bounds its own
+rounding, so that nothing is assumed of how it was computed.
+
+\begin{definition}\label{def:tiers}
+A \term[one of three labels, estimate, first-order or certified, that a
+reported key-rate number carries]{tier} of a reported key-rate number is one
+of the following three labels.
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item \term[the tier of a key-rate number that is the value of the objective
+  at the point an optimiser returned, claimed as no bound]{estimate}: the
+  number is the value of the objective at the point
+  an optimiser returned. It is reported as an estimate of the minimum of the
+  objective and is claimed as no bound.
+\item \term[the tier of a key-rate number that is a lower bound on the minimum
+  of the objective, established by a claim under hypotheses that claim
+  names]{first-order}: the number is a lower bound on the minimum of the
+  objective, established by a claim under hypotheses that claim names.
+\item \term[the tier of a lower bound on the minimum of the objective of a
+  declaration, formed with every arithmetic step from that declaration's
+  data exact or rigorously enclosed, so that none of its hypotheses
+  concerns arithmetic]{certified}: the number is a lower bound on the minimum
+  of the objective of the declaration it is formed on, established by a claim
+  under hypotheses that claim names, and every arithmetic step between that
+  declaration's data and the number is exact or
+  \term[said of a computation each of whose operations returns a set of
+  numbers, such as an interval or a ball, containing the exact result of the
+  operation at every value its inputs' sets contain]{rigorously enclosed}: a
+  computation is rigorously enclosed when each of its operations returns a
+  set of numbers, such as an interval or a ball, that contains the exact
+  result of the operation at every value the sets of its inputs contain, so
+  that the set it ends with contains the exact value, at the exact data, of
+  the quantity it computes. None of those hypotheses is an assumption about
+  how a number was computed, that is, none is an assumption of the category
+  numerical-trust.
+\end{enumerate}
+The tiers are ordered, estimate below first-order below certified, and a
+tier is \emph{stronger} than the tiers below it. A certified number is a
+first-order number as well. There is no other tier.
+\end{definition}

@@ -1,0 +1,32 @@
+% ---
+% id: receiver/rem:exact-window-remainders
+% kind: rem
+% title: "The analytic remainder of each exact-window branch"
+% summary: >-
+%   The exact window covers finitely many blocks, so each branch keeps an
+%   admissible remainder above it: branch 1 the bound function one past the
+%   depth, branch 2 its own analytic window and tail. Neither remainder is new
+%   or weakened.
+% prominence: standard
+% status: accepted
+% uses: [def:pmcex, lem:exactwindow, lem:collapse, lem:windowtail, def:pmc]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}
+\label{rem:exact-window-remainders}
+The exact window of Definition~\ref{def:pmcex} covers $N<n\le m^{\ast}_t$
+and nothing above it, so a remainder admissible in the sense of
+\eqref{eq:tailadm} is still required, and each branch of \eqref{eq:pmcex}
+already has one. Branch~1 has \eqref{eq:collapsehyp} exactly, by
+predicate~(X) of Definition~\ref{def:pmc}, and takes
+$\Bnd^{(t)}(m^{\ast}_t+1)$ by Lemma~\ref{lem:exactwindow}\,(ii). Branch~2
+has no hypothesis available and keeps its own analytic window and tail
+\eqref{eq:windowtail} above the exact one; this is why
+$m^{\ast}_t\le m_t$ is required there, so that the two windows compose into
+the single window $N<n\le m_t$ to which Lemma~\ref{lem:exactwindow} is
+applied. Neither remainder is new and neither is weakened.
+\end{remark}

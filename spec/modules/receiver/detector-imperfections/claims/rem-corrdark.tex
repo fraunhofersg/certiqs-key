@@ -1,0 +1,37 @@
+% ---
+% id: receiver/detector-imperfections/rem:corrdark
+% kind: rem
+% title: "Correlated dark counts within a round"
+% summary: >-
+%   A declared dark-count channel need not have product form: if it satisfies
+%   (D1) and (D2) exactly, the dark-count theorem holds for it verbatim, and if
+%   it passes the widened tests it holds in the weakened forms of
+%   [[prop:dark-slack-bound]] and [[rem:d2slack]]. Correlations across rounds are excluded.
+% prominence: standard
+% status: accepted
+% uses: [receiver/def:tolmap, rem:d2slack, prop:dark-slack-bound]
+% mentions: [thm:dark-counts, def:darktol, req:dark-channel-record, receiver/ass:round]
+% assumes: [A-THRESH]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:corrdark}
+Nothing in Theorem~\ref{thm:dark-counts} uses the product form beyond part~(i): a
+declared, experimentally certified $R$ satisfying (D1) and (D2)
+\emph{exactly} is admissible, and (ii)--(iv) hold for it verbatim. What must
+then be \emph{checked} rather than derived is (D1) and (D2), and the artifact
+records which of the two routes the emitted $R$ came from
+(Requirement~\ref{req:dark-channel-record}). Where the check is the one this
+contract performs, item (iii) of Definition~\ref{def:tolmap}
+(Definition~\ref{def:darktol}) at $\varepsilon_4$ and $\varepsilon_2$, the
+declared $R$ satisfies the two conditions only up to those tolerances, and
+then (ii), (iii) and (iv) hold only as Proposition~\ref{prop:dark-slack-bound}
+and Remark~\ref{rem:d2slack} restate them: the composed inequality is
+\eqref{eq:darkpmcslack} in $\bar r$ and $\delta_{\dc}$, and the composed family
+is a POVM only up to $\varepsilon_4$. Correlations \emph{across rounds} are a
+different matter and are excluded by Assumption~\ref{ass:thresh}: they would
+violate Assumption~\ref{ass:round} downstream, and no channel on a single
+round's label can repair that.
+\end{remark}

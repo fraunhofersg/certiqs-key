@@ -1,0 +1,41 @@
+% ---
+% id: receiver/ass:exact
+% kind: ass
+% title: "Exact declared parameters"
+% summary: >-
+%   Declared component parameters, efficiencies, dark-count probabilities and
+%   probe mean photon numbers are exact. A non-zero parameter tolerance would
+%   be an uncertainty set, which is out of scope and is refused rather than
+%   ignored.
+% prominence: standard
+% status: accepted
+% uses: []
+% mentions: [ass:trust]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-EXACT
+% verification: never
+% category: receiver
+% affects: [secrecy]
+% refines: A-TRUST
+% user_statement: >-
+%   Every number you declared for a receiver component (each efficiency,
+%   dark-count probability, probe mean photon number and other component
+%   parameter) is the device's true value, not an estimate with an error bar.
+%   The engine refuses a non-zero tolerance field, and an uncertainty set is
+%   not modelled. A result computed from a measured value therefore applies to
+%   a device with exactly that value.
+% lean:
+% ---
+
+This is the parameter part of Assumption~\ref{ass:trust}. A parameter
+tolerance is an uncertainty set and is out of scope: uncertainty sets on the
+device parameters are future scope (\repodoc{spec/future-scope.md}~\S11), and
+the reserved tolerance field that would carry one is refused unless absent or
+exactly zero.
+
+\begin{assumption}\label{ass:exact}
+(i) Every declared component parameter, efficiency, dark-count probability and
+probe mean photon number is exact.
+\end{assumption}

@@ -1,0 +1,30 @@
+% ---
+% id: protocol-compiler/req:operator-form
+% kind: req
+% title: "Operators on the measured system held as block lists"
+% summary: >-
+%   Every operator on the measured system is held and emitted as its block
+%   list. Where there are several sectors its direct sum is formed only as the
+%   argument of chain condition (C4), decided there and discarded.
+% prominence: standard
+% status: accepted
+% uses: [def:declaration, def:chaincond]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+By Definition~\ref{def:declaration} an operator on the \tref{measured system} is its
+\tref{block list}, so sector block-diagonality holds by type and the declaration
+holds no array larger than one sector block.
+
+\begin{requirement}\label{req:operator-form}
+The engine holds and emits every operator on $\Qsys$ as its
+\tref{block list} against the sector map $\Smap$
+(Definition~\ref{def:declaration}). Where $|\SecSet|>1$ it does not
+materialize the direct sum $\bigoplus_sF^{(s)}$ of such a list, with one
+exception: condition (C4) of Definition~\ref{def:chaincond} forms it as the
+argument of that one decision, decides it and discards it. The convention
+\iface{operator_form} states this rule and its scope.
+\end{requirement}

@@ -1,0 +1,48 @@
+% ---
+% id: receiver/prop:exactnoworse
+% kind: prop
+% title: "Dominance of the exact-window weight over the analytic weight"
+% summary: >-
+%   At every setting with a declared depth, the exact-window weight is at least
+%   the analytic weight on the same bound data. The comparison is between exact
+%   expressions; [[rem:noworsefl]] says which of its steps survive an
+%   evaluation.
+% prominence: standard
+% status: accepted
+% uses: [def:pmcex, def:pmc, lem:windowtail, lem:collapse]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{proposition}\label{prop:exactnoworse}
+At every setting carrying a declared \tref{exact-window depth}, the value
+\eqref{eq:pmcex} is at least the value \eqref{eq:pmcdef} gives at that
+setting on the same bound data.
+\end{proposition}
+
+\begin{proof}
+Write $P^{\ast}$ for \eqref{eq:pmcex} and $P$ for \eqref{eq:pmcdef} and drop
+the superscript $(t)$. From the maximum in \eqref{eq:elldef},
+$\ell(n)\ge\Bnd(n)$ for every $n$ in the exact window.
+
+\emph{Branch 2.} By \eqref{eq:windowtail},
+$P=\max\{0,\min\{\min_{N<n\le m_t}\Bnd(n),\,T_{m_t}\}\}$. Splitting the window
+at $m^{\ast}_t$,
+$\min_{N<n\le m_t}\Bnd(n)=\min\{\min_{N<n\le m^{\ast}_t}\Bnd(n),\,
+\min_{m^{\ast}_t<n\le m_t}\Bnd(n)\}$, and \eqref{eq:pmcex} is that same
+expression with the first of the two replaced by
+$\min_{N<n\le m^{\ast}_t}\ell(n)$, which is at least it. A minimum is
+non-decreasing in each argument and $\max\{0,\cdot\}$ is non-decreasing, so
+$P^{\ast}\ge P$.
+
+\emph{Branch 1.} $P=\max\{0,\Bnd(N+1)\}$. If $\Bnd(N+1)<0$ then $P=0\le
+P^{\ast}$. If $\Bnd(N+1)\ge0$ then, predicate~(X) making \eqref{eq:collapsehyp}
+hold with equality, Lemma~\ref{lem:collapse} makes $\Bnd$ non-decreasing on
+$\{N+1,N+2,\dots\}$; hence $\ell(n)\ge\Bnd(n)\ge\Bnd(N+1)$ for
+$N<n\le m^{\ast}_t$, and $\Bnd(m^{\ast}_t+1)\ge\Bnd(N+1)$. Both arguments of
+the inner minimum in \eqref{eq:pmcex} are therefore at least $\Bnd(N+1)$, so
+$P^{\ast}\ge\max\{0,\Bnd(N+1)\}=P$.
+\end{proof}

@@ -1,0 +1,141 @@
+id: statistics
+kind: core
+version: 0.10.0
+title: "Acceptance statistics (statistics)"
+abstract: >-
+  This module builds, before the run and from a declared honest model, the
+  acceptance set against which a protocol's observed outcome frequencies are
+  tested, and states how often an honest run passes that test; the key-rate
+  engine of the meat-core module reads the set as the acceptance set of the
+  protocol declaration it solves. Its core fixes the frequency vector of a run
+  and the two admissible geometries, a single frequency vector or a rational
+  polytope in the probability simplex, the polytope possibly in canonical box
+  form with recorded bounds per outcome. The core's main results are that
+  every geometry passing its validation predicate is a non-empty, compact and
+  convex subset of the simplex, as the engine's acceptance assumption
+  requires ([[thm:geometry-validation]]), and that over a non-empty canonical
+  box, filling the coordinates of smallest coefficient first minimises a
+  rational linear functional exactly, with a dual witness of the same value in
+  the format the engine's certificate expects, while the outcomes with a
+  positive upper bound include every outcome on which a point of the box puts
+  weight
+  ([[thm:box-oracle]]). The core also supplies the binomial tails in closed
+  form and the honest envelope, a per-outcome range of honest probabilities
+  of which one honest law is the degenerate case. The binomial-box submodule
+  constructs the box and bounds the probability that an honest run fails the
+  test; the singleton submodule evaluates a one-point test exactly. The
+  declared premises are the honest-round model, an acceptance value recorded
+  in every round, an honest law that some feasible state of the engine's
+  declaration produces, and the output-state model of the test statistics
+  ([[A-TSM]]), under which the acceptance outcome carries every per-round
+  public choice of known bias made at a measuring station, a letter-side
+  choice being a component of the letter drawn as declared ([[A-COIN]]);
+  that the alphabet and round count are those of
+  that declaration, and that the data are exact and the tails conservatively
+  evaluated, are conditions the engine decides.
+  The honest-round model and the premise on that feasible state bear on
+  completeness, rate and usability, never on the soundness of a key.
+depends_on: [reductions]   # the claim-graph edge for A-TSM (reductions/ass:tsm) only; the code imports domain/ only
+notation_version: "0.5.0"   # the spec/notation.md version this module pins
+submodules: [binomial-box, singleton]
+reading_groups:
+- title: Frequencies and acceptance geometries
+  start: def:freq
+  abstract: >-
+    A run's outcome counts divided by the round count give a frequency vector
+    in the probability simplex, and the acceptance test asks whether that
+    vector lies in a declared set. The alphabet and the round count are those
+    of the declaration the consuming engine solves. The set is an admissible geometry, a
+    single frequency vector or a rational polytope in the simplex, the
+    polytope possibly in canonical box form with recorded lower and upper
+    bounds per outcome. The main result, [[thm:geometry-validation]], is that
+    a geometry passing its validation predicate is a non-empty, compact and
+    convex subset of the simplex; for the canonical box form the predicate is
+    a closed-form condition on the sums of the bounds.
+- title: Binomial tails
+  start: thm:binomial-tails
+  abstract: >-
+    The count of one outcome over independent rounds with one law is
+    binomial, and the box construction reads its two tails. They are
+    regularised incomplete beta integrals, with every boundary case of the
+    count stated and the upper tail non-decreasing in the success probability
+    ([[thm:binomial-tails]]). The two strict tails the construction compares
+    with a budget follow by a shift of the count ([[cor:tail-forms]]), and at
+    a rational success probability both can be decided exactly
+    ([[lem:exact-strict-tails]]).
+- title: The exact box oracle
+  start: thm:box-oracle
+  abstract: >-
+    The consuming engine minimises linear functionals over the acceptance set
+    and needs to know on which outcomes an accepted frequency can put weight.
+    The main result, [[thm:box-oracle]], solves the minimisation over a
+    non-empty canonical box exactly by filling the coordinates of smallest
+    coefficient first, from their lower towards their upper bounds, supplies a
+    dual witness of the same value in the format the engine's certificate
+    expects, and shows that the outcomes with a positive upper bound include
+    every outcome on which a point of the box puts weight, and can include
+    more.
+- title: The honest envelope
+  start: def:envelope
+  abstract: >-
+    The honest model is an honest envelope: a lower and an upper honest
+    probability per outcome, whose envelope set holds every law between them.
+    One honest law is the degenerate envelope, and assuming that every
+    round's conditional outcome law lies in a degenerate envelope is the same
+    as assuming independent rounds with that law ([[lem:hon-degenerate]]). A
+    conservative evaluation takes the envelope, the budget and its allocation
+    as exact rationals and decides every tail comparison exactly or against an
+    upward-rounded bound ([[def:conservative-evaluation]]).
+- title: Assumptions
+  start: ass:hon
+  abstract: >-
+    These are the premises this module declares, and none is evidence about an
+    adversary: honest rounds, independent with one law or conditionally inside a
+    declared envelope; an acceptance value recorded in every round; and a law
+    of the envelope that some feasible state of the consuming declaration
+    produces. A failure of the honest-round premises costs completeness, rate
+    or usability, never the soundness of a key. A failure of that last
+    premise means that the declared devices do not describe what produced
+    the law, and a key length computed for them can grow with the mismatch;
+    the consuming engine checks a run whose honest law is supplied or whose
+    declaration carries a constraint the user declared, unless the run opts
+    out, states the cap a failure it proves puts on the probability that
+    devices as declared pass the acceptance test, and refuses the run where
+    that cap is at most a threshold, one half by default. A
+    round missing from the record
+    normalises the counts against the wrong round count.
+- title: "Requirements: the emitted geometry"
+  start: req:geometry-tag
+  abstract: >-
+    The engine emits every acceptance set under one of the two geometry tags
+    with that tag's data, and a consumer refuses a set under any other tag.
+    It records a canonical box's lower and upper bounds beside the rows they
+    determine. As the acceptance support it emits the outcomes with a
+    positive upper bound, a superset never substituted for the support
+    itself, and for a singleton the support of its vector. A set is docked
+    only on the alphabet and round count of the declaration its consumer
+    solves: a built set is compared with it, a set the declaration carries
+    is read in its enumeration, and a mismatch produces no result.
+order:
+  - def:freq
+  - lem:freq-in-simplex
+  - def:matched-alphabet
+  - def:taxonomy
+  - thm:geometry-validation
+  - rem:two-tags
+  - thm:binomial-tails
+  - cor:tail-forms
+  - lem:exact-strict-tails
+  - thm:box-oracle
+  - rem:box-oracle-consumer
+  - def:envelope
+  - lem:hon-degenerate
+  - def:conservative-evaluation
+  - ass:hon
+  - ass:hon-env
+  - ass:alphabet
+  - ass:reach
+  - req:geometry-tag
+  - req:box-bounds-key
+  - req:acceptance-support
+  - req:matched-alphabet

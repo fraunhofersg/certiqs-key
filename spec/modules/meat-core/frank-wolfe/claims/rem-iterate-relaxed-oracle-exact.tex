@@ -1,0 +1,70 @@
+% ---
+% id: meat-core/frank-wolfe/rem:iterate-relaxed-oracle-exact
+% kind: rem
+% title: "Iterate in the relaxed set, minima over the exact set"
+% summary: >-
+%   A run establishes its iterate only in the relaxed feasible set, while the
+%   linear minima its bracket bounds are over the exact one, and part (iii) of
+%   [[thm:firstorder]] asks each half of the object that supplies it. Its bound
+%   compares h_lb with the exact h_low directly, through no relaxed quantity.
+% prominence: standard
+% status: accepted
+% uses: [thm:firstorder, def:first-order-setting, prop:relaxed-set-properties]
+% mentions: [rem:feas-tol, lem:feasible-side-dual, rem:acc-side, cor:fo-keylength, meat-core/thm:choi, meat-core/prop:value-range, foundations/def:exact-island, req:iterate-checks]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:iterate-relaxed-oracle-exact}
+Part~(iii) of Theorem~\ref{thm:firstorder} substitutes the
+\tref{relaxed feasible set} $\Feas^{J}(\varepsilon)$ in different places
+in its two halves, and the asymmetry is deliberate. A run of this module
+is always in that part: it verifies the $J$ factor of its iterate's
+membership at positive declared windows
+(Requirement~\ref{req:iterate-checks}) and holds the $\acSet$ factor
+exactly, by forming $\mathbf q_t$ on the \tref{exact island}
+(\xref{foundations/def:exact-island}; Remark~\ref{rem:acc-side}), so what
+it establishes is $x_t\in\acSet\times\Feas^{J}(\varepsilon)$ and not exact
+membership in the product; while the minima of \eqref{eq:lmo}, and the
+lower bounds that part~(iv) of the theorem puts in their place, are taken
+over the declared conic program \eqref{eq:choi-feas}, which is the
+\emph{exact} $\Feas^{J}$. \emph{Iterate in the relaxed set, minima over
+the exact set}: (iiib) asks each half of the object that supplies it. Its
+hypotheses (H-POS), (H-SUPP) and (H-NOPERT) are conditions on the iterate
+alone and name no set. Substituting $\Feas^{J}(\varepsilon)$ into
+\eqref{eq:lmo} as well would ask for a bound against a \emph{larger} set,
+hence below a \emph{smaller} minimum: since
+$\Feas^{J}\subseteq\Feas^{J}(\varepsilon)$, one has
+$\min_{\Feas^{J}(\varepsilon)}\le\min_{\Feas^{J}}$, so the inequality over
+the exact set is the weaker of the two. It is also the one
+Lemma~\ref{lem:feasible-side-dual} supplies: the trace identity that lemma
+rests on is the exact coupling condition, which a point of the relaxed set
+meets only within its window.
+
+Part~(iiib) concludes against the exact $\hlow$ directly, with no
+intermediate quantity: $\hlow[\Feas^{J}(\varepsilon)]$ appears in (iiia)
+and nowhere in (iiib), and no non-negativity of it is claimed; it may be
+negative, by at most $\frac{\alpha}{\alpha-1}\log_2(1+d_{A_0}\varepsilon)$
+(Proposition~\ref{prop:relaxed-set-properties}\,(c$''$)). The clamp at
+zero reads the range fact $\hlow\ge0$ of
+Proposition~\ref{prop:value-range}\,(i) on the exact set, which is the only
+reading it needs; on the relaxed set that fact is not available, and
+nothing uses it there. Corollary~\ref{cor:fo-keylength} consumes the same
+inequality on this reading as on that of~(ii), (ii) being the case
+$\varepsilon=0$ of (iiib). Which $\varepsilon$ a run uses, the larger of
+its two declared windows on computed residuals and never the declared
+tolerance, is fixed by Requirement~\ref{req:iterate-checks}, and part~(iii)
+is insensitive to it, being proved for every $\varepsilon\ge0$.
+
+The relaxed quantity in (iiia) is the Choi-form one and not the state-form
+$\hlow[\Feas(\varepsilon)]$ of
+Proposition~\ref{prop:relaxed-set-properties}\,(d): at $\varepsilon>0$ the
+two relaxed sets are not in bijection under $\chi_{\Qsys}$, for the two
+reasons Remark~\ref{rem:feas-tol} gives, and no relation between the two
+numbers is claimed or needed. Part~(iiib) uses neither relaxed value: it
+compares $\hlb$ against the exact $\hlow$ directly, so the chain
+\eqref{eq:feas-tol-mono-J} is consumed by the estimate half of part~(iii)
+and not by the bound half.
+\end{remark}

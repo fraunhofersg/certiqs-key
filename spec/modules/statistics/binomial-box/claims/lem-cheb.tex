@@ -1,0 +1,34 @@
+% ---
+% id: statistics/binomial-box/lem:cheb
+% kind: lem
+% title: "Chebyshev's inequality for a binomial count"
+% summary: >-
+%   A binomial (n, p) count deviates from np by at least t > 0 with
+%   probability at most np(1 − p)/t². This gives the finite-sample width bound
+%   of the exact rule in [[thm:monotonicity-limits]] (iv).
+% prominence: technical
+% status: accepted
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{lemma}\label{lem:cheb}
+Let $\Ncount{}$ be binomial with parameters $(n,p)$ and let $t>0$. Then
+$\Pr\big[|\Ncount{}-np|\ge t\big]\le np(1-p)/t^{2}$.
+\end{lemma}
+
+\begin{proof}
+Write $\Ncount{}=\sum_{j=1}^{n}\chi_j$ with $\chi_j$ independent
+Bernoulli$(p)$; then $\mathbb{E}[\Ncount{}]=np$ and, by independence,
+$\operatorname{Var}(\Ncount{})=\sum_{j}\operatorname{Var}(\chi_j)=np(1-p)$.
+Consider the non-negative random variable $(\Ncount{}-np)^{2}$. Pointwise it is
+at least $t^{2}$ wherever $|\Ncount{}-np|\ge t$ and at least $0$ elsewhere, so
+it dominates the random variable taking the value $t^{2}$ wherever
+$|\Ncount{}-np|\ge t$ and $0$ elsewhere. Taking expectations,
+$t^{2}\,\Pr\big[|\Ncount{}-np|\ge t\big]
+\le\mathbb{E}\big[(\Ncount{}-np)^{2}\big]
+=\operatorname{Var}(\Ncount{})=np(1-p)$, which is the claim.
+\end{proof}

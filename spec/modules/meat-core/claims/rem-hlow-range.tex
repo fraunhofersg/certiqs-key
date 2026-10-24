@@ -1,0 +1,74 @@
+% ---
+% id: meat-core/rem:hlow-range
+% kind: rem
+% title: "Reading an infinite value"
+% summary: >-
+%   An infinite value of the program is the infeasibility of the declared
+%   acceptance set against the declaration: no attack the declared list admits
+%   is then accepted and no key is produced. The entropy part of the objective
+%   is capped, the divergence penalty is not.
+% prominence: standard
+% status: accepted
+% uses: [prop:value-range, thm:accumulated-entropy, thm:constrained-accumulation, def:roundmodel, lem:range, thm:protocol-channel, thm:reduction, cor:reduction-constrained]
+% mentions: [req:infinite-value]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:hlow-range}
+An infinite value is not a large rate. By
+Proposition~\ref{prop:value-range}\,(iv), $\hlow=+\infty$ is the
+infeasibility of the declared acceptance set against the declaration: no
+$\mathbf q\in\acSet$ is absolutely continuous with respect to
+$\Phimap[\omega]$ for any $\omega\in\Feas$. For the attacks the declared
+list admits this means $\Pr[\OmAT]=0$: for every \tref{attack sequence} of
+Definition~\ref{def:roundmodel} when $\CList=\varnothing$, and for every
+$\CList$-admissible one when $\CList$ is
+\tref{licensed for the declared source mode}, the attacks
+Theorem~\ref{thm:constrained-accumulation} ranges over, the initial state
+being in either case that of Theorem~\ref{thm:accumulated-entropy}.
+Indeed, let $\sigma_j\in\Seq{A\Qsys}$ be the unconditioned state the
+protocol channel acts on in round $j$, the $A\Qsys$-marginal of the output
+of the round-$j$ attack; in trusted-source mode the attack acts on the
+$A_jE_{j-1}$-marginal of the state before round $j$, whose $A_j$-marginal
+is $\tau_A$, the earlier rounds acting on other copies of $A$. By
+Lemma~\ref{lem:range}\,(i), $\sigma_j$ satisfies the declaration's marginal
+condition and every entry of $\CList$, and by
+Theorem~\ref{thm:protocol-channel}\,(iii) the acceptance value of round $j$
+is distributed as $\Phimap[\sigma_j]$. The average
+$\bar\sigma\coloneqq\frac1n\sum_j\sigma_j$ satisfies the same conditions,
+each of them being convex, and
+$\Phimap[\bar\sigma]=\frac1n\sum_j\Phimap[\sigma_j]$. Pinching
+$\bar\sigma$ along the joint sectors, as in Step~1 of the proof of
+Theorem~\ref{thm:reduction}, keeps its statistics and its marginal and, by
+the proof of Corollary~\ref{cor:reduction-constrained}, every entry of
+$\CList$, and gives a point $\bar\omega\in\Feas$ with
+$\Phimap[\bar\omega]=\Phimap[\bar\sigma]$. If $\Pr[\OmAT]>0$, some sequence
+$\hat c_1^n$ of positive probability has its frequency vector $\mathbf f$
+in $\acSet$; every $\hat c$ with $f(\hat c)>0$ is the value of some round
+$j$ of it, so $\Phimap[\sigma_j](\hat c)>0$ and
+$\Phimap[\bar\omega](\hat c)\ge\frac1n\Phimap[\sigma_j](\hat c)>0$. Then
+$\mathbf f\ll\Phimap[\bar\omega]$ with $\mathbf f\in\acSet$ and
+$\bar\omega\in\Feas$, which Proposition~\ref{prop:value-range}\,(iv) rules
+out. So the hypothesis $\Pr[\OmAT]>0$ of
+Theorem~\ref{thm:accumulated-entropy}, respectively
+Theorem~\ref{thm:constrained-accumulation}, fails, and the accepted state
+is null: there is no run on which a key would be produced.
+
+For a nonempty list the conclusion reaches no further than the
+$\CList$-admissible attacks. Take $d_A=1$, $\Qsys=\mathbb{C}^2$ with one
+sector, $F_v=\dyad{v}$ for $v\in\{0,1\}$, the acceptance value the outcome
+$v$, $\acSet=\{(\frac12,\frac12)\}$ and for $\CList$ the one homogeneous
+entry $\tr[(\idon{A}\otimes\dyad{1})\,\omega]=0$. Then
+$\Feas=\{\dyad{0}\}$ and $\hlow=+\infty$, while the attack that prepares
+$\ket{+}$ in every round, which is not $\CList$-admissible, is accepted with
+positive probability at every even $n$.
+
+The two parts of the objective differ here: the entropy part is capped, each
+term at $\log_2(d_Z+1)$ (Proposition~\ref{prop:value-range}\,(ii)), while the
+divergence penalty is not (Proposition~\ref{prop:value-range}\,(iii)). What
+the engine does with an infinite value is
+Requirement~\ref{req:infinite-value}.
+\end{remark}

@@ -1,0 +1,46 @@
+% ---
+% id: receiver/def:compile
+% kind: def
+% title: "Compilation of a declared element graph"
+% summary: >-
+%   The compiled instrument matrix is the product of the embedded elements
+%   along a linear extension, later elements multiplying from the left,
+%   followed by the terminal detector-efficiency layer. This fixes the matrix
+%   convention of the whole receiver contract.
+% prominence: standard
+% status: implemented
+% uses: [def:graph, def:instrument]
+% mentions: [receiver/detector-imperfections/thm:efficiency]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.graph:compile_element_graph
+% lean:
+% ---
+
+The product below follows the matrix convention the interface records
+(\repodoc{spec/modules/receiver/interface.yaml}): a factor acts on column
+vectors indexed by the modes, so the element that light meets later stands
+further to the left.
+
+\begin{definition}\label{def:compile}
+Let $\Grph$ be a well-formed graph; it is in particular acyclic
+(condition (E2) of Definition~\ref{def:graph}), so that a linear extension exists. For a
+linear extension $\sigma=(e_1,\dots,e_L)$ of $\Grph$ put
+\begin{equation}\label{eq:compile}
+  \Gmat_{\Grph}^{\sigma}\coloneqq
+  \hat\Gmat_{e_L}\,\hat\Gmat_{e_{L-1}}\cdots\hat\Gmat_{e_1}
+  \ \in\ \mathbb{C}^{\Modes\times\Modes},
+\end{equation}
+later elements multiplying from the left. The
+\term[The matrix D_eta times the ordered product of a well-formed graph's embedded elements.]{compiled instrument matrix} of the receiver is
+$\Gmat\coloneqq D_\eta\,\Gmat^{\sigma}_{\Grph}$, where
+$D_\eta=\sum_k\sqrt{\eta_k}\,\Emd{\{k\}}+\Emd{\Modes\setminus\bigcup_k
+\Port{k}}$ is the \term[The diagonal matrix D_eta applying each port's detector efficiency after every element.]{terminal detector-efficiency layer}, applied after every
+element, and $\eta_k\in[0,1]$ is the declared efficiency of port $k$ (the
+effect of that layer on the port Grams is Theorem~\ref{thm:efficiency} of the
+detector-imperfections submodule). The \tref{detector ports} $\Port{k}$ and the
+port-embedding abbreviation $\Emd{\{k\}}$ written here are those of a
+\tref{receiver instrument} tuple: clause (iii) of
+Definition~\ref{def:instrument} and its closing notation.
+\end{definition}

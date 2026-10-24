@@ -1,0 +1,66 @@
+% ---
+% id: receiver/def:pmc
+% kind: def
+% title: "The uniform high-photon multiclick weight"
+% summary: >-
+%   At a setting without an exact-window depth, the per-setting weight is the
+%   collapse value where the flag is exact and a declared window with its tail
+%   otherwise. The uniform weight is the minimum of the per-setting weights
+%   over all settings.
+% prominence: standard
+% status: implemented
+% uses: [def:bounddata, def:setting-family, lem:collapse, lem:windowtail]
+% mentions: [def:pmcex, rem:flag-instances, ass:eig]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.bound:SettingBound
+% lean:
+% ---
+
+Each setting without an exact-window depth gets its own weight, by the
+collapse of Lemma~\ref{lem:collapse} where the setting's flag guarantees its hypothesis
+and by the window and tail of Lemma~\ref{lem:windowtail} otherwise.
+Remark~\ref{rem:flag-instances} says where the flag is set at the two
+instances this module constructs.
+
+\begin{definition}\label{def:pmc}
+Fix a cutoff $N$ and a \tref{setting family}
+(Definition~\ref{def:setting-family}); for each setting $t\in\Tset$ let
+$\Bnd^{(t)}$ be the \tref{bound function} \eqref{eq:beta} of the
+\tref{bound data of the setting}. At every setting $t$ whose declaration
+carries \emph{no} \tref{exact-window depth} (Definition~\ref{def:pmcex}),
+the
+\term[The high-photon multiclick weight of one setting: its collapse value, its window and tail, or its exact window.]{per-setting weight}
+is
+\begin{equation}\label{eq:pmcdef}
+  \pmc^{(t)}\coloneqq
+  \begin{cases}
+    \max\big\{0,\ \Bnd^{(t)}(N+1)\big\}
+      &\text{if (X) holds at }t,\\[4pt]
+    \max\big\{0,\ \underline{\Bnd}^{(t)}_{N,m_t}\big\}
+      &\text{otherwise, for the declared window }m_t>N,
+  \end{cases}
+\end{equation}
+and the
+\term[The minimum of the per-setting weights over all settings of a setting family.]{uniform weight}
+is $\pmc\coloneqq\min_{t\in\Tset}\pmc^{(t)}$, where the branch-1
+\term[The condition that a setting's exact flag reads exact; it selects the collapse branch of the per-setting weight.]{predicate (X)}
+is
+\begin{description}[leftmargin=3.2em,style=nextline]
+\item[(X) \emph{exact by construction, decidable from the declaration:}] the
+  setting's \tref{exact flag} is $\chi^{(t)}=\mathrm{exact}$
+  (Definition~\ref{def:setting-family}\,(c)). Then
+  $\gamma^{(t)}=\beta^{(t)}_k=1$ exactly, so \eqref{eq:collapsehyp} reads
+  $K\ge K$ and holds with \emph{equality}, no arithmetic having been
+  performed.
+\end{description}
+\emph{Where the exact window replaces this.} At a setting whose declaration
+carries an exact-window depth $m^{\ast}_t$, \eqref{eq:pmcdef} does not apply
+and $\pmc^{(t)}$ is \eqref{eq:pmcex} instead
+(Definition~\ref{def:pmcex}); $\pmc=\min_{t\in\Tset}\pmc^{(t)}$ is unchanged,
+and the two kinds of setting may be mixed in one declaration. A declaration
+carrying no depth at any setting is governed by \eqref{eq:pmcdef} alone: no
+$\Bnd^{\ast}$ is formed, no eigenvalue of any block above the cutoff is
+computed, and Assumption~\ref{ass:eig} is not invoked.
+\end{definition}

@@ -1,0 +1,64 @@
+% ---
+% id: protocol-compiler/lem:hermitian-constraint-values
+% kind: lem
+% title: "Hermiticity of the constraint values"
+% summary: >-
+%   For a Hermitian constraint operator and a Hermitian ω, the partial trace
+%   of their product over the measured system is Hermitian and its trace
+%   real; under D(ii) and D(vi) every trusted right-hand side is Hermitian.
+%   So both sides of each constraint line can be compared.
+% prominence: technical
+% status: accepted
+% uses: [def:feasible, def:declaration, def:target]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+The trusted line of \eqref{eq:feas-modes} compares two operators on $A$ in
+the L\"owner order, which is defined on Hermitian operators, and the untrusted
+line compares a trace with a real number. That the left-hand side is
+Hermitian is \emph{not} automatic from $\omega=\omega^{\dagger}$ alone, a
+product of two Hermitian operators need not be Hermitian; it follows from the
+Hermiticity of $\hat O_k$ that D(iii) requires.
+
+\begin{lemma}\label{lem:hermitian-constraint-values}
+Let $\hat O_k$ be an operator on $\Qsys$ with
+$\hat O_k=\hat O_k^{\dagger}$, as D(iii) of Definition~\ref{def:target}
+requires of every constraint operator, and let $\omega$ be an operator on
+$A\Qsys$ with
+$\omega=\omega^{\dagger}$. Then:
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item $\tr_{\Qsys}[(\idon{A}\otimes\hat O_k)\,\omega]$ is Hermitian;
+\item $\tr[(\idon{A}\otimes\hat O_k)\,\omega]$ is real;
+\item where D(ii) and D(vi) hold, the right-hand side of the trusted line of
+  \eqref{eq:feas-modes} is Hermitian: $c_k\tau_A$ is, for $c_k$ real and
+  $\tau_A$ Hermitian by D(ii), and a general $\Theta_k$ is, by D(vi).
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Write $X\coloneqq\idon{A}\otimes\hat O_k$, which is Hermitian because
+$\hat O_k$ is. For any operator $Y$ on $A\Qsys$,
+\begin{equation}\label{eq:ptrcyc}
+  \tr_{\Qsys}\!\big[(\idon{A}\otimes\hat O_k)\,Y\big]
+  =\tr_{\Qsys}\!\big[Y\,(\idon{A}\otimes\hat O_k)\big] ,
+\end{equation}
+an identity of \emph{linear} maps, holding for every $Y$ whatsoever: in any
+product bases $\{\ket{i}\}$ of $\Hs{A}$ and $\{\ket{q}\}$ of $\Hs{\Qsys}$,
+the $(i,j)$ entry of either side equals
+$\sum_{q,q'}\bra{q}\hat O_k\ket{q'}\,\bra{i\,q'}Y\ket{j\,q}$, for the
+left-hand side directly, and for the right-hand side after exchanging the
+names of the two summation indices.
+
+(i) Using $\omega=\omega^{\dagger}$, $X=X^{\dagger}$ and \eqref{eq:ptrcyc},
+$\big(\tr_{\Qsys}[X\omega]\big)^{\dagger}=\tr_{\Qsys}[(X\omega)^{\dagger}]
+=\tr_{\Qsys}[\omega X]=\tr_{\Qsys}[X\omega]$.
+
+(ii) $\tr[X\omega]$ is the trace of the Hermitian operator
+$\tr_{\Qsys}[X\omega]$ of (i), and so is real.
+
+(iii) $c_k\tau_A$ is Hermitian, $c_k$ being real and $\tau_A$ Hermitian by
+D(ii); a general $\Theta_k$ is Hermitian by D(vi).
+\end{proof}

@@ -1,0 +1,104 @@
+% ---
+% id: receiver/lem:fock-functor
+% kind: lem
+% title: "Functoriality of the Fock lift"
+% summary: >-
+%   The Fock lift respects composition and adjoints, preserves every
+%   photon-number sector, and takes unitaries, contractions and projectors to
+%   unitaries, contractions and projectors. The lift of a unitary implements
+%   the mode transformation on the annihilation operators.
+% prominence: standard
+% status: implemented
+% uses: [def:fock]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.fock:fock_block
+% lean:
+% ---
+
+The later derivations work block by block on the lift of
+Definition~\ref{def:fock}; this lemma collects the properties of the lift they
+use.
+
+\begin{lemma}\label{lem:fock-functor}
+Let $\mathcal{K}_0$ be finite-dimensional and let $X,Y$ be operators on
+$\mathcal{K}_0$. Then, with $\Fock$ as in \eqref{eq:fockfunctor}:
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $X^{\otimes n}$ preserves $\Symn{n}(\mathcal{K}_0)$, so $\Fock(X)$ is
+  well defined, and it is block diagonal with respect to the photon-number
+  decomposition: $\Fock(X)\Pnum{n}=\Pnum{n}\Fock(X)$ for every $n$;
+\item $\Fock(XY)=\Fock(X)\Fock(Y)$, $\Fock(\id)=\id$, and
+  $\Fock(X)^\dagger=\Fock(X^\dagger)$;
+\item if $U$ is unitary then $\Fock(U)$ is unitary; if
+  $X^\dagger X\preceq\id$ then $\lVert\Fock(X)\rVert\le1$, so $\Fock(X)$ is a
+  bounded operator on $\mathcal{F}(\mathcal{K}_0)$;
+\item if $P$ is an orthogonal projector then $\Fock(P)$ is the orthogonal
+  projector onto $\mathcal{F}(\operatorname{ran}P)\subseteq
+  \mathcal{F}(\mathcal{K}_0)$ --- equivalently, with the occupation vectors
+  formed in an orthonormal basis of $\mathcal{K}_0$ adapted to
+  $\operatorname{ran}P\oplus\ker P$, onto the closed span of those carrying
+  no photon outside $\operatorname{ran}P$;
+\item if $U$ is unitary then $\Fock(U)$ implements the mode transformation on
+  the annihilation operators,
+  $\Fock(U)^\dagger a_i\Fock(U)=\sum_jU_{ij}a_j$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) For a permutation $\pi$ of $n$ factors let $\Pi_\pi$ be the corresponding
+unitary on $\mathcal{K}_0^{\otimes n}$. Then $\Pi_\pi X^{\otimes n}=
+X^{\otimes n}\Pi_\pi$, because both sides send
+$v_1\otimes\cdots\otimes v_n$ to the tensor product of the $Xv_i$ permuted by
+$\pi$. Hence $X^{\otimes n}$ commutes with the orthogonal projector
+$P_{\Symn{n}}=\frac{1}{n!}\sum_\pi\Pi_\pi$ and therefore preserves its range.
+Block diagonality in $n$ is the definition of $\Fock$ as a direct sum.
+
+(ii) On $\Symn{n}$, $(XY)^{\otimes n}=X^{\otimes n}Y^{\otimes n}$ and both
+factors preserve $\Symn{n}$, so the restriction of the product is the product
+of the restrictions; $\id^{\otimes n}=\id$; and
+$(X^{\otimes n})^\dagger=(X^\dagger)^{\otimes n}$, whose restriction to the
+invariant subspace $\Symn{n}$ is the adjoint of the restriction. Summing over
+$n$ gives the three identities.
+
+(iii) With $U$ unitary, (ii) gives
+$\Fock(U)^\dagger\Fock(U)=\Fock(U^\dagger U)=\id$ and likewise on the other
+side. With $X^\dagger X\preceq\id$, $\lVert X\rVert\le1$, so
+$\lVert X^{\otimes n}\rVert=\lVert X\rVert^n\le1$; restriction to a subspace
+does not increase the norm, so every block of $\Fock(X)$ has norm $\le1$ and
+the direct sum is bounded by $1$.
+
+(iv) $P^{\otimes n}$ is an orthogonal projector on $\mathcal{K}_0^{\otimes n}$
+with range $(\operatorname{ran}P)^{\otimes n}$, and it commutes with
+$P_{\Symn{n}}$ by the computation in (i). The product of two commuting
+orthogonal projectors is the orthogonal projector onto the intersection of
+their ranges, so the restriction of $P^{\otimes n}$ to $\Symn{n}$ is the
+orthogonal projector onto
+$\Symn{n}(\mathcal{K}_0)\cap(\operatorname{ran}P)^{\otimes n}
+=\Symn{n}(\operatorname{ran}P)$. Choosing an orthonormal basis of
+$\mathcal{K}_0$ adapted to $\operatorname{ran}P\oplus\ker P$ identifies that
+subspace with the span of the occupation vectors supported on
+$\operatorname{ran}P$.
+
+(v) Fix the orthonormal basis $\{\ket{e_j}\}$ used in
+Definition~\ref{def:fock}. The creation operator satisfies
+$a_i^\dagger\ket{\psi}=\sqrt{n+1}\,P_{\Symn{n+1}}(\ket{e_i}\otimes\ket{\psi})$
+for $\ket{\psi}\in\Symn{n}$, which is the standard identification of the mode
+description with the symmetric-tensor description. For unitary $U$,
+$\Fock(U)P_{\Symn{n+1}}=P_{\Symn{n+1}}U^{\otimes(n+1)}$ on
+$\mathcal{K}_0^{\otimes(n+1)}$ by (i), hence
+\begin{align}
+  \Fock(U)\,a_i^\dagger\ket{\psi}
+  &=\sqrt{n+1}\;P_{\Symn{n+1}}\big(U\ket{e_i}\otimes U^{\otimes n}\ket{\psi}\big)
+  \nonumber\\
+  &=\sum_j U_{ji}\,\sqrt{n+1}\;P_{\Symn{n+1}}
+      \big(\ket{e_j}\otimes\Fock(U)\ket{\psi}\big)
+  =\Big(\sum_jU_{ji}a_j^\dagger\Big)\Fock(U)\ket{\psi},
+\end{align}
+using $U\ket{e_i}=\sum_jU_{ji}\ket{e_j}$. Therefore
+$\Fock(U)a_i^\dagger\Fock(U)^\dagger=\sum_jU_{ji}a_j^\dagger$; taking adjoints
+gives $\Fock(U)a_i\Fock(U)^\dagger=\sum_j\overline{U_{ji}}\,a_j$, and
+replacing $U$ by $U^\dagger$ gives
+$\Fock(U)^\dagger a_i\Fock(U)=\sum_j\overline{(U^\dagger)_{ji}}a_j
+=\sum_jU_{ij}a_j$.
+\end{proof}

@@ -1,0 +1,307 @@
+% ---
+% id: statistics/binomial-box/thm:monotonicity-limits
+% kind: thm
+% title: "Monotonicity in the budget and limiting cases"
+% summary: >-
+%   The acceptance set shrinks as the budget grows under monotone allocation
+%   and endpoint rules, so no infimum over it, h_low included, decreases.
+%   Zero-budget and one-letter limits are explicit; at a fixed positive
+%   allocation the exact rule's set tends to the envelope's box as n^(−1/2),
+%   unnested in n.
+% prominence: standard
+% status: accepted
+% uses: [def:endpoint-rule, def:monotone-rule, def:interval, def:construction, lem:guard, thm:completeness-bound, lem:cheb, thm:box-construction, statistics/def:envelope, lem:widening, statistics/def:conservative-evaluation]
+% mentions: [prop:rule-exact, prop:rule-bernstein, prop:bracketed-endpoints, meat-core/def:feasible]
+% assumes: [A-ALPHABET]
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Parts (i) and (ii) need the endpoint rule itself to be
+\tref{monotone in the allocation}, and which rules are is each rule's own
+statement: the \tref[exact binomial quantile rule]{exact rule} with its
+sweep evaluation (Proposition~\ref{prop:rule-exact}\,(ii), and (vii) where
+a tail is decided against an upper bound) and the Bernstein
+rule (Proposition~\ref{prop:rule-bernstein}\,(ii)) are, while the enclosure
+evaluation of the exact rule (Proposition~\ref{prop:bracketed-endpoints})
+does not claim it, so (i) and (ii) are not asserted for it. The monotonicity
+of $\hlow$ in (ii) is a trade-off, not an improvement: the same change of
+budget makes the honest run abort no less often. A one-letter acceptance
+alphabet, the case of (vi), imposes no constraint on the \tref{consumer} and
+carries no information; it is a degenerate case to be recognised, not a
+regime to be used.
+
+\begin{theorem}\label{thm:monotonicity-limits}
+Fix $\Chatset$, an \tref{honest envelope} $({\honest}^{-},{\honest}^{+})$
+with \tref{envelope set} $\mathsf{H}$ (Definition~\ref{def:envelope}; a single
+law $\honest$ is the \tref{degenerate envelope}, $\mathsf{H}=\{\honest\}$),
+$n$, $\Chatcon$ and an \tref{admissible endpoint rule} $R$
+(Definition~\ref{def:endpoint-rule}) under a \tref{conservative evaluation}
+(Definition~\ref{def:conservative-evaluation}), write $p^{\mp}_{\hat c}$ for the
+envelope's values as there, and write $\acSet(e)$ for the output of
+$\mathsf{Acc}_R$ at budget $e$ under a fixed monotone allocation rule
+(Definition~\ref{def:monotone-rule}).
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item \emph{(budget monotonicity: the set shrinks as the budget grows)} If
+$R$ is monotone in the allocation and $0\le e_1\le e_2<1$, then
+$\acSet(e_2)\subseteq\acSet(e_1)$.
+\item \emph{(consequence for any consumer infimum)} Under the hypothesis of
+(i), for every function $\Psi:\simplex{\Chatset}\to[-\infty,+\infty]$ and
+$e_1\le e_2$,
+\begin{equation}\label{eq:inf-mono}
+  \inf_{\mathbf{q}\in\acSet(e_1)}\Psi(\mathbf{q})
+  \ \le\ \inf_{\mathbf{q}\in\acSet(e_2)}\Psi(\mathbf{q}) .
+\end{equation}
+In particular, taking
+$\Psi(\mathbf{q})=\inf_{\omega\in\Feas}O_{\alpha}(\mathbf{q},\omega)$, the
+quantity $\hlow$, which \xref{meat-core/def:feasible} defines as
+$\inf_{\mathbf{q}\in\acSet}\inf_{\omega\in\Feas}O_{\alpha}$, is
+\emph{non-decreasing} in $\ecomp$: a weaker completeness guarantee buys a
+larger or equal entropy bound.
+\item \emph{(limit $\ecomp=0$, every rule)} At $e=0$ every
+$\varepsilon^{\pm}(\hat c)=0$ and
+\begin{equation*}
+\begin{aligned}
+  \acSet(0)=\big\{\mathbf{q}\in\simplex{\Chatset}:\
+  &q(\hat c)=0\ \text{for }\hat c\in\Chatcon\text{ with }p^{+}_{\hat c}=0,\\
+  &q(\hat c)=1\ \text{for }\hat c\in\Chatcon\text{ with }p^{-}_{\hat
+  c}=1\big\},
+\end{aligned}
+\end{equation*}
+with $\varepsilon^{\star}=0$. If $p^{+}_{\hat c}>0$ and $p^{-}_{\hat c}<1$ for
+every $\hat c\in\Chatcon$ (for the degenerate envelope: if
+$0<\honest(\hat c)<1$ for every $\hat c\in\Chatcon$), then
+$\acSet(0)=\simplex{\Chatset}$: a zero completeness budget buys the whole
+simplex and no constraint at all.
+\item \emph{(limit $n\to\infty$, the exact rule)} Let $R$ be the exact rule
+of Definition~\ref{def:interval}, let $\hat c\in\Chatcon$ and write
+$p^{\mp}=p^{\mp}_{\hat c}$. Then
+\begin{equation}\label{eq:width}
+  0\ \le\ q^{+}(\hat c)-p^{+}\ \le\
+  \sqrt{\frac{p^{+}(1-p^{+})}{n\,\varepsilon^{+}(\hat c)}}+\frac1n,
+  \qquad
+  0\ \le\ p^{-}-q^{-}(\hat c)\ \le\
+  \sqrt{\frac{p^{-}(1-p^{-})}{n\,\varepsilon^{-}(\hat c)}}+\frac1n ,
+\end{equation}
+the first whenever $0<p^{+}<1$ and $\varepsilon^{+}(\hat c)>0$, the second
+whenever $0<p^{-}<1$ and $\varepsilon^{-}(\hat c)>0$.
+Consequently, if $\Chatcon=\Chatset$, $0<p^{\mp}_{\hat c}<1$ and
+$\varepsilon^{\pm}(\hat c)>0$ for all $\hat c$, and the allocation is held
+fixed as $n$ grows (for instance the uniform rule at a fixed $e>0$), then
+every $\mathbf{q}\in\acSet$ satisfies
+$p^{-}_{\hat c}-O(n^{-1/2})\le q(\hat c)\le p^{+}_{\hat c}+O(n^{-1/2})$
+uniformly in $\hat c$: $\acSet$ lies coordinatewise within $O(n^{-1/2})$ of
+the box $\prod_{\hat c}[p^{-}_{\hat c},p^{+}_{\hat c}]$, and it contains
+$\mathsf{H}$ by Theorem~\ref{thm:box-construction}\,(iii). For the degenerate envelope,
+$\sup_{\mathbf{q}\in\acSet}\|\mathbf{q}-\honest\|_{\infty}=O(n^{-1/2})$ and
+$\acSet$ converges to $\{\honest\}$ in Hausdorff distance.
+\item \emph{(no monotonicity in $n$, with a counterexample; the exact rule)}
+For the exact rule, $\acSet$ is \emph{not} monotone in $n$, already for a
+degenerate envelope. Take $\Chatset=\{\hat c_0,\hat c_1\}$, the degenerate
+envelope at $\honest=(\tfrac12,\tfrac12)$, $\Chatcon=\{\hat c_0\}$ and
+$\varepsilon^{-}(\hat c_0)=\varepsilon^{+}(\hat c_0)=\tfrac25$ (so
+$\ecomp=\tfrac45$). Then
+\begin{equation*}
+\begin{aligned}
+  n&=2:\quad [k^{-},k^{+}]=[1,1],\quad
+   \acSet=\{(\tfrac12,\tfrac12)\};\\
+  n&=3:\quad [k^{-},k^{+}]=[1,2],\quad
+   \acSet=\{\mathbf{q}\in\simplex{\Chatset}:\tfrac13\le q(\hat
+   c_0)\le\tfrac23\},
+\end{aligned}
+\end{equation*}
+so $\acSet(n{=}2)\subsetneq\acSet(n{=}3)$: the set is strictly larger at the
+larger round count.
+\item \emph{(degenerate alphabet $|\Chatset|=1$, every rule)} If
+$\Chatset=\{\hat c_0\}$ then, for every $n\ge1$, every $\ecomp\in[0,1)$,
+every $\Chatcon\subseteq\Chatset$ and every admissible allocation,
+\begin{equation*}
+  {\honest}^{+}(\hat c_0)=1,
+  \qquad
+  \mathsf{H}=\acSet=\simplex{\Chatset}=\{\delta_{\hat c_0}\},
+\end{equation*}
+and $\varepsilon^{\star}=0$ whenever ${\honest}^{-}(\hat c_0)=1$, in
+particular for the degenerate envelope, which is then
+$\honest=\delta_{\hat c_0}$. The emitted set is therefore constant in all of
+the construction's parameters on a one-letter alphabet, being at once the
+whole simplex and a single point; for the degenerate envelope so are its box
+data, and completeness is perfect. For a non-degenerate envelope
+(${\honest}^{-}(\hat c_0)<1$, which \eqref{eq:envelope} permits here) the
+lower box bound $q^{-}(\hat c_0)$ and the reported $\varepsilon^{\star}$ may be
+positive and may vary with the parameters; the reported figure is still a
+valid bound (by Theorem~\ref{thm:completeness-bound}), merely a loose one, the true honest
+failure probability being $0$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{(i).} Fix $\hat c\in\Chatcon$, write $p^{\mp}=p^{\mp}_{\hat c}$ and
+$\varepsilon^{\pm}_i\coloneqq\varepsilon^{\pm}_{(e_i)}(\hat c)$, so
+$\varepsilon^{\pm}_1\le\varepsilon^{\pm}_2$ by
+Definition~\ref{def:monotone-rule}. Since $R$ is monotone in the allocation
+(Definition~\ref{def:endpoint-rule}),
+$R^{-}(n,p^{-},\varepsilon^{-}_1)\le R^{-}(n,p^{-},\varepsilon^{-}_2)$ and
+$R^{+}(n,p^{+},\varepsilon^{+}_1)\ge R^{+}(n,p^{+},\varepsilon^{+}_2)$. Both
+guards in \eqref{eq:guard} are monotone in their first argument, their second
+arguments $\lfloor np^{-}\rfloor$ and $\lceil np^{+}\rceil$ not depending on
+the budget, whence $k^{-}_1(\hat c)\le k^{-}_2(\hat c)$ and
+$k^{+}_1(\hat c)\ge k^{+}_2(\hat c)$,
+that is, $[k^{-}_2,k^{+}_2]\subseteq[k^{-}_1,k^{+}_1]$. The endpoints
+$k^{\mp}_1$ at the smaller budget are therefore integer endpoints of the kind
+Lemma~\ref{lem:widening}\,(iv) admits for the output $\acSet(e_2)$:
+$0\le k^{-}_1(\hat c)\le k^{-}_2(\hat c)$ and
+$k^{+}_2(\hat c)\le k^{+}_1(\hat c)\le n$, the outer bounds by
+\eqref{eq:ordering} at $e_1$ and the inner ones as just shown. The set
+\eqref{eq:widened-set} they give is $\acSet(e_1)$, since both sets are built
+by \eqref{eq:boxbounds} on the same $\Chatcon$, with the bounds $[0,1]$ off
+$\Chatcon$ at both budgets. Lemma~\ref{lem:widening}\,(i) gives
+$\acSet(e_2)\subseteq\acSet(e_1)$.
+
+\emph{(ii).} \eqref{eq:inf-mono} is \eqref{eq:widened-inf} of
+Lemma~\ref{lem:widening}\,(iii) applied to the inclusion of (i), with
+$\acSet(e_2)$ in the role of $\acSet$ and $\acSet(e_1)$ in that of $\acSet'$,
+and it holds
+for arbitrary $\Psi$ with values in the extended reals, no continuity or
+measurability required. The specialization substitutes the definition of
+$\hlow$ as an infimum over $\acSet$ and changes nothing else.
+
+\emph{(iii).} The allocation constraint at $e=0$ forces every
+$\varepsilon^{\pm}(\hat c)=0$, these being non-negative with sum at most $0$.
+Fix $\hat c\in\Chatcon$ and write $p^{\mp}=p^{\mp}_{\hat c}$; by
+\eqref{eq:guard} each side is computed from its own envelope value alone.
+
+\emph{Lower side}, $R^{-}=R^{-}(n,p^{-},0)$. If $p^{-}\in(0,1)$:
+Definition~\ref{def:endpoint-rule}\,(b) gives $R^{-}=0$, so
+$k^{-}(\hat c)=\min\{0,\lfloor np^{-}\rfloor\}=0$. If $p^{-}=0$:
+Definition~\ref{def:endpoint-rule}\,(c) gives $R^{-}=0$ and
+$k^{-}(\hat c)=\min\{0,0\}=0$. If $p^{-}=1$: (c) gives $R^{-}=n$ and
+$k^{-}(\hat c)=\min\{n,n\}=n$. So the lower bound is $q^{-}(\hat c)=0$ unless
+$p^{-}=1$, where it is $q^{-}(\hat c)=1$.
+
+\emph{Upper side}, $R^{+}=R^{+}(n,p^{+},0)$. If $p^{+}\in(0,1)$: (b) gives
+$R^{+}=n$, so $k^{+}(\hat c)=\max\{n,\lceil np^{+}\rceil\}=n$. If $p^{+}=0$:
+(c) gives $R^{+}=0$ and $k^{+}(\hat c)=\max\{0,0\}=0$. If $p^{+}=1$: (c) gives
+$R^{+}=n$ and $k^{+}(\hat c)=\max\{n,n\}=n$. So the upper bound is
+$q^{+}(\hat c)=1$ unless $p^{+}=0$, where it is $q^{+}(\hat c)=0$.
+
+On $\simplex{\Chatset}$ the bound $q(\hat c)\ge1$ is $q(\hat c)=1$ and the
+bound $q(\hat c)\le0$ is $q(\hat c)=0$, and the bounds $[0,1]$ are vacuous;
+assembling the cases in \eqref{eq:accset} gives the displayed set, and it is
+the whole simplex when no $\hat c\in\Chatcon$ has $p^{+}_{\hat c}=0$ or
+$p^{-}_{\hat c}=1$. Finally $\varepsilon^{\star}=0$. A lower term of
+\eqref{eq:completeness} is $\Pr[\Ncount{\hat c}^{-}<0]=0$ when
+$k^{-}(\hat c)=0$, and when $p^{-}=1$ it is $\Pr[\Ncount{\hat c}^{-}<n]=0$
+because $\Ncount{\hat c}^{-}$, binomial $(n,1)$, equals $n$ almost surely. An
+upper term is $\Pr[\Ncount{\hat c}^{+}>n]=0$ when $k^{+}(\hat c)=n$, and when
+$p^{+}=0$ it is $\Pr[\Ncount{\hat c}^{+}>0]=0$ because
+$\Ncount{\hat c}^{+}$, binomial $(n,0)$, equals $0$ almost surely.
+
+\emph{(iv).} The left inequalities of \eqref{eq:width} are \eqref{eq:ordering}
+(Lemma~\ref{lem:guard}\,(i)):
+$q^{+}(\hat c)=k^{+}(\hat c)/n\ge\lceil np^{+}\rceil/n\ge p^{+}$ and
+$q^{-}(\hat c)=k^{-}(\hat c)/n\le\lfloor np^{-}\rfloor/n\le p^{-}$.
+
+For the upper one, $\kappa^{+}(\hat c)$ is the quantile \eqref{eq:kappaplus}
+at $p^{+}$ and $\Ncount{\hat c}^{+}$ is binomial $(n,p^{+})$ (the
+\tref{side-wise reading} of Definition~\ref{def:endpoint-rule}). Set
+$t\coloneqq\sqrt{np^{+}(1-p^{+})/\varepsilon^{+}(\hat c)}>0$ and
+$k\coloneqq\lceil np^{+}+t\rceil$. Any integer $j>k$ satisfies $j>np^{+}+t$,
+so
+\begin{equation*}
+  \Pr[\Ncount{\hat c}^{+}>k]\ \le\ \Pr[\Ncount{\hat c}^{+}-np^{+}>t]
+  \ \le\ \Pr\big[|\Ncount{\hat c}^{+}-np^{+}|\ge t\big]
+  \ \le\ \frac{np^{+}(1-p^{+})}{t^{2}}\ =\ \varepsilon^{+}(\hat c)
+\end{equation*}
+by Lemma~\ref{lem:cheb}. If $k\le n$ this exhibits an admissible index in
+\eqref{eq:kappaplus}, so $\kappa^{+}(\hat c)\le k$ by minimality; if $k>n$
+then $\kappa^{+}(\hat c)\le n<k$ anyway. In both cases
+$\kappa^{+}(\hat c)\le\lceil np^{+}+t\rceil$. Since also
+$\lceil np^{+}\rceil\le\lceil np^{+}+t\rceil$, the guard gives
+$k^{+}(\hat c)\le\lceil np^{+}+t\rceil\le np^{+}+t+1$, hence
+$q^{+}(\hat c)-p^{+}\le t/n+1/n$, which is the stated bound because
+$t/n=\sqrt{p^{+}(1-p^{+})/(n\varepsilon^{+}(\hat c))}$.
+
+Symmetrically, $\kappa^{-}(\hat c)$ is the quantile \eqref{eq:kappaminus} at
+$p^{-}$ and $\Ncount{\hat c}^{-}$ is binomial $(n,p^{-})$. Set
+$t'\coloneqq\sqrt{np^{-}(1-p^{-})/\varepsilon^{-}(\hat c)}>0$ and
+$k'\coloneqq\max\{0,\lfloor np^{-}-t'\rfloor\}$. If $\lfloor np^{-}-t'\rfloor
+\le0$ then $k'=0$ and $\Pr[\Ncount{\hat c}^{-}<0]=0\le\varepsilon^{-}(\hat
+c)$. Otherwise $k'=\lfloor np^{-}-t'\rfloor\le np^{-}-t'$, so any integer
+$j\le k'-1$ satisfies $j<np^{-}-t'$ and
+$\Pr[\Ncount{\hat c}^{-}<k']\le\Pr[\Ncount{\hat c}^{-}-np^{-}<-t']\le
+\Pr[|\Ncount{\hat c}^{-}-np^{-}|\ge t']\le\varepsilon^{-}(\hat c)$ by
+Lemma~\ref{lem:cheb}. Either way $k'$ is admissible in
+\eqref{eq:kappaminus}, so $\kappa^{-}(\hat c)\ge k'$. In the unclipped case
+$k'=\lfloor np^{-}-t'\rfloor>np^{-}-t'-1$; in the clipped case
+$\lfloor np^{-}-t'\rfloor\le0$ forces $np^{-}-t'<1$, hence $np^{-}-t'-1<0=k'$.
+In both cases $\kappa^{-}(\hat c)\ge k'>np^{-}-t'-1$. As
+$\lfloor np^{-}\rfloor>np^{-}-1\ge np^{-}-t'-1$, the guard gives
+$k^{-}(\hat c)\ge np^{-}-t'-1$ and hence $p^{-}-q^{-}(\hat c)\le t'/n+1/n$.
+
+For the consequence: $\acSet\subseteq\prod_{\hat c}[q^{-}(\hat
+c),q^{+}(\hat c)]$ by \eqref{eq:accset}, so every $\mathbf{q}\in\acSet$ has
+$p^{-}_{\hat c}-q(\hat c)\le p^{-}_{\hat c}-q^{-}(\hat c)$ and
+$q(\hat c)-p^{+}_{\hat c}\le q^{+}(\hat c)-p^{+}_{\hat c}$, which
+\eqref{eq:width} bounds by $O(n^{-1/2})$ uniformly
+over the finite alphabet, both bounds of \eqref{eq:width} applying at every
+$\hat c$ because $0<p^{\mp}_{\hat c}<1$ and $\varepsilon^{\pm}(\hat c)>0$
+there, with fixed values; $\mathsf{H}\subseteq\acSet$ is
+Theorem~\ref{thm:box-construction}\,(iii). For the degenerate envelope
+$p^{-}_{\hat c}=p^{+}_{\hat c}=\honest(\hat c)$, so the same two bounds give
+$\|\mathbf{q}-\honest\|_{\infty}\le\max_{\hat c}\max\{q^{+}(\hat
+c)-\honest(\hat c),\,\honest(\hat c)-q^{-}(\hat c)\}=O(n^{-1/2})$ for every
+$\mathbf{q}\in\acSet$, and $\honest\in\acSet$ by Theorem~\ref{thm:box-construction}\,(iii),
+so the other half of the Hausdorff distance is $0$.
+
+\emph{(v).} Direct computation with the degenerate envelope at $p=\tfrac12$,
+so that $\Ncount{}\coloneqq\Ncount{\hat c_0}^{-}=\Ncount{\hat c_0}^{+}$ is
+binomial $(n,\tfrac12)$, and the exact rule. At
+$n=2$ the law of $\Ncount{}$ is $(\tfrac14,\tfrac12,\tfrac14)$ on
+$\{0,1,2\}$: $\Pr[\Ncount{}<0]=0\le\tfrac25$ and
+$\Pr[\Ncount{}<1]=\tfrac14\le\tfrac25$ but
+$\Pr[\Ncount{}<2]=\tfrac34>\tfrac25$, so $\kappa^{-}=1$;
+$\Pr[\Ncount{}>0]=\tfrac34>\tfrac25$ and $\Pr[\Ncount{}>1]=\tfrac14\le\tfrac25$,
+so $\kappa^{+}=1$. The guard is inert ($\lfloor1\rfloor=\lceil1\rceil=1$), so
+$[k^{-},k^{+}]=[1,1]$ and $q(\hat c_0)=\tfrac12$, which on a two-letter
+alphabet forces $\mathbf{q}=(\tfrac12,\tfrac12)$. At $n=3$ the law is
+$(\tfrac18,\tfrac38,\tfrac38,\tfrac18)$ on $\{0,1,2,3\}$:
+$\Pr[\Ncount{}<1]=\tfrac18\le\tfrac25$ but
+$\Pr[\Ncount{}<2]=\tfrac12>\tfrac25$, so $\kappa^{-}=1$;
+$\Pr[\Ncount{}>1]=\tfrac12>\tfrac25$ and
+$\Pr[\Ncount{}>2]=\tfrac18\le\tfrac25$, so $\kappa^{+}=2$. The guard is again
+inert ($\lfloor\tfrac32\rfloor=1$, $\lceil\tfrac32\rceil=2$), so
+$[k^{-},k^{+}]=[1,2]$ and $q(\hat c_0)\in[\tfrac13,\tfrac23]$. The two sets are
+as displayed and the inclusion is strict.
+
+\emph{(vi).} On $\Chatset=\{\hat c_0\}$ the only vector with non-negative
+coordinates summing to $1$ is $\delta_{\hat c_0}$, so
+$\simplex{\Chatset}=\{\delta_{\hat c_0}\}$. Condition \eqref{eq:envelope}
+gives ${\honest}^{+}(\hat c_0)\le1\le{\honest}^{+}(\hat c_0)$, that is,
+${\honest}^{+}(\hat c_0)=1$, and ${\honest}^{-}(\hat c_0)\le1$, so
+$\delta_{\hat c_0}\in\mathsf{H}\subseteq\simplex{\Chatset}$ and
+$\mathsf{H}=\{\delta_{\hat c_0}\}$; for the degenerate envelope also
+${\honest}^{-}(\hat c_0)=1$, that is, $\honest=\delta_{\hat c_0}$. Since
+$\acSet\subseteq\simplex{\Chatset}$ by \eqref{eq:accset} and
+$\acSet\supseteq\mathsf{H}\neq\varnothing$ by Theorem~\ref{thm:box-construction}\,(iii),
+$\acSet=\simplex{\Chatset}=\{\delta_{\hat c_0}\}$ whatever the parameters. For
+$\varepsilon^{\star}$: if $\Chatcon=\varnothing$, \eqref{eq:boxbounds} gives
+the vacuous bounds $[0,1]$ and $\varepsilon^{\star}$ is an empty sum, hence
+$0$. If $\Chatcon=\{\hat c_0\}$, the upper side has
+$p^{+}_{\hat c_0}=1$, so Definition~\ref{def:endpoint-rule}\,(c) gives
+$R^{+}=n$, the guard gives $k^{+}(\hat c_0)=n$ and the upper term
+$\Pr[\Ncount{\hat c_0}^{+}>n]$ is $0$. If moreover
+${\honest}^{-}(\hat c_0)=1$, the same convention gives $R^{-}=n$,
+$k^{-}(\hat c_0)=\min\{n,n\}=n$, the box bounds
+$q^{-}(\hat c_0)=q^{+}(\hat c_0)=1$ independent of every parameter, and the
+lower term $\Pr[\Ncount{\hat c_0}^{-}<n]$ is $0$ because
+$\Ncount{\hat c_0}^{-}$, binomial $(n,1)$, equals $n$ almost surely; so
+$\varepsilon^{\star}=0$. The two cases exhaust $\Chatcon\subseteq\Chatset$,
+and neither used $n$, $\ecomp$, the allocation or anything of $R$ beyond
+Definition~\ref{def:endpoint-rule}\,(c). When ${\honest}^{-}(\hat c_0)<1$ the
+lower term is the tail of a binomial $(n,{\honest}^{-}(\hat c_0))$ below
+$k^{-}(\hat c_0)$, which Lemma~\ref{lem:guard}\,(ii) bounds by
+$\varepsilon^{-}(\hat c_0)$ and which need not vanish; the bound of
+Theorem~\ref{thm:completeness-bound} still holds, the true failure probability being
+$\Pr[\operatorname{freq}_{\Chat_1^n}\notin\{\delta_{\hat c_0}\}]=0$.
+\end{proof}

@@ -1,0 +1,36 @@
+% ---
+% id: receiver/rem:res5why
+% kind: rem
+% title: "What the fifth residual checks that the others do not"
+% summary: >-
+%   The fifth residual is the only one that looks at the emitted photon-number
+%   blocks, which can fail Hermiticity or positivity at the last step while the
+%   other residuals pass. It is neither a repair nor an enclosure.
+% prominence: standard
+% status: accepted
+% uses: [def:residuals]
+% mentions: [thm:exact-and-evaluated, req:residual-refusal]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+\begin{remark}\label{rem:res5why}
+Four of the other five residuals of Definition~\ref{def:residuals} check the
+\emph{optics}: that the compiled matrix is a contraction, that the Grams are
+positive, that the loss identity closes, that the POVM sums to the identity.
+None of them looks at the object the artifact actually emits, the
+photon-number block, and a block can fail Hermiticity or positivity at the last
+floating-point step even when all four pass, because $r_4$ constrains only the
+\emph{sum} over $S$ and $r_2$ lives on the Grams, one compilation stage
+earlier. $r_5$ makes that defect visible where the receiver is in hand, with
+the port, the setting and the photon number that produced it.
+
+Two things $r_5$ is not. It is not a repair: a block that fails is refused and
+never repaired (Requirement~\ref{req:residual-refusal}), because a repaired
+block is a different operator and no claim of this contract holds for it. And
+it is not an enclosure: $r_5=0$ says that the \emph{computed} block is
+Hermitian and positive, not that it is close to the exact one, which is
+Theorem~\ref{thm:exact-and-evaluated}\,(ii) exactly as for $r_1,\dots,r_4$.
+\end{remark}

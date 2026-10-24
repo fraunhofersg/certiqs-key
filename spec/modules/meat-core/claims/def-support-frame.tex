@@ -1,0 +1,97 @@
+% ---
+% id: meat-core/def:support-frame
+% kind: def
+% title: "Support frame and declared isometry"
+% summary: >-
+%   In trusted-source mode a support frame is the range of an isometry ι from a
+%   Choi input register A₀ into A that contains the support of τ_A, not
+%   necessarily equal to it. Two exact constructions are named: the full frame,
+%   always available, and the diagonal frame, tight by construction.
+% prominence: standard
+% status: implemented
+% uses: [def:declaration]
+% mentions: [def:untrusted-choi]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.objective.joint:marginal_frame
+% lean:
+% ---
+
+The Choi program parametrises the states with Alice's declared marginal
+$\tau_A$ by positive operators on a register $A_0$ mapped into $A$. The
+frame is asked only to contain the support of $\tau_A$, not to equal
+it, so that no run has to decide $\operatorname{rank}\tau_A$ from a computed
+spectrum at a window. In \tref{untrusted-source mode} there is no marginal, and no
+$A_0$, $\iota$ or $W_{\tau}$ is defined or needed
+(Definition~\ref{def:untrusted-choi}); at $d_A=1$ the two modes give the
+same program (Definition~\ref{def:untrusted-choi}\,(d)).
+
+\begin{definition}\label{def:support-frame}
+Let the declaration be in \tref{trusted-source mode}, with declared marginal
+$\tau_A$. Let $A_0$ be a register of dimension $d_{A_0}$ and let
+$\iota\in\Linn{A_0}{A}$ satisfy
+\begin{equation}\label{eq:iota}
+  \iota^{\dagger}\iota=\idon{A_0},
+  \qquad
+  \iota\,\iota^{\dagger}\,\tau_A=\tau_A .
+\end{equation}
+Write $\Pi_{\iota}\coloneqq\iota\iota^{\dagger}$, which is the orthogonal
+projector onto $\operatorname{ran}\iota$
+($\Pi_{\iota}^{\dagger}=\Pi_{\iota}$ and
+$\Pi_{\iota}^{2}=\iota(\iota^{\dagger}\iota)\iota^{\dagger}=\Pi_{\iota}$
+by the first condition). The first condition says $\iota$ is an isometry;
+the second says its range \emph{contains} the support of $\tau_A$, since
+$\Pi_{\iota}\tau_A=\tau_A$ holds exactly when every column of $\tau_A$
+lies in $\operatorname{ran}\iota$, i.e.\ when
+$\operatorname{ran}\tau_A\subseteq\operatorname{ran}\iota$. We call
+$\operatorname{ran}\iota$ the
+\term[The range of an isometry from the Choi input register into Alice's system that contains the support of her declared marginal.]{support frame}
+of the run and $\iota$ the
+\term[The isometry from the Choi input register into Alice's system whose range is the support frame.]{declared isometry};
+a support frame is given by any $\iota$ satisfying \eqref{eq:iota}. The
+frame is
+\term[Said of a support frame equal to the support of Alice's marginal, equivalently of dimension equal to its rank.]{tight}
+when $\operatorname{ran}\iota=\operatorname{supp}\tau_A$, equivalently when
+$d_{A_0}=\operatorname{rank}\tau_A$; in general
+$\operatorname{rank}\tau_A\le d_{A_0}\le d_A$. The images under $\iota$
+of a fixed orthonormal basis of $A_0$ are the
+\term[The images under the declared isometry of a fixed orthonormal basis of the Choi input register.]{declared basis of $A_0$}.
+
+Two constructions satisfy \eqref{eq:iota} exactly:
+\begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+\item \emph{The
+  \term[The support frame whose declared isometry is the identity on Alice's system: always available, exact, and tight exactly when her marginal is nonsingular.]{full frame}.}
+  $A_0=A$, $d_{A_0}=d_A$, $\iota=\idon{A}$.
+  Then $\iota^{\dagger}\iota=\idon{A}$ and
+  $\Pi_{\iota}\tau_A=\idon{A}\,\tau_A=\tau_A$: both conditions of
+  \eqref{eq:iota} hold for \emph{any} admissible $\tau_A$, and both hold
+  \emph{exactly} as binary64 data, a product with the identity rounding
+  nothing. This construction is always available and uses no property of
+  $\tau_A$ beyond admission. It is tight exactly when $\tau_A$ is
+  nonsingular.
+\item \emph{The
+  \term[The support frame whose declared isometry is the coordinate injection onto the nonzero diagonal entries of a diagonal marginal: exact and tight.]{diagonal frame}.}
+  If the declared $\tau_A$ is diagonal in
+  the declared basis of $A$, $\tau_A=\sum_it_i\dyad{i}$, then
+  $\operatorname{supp}\tau_A=\operatorname{span}\{\ket i:t_i\neq0\}$, and
+  one may take $d_{A_0}=\#\{i:t_i\neq0\}$ and
+  $\iota=\sum_j\ket{i_j}\bra{j}$, the coordinate injection onto those
+  indices in increasing order. Both conditions of \eqref{eq:iota} are then
+  arithmetic in $\{0,1\}$ and hold exactly, and the frame is tight.
+  Whether $t_i\neq0$ is a bit-level comparison of a declared binary64
+  datum against zero and not a threshold: $\tau_A$ is admitted only with
+  $\tau_A\succeq0$ and $\tr\tau_A=1$ decided exactly
+  (Definition~\ref{def:declaration}, the exact-admissibility paragraph), so
+  its diagonal entries \emph{are}
+  its eigenvalues and \emph{are} the declared numbers.
+  The construction is available only for a $\tau_A$ that is diagonal in the
+  declared basis, every off-diagonal entry being the datum $0$.
+  Construction~(a) is always available
+  and exhibits no tightness at all.
+\end{enumerate}
+Set
+\begin{equation}\label{eq:Wtau}
+  W_{\tau}\coloneqq\tau_A^{1/2}\,\iota\ \in\ \Linn{A_0}{A}.
+\end{equation}
+\end{definition}

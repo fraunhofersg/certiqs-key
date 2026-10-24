@@ -1,0 +1,33 @@
+{
+ "alpha": "from perfect-encoded-N4",
+ "device": {
+  "alice_exact_window": "7",
+  "alice_photon_cutoff": "4",
+  "bob_exact_window": "7",
+  "bob_photon_cutoff": "4",
+  "route": "licensed"
+ },
+ "f_ec": 1.1,
+ "id": "perfect-licensed-N4",
+ "labels": {
+  "coincidences": 1000000,
+  "cutoff": 4,
+  "devices": "perfect",
+  "loss_db": 10.0,
+  "qber": 0.0,
+  "rounds": 10000000,
+  "route": "licensed"
+ },
+ "model": {
+  "alice_transmittance": "5696652996790543/18014398509481984",
+  "bob_transmittance": "5696652996790543/18014398509481984",
+  "visibility": "1"
+ },
+ "parameters": {},
+ "rounds": 10000000,
+ "solver": {
+  "budget_seconds": 7200,
+  "max_iterations": null,
+  "method": "auto"
+ }
+}

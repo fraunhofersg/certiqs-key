@@ -1,0 +1,81 @@
+% ---
+% id: receiver/thm:multiclick-bound
+% kind: thm
+% title: "Lower bound on every multiclick block"
+% summary: >-
+%   For no-click operators of prefactor form, every n-photon block of the
+%   multiclick combination is bounded below by the bound function at n, built
+%   from extreme eigenvalues of the mode operators B and Bₖ. The bound is at
+%   most one.
+% prominence: standard
+% status: implemented
+% uses: [lem:fock-block-spectrum, def:bounddata]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.receiver.bound:setting_bound
+% lean:
+% ---
+
+The multiclick element is the identity plus a multiple of the all-dark
+element, the \tref[joint no-click elements]{joint no-click element} of all
+$K$ ports, minus the joint no-click elements that leave out one port. Bounding
+each lifted operator by an extreme eigenvalue of its mode-space operator,
+from below where it enters with a non-negative coefficient and from above
+where it is subtracted, gives a scalar bound on each photon-number block.
+
+\begin{theorem}\label{thm:multiclick-bound}
+Let $B,B_1,\dots,B_K$ be Hermitian operators on a finite-dimensional space with
+\begin{equation}\label{eq:bbkhyp}
+  0\ \preceq\ B_k\ \preceq\ B\ \preceq\ \id\qquad(k=1,\dots,K),
+\end{equation}
+let $\gamma,\beta_1,\dots,\beta_K\in(0,1]$ with $\gamma\le\beta_k$ for every
+$k$, let $\Pvac{[K]}$ and $\Pvac{[K]\setminus\{k\}}$ ($k=1,\dots,K$) be
+operators on the \tref{Fock space} of that space of the form
+\begin{equation}\label{eq:prefactorform}
+  \Pvac{[K]}=\gamma\,\Fock(\id-B),\qquad
+  \Pvac{[K]\setminus\{k\}}=\beta_k\,\Fock\big(\id-B_k\big),
+\end{equation}
+and put $M_{\mc}\coloneqq\id+(K-1)\Pvac{[K]}-\sum_k\Pvac{[K]\setminus\{k\}}$. Put
+\begin{equation}\label{eq:cd}
+  c\coloneqq1-\lmax(B),\qquad
+  d_k\coloneqq1-\lmin\big(B_k\big).
+\end{equation}
+Then $\big(\gamma,\{\beta_k\},c,\{d_k\}\big)$ is admissible bound data, and for
+every $n\ge0$
+\begin{equation}\label{eq:mcbound}
+  \lmin\big(\blk{M}{\eqn}_{\mc}\big)\ \ge\ \Bnd(n) ,
+  \qquad\text{equivalently}\qquad
+  \blk{M}{\eqn}_{\mc}\ \succeq\ \Bnd(n)\,\id^{(=n)} .
+\end{equation}
+Moreover $\Bnd(n)\le1$ for every $n$.
+\end{theorem}
+
+\begin{proof}
+\emph{Admissibility of the data.} $0\preceq B\preceq\id$ gives
+$\lmax(B)\in[0,1]$, hence $c\in[0,1]$; likewise $0\preceq B_k\preceq\id$ gives
+$d_k\in[0,1]$. For $c\le d_k$: from $B_k\preceq B$ we get
+$\lmin(B_k)\le\lmin(B)\le\lmax(B)$, and subtracting from $1$ reverses the
+inequality, so $d_k=1-\lmin(B_k)\ge1-\lmax(B)=c$. The relation
+$\gamma\le\beta_k$ is a hypothesis.
+
+\emph{The bound.} By Lemma~\ref{lem:fock-block-spectrum} applied to $B$ and to each
+$B_k$ --- legitimate because \eqref{eq:bbkhyp} puts all of them in
+$[0,\id]$ ---
+\begin{equation}\label{eq:blockopbounds}
+  \Fock(\id-B)^{(n)}\succeq c^{\,n}\id^{(=n)},
+  \qquad
+  \Fock\big(\id-B_k\big)^{(n)}\preceq d_k^{\,n}\id^{(=n)} .
+\end{equation}
+The Löwner order is preserved by sums and by multiplication with non-negative
+scalars, and $K-1\ge0$, $\gamma>0$, $\beta_k>0$. Taking the $n$-photon block of
+$M_{\mc}=\id+(K-1)\Pvac{[K]}-\sum_k\Pvac{[K]\setminus\{k\}}$, bounding the
+term with the non-negative coefficient from below and each subtracted term from
+above, gives
+$\blk{M}{\eqn}_{\mc}\succeq\big(1+(K-1)\gamma c^n-\sum_k\beta_kd_k^n\big)
+\id^{(=n)}$, and $X\succeq t\,\id$ says exactly $\lmin(X)\ge t$.
+
+\emph{$\Bnd\le1$.} Since $d_k\ge c$ and $\beta_k\ge\gamma$, every term of
+$\sum_k\beta_kd_k^n$ is at least $\gamma c^n$, so the sum is at least
+$K\gamma c^n\ge(K-1)\gamma c^n$, whence $\Bnd(n)\le1$.
+\end{proof}

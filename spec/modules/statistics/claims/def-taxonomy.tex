@@ -1,0 +1,71 @@
+% ---
+% id: statistics/def:taxonomy
+% kind: def
+% title: "Admissible geometries and the canonical box form"
+% summary: >-
+%   An admissible geometry is a singleton, one rational vector, or a polytope,
+%   rational linear inequalities intersected with the probability simplex, each
+%   with its validation predicate. A polytope in canonical box form is given by
+%   recorded lower and upper bounds per outcome.
+% prominence: standard
+% status: implemented
+% uses: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.taxonomy:GeometryTag
+% lean:
+% ---
+
+The acceptance test asks whether the frequency vector of a run lies in a
+declared set. The set is declared in one of two forms, and a polytope may in
+addition record per-outcome bounds from which its rows are built.
+
+\begin{definition}\label{def:taxonomy}
+An \term[A tag, singleton or polytope, together with the data of that tag; an
+acceptance set is declared as one.]{admissible geometry} is a pair consisting of a \emph{tag}
+and its \emph{data}, drawn from exactly the following two cases, each with
+its data, the set $\Gamma$ the data denote and its
+\term[The condition on a geometry's data that validation checks: a
+probability vector for a singleton, a feasible linear system for a
+polytope.]{validation predicate}. There is no third tag.
+\begin{description}[leftmargin=1.9em]
+\item[$\mathrm{singleton}$.] Data: a vector
+$\mathbf{q}^{\ast}\in\mathbb{Q}^{\Chatset}$. Denotation
+$\Gamma\coloneqq\{\mathbf{q}^{\ast}\}$. \emph{Validation predicate:}
+$q^{\ast}(\hat c)\ge0$ for every $\hat c$ and $\sum_{\hat c}q^{\ast}(\hat
+c)=1$.
+\item[$\mathrm{polytope}$.] Data: an integer row count $m_{\mathrm{row}}\ge0$,
+a matrix $B\in\mathbb{Q}^{\,m_{\mathrm{row}}\times\Chatset}$ and a vector
+$\mathbf{b}\in\mathbb{Q}^{\,m_{\mathrm{row}}}$. Denotation
+\begin{equation}\label{eq:polytope}
+  \Gamma\coloneqq\{\mathbf{q}\in\simplex{\Chatset}:\ B\mathbf{q}\le\mathbf{b}\},
+\end{equation}
+the inequality componentwise. \emph{Validation predicate:} feasibility of the
+linear system $\{\mathbf{q}\ge0,\ \sum_{\hat c}q(\hat c)=1,\
+B\mathbf{q}\le\mathbf{b}\}$ over the rationals.
+\end{description}
+A $\mathrm{polytope}$ geometry is in \term[A polytope geometry that records a
+lower and an upper bound per outcome and whose rows are exactly the two
+bounds of each outcome.]{canonical box form} when it carries, in addition, a
+pair $\qlo,\qhi\in\mathbb{Q}^{\Chatset}$ with $0\le\qlo\le\qhi$
+componentwise, and its $(B,\mathbf{b})$ are exactly
+\begin{equation}\label{eq:boxrows}
+  m_{\mathrm{row}}=2m,\qquad
+  \begin{aligned}
+    &\text{row }i:\ \ \delta_{\hat c^{(i)}}^{\transpose},
+      &&\text{right-hand side } q^{+}(\hat c^{(i)}),\\
+    &\text{row }m+i:\ \ -\delta_{\hat c^{(i)}}^{\transpose},
+      &&\text{right-hand side } -q^{-}(\hat c^{(i)}),
+  \end{aligned}
+  \qquad i=1,\dots,m,
+\end{equation}
+where $m\coloneqq|\Chatset|$, $\hat c^{(1)},\dots,\hat c^{(m)}$ is the
+declaration's enumeration of $\Chatset$ and $\delta_{\hat c}$ is the standard
+basis vector of $\mathbb{R}^{\Chatset}$ at $\hat c$. Row indices are integers,
+never alphabet elements; equivalently
+\begin{equation}\label{eq:boxset}
+  \Gamma=\{\mathbf{q}\in\simplex{\Chatset}:\
+  q^{-}(\hat c)\le q(\hat c)\le q^{+}(\hat c)\ \ \forall\hat c\in\Chatset\}.
+\end{equation}
+\end{definition}

@@ -1,0 +1,64 @@
+% ---
+% id: protocol-compiler/ass:coin
+% kind: ass
+% title: "Public choices as private coins of declared bias"
+% summary: >-
+%   Every public choice is drawn with its declared bias; those of fixed bias
+%   are jointly independent of each other, the quantum systems and the
+%   adversary, and one weighted by a station's setting depends on the round
+%   through that setting only. It lets a weight inside the measurement
+%   describe the round.
+% prominence: standard
+% status: accepted
+% uses: [def:weighted, def:declaration]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% short_id: A-COIN
+% verification: never
+% category: local-randomness
+% affects: [secrecy]
+% user_statement: >-
+%   Every public choice of your protocol (for example an actively chosen
+%   basis, or whether a round is a test round; a basis set passively by a beam
+%   splitter is part of the measurement, not a choice), whichever party draws
+%   it and at whichever of its
+%   stations, comes from a local random number generator with exactly the
+%   declared probabilities, and each is announced or kept secret exactly as
+%   declared. The choices with fixed probabilities are independent of each
+%   other and, all together, of the quantum signals and of anything an
+%   attacker does. A choice whose probabilities depend on a station's private
+%   setting is drawn by a party whose recorded outcome includes that setting,
+%   and may depend on that
+%   setting only, never otherwise on Alice's letter, another choice or a
+%   detection result.
+% lean:
+% ---
+
+A public choice of known bias enters the declaration as a weight inside the
+measurement operators, and that weight describes the round only if the choice
+is drawn as declared. For a choice $f$ weighted through the private setting
+of the station that measures a system, the conditional independence given $t$
+in clause~(ii) is what makes the only dependence of $f$ on the round its
+dependence through $t$: a value whose weight varied with the device outcome
+would be an inference from that outcome and not a choice, and such a
+weighting is refused by type.
+
+\begin{assumption}\label{ass:coin}
+(i) The declared public choices $t\in\Tpub$ are drawn from private random
+sources with their declared weights $q_t$, mutually independent, whichever
+party draws each, and, taken together, independent of the quantum systems and
+of the adversary;
+(ii) a public choice $f$ declared with a setting-dependent weighting
+$P(f\,|\,t)$ --- the \tref{setting-dependent form} of
+Definition~\ref{def:weighted}, which may be declared at any
+\tref{measured factor} --- is drawn in each round by a party whose
+\tref[readout map]{readout} records the \tref{setting component} $t$ of the
+outcome, from a private random source with the declared conditional
+distribution $P(\,\cdot\,|\,t)$ given that round's setting $t$; given $t$,
+$f$ is independent of the quantum systems, of the letter and every outcome of
+the round (the device outcome $y$ included), of every other declared public
+choice and of the adversary, taken together;
+(iii) every such choice is announced, or withheld, exactly as the public
+structure declares.
+\end{assumption}

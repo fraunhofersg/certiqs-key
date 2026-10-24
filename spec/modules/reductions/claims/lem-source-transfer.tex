@@ -1,0 +1,247 @@
+% ---
+% id: reductions/lem:source-transfer
+% kind: lem
+% title: "Exactness of the source map in trusted-source mode"
+% summary: >-
+%   In trusted-source mode, replacing the specified signal ensemble by the
+%   virtual one is an exact operational reduction, and the entanglement-based
+%   description a certificate presents has the same full output. One source
+%   channel common to every letter is essential.
+% prominence: standard
+% status: accepted
+% uses: [def:opreduction, lem:opreduction-transfer, def:protocol, def:roundmodel, lem:sep, transmitter/def:source-spec, transmitter/def:source-segment, transmitter/def:srcert, transmitter/thm:certificate-sufficiency]
+% mentions: [cor:sequential, transmitter/ass:src, transmitter/ass:ens, transmitter/decoy/ass:wcp]
+% assumes: [A-SEQ]
+% refs: []
+% provenance: newly-derived
+% lean:
+% notes: "Current caveats: the proof reads (SR2), (SR3) and A-SEQ; (SR1) enters only as a hypothesis of the cited transmitter theorem and as what the consuming engine reads as tau_A. No form of the certificate is read (pure, block or ensemble presentation), because transmitter/thm:certificate-sufficiency (iii) reads purity nowhere. What it reads of the transmitter: the source identity (S3) of transmitter/def:source-segment; (SR1) to (SR3) and the virtual pair of transmitter/def:srcert, including its paragraph 'One reading at every L_s' (quoted in rem:source-transfer-scope); and transmitter/thm:certificate-sufficiency (iii)(a) and (iii)(b) with their hypotheses. The finiteness the proof reads, of E_0 (the round model's own) and of the virtual transmitted system (transmitter/def:source-spec's), is hypothesised in the statement, and it is what makes the tensor power of Xi a channel by lem:sep (iii); an adversary whose memory has any dimension, or who receives the signals round by round, is reached by meat-core/lem:memory-lift."
+% ---
+
+A source map replaces \emph{Alice's} preparation, and only a
+\tref{source specification} in trusted-source mode has one. In
+untrusted-source mode the specification carries ``no certificate and no
+marginal'' (\xref{transmitter/def:source-spec}), the retained system $A_j$ is
+an \emph{output} of the attack (Definition~\ref{def:roundmodel}, untrusted
+branch), and both (SR3), that no operation of the adversary acts on $A$, and
+the register discipline that \xref{transmitter/thm:certificate-sufficiency}\,(iii)
+requires of its channel fail there; correspondingly A-SRC
+(\xref{transmitter/ass:src}) is stated of a specification in trusted-source
+mode. So
+the lemma is stated in trusted-source mode alone; in untrusted-source mode
+there is no source segment to transfer, and what remains is the receiver-side
+instance, Corollary~\ref{cor:sequential}. The specified-source input
+$\rho^{\mathrm{sp}}$ of the lemma is the state in which the physical source prepares
+the letters and signals of the $n$ rounds, under the transmitter's
+physical-source premise that makes the rounds independent: A-ENS
+(\xref{transmitter/ass:ens}) or, for a specification declared by a
+\tref{source model}, the premise that model declares in its place, A-WCP
+(\xref{transmitter/decoy/ass:wcp}) for the decoy model. The lemma is a
+statement about $\rho^{\mathrm{sp}}$ and does not assume that premise.
+
+\begin{lemma}\label{lem:source-transfer}
+Let a source specification in \emph{trusted-source mode}
+(\xref{transmitter/def:source-spec}) declare an alphabet $\Xset$ with weights
+$(p_x)_{x\in\Xset}$, the \emph{specified} ensemble $\{p_x,\rho_x\}$ on the
+\tref{transmitted system} $\Asig$ and the \tref{virtual ensemble}
+$\{p_x,\rvirt_x\}$ on the virtual transmitted system $\Avirt$, with
+$\Hs{\Asig}$ separable and $\Hs{\Avirt}$ finite-dimensional, as
+\xref{transmitter/def:source-spec} declares the virtual transmitted system,
+and let its source segment satisfy
+the \tref{interface conditions} (S1)--(S4) of
+\xref{transmitter/def:source-segment}, so that its composite
+$\Xi\colon\Tcl{\Avirt}\to\Tcl{\Asig}$ satisfies the \emph{source identity}
+\begin{equation}\label{eq:sourceidentity}
+  \Xi\big(\rvirt_x\big)=\rho_x\qquad\text{for every }x\in\Xset .
+\end{equation}
+Fix $n$, a finite-dimensional adversary register $E_0$ and a protocol in the
+sense of Definition~\ref{def:protocol}, and put
+\begin{equation}\label{eq:prepstates}
+  \rho^{\mathrm{sp}}\coloneqq\bigotimes_{j=1}^{n}
+    \Big(\sum_{x\in\Xset}p_x\,\dyad{x}_{X_j}\otimes\rho_x\Big),
+  \qquad
+  \rho^{\mathrm{v}}\coloneqq\bigotimes_{j=1}^{n}
+    \Big(\sum_{x\in\Xset}p_x\,\dyad{x}_{X_j}\otimes\rvirt_x\Big),
+\end{equation}
+the $j$-th factor living on $X_j\Asig_j$ and on $X_j\Avirt_j$ respectively.
+
+\emph{The two \tref[protocol presentation]{presentations}.} A \emph{strategy}
+is a pair
+$a=(\zeta,(\Aev_j)_{j=1}^{n})$ of an initial adversary state
+$\zeta\in\Seq{E_0}$ and channels
+\begin{equation}\label{eq:srcstrategy}
+  \Aev_1\in\mathrm{CPTP}\big(\Asig^{n}E_0,\ \Bsys_1E'_1\big),
+  \qquad
+  \Aev_j\in\mathrm{CPTP}\big(E_{j-1},\ \Bsys_jE'_j\big)\ \ (2\le j\le n),
+\end{equation}
+with $E'_j$, $E_j$ as in Definition~\ref{def:roundmodel}: the \emph{trusted}
+branch of \eqref{eq:attackchannel}, the only branch this lemma is about, in
+which $A_j$ is Alice's and is no output of $\Aev_j$. A strategy of the
+\emph{virtual} type is the same with $\Avirt^{n}$ in place of $\Asig^{n}$ in
+\eqref{eq:srcstrategy}. The \emph{specified-source} presentation
+$\mathsf{P}^{\mathrm{sp}}$ has these strategies and the output map
+$\mathsf{out}^{\mathrm{sp}}(a)\coloneqq$ the state \eqref{eq:protocol} produces
+on the \tref{output registers} of $\Kfin$ together with $E_n$, from the input
+$\rho^{\mathrm{sp}}\otimes\zeta$, with $\Bsys_j$ supplied by $\Aev_j$ and the
+classical $X_j$ carried into $\bar{\Grnd}_j$; the \emph{virtual-source}
+presentation $\mathsf{P}^{\mathrm{v}}$ has the strategies of the virtual type
+and the output map built the same way from $\rho^{\mathrm{v}}\otimes\zeta$, the
+two protocols agreeing in \emph{every} other component: the
+\tref{measured system} and its POVM, $\bar{\Grnd}_j$ and $\Kfin$. The output registers are literally
+the same, which is condition (R1) of Definition~\ref{def:opreduction}.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item \emph{(the source map)} define
+  $r_{\mathrm{src}}(\zeta,(\Aev_j)_j)\coloneqq(\zeta,(\Aev^{\mathrm{v}}_j)_j)$
+  by
+  \begin{equation}\label{eq:srcmap-strategy}
+    \Aev^{\mathrm{v}}_1\coloneqq
+      \Aev_1\circ\big(\Xi^{\otimes n}\otimes\idmap_{E_0}\big),
+    \qquad
+    \Aev^{\mathrm{v}}_j\coloneqq\Aev_j\ \ (2\le j\le n).
+  \end{equation}
+  Then $r_{\mathrm{src}}$ is an \tref{exact operational reduction} from
+  $\mathsf{P}^{\mathrm{sp}}$ to $\mathsf{P}^{\mathrm{v}}$ in the sense of
+  Definition~\ref{def:opreduction}, with the whole of the virtual type as the
+  \tref[analysed strategy set]{admissible strategy set};
+\item \emph{(the two descriptions of the virtual protocol)} let the virtual
+  protocol be described \emph{entanglement-based} instead: Alice's retained
+  systems $A_1,\dots,A_n$ carry, jointly with the virtual transmitted systems,
+  the preparation $\Psi^{\otimes n}$, where $\Psi$ is a source-replacement
+  certificate for the \tref{declared data} $(A,\mathbb{T},\tau_A,\{M_x\})$
+  against $\{p_x,\rvirt_x\}$ in any of the declared forms of
+  \xref{transmitter/def:srcert}, satisfying (SR1)--(SR3); and $x_j$ is
+  produced by her declared \tref{measurement channel} $\pcNmsm$, the
+  measurement map of part (iii) of \xref{transmitter/thm:certificate-sufficiency}, applied to
+  $A_j$ at its declared time in round $j$. Write $\mathsf{out}^{\mathrm{eb}}$
+  for the resulting output map on the virtual type. Then, under A-SEQ
+  (\xref{transmitter/ass:seq}),
+  $\mathsf{out}^{\mathrm{eb}}(a)=\mathsf{out}^{\mathrm{v}}(a)$ for every
+  strategy $a$ of that type, so the identity map on strategies is an exact
+  operational reduction between the two presentations in either direction;
+\item \emph{(the composite)} consequently $r_{\mathrm{src}}$ is an exact
+  operational reduction from $\mathsf{P}^{\mathrm{sp}}$ to the virtual protocol
+  in its entanglement-based description, the object the rest of this
+  contract and the consuming engine analyse;
+\item \emph{(one channel for every label is essential)} \eqref{eq:sourceidentity}
+  with \emph{one} $\Xi$ cannot be weakened to a family $(\Xi_x)_x$ with
+  $\Xi_x(\rvirt_x)=\rho_x$. Take $n=1$, $\Xset=\{0,1\}$,
+  $p_0=p_1=\tfrac12$, $\Asig=\Avirt=\mathbb{C}^{2}$,
+  $\rvirt_0=\rvirt_1=\dyad{0}$, $\rho_0=\dyad{0}$, $\rho_1=\dyad{1}$, and
+  $\Xi_x(\cdot)\coloneqq\tr[\cdot]\,\rho_x$. Every identity
+  $\Xi_x(\rvirt_x)=\rho_x$ holds, yet for the attack that measures the received
+  signal in the basis $\{\ket{0},\ket{1}\}$ and keeps the outcome in $E'_1$,
+  the marginal on $X_1E'_1$ is perfectly correlated in the specified-source
+  protocol and, for \emph{every} attack of the virtual type, a product in the
+  virtual one, so no map of strategies can make the two
+  \tref[full output]{full outputs} equal; the protocol exhibited in the proof announces nothing in round one, so that
+  $E_1$ is $E'_1$ there.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) The map $\Gamma\coloneqq\Xi^{\otimes n}\otimes\idmap_{E_0}$, and with it
+$\idmap_{X^{n}}\otimes\Gamma$, is a channel that acts factor by factor on
+products: its inputs $\Avirt$, $E_0$ and $X_j$ are finite-dimensional, so
+Lemma~\ref{lem:sep}\,(iii) gives it, with $\Phi_i=\Xi$ on each $\Avirt_j$
+and the identity maps on $E_0$ and on the classical registers. First,
+$\big(\idmap_{X^{n}}\otimes\Xi^{\otimes n}\big)
+(\rho^{\mathrm{v}})=\rho^{\mathrm{sp}}$. The map acts factor by factor on
+\eqref{eq:prepstates}, and on the $j$-th factor
+$\sum_xp_x\dyad{x}\otimes\Xi(\rvirt_x)=\sum_xp_x\dyad{x}\otimes\rho_x$ by
+\eqref{eq:sourceidentity}, linearity and continuity of $\Xi$ on the trace-class
+operators; a term with $p_x=0$ is the zero operator on both sides whatever
+$\rvirt_x$ and $\rho_x$ are, which is why \eqref{eq:sourceidentity} is needed
+only where the weight is positive. Tensoring with $\idmap_{E_0}$ gives
+\begin{equation}\label{eq:srcinput}
+  \big(\idmap_{X^{n}}\otimes\Xi^{\otimes n}\otimes\idmap_{E_0}\big)
+  \big(\rho^{\mathrm{v}}\otimes\zeta\big)
+  =\rho^{\mathrm{sp}}\otimes\zeta .
+\end{equation}
+Second, write $\Grnd^{\Aev_1}_1$ for the round-one map of \eqref{eq:protocol}
+with $\Bsys_1$ supplied by $\Aev_1$, and
+$\mathsf{C}\coloneqq\Kfin\circ\Grnd^{\Aev_n}_n\circ\dots\circ\Grnd^{\Aev_2}_2$
+for everything that follows it. Since $\Xi^{\otimes n}$ acts on $\Avirt^{n}$
+alone and $\Aev^{\mathrm{v}}_1=\Aev_1\circ(\Xi^{\otimes n}\otimes\idmap_{E_0})$,
+\begin{equation*}
+  \Grnd^{\Aev^{\mathrm{v}}_1}_1
+  =\Grnd^{\Aev_1}_1\circ
+   \big(\idmap_{X^{n}}\otimes\Xi^{\otimes n}\otimes\idmap_{E_0}\big),
+\end{equation*}
+the inserted map being the identity on every system $\Grnd^{\Aev_1}_1$ reads
+apart from the transmitted ones. And $\mathsf{C}$ is \emph{literally the same}
+composite in the two executions: $\Aev^{\mathrm{v}}_j=\Aev_j$ for $j\ge2$ by
+\eqref{eq:srcmap-strategy}, the two protocols agree in every component other
+than the released signal system, and no map of $\mathsf{C}$ touches that
+system, the transmitted systems having been consumed by $\Aev_1$. Therefore
+\begin{equation*}
+  \mathsf{out}^{\mathrm{v}}\big(r_{\mathrm{src}}(a)\big)
+  =\mathsf{C}\circ\Grnd^{\Aev^{\mathrm{v}}_1}_1
+     \big(\rho^{\mathrm{v}}\otimes\zeta\big)
+  =\mathsf{C}\circ\Grnd^{\Aev_1}_1\big(\rho^{\mathrm{sp}}\otimes\zeta\big)
+  =\mathsf{out}^{\mathrm{sp}}(a),
+\end{equation*}
+using \eqref{eq:srcinput} in the middle step. This is
+\eqref{eq:opreduction}. Condition (R3) holds because
+$\Aev^{\mathrm{v}}_1$ is a composition of channels and has the input
+$\Avirt^{n}E_0$ and the output $\Bsys_1E'_1$ required by
+\eqref{eq:srcstrategy} of the virtual type, and (R2) is the display.
+
+(ii) By (SR3) no operation of the protocol and no operation of the adversary
+acts on $A_j$ except Alice's declared measurement, and $\pcNmsm$ acts on $A_j$
+alone and writes into the fresh classical register $X_j$. Every map of the
+execution that \emph{reads} $X_j$, namely the announcement of round $j$ inside
+$\bar{\Grnd}_j$ and, through the public record, every later map, comes after
+Alice's round-$j$ measurement, by A-SEQ: every public message of round $j$
+follows every measurement of round $j$, and no operation on a quantum system of
+round $j$ depends on a message of round $j$. So each map of the execution that
+precedes the first map reading $X_j$ acts on systems complementary to $A_jX_j$,
+and part (iii)(a) of \xref{transmitter/thm:certificate-sufficiency}, the
+interchange law, which reads no property of the channel it is stated for
+beyond the register discipline, lets Alice's round-$j$ measurement be
+performed before it. Applying this for $j=1,\dots,n$ moves all $n$
+measurements to the start of the execution, where the state is
+$\Psi^{\otimes n}\otimes\zeta$. There
+\begin{equation*}
+  \big(\pcNmsm^{\otimes n}\otimes\idmap_{E_0}\big)
+  \big(\Psi^{\otimes n}\otimes\zeta\big)
+  =\bigotimes_{j=1}^{n}\Big(\sum_{x\in\Xset}\dyad{x}_{X_j}\otimes
+    \tr_{A}\big[(M_x\otimes\idon{\Avirt})\,\Psi\big]\Big)\otimes\zeta
+  =\rho^{\mathrm{v}}\otimes\zeta ,
+\end{equation*}
+by the definition of $\pcNmsm$ and by (SR2), which is the source
+identification of that theorem's part (iii)(b) at the trivial attack. From that
+point the two executions are the same composite of the same maps applied to the
+same state, so the full outputs agree; the output registers agree because
+$\pcNmsm$ consumes $A_j$ and produces $X_j$ in both descriptions. Neither
+direction of the equality reads any property of $\Psi$ beyond (SR2) and (SR3),
+so the conclusion holds in whichever declared form the certificate was given;
+(SR1) enters as a hypothesis of the theorem cited and as what the consuming
+engine reads as $\tau_A$, and no step of this proof uses it.
+
+(iii) By (ii) the identity map is an exact operational reduction from
+$\mathsf{P}^{\mathrm{v}}$ to the entanglement-based presentation, whose strategy
+set is the same; composing it with $r_{\mathrm{src}}$ is
+Lemma~\ref{lem:opreduction-transfer}\,(v).
+
+(iv) Each $\Xi_x$ is a channel and $\Xi_x(\rvirt_x)=\tr[\rvirt_x]\rho_x=\rho_x$.
+In the specified-source protocol the state on $X_1\Asig_1$ is
+$\tfrac12\dyad{0}_{X_1}\otimes\dyad{0}+\tfrac12\dyad{1}_{X_1}\otimes\dyad{1}$,
+so the stated attack leaves $X_1$ and $E'_1$ perfectly correlated; in the
+virtual protocol the state is
+$\big(\tfrac12\dyad{0}_{X_1}+\tfrac12\dyad{1}_{X_1}\big)\otimes\dyad{0}$, a
+product, so the same attack and, the signal carrying no dependence on $x$,
+\emph{every} attack of the virtual type leaves $E'_1$ independent of $X_1$.
+Take the protocol whose $\bar{\Grnd}_1$ retains $x_1$ as its per-round datum and
+\emph{appends nothing to the public record}, and whose $\Kfin$ is the identity
+on the retained data and on $E_1$; it is a protocol of the form
+\eqref{eq:protocol}, and with no round-one announcement $E_1$ is $E'_1$, the
+adversary retaining no public datum of that round. The two outputs are then
+compared on the marginal on $X_1E'_1$: for the stated attack it is
+perfectly correlated in the specified-source protocol and, for \emph{every}
+attack of the virtual type, a product in the virtual one, so the two full
+outputs differ and no map of strategies can equate them. The argument reads
+the marginal on $X_1E'_1$, and that is why the exhibited protocol announces
+nothing in round one: at a protocol whose round-one announcement is a
+function of $x_1$, $E_1$ would collect that datum and would not be
+independent of $X_1$ in either protocol.
+\end{proof}

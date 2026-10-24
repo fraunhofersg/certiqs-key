@@ -1,0 +1,22 @@
+digraph claims {
+  rankdir=LR;
+  graph [label="3 Binary64 numbers and exact sums\nArrow: claim -> prerequisite. Solid: uses; dashed: assumes.\nDeclared dependencies, not a proof check. Mentions excluded.", labelloc=t, fontsize=13, fontname="Arial", bgcolor="white", pad=0.25, nodesep=0.3];
+  node [shape=box, style="rounded,filled", fontname="Arial", fontsize=11, margin="0.13,0.09"];
+  edge [color="#526777", arrowsize=0.65];
+  subgraph "cluster_foundations" {
+    label="foundations"; color="#cbd5df";
+    "foundations/def:binary64" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">foundations/def:binary64<BR/>Binary64 numbers, declared values and<BR/>dyadic lattices<BR/>implemented</TD></TR><TR><TD HREF="../claims/def-binary64.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-foundations/def:binary64" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled", URL="../claims/def-binary64.tex", target="_top"];
+    "foundations/def:declared-order" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">foundations/def:declared-order<BR/>Sums in a declared order and sums that<BR/>round nowhere<BR/>implemented</TD></TR><TR><TD HREF="../claims/def-declared-order.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-foundations/def:declared-order" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#a9d6ab", style="rounded,filled", URL="../claims/def-declared-order.tex", target="_top"];
+    "foundations/lem:binary64-lattice" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">foundations/lem:binary64-lattice<BR/>Binary64 numbers on dyadic lattices<BR/>accepted</TD></TR><TR><TD HREF="../claims/lem-binary64-lattice.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-foundations/lem:binary64-lattice" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../claims/lem-binary64-lattice.tex", target="_top"];
+    "foundations/lem:exact-accumulation" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">foundations/lem:exact-accumulation<BR/>Exactness of a sum that rounds nowhere<BR/>accepted</TD></TR><TR><TD HREF="../claims/lem-exact-accumulation.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-foundations/lem:exact-accumulation" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../claims/lem-exact-accumulation.tex", target="_top"];
+    "foundations/rem:summation-order" [label=<<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0"><TR><TD COLSPAN="2">foundations/rem:summation-order<BR/>Dependence of a computed sum on its<BR/>order<BR/>accepted</TD></TR><TR><TD HREF="../claims/rem-summation-order.tex" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">TeX source</FONT></TD><TD HREF="../contract.pdf#nameddest=claim-foundations/rem:summation-order" TARGET="_top"><FONT COLOR="#164b87" POINT-SIZE="10">Rendered PDF</FONT></TD></TR></TABLE>>, fillcolor="#cfead0", style="rounded,filled", URL="../claims/rem-summation-order.tex", target="_top"];
+  }
+  "foundations/def:declared-order" -> "foundations/def:binary64";
+  "foundations/lem:binary64-lattice" -> "foundations/def:binary64";
+  "foundations/lem:exact-accumulation" -> "foundations/def:binary64";
+  "foundations/lem:exact-accumulation" -> "foundations/def:declared-order";
+  "foundations/rem:summation-order" -> "foundations/def:binary64";
+  "foundations/rem:summation-order" -> "foundations/def:declared-order";
+  "foundations/rem:summation-order" -> "foundations/lem:binary64-lattice";
+  "foundations/rem:summation-order" -> "foundations/lem:exact-accumulation";
+}

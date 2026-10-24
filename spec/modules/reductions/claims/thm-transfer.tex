@@ -1,0 +1,61 @@
+% ---
+% id: reductions/thm:transfer
+% kind: thm
+% title: "Security transfer from a constrained squashed model"
+% summary: >-
+%   If the analysed squashed inputs contain the squashed image of every
+%   physical input, a bound ε on any criterion of the output state of the
+%   squashed protocol holds for the physical protocol with the same ε. No
+%   property of the criterion is used.
+% prominence: main
+% status: accepted
+% uses: [def:protocol, def:criterion, thm:factorization, def:opreduction, lem:opreduction-transfer]
+% mentions: [thm:two-sided]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+With the output state unchanged (Theorem~\ref{thm:factorization}), security
+of the squashed protocol carries over as soon as the squashed analysis runs
+over enough inputs. Theorem~\ref{thm:two-sided} composes the receiver-side
+reduction with the source map in trusted-source mode.
+
+\begin{theorem}\label{thm:transfer}
+Let $M\dsq_{\Lambda}F$ and let $\Eprot_M,\Eprot_F$ be as in
+Definition~\ref{def:protocol}. For every admissible adversary system $E$ let
+$\Sph_E\subseteq\Seq{A^{n}\Bsys^{n}E}$ and
+$\Ssq_E\subseteq\Seq{A^{n}\Qsys^{n}E}$ satisfy
+\begin{equation}\label{eq:inclusion}
+  \big(\idmap_{A^{n}}\otimes\Lambda^{\otimes n}\otimes\idmap_E\big)
+  \big(\Sph_E\big)\;\subseteq\;\Ssq_E .
+\end{equation}
+If $\Crit(\Eprot_F,\sigma)\le\varepsilon$ for all $\sigma\in\Ssq_E$ and all
+$E$, then $\Crit(\Eprot_M,\rho)\le\varepsilon$ for all $\rho\in\Sph_E$ and all
+$E$ --- with the \emph{same} $\varepsilon$, and simultaneously for every
+security criterion in the sense of Definition~\ref{def:criterion}.
+\end{theorem}
+
+\begin{proof}
+Fix an admissible adversary system $E$ and put
+$r(\rho)\coloneqq
+(\idmap_{A^{n}}\otimes\Lambda^{\otimes n}\otimes\idmap_E)(\rho)$. Let
+$\mathsf{P}$ be the presentation whose strategies are the states
+$\rho\in\Sph_E$ --- a strategy here is an input state and not a channel, which
+Definition~\ref{def:opreduction} allows and says --- with
+$\mathsf{out}(\rho)=(\Eprot_M\otimes\idmap_E)(\rho)$, and $\mathsf{P}'$ the
+presentation with strategies $\Ssq_E$ and
+$\mathsf{out}'(\sigma)=(\Eprot_F\otimes\idmap_E)(\sigma)$; both have the output
+registers of $\Kfin$ together with $E$, which is condition (R1). The
+hypothesis \eqref{eq:inclusion} says exactly that $r$ takes its values in
+$\Ssq_E$, which is condition (R3), and \eqref{eq:sameoutput} of
+Theorem~\ref{thm:factorization} is \eqref{eq:opreduction} for $r$. So $r$ is an
+exact operational reduction from $\mathsf{P}$ to $\mathsf{P}'$, and
+Lemma~\ref{lem:opreduction-transfer}\,(i), applied to the criterion $f_E$ at
+this $E$, gives
+$\Crit(\Eprot_M,\rho)=\Crit(\Eprot_F,r(\rho))\le\varepsilon$ for every
+$\rho\in\Sph_E$, with no property of $f_E$ used. The quantification over $E$ is
+one presentation pair and one reduction per admissible $E$
+(Definition~\ref{def:opreduction}, closing paragraph).
+\end{proof}

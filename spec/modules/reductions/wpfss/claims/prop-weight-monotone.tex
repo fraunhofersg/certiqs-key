@@ -1,0 +1,79 @@
+% ---
+% id: reductions/wpfss/prop:weight-monotone
+% kind: prop
+% title: "Monotonicity of the weight-preserving target in its weights"
+% summary: >-
+%   Certified weights stay certified when lowered but not below zero, and while
+%   the total weight is below one the weight-preserving target of the larger
+%   weights squashes to that of the smaller ones. By [[cor:monotone]] the
+%   smaller weights give the cleaner target, which hands the adversary more.
+% prominence: standard
+% status: accepted
+% uses: [def:targets, prop:chain, reductions/cor:monotone]
+% mentions: []
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% lean:
+% ---
+
+Nothing in Definition~\ref{def:targets} or Proposition~\ref{prop:chain}
+requires $p_v$ to be the largest admissible value. The proposition says what
+lowering the weights does: they stay valid, and the target becomes cleaner, a
+statement about the pre-order that is proved rather than asserted.
+
+\begin{proposition}
+\label{prop:weight-monotone}
+Let $(p_v)_{v\in\Vset}$ be \tref{certified weights} for $M$ with
+\tref{total weight} $p$, let $p'_v\in[0,p_v]$ for every $v\in\Vset$, and
+write $p'\coloneqq\sum_vp'_v$. Write $\Fwp[p]$ and $\Fwp[p']$ for the
+\tref[weight-preserving target]{weight-preserving targets} \eqref{eq:WPFSS}
+built from $(p_v)$ and from $(p'_v)$.
+\begin{enumerate}[label=(\roman*),leftmargin=3.0em]
+\item $(p'_v)$ are certified weights for $M$, and $p'\le p$; in particular,
+  where $p<1$ the construction of Proposition~\ref{prop:chain} runs
+  unchanged with $(p'_v)$.
+\item If $p<1$, put
+  \begin{equation}\label{eq:weightmono}
+    \Psi(\sigma)\coloneqq\lambda\,\sigma+(1-\lambda)\,\Pleq\sigma\Pleq
+     +\tr\!\big[\Pflag\sigma\big]\,\nu,
+    \qquad
+    \lambda\coloneqq\frac{1-p}{1-p'},
+    \qquad
+    \nu\coloneqq\sum_v\frac{p_v-p'_v}{1-p'}\dyad{v}_{\Flag}.
+  \end{equation}
+  Then $\Psi$ is a channel and $\Fwp[p]\dsq_{\Psi}\Fwp[p']$, so by
+  Corollary~\ref{cor:monotone} the smaller-weight target is the cleaner one.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) By \eqref{eq:certweights},
+$\blk{M}{\gtN}_v\succeq p_v\idon{\Bsys_{\gtN}}\succeq p'_v\idon{\Bsys_{\gtN}}$
+with $p'_v\ge0$, for every $v$, and summing $p'_v\le p_v$ gives $p'\le p$; so
+where $p<1$ also $p'<1$, and Proposition~\ref{prop:chain} applies to
+$(p'_v)$.
+
+(ii) \emph{$\Psi$ is a channel.} $\lambda\in[0,1]$ and $\nu\succeq0$ because
+$p'\le p<1$ and $p'_v\le p_v$, so $\Psi$ is CP; and with
+$\tr\nu=(p-p')/(1-p')$ and $\Pleq+\Pflag=\idon{\Qsys}$,
+$\tr\Psi(\sigma)=\tr[\Pleq\sigma]+\big(\lambda+\tr\nu\big)\tr[\Pflag\sigma]
+=\tr\sigma$, since
+$\lambda+\tr\nu=\big((1-p)+(p-p')\big)/(1-p')=1$.
+
+\emph{The adjoint.} On block observables
+$\Psi^{\dagger}(X_{\leqN}\dsum X_{\Flag})
+=X_{\leqN}\dsum\big(\lambda X_{\Flag}+\tr[\nu X_{\Flag}]\idon{\Flag}\big)$, and
+evaluating at $X_{\Flag}=p'_v\idon{\Flag}+(1-p')\dyad{v}$ gives flag block
+\begin{equation*}
+  \Big[\tfrac{(1-p)p'_v}{1-p'}+\tfrac{p'_v(p-p')}{1-p'}+(p_v-p'_v)\Big]\idon{\Flag}
+  +(1-p)\dyad{v}
+  \;=\;p_v\,\idon{\Flag}+(1-p)\dyad{v},
+\end{equation*}
+because the first two brackets sum to $p'_v$; with the unchanged $\leqN$ block
+this is $\Fwp[p]_v$. The conclusion is Corollary~\ref{cor:monotone} applied
+to $\Fwp[p]\dsq_{\Psi}\Fwp[p']$.
+
+Taking $p'\equiv0$ recovers the flag-noise channel $\Lnoise$ of
+\eqref{eq:Lnoise}, as it must.
+\end{proof}

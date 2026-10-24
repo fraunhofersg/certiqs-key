@@ -1,0 +1,29 @@
+{
+ "kind": "bbm92-study-viewmodel-snapshot",
+ "sets": {
+  "perfect": {
+   "engine_pin": "9251e512",
+   "frontend_commit": "9223a053",
+   "view_models": [
+    "protocol_map.json",
+    "optics.json",
+    "povm.json",
+    "povm-dark-composed.json"
+   ],
+   "preparation_extract": "perfect/preparation-extract.json",
+   "record_extract": null
+  },
+  "realistic": {
+   "engine_pin": "9251e512",
+   "frontend_commit": "9223a053",
+   "view_models": [
+    "protocol_map.json",
+    "optics.json",
+    "povm.json",
+    "povm-dark-composed.json"
+   ],
+   "preparation_extract": "realistic/preparation-extract.json",
+   "record_extract": "realistic/record-extract.json"
+  }
+ }
+}

@@ -1,0 +1,29 @@
+% ---
+% id: statistics/singleton/req:singleton-point-form
+% kind: req
+% title: "Point-form honest input for the singleton"
+% summary: >-
+%   The singleton reads the honest model in the point form only: a degenerate
+%   envelope is read as its law, and a non-degenerate envelope is refused
+%   rather than reduced to one of its laws.
+% prominence: standard
+% status: accepted
+% uses: [thm:singleton-completeness]
+% mentions: [rem:singleton-honest]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.singleton:singleton_completeness
+% lean:
+% ---
+
+The accept probability of Theorem~\ref{thm:singleton-completeness} is a multinomial mass under
+one law and has no counterpart for an envelope of laws
+(Remark~\ref{rem:singleton-honest}).
+
+\begin{requirement}\label{req:singleton-point-form}
+The singleton takes its honest input in the \tref{point form} only: the
+engine reads a \tref{degenerate envelope} as its law, and refuses a
+non-degenerate envelope with \iface{honest_envelope_not_degenerate} rather
+than reducing it to one of its laws.
+\end{requirement}

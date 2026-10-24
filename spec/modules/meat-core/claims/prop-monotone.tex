@@ -1,0 +1,43 @@
+% ---
+% id: meat-core/prop:monotone
+% kind: prop
+% title: "Monotonicity of the maximal key length"
+% summary: >-
+%   The maximal key length does not increase with the reconciliation leakage,
+%   does not decrease as either error budget grows, and is unchanged by any
+%   change of the declaration that keeps h_low. More leakage or a tighter
+%   budget therefore never lengthens it.
+% prominence: standard
+% status: implemented
+% uses: [def:max-key-length, thm:keylength]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.meat_core.finitekey.keylength:key_length
+% lean:
+% ---
+
+\begin{proposition}\label{prop:monotone}
+The \tref{maximal key length} $\ell_{\max}$ of
+Definition~\ref{def:max-key-length}
+is
+\begin{enumerate}[label=(\roman*),leftmargin=2.4em]
+\item non-increasing in $\lEC$;
+\item non-decreasing in $\eev$;
+\item non-decreasing in $\epa$;
+\item unchanged under any modification of the declaration that leaves
+  $\hlow$ unchanged.
+\end{enumerate}
+Consequently increasing leakage or tightening either error budget can never
+increase $\ell_{\max}$.
+\end{proposition}
+
+\begin{proof}
+$\hlow$ does not depend on $(\lEC,\eev,\epa)$. In
+\eqref{eq:keylength}: $-\lEC$ is decreasing in $\lEC$;
+$-\lceil\log_2\frac1{\eev}\rceil$ is non-decreasing in $\eev$ (the
+ceiling of a decreasing function of $\eev$ is non-increasing in
+$\eev$); $-\frac{\alpha}{\alpha-1}\log_2\frac1{\epa}$ is increasing in
+$\epa$ ($\frac{\alpha}{\alpha-1}>0$). The floor and the clamp
+$\max\{0,\cdot\}$ are monotone.
+\end{proof}

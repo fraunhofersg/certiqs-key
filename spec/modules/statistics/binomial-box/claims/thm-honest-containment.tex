@@ -1,0 +1,122 @@
+% ---
+% id: statistics/binomial-box/thm:honest-containment
+% kind: thm
+% title: "Honest containment and infeasibility"
+% summary: >-
+%   Every law of the envelope set lies in the constructed box for every budget
+%   and allocation, so a reachable one gives a compatible pair and rules out
+%   the consuming engine's infeasibility condition. The construction never
+%   fails on an admissible input, so every refusal comes from the input.
+% prominence: standard
+% status: implemented
+% uses: [statistics/thm:geometry-validation, thm:box-construction, def:endpoint-rule, statistics/def:envelope, statistics/def:conservative-evaluation, statistics/def:matched-alphabet]
+% mentions: [protocol-compiler/def:feasible, req:input-refusal, statistics/req:matched-alphabet]
+% assumes: [A-REACH, A-ALPHABET]
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.statistics.construction:validate_request
+% lean:
+% notes: "The clause list of (iii) is the negation, clause by clause, of the conditions an admissible input in def:endpoint-rule places on data of its form, and req:input-refusal names each violation's code in the same order; the three change together."
+% ---
+
+Theorem~\ref{thm:box-construction}\,(iii) places every law of the \tref{envelope set} in
+the box; this theorem draws two consequences, one for the consuming engine's
+infeasibility condition and one for refusals. The one clause of an
+\tref{admissible input} that this module cannot decide, that the alphabet, its
+enumeration and the round count are those of the consuming declaration, is
+checked where both artefacts are available, in bundle validation
+(\repodoc{spec/architecture.md#36-bundle-validation-is-input-validation-not-a-module};
+Requirement~\ref{req:matched-alphabet});
+how the engine refuses on the other clauses is
+Requirement~\ref{req:input-refusal}.
+
+\begin{theorem}\label{thm:honest-containment}
+Let $\acSet$ be the output of $\mathsf{Acc}_R$ on an \tref{admissible input}
+(Definition~\ref{def:endpoint-rule}), for any
+\tref{admissible endpoint rule} $R$, under a \tref{conservative evaluation}
+(Definition~\ref{def:conservative-evaluation}).
+\begin{enumerate}[label=(\roman*),leftmargin=2.2em]
+\item $\mathsf{H}\subseteq\acSet$, where $\mathsf{H}$ is the
+\tref{envelope set} \eqref{eq:envelope-set} of the input envelope, for every
+admissible $\ecomp\in[0,1)$, every $\Chatcon$ and every admissible
+allocation; for the \tref{degenerate envelope}, $\honest\in\acSet$.
+\item Assume A-REACH (Assumption~\ref{ass:reach}): there exists
+$\omega^{\mathrm{hon}}\in\Feas$, the feasible set of the consuming
+declaration $\Decl$ (\xref{protocol-compiler/def:feasible}), with
+$\mathbf{p}^{\mathrm{hon}}\coloneqq\Phimap[\omega^{\mathrm{hon}}]\in\mathsf{H}$
+(for the degenerate envelope, $\Phimap[\omega^{\mathrm{hon}}]=\honest$). Then
+the pair $(\mathbf{p}^{\mathrm{hon}},\omega^{\mathrm{hon}})$ satisfies
+$\mathbf{p}^{\mathrm{hon}}\in\acSet$, $\omega^{\mathrm{hon}}\in\Feas$ and
+$\mathbf{p}^{\mathrm{hon}}\ll\Phimap[\omega^{\mathrm{hon}}]$. Consequently the
+condition
+\begin{equation}\label{eq:infeasible}
+  \text{\emph{no} }\mathbf{q}\in\acSet\text{ is absolutely continuous with
+  respect to }\Phimap[\omega]\text{ for any }\omega\in\Feas
+\end{equation}
+is \emph{false} for this $\acSet$.
+\item \emph{(refusals come from the input)} The \tref{validation predicate}
+of Theorem~\ref{thm:geometry-validation}\,(iii) is decidable in closed form, and on every
+admissible input it is satisfied by the output of $\mathsf{Acc}_R$
+unconditionally, for every admissible rule. Hence the construction never
+fails on an admissible input, and a refusal can arise only from an input that
+is not admissible. On data of the form of an admissible input
+(Definition~\ref{def:endpoint-rule}), the violations of its conditions that
+are decidable from this module's own inputs are exactly:
+\begin{enumerate}[label=(\arabic*),leftmargin=2.2em]
+\item $|\Chatset|=0$;
+\item $|\Chatset|$ not finite;
+\item $n<1$;
+\item an honest input in the \tref{point form} with
+$\honest\notin\simplex{\Chatset}$, including a coordinate outside
+$\Chatset$;
+\item an honest input in the envelope form violating \eqref{eq:envelope}:
+some entry of ${\honest}^{-}$ or ${\honest}^{+}$ outside $[0,1]$, some
+${\honest}^{-}(\hat c)>{\honest}^{+}(\hat c)$,
+$\sum_{\hat c}{\honest}^{-}(\hat c)>1$, $\sum_{\hat c}{\honest}^{+}(\hat
+c)<1$, or a coordinate outside $\Chatset$;
+\item $\ecomp\notin[0,1)$;
+\item some $\varepsilon^{\pm}(\hat c)<0$;
+\item $\sum_{\hat c\in\Chatcon}(\varepsilon^{-}(\hat c)+\varepsilon^{+}(\hat
+c))>\ecomp$;
+\item $\Chatcon\not\subseteq\Chatset$;
+\item some coordinate of $\honest$ or of ${\honest}^{\mp}$, or $\ecomp$, or
+some $\varepsilon^{\pm}(\hat c)$ is not an exact rational, violating
+Definition~\ref{def:conservative-evaluation};
+\item the requested endpoint rule, or the requested evaluation, is none of
+those of clause (viii) of Definition~\ref{def:endpoint-rule}.
+\end{enumerate}
+Exactly one clause of an admissible input is \emph{not} decidable from this
+module's inputs: clause (ix) of Definition~\ref{def:endpoint-rule}, the
+condition of Definition~\ref{def:matched-alphabet} that $\Chatset$, its
+enumeration and $n$ are those of the same declaration $\Decl$ the
+\tref{consumer} solves. That clause
+is a relation between artefacts, not a property of an input.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{(i).} Theorem~\ref{thm:box-construction}\,(iii).
+
+\emph{(ii).} By (i), $\mathbf{p}^{\mathrm{hon}}\in\mathsf{H}\subseteq
+\acSet$. Absolute continuity
+$\mathbf{p}^{\mathrm{hon}}\ll\Phimap[\omega^{\mathrm{hon}}]$ reads:
+$p^{\mathrm{hon}}(\hat c)>0$ implies
+$\Phimap[\omega^{\mathrm{hon}}](\hat c)>0$. The two vectors are equal by
+definition of $\mathbf{p}^{\mathrm{hon}}$, so the implication is trivially
+true. This exhibits a witness
+$(\mathbf{q},\omega)=(\mathbf{p}^{\mathrm{hon}},\omega^{\mathrm{hon}})$ to the
+negation of the universally quantified statement \eqref{eq:infeasible}; for
+the degenerate envelope the witness is $(\honest,\omega^{\mathrm{hon}})$.
+
+\emph{(iii).} Decidability in closed form is \eqref{eq:boxfeas};
+unconditional satisfaction on every admissible input is
+Theorem~\ref{thm:box-construction}\,(iii). The enumerated list is the negation, clause by
+clause, of the conditions the clauses of an admissible input
+(Definition~\ref{def:endpoint-rule}) place on data of its form, with the
+single stated exception of the cross-artefact condition of
+Definition~\ref{def:matched-alphabet}: an input
+of that form for which none of the eleven violations (1)--(11) holds, and
+whose alphabet and round count are matched to the consuming declaration, is
+admissible, and then
+(i)--(ii) apply.
+\end{proof}

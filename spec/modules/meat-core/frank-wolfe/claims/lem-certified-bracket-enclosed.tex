@@ -1,0 +1,410 @@
+% ---
+% id: meat-core/frank-wolfe/lem:certified-bracket-enclosed
+% kind: lem
+% title: "The certified bracket over a measured family known through enclosures"
+% summary: >-
+%   Over a reference companion whose measured families, of one or more
+%   replaced factors, are known through entrywise enclosures and on some
+%   blocks enclosed factors, one enclosure of the gradient serves the
+%   companion where every element the gradient reads has its zero pattern
+%   and rank fixed.
+% prominence: standard
+% status: implemented
+% uses: [lem:certified-bracket, thm:firstorder, cor:fo-dropped, meat-core/prop:reference-companion, meat-core/def:admissible-declaration, meat-core/def:declaration, meat-core/def:joint-sectors, meat-core/def:keyinert, meat-core/def:dropped, meat-core/cor:full-gradient, meat-core/thm:choi, meat-core/def:branch, foundations/def:exact-reference, foundations/def:factor-enclosure, foundations/cor:least-eigenvalue-over-enclosure, foundations/cor:rank-over-factor-enclosure]
+% mentions: [cor:certified-keylength-reference]
+% assumes: []
+% refs: []
+% provenance: newly-derived
+% implements: certiqs_key.solvers.frank_wolfe.certified:_companion_element
+% lean:
+% notes: "Part (b) does not promise that C has full row rank: a dependence between its rows that the grouping leaves fails closed at the floor of req:certified-evaluation (iii)(b). The clauses of the hypothesis and of admissibility in (c) ask nothing of a block at an element another of whose blocks is zero for every member, and (c) leaves such an element out of the pieces it forms: the engine decides such an element zero whatever its other blocks. Kept apart from lem:certified-bracket so that meat-core/prop:reference-companion stays out of the closure of lem:certified-bracket and cor:certified-keylength on routes with no companion. (H-FAC) is a hypothesis here and is decided by no code: the claims that carry the companion's factor enclosures from the receiver through the reductions and the compiler establish it. The third kind of fixed rank takes the core the same for every member, which is what a factor enclosure gives; the second kind lets it vary, as the rule over an entrywise enclosure does. Several blocks of the third kind in one element: each block's rank is fixed at every member by its own floor, and the tensor product of their factors then has the product of their ranks; a floor over the box of the Kronecker product, which contains matrices that are no tensor products, is neither needed nor implied."
+% ---
+
+Lemma~\ref{lem:certified-bracket} needs, at a point, only enclosures of the
+gradient. A reference companion known through enclosures leaves a whole set of
+families consistent with its data, the companion's own among them, and this
+lemma says when one enclosure of the gradient serves every one of them: when
+the zero pattern and the rank of every element that the gradient's formula
+reads are the same throughout. The companion may replace the measured
+families of several factors, as it replaces both stations of an
+entanglement-based declaration, and each of them may be known through
+enclosures, so that an element of the product family may be a tensor product
+of several blocks that are only enclosed. An element of rank below its
+dimension whose support no coordinate vectors span has its rank fixed by no
+entrywise enclosure with positive radii, and is read instead through an
+enclosed factor of fixed rank. A block may so be
+known twice, and the statistics may read it through the one enclosure and the
+deficits through the other; part~(c) says that an enclosure of the gradient
+formed in that way, over every pair of the two readings, serves the companion,
+whose own family is read twice among those pairs. Part~(b) gives the factor
+structure that keeps the factors of a \tref{pass class} of known rank where
+some of them are only enclosed: a tensor product of factors of full row rank
+has full row rank, the tensor product of their Gram matrices being positive
+definite, so blocks of fixed rank multiply into elements of fixed rank.
+Elements whose blocks known only through boxes are the same blocks have
+their rows grouped by those blocks, named as blocks and never compared by
+their boxes, so that an exact dependence between their exact factors is
+reduced exactly.
+Corollary~\ref{cor:certified-keylength-reference} takes the key length from
+the lemma.
+
+\begin{lemma}\label{lem:certified-bracket-enclosed}
+Let $\Decl^{\mathrm{ref}}$ be a compiled reference companion of
+Proposition~\ref{prop:reference-companion}, with $\mathbb{F}^{\mathrm{ref}}$
+the set of the \tref[measured factor]{measured factors} it replaces (the one
+measured system in the basic format), let $\alpha$, $\acSet$ and
+$x=(\mathbf q,J)$ be as in Lemma~\ref{lem:certified-bracket} with
+$\Decl\coloneqq\Decl^{\mathrm{ref}}$, save that (H-POS) of
+Theorem~\ref{thm:firstorder} is not assumed of $x$, and, where (H-POS) holds
+for $\Decl^{\mathrm{ref}}$ at $x$, let $(\lmoq,\lmoJ)$ be the gradient that
+lemma reads there, the blocks of the measured families of the factors of
+$\mathbb{F}^{\mathrm{ref}}$ each known through an \tref{entrywise enclosure}
+(\xref{foundations/def:exact-reference}), some of them read, besides, with a
+triple $(L_c,t,W)$ of a \tref{matrix box} and a core as in
+\xref{foundations/def:factor-enclosure}, the block's \emph{factor
+enclosure}, and every other datum exactly. Call a tuple
+$F=(F^{f})_{f\in\mathbb{F}^{\mathrm{ref}}}$ of families, each $F^{f}$
+indexed as the measured family of factor $f$ is, a \emph{family of the
+replaced factors}, its elements $F^{(s)}_v$ being the products
+\eqref{eq:productfamily} of its blocks and of the blocks of the other factors
+of $\Decl^{\mathrm{ref}}$; call it an \emph{entrywise member} when each of
+its blocks is a Hermitian matrix that the entrywise enclosure of that block
+contains, and a \emph{member} when, moreover, each of its blocks that is read
+with a factor enclosure is a member of it. Suppose
+\begin{itemize}[leftmargin=4.6em]
+\item[(H-FAC)] each block of the companion's own family of the replaced
+  factors that is read with a factor enclosure is a member of it, the triple
+  being a factor enclosure of that block, so that the companion's family of
+  the replaced factors is a member.
+\end{itemize}
+Call a block \emph{decided} when every entry of its entrywise enclosure has
+centre and radius $0$; or some entry's centre $C_{il}$ and radius $r_{il}$
+satisfy $|C_{il}|>r_{il}$; or its factor enclosure has no column; or its
+factor enclosure has $k\ge1$ columns and there are $G$, $\rho$ and $\ell$ as
+in \xref{foundations/cor:rank-over-factor-enclosure}\,(ii) with
+$\ell-\rho>0$. Call a block \emph{of fixed rank} when it is of one of three
+kinds: of the first kind when it is zero for every member; of the second kind
+when there are a matrix $E$ of full row rank and, for every member, a
+positive definite $\widetilde X$ with the member's block equal to
+$E^{\dagger}\widetilde XE$, $E$ the same for every member
+(\xref{foundations/cor:least-eigenvalue-over-enclosure}\,(iv) gives such an
+$E$); and of the third kind when there are an integer $k\ge1$, a matrix box
+of complex $k\times n$ matrices, $n$ the dimension of the block, and a
+positive definite $k\times k$ matrix $\widetilde X$ and, for every member, a
+matrix $E_{*}$ of rank $k$ that the box contains, with the member's block
+equal to $E_{*}^{\dagger}\widetilde XE_{*}$
+(\xref{foundations/cor:rank-over-factor-enclosure}\,(ii) gives such a box,
+that of the adjoints of the factors, with $\widetilde X$ the core). Suppose
+that every block of a factor of $\mathbb{F}^{\mathrm{ref}}$ that is a factor
+of an element $F^{(s)}_v$ with $(x',v)$ an outcome pair of a \tref{pass class}
+of some $\hat c\in\Chkey$ and $M^{(\mathsf t)}_{x'}\ne0$, no other block of
+which is zero for every member, is decided, and that every such block is of
+fixed rank at the pairs $(\hat c,(\mathsf t,s))$ that are not
+\tref{key-inert}. Then:
+  \begin{enumerate}[label=(\alph*),leftmargin=2.2em]
+  \item every member gives the same
+    \tref[effective outcome set]{effective outcome sets} on every joint
+    sector, the same key-inert pairs and the same
+    \tref[joint key-active index set]{joint key-active index sets}, those
+    read off the enclosures;
+  \item fix, for every block that the hypothesis asks to be of fixed rank,
+    one kind it is of, with the data of that kind, and, where that kind is
+    the third, at every member one matrix $E_{*}$ as that kind asks, one for
+    the block and not one for each element it is a factor of; below, the
+    kind of a block is the one so fixed for it. At every pair
+    $(\hat c,(\mathsf t,s))$ that is not key-inert, every
+    element $F^{(s)}_v$ of an outcome pair $(x',v)$ of a pass class of
+    $\hat c$ with $M^{(\mathsf t)}_{x'}\ne0$ is, for every member,
+    $E^{(s)\dagger}_v\widetilde F^{(s)}_vE^{(s)}_v$ with
+    $\widetilde F^{(s)}_v$ positive definite and $E^{(s)}_v$ of full row
+    rank, the case $F^{(s)}_v=0$ included as $E^{(s)}_v$ with no rows, where
+    $E^{(s)}_v$ is the same for every member if no block of $F^{(s)}_v$ is of
+    the third kind or some block of it is zero for every member, and
+    otherwise its rank is the same for every member and it is the tensor
+    product, in the order of $\mathbb{F}$, of one matrix for each block of
+    $F^{(s)}_v$: the matrix $E_{*}$ fixed for the block at that member where
+    the block is of the third kind, and a matrix the same for every member
+    otherwise. For an element of the latter case, call its \emph{tuple}
+    $\beta(v)$ the list, in the order of $\mathbb{F}$, of its blocks of the
+    third kind, each block $F^{f,(s_f)}_{v_f}$ named by the triple
+    $(f,s_f,v_f)$, so that two entries of tuples agree exactly when they
+    name the same block, whatever their boxes; and for a tuple $\beta$ let
+    $E^{\mathrm{box}}_{\beta}$ be the tensor product, in that order, of the
+    matrices $E_{*}$ fixed for its blocks, which at each member is one
+    matrix for every element whose tuple is $\beta$.
+    Moreover, for every pass class of $\hat c$ and any factor forms
+    $M^{(\mathsf t)}_{x}=E^{(\mathsf t)\dagger}_{x}\widetilde M_{x}
+    E^{(\mathsf t)}_{x}$ of Alice's elements with $E^{(\mathsf t)}_{x}$ of
+    full row rank and $\widetilde M_{x}$ positive definite, the matrix
+    $\widetilde E$ that stacks the matrices
+    $E^{(\mathsf t)}_{x}\otimes E^{(s)}_v$ over the class's outcome pairs
+    $(x,v)$ with $M^{(\mathsf t)}_{x}\ne0$, in a fixed order, is, for every
+    member, $\widetilde E=\widetilde B\,C$ with $\widetilde B$ of full column
+    rank and the same for every member, and $C$ a stack of a matrix $C_0$
+    and, one for each tuple $\beta$ of an element of the latter case in the
+    class, of a matrix $(C_{\beta}\otimes E^{\mathrm{box}}_{\beta})U_{\beta}$,
+    with $C_0$, every $C_{\beta}$ and every permutation matrix $U_{\beta}$
+    the same for every member; where the $E^{(\mathsf t)}_{x}$, the
+    $E^{(s)}_v$ that are the same for every member and the matrices the same
+    for every member of which the other $E^{(s)}_v$ are tensor products have
+    entries in $\mathbb{Q}(i)$, $\widetilde B$, $C_0$ and every $C_{\beta}$
+    can be taken with entries in $\mathbb{Q}(i)$;
+  \item call a pair $(F',F'')$ of families of the replaced factors, the
+    first read by the statistics and the second by the deficits,
+    \emph{admissible} when every block of $F''$ that is a factor of an
+    element $F^{(s)}_v$ of an outcome pair $(x',v)$ of a pass class of
+    $\hat c$ with $M^{(\mathsf t)}_{x'}\ne0$, at a pair
+    $(\hat c,(\mathsf t,s))$ that is not key-inert, no other block of which
+    is zero for every member, is a positive semidefinite matrix. For such a pair form, at $x$, $P^{J}_{\hat c}$ and
+    every $\Gamma^{(s')}_{\hat c}$ with $F'$, every deficit
+    $f^{J}_{\hat c,s}$ and every $\Delta^{(s')}_{\hat c}$ with $F''$, an
+    outcome pair whose element of Alice's is zero, or whose element
+    $F^{(s)}_v$ has a block that is zero for every member, contributing
+    nothing to a branch map or to the statistics, over the key-inert pairs and the joint key-active index sets
+    of (a), and
+    $K^{J}_{\hat c}$ as $P^{J}_{\hat c}$ plus those deficits; where
+    $q(\hat c)$, $P^{J}_{\hat c}$ and $K^{J}_{\hat c}$ so formed are positive
+    as (H-POS) of Theorem~\ref{thm:firstorder} asks, let
+    $(\lmoq,\lmoJ)[F',F'']$ be the pair given by \eqref{eq:grad-q} and
+    \eqref{eq:grad-J} with these pieces, read as
+    Lemma~\ref{lem:certified-bracket} reads them. Let $\mathcal P$ be a set
+    of admissible pairs that contains $(F,F)$ for every member $F$, such as
+    the set of the admissible pairs of an entrywise member $F'$ and a family
+    $F''$ of the replaced factors each of whose blocks lies in its entrywise
+    enclosure or is a member of its factor enclosure, the one or the other
+    chosen block by block. Then
+    a set that contains $P^{J}_{\hat c}$, or $K^{J}_{\hat c}$, formed with
+    every pair of $\mathcal P$ contains that of $\Decl^{\mathrm{ref}}$ at
+    $x$; and where (H-POS) holds for $\Decl^{\mathrm{ref}}$, enclosures
+    $(\hat g,\delta)$ and $(M_p,\rho_p)$ that hold, as in parts (ii) and
+    (iii) of Lemma~\ref{lem:certified-bracket}, at
+    $(\lmoq,\lmoJ)[F',F'']$ for every pair of $\mathcal P$ at which it is
+    formed hold at the gradient of $\Decl^{\mathrm{ref}}$, and parts
+    (i)--(iii) of that lemma then give
+    $\max\{0,b^{\mathrm A}+b^{\mathrm F}\}\le\hlow[\Decl^{\mathrm{ref}}]$;
+  \item in the setting of
+    Corollary~\ref{cor:fo-dropped}, with a \tref{dropped set}
+    $\mathcal{D}$, (a)--(c) hold, the hypotheses read the same way, with
+    $O^{J,\mathcal{D}}_{\alpha}$ in place of $O^{J}_{\alpha}$,
+    (H-POS$^{\mathcal{D}}$) in place of (H-POS), its gradient of
+    (H-NOPERT$^{\mathcal{D}}$) in place of $(\lmoq,\lmoJ)$ and
+    $K^{J,\mathcal{D}}_{\hat c}$ in place of $K^{J}_{\hat c}$, the kept
+    pairs in place of the pairs that are not key-inert, part (iv) of
+    Lemma~\ref{lem:certified-bracket} in place of its parts (i)--(iii),
+    and $\underline{h}^{\mathcal{D}}_{\alpha}$ in place of $\hlow$.
+  \end{enumerate}
+\end{lemma}
+
+\begin{proof}
+\emph{(a).} By Definition~\ref{def:joint-sectors}, an element
+$F^{(s)}_v$ of a factorised family is non-zero exactly when each of its
+factor blocks is, and the effective outcome set of a pass class on a joint
+sector collects the outcome pairs with $M^{(\mathsf t)}_{x'}\ne0$ and
+$F^{(s)}_v\ne0$. Alice's blocks and the blocks of the factors outside
+$\mathbb{F}^{\mathrm{ref}}$ are the same for every member. A decided block of
+a factor of $\mathbb{F}^{\mathrm{ref}}$ is zero for every member when every
+entry has centre and radius $0$, since then every entry of a contained matrix
+is $0$, and non-zero for every member when some entry has
+$|C_{il}|>r_{il}$, since then $|X_{il}|\ge|C_{il}|-r_{il}>0$. When its
+factor enclosure has no column, every member of that enclosure is the zero
+matrix (\xref{foundations/cor:rank-over-factor-enclosure}\,(i)), and so is
+the block of every member, which is one of them; when it has $k\ge1$ columns
+with $\ell-\rho>0$, every member of the enclosure has rank $k$ and is not
+zero (part (ii) of that corollary), and so the block of every member is not
+zero. An element one of whose blocks is zero for every member is zero for
+every member, whatever its other blocks, of which the hypothesis therefore
+asks nothing at that element. So each effective outcome set is the same for every member, and
+key-inertness, which reads only these sets and the raw-key map, and the joint
+key-active index sets with it, are the same.
+
+\emph{(b), the factor forms.} Let $F$ be a member. A block of a factor of
+$\mathbb{F}^{\mathrm{ref}}$ of fixed rank is, at $F$, by the kind fixed for
+it: zero, of the first kind; $E^{\dagger}\widetilde XE$ with $E$ the same
+for every member, of the second; or $E_{*}^{\dagger}\widetilde XE_{*}$ with
+$E_{*}$ the matrix fixed for the block at $F$, in the box, of rank $k$, and
+$\widetilde X$ the same for every member, of the third, so that the block
+enters every element it is a factor of through that one $E_{*}$. Every
+other factor block $B$, a block of a factor outside
+$\mathbb{F}^{\mathrm{ref}}$, is the same for every member and positive
+semidefinite, and with $B=\sum_{k'\le m}b_{k'}u_{k'}u_{k'}^{\dagger}$,
+$b_{k'}>0$ and $u_{k'}$ orthonormal, it is
+$E_B^{\dagger}\operatorname{diag}(b_1,\dots,b_m)E_B$ with $E_B$ the matrix
+of rows $u_{k'}^{\dagger}$, of full row rank. A tensor product of such forms
+is $(\bigotimes E)^{\dagger}(\bigotimes\widetilde X)(\bigotimes E)$, where
+$\bigotimes E$ has full row rank, the tensor product of injective adjoints
+being injective: its Gram matrix
+$(\bigotimes E)(\bigotimes E)^{\dagger}=\bigotimes(EE^{\dagger})$ is a tensor
+product of positive definite matrices, each $EE^{\dagger}$ being positive
+definite for a matrix $E$ of full row rank, and so positive definite, and its
+rank, its number of rows, is the product of the ranks of the factors; and
+$\bigotimes\widetilde X$ is positive definite. A positive multiple
+$wE^{\dagger}\widetilde XE=E^{\dagger}(w\widetilde X)E$ keeps the form, and a
+zero weight or a zero factor gives the zero element; an element one of whose
+blocks is zero for every member is so zero for every member, its
+$E^{(s)}_v$ with no rows the same for every member, whatever its other
+blocks. The weight and every
+factor of $\bigotimes E$ but those of the blocks of the third kind are the
+same for every member, $E$ being the same for every member at a block of the
+second kind and $E_B$ at a block outside $\mathbb{F}^{\mathrm{ref}}$. So,
+where no block of the element is zero for every member, $\bigotimes E$, taken
+in the order of $\mathbb{F}$, is the same for every member where no block of
+the element is of the third kind, and otherwise it is the tensor product of
+the matrices $E_{*}$ fixed for its blocks of the third kind and of matrices
+the same for every member, one per block, as the statement says, and its
+rank is the same for every member: the product of the ranks of its factors,
+each the same for every member, a block of the third kind contributing its
+$k$ at every member, whichever other blocks of the third kind stand beside
+it.
+
+\emph{(b), the reordering.} Let $v$ be an element of the latter case, with
+tuple $\beta=\beta(v)$, let $f_1,\dots,f_m$ be the factors of $\mathbb{F}$ in
+their order, and let $E^{(s)}_v=E_{v,1}\otimes\dots\otimes E_{v,m}$, with
+$E_{v,j}$ the matrix of its block of factor $f_j$, of $p_j$ rows and $n_j$
+columns; let $\operatorname{pos}\beta\subseteq\{1,\dots,m\}$, non-empty, be
+the positions of the blocks of $\beta$. Each $p_j$ is the same for every
+member: the $k$ of the block where it is of the third kind, and otherwise
+the number of rows of a matrix the same for every member. Each $n_j$ is the
+block dimension $d_{f_j,s_{f_j}}$ of the joint sector $s$, the same for
+every element of the class. For positive integers $q_1,\dots,q_m$ let
+$\Sigma_{\beta}(q)$ be the linear map with
+$\Sigma_{\beta}(q)(u_1\otimes\dots\otimes u_m)=u_{\sigma(1)}\otimes\dots
+\otimes u_{\sigma(m)}$ for $u_j\in\mathbb{C}^{q_j}$, where $\sigma$ lists the
+positions outside $\operatorname{pos}\beta$ in increasing order and then
+those in $\operatorname{pos}\beta$ in increasing order. Defined on the
+tensor products of standard basis vectors, which it maps bijectively onto
+those of $\mathbb{C}^{q_{\sigma(1)}}\otimes\dots\otimes\mathbb{C}^{q_{\sigma(m)}}$,
+and extended linearly, it is a permutation matrix, so that
+$\Sigma_{\beta}(q)^{-1}=\Sigma_{\beta}(q)^{\top}$, and the identity holds for
+all vectors $u_j$, both sides being multilinear in them. For matrices $A_j$
+of size $p_j\times n_j$, both sides applied to $u_1\otimes\dots\otimes u_m$
+give $\Sigma_{\beta}(p)(A_1\otimes\dots\otimes A_m)=(A_{\sigma(1)}\otimes
+\dots\otimes A_{\sigma(m)})\Sigma_{\beta}(n)$, and the Kronecker product
+being associative,
+\begin{equation*}
+  E^{(s)}_v=R_v\big(E^{\mathrm{ex}}_v\otimes E^{\mathrm{box}}_{\beta}\big)
+  \Sigma_{\beta}(n),\qquad R_v\coloneqq\Sigma_{\beta}(p)^{\top},
+\end{equation*}
+with $E^{\mathrm{ex}}_v$ the tensor product, in order, of the $E_{v,j}$ with
+$j\notin\operatorname{pos}\beta$, the $1\times1$ matrix $1$ where there is
+none, the same for every member, and $E^{\mathrm{box}}_{\beta}$ that of the
+$E_{v,j}$ with $j\in\operatorname{pos}\beta$, the matrices $E_{*}$ fixed for
+the blocks of $\beta$, as the statement defines it. $R_v$ reads only
+$\operatorname{pos}\beta$ and the $p_j$, and $\Sigma_{\beta}(n)$ only
+$\operatorname{pos}\beta$ and the $n_j$; so $R_v$ is the same for every
+member, and $\Sigma_{\beta}(n)$ is the same for every member and for every
+element of the class whose tuple is $\beta$. At a member, every element whose
+tuple is $\beta$ has, at each block of $\beta$, the one $E_{*}$ fixed for that
+block, so $E^{\mathrm{box}}_{\beta}$ is one matrix for all of them. This is
+where $E_{*}$ is fixed per block and not per element, and where a tuple names
+blocks and not boxes: two distinct blocks with equal boxes are distinct
+entries, and their matrices $E_{*}$ may differ at a member.
+
+\emph{(b), the stack.} Fix a pass class, and let $V_1$ be the elements $v$ of
+its outcome pairs $(x,v)$ with $M^{(\mathsf t)}_{x}\ne0$ that are of the
+latter case. Which elements these are, and their tuples, depend only on the
+kinds fixed for the blocks and on the zero pattern, the same for every member.
+The rows of $\widetilde E$ that belong to the pairs $(x,v)$ with
+$v\notin V_1$ form a matrix $S_0$, the same for every member. Let $a$ be the
+number of columns of the $E^{(\mathsf t)}_{x}$, the dimension of Alice's
+elements on the sector $\mathsf t$, and $e_x$ the number of rows of
+$E^{(\mathsf t)}_{x}$. For a tuple $\beta$ of an element of $V_1$, the pairs
+$(x,v)$ with $v\in V_1$ and $\beta(v)=\beta$ have, by the reordering, the
+associativity of the Kronecker product and the mixed-product rule
+$(\idon{e_x}\otimes R)(A\otimes M)(\idon{a}\otimes\Sigma)=A\otimes RM\Sigma$,
+the rows
+\begin{equation*}
+  E^{(\mathsf t)}_{x}\otimes E^{(s)}_v=(\idon{e_x}\otimes R_v)
+  \big((E^{(\mathsf t)}_{x}\otimes E^{\mathrm{ex}}_v)\otimes
+  E^{\mathrm{box}}_{\beta}\big)U_{\beta},\qquad
+  U_{\beta}\coloneqq\idon{a}\otimes\Sigma_{\beta}(n).
+\end{equation*}
+The matrices $E^{(\mathsf t)}_{x}\otimes E^{\mathrm{ex}}_v$ of these pairs
+all have the same number of columns, $a$ times the product of the $n_j$
+with $j\notin\operatorname{pos}\beta$; let
+$S_{\beta}$ stack them in the fixed order, the same for every member.
+Stacking on the left commutes with the tensor product by a fixed right
+factor, $\big[\begin{smallmatrix}A\\ A'\end{smallmatrix}\big]\otimes
+E=\big[\begin{smallmatrix}A\otimes E\\ A'\otimes E\end{smallmatrix}\big]$,
+and the right factor $E^{\mathrm{box}}_{\beta}$ is, at a member, one matrix
+for all these pairs; so their rows, in the fixed order, form
+$D_{\beta}(S_{\beta}\otimes E^{\mathrm{box}}_{\beta})U_{\beta}$, with
+$D_{\beta}$ the block-diagonal matrix of the $\idon{e_x}\otimes R_v$, a
+permutation matrix the same for every member. Every matrix $S$ has a rank
+factorisation $S=BC'$ with $B$ of full column rank: over a field that contains
+its entries, $B$ its pivot columns and $C'$ the non-zero rows of its reduced
+row echelon form, an empty factorisation where $S$ is zero or has no row. Take
+$S_0=B_0C_0$ and $S_{\beta}=B_{\beta}C_{\beta}$ so. By the mixed-product
+rule, $S_{\beta}\otimes E^{\mathrm{box}}_{\beta}=(B_{\beta}\otimes
+\idon{k_{\beta}})(C_{\beta}\otimes E^{\mathrm{box}}_{\beta})$, with
+$k_{\beta}$ the number of rows of $E^{\mathrm{box}}_{\beta}$, the product of
+the $k$ of the blocks of $\beta$, the same for every member; nothing else of
+$E^{\mathrm{box}}_{\beta}$ enters. Let $\Pi$ be the permutation matrix that
+returns the rows from this grouping, that of $S_0$ and one group per tuple,
+to the fixed order. Then $\widetilde E=\Pi\operatorname{diag}\big(B_0,
+(D_{\beta}(B_{\beta}\otimes\idon{k_{\beta}}))_{\beta}\big)\,C$ with $C$ the
+stack of $C_0$ and the $(C_{\beta}\otimes E^{\mathrm{box}}_{\beta})U_{\beta}$;
+the first factor, $\widetilde B$, is the same for every member and has full
+column rank, being an invertible matrix times a block-diagonal matrix whose
+blocks have full column rank, $D_{\beta}(B_{\beta}\otimes\idon{k_{\beta}})$
+among them as an invertible matrix times a tensor product of injective maps.
+Where the $E^{(\mathsf t)}_{x}$, the $E^{(s)}_v$ for $v\notin V_1$ and, for
+$v\in V_1$, the $E_{v,j}$ with $j\notin\operatorname{pos}\beta(v)$ have
+entries in $\mathbb{Q}(i)$, so do $S_0$ and every $S_{\beta}$, and the
+factorisations over the field $\mathbb{Q}(i)$ give $B_0$, $C_0$, $B_{\beta}$
+and $C_{\beta}$ there; $\Pi$, every $D_{\beta}$ and every $U_{\beta}$ have
+entries $0$ and $1$.
+
+\emph{(c).} Let $F^{\mathrm{ref}}$ be the companion's family of the replaced
+factors. The family of each factor of $\Decl^{\mathrm{ref}}$ is a positive
+operator-valued measure (Proposition~\ref{prop:reference-companion}\,(ii),
+with condition (iii) of Definition~\ref{def:admissible-declaration}, which in
+the general format asks it of every factor's family), so the blocks of
+$F^{\mathrm{ref}}$ are Hermitian and positive semidefinite; they lie in their
+entrywise enclosures, which are enclosures of them, and, by (H-FAC), in their
+factor enclosures. So $F^{\mathrm{ref}}$ is a member,
+$(F^{\mathrm{ref}},F^{\mathrm{ref}})$ is an admissible pair, and it lies in
+$\mathcal P$. By (a), the key-inert pairs and joint key-active index sets of
+$\Decl^{\mathrm{ref}}$ are those read off the enclosures, so the
+$P^{J}_{\hat c}$, $\Gamma^{(s')}_{\hat c}$, deficits,
+$\Delta^{(s')}_{\hat c}$ and $K^{J}_{\hat c}=P^{J}_{\hat c}+\sum
+f^{J}_{\hat c,s}$ (Theorem~\ref{thm:choi}) formed with this pair are those of
+$\Decl^{\mathrm{ref}}$ at $x$, every piece being formed from its one family:
+an outcome pair whose element of Alice's is zero, which (c) leaves out of the
+branch maps, contributes nothing to those of $\Decl^{\mathrm{ref}}$ either,
+its Kraus factor $\sqrt{M^{(\mathsf t)}_{x'}}\otimes\sqrt{F^{(s)}_v}$ being
+zero (Definition~\ref{def:branch}); and so does one whose element
+$F^{(s)}_v$ has a block zero for every member, which (c) leaves out of the
+branch maps and the statistics, that element being zero at
+$F^{\mathrm{ref}}$, a member, so that its Kraus factor and its contribution
+to the statistics are zero there. A set containing such a quantity formed
+with every pair of
+$\mathcal P$ contains that of $\Decl^{\mathrm{ref}}$. Where (H-POS) holds
+for $\Decl^{\mathrm{ref}}$, these $q(\hat c)$, $P^{J}_{\hat c}$ and
+$K^{J}_{\hat c}$ are positive as it asks, so
+$(\lmoq,\lmoJ)[F^{\mathrm{ref}},F^{\mathrm{ref}}]$ is formed, and by the
+formulas of Corollary~\ref{cor:full-gradient} it is the gradient
+$(\lmoq,\lmoJ)$ of $\Decl^{\mathrm{ref}}$ at $x$ as
+Lemma~\ref{lem:certified-bracket} reads it; the enclosures hold there.
+$\Decl^{\mathrm{ref}}$ satisfies conditions (i)--(vi) and (viii) of
+Definition~\ref{def:admissible-declaration}
+(Proposition~\ref{prop:reference-companion}\,(ii)), so parts (ii), (iii)
+and then (i) of Lemma~\ref{lem:certified-bracket} apply to it at $x$, where
+(H-POS) holds. Finally, a
+member $F$ is an entrywise member each of whose blocks lies in its entrywise
+enclosure and in its factor enclosure where one is read, so $(F,F)$ belongs
+to the set of pairs named in (c), whatever enclosure is chosen for each
+block, and it is admissible: every block that admissibility reads is a factor
+of an element no other block of which is zero for every member, at a pair
+that is not key-inert, so the hypothesis asks it to be of fixed rank, and it
+is zero or $E^{\dagger}\widetilde XE$ at $F$, and so positive semidefinite.
+An element one of whose blocks is zero for every member is zero at $F$ and
+contributes nothing to a piece formed with $(F,F)$, whatever its other
+blocks.
+
+\emph{(d).} Parts (a) and (b) read only the zero pattern and the ranks, the
+hypothesis that the blocks are decided being unchanged and the fixed-rank
+hypothesis now only at the kept pairs, and (c) runs with
+$K^{J,\mathcal{D}}_{\hat c}$, formed with the deficits of the kept pairs
+only, and with part (iv) of Lemma~\ref{lem:certified-bracket}, whose parts
+(ii) and (iii) do not read the objective.
+\end{proof}
