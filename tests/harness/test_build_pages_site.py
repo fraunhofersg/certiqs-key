@@ -104,9 +104,10 @@ def test_site_from_head(tmp_path: Path) -> None:
         for name in ("contract.pdf", "digest.pdf"):
             assert f"spec/modules/{core}/{name}" in paths
     files = {p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()}
-    assert files == ({"index.html", "latest/index.html"}
+    assert files == ({"index.html", "latest/index.html", "latest/link-test.html"}
                      | {f"latest/{p}" for p in paths})
-    for index in (out / "index.html", out / "latest" / "index.html"):
+    for index in (out / "index.html", out / "latest" / "index.html",
+                  out / "latest" / "link-test.html"):
         for href in re.findall(r'href="([^"]+)"', index.read_text(encoding="utf-8")):
             target = (index.parent / unquote(href.split("#")[0])).resolve()
             assert target.is_file(), f"{index.name}: {href}"

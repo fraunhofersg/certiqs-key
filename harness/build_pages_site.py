@@ -23,9 +23,10 @@ PDFs and the report pages link one another by relative paths. A claim id can
 be renamed (``harness.relabel``), so a document citing one release links that
 release's folder, which a later rename leaves alone. Every version is read
 from git, never from the working tree, so an uncommitted file cannot reach the
-site. Each version's ``index.html`` lists the modules and carries a link test:
-the same two claims linked with the id raw and percent-encoded, for checking
-which form a browser's viewer honours.
+site. Each version's ``index.html`` links the whitepaper, the contracts and
+the report examples (described by ``EXAMPLES``); its ``link-test.html``, not
+linked from the index, holds the same two claims linked with the id raw and
+percent-encoded, for checking which form a browser's viewer honours.
 
 ``DENY`` repeats, as path prefixes, what must never be served; a path matching
 both lists aborts the build, and after writing, every file in the output is
@@ -83,8 +84,42 @@ LINK_TEST: tuple[tuple[str, str], ...] = (
     ("meat-core", "meat-core/cor:composed-security"),
 )
 
+#: The report examples the index describes, by folder: (group, one line).
+#: A served example not listed here is linked under "Other" by its folder name.
+EXAMPLE_GROUPS: tuple[str, ...] = (
+    "Bundled protocols, at their defaults",
+    "Protocols declared in a protocol document",
+    "Special cases",
+)
+EXAMPLES: dict[str, tuple[str, str]] = {
+    "bb84": (EXAMPLE_GROUPS[0], "BB84 with ideal qubits"),
+    "optical_bb84": (EXAMPLE_GROUPS[0],
+                     "BB84 with an optical receiver: detectors, efficiencies, "
+                     "dark counts"),
+    "decoy_bb84": (EXAMPLE_GROUPS[0],
+                   "decoy-state BB84 with weak coherent pulses"),
+    "bbm92": (EXAMPLE_GROUPS[0], "entanglement-based BBM92"),
+    "document-qubit_bb84_y": (EXAMPLE_GROUPS[1],
+                              "BB84 with the Y basis in place of X"),
+    "document-optical_bb84_port_grams": (
+        EXAMPLE_GROUPS[1],
+        "optical BB84 with the receiver declared by its port Gram matrices"),
+    "document-bbm92_holder_b": (EXAMPLE_GROUPS[1], "BBM92 with Bob holding the key"),
+    "document-bbm92_choice_at_bob": (
+        EXAMPLE_GROUPS[1], "BBM92 with the test choice declared at Bob only"),
+    "refused": (EXAMPLE_GROUPS[2],
+                "a refused run: an authentication ε of 0.5 leaves no "
+                "security statement, and the report says why"),
+    "sweep-bb84": (EXAMPLE_GROUPS[2],
+                   "a sweep over the QBER: two key lengths and one refused point"),
+    "alpha-search-bb84": (EXAMPLE_GROUPS[2],
+                          "BB84 with the optional search over the Rényi order α"),
+}
+
+HEADLINE_REPORT = "runs/bbm92_study/data/headline-report/report.html"
 LATEST = "latest"
 INDEX = "index.html"
+LINK_TEST_PAGE = "link-test.html"
 
 _ALLOW_RE = [
     re.compile("".join("[^/]+" if part == "*" else re.escape(part)
@@ -169,25 +204,27 @@ def _a(href: str, text: str) -> str:
     return f'<a href="{html.escape(href)}">{html.escape(text)}</a>'
 
 
+def _list(items: Sequence[tuple[str, str]]) -> str:
+    return "<ul>" + "".join(f"<li>{_a(p, text)}</li>" for p, text in items) + "</ul>"
+
+
 def version_index(folder: str, paths: Sequence[str]) -> str:
     """Return the ``index.html`` of one version, linking only served paths."""
     have = set(paths)
     cores = sorted({p.split("/")[2] for p in paths
                     if p.startswith("spec/modules/") and p.endswith("/contract.pdf")})
-    body = [f"<h1>CERTIQS-KEY contracts: {html.escape(folder)}</h1>",
-            "<p class=\"mute\">One contract and one statements digest per core "
-            "module; a submodule's claims are in its core's contract. Link a "
-            "claim as <code>spec/modules/&lt;core&gt;/contract.pdf#nameddest="
-            "claim-&lt;full claim id&gt;</code>.</p>"]
+    body = [f"<h1>CERTIQS-KEY {html.escape(folder)}</h1>"]
     documents = [(p, "whitepaper") for p in paths
                  if p.startswith("whitepaper/") and p.endswith(".pdf")]
-    documents += [(p, "the BBM92 study's headline key-rate report") for p in (
-        "runs/bbm92_study/data/headline-report/report.html",) if p in have]
+    documents += [(p, "the key-rate report of the whitepaper's headline BBM92 "
+                      "result") for p in (HEADLINE_REPORT,) if p in have]
     if documents:
-        body.append("<h2>Whitepaper</h2>")
-        body.append("<ul>" + "".join(
-            f"<li>{_a(p, text)}</li>" for p, text in documents) + "</ul>")
-    body += ["<h2>Modules</h2>", "<table>"]
+        body += ["<h2>Whitepaper</h2>", _list(documents)]
+    body += ["<h2>Contracts</h2>",
+             "<p class=\"mute\">One contract and one statements digest per core "
+             "module; a submodule's claims are in its core's contract. Link a "
+             "claim as <code>spec/modules/&lt;core&gt;/contract.pdf#nameddest="
+             "claim-&lt;full claim id&gt;</code>.</p>", "<table>"]
     for core in cores:
         base = f"spec/modules/{core}/"
         cells = [_a(base + "contract.pdf", core)]
@@ -202,31 +239,51 @@ def version_index(folder: str, paths: Sequence[str]) -> str:
         ("spec/overview/overview.pdf", "main results in dependency order"),
         ("spec/module-graph.svg", "module map")) if p in have]
     if overview:
-        body.append("<h2>Overview</h2>")
-        body.append("<ul>" + "".join(
-            f"<li>{_a(p, text)}</li>" for p, text in overview) + "</ul>")
-    reports = [p for p in paths if p.startswith("runs/report_examples/")
-               and p.count("/") == 3 and p.endswith(("/report.html", "/sweep.html"))]
+        body += ["<h3>Overview</h3>", _list(overview)]
+    reports = {p.split("/")[2]: p for p in paths
+               if p.startswith("runs/report_examples/") and p.count("/") == 3
+               and p.endswith(("/report.html", "/sweep.html"))}
     if reports:
-        body.append("<h2>Key-rate report examples</h2>")
-        body.append("<ul>" + "".join(
-            f"<li>{_a(p, p.split('/')[2])}</li>" for p in reports) + "</ul>")
+        body += ["<h2>Key-rate report examples</h2>",
+                 "<p class=\"mute\">What a report looks like, for each bundled "
+                 "protocol and a few special cases. Each run stops after a "
+                 "handful of solver steps, so its key length is not a converged "
+                 "figure for its protocol.</p>"]
+        for group in EXAMPLE_GROUPS:
+            items = [(reports.pop(name), text) for name, (g, text)
+                     in EXAMPLES.items() if g == group and name in reports]
+            if items:
+                body += [f"<h3>{html.escape(group)}</h3>", _list(items)]
+        if reports:
+            body += ["<h3>Other</h3>", _list(sorted(
+                (p, name) for name, p in reports.items()))]
+    body.append(f"<p class=\"mute\">{_a('../' + INDEX, 'All versions')}</p>")
+    return _page(f"CERTIQS-KEY {folder}", body)
+
+
+def link_test_page(folder: str, paths: Sequence[str]) -> str | None:
+    """Return the link test of one version, or None without its contracts.
+
+    The same claims linked with the id raw and percent-encoded, for checking
+    which form a browser's viewer honours; a maintainer's page, not linked
+    from the index.
+    """
+    have = set(paths)
     tests = [(core, cid) for core, cid in LINK_TEST
              if f"spec/modules/{core}/contract.pdf" in have]
-    if tests:
-        body.append("<h2>Link test</h2>")
-        body.append("<p class=\"mute\">Each claim twice: the id as written, and "
-                    "percent-encoded. Both should open the contract at the "
-                    "claim.</p>")
-        body.append("<ul>")
-        for core, cid in tests:
-            pdf = f"spec/modules/{core}/contract.pdf#nameddest=claim-"
-            body.append(f"<li><code>{html.escape(cid)}</code>: "
-                        f"{_a(pdf + cid, 'raw')}, "
-                        f"{_a(pdf + quote(cid, safe=''), 'encoded')}</li>")
-        body.append("</ul>")
-    body.append(f"<p class=\"mute\">{_a('../' + INDEX, 'All versions')}</p>")
-    return _page(f"CERTIQS-KEY contracts {folder}", body)
+    if not tests:
+        return None
+    body = [f"<h1>Link test: {html.escape(folder)}</h1>",
+            "<p class=\"mute\">Each claim twice: the id as written, and "
+            "percent-encoded. Both should open the contract at the claim.</p>",
+            "<ul>"]
+    for core, cid in tests:
+        pdf = f"spec/modules/{core}/contract.pdf#nameddest=claim-"
+        body.append(f"<li><code>{html.escape(cid)}</code>: "
+                    f"{_a(pdf + cid, 'raw')}, "
+                    f"{_a(pdf + quote(cid, safe=''), 'encoded')}</li>")
+    body += ["</ul>", f"<p class=\"mute\">{_a(INDEX, 'Back to the index')}</p>"]
+    return _page(f"CERTIQS-KEY link test {folder}", body)
 
 
 def root_index(folders: Sequence[str]) -> str:
@@ -258,6 +315,10 @@ def build(repo: Path, out: Path, latest: str, tags: str) -> dict[str, list[str]]
         _write_blobs(repo, ref, paths, dest)
         (dest / INDEX).write_text(version_index(folder, paths), encoding="utf-8",
                                   newline="\n")
+        link_test = link_test_page(folder, paths)
+        if link_test is not None:
+            (dest / LINK_TEST_PAGE).write_text(link_test, encoding="utf-8",
+                                               newline="\n")
         built[folder] = paths
     (out / INDEX).write_text(root_index(list(built)), encoding="utf-8",
                              newline="\n")
@@ -272,7 +333,7 @@ def _is_site_file(rel: str, built: dict[str, list[str]]) -> bool:
     if rel == INDEX:
         return True
     folder, _, path = rel.partition("/")
-    return folder in built and (path == INDEX or allowed(path))
+    return folder in built and (path in (INDEX, LINK_TEST_PAGE) or allowed(path))
 
 
 def main(argv: Sequence[str] | None = None) -> int:
