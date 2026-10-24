@@ -116,58 +116,58 @@ def memory_limit(gib: float) -> dict[str, Any]:
 
         resource.setrlimit(resource.RLIMIT_AS, (limit, limit))
         return {"kind": "RLIMIT_AS", "bytes": limit}
+    else:
+        from ctypes import wintypes as w
 
-    from ctypes import wintypes as w
+        class Basic(ctypes.Structure):
+            _fields_ = [
+                ("process_time", ctypes.c_int64),
+                ("job_time", ctypes.c_int64),
+                ("flags", w.DWORD),
+                ("min_ws", ctypes.c_size_t),
+                ("max_ws", ctypes.c_size_t),
+                ("active", w.DWORD),
+                ("affinity", ctypes.c_size_t),
+                ("priority", w.DWORD),
+                ("scheduling", w.DWORD),
+            ]
 
-    class Basic(ctypes.Structure):
-        _fields_ = [
-            ("process_time", ctypes.c_int64),
-            ("job_time", ctypes.c_int64),
-            ("flags", w.DWORD),
-            ("min_ws", ctypes.c_size_t),
-            ("max_ws", ctypes.c_size_t),
-            ("active", w.DWORD),
-            ("affinity", ctypes.c_size_t),
-            ("priority", w.DWORD),
-            ("scheduling", w.DWORD),
+        class Limits(ctypes.Structure):
+            _fields_ = [
+                ("basic", Basic),
+                ("io", ctypes.c_uint64 * 6),
+                ("process_memory", ctypes.c_size_t),
+                ("job_memory", ctypes.c_size_t),
+                ("peak_process", ctypes.c_size_t),
+                ("peak_job", ctypes.c_size_t),
+            ]
+
+        kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+        kernel.CreateJobObjectW.argtypes = [ctypes.c_void_p, w.LPCWSTR]
+        kernel.CreateJobObjectW.restype = w.HANDLE
+        kernel.SetInformationJobObject.argtypes = [
+            w.HANDLE,
+            ctypes.c_int,
+            ctypes.c_void_p,
+            w.DWORD,
         ]
-
-    class Limits(ctypes.Structure):
-        _fields_ = [
-            ("basic", Basic),
-            ("io", ctypes.c_uint64 * 6),
-            ("process_memory", ctypes.c_size_t),
-            ("job_memory", ctypes.c_size_t),
-            ("peak_process", ctypes.c_size_t),
-            ("peak_job", ctypes.c_size_t),
-        ]
-
-    kernel = ctypes.WinDLL("kernel32", use_last_error=True)
-    kernel.CreateJobObjectW.argtypes = [ctypes.c_void_p, w.LPCWSTR]
-    kernel.CreateJobObjectW.restype = w.HANDLE
-    kernel.SetInformationJobObject.argtypes = [
-        w.HANDLE,
-        ctypes.c_int,
-        ctypes.c_void_p,
-        w.DWORD,
-    ]
-    kernel.AssignProcessToJobObject.argtypes = [w.HANDLE, w.HANDLE]
-    kernel.GetCurrentProcess.restype = w.HANDLE
-    handle = kernel.CreateJobObjectW(None, None)
-    if not handle:
-        raise ctypes.WinError(ctypes.get_last_error())
-    limits = Limits()
-    limits.basic.flags = 0x100 | 0x200 | 0x2000
-    limits.process_memory = limits.job_memory = limit
-    if not kernel.SetInformationJobObject(
-        handle, 9, ctypes.byref(limits), ctypes.sizeof(limits)
-    ):
-        raise ctypes.WinError(ctypes.get_last_error())
-    if not kernel.AssignProcessToJobObject(handle, kernel.GetCurrentProcess()):
-        raise ctypes.WinError(ctypes.get_last_error())
-    global _JOB_HANDLE
-    _JOB_HANDLE = handle
-    return {"kind": "Windows job committed memory", "bytes": limit}
+        kernel.AssignProcessToJobObject.argtypes = [w.HANDLE, w.HANDLE]
+        kernel.GetCurrentProcess.restype = w.HANDLE
+        handle = kernel.CreateJobObjectW(None, None)
+        if not handle:
+            raise ctypes.WinError(ctypes.get_last_error())
+        limits = Limits()
+        limits.basic.flags = 0x100 | 0x200 | 0x2000
+        limits.process_memory = limits.job_memory = limit
+        if not kernel.SetInformationJobObject(
+            handle, 9, ctypes.byref(limits), ctypes.sizeof(limits)
+        ):
+            raise ctypes.WinError(ctypes.get_last_error())
+        if not kernel.AssignProcessToJobObject(handle, kernel.GetCurrentProcess()):
+            raise ctypes.WinError(ctypes.get_last_error())
+        global _JOB_HANDLE
+        _JOB_HANDLE = handle
+        return {"kind": "Windows job committed memory", "bytes": limit}
 
 
 def memory_snapshot() -> dict[str, Any]:
@@ -177,51 +177,52 @@ def memory_snapshot() -> dict[str, Any]:
 
         peak = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
         return {"peak_rss_bytes": peak * (1 if sys.platform == "darwin" else 1024)}
-    from ctypes import wintypes as w
+    else:
+        from ctypes import wintypes as w
 
-    class Status(ctypes.Structure):
-        _fields_ = [("length", w.DWORD), ("load", w.DWORD)] + [
-            (n, ctypes.c_uint64)
-            for n in (
-                "total",
-                "available",
-                "total_page",
-                "available_page",
-                "virtual",
-                "available_virtual",
-                "extended",
-            )
-        ]
+        class Status(ctypes.Structure):
+            _fields_ = [("length", w.DWORD), ("load", w.DWORD)] + [
+                (n, ctypes.c_uint64)
+                for n in (
+                    "total",
+                    "available",
+                    "total_page",
+                    "available_page",
+                    "virtual",
+                    "available_virtual",
+                    "extended",
+                )
+            ]
 
-    class Counters(ctypes.Structure):
-        _fields_ = [("cb", w.DWORD), ("faults", w.DWORD)] + [
-            (n, ctypes.c_size_t)
-            for n in (
-                "peak",
-                "working",
-                "peak_paged",
-                "paged",
-                "peak_nonpaged",
-                "nonpaged",
-                "pagefile",
-                "peak_pagefile",
-                "private",
-            )
-        ]
+        class Counters(ctypes.Structure):
+            _fields_ = [("cb", w.DWORD), ("faults", w.DWORD)] + [
+                (n, ctypes.c_size_t)
+                for n in (
+                    "peak",
+                    "working",
+                    "peak_paged",
+                    "paged",
+                    "peak_nonpaged",
+                    "nonpaged",
+                    "pagefile",
+                    "peak_pagefile",
+                    "private",
+                )
+            ]
 
-    kernel = ctypes.WinDLL("kernel32", use_last_error=True)
-    kernel.GetCurrentProcess.restype = w.HANDLE
-    status, counters = Status(), Counters()
-    status.length, counters.cb = ctypes.sizeof(status), ctypes.sizeof(counters)
-    kernel.GlobalMemoryStatusEx(ctypes.byref(status))
-    psapi = ctypes.WinDLL("psapi", use_last_error=True)
-    psapi.GetProcessMemoryInfo.argtypes = [w.HANDLE, ctypes.c_void_p, w.DWORD]
-    ok = psapi.GetProcessMemoryInfo(
-        kernel.GetCurrentProcess(), ctypes.byref(counters), counters.cb
-    )
-    return {
-        "total_ram_bytes": status.total,
-        "available_ram_bytes": status.available,
-        "peak_rss_bytes": counters.peak if ok else None,
-        "peak_commit_bytes": counters.peak_pagefile if ok else None,
-    }
+        kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+        kernel.GetCurrentProcess.restype = w.HANDLE
+        status, counters = Status(), Counters()
+        status.length, counters.cb = ctypes.sizeof(status), ctypes.sizeof(counters)
+        kernel.GlobalMemoryStatusEx(ctypes.byref(status))
+        psapi = ctypes.WinDLL("psapi", use_last_error=True)
+        psapi.GetProcessMemoryInfo.argtypes = [w.HANDLE, ctypes.c_void_p, w.DWORD]
+        ok = psapi.GetProcessMemoryInfo(
+            kernel.GetCurrentProcess(), ctypes.byref(counters), counters.cb
+        )
+        return {
+            "total_ram_bytes": status.total,
+            "available_ram_bytes": status.available,
+            "peak_rss_bytes": counters.peak if ok else None,
+            "peak_commit_bytes": counters.peak_pagefile if ok else None,
+        }
