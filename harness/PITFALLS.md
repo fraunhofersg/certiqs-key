@@ -91,7 +91,8 @@ says what happens and what to do instead.
   default tier deselects (`tests/conftest.py`); run `pytest -m pins` on the
   machine that recorded them. A snapshot compares a value that is rounding noise (a
   validation residual of order 1e-16) by whether it lies within its
-  tolerance, not by its digits.
+  tolerance, not by its digits, and a floating-point evaluation (the
+  receiver's photon-number blocks and port Grams) within four ulps of one.
 - On macOS and Linux the venv's interpreter is `.venv/bin/python`, not the
   README's `.venv/Scripts/python`.
 - The venv's package is an editable install of the main clone's `src/`, so

@@ -178,6 +178,13 @@ snapshot holds is ``0`` (checked), where a perfect PBS sends nothing into the
 added modes, so no number moves and the preparation is compared whole. On the
 static surface the two leak rows stand where the extinction row stood and
 carry its declaration but for name and meaning (:func:`_split_static`).
+
+ROUNDING. The receiver's floating-point evaluations (each photon-number
+block's elements, each port's Gram) carry the last bits of the BLAS kernel
+the CPU picks at run time, so they are compared within four ulps of one
+(:func:`_within_rounding`), as a residual is compared within its tolerance;
+everything else, the exact values and the digests of the enclosures among
+them, is compared whole.
 """
 
 from __future__ import annotations
@@ -187,6 +194,7 @@ import functools
 import gzip
 import importlib.util
 import json
+import math
 import re
 from fractions import Fraction as F
 from pathlib import Path
@@ -792,6 +800,55 @@ def _projected(value: Any, role: str = "") -> Any:
     return value
 
 
+#: The receiver's floating-point evaluations: each photon-number block's
+#: elements and each port's Gram matrix, entries of modulus at most one.
+_FLOATING_POINT_KEYS = frozenset({"photon_blocks", "port_grams"})
+
+#: How far a floating-point entry may lie from the snapshot's: four ulps of
+#: one, the entries' largest modulus (the decoy registry's freeze allows four
+#: ulps likewise). The BLAS kernel, picked by CPU at run time, sets the last
+#: bits: on a Linux x86_64 runner an entry the snapshot holds as 0.0 comes out
+#: of order 1e-50, another one ulp away (harness/PITFALLS.md).
+_ROUNDING = 4 * math.ulp(1.0)
+
+
+def _within_rounding(ours: Any, snapshot: Any, inside: bool = False) -> Any:
+    """Return ``ours``, each floating-point entry within rounding set to the snapshot's.
+
+    Only under :data:`_FLOATING_POINT_KEYS`; every other value, and an entry
+    farther than :data:`_ROUNDING`, is left as it is, so the comparison
+    still shows it.
+    """
+    if isinstance(ours, dict) and isinstance(snapshot, dict):
+        return {
+            key: (
+                _within_rounding(
+                    item, snapshot[key], inside or key in _FLOATING_POINT_KEYS
+                )
+                if key in snapshot
+                else item
+            )
+            for key, item in ours.items()
+        }
+    if (
+        isinstance(ours, list)
+        and isinstance(snapshot, list)
+        and len(ours) == len(snapshot)
+    ):
+        return [
+            _within_rounding(item, theirs, inside)
+            for item, theirs in zip(ours, snapshot, strict=True)
+        ]
+    if (
+        inside
+        and isinstance(ours, float)
+        and isinstance(snapshot, float)
+        and abs(ours - snapshot) <= _ROUNDING
+    ):
+        return snapshot
+    return ours
+
+
 def _domination_records(value: Any) -> list[dict[str, Any]]:
     """Every ``domination_record`` at any depth of a preparation record."""
     found: list[dict[str, Any]] = []
@@ -1106,7 +1163,8 @@ def test_the_preparation_is_the_snapshot_s(
         assert any("round-down" in block["steps"] for block in before)
         assert not _uncertified_blocks(ours)
     projected = _projected(ours)
-    assert projected == _r2_named(projected, _projected(expected))
+    snapshot = _r2_named(projected, _projected(expected))
+    assert _within_rounding(projected, snapshot) == snapshot
 
 
 def test_the_receiver_wrap_checks_an_enclosed_weight(
